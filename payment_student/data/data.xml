@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="payment_mail" model="mail.template">
+            <field name="name">Parent Payment Email</field>
+            <field name="model_id" ref="payment_student.model_res_partner"/>
+            <field name="subject">Payment - {{ object.company_id.name }}</field>
+            <field name="partner_to">{{ object.id }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="body_html" type="html">
+                <t t-set="line" t-value="object._get_setting_line()"/>
+                <p>
+                    <strong>Sayın <i t-out="object.name" contenteditable="false"/></strong>,
+                    <br/><br/>
+                    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-out="object._get_payment_terms()" contenteditable="false"/> hizmetlerimizle ilgili kayıt ücretini 
+                    <t t-if="line"><t t-out="line['month']" contenteditable="false"/> dönemi içerisinde kredi kartınız ile online olarak <t t-out="line['installment']" contenteditable="false"/> taksitle yada tek çekimde %<t t-out="line['percentage']" contenteditable="false"/> indirim ile ödeyebilirsiniz.</t>
+                    <t t-else="">kredi kartınız ile online olarak ödeyebilirsiniz.</t>
+                    <br/>
+                    İncelemek ve Online Ödeme için <a t-att-href="object._get_payment_url()" style="color:#3079ed;">tıklayınız.</a>
+                    <br/><br/>
+                    Sağlıklı bir yıl dileriz.
+                    <br/><br/>
+                    Saygılarımızla...
+                    <br/><br/>
+                    <span t-out="object._get_payment_company()" contenteditable="false"/>
+                </p>
+            </field>
+            <!--<field name="report_template" ref="action_report_template"/>
+            <field name="report_name">{{ (object.name or '') }}</field>-->
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+jetcheckout_journal,jetcheckout_journal,model_payment_acquirer_jetcheckout_journal,account.group_account_manager,1,1,1,1
+jetcheckout_provider,jetcheckout_provider,model_payment_acquirer_jetcheckout_provider,account.group_account_manager,1,1,1,1
+jetcheckout_pos,jetcheckout_pos,model_payment_acquirer_jetcheckout_pos,account.group_account_manager,1,1,1,1
+jetcheckout_refund,jetcheckout_refund,model_payment_acquirer_jetcheckout_refund,account.group_account_manager,1,1,1,1
+jetcheckout_status,jetcheckout_status,model_payment_acquirer_jetcheckout_status,account.group_account_manager,1,1,1,1
+jetcheckout_terms,jetcheckout_terms,model_payment_acquirer_jetcheckout_term,base.group_public,1,0,0,0
+jetcheckout_bank,jetcheckout_bank,model_payment_acquirer_jetcheckout_bank,base.group_public,1,0,0,0
+jetcheckout_bank_manager,jetcheckout_bank_manager,model_payment_acquirer_jetcheckout_bank,account.group_account_manager,1,1,1,1

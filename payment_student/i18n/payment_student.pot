@@ -1,0 +1,954 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_student
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-15 11:49+0000\n"
+"PO-Revision-Date: 2022-03-15 11:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_student
+#: code:addons/payment_student/controllers/main.py:0
+#, python-format
+msgid "%s (Error Code: %s)"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "<em>Select All</em>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items To Pay</span>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_transaction_form
+msgid "<span class=\"o_stat_text\">Student Payment</span>"
+msgstr ""
+
+#. module: payment_student
+#: model:mail.template,body_html:payment_student.payment_mail
+msgid ""
+"<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
+"                <p>\n"
+"                    <strong>Sayın <i t-out=\"object.name\" contenteditable=\"false\"/></strong>,\n"
+"                    <br/><br/>\n"
+"                    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-out=\"object._get_payment_terms()\" contenteditable=\"false\"/> hizmetlerimizle ilgili kayıt ücretini \n"
+"                    <t t-if=\"line\"><t t-out=\"line['month']\" contenteditable=\"false\"/> dönemi içerisinde kredi kartınız ile online olarak <t t-out=\"line['installment']\" contenteditable=\"false\"/> taksitle yada tek çekimde %<t t-out=\"line['percentage']\" contenteditable=\"false\"/> indirim ile ödeyebilirsiniz.</t>\n"
+"                    <t t-else=\"\">kredi kartınız ile online olarak ödeyebilirsiniz.</t>\n"
+"                    <br/>\n"
+"                    İncelemek ve Online Ödeme için <a t-att-href=\"object._get_payment_url()\">tıklayınız.</a>\n"
+"                    <br/><br/>\n"
+"                    Sağlıklı bir yıl dileriz.\n"
+"                    <br/><br/>\n"
+"                    Saygılarımızla...\n"
+"                    <br/><br/>\n"
+"                    <span t-out=\"object._get_payment_company()\" contenteditable=\"false\"/>\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_warning
+msgid "Access warning"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__active
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_search
+#: model_terms:ir.ui.view,arch_db:payment_student.class_search
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_search
+#: model_terms:ir.ui.view,arch_db:payment_student.school_search
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.term_search
+msgid "Active"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__is_discount_advance
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Advance Payment Discount"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_advance_ids
+msgid "Advance Payment Discounts"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Agreements"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__amount
+msgid "Amount"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Amount To Pay"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid "Archived"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_bursary
+#: model:ir.model,name:payment_student.model_res_student_bursary
+#: model:ir.ui.menu,name:payment_student.menu_bursary
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_form
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_search
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_tree
+msgid "Bursaries"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__bursary_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__bursary_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__bursary_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Bursary"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Children"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__class_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Class"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_class
+#: model:ir.model,name:payment_student.model_res_student_class
+#: model:ir.ui.menu,name:payment_student.menu_class
+#: model_terms:ir.ui.view,arch_db:payment_student.class_form
+#: model_terms:ir.ui.view,arch_db:payment_student.class_search
+msgid "Classes"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__code
+msgid "Code"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_company
+#: model:ir.ui.menu,name:payment_student.menu_company
+msgid "Companies"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_ir_mail_server__company_id
+#: model:ir.model.fields,field_description:payment_student.field_mail_template__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__company_id
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Company"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_companies
+msgid "Company Settings"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model,name:payment_student.model_res_partner
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Contact"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__contact_page
+msgid "Contact Page"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Conveyance"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,help:payment_student.field_res_partner__access_url
+msgid "Customer Portal URL"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Details"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__percentage
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__percentage
+msgid "Discount (%)"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+msgid "Discount Rate"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__setting_id
+msgid "Discount Start Date"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#: code:addons/payment_student/models/student.py:0
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Discount percentage must be higher than zero"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__sale_agreement
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Distant Sale Agreement"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Email"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__date_email_sent
+#: model:ir.model.fields,field_description:payment_student.field_res_users__date_email_sent
+msgid "Email Sent Date"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_emails
+msgid "Email Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_mail_template
+#: model:ir.model,name:payment_student.model_mail_template
+#: model:ir.ui.menu,name:payment_student.menu_mail_template
+msgid "Email Templates"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_end
+msgid "End Date"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Groupby"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Has No Payments"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Has Payments"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"If you need assistance, you can contact with us by using one of the "
+"following methods."
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__installment
+msgid "Installment"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Installment must be higher than zero"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
+#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
+msgid "Is Sps"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_count
+#: model:ir.model.fields,field_description:payment_student.field_res_users__payment_count
+msgid "Items To Pay"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__limited_student_id
+msgid "Limited Student"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_ir_mail_server
+msgid "Mail Server"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_mail_server
+#: model:ir.ui.menu,name:payment_student.menu_mail_server
+msgid "Mail Servers"
+msgstr ""
+
+#. module: payment_student
+#: model:res.groups,name:payment_student.group_sps_manager
+msgid "Manager"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__membership_agreement
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Membership Agreement"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__name
+msgid "Name"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "No Sent Email"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "No email"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "No mobile"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.server,name:payment_student.action_settings
+#: model:ir.ui.menu,name:payment_student.menu_settings
+msgid "Other Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+msgid "Paid"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid_amount
+msgid "Paid Amount"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Parent"
+msgstr ""
+
+#. module: payment_student
+#: model:mail.template,name:payment_student.payment_mail
+msgid "Parent Payment Email"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_parent
+#: model:ir.ui.menu,name:payment_student.menu_parent
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+msgid "Parents"
+msgstr ""
+
+#. module: payment_student
+#: model:mail.template,subject:payment_student.payment_mail
+msgid "Payment - {{ object.company_id.name }}"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_acquirer
+#: model:ir.ui.menu,name:payment_student.menu_acquirer
+msgid "Payment Acquirers"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Payment Details"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_discount
+msgid "Payment Discounts"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__payment_ids
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Payment Items"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_payments
+msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_table
+#: model:ir.model,name:payment_student.model_res_student_payment_table
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Payment Table"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_transaction
+#: model:ir.ui.menu,name:payment_student.menu_transaction
+msgid "Payment Transactions"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__payment_type_id
+msgid "Payment Type"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_type
+#: model:ir.model,name:payment_student.model_res_student_payment_type
+#: model:ir.ui.menu,name:payment_student.menu_payment_type
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_tree
+msgid "Payment Types"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Payment table can be calculated only for non paid payment items"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Payment table cannot be related to more than one company"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#, python-format
+msgid ""
+"Payment table will be displayed here after you select at least one payment "
+"item"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment
+#: model:ir.ui.menu,name:payment_student.menu_payment
+msgid "Payments"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Phone"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Please create a company payment settings to contine"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_url
+msgid "Portal Access URL"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__privacy_policy
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Privacy Policy"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Receipt"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__parent_id
+msgid "Related Company"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_main
+msgid "SPS"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "School"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.class_tree
+msgid "School Classes"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_schools
+msgid "School Settings"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.term_tree
+msgid "School Terms"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_school
+#: model:ir.model,name:payment_student.model_res_student_school
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__school_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__school_ids
+#: model:ir.ui.menu,name:payment_student.menu_school
+#: model_terms:ir.ui.view,arch_db:payment_student.school_form
+#: model_terms:ir.ui.view,arch_db:payment_student.school_search
+#: model_terms:ir.ui.view,arch_db:payment_student.school_tree
+msgid "Schools"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_maximum
+msgid "Select Maximum"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+msgid ""
+"Select maximum rate between <strong>Sibling Discount</strong> and "
+"<strong>Bursary Discount</strong>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+msgid "Send Email"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Sent Email Before"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Sent Email Today"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#: model:ir.model,name:payment_student.model_res_student_setting
+#: model:ir.ui.menu,name:payment_student.menu_setting
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#, python-format
+msgid "Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.server,name:payment_student.parent_share
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Share Payment Link"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__sibling_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__sibling_ids
+msgid "Sibling"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_sibling
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Sibling Discount"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__is_discount_sibling
+msgid "Sibling Payment Discount"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid "Siblings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#: code:addons/payment_student/models/student.py:0
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Start date cannot be higher than end date"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__student_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Student"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Student Name<br/>School | Class"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_count
+msgid "Student Payment Count"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_payment
+msgid "Student Payment Items"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.module.category,description:payment_student.module_category_sps
+#: model:ir.module.category,name:payment_student.module_category_sps
+msgid "Student Payment System"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__transaction_ids
+msgid "Student Payments"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_student
+#: model:ir.ui.menu,name:payment_student.menu_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Students"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Subtotal"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__term_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+msgid "Term"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_term
+#: model:ir.model,name:payment_student.model_res_student_term
+#: model:ir.ui.menu,name:payment_student.menu_term
+#: model_terms:ir.ui.view,arch_db:payment_student.term_form
+#: model_terms:ir.ui.view,arch_db:payment_student.term_search
+msgid "Terms"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any payment item related to this partner"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any payment settings related to this partner"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any website related to this partner's company"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Total"
+msgstr ""
+
+#. module: payment_student
+#: model:res.groups,name:payment_student.group_sps_user
+msgid "User"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_user
+#: model:ir.ui.menu,name:payment_student.menu_user
+msgid "Users"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Vat"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_websites
+msgid "Website Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_websites
+msgid "Websites"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Welcome"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Whatsapp"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"You can get payment amounts and applied discounts, which is calculated "
+"dynamically, with choosing student(s) of yours in the following table."
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"Your transaction has been failed. Please try again. If this sitution occurs "
+"anyway, please contact with system administation."
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Your transaction has been succeeded. Thank you."
+msgstr ""

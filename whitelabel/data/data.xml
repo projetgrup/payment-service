@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function  model="ir.default" name="set" eval="('res.config.settings', 'title_brand', 'WHITELABEL')"/>
+        <function  model="ir.default" name="set" eval="('res.config.settings', 'odoo_text_replacement', 'Whitelabel Software')"/>
+        <function  model="ir.default" name="set_whitelabel_favicon" eval="('res.config.settings', 'whitelabel_favicon')"/>
+    </data>
+
+    <record id="base.partner_root" model="res.partner">
+        <field name="name">System</field>
+        <field name="email">system@example.com</field>
+    </record>
+
+    <delete id="base.menu_view_base_module_upgrade" model="ir.ui.menu"/>
+    <delete id="base_import_module.menu_view_base_module_import" model="ir.ui.menu"/>
+</odoo>

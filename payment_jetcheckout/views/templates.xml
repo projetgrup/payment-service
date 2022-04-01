@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_button" inherit_id="portal.placeholder_user_sign_in" name="Jetcheckout Button">
+        <xpath expr="." position="inside">
+            <li id="menu_pay" groups="base.group_portal, base.group_user" t-attf-class="#{_item_class} o_no_autohide_item">
+                <a href="/pay" t-attf-class="#{_link_class}">
+                    <i class="fa fa-credit-card mr-2" t-translation="off"/>Payment
+                </a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="payment_button_dropdown" inherit_id="portal.user_dropdown" name="Jetcheckout Button Dropdown">
+        <xpath expr="//li[@t-if='is_connected']" position="attributes">
+            <attribute name="t-attf-class">nav-item dropdown o_no_autohide_item</attribute>
+        </xpath>
+    </template>
+
+    <template id="jetcheckout_s2s_form">
+        <t t-if="order">
+            <t t-set="data" t-value="order"/>
+            <input id="success_url" type="hidden" name="success_url" value="/payment/card/shop"/>
+            <input id="fail_url" type="hidden" name="fail_url" value="/payment/card/shop"/>
+            <input id="order" type="hidden" name="order_id" t-att-value="order.id"/>
+        </t>
+        <t t-elif="sale_order">
+            <t t-set="data" t-value="sale_order"/>
+            <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
+            <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
+            <input id="order" type="hidden" name="order_id" t-att-value="sale_order.id"/>
+        </t>
+        <t t-elif="invoice">
+            <t t-set="data" t-value="invoice"/>
+            <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
+            <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
+            <input id="invoice" type="hidden" name="invoice_id" t-att-value="invoice.id"/>
+        </t>
+        <t t-elif="account">
+            <t t-set="data" t-value="account"/>
+            <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
+            <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
+            <input id="subscription" type="hidden" name="subscription_id" t-att-value="account.id"/>
+        </t>
+        <t t-else="">
+            <t t-set="data" t-value="None"/>
+            <input id="success_url" type="hidden" name="success_url" t-att-value="success_url"/>
+            <input id="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
+            <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+            <t t-set="no_button" t-value="False"/>
+            <t t-set="no_card_family" t-value="False"/>
+        </t>
+        <t t-if="data">
+            <input id="amount" type="hidden" name="amount" t-att-value="account and data.recurring_amount_total or data.amount_total"/>
+            <input id="currency" type="hidden" t-att-data-decimal="data.currency_id.decimal_places" data-separator="," data-thousand="." t-att-data-currency="data.currency_id.name" t-att-data-id="data.currency_id.id" t-att-data-position="data.currency_id.position" t-att-data-symbol="data.currency_id.symbol"/>
+            <t t-set="no_button" t-value="True"/>
+            <t t-set="no_card_family" t-value="True"/>
+        </t>
+        <t t-call="payment_jetcheckout.payment_form">
+            <t t-set="s2s_form" t-value="True"/>
+            <t t-set="no_button" t-value="no_button"/>
+            <t t-set="no_card_family" t-value="no_card_family"/>
+        </t>
+    </template>
+
+    <template id="payment_sidebar" name="Payment Sidebar">
+        <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
+            <div>
+                <div class="px-3 py-4 bg-white card my-4">
+                    <label for="partner" class="text-primary font-weight-bold mb-0">Partner</label>
+                    <span t-esc="partner_name" class="text-600"/>
+                    <t t-if="contact">
+                        <label for="contact" class="text-primary font-weight-bold mt-2 mb-0">Contact</label>
+                        <span t-esc="contact_name" class="text-600"/>
+                    </t>
+                    <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                    <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
+                    <t t-if="page == 'payment'">
+                        <div class="field-container mt-5">
+                            <input id="amount" type="text" inputmode="decimal" class="text-center" required="required"/>
+                            <span class="bar-container"/>
+                            <span t-if="currency['position'] == 'before'" class="symbol symbol-before" t-esc="currency['symbol']"/>
+                            <span t-else="" class="symbol symbol-after" t-esc="currency['symbol']"/>
+                            <label for="amount"><span>Amount to Pay</span></label>
+                        </div>
+                        <input id="commission" type="hidden" value="0"/>
+                        <button id="payment_pay0" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay shadow"><i class="fa fa-credit-card mr-2" t-translation="off"/>Pay</button>
+                    </t>
+                    <t t-elif="page == 'result'">
+                        <button t-if="tx != False and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
+                        <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
+                    </t>
+                    <div t-if="page == 'payment'" class="mt-3">
+                        <ul class="mb-0 text-center list-inline payment_icon_list">
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                                <li t-attf-class="list-inline-item#{'' if (i &lt; 5) else ' d-none'}">
+                                    <span t-field="pm_icon.image_payment_form"
+                                        t-options='{"widget": "image", "alt-field": "name"}'/>
+                                </li>
+                                <li t-if="i==5" style="display:block;" class="list-inline-item">
+                                    <span class="float-right more_option text-info">
+                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acquirer.payment_icon_ids[5:]])">and more</a>
+                                    </span>
+                                </li>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+                <div t-if="page == 'payment'" style="height: 200px;">
+                    <t t-call="payment_jetcheckout.payment_preview"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_smart_button" name="Payment Smart Buttons">
+        <div t-if="not s2s_form" class="oe_button_box row mx-0">
+            <a t-if="page != 'payment'" role="button" href="/pay" class="btn oe_stat_button col-md-3">
+                <i class="fa fa-fw o_button_icon fa-undo icon"></i>
+                <div class="o_stat_info">
+                    <span class="o_stat_text">Return</span><span class="o_stat_text">Payment</span>
+                </div>
+            </a>
+            <a t-if="page in ('payment','transaction')" role="button" href="/payment/card/ledger" class="btn oe_stat_button col-md-3">
+                <i class="fa fa-fw o_button_icon fa-book icon"></i>
+                <div class="o_stat_info">
+                    <span class="o_stat_text">Balance</span>
+                    <span class="o_stat_text"><span t-esc="partner_balance_sign_str" t-att-title="partner_balance_sign_title" class="badge badge-pill border"/> <span t-esc="partner_balance"/></span>
+                </div>
+            </a>
+            <a t-if="page in ('payment','ledger')" role="button" href="/payment/card/transactions" class="btn oe_stat_button col-md-3">
+                <i class="fa fa-fw o_button_icon fa-list icon"></i>
+                <div class="o_stat_info">
+                    <span class="o_stat_text">Last</span><span class="o_stat_text">Transactions</span>
+                </div>
+            </a>
+        </div>
+    </template>
+
+    <template id="payment_page" name="Payment">
+        <t t-call="web.frontend_layout">
+            <t t-call="payment_jetcheckout.payment_card"/>
+        </t>
+    </template>
+
+    <template id="payment_card" name="Payment Card">
+        <div class="payment-card row justify-content-center mx-0">
+            <t t-call="payment_jetcheckout.payment_sidebar">
+                <t t-set="page" t-value="'payment'"/>
+            </t>
+            <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                <t t-call="payment_jetcheckout.payment_form"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_preview" name="Payment Card Preview">
+        <div t-attf-class="creditcard #{'d-none' if s2s_form else ''}">
+            <div class="front">
+                <div id="ccsingle"></div>
+                <svg id="cardfront" x="0px" y="0px" viewBox="0 0 750 471" style="enable-background:new 0 0 750 471;" xml:space="preserve">
+                    <g id="Front">
+                        <g id="CardBackground">
+                            <g id="Page-1_1_">
+                                <g id="amex_1_">
+                                    <path id="Rectangle-1_1_" class="lightcolor grey" d="M40,0h670c22.1,0,40,17.9,40,40v391c0,22.1-17.9,40-40,40H40c-22.1,0-40-17.9-40-40V40 C0,17.9,17.9,0,40,0z"/>
+                                </g>
+                            </g>
+                            <path class="darkcolor greydark" d="M750,431V193.2c-217.6-57.5-556.4-13.5-750,24.9V431c0,22.1,17.9,40,40,40h670C732.1,471,750,453.1,750,431z"/>
+                        </g>
+                        <text transform="matrix(1 0 0 1 60.106 295.0121)" id="svgnumber" class="st2 st3 st4">0123 4567 8910 1112</text>
+                        <text transform="matrix(1 0 0 1 54.1064 428.1723)" id="svgname" class="st2 st5 st6"></text>
+                        <text transform="matrix(1 0 0 1 54.1074 389.8793)" class="st7 st5 st8">Cardholder Name</text>
+                        <text transform="matrix(1 0 0 1 479.7754 388.8793)" class="st7 st5 st8">Expiration</text>
+                        <text transform="matrix(1 0 0 1 65.1054 241.5)" class="st7 st5 st8">Card Number</text>
+                        <g>
+                            <text transform="matrix(1 0 0 1 574.4219 433.8095)" id="svgexpire" class="st2 st5 st9">**/**</text>
+                            <text transform="matrix(1 0 0 1 479.3848 417.0097)" class="st2 st10 st11">VALID</text>
+                            <text transform="matrix(1 0 0 1 479.3848 435.6762)" class="st2 st10 st11">THRU</text>
+                            <polygon class="st2" points="554.5,421 540.4,414.2 540.4,427.9"/>
+                        </g>
+                        <g id="cchip">
+                            <g>
+                                <path class="st2" d="M168.1,143.6H82.9c-10.2,0-18.5-8.3-18.5-18.5V74.9c0-10.2,8.3-18.5,18.5-18.5h85.3 c10.2,0,18.5,8.3,18.5,18.5v50.2C186.6,135.3,178.3,143.6,168.1,143.6z"/>
+                            </g>
+                            <g>
+                                <g>
+                                    <rect x="82" y="70" class="st12" width="1.5" height="60"/>
+                                </g>
+                                <g>
+                                    <rect x="167.4" y="70" class="st12" width="1.5" height="60"/>
+                                </g>
+                                <g>
+                                    <path class="st12" d="M125.5,130.8c-10.2,0-18.5-8.3-18.5-18.5c0-4.6,1.7-8.9,4.7-12.3c-3-3.4-4.7-7.7-4.7-12.3 c0-10.2,8.3-18.5,18.5-18.5s18.5,8.3,18.5,18.5c0,4.6-1.7,8.9-4.7,12.3c3,3.4,4.7,7.7,4.7,12.3 C143.9,122.5,135.7,130.8,125.5,130.8z M125.5,70.8c-9.3,0-16.9,7.6-16.9,16.9c0,4.4,1.7,8.6,4.8,11.8l0.5,0.5l-0.5,0.5 c-3.1,3.2-4.8,7.4-4.8,11.8c0,9.3,7.6,16.9,16.9,16.9s16.9-7.6,16.9-16.9c0-4.4-1.7-8.6-4.8-11.8l-0.5-0.5l0.5-0.5 c3.1-3.2,4.8-7.4,4.8-11.8C142.4,78.4,134.8,70.8,125.5,70.8z"/>
+                                </g>
+                                <g>
+                                    <rect x="82.8" y="82.1" class="st12" width="25.8" height="1.5"/>
+                                </g>
+                                <g>
+                                    <rect x="82.8" y="117.9" class="st12" width="26.1" height="1.5"/>
+                                </g>
+                                <g>
+                                    <rect x="142.4" y="82.1" class="st12" width="25.8" height="1.5"/>
+                                </g>
+                                <g>
+                                    <rect x="142" y="117.9" class="st12" width="26.2" height="1.5"/>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="Back">
+                    </g>
+                </svg>
+            </div>
+            <div class="back">
+                <svg id="cardback" x="0px" y="0px" viewBox="0 0 750 471" style="enable-background:new 0 0 750 471;" xml:space="preserve">
+                    <g id="Front">
+                        <line class="st0" x1="35.3" y1="10.4" x2="36.7" y2="11"/>
+                    </g>
+                    <g id="Back">
+                        <g id="Page-1_2_">
+                            <g id="amex_2_">
+                                <path id="Rectangle-1_2_" class="darkcolor greydark" d="M40,0h670c22.1,0,40,17.9,40,40v391c0,22.1-17.9,40-40,40H40c-22.1,0-40-17.9-40-40V40 C0,17.9,17.9,0,40,0z"/>
+                            </g>
+                        </g>
+                        <rect y="61.6" class="st2" width="750" height="78"/>
+                        <g>
+                            <path class="st3" d="M701.1,249.1H48.9c-3.3,0-6-2.7-6-6v-52.5c0-3.3,2.7-6,6-6h652.1c3.3,0,6,2.7,6,6v52.5 C707.1,246.4,704.4,249.1,701.1,249.1z"/>
+                            <rect x="42.9" y="198.6" class="st4" width="664.1" height="10.5"/>
+                            <rect x="42.9" y="224.5" class="st4" width="664.1" height="10.5"/>
+                            <path class="st5" d="M701.1,184.6H618h-8h-10v64.5h10h8h83.1c3.3,0,6-2.7,6-6v-52.5C707.1,187.3,704.4,184.6,701.1,184.6z"/>
+                        </g>
+                        <text transform="matrix(1 0 0 1 621.999 227.2734)" id="svgsecurity" class="st6 st7">***</text>
+                        <g class="st8">
+                            <text transform="matrix(1 0 0 1 518.083 280.0879)" class="st9 st6 st10">Security Code</text>
+                        </g>
+                        <rect x="58.1" y="378.6" class="st11" width="375.5" height="13.5"/>
+                        <rect x="58.1" y="405.6" class="st11" width="421.7" height="13.5"/>
+                        <text transform="matrix(1 0 0 1 59.5073 228.6099)" id="svgnameback" class="st12 st13"></text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_form" name="Payment Form">
+        <div class="o_payment_loading">
+            <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
+        </div>
+        <div t-attf-class="w-100 bg-white my-4 #{'' if no_border else 'border card'}">
+            <t t-call="payment_jetcheckout.payment_smart_button">
+                <t t-set="page" t-value="'payment'"/>
+            </t>
+            <div id="payment_card" class="d-flex justify-content-center row px-3">
+                <div class="payment-table mt-2 p-3 col-md-6">
+                    <div t-if="not s2s_form" class="payment-info">
+                        <i class="fa fa-credit-card mr-3" t-translation="off"></i>Card Information
+                    </div>
+                    <div t-if="not s2s_form" class="payment-info-sub">
+                        Please specify a payment amount from sidebar and enter your credit card details here
+                    </div>
+                    <div class="payment-form-container payment-gradient border card">
+                        <div class="field-container">
+                            <input id="name" type="text" required="required"/>
+                            <span class="bar-container"/>
+                            <label for="name"><span>Name</span></label>
+                        </div>
+                        <div class="field-container">
+                            <input id="cardnumber" type="text" required="required"/>
+                            <span class="bar-container"/>
+                            <input id="ccname" type="hidden"/>
+                            <div id="installment_card" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
+                            <svg id="ccicon" t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471"/>
+                            <label for="cardnumber"><span>Card Number</span></label>
+                        </div>
+                        <div class="field-container">
+                            <input id="expirationdate" type="text" required="required"/>
+                            <span class="bar-container"/>
+                            <label for="expirationdate"><span>Expiration</span></label>
+                        </div>
+                        <div class="field-container">
+                            <input id="securitycode" type="text" required="required"/>
+                            <span class="bar-container"/>
+                            <label for="securitycode"><span t-if="s2s_form">CVC</span><span t-else="">Security Code</span></label>
+                        </div>
+                        <div class="field-container">
+                            <div class="terms-container justify-content-end">
+                                <label id="payment_terms" for="accept_terms" style="cursor: pointer;margin-bottom: 0;" class="btn">Terms &amp; Conditions</label>
+                                <label class="switch" style="margin-bottom: 0;">
+                                    <input id="accept_terms" type="checkbox"/>
+                                    <span class="slider round fa"/>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-table mt-2 p-3 col-md-6">
+                    <div t-if="not s2s_form" class="payment-info">
+                        <i class="fa fa-align-right mr-3" t-translation="off"></i>Installment Information
+                    </div>
+                    <div t-if="not s2s_form" class="payment-info-sub">
+                        Installment details is placed here when you fill your card details
+                    </div>
+                    <div t-if="s2s_form">
+                        <t t-call="payment_jetcheckout.payment_preview"/>
+                    </div>
+                    <div id="installment_table" class="payment-gradient border card p-3">
+                        <div>
+                            <div class="font-weight-bold text-primary text-uppercase installment-row installment-header">
+                                <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
+                                <div t-if="not s2s_form" class="text-center">Rate</div>
+                                <div class="text-center">Monthly</div>
+                                <div class="text-center">Total</div>
+                            </div>
+                        </div>
+                        <div id="installment_row" class="d-none"/>
+                        <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
+                            <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
+                        </div>
+                        <div class="row font-weight-bold text-uppercase">
+                            <div id="installments_table" class="col-xl-6 p-2">
+                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
+                            </div>
+                            <div class="col-xl-6 p-2">
+                                <button t-if="not no_button" id="payment_pay" class="payment_pay btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="payment_installments" class="row mx-0 d-none"/>
+        </div>
+    </template>
+
+    <template id="payment_page_result" name="Payment Result">
+        <t t-call="web.frontend_layout">
+            <div class="payment-result row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'result'"/>
+                </t>
+                <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                    <div class="border shadow w-100 bg-white text-center mr-4 my-4 pb-4">
+                        <t t-call="payment_jetcheckout.payment_smart_button">
+                            <t t-set="page" t-value="'result'"/>
+                        </t>
+                        <h4 t-if="tx != False and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="text-center w-100">Payment is successful. Thank you.</div>
+                            <div class="row w-100 mt-2">
+                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                            </div>
+                        </h4>
+                        <h4 t-elif="tx != False and tx.state == 'pending'" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="mb-3 text-center w-100">Payment is successful, but it will be processed later.</div>
+                            <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                        </h4>
+                        <h4 t-else="" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="mb-3 text-center w-100">Payment is not successful. Please try again later.</div>
+                            <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                            <span t-esc="tx.state_message" class="font-italic font-weight-light btn-sm"/>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment_page_ledger" name="Partner Ledger">
+        <t t-call="web.frontend_layout">
+            <div class="payment-ledger row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'ledger'"/>
+                </t>
+                <div class="col-md-9 justify-content-center mx-0 navbar-light">
+                    <div class="border shadow bg-white my-4 pb-3">
+                        <t t-call="payment_jetcheckout.payment_smart_button">
+                            <t t-set="page" t-value="'ledger'"/>
+                        </t>
+                        <table class="table-responsive-md w-100">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <th class="py-3 pl-2">Date</th>
+                                    <th>Due Date</th>
+                                    <th>Account</th>
+                                    <th>Ref</th>
+                                    <th class="text-right">Debit</th>
+                                    <th class="text-right">Credit</th>
+                                    <th class="text-right pr-2">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="amount_balance" t-value="balance - balance_sum"/>
+                                <t t-foreach="amls" t-as="aml">
+                                    <tr class="border">
+                                        <td class="py-2 pl-2"><span t-field="aml.date"/></td>
+                                        <td><span t-field="aml.date_maturity"/></td>
+                                        <td><span t-field="aml.account_id.code"/></td>
+                                        <td><span t-field="aml.name"/></td>
+                                        <td class="text-right"><span t-field="aml.debit"/></td>
+                                        <td class="text-right"><span t-field="aml.credit"/></td>
+                                        <td class="border-right text-right pr-2"><span t-esc="amount_balance" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
+                                    </tr>
+                                    <t t-set="amount_balance" t-value="amount_balance - aml.balance"/>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="form-inline justify-content-center mt-3">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="installment" name="Payment Installment">
+        <t t-if="not no_input">
+            <t t-foreach="installment['installments']" t-as="row">
+                <t t-set="installment_count" t-value="row['total_installment']"/>
+                <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
+                    <t t-set="customer_rate" t-value="row['customer_rate']"/>
+                    <t t-set="installment_amount" t-value="amount * (1 + (row['customer_rate'] / 100))"/>
+                    <div class="installment-cell">
+                        <div class="text-center"><input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-checked="row['installment_count'] == 1"/></div>
+                        <div><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></div>
+                    </div>
+                    <div t-if="not s2s_form" class="text-center side-border">%<span t-esc="customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></div>
+                    <div class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
+                    <div class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-foreach="installment['installments']" t-as="row">
+                <t t-set="installment_count" t-value="row['total_installment']"/>
+                <tr t-if="installment_count > 0">
+                    <t t-set="installment_amount" t-value="amount * (1 + (row['customer_rate'] / 100))"/>
+                    <td class="text-center"><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></td>
+                    <td class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                    <td class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                </tr>
+            </t>
+        </t>
+    </template>
+
+    <template id="installments" name="Payment Installments">
+        <main t-if="not error and installments" class="row installment-table bg-white">
+            <t t-foreach="installments" t-as="installment">
+                <div class="col-md-4 p-2">
+                    <div class="border">
+                        <table class="w-100">
+                            <colgroup>
+                                <col width="20%"/>
+                                <col width="40%"/>
+                                <col width="40%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="text-center"><img t-att-src="installment['card_family_logo']" t-att-alt="installment['card_family']"/></th>
+                                </tr>
+                                <tr class="font-weight-bold bottom-border">
+                                    <td></td>
+                                    <td class="text-center">Monthly Payment</td>
+                                    <td class="text-center">Total Payment</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-call="payment_jetcheckout.installment">
+                                    <t t-set="no_input" t-value="True"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </main>
+    </template>
+
+    <template id="payment_page_transaction" name="Payment Transactions">
+        <t t-call="web.frontend_layout">
+            <div class="payment-transaction row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'transaction'"/>
+                </t>
+                <div class="col-md-9 justify-content-center mx-0 navbar-light">
+                    <div class="border shadow bg-white text-center my-4 pb-3">
+                        <t t-call="payment_jetcheckout.payment_smart_button">
+                            <t t-set="page" t-value="'transaction'"/>
+                        </t>
+                        <table class="table-responsive-md w-100 table-fold">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <th class="py-3">Date</th>
+                                    <th>Transaction</th>
+                                    <th>Card Holder Name</th>
+                                    <th>Card Number</th>
+                                    <th>Payment Amount</th>
+                                    <th>State</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="txs" t-as="tx">
+                                    <tr t-attf-class="border row-view #{'bg-success-light' if tx.state == 'done' else 'bg-danger-light'}">
+                                        <td class="py-2"><span t-field="tx.create_date"/></td>
+                                        <td><span t-field="tx.reference"/></td>
+                                        <td><span t-field="tx.jetcheckout_card_name"/></td>
+                                        <td><span t-field="tx.jetcheckout_card_number"/></td>
+                                        <td><span t-field="tx.jetcheckout_payment_amount"/></td>
+                                        <td class="border-right"><span t-field="tx.state"/></td>
+                                    </tr>
+                                    <tr class="border bg-100 row-fold">
+                                        <td colspan="99">
+                                            <table class="w-100">
+                                                <tr class="font-weight-bold border">
+                                                    <td>Commission Amount</td>
+                                                    <td>Installment Count</td>
+                                                    <td rowspan="3" class="border-left p-2">
+                                                        <a t-attf-href="/report/pdf/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
+                                                        <a t-attf-href="/report/pdf/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border">
+                                                    <td><span t-field="tx.jetcheckout_commission_amount"/></td>
+                                                    <td><span t-field="tx.jetcheckout_installment_count"/></td>
+                                                </tr>
+                                                <tr class="border">
+                                                    <td colspan="5" class="text-left pl-2"><span class="font-weight-bold">Message:</span> <span t-field="tx.state_message"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="form-inline justify-content-center mt-3">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

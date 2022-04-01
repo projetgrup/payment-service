@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_button" inherit_id="payment_jetcheckout.payment_button">
+        <xpath expr="//li[@id='menu_pay']" position="replace"/>
+    </template>
+
+    <template id="student_payment_page" name="Student Payment">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="body_classname" t-value="'payment-student navbar-light'"/>
+            <t t-set="payments" t-value="parent.payment_ids"/>
+            <div class="px-4">
+                <div class="row mx-0 my-4">
+                    <div class="col-md-6">
+                        <img t-att-src="'/web/image/website/%s/logo/' % website.id" t-att-alt="website.name" height="80"/>
+                    </div>
+                    <div class="col-md-6 text-right align-self-center">
+                        <span class="font-weight-bold text-secondary">Welcome  <t t-esc="parent.name"/></span>
+                    </div>
+                </div>
+                <div class="row mx-0 my-4 card border shadow flex-row">
+                    <div class="col-md-4 p-4">
+                        <div t-if="tx and tx.state == 'error'" class="row alert alert-danger d-md-none d-block">
+                            Your transaction has been failed. Please try again. If this sitution occurs anyway, please contact with system administation.
+                        </div>
+                        <div t-elif="tx and tx.state == 'done'" class="row alert alert-success d-md-none d-block">
+                            <div>Your transaction has been succeeded. Thank you.</div>
+                            <div class="row mt-2">
+                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                            </div>
+                        </div>
+                        <div class="row border card p-3 bg-warning-light small">
+                            You can get payment amounts and applied discounts, which is calculated dynamically, with choosing student(s) of yours in the following table.
+                        </div>
+                        <div t-if="payments" class="row bg-white card table-responsive overflow-auto mb-3">
+                            <table class="table table-sm payment-list mb-0">
+                                <tbody>
+                                    <t t-foreach="payments" t-as="payment">
+                                        <tr>
+                                            <td class="text-center">Student Name<br/>School | Class</td>
+                                            <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/></td>
+                                            <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
+                                            <td class="border text-center">
+                                                <label class="switch" style="margin-bottom: 0;">
+                                                    <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment.is_sibling_paid()" checked="checked"/>
+                                                    <span class="slider round fa"/>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot class="shadow bg-light">
+                                    <tr>
+                                        <td class="text-right"></td>
+                                        <td class="text-right"><em>Select All</em></td>
+                                        <td class="text-center">
+                                            <label class="switch" style="margin-bottom: 0;">
+                                                <input type="checkbox" class="payment-all-items" checked="checked"/>
+                                                <span class="slider round fa"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="row border p-3 bg-warning-light small d-md-block d-none">
+                            If you need assistance, you can contact with us by using one of the following methods.
+                        </div>
+                        <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-block d-none">
+                            <table class="table table-sm payment-list mb-0">
+                                <tr>
+                                    <td class="text-right">Phone</td>
+                                    <td class="text-center"><t t-esc="company.phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">Whatsapp</td>
+                                    <td class="text-center"><t t-esc="company.mobile"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">Email</td>
+                                    <td class="text-center"><t t-esc="company.email"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row border p-3 bg-warning-light d-md-block d-none">
+                            Agreements
+                        </div>
+                        <div class="row table-responsive bg-white border card overflow-auto d-md-block d-none">
+                            <table class="table table-sm mb-0">
+                                <tr>
+                                    <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-4">
+                        <div t-if="tx and tx.state == 'error'" class="row alert alert-danger d-md-block d-none">
+                            Your transaction has been failed. Please try again. If this sitution occurs anyway, please contact with system administation.
+                        </div>
+                        <div t-elif="tx and tx.state == 'done'" class="row alert alert-success d-md-block d-none">
+                            <div>Your transaction has been succeeded. Thank you.</div>
+                            <div class="row mt-2">
+                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                            </div>
+                        </div>
+                        <div t-if="len(payments) > 0" class="row justify-content-center flex-column">
+                            <div class="bg-white border card table-responsive payment-pivot overflow-auto"/>
+                        </div>
+                        <div t-if="len(payments) > 0" class="row justify-content-center">
+                            <div class="row justify-content-center payment-card mx-0 w-100">
+                                <input id="amount" type="hidden" name="amount" value="0"/>
+                                <input id="amount_installment" type="hidden" name="amount_installment" value="0"/>
+                                <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="currency_separator" t-att-data-thousand="currency_thousand" t-att-data-currency="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>
+                                <input id="advance_discount" type="hidden" t-att-value="advance_discount"/>
+                                <input id="maximum_discount" type="hidden" t-att-value="maximum_discount"/>
+                                <input id="sibling_discount" type="hidden" t-att-value="sibling_discount"/>
+                                <input id="order" type="hidden" value="0"/>
+                                <t t-call="payment_jetcheckout.jetcheckout_s2s_form"/>
+                            </div>
+                        </div>
+                        
+                        <div class="row border p-3 bg-warning-light small d-md-none d-block">
+                            If you need assistance, you can contact with us by using one of the following methods.
+                        </div>
+                        <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-none d-block">
+                            <table class="table table-sm payment-list mb-0">
+                                <tr>
+                                    <td class="text-right">Phone</td>
+                                    <td class="text-center"><t t-esc="company.phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">Whatsapp</td>
+                                    <td class="text-center"><t t-esc="company.mobile"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">Email</td>
+                                    <td class="text-center"><t t-esc="company.email"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row border p-3 bg-warning-light d-md-none d-block">
+                            Agreements
+                        </div>
+                        <div class="row table-responsive bg-white border card overflow-auto d-md-none d-block">
+                            <table class="table table-sm mb-0">
+                                <tr>
+                                    <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row mx-0 mt-4 pb-1 border-bottom">
+                            <div class="col-md-12">
+                                <ul class="mb-0 list-inline payment_icon_list">
+                                    <t t-foreach="card_family" t-as="card">
+                                        <li class="list-inline-item">
+                                            <img t-att-src="card" alt="" height="40" class="card p-2"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row mx-0 pt-1">
+                            <div class="col-md-6 mb-4">
+                                <ul class="mb-0 list-inline payment_icon_list">
+                                    <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                                        <li class="list-inline-item">
+                                            <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <t t-raw="footer"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="student_payment_table" name="Student Payment Table">
+        <table class="table table-bordered mb-0">
+            <thead class="shadow">
+                <tr>
+                    <th class="text-right" style="width: 300px;">Payment Details</th>
+                    <t t-foreach="vals['students']" t-as="student">
+                        <th class="text-right"><t t-esc="student['name']"/></th>
+                    </t>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="vals['payments']" t-as="payment">
+                    <tr>
+                        <td class="text-right"><t t-esc="payment['name']"/></td>
+                        <t t-foreach="payment['amount']" t-as="amount">
+                            <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                        </t>
+                    </tr>
+                </t>
+                <tr t-if="vals['has_payment']" class="bg-light">
+                    <td class="text-right">Subtotal</td>
+                    <t t-foreach="vals['subpayments']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+                <tr t-if="vals['siblings']" class="text-danger">
+                    <td class="text-right">Sibling Discount<span t-translation="off"> %<t t-esc="sibling_discount"/></span></td>
+                    <t t-foreach="vals['siblings']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+                <tr t-if="vals['siblings']" class="bg-light">
+                    <td class="text-right">Subtotal</td>
+                    <t t-foreach="vals['subsiblings']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+                <t t-if="vals['bursaries']" t-foreach="vals['bursaries']" t-as="bursary">
+                    <tr t-if="bursary['id']" class="text-danger">
+                        <td class="text-right"><t t-esc="bursary['name']"/></td>
+                        <t t-foreach="bursary['amount']" t-as="amount">
+                            <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                        </t>
+                    </tr>
+                </t>
+                <tr t-if="vals['has_bursary']" class="bg-light">
+                    <td class="text-right">Subtotal</td>
+                    <t t-foreach="vals['subbursaries']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+                <tr t-if="vals['advance_discount']" class="text-danger">
+                    <td class="text-right">Advance Payment Discount<span t-translation="off"> %<t t-esc="advance_discount"/></span></td>
+                    <t t-foreach="vals['discounts']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+            </tbody>
+            <tfoot class="text-primary">
+                <tr class="bg-light">
+                    <td class="text-right">Amount To Pay</td>
+                    <t t-foreach="vals['totals']" t-as="amount">
+                        <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
+                    </t>
+                </tr>
+            </tfoot>
+        </table>
+    </template>
+
+    <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
+        <xpath expr="//tr[@t-if='is_conveyance']" position="before">
+            <t t-call="payment_student.student_payment_table">
+                <t t-set="vals" t-value="doc.student_payment_ids.get_payment_table()"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

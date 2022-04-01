@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+api_manager,api_manager,model_res_student_api,payment_student.group_sps_manager,1,1,1,1

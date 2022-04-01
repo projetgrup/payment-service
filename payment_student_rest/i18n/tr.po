@@ -1,0 +1,95 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_student_rest
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-17 08:45+0000\n"
+"PO-Revision-Date: 2022-03-17 11:46+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__api_key
+msgid "API Key"
+msgstr "API Anahtarı"
+
+#. module: payment_student_rest
+#: model:ir.actions.act_window,name:payment_student_rest.action_api
+#: model_terms:ir.ui.view,arch_db:payment_student_rest.api_form
+#: model_terms:ir.ui.view,arch_db:payment_student_rest.api_tree
+msgid "API Keys"
+msgstr "API Anahtarları"
+
+#. module: payment_student_rest
+#: model:ir.ui.menu,name:payment_student_rest.menu_api
+msgid "API Settings"
+msgstr "API Ayarları"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__company_id
+msgid "Company"
+msgstr "Şirket"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__create_date
+msgid "Created on"
+msgstr "Oluşturma Tarihi"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__display_name
+msgid "Display Name"
+msgstr "Görünen Ad"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme Tarihi"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme Tarihi"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__name
+msgid "Name"
+msgstr "Adı"
+
+#. module: payment_student_rest
+#: model:ir.model.fields,field_description:payment_student_rest.field_res_student_api__secret_key
+msgid "Secret Key"
+msgstr "Gizli Anahtar"
+
+#. module: payment_student_rest
+#: model:ir.model,name:payment_student_rest.model_res_student_api
+msgid "Student API"
+msgstr "Öğrenci API"

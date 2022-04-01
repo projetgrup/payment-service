@@ -1,0 +1,1097 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_student
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-15 11:49+0000\n"
+"PO-Revision-Date: 2022-03-15 14:53+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: payment_student
+#: code:addons/payment_student/controllers/main.py:0
+#, python-format
+msgid "%s (Error Code: %s)"
+msgstr "%s (Hata Kodu: %s)"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "<em>Select All</em>"
+msgstr "<em>Tümünü Seç</em>"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid ""
+"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items To Pay</span>"
+msgstr ""
+"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Ödenecek</span>"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_transaction_form
+msgid "<span class=\"o_stat_text\">Student Payment</span>"
+msgstr "<span class=\"o_stat_text\">Öğrenci Tahsilatı</span>"
+
+#. module: payment_student
+#: model:mail.template,body_html:payment_student.payment_mail
+msgid ""
+"<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
+"                <p>\n"
+"                    <strong>Sayın <i t-out=\"object.name\" contenteditable="
+"\"false\"/></strong>,\n"
+"                    <br/><br/>\n"
+"                    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için "
+"<t t-out=\"object._get_payment_terms()\" contenteditable=\"false\"/> "
+"hizmetlerimizle ilgili kayıt ücretini \n"
+"                    <t t-if=\"line\"><t t-out=\"line['month']\" "
+"contenteditable=\"false\"/> dönemi içerisinde kredi kartınız ile online "
+"olarak <t t-out=\"line['installment']\" contenteditable=\"false\"/> taksitle "
+"yada tek çekimde %<t t-out=\"line['percentage']\" contenteditable=\"false\"/"
+"> indirim ile ödeyebilirsiniz.</t>\n"
+"                    <t t-else=\"\">kredi kartınız ile online olarak "
+"ödeyebilirsiniz.</t>\n"
+"                    <br/>\n"
+"                    İncelemek ve Online Ödeme için <a t-att-href=\"object."
+"_get_payment_url()\">tıklayınız.</a>\n"
+"                    <br/><br/>\n"
+"                    Sağlıklı bir yıl dileriz.\n"
+"                    <br/><br/>\n"
+"                    Saygılarımızla...\n"
+"                    <br/><br/>\n"
+"                    <span t-out=\"object._get_payment_company()\" "
+"contenteditable=\"false\"/>\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_warning
+msgid "Access warning"
+msgstr "Erişim Uyarısı"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__active
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_search
+#: model_terms:ir.ui.view,arch_db:payment_student.class_search
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_search
+#: model_terms:ir.ui.view,arch_db:payment_student.school_search
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.term_search
+msgid "Active"
+msgstr "Aktif"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__is_discount_advance
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Advance Payment Discount"
+msgstr "Peşin Ödeme İndirimi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_advance_ids
+msgid "Advance Payment Discounts"
+msgstr "Peşin Ödeme İndirimi"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Agreements"
+msgstr "Sözleşmeler"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__amount
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Amount To Pay"
+msgstr "Ödenecek Tutar"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid "Archived"
+msgstr "Arşivlendi"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_bursary
+#: model:ir.model,name:payment_student.model_res_student_bursary
+#: model:ir.ui.menu,name:payment_student.menu_bursary
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_form
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_search
+#: model_terms:ir.ui.view,arch_db:payment_student.bursary_tree
+msgid "Bursaries"
+msgstr "Burslar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__bursary_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__bursary_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__bursary_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Bursary"
+msgstr "Burs"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Children"
+msgstr "Çocuklar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__class_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Class"
+msgstr "Sınıf"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_class
+#: model:ir.model,name:payment_student.model_res_student_class
+#: model:ir.ui.menu,name:payment_student.menu_class
+#: model_terms:ir.ui.view,arch_db:payment_student.class_form
+#: model_terms:ir.ui.view,arch_db:payment_student.class_search
+msgid "Classes"
+msgstr "Sınıflar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_company
+#: model:ir.ui.menu,name:payment_student.menu_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_ir_mail_server__company_id
+#: model:ir.model.fields,field_description:payment_student.field_mail_template__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__company_id
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Company"
+msgstr "Şirket"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_companies
+msgid "Company Settings"
+msgstr "Şirket Ayarları"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model,name:payment_student.model_res_partner
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Contact"
+msgstr "İletişim"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__contact_page
+msgid "Contact Page"
+msgstr "İletişim Sayfası"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Conveyance"
+msgstr "Temlikname"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_date
+msgid "Created on"
+msgstr "Oluşturma Tarihi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__currency_id
+msgid "Currency"
+msgstr "Para Birimi"
+
+#. module: payment_student
+#: model:ir.model.fields,help:payment_student.field_res_partner__access_url
+msgid "Customer Portal URL"
+msgstr "Müşteri Portal URL"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Details"
+msgstr "Detaylar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__percentage
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__percentage
+msgid "Discount (%)"
+msgstr "İndirim (%)"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+msgid "Discount Rate"
+msgstr "İndirim Oranı"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__setting_id
+msgid "Discount Start Date"
+msgstr "İndirim Başlangıç Tarihi"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Discount percentage must be higher than zero"
+msgstr "İndirim oranı sıfırdan büyük olmalıdır"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__display_name
+msgid "Display Name"
+msgstr "Görünen Ad"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__sale_agreement
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Distant Sale Agreement"
+msgstr "Mesafeli Satış Sözleşmesi"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Email"
+msgstr "Eposta"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__date_email_sent
+#: model:ir.model.fields,field_description:payment_student.field_res_users__date_email_sent
+msgid "Email Sent Date"
+msgstr "Eposta Gönderim Tarihi"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_emails
+msgid "Email Settings"
+msgstr "Eposta Ayarları"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_mail_template
+#: model:ir.model,name:payment_student.model_mail_template
+#: model:ir.ui.menu,name:payment_student.menu_mail_template
+msgid "Email Templates"
+msgstr "Eposta Şablonları"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_end
+msgid "End Date"
+msgstr "Bitiş Tarihi"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "Groupby"
+msgstr "Grupla"
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Has No Payments"
+msgstr "Ödemesi Yok"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Has Payments"
+msgstr "Ödemesi Var"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"If you need assistance, you can contact with us by using one of the "
+"following methods."
+msgstr "Destek İhtiyacınız varsa aşağıdaki yöntemlerden yararlanabilirsiniz."
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__installment
+msgid "Installment"
+msgstr "Taksit"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Installment must be higher than zero"
+msgstr "Taksit oranı sıfırdan büyük olmalıdır"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
+#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
+msgid "Is Sps"
+msgstr "ÖTS"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_count
+#: model:ir.model.fields,field_description:payment_student.field_res_users__payment_count
+msgid "Items To Pay"
+msgstr "Ödenecek"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme Tarihi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme Tarihi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__limited_student_id
+msgid "Limited Student"
+msgstr "Öğrenci"
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_ir_mail_server
+msgid "Mail Server"
+msgstr "Eposta Sunucusu"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_mail_server
+#: model:ir.ui.menu,name:payment_student.menu_mail_server
+msgid "Mail Servers"
+msgstr "Eposta Sunucuları"
+
+#. module: payment_student
+#: model:res.groups,name:payment_student.group_sps_manager
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__membership_agreement
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Membership Agreement"
+msgstr "Üyelik Sözleşmesi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_school__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_term__name
+msgid "Name"
+msgstr "Ad"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "No Sent Email"
+msgstr "Eposta Gönderilmemiş"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "No email"
+msgstr "Eposta Yok"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "No mobile"
+msgstr "Telefon Yok"
+
+#. module: payment_student
+#: model:ir.actions.server,name:payment_student.action_settings
+#: model:ir.ui.menu,name:payment_student.menu_settings
+msgid "Other Settings"
+msgstr "Diğer Ayarlar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+msgid "Paid"
+msgstr "Ödendi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid_amount
+msgid "Paid Amount"
+msgstr "Ödenen Tutar"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Parent"
+msgstr "Veli"
+
+#. module: payment_student
+#: model:mail.template,name:payment_student.payment_mail
+msgid "Parent Payment Email"
+msgstr "Veli Tahsilat Epostası"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_parent
+#: model:ir.ui.menu,name:payment_student.menu_parent
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+msgid "Parents"
+msgstr "Veliler"
+
+#. module: payment_student
+#: model:mail.template,subject:payment_student.payment_mail
+msgid "Payment - {{ object.company_id.name }}"
+msgstr "Ödeme - {{ object.company_id.name }}"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_acquirer
+#: model:ir.ui.menu,name:payment_student.menu_acquirer
+msgid "Payment Acquirers"
+msgstr "Ödeme Alıcıları"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Payment Details"
+msgstr "Ödeme Detayları"
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_discount
+msgid "Payment Discounts"
+msgstr "Ödeme İndirimleri"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__payment_ids
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Payment Items"
+msgstr "Ödeme İşlemleri"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_payments
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_table
+#: model:ir.model,name:payment_student.model_res_student_payment_table
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Payment Table"
+msgstr "Ödeme Tablosu"
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemi"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_transaction
+#: model:ir.ui.menu,name:payment_student.menu_transaction
+msgid "Payment Transactions"
+msgstr "Ödeme İşlemleri"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__payment_type_id
+msgid "Payment Type"
+msgstr "Ödeme Türü"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_type
+#: model:ir.model,name:payment_student.model_res_student_payment_type
+#: model:ir.ui.menu,name:payment_student.menu_payment_type
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_form
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_type_tree
+msgid "Payment Types"
+msgstr "Ödeme Türleri"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Payment table can be calculated only for non paid payment items"
+msgstr "Ödeme tablosu sadece ödenmemiş ödeme satırları için hesaplanabilir"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Payment table cannot be related to more than one company"
+msgstr "Ödeme tablosu birden fazla şirketle ilişkili olamaz"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#, python-format
+msgid ""
+"Payment table will be displayed here after you select at least one payment "
+"item"
+msgstr "Bir ödeme satırı seçtiğinizde ödeme tablosu burada görünecektir"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment
+#: model:ir.ui.menu,name:payment_student.menu_payment
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Please create a company payment settings to contine"
+msgstr ""
+"Devam etmek için lütfen bu şirkete ait bir ödeme yapılandırması oluşturun "
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_url
+msgid "Portal Access URL"
+msgstr "Portal Erişim URL"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/js/student.js:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__privacy_policy
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+#, python-format
+msgid "Privacy Policy"
+msgstr "Gizlilik Politikası"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Receipt"
+msgstr "Makbuz"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__parent_id
+msgid "Related Company"
+msgstr "İlişkili Şirket"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_main
+msgid "SPS"
+msgstr "ÖTS"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+msgid "School"
+msgstr "Okul"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.class_tree
+msgid "School Classes"
+msgstr "Okul Sınıfı"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_schools
+msgid "School Settings"
+msgstr "Okul Ayarları"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.term_tree
+msgid "School Terms"
+msgstr "Okul Dönemleri"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_school
+#: model:ir.model,name:payment_student.model_res_student_school
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__school_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__school_ids
+#: model:ir.ui.menu,name:payment_student.menu_school
+#: model_terms:ir.ui.view,arch_db:payment_student.school_form
+#: model_terms:ir.ui.view,arch_db:payment_student.school_search
+#: model_terms:ir.ui.view,arch_db:payment_student.school_tree
+msgid "Schools"
+msgstr "Okullar"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__access_token
+msgid "Security Token"
+msgstr "Güvenlik Tokeni"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_maximum
+msgid "Select Maximum"
+msgstr "Maksimumu Seç"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+msgid ""
+"Select maximum rate between <strong>Sibling Discount</strong> and "
+"<strong>Bursary Discount</strong>"
+msgstr ""
+"<strong>Kardeş İndirimi</strong> ve <strong>Burs İndirimi</strong> "
+"arasındaki maksimum oranı seç"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+msgid "Send Email"
+msgstr "Eposta Gönder"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Sent Email Before"
+msgstr "Önceden Eposta Gönderilmiş"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_search
+msgid "Sent Email Today"
+msgstr "Bugün Eposta Gönderilmiş"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#: model:ir.model,name:payment_student.model_res_student_setting
+#: model:ir.ui.menu,name:payment_student.menu_setting
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#, python-format
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. module: payment_student
+#: model:ir.actions.server,name:payment_student.parent_share
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Share Payment Link"
+msgstr "Ödeme Bağlantısını Paylaş"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__sibling_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__sibling_ids
+msgid "Sibling"
+msgstr "Kardeş"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__discount_sibling
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Sibling Discount"
+msgstr "Kardeş İndirimi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__is_discount_sibling
+msgid "Sibling Payment Discount"
+msgstr "Kardeş Ödeme İndirimi"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid "Siblings"
+msgstr "Kardeşler"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "Start date cannot be higher than end date"
+msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__student_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
+msgid "Student"
+msgstr "Öğrenci"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Student Name<br/>School | Class"
+msgstr "Öğrenci Adı<br/>Okul | Sınıf"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_count
+msgid "Student Payment Count"
+msgstr "Öğrenci Ödeme Adedi"
+
+#. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_payment
+msgid "Student Payment Items"
+msgstr "Öğrenci Ödeme İşlemleri"
+
+#. module: payment_student
+#: model:ir.module.category,description:payment_student.module_category_sps
+#: model:ir.module.category,name:payment_student.module_category_sps
+msgid "Student Payment System"
+msgstr "Öğrenci Tahsilat Sistemi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__transaction_ids
+msgid "Student Payments"
+msgstr "Öğrenci Ödemeleri"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_student
+#: model:ir.ui.menu,name:payment_student.menu_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_search
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Students"
+msgstr "Öğrenciler"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Subtotal"
+msgstr "Ara Toplam"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__term_id
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+msgid "Term"
+msgstr "Dönem"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_term
+#: model:ir.model,name:payment_student.model_res_student_term
+#: model:ir.ui.menu,name:payment_student.menu_term
+#: model_terms:ir.ui.view,arch_db:payment_student.term_form
+#: model_terms:ir.ui.view,arch_db:payment_student.term_search
+msgid "Terms"
+msgstr "Dönemler"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any payment item related to this partner"
+msgstr "Bu kayıt ile ilişkili bir ödeme satırı bulunamadı"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any payment settings related to this partner"
+msgstr "Bu kayıt ile ilişkili bir ödeme yapılandırması bulunamadı"
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There isn't any website related to this partner's company"
+msgstr "Bu kayda ait şirket ile ilişkili bir website bulunamadı"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#, python-format
+msgid "Total"
+msgstr "Genel Toplam"
+
+#. module: payment_student
+#: model:res.groups,name:payment_student.group_sps_user
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_user
+#: model:ir.ui.menu,name:payment_student.menu_user
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_tree
+msgid "Vat"
+msgstr "TCKN"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_websites
+msgid "Website Settings"
+msgstr "Website Ayarları"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_websites
+msgid "Websites"
+msgstr "Websiteler"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Welcome"
+msgstr "Hoşgeldiniz"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Whatsapp"
+msgstr "Whatsapp"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"You can get payment amounts and applied discounts, which is calculated "
+"dynamically, with choosing student(s) of yours in the following table."
+msgstr ""
+"Aşağıdaki listelenmiş olan velisi olduğunuz öğrenci veya öğrencilerin "
+"seçimlerini yaparak dinamik olarak hesaplanmış olan ödenecek tutar ve "
+"uygulanan indirimleri görebilirsiniz."
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid ""
+"Your transaction has been failed. Please try again. If this sitution occurs "
+"anyway, please contact with system administation."
+msgstr ""
+"Ödeme işlemi başarısız oldu. Lütfen tekrar deneyiniz. Tekrar bu durumun "
+"olması halinde, lütfen sistem yönetimi ile iletişime geçiniz."
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "Your transaction has been succeeded. Thank you."
+msgstr "Ödeme başarıyla tamamlandı. Teşekkür ederiz."
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Activities"
+#~ msgstr "Aktiviteler"
+
+#~ msgid "Activity Exception Decoration"
+#~ msgstr "Aktivite İstisna Görünümü"
+
+#~ msgid "Activity State"
+#~ msgstr "Aktivite Durumu"
+
+#~ msgid "Attachment Count"
+#~ msgstr "Ek Sayısı"
+
+#~ msgid "Childs"
+#~ msgstr "Çocuklar"
+
+#~ msgid "Configuration"
+#~ msgstr "Yapılandırma"
+
+#~ msgid "Discount End Date"
+#~ msgstr "İndirim Bitiş Tarihi"
+
+#~ msgid "Firstname"
+#~ msgstr "Adı"
+
+#~ msgid "Followers"
+#~ msgstr "Takipçiler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Takipçiler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Takipçiler (İş Ortakları)"
+
+#~ msgid "Icon"
+#~ msgstr "İkon"
+
+#~ msgid "Icon to indicate an exception activity."
+#~ msgstr "İstisna aktivitesini gösterir ikon."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "If checked, some messages have a delivery error."
+#~ msgstr "İşaretliyse, bazı mesajlar teslimat hatası içerir."
+
+#~ msgid "Image"
+#~ msgstr "Resim"
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi"
+
+#~ msgid "Lastname"
+#~ msgstr "Soyadı"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Ana Ek"
+
+#~ msgid "Message Delivery error"
+#~ msgstr "Mesaj Teslimat hatası"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Next Activity Deadline"
+#~ msgstr "Sonraki Aktivite Son Tarihi"
+
+#~ msgid "Next Activity Summary"
+#~ msgstr "Sonraki Aktivite Özeti"
+
+#~ msgid "Next Activity Type"
+#~ msgstr "Sonraki Aktivite Türü"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Adedi"
+
+#~ msgid "Number of errors"
+#~ msgstr "Hata Adedi"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "İşlem gerektiren mesaj adedi"
+
+#~ msgid "Number of messages with delivery error"
+#~ msgstr "Teslimat hatalı mesaj adedi"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj adedi"
+
+#~ msgid "Percentage"
+#~ msgstr "Yüzde"
+
+#~ msgid "Responsible User"
+#~ msgstr "Sorumlu Kullanıcı"
+
+#~ msgid "SMS Delivery error"
+#~ msgstr "SMS Teslimat hatası"
+
+#~ msgid "School Ref"
+#~ msgstr "Okul Kayıt No"
+
+#~ msgid ""
+#~ "Status based on activities\n"
+#~ "Overdue: Due date is already passed\n"
+#~ "Today: Activity date is today\n"
+#~ "Planned: Future activities."
+#~ msgstr ""
+#~ "Aktivitelere bağlı durum\n"
+#~ "Gecikmiş: Tarihi zaten geçmiş\n"
+#~ "Bugün: Aktivite tarihi bugün\n"
+#~ "Planlandı: Gelecek aktiviteler."
+
+#~ msgid "Type of the exception activity on record."
+#~ msgstr "Kayıttaki istisna aktivitesi türü."
+
+#~ msgid "Unread Messages"
+#~ msgstr "Okunmamış Mesajlar"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesajlar Sayacı"
+
+#~ msgid "Website communication history"
+#~ msgstr "Websayfa iletişim geçmişi"
+
+#~ msgid "Whatsapp Delivery error"
+#~ msgstr "Whatsapp Teslimat Hatası"

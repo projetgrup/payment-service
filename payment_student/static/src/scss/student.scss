@@ -1,0 +1,43 @@
+.payment-student {
+    table {
+        table-layout: auto !important;
+    }
+    .table-responsive {
+        width: initial;
+        td, th {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+    .table-responsive::-webkit-scrollbar {
+            width: 8px;
+            background-color: #eee;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #aaa;
+    }
+
+    .payment-list {
+        font-size: 0.8rem;
+    }
+
+    .payment-pivot {
+        width: 100% !important;
+        table {
+            font-size: 0.8rem;
+            min-width: 400px;
+            tfoot {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .payment-pages {
+        gap: 5%;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+}

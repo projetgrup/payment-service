@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acquirer_form_jetcheckout" model="ir.ui.view">
+    <field name="model">payment.acquirer</field>
+    <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//group[@name="acquirer"]' position="after">
+            <group attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
+                <field name="jetcheckout_api_key" string="API Key"/>
+                <field name="jetcheckout_secret_key" password="True" string="Secret Key"/>
+                <field name="jetcheckout_gateway" string="Gateway URL" placeholder="https://api.jetcheckout.com"/>
+            </group>
+        </xpath>
+        <xpath expr='//field[@name="display_as"]' position="after">
+            <label for="display_icon"/>
+            <div class="position-relative">
+                <field name="display_icon"/><field name="display_icon_preview" class="position-absolute" style="top:0;left:-30px;width:initial;"/>
+            </div>
+        </xpath>
+        <xpath expr='//page[@name="acquirer_credentials"]' position="after">
+            <page string="Journals" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
+                <field name="jetcheckout_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
+                    <tree editable="bottom">
+                        <field name="provider_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="pos_id" domain="[('provider_id','=',provider_id)]" context="{'default_provider_id': provider_id}" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="currency_id"/>
+                        <field name="journal_id" domain="[('type','=','bank'),('company_id','=',company_id)]"/>
+                        <field name="partner_id" domain="['|',('company_id','=',False),('company_id','=',company_id)]"/>
+                        <field name="company_id" optional="hide"/>
+                        <field name="website_id" optional="hide"/>
+                    </tree>
+                </field>
+            </page>
+            <page string="Banks" attrs="{'invisible': [('provider', '!=', 'transfer')]}">
+                <field name="bank_ids" nolabel="1" colspan="2">
+                    <tree editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="logo" widget="image" class="oe_avatar text-center"/>
+                        <field name="name"/>
+                        <field name="iban_number"/>
+                        <field name="account_number"/>
+                        <field name="branch"/>
+                        <field name="color" widget="color"/>
+                    </tree>
+                </field>
+            </page>
+            <page string="Terms &amp; Conditions" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
+                <field name="jetcheckout_terms" nolabel="1" colspan="2" widget="html" options="{'style-inline': true, 'codeview': true}"/>
+            </page>
+        </xpath>
+        <xpath expr='//field[@name="pre_msg"]' position="attributes">
+            <attribute name="widget">html</attribute>
+            <attribute name="options">{'style-inline': true, 'codeview': true}</attribute>
+        </xpath>
+        <xpath expr='//field[@name="pending_msg"]' position="attributes">
+            <attribute name="widget">html</attribute>
+            <attribute name="options">{'style-inline': true, 'codeview': true}</attribute>
+        </xpath>
+        <!--<xpath expr='//field[@name="journal_id"]' position="attributes">
+            <attribute name="attrs">{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['none', 'transfer', 'jetcheckout'])]}</attribute>
+        </xpath>-->
+    </field>
+    </record>
+
+    <record id="transaction_jetcheckout" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_form"/>
+    <field name="arch" type="xml">
+        <div name="button_box" position="inside">
+            <field name="is_jetcheckout" invisible="1"/>
+            <button type="object"
+                name="jetcheckout_payment"
+                class="oe_stat_button"
+                icon="fa-money"
+                groups="account.group_account_manager"
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_cancel"
+                class="oe_stat_button"
+                icon="fa-times"
+                groups="account.group_account_manager"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}"
+                confirm="Do you confirm cancelling transaction?">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Cancel</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_refund"
+                class="oe_stat_button"
+                icon="fa-undo"
+                groups="account.group_account_manager"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_query"
+                class="oe_stat_button"
+                icon="fa-search"
+                groups="account.group_account_manager"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+        </div>
+        <xpath expr='//group[@name="transaction_partner"]/..' position="after">
+            <group name="transaction_jetcheckout" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
+                <group>
+                    <field name="jetcheckout_card_name"/>
+                    <field name="jetcheckout_card_number"/>
+                    <field name="jetcheckout_card_type"/>
+                    <field name="jetcheckout_payment_amount"/>
+                    <field name="jetcheckout_installment_count"/>
+                    <!--<field name="jetcheckout_installment_amount"/>-->
+                    <label for="jetcheckout_commission_rate"/>
+                    <div class="o_row">
+                        %<field name="jetcheckout_commission_rate"/>
+                    </div>
+                    <field name="jetcheckout_commission_amount"/>
+                </group>
+                <group>
+                    <field name="jetcheckout_order_id"/>
+                    <field name="jetcheckout_transaction_id"/>
+                    <field name="jetcheckout_ip_address"/>
+                    <field name="jetcheckout_vpos_name"/>
+                </group>
+            </group>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="status_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.status.form</field>
+    <field name="model">payment.acquirer.jetcheckout.status</field>
+    <field name="arch" type="xml">
+        <form string="Status">
+            <div colspan="2">
+                <div class="font-weight-bold m-auto text-center d-flex align-items-center justify-content-center">
+                    <div class="float-left text-primary">
+                        <h1 attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','!=',False)]}"><i class="fa fa-check text-primary"/></h1>
+                        <h1 attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','=',False)]}"><i class="fa fa-refresh text-primary"/></h1>
+                        <h1 attrs="{'invisible': [('is_successful','!=',False)]}"><i class="fa fa-times text-primary"/></h1>
+                    </div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','!=',False)]}"><h2>Transaction is successful</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','=',False)]}"><h2>Transaction is cancelled</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': [('is_successful','!=',False)]}"><h2>Transaction is failed</h2></div>
+                </div>
+            </div>
+            <group>
+                <group>
+                    <field name="transaction_date"/>
+                    <field name="vpos_id"/>
+                    <field name="is_successful" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="is_completed" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="is_3d" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="is_cancelled" widget="boolean_toggle" style="pointer-events: none;"/>
+                </group>
+                <group>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="amount"/>
+                    <field name="commission"/>
+                    <label for="cost_rate"/>
+                    <div class="o_row">
+                        % <field name="cost_rate"/>
+                    </div>
+                    <field name="auth_code"/>
+                    <field name="service_ref_id" style="word-break: break-all;"/>
+                </group>
+            </group>
+            <footer>
+                <button special="cancel" class="btn-secondary" string="Close" icon="fa-minus"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="refund_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.refund.form</field>
+    <field name="model">payment.acquirer.jetcheckout.refund</field>
+    <field name="arch" type="xml">
+        <form string="Refund">
+            <group>
+                <group>
+                    <p class="h3 text-center">Please enter <strong>refund</strong> amount</p>
+                </group>
+                <group>
+                    <field name="total"/>
+                    <field name="amount" required="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="transaction_id" invisible="1"/>
+                </group>
+            </group>
+            <footer>
+                <button name="confirm" type="object" class="btn-primary" string="Refund" icon="fa-undo"/>
+                <button special="cancel" class="btn-secondary" string="Close" icon="fa-minus"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+    <record id="provider_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.provider.form</field>
+    <field name="model">payment.acquirer.jetcheckout.provider</field>
+    <field name="arch" type="xml">
+        <tree string="Provider" editable="top">
+            <field name="name"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="pos_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.pos.form</field>
+    <field name="model">payment.acquirer.jetcheckout.pos</field>
+    <field name="arch" type="xml">
+        <tree string="Pos" editable="top">
+            <field name="name"/>
+            <field name="provider_id"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="action_provider" model="ir.actions.act_window">
+    <field name="name">Providers</field>
+    <field name="res_model">payment.acquirer.jetcheckout.provider</field>
+    <field name='view_mode'>tree</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new pos provider
+        </p>
+    </field>
+    </record>
+
+    <record id="action_pos" model="ir.actions.act_window">
+    <field name="name">Virtual Pos</field>
+    <field name="res_model">payment.acquirer.jetcheckout.pos</field>
+    <field name='view_mode'>tree</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new virtual pos
+        </p>
+    </field>
+    </record>
+
+    <menuitem id="provider_menu" action="action_provider" parent="account.root_payment_menu" sequence="11"/>
+    <menuitem id="pos_menu" action="action_pos" parent="account.root_payment_menu" sequence="12"/>
+
+</odoo>

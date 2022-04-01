@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="res_config_edition">
+        <t t-jquery=".o_setting_right_pane" t-operation="replace">
+            <div class="o_setting_right_pane">
+                <div class="user-heading">
+                    <h3> <t t-esc="widget.odoo_text_replacement"/></h3>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

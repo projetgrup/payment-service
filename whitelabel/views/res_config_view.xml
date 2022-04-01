@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="40"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='general_settings']" position="before">
+                <div class="app_settings_block" data-string="Whitelabel" data-key="whitelabel">
+                    <h2>Whitelabel</h2>
+                    <div class="row mt16 o_settings_container" id="debranding_config">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">
+                                    New favicon image.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="whitelabel_favicon" string="Favicon Image" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="whitelabel_favicon" widget="image" required="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">
+                                    New title brand
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <label for="title_brand" string="Title Brand" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="title_brand" required="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16 o_settings_container" id="debranding_config">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">
+                                    Replace Powered by Text
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="odoo_text_replacement" string="Replace Powered by Text" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="odoo_text_replacement" required="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@id='appstore']" position="replace">
+                <div class="d-flex"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

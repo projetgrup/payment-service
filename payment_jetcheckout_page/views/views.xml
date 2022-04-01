@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="api_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.page.api.tree</field>
+    <field name="model">payment.acquirer.jetcheckout.page.api</field>
+    <field name="arch" type="xml">
+        <tree string="API Keys" decoration-muted="active == False">
+            <field name="partner_id"/>
+            <field name="api_key"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="api_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.page.api.form</field>
+    <field name="model">payment.acquirer.jetcheckout.page.api</field>
+    <field name="arch" type="xml">
+        <form string="API Keys">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="partner_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group attrs="{'invisible': [('api_key','!=',False)]}">
+                        <label for="api_key"/>
+                        <div class="o_row text-400 font-italic">
+                            API Key will be here
+                        </div>
+                        <label for="secret_key"/>
+                        <div class="o_row text-400 font-italic">
+                            Secret Key will be here
+                        </div>
+                    </group>
+                    <group attrs="{'invisible': [('api_key','=',False)]}">
+                        <field name="api_key" widget="CopyClipboardChar" options="{'string': 'Copy API Key'}"/>
+                        <field name="secret_key" widget="CopyClipboardChar" options="{'string': 'Copy Secret Key'}"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="transaction_jetcheckout" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment_jetcheckout.transaction_jetcheckout"/>
+    <field name="arch" type="xml">
+        <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">
+            <group name="transaction_jetcheckout_page" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
+                <group>
+                    <field name="jetcheckout_page_tx"/>
+                    <field name="jetcheckout_page_return_url"/>
+                    <field name="jetcheckout_page_hash"/>
+                </group>
+                <group>
+                    <field name="partner_authorized"/>
+                    <field name="jetcheckout_page_product_name"/>
+                </group>
+            </group>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="action_api" model="ir.actions.act_window">
+    <field name="name">API Keys</field>
+    <field name="res_model">payment.acquirer.jetcheckout.page.api</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <menuitem id="menu_api" action="action_api" parent="account.root_payment_menu" sequence="13"/>
+</odoo>

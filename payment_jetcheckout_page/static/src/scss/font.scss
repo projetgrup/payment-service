@@ -1,0 +1,31 @@
+// ------------------------------------------------------------------
+// Montserrat
+// ------------------------------------------------------------------
+$montserrat-font-path: '../font/';
+
+@mixin montserrat-font($type, $weight, $style) {
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('#{$montserrat-font-path}/Montserrat-#{$type}.ttf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+    }
+
+    @font-face {
+        font-family: 'Montserrat-#{$type}';
+        src: url('@{montserrat-font-path}/Montserrat-@{type}.ttf') format('truetype');
+    }
+}
+
+
+@mixin montserrat-font-pair($type, $weight) {
+    @include montserrat-font('#{$type}', $weight, normal);
+    @include montserrat-font('#{$type}Italic', $weight, italic);
+}
+
+@include montserrat-font-pair('Thin', 100);
+@include montserrat-font-pair('Light', 300);
+@include montserrat-font-pair('Regular', 400);
+@include montserrat-font-pair('Medium', 500);
+@include montserrat-font-pair('Bold', 700);
+@include montserrat-font-pair('Black', 900);
