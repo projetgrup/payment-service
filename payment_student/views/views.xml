@@ -66,6 +66,23 @@
     </field>
     </record>
 
+    <record id="payment_template_tree" model="ir.ui.view">
+    <field name="name">res.student.template.tree</field>
+    <field name="model">res.student.template</field>
+    <field name="arch" type="xml">
+        <tree string="Payment Templates" editable="top" sample="1">
+            <field name="school_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="term_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="payment_type_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="amount"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="currency_id" force_save="1" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
     <record id="payment_tree" model="ir.ui.view">
     <field name="name">res.student.payment.tree</field>
     <field name="model">res.student.payment</field>
@@ -98,7 +115,7 @@
     <field name="model">res.student.payment</field>
     <field name="arch" type="xml">
         <pivot string="Payment Items">
-            <field name="create_date" type="row"/>
+            <field name="paid_date" type="row"/>
             <field name="amount" type="measure"/>
         </pivot>
     </field>
@@ -767,6 +784,12 @@
     <field name="domain">['|',('active','=',False),('active','=',True)]</field>
     </record>
 
+    <record id="action_payment_template" model="ir.actions.act_window">
+    <field name="name">Payment Template</field>
+    <field name="res_model">res.student.payment.template</field>
+    <field name="view_mode">tree</field>
+    </record>
+
     <record id="action_payment" model="ir.actions.act_window">
     <field name="name">Payments</field>
     <field name="res_model">res.student.payment</field>
@@ -889,6 +912,7 @@
     <menuitem id="menu_term" action="action_term" parent="menu_schools" sequence="3"/>
     <menuitem id="menu_bursary" action="action_bursary" parent="menu_schools" sequence="4"/>
     <menuitem id="menu_payment_type" action="action_payment_type" parent="menu_schools" sequence="5"/>
+    <menuitem id="menu_payment_template" action="action_payment_template" parent="menu_schools" sequence="6"/>
 
     <menuitem id="menu_websites" action="action_websites" name="Website Settings" parent="menu_setting" sequence="3"/>
     <menuitem id="menu_acquirer" action="action_acquirer" name="Payment Settings" parent="menu_setting" sequence="4"/>

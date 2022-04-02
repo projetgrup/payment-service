@@ -177,6 +177,19 @@ class StudentPaymentType(models.Model):
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
 
+class StudentPaymentTemplate(models.Model):
+    _name = 'res.student.payment.template'
+    _description = 'Student Payment Template'
+    _order = 'id desc'
+
+    school_id = fields.Many2one('res.student.school', required=True, ondelete='restrict')
+    class_id = fields.Many2one('res.student.class', ondelete='restrict')
+    term_id = fields.Many2one('res.student.term', required=True, ondelete='restrict')
+    payment_type_id = fields.Many2one('res.student.payment.type', required=True, ondelete='restrict')
+    amount = fields.Monetary(required=True)
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
+    currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
+
 class StudentPayment(models.Model):
     _name = 'res.student.payment'
     _description = 'Student Payment Items'
