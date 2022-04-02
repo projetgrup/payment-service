@@ -225,16 +225,18 @@ class StudentPayment(models.Model):
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
 
-    @api.onchange('student_id')
+    @api.onchange('student_id','term_id','payment_type_id')
     def onchange_student_id(self):
-        template = self.env['res.student.payment.template'].search([
-            ('school_id','=',self.school_id.id),
-            '|', ('class_id','=',self.class_id.id), ('class_id','=',False),
-            ('term_id','=',self.term_id.id),
-            ('payment_type_id','=',self.payment_type_id.id),
-        ], limit=1)
-        if template:
-            self.amount = template.amount
+        if self.school_id and self.class_id and self.term_id and self.payment_type_id:
+            template = self.env['res.student.payment.template'].search([
+                ('school_id','=',self.school_id.id),
+                '|', ('class_id','=',self.class_id.id), ('class_id','=',False),
+                ('term_id','=',self.term_id.id),
+                ('payment_type_id','=',self.payment_type_id.id),
+                ('company_id','=',self.company_id.id),
+            ], limit=1)
+            if template:
+                self.amount = template.amount
 
     def is_sibling_paid(self):
         self.ensure_one()
