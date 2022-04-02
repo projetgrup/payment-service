@@ -497,6 +497,31 @@ class Partner(models.Model):
                 break
         return res
 
+    @api.model
+    def create(self, vals):
+        if 'school_id' in vals:
+            vals['is_sps'] = True
+        res = super().create(vals)
+        for student in res:
+            if student.is_sps and student.parent_id:
+                templates = self.env['res.student.payment.template'].search([
+                    ('school_id','=',student.school_id.id),
+                    '|', ('class_id','=',student.class_id.id), ('class_id','=',False),
+                    ('company_id','=',student.company_id.id),
+                ])
+                if templates:
+                    val = []
+                    for template in templates:
+                        val.append({
+                            'student_id': student.id,
+                            'term_id': template.term_id.id,
+                            'payment_type_id': template.payment_type_id.id,
+                            'amount': template.amount,
+                            'company_id': student.company_id.id,
+                        })
+                    self.env['res.student.payment'].sudo().create(val)
+        return res
+
     def _get_name(self):
         partner = self
         name = partner.name or ''
