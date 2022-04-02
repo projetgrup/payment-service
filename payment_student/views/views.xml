@@ -4,7 +4,7 @@
     <field name="name">res.student.school.tree</field>
     <field name="model">res.student.school</field>
     <field name="arch" type="xml">
-        <tree string="Schools" editable="top" decoration-muted="active == False">
+        <tree string="Schools" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -17,7 +17,7 @@
     <field name="name">res.student.term.tree</field>
     <field name="model">res.student.term</field>
     <field name="arch" type="xml">
-        <tree string="School Terms" editable="top" decoration-muted="active == False">
+        <tree string="School Terms" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -30,7 +30,7 @@
     <field name="name">res.student.bursary.tree</field>
     <field name="model">res.student.bursary</field>
     <field name="arch" type="xml">
-        <tree string="Bursaries" editable="top" decoration-muted="active == False">
+        <tree string="Bursaries" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="percentage"/>
@@ -44,7 +44,7 @@
     <field name="name">res.student.class.tree</field>
     <field name="model">res.student.class</field>
     <field name="arch" type="xml">
-        <tree string="School Classes" editable="top" decoration-muted="active == False">
+        <tree string="School Classes" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -57,7 +57,7 @@
     <field name="name">res.student.payment.type.tree</field>
     <field name="model">res.student.payment.type</field>
     <field name="arch" type="xml">
-        <tree string="Payment Types" editable="top" decoration-muted="active == False">
+        <tree string="Payment Types" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -70,7 +70,7 @@
     <field name="name">res.student.payment.tree</field>
     <field name="model">res.student.payment</field>
     <field name="arch" type="xml">
-        <tree string="Payment Items" editable="top">
+        <tree string="Payment Items" editable="top" sample="1">
             <header>
                 <button name="action_payment_table" type="object" string="Payment Table"/>
             </header>
@@ -107,7 +107,7 @@
     <field name="name">res.partner.student.tree</field>
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
-        <tree string="Students" decoration-muted="active == False">
+        <tree string="Students" decoration-muted="active == False" sample="1">
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="vat" string="Vat"/>
@@ -125,7 +125,7 @@
     <field name="name">res.partner.parent.tree</field>
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
-        <tree string="Parents" decoration-muted="active == False">
+        <tree string="Parents" decoration-muted="active == False" sample="1">
             <header>
                 <button name="action_send" type="object" string="Send Email"/>
             </header>
@@ -707,6 +707,21 @@
     <field name="model">res.partner</field>
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
+        <xpath expr='//div[@role="alert"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//div[@name="button_box"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="company_type"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]/..' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//notebook' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
         <xpath expr='//field[@name="function"]' position="before">
             <field name="is_sps" widget="boolean_toggle"/>
         </xpath>
