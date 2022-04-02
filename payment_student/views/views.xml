@@ -74,7 +74,6 @@
             <field name="school_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="class_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="term_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
-            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="payment_type_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="amount"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
