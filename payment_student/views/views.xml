@@ -258,7 +258,7 @@
                     <group>
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('company_id','=',company_id)]" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
