@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import werkzeug
+from datetime import datetime
+
 from odoo import http, _
 from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.addons.payment_jetcheckout.controllers.main import jetcheckoutController as jetController
-from odoo.exceptions import UserError
 
 class StudentPaymentController(jetController):
 
@@ -26,6 +27,7 @@ class StudentPaymentController(jetController):
                 last_amount = list(filter(lambda x: x['id'] == sid, amounts))[0]['amount']
                 rate = last_amount / first_amount if first_amount != 0 else 1
                 payment.paid_amount = payment.amount * rate
+                payment.paid_date = datetime.now()
             res.update({
                 'student_payment_ids': [(6, 0, ids)],
             })
