@@ -476,7 +476,7 @@ class Partner(models.Model):
             else:
                 partner.school_ids = [(6, 0, partner.mapped('child_ids.school_id').ids)]
 
-    is_sps = fields.Boolean()
+    is_sps = fields.Boolean(string='Payment System Member')
     school_id = fields.Many2one('res.student.school', ondelete='restrict')
     class_id = fields.Many2one('res.student.class', ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', ondelete='restrict')
@@ -496,6 +496,20 @@ class Partner(models.Model):
                 res['lang'] = 'tr_TR'
                 break
         return res
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if self._context.get('is_parent'):
+            if view_type == 'form':
+                view_id = self.env.ref('payment_student.parent_form').id
+            else:
+                view_id = self.env.ref('payment_student.parent_tree').id
+        elif self._context.get('is_student'):
+            if view_type == 'form':
+                view_id = self.env.ref('payment_student.student_form').id
+            else:
+                view_id = self.env.ref('payment_student.student_tree').id
+        return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.model
     def create(self, vals):
