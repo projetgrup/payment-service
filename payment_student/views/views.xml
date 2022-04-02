@@ -275,7 +275,7 @@
                     <group>
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True, 'default_is_sps': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('parent_id','=',False),('company_id','=',company_id)]"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'default_is_sps': True, 'is_parent': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('parent_id','=',False),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
