@@ -784,7 +784,7 @@
     </record>
 
     <record id="action_payment_template" model="ir.actions.act_window">
-    <field name="name">Payment Template</field>
+    <field name="name">Payment Templates</field>
     <field name="res_model">res.student.payment.template</field>
     <field name="view_mode">tree</field>
     </record>
