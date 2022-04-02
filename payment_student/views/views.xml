@@ -275,7 +275,7 @@
                     <group>
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('company_id','=',company_id)]"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'default_is_sps': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('parent_id','=',False),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
@@ -743,7 +743,7 @@
             <attribute name="invisible">1</attribute>
         </xpath>
         <xpath expr='//field[@name="function"]' position="before">
-            <field name="is_sps" widget="boolean_toggle" groups="group_sps_manager"/>
+            <field name="is_sps" widget="boolean_toggle" groups="payment_student.group_sps_manager"/>
         </xpath>
     </field>
     </record>
