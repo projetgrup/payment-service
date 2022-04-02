@@ -67,8 +67,8 @@
     </record>
 
     <record id="payment_template_tree" model="ir.ui.view">
-    <field name="name">res.student.template.tree</field>
-    <field name="model">res.student.template</field>
+    <field name="name">res.student.payment.template.tree</field>
+    <field name="model">res.student.payment.template</field>
     <field name="arch" type="xml">
         <tree string="Payment Templates" editable="top" sample="1">
             <field name="school_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
