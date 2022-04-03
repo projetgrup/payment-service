@@ -35,13 +35,13 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
             }
         });
 
-        this.menuService = useService("menu");
-        this.actionService = useService("action");
+        //this.menuService = useService("menu");
+        //this.actionService = useService("action");
         this.title = useService("title");
-        this.router = useService("router");
-        this.user = useService("user");
-        useService("legacy_service_provider");
-        useOwnDebugContext({ categories: ["default"] });
+        //this.router = useService("router");
+        //this.user = useService("user");
+        //useService("legacy_service_provider");
+        //useOwnDebugContext({ categories: ["default"] });
         // if (this.env.debug) {
         //     registry.category("systray").add(
         //         "web.debug_mode_menu",
@@ -51,9 +51,7 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
         //         { sequence: 100 }
         //     );
         // }
-        // this.localization = localization;
-        // useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
-        // useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
+        // (this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
         //     if (mode !== "new") {
         //         this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
         //     }
@@ -65,17 +63,18 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
         //     () => []
         // );
         // useExternalListener(window, "click", this.onGlobalClick, { capture: true });
-        // const self = this;
-        // rpc.query({
-        //     model: "res.config.settings",
-        //     method: 'get_debranding_settings',
-        // }, {
-        //     shadow: true
-        // }).then(function(debranding_settings) {
-        //     odoo.debranding_settings = debranding_settings;
-        //     self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
-        // });
-        // useTooltip();
+        const self = this;
+
+        rpc.query({
+            model: "res.config.settings",
+            method: 'get_debranding_settings',
+        }, {
+            shadow: true
+        }).then(function(debranding_settings) {
+            odoo.debranding_settings = debranding_settings;
+            self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
+        });
+        useTooltip();
 
     },
     _loadDefaultApp() {
