@@ -22,7 +22,7 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_cancel(self):
         super().jetcheckout_cancel()
-        self.mapped('student_payment_ids').write({'paid': False, 'paid_amount': 0})
+        self.mapped('student_payment_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0})
 
 class StudentPaymentTable(models.TransientModel):
     _name = 'res.student.payment.table'
@@ -177,6 +177,19 @@ class StudentPaymentType(models.Model):
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
 
+class StudentPaymentTemplate(models.Model):
+    _name = 'res.student.payment.template'
+    _description = 'Student Payment Template'
+    _order = 'id desc'
+
+    school_id = fields.Many2one('res.student.school', required=True, ondelete='restrict')
+    class_id = fields.Many2one('res.student.class', ondelete='restrict')
+    term_id = fields.Many2one('res.student.term', required=True, ondelete='restrict')
+    payment_type_id = fields.Many2one('res.student.payment.type', required=True, ondelete='restrict')
+    amount = fields.Monetary(required=True)
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
+    currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
+
 class StudentPayment(models.Model):
     _name = 'res.student.payment'
     _description = 'Student Payment Items'
@@ -208,8 +221,22 @@ class StudentPayment(models.Model):
     paid = fields.Boolean(readonly=True)
     paid_amount = fields.Monetary(readonly=True)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_payment_rel', 'payment_id', 'transaction_id', string='Student Payments')
+    paid_date = fields.Datetime(readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
+
+    @api.onchange('student_id','term_id','payment_type_id')
+    def onchange_student_id(self):
+        if self.school_id and self.class_id and self.term_id and self.payment_type_id:
+            template = self.env['res.student.payment.template'].search([
+                ('school_id','=',self.school_id.id),
+                '|', ('class_id','=',self.class_id.id), ('class_id','=',False),
+                ('term_id','=',self.term_id.id),
+                ('payment_type_id','=',self.payment_type_id.id),
+                ('company_id','=',self.company_id.id),
+            ], limit=1)
+            if template:
+                self.amount = template.amount
 
     def is_sibling_paid(self):
         self.ensure_one()
@@ -449,7 +476,7 @@ class Partner(models.Model):
             else:
                 partner.school_ids = [(6, 0, partner.mapped('child_ids.school_id').ids)]
 
-    is_sps = fields.Boolean()
+    is_sps = fields.Boolean(string='Payment System Member')
     school_id = fields.Many2one('res.student.school', ondelete='restrict')
     class_id = fields.Many2one('res.student.class', ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', ondelete='restrict')
@@ -468,6 +495,45 @@ class Partner(models.Model):
             if lang[0] == 'tr_TR':
                 res['lang'] = 'tr_TR'
                 break
+        return res
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if self._context.get('is_parent'):
+            if view_type == 'form':
+                view_id = self.env.ref('payment_student.parent_form').id
+            else:
+                view_id = self.env.ref('payment_student.parent_tree').id
+        elif self._context.get('is_student'):
+            if view_type == 'form':
+                view_id = self.env.ref('payment_student.student_form').id
+            else:
+                view_id = self.env.ref('payment_student.student_tree').id
+        return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+    @api.model
+    def create(self, vals):
+        if 'school_id' in vals:
+            vals['is_sps'] = True
+        res = super().create(vals)
+        for student in res:
+            if student.is_sps and student.parent_id:
+                templates = self.env['res.student.payment.template'].search([
+                    ('school_id','=',student.school_id.id),
+                    '|', ('class_id','=',student.class_id.id), ('class_id','=',False),
+                    ('company_id','=',student.company_id.id),
+                ])
+                if templates:
+                    val = []
+                    for template in templates:
+                        val.append({
+                            'student_id': student.id,
+                            'term_id': template.term_id.id,
+                            'payment_type_id': template.payment_type_id.id,
+                            'amount': template.amount,
+                            'company_id': student.company_id.id,
+                        })
+                    self.env['res.student.payment'].sudo().create(val)
         return res
 
     def _get_name(self):

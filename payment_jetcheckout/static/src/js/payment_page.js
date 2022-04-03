@@ -27,6 +27,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$ccicon = document.getElementById('ccicon');
             self.$ccsingle = document.getElementById('ccsingle');
             self.$ccname = document.getElementById('ccname');
+            self.$ccfamily = document.getElementById('ccfamily');
             self.$amount = document.getElementById('amount');
             self.$amount_installment = document.getElementById('amount_installment');
             self.$currency = document.getElementById('currency');
@@ -385,16 +386,17 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
 
     getInstallment: function () {
         var self = this;
-        if (self.cardnumber.value.length == 0) {
+        if (this.cardnumber.value.length == 0) {
             this.$svgnumber.innerHTML = '0123 4567 8910 1112';
             this.$empty.classList.remove('d-none');
             this.$row.classList.add('d-none');
             this.$row.innerHTML = '';
             this.$cclogo.innerHTML = '';
             this.$cclogo.classList.remove('show');
+            this.$ccfamily.value = '';
         } else {
-            this.$svgnumber.innerHTML = self.cardnumber.value;
-            if (self.cardnumber.typedValue.length >= 6){
+            this.$svgnumber.innerHTML = this.cardnumber.value;
+            if (this.cardnumber.typedValue.length >= 6){
                 rpc.query({
                     route: '/payment/card/installment',
                     params: {
@@ -419,8 +421,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         self.$empty.classList.add('d-none');
                         self.$row.classList.remove('d-none');
                         self.$row.innerHTML = result.render;
-                        self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
-                        self.$cclogo.classList.add('show');
+                        if (result.card) {
+                            self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
+                            self.$cclogo.classList.add('show');
+                            self.$ccfamily.value = result.card;
+                        }
                     }
                 }).guardedCatch(function (error) {
                     self.displayNotification({
@@ -437,6 +442,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 this.$row.innerHTML = '';
                 this.$cclogo.innerHTML = '';
                 this.$cclogo.classList.remove('show');
+                this.$ccfamily.value = '';
             }
         }
     },
@@ -536,6 +542,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             expire_year: this.expirationdate.typedValue.substring(3),
             cvc: this.securitycode.typedValue,
             card_type: this.$ccname.value,
+            card_family: this.$ccfamily.value,
             success_url: this.$success_url && this.$success_url.value || false,
             fail_url: this.$fail_url && this.$fail_url.value || false,
             partner_id: this.$partner_id && this.$partner_id.value || 0,

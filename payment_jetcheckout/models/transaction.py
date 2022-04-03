@@ -24,6 +24,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True)
     jetcheckout_card_type = fields.Char('Card Type', readonly=True)
+    jetcheckout_card_family = fields.Char('Card Family', readonly=True)
     jetcheckout_vpos_name = fields.Char('Virtual Pos', readonly=True)
     jetcheckout_order_id = fields.Char('Order', readonly=True)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True)

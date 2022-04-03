@@ -4,7 +4,7 @@
     <field name="name">res.student.school.tree</field>
     <field name="model">res.student.school</field>
     <field name="arch" type="xml">
-        <tree string="Schools" editable="top" decoration-muted="active == False">
+        <tree string="Schools" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -17,7 +17,7 @@
     <field name="name">res.student.term.tree</field>
     <field name="model">res.student.term</field>
     <field name="arch" type="xml">
-        <tree string="School Terms" editable="top" decoration-muted="active == False">
+        <tree string="School Terms" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -30,7 +30,7 @@
     <field name="name">res.student.bursary.tree</field>
     <field name="model">res.student.bursary</field>
     <field name="arch" type="xml">
-        <tree string="Bursaries" editable="top" decoration-muted="active == False">
+        <tree string="Bursaries" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="percentage"/>
@@ -44,7 +44,7 @@
     <field name="name">res.student.class.tree</field>
     <field name="model">res.student.class</field>
     <field name="arch" type="xml">
-        <tree string="School Classes" editable="top" decoration-muted="active == False">
+        <tree string="School Classes" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -57,7 +57,7 @@
     <field name="name">res.student.payment.type.tree</field>
     <field name="model">res.student.payment.type</field>
     <field name="arch" type="xml">
-        <tree string="Payment Types" editable="top" decoration-muted="active == False">
+        <tree string="Payment Types" editable="top" decoration-muted="active == False" sample="1">
             <field name="name"/>
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -66,11 +66,27 @@
     </field>
     </record>
 
+    <record id="payment_template_tree" model="ir.ui.view">
+    <field name="name">res.student.payment.template.tree</field>
+    <field name="model">res.student.payment.template</field>
+    <field name="arch" type="xml">
+        <tree string="Payment Templates" editable="top" sample="1">
+            <field name="school_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="term_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="payment_type_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="amount"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="currency_id" force_save="1" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
     <record id="payment_tree" model="ir.ui.view">
     <field name="name">res.student.payment.tree</field>
     <field name="model">res.student.payment</field>
     <field name="arch" type="xml">
-        <tree string="Payment Items" editable="top">
+        <tree string="Payment Items" editable="top" sample="1">
             <header>
                 <button name="action_payment_table" type="object" string="Payment Table"/>
             </header>
@@ -85,8 +101,9 @@
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
             <field name="paid"/>
             <field name="paid_amount" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
-            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" optional="hide"/>
             <field name="currency_id" force_save="1" invisible="1"/>
         </tree>
     </field>
@@ -97,7 +114,7 @@
     <field name="model">res.student.payment</field>
     <field name="arch" type="xml">
         <pivot string="Payment Items">
-            <field name="create_date" type="row"/>
+            <field name="paid_date" type="row"/>
             <field name="amount" type="measure"/>
         </pivot>
     </field>
@@ -107,7 +124,7 @@
     <field name="name">res.partner.student.tree</field>
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
-        <tree string="Students" decoration-muted="active == False">
+        <tree string="Students" decoration-muted="active == False" sample="1">
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="vat" string="Vat"/>
@@ -125,7 +142,7 @@
     <field name="name">res.partner.parent.tree</field>
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
-        <tree string="Parents" decoration-muted="active == False">
+        <tree string="Parents" decoration-muted="active == False" sample="1">
             <header>
                 <button name="action_send" type="object" string="Send Email"/>
             </header>
@@ -258,7 +275,7 @@
                     <group>
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('company_id','=',company_id)]" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'default_is_sps': True, 'is_parent': True}" attrs="{'required': [('is_sps','=',True)]}" domain="[('is_sps','=',True),('parent_id','=',False),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
@@ -707,8 +724,26 @@
     <field name="model">res.partner</field>
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
+        <xpath expr='//div[@role="alert"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//div[@name="button_box"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="company_type"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]/..' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//notebook' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="function"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
         <xpath expr='//field[@name="function"]' position="before">
-            <field name="is_sps" widget="boolean_toggle"/>
+            <field name="is_sps" widget="boolean_toggle" groups="payment_student.group_sps_manager"/>
         </xpath>
     </field>
     </record>
@@ -746,6 +781,12 @@
     <field name="res_model">res.student.payment.type</field>
     <field name="view_mode">tree</field>
     <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_payment_template" model="ir.actions.act_window">
+    <field name="name">Payment Templates</field>
+    <field name="res_model">res.student.payment.template</field>
+    <field name="view_mode">tree</field>
     </record>
 
     <record id="action_payment" model="ir.actions.act_window">
@@ -855,7 +896,9 @@
     <menuitem id="menu_main" name="SPS" web_icon="hr,static/description/icon.png" sequence="24"/>
     <menuitem id="menu_student" action="action_student" parent="menu_main" sequence="0"/>
     <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
-    <menuitem id="menu_payment" action="action_payment" parent="menu_main" sequence="2"/>
+    <menuitem id="menu_payments" name="Payments" parent="menu_main" sequence="2"/>
+    <menuitem id="menu_payment" action="action_payment" parent="menu_payments" sequence="1"/>
+    <menuitem id="menu_transaction" action="action_transaction" parent="menu_payments" sequence="2"/>
 
     <menuitem id="menu_setting" name="Settings" web_icon="base,static/description/settings.png" sequence="25" groups="group_sps_manager"/>
     <menuitem id="menu_companies" name="Company Settings" parent="menu_setting" sequence="1"/>
@@ -868,12 +911,10 @@
     <menuitem id="menu_term" action="action_term" parent="menu_schools" sequence="3"/>
     <menuitem id="menu_bursary" action="action_bursary" parent="menu_schools" sequence="4"/>
     <menuitem id="menu_payment_type" action="action_payment_type" parent="menu_schools" sequence="5"/>
+    <menuitem id="menu_payment_template" action="action_payment_template" parent="menu_schools" sequence="6"/>
 
     <menuitem id="menu_websites" action="action_websites" name="Website Settings" parent="menu_setting" sequence="3"/>
-
-    <menuitem id="menu_payments" name="Payment Settings" parent="menu_setting" sequence="4"/>
-    <menuitem id="menu_acquirer" action="action_acquirer" parent="menu_payments" sequence="1"/>
-    <menuitem id="menu_transaction" action="action_transaction" parent="menu_payments" sequence="2"/>
+    <menuitem id="menu_acquirer" action="action_acquirer" name="Payment Settings" parent="menu_setting" sequence="4"/>
 
     <menuitem id="menu_emails" name="Email Settings" parent="menu_setting" sequence="5"/>
     <menuitem id="menu_mail_template" action="action_mail_template" parent="menu_emails" sequence="1"/>

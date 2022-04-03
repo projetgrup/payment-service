@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-15 11:49+0000\n"
-"PO-Revision-Date: 2022-03-15 11:49+0000\n"
+"POT-Creation-Date: 2022-04-02 18:57+0000\n"
+"PO-Revision-Date: 2022-04-02 18:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid ""
 "                    <t t-if=\"line\"><t t-out=\"line['month']\" contenteditable=\"false\"/> dönemi içerisinde kredi kartınız ile online olarak <t t-out=\"line['installment']\" contenteditable=\"false\"/> taksitle yada tek çekimde %<t t-out=\"line['percentage']\" contenteditable=\"false\"/> indirim ile ödeyebilirsiniz.</t>\n"
 "                    <t t-else=\"\">kredi kartınız ile online olarak ödeyebilirsiniz.</t>\n"
 "                    <br/>\n"
-"                    İncelemek ve Online Ödeme için <a t-att-href=\"object._get_payment_url()\">tıklayınız.</a>\n"
+"                    İncelemek ve Online Ödeme için <a t-att-href=\"object._get_payment_url()\" style=\"color:#3079ed;\">tıklayınız.</a>\n"
 "                    <br/><br/>\n"
 "                    Sağlıklı bir yıl dileriz.\n"
 "                    <br/><br/>\n"
@@ -103,6 +103,7 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__amount
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__amount
 msgid "Amount"
 msgstr ""
 
@@ -147,6 +148,7 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__class_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__class_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__class_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_search
@@ -184,6 +186,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__company_id
@@ -225,6 +228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_uid
@@ -238,6 +242,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_date
@@ -247,6 +252,7 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__currency_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__currency_id
 msgid "Currency"
 msgstr ""
 
@@ -290,6 +296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__display_name
@@ -336,6 +343,11 @@ msgid "End Date"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.setting_form
+msgid "Footer"
+msgstr ""
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_search
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_search
@@ -363,6 +375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__id
@@ -407,6 +420,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting____last_update
@@ -420,6 +434,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_uid
@@ -433,6 +448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_date
@@ -465,6 +481,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_student/static/src/js/student.js:0
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__membership_agreement
+#: model:ir.model.fields,field_description:payment_student.field_res_student_setting__website_footer
 #: model_terms:ir.ui.view,arch_db:payment_student.setting_form
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
 #, python-format
@@ -516,6 +533,11 @@ msgid "Paid Amount"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid_date
+msgid "Paid Date"
+msgstr ""
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_form
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_form
@@ -545,7 +567,6 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_acquirer
-#: model:ir.ui.menu,name:payment_student.menu_acquirer
 msgid "Payment Acquirers"
 msgstr ""
 
@@ -565,13 +586,14 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_ids
 #: model:ir.model.fields,field_description:payment_student.field_res_users__payment_ids
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_pivot
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
 msgid "Payment Items"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_payments
+#: model:ir.ui.menu,name:payment_student.menu_acquirer
 msgid "Payment Settings"
 msgstr ""
 
@@ -582,6 +604,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_table_form
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
 msgid "Payment Table"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_template
+#: model:ir.ui.menu,name:payment_student.menu_payment_template
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_template_tree
+msgid "Payment Templates"
 msgstr ""
 
 #. module: payment_student
@@ -597,6 +626,7 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__payment_type_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__payment_type_id
 msgid "Payment Type"
 msgstr ""
 
@@ -634,6 +664,7 @@ msgstr ""
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_payment
 #: model:ir.ui.menu,name:payment_student.menu_payment
+#: model:ir.ui.menu,name:payment_student.menu_payments
 msgid "Payments"
 msgstr ""
 
@@ -681,6 +712,7 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_search
@@ -830,6 +862,11 @@ msgid "Student Payment System"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_payment_template
+msgid "Student Payment Template"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_ids
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__transaction_ids
 msgid "Student Payments"
@@ -856,6 +893,7 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__term_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__term_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 msgid "Term"
 msgstr ""
@@ -867,6 +905,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_student.term_form
 #: model_terms:ir.ui.view,arch_db:payment_student.term_search
 msgid "Terms"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There is already a parent with the same email - %s"
+msgstr ""
+
+#. module: payment_student
+#: code:addons/payment_student/models/student.py:0
+#, python-format
+msgid "There is already a student with the same Vat Number - %s"
 msgstr ""
 
 #. module: payment_student
