@@ -69,7 +69,7 @@
                     </t>
                     <t
                         t-if="state.mobileSearchMode == 'full'"
-                        t-call="web_responsive.LegacyMobileSearchView"
+                        t-call="whitelabel.LegacyMobileSearchView"
                     />
                     <t t-if="state.mobileSearchMode == ''">
                         <button
@@ -94,7 +94,7 @@
             >ui.size == ui.SIZES.MD ? 'o_search_options_hide_labels' : ''</attribute>
         </xpath>
     </t>
-    <t t-name="web_responsive.LegacyMobileSearchView" owl="1">
+    <t t-name="whitelabel.LegacyMobileSearchView" owl="1">
         <div class="o_cp_mobile_search">
             <div class="o_mobile_search_header">
                 <span
@@ -219,7 +219,7 @@
             >ui.size == ui.SIZES.MD ? 'o_search_options_hide_labels' : ''</attribute>
         </xpath>
     </t>
-    <t t-name="web_responsive.SearchBar" owl="1">
+    <t t-name="whitelabel.SearchBar" owl="1">
         <div>
             <t t-if="!env.isSmall" t-call="web.SearchBar" />
             <t t-if="env.isSmall">
@@ -245,7 +245,7 @@
                 </t>
                 <t
                     t-if="props.mobileSearchMode == 'full'"
-                    t-call="web_responsive.MobileSearchView"
+                    t-call="whitelabel.MobileSearchView"
                 />
                 <t t-if="props.mobileSearchMode == ''">
                     <div
@@ -260,7 +260,7 @@
             </t>
         </div>
     </t>
-    <t t-name="web_responsive.MobileSearchView" owl="1">
+    <t t-name="whitelabel.MobileSearchView" owl="1">
         <div class="o_searchview">
             <div class="o_cp_mobile_search">
                 <div class="o_mobile_search_header">

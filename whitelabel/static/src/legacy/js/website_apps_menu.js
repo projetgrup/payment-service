@@ -1,7 +1,7 @@
 /* Copyright 2021 Sergey Shebanin
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
-odoo.define("web_responsive.website_apps_menu", function (require) {
+odoo.define("whitelabel.website_apps_menu", function (require) {
     "use strict";
     /*
      * We can't require anything from website here because `web_responsive` doesn't depend on `website`.

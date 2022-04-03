@@ -1,7 +1,7 @@
 ﻿/* Copyright 2019 Odoo S.A.
  * Copyright 2021 ITerra - Sergey Shebanin
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
-odoo.define("web_responsive.KanbanRendererMobile", function (require) {
+odoo.define("whitelabel.KanbanRendererMobile", function (require) {
     "use strict";
 
     /**
