@@ -55,6 +55,7 @@
             "/whitelabel/static/src/components/attachment_viewer/attachment_viewer.esm.js",
             "/whitelabel/static/src/components/hotkey/hotkey.scss",
 
+            '/whitelabel/static/src/js/web_client.js',
             '/whitelabel/static/src/js/dialog.js',
             '/whitelabel/static/src/js/my_widget.js',
             '/whitelabel/static/src/js/user_menu.js',
