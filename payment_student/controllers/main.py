@@ -120,6 +120,6 @@ class StudentPaymentController(jetController):
             return setting.contact_page
         return ''
 
-    @http.route(['/pay'], type='http', auth='user', website=True)
+    @http.route(['/pay'], type='http', auth='user')
     def jetcheckout_payment_page(self, **kwargs):
         return werkzeug.utils.redirect('/404')
