@@ -264,6 +264,10 @@ input:checked + .slider:before {
             border-color: theme-color('primary') !important;
         }
 
+        > input::placeholder {
+            color: #ccc;
+        }
+
         > label {
             font-weight: normal;
             position: absolute;
