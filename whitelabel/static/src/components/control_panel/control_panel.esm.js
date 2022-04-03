@@ -5,7 +5,7 @@
 import LegacyControlPanel from "web.ControlPanel";
 import {ControlPanel} from "@web/search/control_panel/control_panel";
 import {SearchBar} from "@web/search/search_bar/search_bar";
-import {deviceContext} from "@web_responsive/components/ui_context.esm";
+import {deviceContext} from "@whitelabel/components/ui_context.esm";
 import {patch} from "web.utils";
 
 const {useState, useContext} = owl.hooks;
@@ -14,7 +14,7 @@ const {useState, useContext} = owl.hooks;
 // We extend them two mostly the same way.
 
 // Patch legacy control panel to add states for mobile quick search
-patch(LegacyControlPanel.prototype, "web_responsive.LegacyControlPanelMobile", {
+patch(LegacyControlPanel.prototype, "whitelabel.LegacyControlPanelMobile", {
     setup() {
         this._super();
         this.state = useState({
@@ -28,7 +28,7 @@ patch(LegacyControlPanel.prototype, "web_responsive.LegacyControlPanelMobile", {
 });
 
 // Patch control panel to add states for mobile quick search
-patch(ControlPanel.prototype, "web_responsive.ControlPanelMobile", {
+patch(ControlPanel.prototype, "whitelabel.ControlPanelMobile", {
     setup() {
         this._super();
         this.state = useState({
@@ -40,6 +40,6 @@ patch(ControlPanel.prototype, "web_responsive.ControlPanelMobile", {
         this.state.mobileSearchMode = ev.detail;
     },
 });
-patch(SearchBar, "web_responsive.SearchBarMobile", {
-    template: "web_responsive.SearchBar",
+patch(SearchBar, "whitelabel.SearchBarMobile", {
+    template: "whitelabel.SearchBar",
 });

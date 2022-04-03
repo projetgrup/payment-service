@@ -17,7 +17,7 @@ const {Component} = owl;
 const {useState, useRef} = owl.hooks;
 
 // Patch WebClient to show AppsMenu instead of default app
-patch(WebClient.prototype, "web_responsive.DefaultAppsMenu", {
+patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
     setup() {
         this._super();
         useBus(Dropdown.bus, "state-changed", (payload) => {
@@ -228,5 +228,5 @@ export class AppsMenuSearchBar extends Component {
         }
     }
 }
-AppsMenuSearchBar.template = "web_responsive.AppsMenuSearchResults";
+AppsMenuSearchBar.template = "whitelabel.AppsMenuSearchResults";
 Object.assign(NavBar.components, {AppsMenu, AppsMenuSearchBar});

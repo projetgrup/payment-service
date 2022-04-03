@@ -3,13 +3,13 @@
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
 import SearchPanel from "@web/legacy/js/views/search_panel";
-import {deviceContext} from "@web_responsive/components/ui_context.esm";
+import {deviceContext} from "@whitelabel/components/ui_context.esm";
 import {patch} from "web.utils";
 
 const {useContext} = owl.hooks;
 
 // Patch search panel to add functionality for mobile view
-patch(SearchPanel.prototype, "web_responsive.SearchPanelMobile", {
+patch(SearchPanel.prototype, "whitelabel.SearchPanelMobile", {
     setup() {
         this._super();
         this.state.mobileSearch = false;

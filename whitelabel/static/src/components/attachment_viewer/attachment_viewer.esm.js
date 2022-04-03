@@ -8,7 +8,7 @@ import {patch} from "web.utils";
 const {useState} = owl.hooks;
 
 // Patch attachment viewer to add min/max buttons capability
-patch(AttachmentViewer.prototype, "web_responsive.AttachmentViewer", {
+patch(AttachmentViewer.prototype, "whitelabel.AttachmentViewer", {
     setup() {
         this._super();
         this.state = useState({

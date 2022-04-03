@@ -39,7 +39,7 @@
         </xpath>
     </t>
     <!-- Search bar -->
-    <t t-name="web_responsive.AppsMenuSearchResults" owl="1">
+    <t t-name="whitelabel.AppsMenuSearchResults" owl="1">
         <div
             class="search-container"
             t-att-class="state.results.length ? 'has-results' : ''"

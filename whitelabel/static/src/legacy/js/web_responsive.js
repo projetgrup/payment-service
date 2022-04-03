@@ -1,7 +1,7 @@
 /* Copyright 2018 Tecnativa - Jairo Llopis
  * Copyright 2021 ITerra - Sergey Shebanin
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
-odoo.define("web_responsive", function (require) {
+odoo.define("whitelabel", function (require) {
     "use strict";
 
     const config = require("web.config");
@@ -106,7 +106,7 @@ odoo.define("web_responsive", function (require) {
 
             // $buttons must be appended by JS because all events are bound
             const $dropdown = $(
-                core.qweb.render("web_responsive.MenuStatusbarButtons")
+                core.qweb.render("whitelabel.MenuStatusbarButtons")
             );
             $buttons.addClass("dropdown-menu").appendTo($dropdown);
             return $dropdown;
