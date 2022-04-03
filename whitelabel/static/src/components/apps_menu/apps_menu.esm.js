@@ -5,16 +5,24 @@
 
 import {Dropdown} from "@web/core/dropdown/dropdown";
 import {NavBar} from "@web/webclient/navbar/navbar";
-import {useAutofocus, useBus, useService} from "@web/core/utils/hooks";
+import {useAutofocus, useBus, useEffect, useService} from "@web/core/utils/hooks";
 import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
 import {scrollTo} from "@web/core/utils/scrolling";
 import {debounce} from "@web/core/utils/timing";
 import {fuzzyLookup} from "@web/core/utils/search";
 import {WebClient} from "@web/webclient/webclient";
+import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { registry } from "@web/core/registry";
+import { DebugMenu } from "@web/core/debug/debug_menu";
+import { localization } from "@web/core/l10n/localization";
+import { useTooltip } from "@web/core/tooltip/tooltip_hook";
+
+
 import {patch} from "web.utils";
 
-const {Component} = owl;
-const {useState, useRef} = owl.hooks;
+const {Component, hooks} = owl;
+const {useState, useRef, useExternalListener} = owl.hooks;
+const rpc = require('web.rpc');
 
 // Patch WebClient to show AppsMenu instead of default app
 patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
@@ -26,6 +34,49 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
                 this.el.classList.toggle("o_first_app", false);
             }
         });
+
+        this.menuService = useService("menu");
+        this.actionService = useService("action");
+        this.title = useService("title");
+        this.router = useService("router");
+        this.user = useService("user");
+        useService("legacy_service_provider");
+        useOwnDebugContext({ categories: ["default"] });
+        if (this.env.debug) {
+            registry.category("systray").add(
+                "web.debug_mode_menu",
+                {
+                    Component: DebugMenu,
+                },
+                { sequence: 100 }
+            );
+        }
+        this.localization = localization;
+        useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
+        useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
+            if (mode !== "new") {
+                this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
+            }
+        });
+        useEffect(
+            () => {
+                this.loadRouterState();
+            },
+            () => []
+        );
+        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        const self = this;
+        rpc.query({
+            model: "res.config.settings",
+            method: 'get_debranding_settings',
+        }, {
+            shadow: true
+        }).then(function(debranding_settings) {
+            odoo.debranding_settings = debranding_settings;
+            self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
+        });
+        useTooltip();
+
     },
     _loadDefaultApp() {
         var menu_apps_dropdown = document.querySelector(
