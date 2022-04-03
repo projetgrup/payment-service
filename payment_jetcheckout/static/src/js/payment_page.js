@@ -386,7 +386,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
 
     getInstallment: function () {
         var self = this;
-        if (self.cardnumber.value.length == 0) {
+        if (this.cardnumber.value.length == 0) {
             this.$svgnumber.innerHTML = '0123 4567 8910 1112';
             this.$empty.classList.remove('d-none');
             this.$row.classList.add('d-none');
@@ -395,8 +395,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             this.$cclogo.classList.remove('show');
             this.$ccfamily.value = '';
         } else {
-            this.$svgnumber.innerHTML = self.cardnumber.value;
-            if (self.cardnumber.typedValue.length >= 6){
+            this.$svgnumber.innerHTML = this.cardnumber.value;
+            if (this.cardnumber.typedValue.length >= 6){
                 rpc.query({
                     route: '/payment/card/installment',
                     params: {
@@ -421,9 +421,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         self.$empty.classList.add('d-none');
                         self.$row.classList.remove('d-none');
                         self.$row.innerHTML = result.render;
-                        self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
-                        self.$cclogo.classList.add('show');
-                        self.$ccfamily.value = result.card;
+                        if (result.card) {
+                            self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
+                            self.$cclogo.classList.add('show');
+                            self.$ccfamily.value = result.card;
+                        }
                     }
                 }).guardedCatch(function (error) {
                     self.displayNotification({
