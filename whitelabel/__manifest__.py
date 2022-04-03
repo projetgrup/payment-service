@@ -26,7 +26,7 @@
         'views/email_templates.xml',
         'views/disable_odoo.xml',
         'views/ir_ui_menu.xml',
-        'views/res_users.xml',
+        #'views/res_users.xml',
         'views/web.xml'
     ],
     "qweb": [
