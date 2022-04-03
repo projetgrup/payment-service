@@ -72,15 +72,15 @@
                         <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-block d-none">
                             <table class="table table-sm payment-list mb-0">
                                 <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-phone mr-2"/>Phone</td>
+                                    <td style="padding-left:20%"><i class="fa fa-phone mr-2" t-translation="off"/>Phone</td>
                                     <td><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-whatsapp mr-2"/>Whatsapp</td>
+                                    <td style="padding-left:20%"><i class="fa fa-whatsapp mr-2" t-translation="off"/>Whatsapp</td>
                                     <td><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-envelope-o mr-2"/>Email</td>
+                                    <td style="padding-left:20%"><i class="fa fa-envelope-o mr-2" t-translation="off"/>Email</td>
                                     <td><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
                                 </tr>
                             </table>
