@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-02 18:57+0000\n"
-"PO-Revision-Date: 2022-04-02 18:57+0000\n"
+"POT-Creation-Date: 2022-04-03 20:46+0000\n"
+"PO-Revision-Date: 2022-04-03 20:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,21 @@ msgstr ""
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
 msgid "<em>Select All</em>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "<i class=\"fa fa-envelope-o mr-2\"/>Email"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "<i class=\"fa fa-phone mr-2\"/>Phone"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
+msgid "<i class=\"fa fa-whatsapp mr-2\"/>Whatsapp"
 msgstr ""
 
 #. module: payment_student
@@ -403,12 +418,6 @@ msgid "Installment must be higher than zero"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
-#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
-msgid "Is Sps"
-msgstr ""
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_count
 #: model:ir.model.fields,field_description:payment_student.field_res_users__payment_count
 msgid "Items To Pay"
@@ -595,6 +604,12 @@ msgstr ""
 #. module: payment_student
 #: model:ir.ui.menu,name:payment_student.menu_acquirer
 msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
+#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
+msgid "Payment System Member"
 msgstr ""
 
 #. module: payment_student
@@ -842,7 +857,7 @@ msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
-msgid "Student Name<br/>School | Class"
+msgid "Student Name<br/>School | Class | Type"
 msgstr ""
 
 #. module: payment_student
