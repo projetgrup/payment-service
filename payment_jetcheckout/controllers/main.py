@@ -182,7 +182,7 @@ class jetcheckoutController(http.Controller):
         values = self.jetcheckout_get_installment_data(acquirer=acquirer, **kwargs)
         if 'error' in values:
             return values
-        installments = filter(lambda x: x['installment_count'] == kwargs['installment'] ,values['installments'][0]['installments'])
+        installments = filter(lambda x: x['installment_count'] == int(kwargs['installment']) ,values['installments'][0]['installments'])
         for installment in installments:
             return float(installment.get('customer_rate', 0.0))
         return 0.0
@@ -245,13 +245,14 @@ class jetcheckoutController(http.Controller):
     @http.route(['/payment/card/payment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        fees = self.jetcheckout_get_fees(acquirer=acquirer, **kwargs)
         currency = request.env.company.currency_id
         installment = int(kwargs.get('installment', 1))
         amount = float(kwargs['amount'])
         amount_installment = float(kwargs['amount_installment'])
         if amount_installment > 0 and installment != 1:
             amount = amount_installment
-        amount_int = int(amount * 100)
+        amount_int = int((amount * (1 + (fees / 100))) * 100)
 
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         data = {
@@ -277,7 +278,6 @@ class jetcheckoutController(http.Controller):
         sale_id = int(kwargs.get('order'))
         invoice_id = int(kwargs.get('invoice'))
         partner = request.env['res.partner'].sudo().browse(self.jetcheckout_get_partner(**kwargs))
-        fees = self.jetcheckout_get_fees(acquirer=acquirer, **kwargs)
 
         if not isinstance(fees, float):
             return fees
