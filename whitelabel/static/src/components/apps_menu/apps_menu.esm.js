@@ -42,15 +42,15 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
         this.user = useService("user");
         useService("legacy_service_provider");
         useOwnDebugContext({ categories: ["default"] });
-        if (this.env.debug) {
-            registry.category("systray").add(
-                "web.debug_mode_menu",
-                {
-                    Component: DebugMenu,
-                },
-                { sequence: 100 }
-            );
-        }
+        // if (this.env.debug) {
+        //     registry.category("systray").add(
+        //         "web.debug_mode_menu",
+        //         {
+        //             Component: DebugMenu,
+        //         },
+        //         { sequence: 100 }
+        //     );
+        // }
         this.localization = localization;
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
