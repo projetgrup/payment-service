@@ -40,8 +40,8 @@
                                 <tbody>
                                     <t t-foreach="payments" t-as="payment">
                                         <tr>
-                                            <td class="text-center">Student Name<br/>School | Class</td>
-                                            <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/></td>
+                                            <td class="text-center">Student Name<br/>School | Class | Type</td>
+                                            <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/> | <t t-esc="payment.payment_type_id.name"/></td>
                                             <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
                                             <td class="border text-center">
                                                 <label class="switch" style="margin-bottom: 0;">
@@ -72,16 +72,16 @@
                         <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-block d-none">
                             <table class="table table-sm payment-list mb-0">
                                 <tr>
-                                    <td class="text-right">Phone</td>
-                                    <td class="text-center"><t t-esc="company.phone"/></td>
+                                    <td class="text-right"><i class="fa fa-phone mr-2"/>Phone</td>
+                                    <td class="text-center"><a t-attf-href="tel:#{company.phone}"/></td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Whatsapp</td>
-                                    <td class="text-center"><t t-esc="company.mobile"/></td>
+                                    <td class="text-right"><i class="fa fa-phone mr-2"/>Whatsapp</td>
+                                    <td class="text-center"><a t-attf-href="wa.me/#{company.mobile}"/></td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Email</td>
-                                    <td class="text-center"><t t-esc="company.email"/></td>
+                                    <td class="text-right"><i class="fa fa-envelope-o mr-2"/>Email</td>
+                                    <td class="text-center"><a t-attf-href="mailto:#{company.email}"/></td>
                                 </tr>
                             </table>
                         </div>
