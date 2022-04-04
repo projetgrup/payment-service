@@ -63,7 +63,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     mapToRadix: [self.$currency.dataset.thousand],
                     min: 0,
                 });
-                if (self.amount_installment) {
+                if (self.$amount_installment) {
                     self.amount_installment = new IMask(self.$amount_installment, {
                         mask: Number,
                         scale: self.$currency.dataset.decimal,
