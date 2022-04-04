@@ -552,7 +552,7 @@ class Partner(models.Model):
 
     def _compute_access_url(self):
         for rec in self:
-            rec.access_url = '/p/%s/%s' % (rec.id, self.access_token)
+            rec.access_url = '/p/%s/%s' % (rec.id, rec.access_token)
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         self.ensure_one()
