@@ -128,7 +128,9 @@
                                 <input id="maximum_discount" type="hidden" t-att-value="maximum_discount"/>
                                 <input id="sibling_discount" type="hidden" t-att-value="sibling_discount"/>
                                 <input id="order" type="hidden" value="0"/>
-                                <t t-call="payment_jetcheckout.jetcheckout_s2s_form"/>
+                                <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
+                                    <t t-set="partner_id" t-value="parent.id"/>
+                                </t>
                             </div>
                         </div>
                         

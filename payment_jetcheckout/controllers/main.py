@@ -29,13 +29,13 @@ class jetcheckoutController(http.Controller):
             raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
         return acquirer
 
-    def jetcheckout_get_partner(self, **kwargs):
+    def _jetcheckout_get_partner(self, **kwargs):
         return 'partner_id' in kwargs and int(kwargs['partner_id']) or request.env.user.partner_id.commercial_partner_id.id
 
-    def jetcheckout_tx_vals(self, **kwargs):
+    def _jetcheckout_tx_vals(self, **kwargs):
         return {}
 
-    def jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
+    def _jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
         if not acquirer:
             acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         company = company or request.env.company
@@ -78,7 +78,7 @@ class jetcheckoutController(http.Controller):
             })
         return vals
 
-    def jetcheckout_get_installment_data(self, acquirer=False, **kwargs):
+    def _jetcheckout_get_installment_data(self, acquirer=False, **kwargs):
         if not acquirer:
             acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
@@ -175,9 +175,9 @@ class jetcheckoutController(http.Controller):
         else:
             return []
 
-    def jetcheckout_get_fees(self, acquirer=False, **kwargs):
+    def _jetcheckout_get_fees(self, acquirer=False, **kwargs):
         kwargs['prefix'] = 'bin_'
-        values = self.jetcheckout_get_installment_data(acquirer=acquirer, **kwargs)
+        values = self._jetcheckout_get_installment_data(acquirer=acquirer, **kwargs)
         if 'error' in values:
             return values
         installments = filter(lambda x: x['installment_count'] == int(kwargs['installment']) ,values['installments'][0]['installments'])
@@ -185,7 +185,7 @@ class jetcheckoutController(http.Controller):
             return float(installment.get('customer_rate', 0.0))
         return 0.0
 
-    def jetcheckout_payment_simulation(self, url, data):
+    def _jetcheckout_payment_simulation(self, url, data):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
@@ -199,13 +199,13 @@ class jetcheckoutController(http.Controller):
     def _jetcheckout_get_transaction(self):
         return False
 
-    def jetcheckout_process(self, **kwargs):
+    def _jetcheckout_process(self, **kwargs):
         if 'order_id' not in kwargs:
-            return werkzeug.utils.redirect('/404')
+            return '/404', None
 
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs.get('order_id'))], limit=1)
         if not tx:
-            return werkzeug.utils.redirect('/404')
+            return '/404', None
 
         if int(kwargs.get('response_code')) == 0:
             tx.write({'state': 'done'})
@@ -217,23 +217,23 @@ class jetcheckoutController(http.Controller):
                 'state': 'error',
                 'state_message': _('%s (Error Code: %s)') % (kwargs.get('message', '-'), kwargs.get('response_code','')),
             })
-        return werkzeug.utils.redirect(kwargs['result_url'])
+        return kwargs.get('result_url', '/payment/card/result'), tx
 
     @http.route(['/pay'], type='http', auth='user', website=True)
     def jetcheckout_payment_page(self, **kwargs):
-        values = self.jetcheckout_get_data()
+        values = self._jetcheckout_get_data()
         return request.render('payment_jetcheckout.payment_page', values)
 
     @http.route(['/payment/card/installments'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_get_installments(self, **kwargs):
-        values = self.jetcheckout_get_installment_data(**kwargs)
+        values = self._jetcheckout_get_installment_data(**kwargs)
         if 'error' in values:
             return values
         return {'render': request.env['ir.ui.view']._render_template('payment_jetcheckout.installments', values)}
 
     @http.route(['/payment/card/installment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_get_installment(self, **kwargs):
-        values = self.jetcheckout_get_installment_data(**kwargs)
+        values = self._jetcheckout_get_installment_data(**kwargs)
         if 'error' in values or 'installments' not in values or not len(values['installments']):
             return values
         values['installment'] = {'installments': values['installments'][0]['installments']}
@@ -246,7 +246,7 @@ class jetcheckoutController(http.Controller):
     @http.route(['/payment/card/payment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        fees = self.jetcheckout_get_fees(acquirer=acquirer, **kwargs)
+        fees = self._jetcheckout_get_fees(acquirer=acquirer, **kwargs)
         if not isinstance(fees, float):
             return fees
 
@@ -274,14 +274,14 @@ class jetcheckoutController(http.Controller):
             "language": "tr",
         }
 
-        vpos, rate = self.jetcheckout_payment_simulation(url, data)
+        vpos, rate = self._jetcheckout_payment_simulation(url, data)
         if not isinstance(vpos, str):
             return vpos
 
         order_id = str(uuid.uuid4())
         sale_id = int(kwargs.get('order'))
         invoice_id = int(kwargs.get('invoice'))
-        partner = request.env['res.partner'].sudo().browse(self.jetcheckout_get_partner(**kwargs))
+        partner = request.env['res.partner'].sudo().browse(self._jetcheckout_get_partner(**kwargs))
 
         tx = self._jetcheckout_get_transaction()
         if not tx:
@@ -317,7 +317,7 @@ class jetcheckoutController(http.Controller):
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,
             }
-            tx_vals.update(self.jetcheckout_tx_vals(**kwargs))
+            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx = request.env['payment.transaction'].sudo().create(tx_vals)
         else:
             tx_vals = {
@@ -335,7 +335,7 @@ class jetcheckoutController(http.Controller):
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,
             }
-            tx_vals.update(self.jetcheckout_tx_vals(**kwargs))
+            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx.write(tx_vals)
 
         if sale_id:
@@ -435,31 +435,36 @@ class jetcheckoutController(http.Controller):
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
-        return self.jetcheckout_process(**kwargs)
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/shop', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_shop(self, **kwargs):
         kwargs['result_url'] = '/shop/confirmation'
-        return self.jetcheckout_process(**kwargs)
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/order/<int:order_id>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_order(self, order_id, access_token, **kwargs):
         kwargs['result_url'] = '/my/orders/%s?access_token=%s' % (order_id, access_token)
-        return self.jetcheckout_process(**kwargs)
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/invoice/<int:invoice_id>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_invoice(self, invoice_id, access_token, **kwargs):
         kwargs['result_url'] = '/my/invoices/%s?access_token=%s' % (invoice_id, access_token)
-        return self.jetcheckout_process(**kwargs)
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/subscription/<int:subscription_id>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_subscription(self, subscription_id, access_token, **kwargs):
         kwargs['result_url'] = '/my/subscription/%s/%s' % (subscription_id, access_token)
-        return self.jetcheckout_process(**kwargs)
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
 
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], csrf=False, website=True, sitemap=False)
     def jetcheckout_result(self, **kwargs):
-        values = self.jetcheckout_get_data()
+        values = self._jetcheckout_get_data()
         last_tx_id = request.session.get('__jetcheckout_last_tx_id')
         values['tx'] = request.env['payment.transaction'].sudo().browse(last_tx_id)
         if last_tx_id:
@@ -469,7 +474,7 @@ class jetcheckoutController(http.Controller):
     @http.route(['/payment/card/terms'], type='json', auth='public', csrf=False, website=True)
     def jetcheckout_terms(self, **kwargs):
         acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        return acquirer.sudo()._render_jetcheckout_terms(request.env.company.id, self.jetcheckout_get_partner(**kwargs))
+        return acquirer.sudo()._render_jetcheckout_terms(request.env.company.id, self._jetcheckout_get_partner(**kwargs))
 
     @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def jetcheckout_report(self, name, order_id, **kwargs):
@@ -486,7 +491,7 @@ class jetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/transactions', '/payment/card/transactions/page/<int:page>'], type='http', auth='user', website=True)
     def jetcheckout_transactions(self, page=0, tpp=20, **kwargs):
-        values = self.jetcheckout_get_data()
+        values = self._jetcheckout_get_data()
         partner = request.env.user.partner_id
         tx_ids = request.env['payment.transaction'].sudo().search([('acquirer_id','=',values['acquirer'].id),('partner_id','in',(partner.id, partner.commercial_partner_id.id))])
         pager = request.website.pager(url='/payment/card/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
@@ -501,7 +506,7 @@ class jetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/ledger', '/payment/card/ledger/page/<int:page>'], type='http', auth='user', website=True)
     def jetcheckout_ledger(self, page=0, tpp=40, **kwargs):
-        values = self.jetcheckout_get_data()
+        values = self._jetcheckout_get_data()
         partner = request.env.user.partner_id
         aml_ids = request.env['account.move.line'].sudo().search([('company_id','=',values['company'].id),('partner_id','in',(partner.id, partner.commercial_partner_id.id)),('account_internal_type','in',('receivable','payable')),('parent_state','=','posted')])
         pager = request.website.pager(url='/payment/card/ledger', total=len(aml_ids), page=page, step=tpp, scope=7, url_args=kwargs)
