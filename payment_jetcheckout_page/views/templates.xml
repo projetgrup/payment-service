@@ -12,7 +12,7 @@
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
                 <script type="text/javascript">
-                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_payment_page_session_info())"/>;
                     if (!/(^|;\s)tz=/.test(document.cookie)) {
                         const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         document.cookie = `tz=${userTZ}; path=/`;
@@ -118,7 +118,7 @@
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
                 <script type="text/javascript">
-                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_payment_page_session_info())"/>;
                     if (!/(^|;\s)tz=/.test(document.cookie)) {
                         const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         document.cookie = `tz=${userTZ}; path=/`;
@@ -240,7 +240,7 @@
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
                 <script type="text/javascript">
-                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_payment_page_session_info())"/>;
                     if (!/(^|;\s)tz=/.test(document.cookie)) {
                         const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         document.cookie = `tz=${userTZ}; path=/`;

@@ -108,12 +108,9 @@ class jetcheckoutController(http.Controller):
                     installment_list = []
                     for installment in options['installments']:
                         if amount_installment > 0 and amount > 0 and installment['installment_count'] != 1:
-                            #customer_rate = (100 * amount_installment / amount) - 100
-                            #if installment['customer_rate']:
-                            #    installment['customer_rate'] = (2 * (installment['customer_rate'] + customer_rate)) + (installment#['customer_rate'] * customer_rate / 100)
-                            #else:
-                            #    installment['customer_rate'] = customer_rate
-                            installment['customer_rate'] += (100 * amount_installment / amount) - 100
+                            installment['installment_rate'] = (100 * amount_installment / amount) - 100
+                        else:
+                            installment['installment_rate'] = 0.0
                         installment['total_installment'] = int(installment['installment_count']) + installment['plus_installment']
                         installment_list.append(installment)
                     installment_list.sort(key=lambda x: int(x['installment_count']))
@@ -136,7 +133,8 @@ class jetcheckoutController(http.Controller):
                             "customer_rate": 0.0,
                             "plus_installment": 0,
                             "plus_installment_description": "",
-                            "total_installment": 1
+                            "total_installment": 1,
+                            "installment_rate": 0.0
                         }]
                     }],
                     'amount': kwargs['amount'],
