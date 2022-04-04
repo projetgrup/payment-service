@@ -27,7 +27,6 @@ class StudentPaymentController(jetController):
                 last_amount = list(filter(lambda x: x['id'] == sid, amounts))[0]['amount']
                 rate = last_amount / first_amount if first_amount != 0 else 1
                 payment.paid_amount = payment.amount * rate
-                payment.paid_date = datetime.now()
             res.update({
                 'student_payment_ids': [(6, 0, ids)],
             })
@@ -84,7 +83,7 @@ class StudentPaymentController(jetController):
         result_url = '/p/%s/%s?x=%s' % (parent_id, access_token, kwargs.get('order_id'))
         if int(kwargs.get('response_code')) == 0:
             tx.write({'state': 'done'})
-            tx.student_payment_ids.write({'paid': True})
+            tx.student_payment_ids.write({'paid': True, 'paid_date': datetime.now()})
         else:
             tx.write({
                 'state': 'error',

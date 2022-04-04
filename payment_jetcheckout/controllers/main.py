@@ -407,6 +407,11 @@ class jetcheckoutController(http.Controller):
                 tx.state = 'pending'
                 tx.jetcheckout_transaction_id = result['transaction_id']
                 redirect_url = '%s/%s' % (result['redirect_url'], result['transaction_id'])
+
+                # If /api/v1 statement is not in redirect url, insert it
+                if '/api/v1' not in redirect_url and '/redirect' in redirect_url:
+                    redirect_split = redirect_url.split('/redirect')
+                    redirect_url = redirect_split[0] + '/api/v1/redirect' + redirect_split[1]
                 return {'redirect_url': redirect_url}
             else:
                 tx.state = 'error'

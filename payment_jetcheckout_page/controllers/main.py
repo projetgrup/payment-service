@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import werkzeug
+import logging
 import urllib.parse
 
 from odoo import http, _
@@ -8,6 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.base_rest.controllers import main
 from odoo.addons.payment_jetcheckout.controllers.main import jetcheckoutController as jetController
 
+_logger = logging.getLogger(__name__)
 
 class PaymentAPIController(main.RestController):
     _root_path = "/page/"
