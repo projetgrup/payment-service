@@ -47,7 +47,6 @@ class jetcheckoutPageController(jetController):
 
     @http.route(['/payment'], type='http', methods=['GET'], auth='none', csrf=False, sitemap=False, website=True)
     def jetcheckout_full_payment_page(self, **kwargs):
-        request.session.uid = False
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash)], limit=1)
         if not tx:
             raise ValidationError(_('Access Denied'))
@@ -60,7 +59,6 @@ class jetcheckoutPageController(jetController):
 
     @http.route(['/payment/card'], type='http', methods=['GET'], auth='none', csrf=False, sitemap=False, website=True)
     def jetcheckout_full_payment_card_page(self, **kwargs):
-        request.session.uid = False
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash)], limit=1)
         if not tx:
             raise ValidationError(_('Access Denied'))
@@ -70,7 +68,6 @@ class jetcheckoutPageController(jetController):
 
     @http.route(['/payment/bank'], type='http', methods=['GET'], auth='none', csrf=False, sitemap=False, website=True)
     def jetcheckout_full_payment_bank_page(self, **kwargs):
-        request.session.uid = False
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash)], limit=1)
         if not tx:
             raise ValidationError(_('Access Denied'))
