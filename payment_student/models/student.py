@@ -20,6 +20,11 @@ class PaymentTransaction(models.Model):
         action['context'] = {'create': False, 'edit': False, 'delete': False}
         return action
 
+    def _jetcheckout_process_query(self, vals):
+        super()._jetcheckout_process_query(vals)
+        if vals.get('successful') and not vals.get('cancelled'):
+            self.mapped('student_payment_ids').write({'paid': True, 'paid_date': datetime.now()})
+
     def jetcheckout_cancel(self):
         super().jetcheckout_cancel()
         self.mapped('student_payment_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0})
