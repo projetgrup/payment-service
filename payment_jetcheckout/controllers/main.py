@@ -196,6 +196,9 @@ class jetcheckoutController(http.Controller):
         else:
             return {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}, None
 
+    def _jetcheckout_get_transaction(self):
+        return False
+
     def jetcheckout_process(self, **kwargs):
         if 'order_id' not in kwargs:
             return werkzeug.utils.redirect('/404')
@@ -244,6 +247,9 @@ class jetcheckoutController(http.Controller):
     def jetcheckout_payment(self, **kwargs):
         acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         fees = self.jetcheckout_get_fees(acquirer=acquirer, **kwargs)
+        if not isinstance(fees, float):
+            return fees
+
         currency = request.env.company.currency_id
         installment = int(kwargs.get('installment', 1))
         amount = float(kwargs['amount'])
@@ -277,10 +283,7 @@ class jetcheckoutController(http.Controller):
         invoice_id = int(kwargs.get('invoice'))
         partner = request.env['res.partner'].sudo().browse(self.jetcheckout_get_partner(**kwargs))
 
-        if not isinstance(fees, float):
-            return fees
-
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash),('state','=','draft')], limit=1)
+        tx = self._jetcheckout_get_transaction()
         if not tx:
             sequence_code = 'payment.jetcheckout.transaction'
             name = request.env['ir.sequence'].sudo().next_by_code(sequence_code)
