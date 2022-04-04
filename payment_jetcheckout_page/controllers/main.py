@@ -18,6 +18,9 @@ class PaymentAPIController(main.RestController):
 
 class jetcheckoutPageController(jetController):
 
+    def _jetcheckout_get_transaction(self):
+        return request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash),('state','=','draft')], limit=1)
+
     def jetcheckout_process(self, **kwargs):
         if 'order_id' not in kwargs:
             return werkzeug.utils.redirect('/404')
