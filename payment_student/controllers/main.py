@@ -7,10 +7,11 @@ from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.addons.payment_jetcheckout.controllers.main import jetcheckoutController as jetController
 
+
 class StudentPaymentController(jetController):
 
-    def jetcheckout_tx_vals(self, **kwargs):
-        res = super().jetcheckout_tx_vals(**kwargs)
+    def _jetcheckout_tx_vals(self, **kwargs):
+        res = super()._jetcheckout_tx_vals(**kwargs)
         ids = kwargs.get('payment_ids',[])
         if ids:
             payment_ids = request.env['res.student.payment'].sudo().browse(ids)
@@ -27,11 +28,17 @@ class StudentPaymentController(jetController):
                 last_amount = list(filter(lambda x: x['id'] == sid, amounts))[0]['amount']
                 rate = last_amount / first_amount if first_amount != 0 else 1
                 payment.paid_amount = payment.amount * rate
-                payment.paid_date = datetime.now()
             res.update({
                 'student_payment_ids': [(6, 0, ids)],
             })
         return res
+
+    def _jetcheckout_process(self, **kwargs):
+        url, tx = super()._jetcheckout_process(**kwargs)
+        if tx.student_payment_ids:
+            tx.student_payment_ids.write({'paid': True, 'paid_date': datetime.now()})
+            url = '%s?x=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
+        return url, tx
 
     @http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def student_payment_page(self, parent_id, access_token, **kwargs):
@@ -54,7 +61,6 @@ class StudentPaymentController(jetController):
 
         values = {
             'parent': parent,
-            'partner_id': parent.id,
             'company': company,
             'website': request.website,
             'currency': currency,
@@ -71,26 +77,6 @@ class StudentPaymentController(jetController):
             'tx': tx,
         }
         return request.render('payment_student.student_payment_page', values)
-
-    @http.route('/p/<int:parent_id>/<string:access_token>/<string:status>', type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
-    def student_payment_result(self, parent_id, access_token, status, **kwargs):
-        if 'order_id' not in kwargs:
-            return werkzeug.utils.redirect('/404')
-
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs.get('order_id'))], limit=1)
-        if not tx:
-            return werkzeug.utils.redirect('/404')
-
-        result_url = '/p/%s/%s?x=%s' % (parent_id, access_token, kwargs.get('order_id'))
-        if int(kwargs.get('response_code')) == 0:
-            tx.write({'state': 'done'})
-            tx.student_payment_ids.write({'paid': True})
-        else:
-            tx.write({
-                'state': 'error',
-                'state_message': _('%s (Error Code: %s)') % (kwargs.get('message', '-'), kwargs.get('response_code','')),
-            })
-        return werkzeug.utils.redirect(result_url)
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)
     def student_privacy_policy(self):

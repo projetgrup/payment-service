@@ -116,6 +116,7 @@
                     <field name="jetcheckout_card_name"/>
                     <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_card_type"/>
+                    <field name="jetcheckout_card_family"/>
                     <field name="jetcheckout_payment_amount"/>
                     <field name="jetcheckout_installment_count"/>
                     <!--<field name="jetcheckout_installment_amount"/>-->

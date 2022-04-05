@@ -185,15 +185,9 @@ class PaymentTransaction(models.Model):
             'target': 'new',
         }
 
-    def jetcheckout_query(self):
-        self.ensure_one()
-        values = self._jetcheckout_s2s_get_tx_status()
-        if 'error' in values:
-            raise UserError(values['error'])
-
-        result = values['result']
-        if result['successful']:
-            if result['cancelled']:
+    def _jetcheckout_process_query(self, vals):
+        if vals['successful']:
+            if vals['cancelled']:
                 state = 'cancel'
             else:
                 state = 'done'
@@ -201,6 +195,13 @@ class PaymentTransaction(models.Model):
             state = 'error'
         self.write({'state': state})
 
+    def jetcheckout_query(self):
+        self.ensure_one()
+        values = self._jetcheckout_s2s_get_tx_status()
+        if 'error' in values:
+            raise UserError(values['error'])
+
+        result = values['result']
         vals = {
             'transaction_date': result['transaction_date'][:19],
             'vpos_id': result['virtual_pos_name'],
@@ -215,6 +216,7 @@ class PaymentTransaction(models.Model):
             'service_ref_id': result['service_ref_id'],
             'currency_id': self.currency_id.id,
         }
+        self._jetcheckout_process_query(result)
         status = self.env['payment.acquirer.jetcheckout.status'].create(vals)
         return {
             'type': 'ir.actions.act_window',

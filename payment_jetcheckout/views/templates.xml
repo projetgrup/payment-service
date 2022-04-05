@@ -421,7 +421,8 @@
                 <t t-set="installment_count" t-value="row['total_installment']"/>
                 <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
                     <t t-set="customer_rate" t-value="row['customer_rate']"/>
-                    <t t-set="installment_amount" t-value="amount * (1 + (row['customer_rate'] / 100))"/>
+                    <t t-set="installment_rate" t-value="row['installment_rate']"/>
+                    <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
                     <div class="installment-cell">
                         <div class="text-center"><input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-checked="row['installment_count'] == 1"/></div>
                         <div><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></div>
@@ -434,9 +435,11 @@
         </t>
         <t t-else="">
             <t t-foreach="installment['installments']" t-as="row">
+                <t t-set="customer_rate" t-value="row['customer_rate']"/>
+                <t t-set="installment_rate" t-value="row['installment_rate']"/>
                 <t t-set="installment_count" t-value="row['total_installment']"/>
                 <tr t-if="installment_count > 0">
-                    <t t-set="installment_amount" t-value="amount * (1 + (row['customer_rate'] / 100))"/>
+                    <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
                     <td class="text-center"><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></td>
                     <td class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
                     <td class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
