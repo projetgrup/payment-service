@@ -21,6 +21,7 @@ publicWidget.registry.StudentPaymentPage = publicWidget.Widget.extend({
             self.$pivot = $('.payment-student div.payment-pivot');
             self.$items = $('.payment-student input.payment-items');
             self.$items_all = $('.payment-student input.payment-all-items');
+            self.$tags = $('.payment-student button.btn-payments');
             self.$currency = $('#currency');
             self.precision = parseInt(self.$currency.data('decimal')) || 2;
             self.$amount = $('#amount');
@@ -36,6 +37,7 @@ publicWidget.registry.StudentPaymentPage = publicWidget.Widget.extend({
             self.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
             self.$items.on('change', self.onChangePaid.bind(self));
             self.$items_all.on('change', self.onChangePaidAll.bind(self));
+            self.$tags.on('click', self.onClickTag.bind(self));
             self.$privacy.on('click', self.onClickPrivacy.bind(self));
             self.$agreement.on('click', self.onClickAgreement.bind(self));
             self.$membership.on('click', self.onClickMembership.bind(self));
@@ -51,6 +53,26 @@ publicWidget.registry.StudentPaymentPage = publicWidget.Widget.extend({
         } else {
             this.$items.prop('checked', false);
         }
+        this.onChangePaid();
+    },
+
+    onClickTag: function (ev) {
+        const $button = $(ev.currentTarget);
+        const pid = $button.data('id');
+        $button.toggleClass('btn-light');
+
+        _.each(this.$items, function(item) {
+            var $el = $(item);
+            if ($el.data('type-id') === pid) {
+                if ($button.hasClass('btn-light')) {
+                    $el.prop('checked', false);
+                    $el.closest('tr').addClass('d-none');
+                } else {
+                    $el.prop('checked', true);
+                    $el.closest('tr').removeClass('d-none');
+                }
+            }
+        });
         this.onChangePaid();
     },
 
