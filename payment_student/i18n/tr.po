@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-03 20:51+0000\n"
-"PO-Revision-Date: 2022-04-03 23:52+0300\n"
+"POT-Creation-Date: 2022-04-11 08:49+0000\n"
+"PO-Revision-Date: 2022-04-11 11:50+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -16,12 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
-
-#. module: payment_student
-#: code:addons/payment_student/controllers/main.py:0
-#, python-format
-msgid "%s (Error Code: %s)"
-msgstr "%s (Hata Kodu: %s)"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
@@ -117,6 +111,8 @@ msgstr "Sözleşmeler"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__amount
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__amount
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
 msgid "Amount"
 msgstr "Tutar"
 
@@ -161,6 +157,7 @@ msgstr "Çocuklar"
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__class_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__class_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__class_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__class_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_search
@@ -198,6 +195,7 @@ msgstr "Şirketler"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__company_id
@@ -239,6 +237,7 @@ msgstr "Temlikname"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_uid
@@ -252,6 +251,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__create_date
@@ -261,6 +261,7 @@ msgstr "Oluşturma Tarihi"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__currency_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__currency_id
 msgid "Currency"
 msgstr "Para Birimi"
 
@@ -302,6 +303,7 @@ msgstr "İndirim oranı sıfırdan büyük olmalıdır"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__display_name
@@ -380,6 +382,7 @@ msgstr "Ödemesi Var"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__id
@@ -396,20 +399,20 @@ msgstr "Destek İhtiyacınız varsa aşağıdaki yöntemlerden yararlanabilirsin
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__installment
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
 msgid "Installment"
 msgstr "Taksit"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__installment_count
+msgid "Installment Count"
+msgstr "Taksit Sayısı"
 
 #. module: payment_student
 #: code:addons/payment_student/models/student.py:0
 #, python-format
 msgid "Installment must be higher than zero"
 msgstr "Taksit oranı sıfırdan büyük olmalıdır"
-
-#. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
-#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
-msgid "Is Sps"
-msgstr "ÖTS"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_count
@@ -423,6 +426,7 @@ msgstr "Ödenecek"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting____last_update
@@ -436,6 +440,7 @@ msgstr "Son Düzenleme Tarihi"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_uid
@@ -449,6 +454,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_setting__write_date
@@ -533,6 +539,11 @@ msgid "Paid Amount"
 msgstr "Ödenen Tutar"
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment__paid_date
+msgid "Paid Date"
+msgstr "Ödeme Tarihi"
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_form
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_form
@@ -562,7 +573,6 @@ msgstr "Ödeme - {{ object.company_id.name }}"
 
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_acquirer
-#: model:ir.ui.menu,name:payment_student.menu_acquirer
 msgid "Payment Acquirers"
 msgstr "Ödeme Alıcıları"
 
@@ -589,9 +599,15 @@ msgid "Payment Items"
 msgstr "Ödeme İşlemleri"
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_payments
+#: model:ir.ui.menu,name:payment_student.menu_acquirer
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__is_sps
+#: model:ir.model.fields,field_description:payment_student.field_res_users__is_sps
+msgid "Payment System Member"
+msgstr "Ödeme Sistemi Kullanıcısı"
 
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_payment_table
@@ -601,6 +617,13 @@ msgstr "Ödeme Ayarları"
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_tree
 msgid "Payment Table"
 msgstr "Ödeme Tablosu"
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_payment_template
+#: model:ir.ui.menu,name:payment_student.menu_payment_template
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_template_tree
+msgid "Payment Templates"
+msgstr "Ödeme Şablonları"
 
 #. module: payment_student
 #: model:ir.model,name:payment_student.model_payment_transaction
@@ -615,6 +638,7 @@ msgstr "Ödeme İşlemleri"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__payment_type_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__payment_type_id
 msgid "Payment Type"
 msgstr "Ödeme Türü"
 
@@ -652,6 +676,7 @@ msgstr "Bir ödeme satırı seçtiğinizde ödeme tablosu burada görünecektir"
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_payment
 #: model:ir.ui.menu,name:payment_student.menu_payment
+#: model:ir.ui.menu,name:payment_student.menu_payments
 msgid "Payments"
 msgstr "Ödemeler"
 
@@ -700,6 +725,7 @@ msgstr "ÖTS"
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__school_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_search
@@ -849,6 +875,11 @@ msgid "Student Payment System"
 msgstr "Öğrenci Tahsilat Sistemi"
 
 #. module: payment_student
+#: model:ir.model,name:payment_student.model_res_student_payment_template
+msgid "Student Payment Template"
+msgstr "Öğrenci Ödeme Şablonu"
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__student_payment_ids
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__transaction_ids
 msgid "Student Payments"
@@ -873,6 +904,7 @@ msgstr "Ara Toplam"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment__term_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__term_id
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 msgid "Term"
 msgstr "Dönem"
@@ -987,14 +1019,12 @@ msgstr ""
 msgid "Your transaction has been succeeded. Thank you."
 msgstr "Ödeme başarıyla tamamlandı. Teşekkür ederiz."
 
-#~ msgid "Paid Date"
-#~ msgstr "Ödeme Tarihi"
+#, python-format
+#~ msgid "%s (Error Code: %s)"
+#~ msgstr "%s (Hata Kodu: %s)"
 
-#~ msgid "Payment Templates"
-#~ msgstr "Ödeme Şablonları"
-
-#~ msgid "Student Payment Template"
-#~ msgstr "Öğrenci Ödeme Şablonu"
+#~ msgid "Is Sps"
+#~ msgstr "ÖTS"
 
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"

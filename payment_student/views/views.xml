@@ -100,8 +100,8 @@
             <field name="payment_type_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
             <field name="paid"/>
-            <field name="paid_amount" attrs="{'invisible': [('paid', '=', False)]}"/>
-            <field name="installment_amount" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
+            <field name="paid_amount" string="Amount" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" optional="hide"/>
