@@ -11,6 +11,7 @@
             <t t-set="class" t-value="True"/>
             <t t-set="body_classname" t-value="'payment-student navbar-light'"/>
             <t t-set="payments" t-value="parent.payment_ids"/>
+            <t t-set="payment_types" t-value="payments.mapped('payment_type_id')"/>
             <div class="px-4">
                 <div class="row mx-0 my-4">
                     <div class="col-md-6">
@@ -20,89 +21,100 @@
                         <span class="font-weight-bold text-secondary">Welcome  <t t-esc="parent.name"/></span>
                     </div>
                 </div>
-                <div class="row mx-0 my-4 card border shadow flex-row">
-                    <div class="col-md-4 p-4">
-                        <div t-if="tx and tx.state == 'error'" class="row alert alert-danger d-md-none d-block">
-                            Your transaction has been failed. Please try again. If this sitution occurs anyway, please contact with system administation.
-                        </div>
-                        <div t-elif="tx and tx.state == 'done'" class="row alert alert-success d-md-none d-block">
-                            <div>Your transaction has been succeeded. Thank you.</div>
-                            <div class="row mt-2">
-                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
-                                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                <div class="row mx-0 my-4 card border shadow flex-row p-2">
+                    <div class="col-md-4 p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div t-if="tx and tx.state == 'error'" class="row alert alert-danger d-md-none d-block">
+                                Your transaction has been failed. Please try again. If this sitution occurs anyway, please contact with system administation.
                             </div>
-                        </div>
-                        <div class="row border card p-3 bg-warning-light small">
-                            You can get payment amounts and applied discounts, which is calculated dynamically, with choosing student(s) of yours in the following table.
-                        </div>
-                        <div t-if="payments" class="row bg-white card table-responsive overflow-auto mb-3">
-                            <table class="table table-sm payment-list mb-0">
-                                <tbody>
-                                    <t t-foreach="payments" t-as="payment">
+                            <div t-elif="tx and tx.state == 'done'" class="row alert alert-success d-md-none d-block">
+                                <div>Your transaction has been succeeded. Thank you.</div>
+                                <div class="row mt-2">
+                                    <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                    <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                                </div>
+                            </div>
+                            <div class="row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
+                                You can get payment amounts and applied discounts, which is calculated dynamically, with choosing student(s) of yours in the following table.
+                            </div>
+                            <div t-if="payments" class="row bg-white card table-responsive overflow-auto mb-3">
+                                <table class="table table-sm payment-list mb-0">
+                                    <tbody>
                                         <tr>
-                                            <td class="text-center">Student Name<br/>School | Class | Type</td>
-                                            <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/> | <t t-esc="payment.payment_type_id.name"/></td>
-                                            <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
-                                            <td class="border text-center">
+                                            <td class="text-center">
+                                                <t t-foreach="payment_types" t-as="payment_type">
+                                                    <button class="btn btn-sm btn-success btn-payments" t-esc="payment_type.name" t-att-data-id="payment_type.id"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="payments" t-as="payment">
+                                            <tr>
+                                                <td class="text-center">Student Name<br/>School | Class | Type</td>
+                                                <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/> | <t t-esc="payment.payment_type_id.name"/></td>
+                                                <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
+                                                <td class="border text-center">
+                                                    <label class="switch" style="margin-bottom: 0;">
+                                                        <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment.is_sibling_paid()" checked="checked"/>
+                                                        <span class="slider round fa"/>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot class="shadow bg-light">
+                                        <tr>
+                                            <td class="text-right"></td>
+                                            <td class="text-right"><em>Select All</em></td>
+                                            <td class="text-center">
                                                 <label class="switch" style="margin-bottom: 0;">
-                                                    <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment.is_sibling_paid()" checked="checked"/>
+                                                    <input type="checkbox" class="payment-all-items" checked="checked"/>
                                                     <span class="slider round fa"/>
                                                 </label>
                                             </td>
                                         </tr>
-                                    </t>
-                                </tbody>
-                                <tfoot class="shadow bg-light">
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-md-block d-none row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
+                                If you need assistance, you can contact with us by using one of the following methods.
+                            </div>
+                            <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-block d-none">
+                                <table class="table table-sm payment-list mb-0">
                                     <tr>
-                                        <td class="text-right"></td>
-                                        <td class="text-right"><em>Select All</em></td>
-                                        <td class="text-center">
-                                            <label class="switch" style="margin-bottom: 0;">
-                                                <input type="checkbox" class="payment-all-items" checked="checked"/>
-                                                <span class="slider round fa"/>
-                                            </label>
-                                        </td>
+                                        <td style="padding-left:20%"><i class="fa fa-phone mr-2" t-translation="off"/>Phone</td>
+                                        <td><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
                                     </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <div class="row border p-3 bg-warning-light small d-md-block d-none">
-                            If you need assistance, you can contact with us by using one of the following methods.
-                        </div>
-                        <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-block d-none">
-                            <table class="table table-sm payment-list mb-0">
-                                <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-phone mr-2" t-translation="off"/>Phone</td>
-                                    <td><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-whatsapp mr-2" t-translation="off"/>Whatsapp</td>
-                                    <td><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left:20%"><i class="fa fa-envelope-o mr-2" t-translation="off"/>Email</td>
-                                    <td><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="row border p-3 bg-warning-light d-md-block d-none">
-                            Agreements
-                        </div>
-                        <div class="row table-responsive bg-white border card overflow-auto d-md-block d-none">
-                            <table class="table table-sm mb-0">
-                                <tr>
-                                    <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
-                                </tr>
-                                <tr>
-                                    <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
-                                </tr>
-                                <tr>
-                                    <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
-                                </tr>
-                                <tr>
-                                    <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
-                                </tr>
-                            </table>
+                                    <tr>
+                                        <td style="padding-left:20%"><i class="fa fa-whatsapp mr-2" t-translation="off"/>Whatsapp</td>
+                                        <td><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left:20%"><i class="fa fa-envelope-o mr-2" t-translation="off"/>Email</td>
+                                        <td><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="d-md-block d-none row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
+                                Agreements
+                            </div>
+                            <div class="row table-responsive bg-white border card overflow-auto d-md-block d-none">
+                                <table class="table table-sm mb-0">
+                                    <tr>
+                                        <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-8 p-4">
@@ -120,7 +132,7 @@
                             <div class="bg-white border card table-responsive payment-pivot overflow-auto"/>
                         </div>
                         <div t-if="len(payments) > 0" class="row justify-content-center">
-                            <div class="row justify-content-center payment-card mx-0 w-100">
+                            <div class="row justify-content-center payment-card mx-0 w-100 mb-n4">
                                 <input id="amount" type="hidden" name="amount" value="0"/>
                                 <input id="amount_installment" type="hidden" name="amount_installment" value="0"/>
                                 <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="currency_separator" t-att-data-thousand="currency_thousand" t-att-data-currency="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>
@@ -134,7 +146,7 @@
                             </div>
                         </div>
                         
-                        <div class="row border p-3 bg-warning-light small d-md-none d-block">
+                        <div class="d-md-none d-block row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
                             If you need assistance, you can contact with us by using one of the following methods.
                         </div>
                         <div class="row table-responsive bg-white border card overflow-auto mb-3 d-md-none d-block">
@@ -153,7 +165,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="row border p-3 bg-warning-light d-md-none d-block">
+                        <div class="d-md-none d-block row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
                             Agreements
                         </div>
                         <div class="row table-responsive bg-white border card overflow-auto d-md-none d-block">
@@ -172,30 +184,32 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="row mx-0 mt-4 pb-1 border-bottom">
-                            <div class="col-md-12">
-                                <ul class="mb-0 list-inline payment_icon_list">
-                                    <t t-foreach="card_family" t-as="card">
-                                        <li class="list-inline-item">
-                                            <img t-att-src="card" alt="" height="40" class="card p-2"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </div>
+                    </div>
+                </div>
+                <div class="row mx-0 flex-column">
+                    <div class="row mx-0 mt-4 pb-1 border-bottom">
+                        <div class="col-md-12">
+                            <ul class="mb-0 list-inline payment_icon_list">
+                                <t t-foreach="card_family" t-as="card">
+                                    <li class="list-inline-item">
+                                        <img t-att-src="card" alt="" height="40" class="card p-2"/>
+                                    </li>
+                                </t>
+                            </ul>
                         </div>
-                        <div class="row mx-0 pt-1">
-                            <div class="col-md-6 mb-4">
-                                <ul class="mb-0 list-inline payment_icon_list">
-                                    <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
-                                        <li class="list-inline-item">
-                                            <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <t t-raw="footer"/>
-                            </div>
+                    </div>
+                    <div class="row mx-0 pt-2 h-0">
+                        <div class="col-md-6">
+                            <ul class="list-inline payment_icon_list">
+                                <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                                    <li class="list-inline-item">
+                                        <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <t t-raw="footer"/>
                         </div>
                     </div>
                 </div>

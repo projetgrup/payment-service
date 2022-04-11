@@ -180,6 +180,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
+                self._onToggleLoading();
             }
         });
     },

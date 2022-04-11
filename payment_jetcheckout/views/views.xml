@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="acquirer_form_jetcheckout" model="ir.ui.view">
+    <record id="acquirer_form" model="ir.ui.view">
     <field name="model">payment.acquirer</field>
     <field name="inherit_id" ref="payment.payment_acquirer_form"/>
     <field name="arch" type="xml">
@@ -62,7 +62,7 @@
     </field>
     </record>
 
-    <record id="transaction_jetcheckout" model="ir.ui.view">
+    <record id="transaction_form" model="ir.ui.view">
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_form"/>
     <field name="arch" type="xml">
@@ -134,6 +134,17 @@
                 </group>
             </group>
         </xpath>
+    </field>
+    </record>
+
+    <record id="transaction_pivot" model="ir.ui.view">
+    <field name="name">payment.transaction.pivot</field>
+    <field name="model">payment.transaction</field>
+    <field name="arch" type="xml">
+        <pivot string="Payment Transaction">
+            <field name="create_date" type="row"/>
+            <field name="amount" type="measure"/>
+        </pivot>
     </field>
     </record>
 
@@ -248,6 +259,10 @@
             Create a new virtual pos
         </p>
     </field>
+    </record>
+
+    <record id="payment.action_payment_transaction" model="ir.actions.act_window">
+    <field name="view_mode">tree,kanban,pivot,form</field>
     </record>
 
     <menuitem id="provider_menu" action="action_provider" parent="account.root_payment_menu" sequence="11"/>

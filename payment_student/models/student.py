@@ -23,11 +23,11 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_process_query(self, vals):
         super()._jetcheckout_process_query(vals)
         if vals.get('successful') and not vals.get('cancelled'):
-            self.mapped('student_payment_ids').write({'paid': True, 'paid_date': datetime.now()})
+            self.mapped('student_payment_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_amount': self.jetcheckout_installment_count})
 
     def jetcheckout_cancel(self):
         super().jetcheckout_cancel()
-        self.mapped('student_payment_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0})
+        self.mapped('student_payment_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_amount': 0})
 
 class StudentPaymentTable(models.TransientModel):
     _name = 'res.student.payment.table'
@@ -225,8 +225,9 @@ class StudentPayment(models.Model):
     amount = fields.Monetary()
     paid = fields.Boolean(readonly=True)
     paid_amount = fields.Monetary(readonly=True)
-    transaction_ids = fields.Many2many('payment.transaction', 'transaction_payment_rel', 'payment_id', 'transaction_id', string='Student Payments')
+    installment_amount = fields.Integer(readonly=True)
     paid_date = fields.Datetime(readonly=True)
+    transaction_ids = fields.Many2many('payment.transaction', 'transaction_payment_rel', 'payment_id', 'transaction_id', string='Student Payments')
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
 
