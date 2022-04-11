@@ -683,7 +683,7 @@
 
     <record id="payment_transaction_form" model="ir.ui.view">
     <field name="model">payment.transaction</field>
-    <field name="inherit_id" ref="payment_jetcheckout.transaction_jetcheckout"/>
+    <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr='//button[@name="jetcheckout_payment"]' position="before">
             <button type="object" name="action_student_payments" class="oe_stat_button" icon="fa-users" attrs="{'invisible': ['|',('is_jetcheckout','=',False),('student_payment_count', '=', 0)]}">
