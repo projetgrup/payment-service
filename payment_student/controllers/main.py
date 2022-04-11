@@ -37,7 +37,7 @@ class StudentPaymentController(jetController):
         url, tx = super()._jetcheckout_process(**kwargs)
         if tx.student_payment_ids:
             if tx.state == 'done':
-                tx.student_payment_ids.write({'paid': True, 'paid_date': datetime.now(), 'installment_amount': tx.jetcheckout_installment_count})
+                tx.student_payment_ids.write({'paid': True, 'paid_date': datetime.now(), 'installment_count': tx.jetcheckout_installment_count})
             url = '%s?x=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx
 
