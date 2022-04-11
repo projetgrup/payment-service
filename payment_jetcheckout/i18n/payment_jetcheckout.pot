@@ -103,28 +103,28 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Cancel</span><span "
 "class=\"o_stat_text\">Transaction</span>"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Create</span><span "
 "class=\"o_stat_text\">Payment</span>"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Query</span><span "
 "class=\"o_stat_text\">Transaction</span>"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Refund</span><span "
 "class=\"o_stat_text\">Transaction</span>"
@@ -457,7 +457,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid "Do you confirm cancelling transaction?"
 msgstr ""
 
