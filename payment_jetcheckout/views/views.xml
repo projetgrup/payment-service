@@ -56,9 +56,9 @@
             <attribute name="widget">html</attribute>
             <attribute name="options">{'style-inline': true, 'codeview': true}</attribute>
         </xpath>
-        <!--<xpath expr='//field[@name="journal_id"]' position="attributes">
+        <xpath expr='//page[@name="configuration"]//field[@name="journal_id"]' position="attributes">
             <attribute name="attrs">{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['none', 'transfer', 'jetcheckout'])]}</attribute>
-        </xpath>-->
+        </xpath>
     </field>
     </record>
 

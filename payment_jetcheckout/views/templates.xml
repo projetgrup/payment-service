@@ -48,18 +48,23 @@
             <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
             <t t-set="no_button" t-value="False"/>
             <t t-set="no_card_family" t-value="False"/>
+            <t t-set="no_loading" t-value="False"/>
         </t>
         <t t-if="data">
             <input id="amount" type="hidden" name="amount" t-att-value="account and data.recurring_amount_total or data.amount_total"/>
             <input id="currency" type="hidden" t-att-data-decimal="data.currency_id.decimal_places" data-separator="," data-thousand="." t-att-data-currency="data.currency_id.name" t-att-data-id="data.currency_id.id" t-att-data-position="data.currency_id.position" t-att-data-symbol="data.currency_id.symbol"/>
             <t t-set="no_button" t-value="True"/>
             <t t-set="no_card_family" t-value="True"/>
+            <t t-set="no_loading" t-value="True"/>
         </t>
-        <t t-call="payment_jetcheckout.payment_form">
-            <t t-set="s2s_form" t-value="True"/>
-            <t t-set="no_button" t-value="no_button"/>
-            <t t-set="no_card_family" t-value="no_card_family"/>
-        </t>
+        <div class="payment-card">
+            <t t-call="payment_jetcheckout.payment_form">
+                <t t-set="s2s_form" t-value="True"/>
+                <t t-set="no_button" t-value="no_button"/>
+                <t t-set="no_card_family" t-value="no_card_family"/>
+                <t t-set="no_loading" t-value="no_loading"/>
+            </t>
+        </div>
     </template>
 
     <template id="payment_sidebar" name="Payment Sidebar">
@@ -245,7 +250,7 @@
     </template>
 
     <template id="payment_form" name="Payment Form">
-        <div class="o_payment_loading">
+        <div t-if="not no_loading" class="o_payment_loading">
             <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
         </div>
         <div t-attf-class="w-100 bg-white my-4 #{'' if no_border else 'border card'}">
@@ -319,12 +324,17 @@
                         <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
-                        <div class="row font-weight-bold text-uppercase">
+                        <div t-if="not no_button" class="row font-weight-bold text-uppercase">
                             <div id="installments_table" class="col-xl-6 p-2">
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button t-if="not no_button" id="payment_pay" class="payment_pay btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <button id="payment_pay" class="payment_pay btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                            </div>
+                        </div>
+                        <div t-else="" class="row font-weight-bold text-uppercase">
+                            <div id="installments_table" class="col-12 p-2">
+                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                         </div>
                     </div>

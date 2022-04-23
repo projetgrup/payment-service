@@ -51,7 +51,7 @@
             <field name="image_128" type="base64" file="payment_jetcheckout/static/src/img/icon.png"/>
             <field name="provider">jetcheckout</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="redirect_form_view_id" ref="jetcheckout_s2s_form"/>
+            <field name="inline_form_view_id" ref="jetcheckout_s2s_form"/>
             <field name="state">disabled</field>
             <!--<field name="pre_msg"><![CDATA[<p>You will be redirected to Jetcheckout page for payment information.</p>]]></field>-->
             <field name="pending_msg"><![CDATA[<p>Your payment is processed, but it's waiting confirmation.</p>]]></field>

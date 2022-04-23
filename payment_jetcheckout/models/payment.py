@@ -1,174 +1,168 @@
 # -*- coding: utf-8 -*-
-from odoo import models, _
+from odoo import models, api, _
 from odoo.exceptions import UserError, ValidationError
 import base64
+
+class AccountPaymentMethod(models.Model):
+    _inherit = 'account.payment.method'
+
+    @api.model
+    def _get_payment_method_information(self):
+        res = super()._get_payment_method_information()
+        res['jetcheckout'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
+        return res
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    def _prepare_jetcheckout_payment_moves(self, line, commission):
-        all_move_vals = []
-        line = line.with_context(force_company=line.company_id.id)
-        for payment in self:
-            payment = payment.with_context(force_company=payment.journal_id.company_id.id)
-            company_currency = payment.company_id.currency_id
-            amount = payment.amount
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+        self.ensure_one()
+        line = self.env.context.get('line')
+        if not line:
+            return super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-            partner_id = payment.partner_id.commercial_partner_id
+        journal_account_id = self.journal_id.default_account_id
+        if not journal_account_id:
+            raise ValidationError(_('Journal default account missing'))
+        partner_payable_account_id = line.partner_id.property_account_payable_id
+        if not partner_payable_account_id:
+            raise ValidationError(_('Partner payable account missing'))
+        partner_receivable_account_id = self.partner_id.property_account_receivable_id
+        if not partner_receivable_account_id:
+            raise ValidationError(_('Partner receivable account missing'))
 
-            if payment.currency_id == company_currency:
-                balance = amount
-                commission_balance = commission
-                amount = 0.0
-                commission = 0.0
-                currency_id = False
-            else:
-                balance = payment.currency_id._convert(amount, company_currency, payment.company_id, payment.payment_date)
-                commission_balance = payment.currency_id._convert(commission_balance, company_currency, payment.company_id, payment.payment_date)
-                currency_id = payment.currency_id.id
+        if self.payment_type == 'inbound':
+            amount_currency = self.amount
+            commission_currency = self.payment_transaction_id.jetcheckout_commission_amount
+        elif self.payment_type == 'outbound':
+            amount_currency = -self.amount
+            commission_currency = -self.payment_transaction_id.jetcheckout_commission_amount
+        else:
+            amount_currency = 0.0
+            commission_currency = 0.0
 
-            journal_debit_account_id = payment.journal_id.default_debit_account_id
-            if not journal_debit_account_id:
-                raise ValidationError(_('Journal debit account missing'))
-            journal_credit_account_id = payment.journal_id.default_credit_account_id
-            if not journal_credit_account_id:
-                raise ValidationError(_('Journal credit account missing'))
-            partner_payable_account_id = line.partner_id.property_account_payable_id
-            if not partner_payable_account_id:
-                raise ValidationError(_('Partner payable account missing'))
-            partner_receivable_account_id = partner_id.property_account_receivable_id
-            if not partner_receivable_account_id:
-                raise ValidationError(_('Partner receivable account missing'))
+        balance = self.currency_id._convert(
+            amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
 
-            move_vals = {
-                'date': payment.payment_date,
-                'ref': payment.communication,
-                'journal_id': payment.journal_id.id,
-                'currency_id': payment.journal_id.currency_id.id or payment.company_id.currency_id.id,
-                'line_ids': [
-                    (0, 0, {
-                        'display_type': False,
-                        'name': payment.name,
-                        'amount_currency': amount if currency_id else 0.0,
-                        'currency_id': currency_id,
-                        'debit': balance,
-                        'credit': 0.0,
-                        'date_maturity': payment.payment_date,
-                        'partner_id': False,
-                        'account_id': journal_debit_account_id.id,
-                        'payment_id': payment.id,
-                    }),
-                    (0, 0, {
-                        'display_type': False,
-                        'name': payment.name,
-                        'amount_currency': commission if currency_id else 0.0,
-                        'currency_id': currency_id,
-                        'debit': commission_balance,
-                        'credit': 0.0,
-                        'date_maturity': payment.payment_date,
-                        'partner_id': line.partner_id.id,
-                        'account_id': partner_payable_account_id.id,
-                        'payment_id': payment.id,
-                    }),
-                    (0, 0, {
-                        'display_type': False,
-                        'name': payment.name,
-                        'amount_currency': -amount if currency_id else 0.0,
-                        'currency_id': currency_id,
-                        'debit': 0.0,
-                        'credit': balance,
-                        'date_maturity': payment.payment_date,
-                        'partner_id': partner_id.id,
-                        'account_id': partner_receivable_account_id.id,
-                        'payment_id': payment.id,
-                    }),
-                    (0, 0, {
-                        'display_type': False,
-                        'name': payment.name,
-                        'amount_currency': -commission if currency_id else 0.0,
-                        'currency_id': currency_id,
-                        'debit': 0.0,
-                        'credit': commission_balance,
-                        'date_maturity': payment.payment_date,
-                        'partner_id': False,
-                        'account_id': journal_credit_account_id.id,
-                        'payment_id': payment.id,
-                    }),
-                ],
+        commission_balance = self.currency_id._convert(
+            commission_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
+
+        currency_id = self.currency_id.id
+        liquidity_line_name = self.payment_reference
+        payment_display_name = self._prepare_payment_display_name()
+        default_line_name = self.env['account.move.line']._get_default_line_name(
+            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            self.amount,
+            self.currency_id,
+            self.date,
+            partner=self.partner_id,
+        )
+
+        line_vals_list = [
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': balance,
+                'credit': 0.0,
+                'partner_id': False,
+                'account_id': journal_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': commission_balance,
+                'credit': 0.0,
+                'partner_id': line.partner_id.id,
+                'account_id': partner_payable_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': 0.0,
+                'credit': balance,
+                'partner_id': self.partner_id.id,
+                'account_id': partner_receivable_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': 0.0,
+                'credit': commission_balance,
+                'partner_id': False,
+                'account_id': journal_account_id.id,
             }
-            all_move_vals.append(move_vals)
-            return all_move_vals
+        ]
+        return line_vals_list
 
-    def post_with_jetcheckout(self, line, commission, provider_commission, ip_address):
-        AccountMove = self.env['account.move'].with_context(default_type='entry')
-        for rec in self:
-            if rec.state != 'draft':
-                raise UserError(_("Only a draft payment can be posted."))
-            if commission > 0:
-                commission_product = self.env['product.product'].search([('default_code','=','JETCOM')], limit=1)
-                if not commission_product:
-                    commission_product = self.env['product.product'].create({
-                        'name': _('Commission'),
-                        'default_code': 'JETCOM',
-                        'type': 'service',
-                        'uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'uom_po_id': self.env.ref('uom.product_uom_unit').id,
-                        'categ_id': self.env.ref('product.cat_expense').id,
-                        'purchase_ok': False,
-                    })
-            else:
-                commission_product = False
+    def post_with_jetcheckout(self, line, commission, ip_address):
+        self.move_id._post(soft=False)
 
-            sequence_code = 'account.payment.customer.invoice'
-            rec.name = self.env['ir.sequence'].next_by_code(sequence_code, sequence_date=rec.payment_date)
-            if not rec.name:
-                raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
-            try:
-                moves = AccountMove.create(rec._prepare_jetcheckout_payment_moves(line, provider_commission))
-            except Exception as e:
-                raise ValidationError(str(e))
-            moves.filtered(lambda move: move.journal_id.post_at != 'bank_rec').post()
+        if commission > 0:
+            commission_product = self.env['product.product'].search([('default_code','=','JETCOM')], limit=1)
+            if not commission_product:
+                commission_product = self.env['product.product'].create({
+                    'name': _('Commission'),
+                    'default_code': 'JETCOM',
+                    'type': 'service',
+                    'uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'uom_po_id': self.env.ref('uom.product_uom_unit').id,
+                    'categ_id': self.env.ref('product.cat_expense').id,
+                    'purchase_ok': False,
+                })
+        else:
+            commission_product = False
 
-            move_name = self._get_move_name_transfer_separator().join(moves.mapped('name'))
-            rec.write({'state': 'posted', 'move_name': move_name})
-            if rec.invoice_ids:
-                (moves[0] + rec.invoice_ids).line_ids.filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id and not (line.account_id == line.payment_id.writeoff_account_id and line.name == line.payment_id.writeoff_label)).reconcile()
+        IrConfig = self.env['ir.config_parameter'].sudo()
+        base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
+        body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
+        layout = self.env.ref('payment_jetcheckout.report_layout')
+        html = layout._render({'body': body, 'base_url': base_url})
+        pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(
+            [html],
+            specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+        )
+        attachment = self.env['ir.attachment'].sudo().create({
+            'name': _('Terms & Conditions.pdf'),
+            'res_model': 'account.payment',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+            'datas': base64.b64encode(pdf_content),
+            'type': 'binary',
+        })
 
-            IrConfig = self.env['ir.config_parameter'].sudo()
-            base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
-            content = line.acquirer_id._render_jetcheckout_terms(rec.company_id, rec.partner_id)
-            layout = self.env['ir.ui.view'].browse(self.env['ir.ui.view'].get_view_id('web.minimal_layout'))
-            html = layout.render(dict(subst=True, body=content, base_url=base_url))
-            pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(
-                [html],
-                specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            )
-            attachment = self.env['ir.attachment'].sudo().create({
-                'name': _('Terms & Conditions.pdf'),
-                'res_model': 'account.payment',
-                'res_id': rec.id,
-                'mimetype': 'application/pdf',
-                'datas': base64.b64encode(pdf_content),
-                'type': 'binary',
-            })
+        body = _('User has accepted Terms & Conditions. User IP Address is %s') % (ip_address,)
+        self.message_post(body=body, attachment_ids=attachment.ids)
 
-            body = _('User has accepted Terms & Conditions. User IP Address is %s') % (ip_address,)
-            rec.message_post(body=body, attachment_ids=attachment.ids)
+        if commission_product:
+            order_vals = {
+                'partner_id': self.partner_id.id,
+                'order_line': [(0, 0, {
+                    'product_id': commission_product.id,
+                    'price_unit': commission
+                })]
+            }
+            order = self.env['sale.order'].sudo().create(order_vals)
+            order.action_confirm()
 
-            if commission_product:
-                order_vals = {
-                    'partner_id': rec.partner_id.id,
-                    'order_line': [(0, 0, {
-                        'product_id': commission_product.id,
-                        'price_unit': commission
-                    })]
-                }
-                order = self.env['sale.order'].sudo().create(order_vals)
-                order.action_confirm()
-
-                parameter = IrConfig.get_param('payment_jetcheckout.commission_invoice', 'no')
-                if parameter == 'draft' or parameter == 'post':
-                    moves = order._create_invoices()
-                    if parameter == 'post':
-                        moves.sudo().post()
+            parameter = IrConfig.get_param('payment_jetcheckout.commission_invoice', 'no')
+            if parameter == 'draft' or parameter == 'post':
+                moves = order._create_invoices()
+                if parameter == 'post':
+                    moves.sudo().action_post()
         return True
