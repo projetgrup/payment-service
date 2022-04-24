@@ -139,6 +139,22 @@
         </t>
     </template>
 
+    <template id="report_layout">
+        &lt;!DOCTYPE html&gt;
+        <html style="height: 0;">
+            <head>
+                <base t-att-href="base_url"/>
+                <t t-call-assets="web.report_assets_pdf" t-js="false"/>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-call-assets="web.report_assets_pdf" t-css="false"/>
+                <meta charset="utf-8"/>
+            </head>
+            <body class="container" t-att-onload="subst and 'subst()'" style="overflow:hidden">
+                <t t-raw="body"/>
+            </body>
+        </html>
+    </template>
+
     <report id="report_receipt" model="payment.transaction" string="Receipt" report_type="qweb-pdf" name="payment_jetcheckout.payment_receipt" file="payment_jetcheckout.payment_receipt"/>
 
     <report id="report_conveyance" model="payment.transaction" string="Conveyance" report_type="qweb-pdf" name="payment_jetcheckout.payment_conveyance" file="payment_jetcheckout.payment_conveyance"/>

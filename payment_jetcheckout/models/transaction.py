@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
-from datetime import date
 import requests
 import json
 import re
@@ -55,30 +54,35 @@ class PaymentTransaction(models.Model):
         return values
 
     def _jetcheckout_create_payment(self):
+        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+        payment_method_line = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
         line = self.env['payment.acquirer.jetcheckout.journal'].sudo().search([
             ('acquirer_id','=',self.acquirer_id.id),
             ('pos_id.name','=',self.jetcheckout_vpos_name),
         ], limit=1)
         if not line:
-            return False
+            raise UserError(_('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name))
 
-        payment = self.env['account.payment'].sudo().create({
-            'partner_id': self.partner_id.id,
-            'partner_type': 'customer',
-            'amount': self.amount + self.fees,
-            'currency_id': self.currency_id.id,
-            'date': date.today(),
+        values = {
+            'amount': abs(self.amount),
             'payment_type': 'inbound',
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.commercial_partner_id.id,
+            'partner_type': 'customer',
             'journal_id': line.journal_id.id,
-            'payment_method_id': self.env.ref('payment_jetcheckout.payment_method_jetcheckout').id,
+            'company_id': self.acquirer_id.company_id.id,
+            'payment_method_line_id': payment_method_line.id,
+            'payment_token_id': self.token_id.id,
+            'payment_transaction_id': self.id,
             'ref': self.reference,
-            #'invoice_ids': [(6, 0, self.invoice_ids.ids)],
-        })
-        try:
-            payment.post_with_jetcheckout(line, self.fees, self.jetcheckout_commission_amount, self.jetcheckout_ip_address)
-        except Exception as e:
-            raise ValidationError(str(e))
-        return payment
+        }
+        payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
+        payment.post_with_jetcheckout(line, self.fees, self.jetcheckout_ip_address)
+        self.payment_id = payment
+
+        if self.invoice_ids:
+            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+            (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
 
     def jetcheckout_s2s_do_refund(self, amount=0.0, **kwargs):
         self.ensure_one()
@@ -139,23 +143,14 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_payment(self):
         self.ensure_one()
-
         try:
-            payment = self.sudo()._jetcheckout_create_payment()
+            self.sudo()._jetcheckout_create_payment()
+            self.write({
+                'state_message': _('Transaction is succesful and payment has been validated.'),
+            })
         except Exception as e:
             self.write({
                 'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + re.sub('( None)*[^a-z A-Z]+','', str(e)),
-            })
-            return
-
-        if payment:
-            self.write({
-                'payment_id': payment.id,
-                'state_message': _('Transaction is succesful and payment has been validated.'),
-            })
-        else:
-            self.write({
-                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing')
             })
 
     def jetcheckout_cancel(self):

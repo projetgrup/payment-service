@@ -210,6 +210,7 @@ input:checked + .slider:before {
 
 .payment-card {
 
+    color: #707070;
     .card {
         border-radius: 10px !important;
     }
@@ -383,10 +384,6 @@ input:checked + .slider:before {
             align-content: center;
             align-items: center;
         }
-    }
-
-    .payment-card {
-        color: #707070;
     }
 
     .payment-form-container {
@@ -693,7 +690,7 @@ input:checked + .slider:before {
 }
 
 .o_payment_form .payment-card .field-container > label {
-    top: -12px !important;
+    top: -24px !important;
 }
 
 .payment-amount {
