@@ -470,6 +470,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please enter an amount'),
             });
+            this._enableButton();
             return false;
         } else if (this.$name.value === '') {
             this.displayNotification({
@@ -477,6 +478,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please fill card holder name'),
             });
+            this._enableButton();
             return false;
         } else if (this.cardnumber.typedValue === '') {
             this.displayNotification({
@@ -484,6 +486,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please fill card number'),
             });
+            this._enableButton();
             return false;
         } else if (this.expirationdate.typedValue === '') {
             this.displayNotification({
@@ -491,6 +494,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please fill card expiration date'),
             });
+            this._enableButton();
             return false;
         } else if (this.securitycode.typedValue === '') {
             this.displayNotification({
@@ -498,6 +502,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please fill card security code'),
             });
+            this._enableButton();
             return false;
         } else if (!document.querySelector('input[name="installment_radio"]:checked')) {
             this.displayNotification({
@@ -505,6 +510,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please select whether payment is straight or installment'),
             });
+            this._enableButton();
             return false;
         } else if (!this.$accept_terms.checked) {
             this.displayNotification({
@@ -512,9 +518,18 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Please accept Terms & Conditions'),
             });
+            this._enableButton();
             return false;
         } else {
             return true;
+        }
+    },
+
+    _enableButton: function () {
+        if (this.$order) {
+            const widget = _.find(this.getParent().getChildren(), w => w.selector === 'form[name="o_payment_checkout"]');
+            widget._enableButton();
+            $('body').unblock();
         }
     },
 
@@ -580,6 +595,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 if (config.isDebug()) {
                     console.error(error);
                 }
+                self._enableButton();
                 self._onToggleLoading();
             });
         }
