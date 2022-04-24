@@ -336,6 +336,9 @@
                             <div id="installments_table" class="col-12 p-2">
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
+                            <div class="d-none">
+                                <button id="payment_pay" class="payment_pay d-none"/>
+                            </div>
                         </div>
                     </div>
                 </div>
