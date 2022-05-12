@@ -224,168 +224,6 @@ input:checked + .slider:before {
         text-align: center;
     }
 
-    .payment-form-container .field-container:first-of-type {
-        grid-area: name;
-    }
-
-    .payment-form-container .field-container:nth-of-type(2) {
-        grid-area: number;
-    }
-
-    .payment-form-container .field-container:nth-of-type(3) {
-        grid-area: expiration;
-    }
-
-    .payment-form-container .field-container:nth-of-type(4) {
-        grid-area: security;
-    }
-
-    .payment-form-container .field-container:nth-of-type(5) {
-        grid-area: terms;
-    }
-
-    .field-container {
-        position: relative;
-
-        > input {
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-            font-size: 18px;
-            padding: 10px 10px 10px 15px;
-            display: block;
-            width: 100%;
-            color: #999;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
-        }
-
-        > input:focus {
-            outline: none;
-            border-color: theme-color('primary') !important;
-        }
-
-        > input::placeholder {
-            color: #ccc;
-        }
-
-        > label {
-            font-weight: normal;
-            position: absolute;
-            pointer-events: none;
-            left: 10px;
-            top: -10px;
-            height:20px;
-            overflow: hidden;
-            font-size: 14px;
-            font-weight: bold;
-            color: theme-color('primary');
-            transition: 0.2s ease all; 
-            -moz-transition: 0.2s ease all; 
-            -webkit-transition: 0.2s ease all;
-            span {
-                background: #fff;
-                padding: 0 5px;
-            }
-        }
-
-        > .bar-container {
-            position: relative;
-            display: block;
-            width: 100%;
-            width: calc(100% - 2.5px);
-            margin: 0 auto;
-        }
-
-        > .bar-container:before, > .bar-container:after {
-            content: '';
-            height: 2px; 
-            width: 0;
-            bottom: 1px; 
-            position: absolute;
-            background: theme-color('primary');
-            transition: 0.2s ease all; 
-            -moz-transition: 0.2s ease all; 
-            -webkit-transition: 0.2s ease all;
-        }
-
-        > .bar-container:before {
-          left: 50%;
-        }
-
-        > .bar-container:after {
-            right: 50%; 
-        }
-
-        > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after {
-            width: 50%;
-        }
-
-        > .highlight-container {
-            position: absolute;
-            height: 50%; 
-            width: 100px; 
-            top: 0; 
-            left: 0;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        > input:focus ~ .highlight-container {
-            -webkit-animation: inputHighlighter 0.3s ease;
-            -moz-animation: inputHighlighter 0.3s ease;
-            animation: inputHighlighter 0.3s ease;
-        }
-
-        @-webkit-keyframes inputHighlighter {
-            from { background: #5264AE; }
-            to { width: 0; background: transparent; }
-        }
-
-        @-moz-keyframes inputHighlighter {
-            from { background: #5264AE; }
-            to { width: 0; background: transparent; }
-        }
-
-        @keyframes inputHighlighter {
-            from { background: #5264AE; }
-            to { width: 0; background: transparent; }
-        }
-
-        .symbol {
-            position: absolute;
-            top: 3px;
-            padding: 10px 10px 10px 5px;
-            font-size: 18px;
-            color: #ccc;
-        }
-
-        .symbol-before {
-            left: 0;
-        }
-
-        .symbol-after {
-            right: 0;
-        }
-
-        .installment-container {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .terms-container {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            align-items: center;
-        }
-    }
-
     .payment-form-container {
         background-color: #fff !important;
         display: grid;
@@ -394,6 +232,26 @@ input:checked + .slider:before {
         grid-template-areas: "name name""number number""expiration security""terms terms";
         padding: 20px;
         color: #707070;
+
+        .field-container:first-of-type {
+            grid-area: name;
+        }
+
+        .field-container:nth-of-type(2) {
+            grid-area: number;
+        }
+    
+        .field-container:nth-of-type(3) {
+            grid-area: expiration;
+        }
+    
+        .field-container:nth-of-type(4) {
+            grid-area: security;
+        }
+    
+        .field-container:nth-of-type(5) {
+            grid-area: terms;
+        }
     }
 
     .payment-gradient {
@@ -689,7 +547,183 @@ input:checked + .slider:before {
     }
 }
 
-.o_payment_form .payment-card .field-container > label {
+.radio-container {
+    position: relative;
+    min-height: 50px;
+    box-sizing: border-box;
+    padding: 20px 10px 10px 15px;
+    display: block;
+    width: 100%;
+    color: #666;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+
+    label.radio-caption {
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 10px;
+        top: -10px;
+        height:20px;
+        overflow: hidden;
+        font-size: 14px;
+        font-weight: bold;
+        color: theme-color('primary');
+        transition: 0.2s ease all; 
+        -moz-transition: 0.2s ease all; 
+        -webkit-transition: 0.2s ease all;
+        span {
+            background: #fff;
+            padding: 0 5px;
+        }
+    }
+}
+
+.field-container {
+    position: relative;
+
+    > input {
+        -webkit-box-sizing: border-box;
+        min-height: 50px;
+        box-sizing: border-box;
+        font-size: 18px;
+        padding: 10px 10px 10px 15px;
+        display: block;
+        width: 100%;
+        color: #999;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+    }
+
+    > input:focus {
+        outline: none;
+        border-color: theme-color('primary') !important;
+    }
+
+    > input::placeholder {
+        color: #ccc;
+    }
+
+    > label {
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 10px;
+        top: -10px;
+        height:20px;
+        overflow: hidden;
+        font-size: 14px;
+        font-weight: bold;
+        color: theme-color('primary');
+        transition: 0.2s ease all; 
+        -moz-transition: 0.2s ease all; 
+        -webkit-transition: 0.2s ease all;
+        span {
+            background: #fff;
+            padding: 0 5px;
+        }
+    }
+
+    > .bar-container {
+        position: relative;
+        display: block;
+        width: 100%;
+        width: calc(100% - 2.5px);
+        margin: 0 auto;
+    }
+
+    > .bar-container:before, > .bar-container:after {
+        content: '';
+        height: 2px; 
+        width: 0;
+        bottom: 1px; 
+        position: absolute;
+        background: theme-color('primary');
+        transition: 0.2s ease all; 
+        -moz-transition: 0.2s ease all; 
+        -webkit-transition: 0.2s ease all;
+    }
+
+    > .bar-container:before {
+      left: 50%;
+    }
+
+    > .bar-container:after {
+        right: 50%; 
+    }
+
+    > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after {
+        width: 50%;
+    }
+
+    > .highlight-container {
+        position: absolute;
+        height: 50%; 
+        width: 100px; 
+        top: 0; 
+        left: 0;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    > input:focus ~ .highlight-container {
+        -webkit-animation: inputHighlighter 0.3s ease;
+        -moz-animation: inputHighlighter 0.3s ease;
+        animation: inputHighlighter 0.3s ease;
+    }
+
+    @-webkit-keyframes inputHighlighter {
+        from { background: #5264AE; }
+        to { width: 0; background: transparent; }
+    }
+
+    @-moz-keyframes inputHighlighter {
+        from { background: #5264AE; }
+        to { width: 0; background: transparent; }
+    }
+
+    @keyframes inputHighlighter {
+        from { background: #5264AE; }
+        to { width: 0; background: transparent; }
+    }
+
+    .symbol {
+        position: absolute;
+        top: 3px;
+        padding: 10px 10px 10px 5px;
+        font-size: 18px;
+        color: #ccc;
+    }
+
+    .symbol-before {
+        left: 0;
+    }
+
+    .symbol-after {
+        right: 0;
+    }
+
+    .installment-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .terms-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+    }
+}
+
+.o_payment_form .field-container > label {
     top: -24px !important;
 }
 

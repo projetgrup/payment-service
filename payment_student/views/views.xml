@@ -256,11 +256,17 @@
             <field name="is_sps" invisible="1"/>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_payment" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
-                      <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value"><field name="payment_count" nolabel="1"/></span>
+                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="paid_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Items Paid</span>
+                    </div>
+                    </button>
+                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="payable_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items To Pay</span>
-                      </div>
+                    </div>
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -365,14 +371,20 @@
         <form string="Parents">
             <field name="is_sps" invisible="1"/>
             <header>
-                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight" attrs="{'invisible': [('payment_count', '=', 0)]}"/>
-                <button name="action_send" type="object" string="Send Email" attrs="{'invisible': [('payment_count', '=', 0)]}"/>
+                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button name="action_send" type="object" string="Send Email" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_payment" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value"><field name="payment_count" nolabel="1"/></span>
+                        <span class="o_stat_value"><field name="paid_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Items Paid</span>
+                    </div>
+                    </button>
+                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="payable_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items To Pay</span>
                     </div>
                     </button>
@@ -614,6 +626,7 @@
             <field name="term_id"/>
             <field name="bursary_id"/>
             <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_payable" string="Payable" domain="[('paid', '=', False)]"/>
             <filter name="filterby_paid" string="Paid" domain="[('paid', '=', True)]"/>
             <group expand="0" string="Groupby">
                 <filter string="Student" name="groupby_student" domain="[]" context="{'group_by':'student_id'}"/>
@@ -890,7 +903,7 @@
     <record id="action_transaction" model="ir.actions.act_window">
     <field name="name">Payment Transactions</field>
     <field name="res_model">payment.transaction</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,kanban,graph,pivot,form</field>
     <field name="context">{'setting': True, 'create': False, 'edit': False, 'delete': False}</field>
     </record>
 

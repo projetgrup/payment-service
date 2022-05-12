@@ -538,7 +538,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="border">
-                                                    <td><span t-field="tx.jetcheckout_commission_amount"/></td>
+                                                    <td><span t-field="tx.jetcheckout_customer_amount"/></td>
                                                     <td><span t-field="tx.jetcheckout_installment_count"/></td>
                                                 </tr>
                                                 <tr class="border">
