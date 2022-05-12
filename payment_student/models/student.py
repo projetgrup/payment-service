@@ -207,11 +207,14 @@ class StudentPayment(models.Model):
     @api.onchange('student_id')
     def _compute_student(self):
         for payment in self:
-            payment.limited_student_id = payment.student_id.id
+            if payment.limited_student_id.id != payment.student_id.id:
+                payment.limited_student_id = payment.student_id.id
 
+    @api.onchange('limited_student_id')
     def _set_student(self):
         for payment in self:
-            payment.student_id = payment.limited_student_id.id
+            if payment.student_id.id != payment.limited_student_id.id:
+                payment.student_id = payment.limited_student_id.id
 
     name = fields.Char(compute='_compute_name')
     student_id = fields.Many2one('res.partner', required=True, ondelete='restrict')
