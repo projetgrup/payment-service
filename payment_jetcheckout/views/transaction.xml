@@ -10,7 +10,7 @@
                 name="jetcheckout_payment"
                 class="oe_stat_button"
                 icon="fa-money"
-                groups="account.group_account_invoice"
+                groups="base.group_user"
                 attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
@@ -20,7 +20,7 @@
                 name="jetcheckout_cancel"
                 class="oe_stat_button"
                 icon="fa-times"
-                groups="account.group_account_invoice"
+                groups="base.group_user"
                 attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}"
                 confirm="Do you confirm cancelling transaction?">
                 <div class="o_form_field o_stat_info mr3">
@@ -31,7 +31,7 @@
                 name="jetcheckout_refund"
                 class="oe_stat_button"
                 icon="fa-undo"
-                groups="account.group_account_invoice"
+                groups="base.group_user"
                 attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
@@ -41,7 +41,7 @@
                 name="jetcheckout_query"
                 class="oe_stat_button"
                 icon="fa-search"
-                groups="account.group_account_invoice"
+                groups="base.group_user"
                 attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
