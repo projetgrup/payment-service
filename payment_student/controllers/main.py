@@ -73,8 +73,6 @@ class StudentPaymentController(jetController):
             'advance_discount': setting.get_setting_discount() if setting else 0,
             'maximum_discount': int(setting.discount_maximum) if setting else 0,
             'sibling_discount': setting.discount_sibling if setting and setting.is_discount_sibling else 0,
-            'success_url': '/p/%s/%s/success' % (parent_id, access_token),
-            'fail_url': '/p/%s/%s/fail' % (parent_id, access_token),
             'tx': tx,
         }
         return request.render('payment_student.student_payment_page', values)
