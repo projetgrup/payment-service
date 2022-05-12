@@ -609,10 +609,10 @@ class Partner(models.Model):
         action = self.env.ref('payment_student.action_payment').sudo().read()[0]
         if self.parent_id:
             action['domain'] = [('student_id', '=', self.id)]
-            action['context'] = {'default_student_id': self.id, 'search_default_filterby_paid': True, 'domain': self.ids}
+            action['context'] = {'default_student_id': self.id, 'search_default_filterby_paid': True, 'domain': self.ids, 'create': False, 'edit': False, 'delete': False}
         else:
             action['domain'] = [('parent_id', '=', self.id)]
-            action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_paid': True}
+            action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_paid': True, 'create': False, 'edit': False, 'delete': False}
         return action
 
     def action_share_payment_link(self):
