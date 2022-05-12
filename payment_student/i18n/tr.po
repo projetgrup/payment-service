@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-11 08:49+0000\n"
-"PO-Revision-Date: 2022-04-11 11:50+0300\n"
+"POT-Creation-Date: 2022-05-12 20:18+0000\n"
+"PO-Revision-Date: 2022-05-12 23:19+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -21,6 +21,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_page
 msgid "<em>Select All</em>"
 msgstr "<em>Tümünü Seç</em>"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+#: model_terms:ir.ui.view,arch_db:payment_student.student_form
+msgid ""
+"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items Paid</span>"
+msgstr "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Ödendi</span>"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_form
@@ -415,8 +422,14 @@ msgid "Installment must be higher than zero"
 msgstr "Taksit oranı sıfırdan büyük olmalıdır"
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__payment_count
-#: model:ir.model.fields,field_description:payment_student.field_res_users__payment_count
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__paid_count
+#: model:ir.model.fields,field_description:payment_student.field_res_users__paid_count
+msgid "Items Paid"
+msgstr "Ödendi"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__payable_count
+#: model:ir.model.fields,field_description:payment_student.field_res_users__payable_count
 msgid "Items To Pay"
 msgstr "Ödenecek"
 
@@ -544,6 +557,12 @@ msgid "Paid Date"
 msgstr "Ödeme Tarihi"
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__paid_ids
+#: model:ir.model.fields,field_description:payment_student.field_res_users__paid_ids
+msgid "Paid Items"
+msgstr "Ödenen İşlemler"
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_form
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_search
 #: model_terms:ir.ui.view,arch_db:payment_student.student_form
@@ -565,6 +584,11 @@ msgstr "Veli Tahsilat Epostası"
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_tree
 msgid "Parents"
 msgstr "Veliler"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_search
+msgid "Payable"
+msgstr "Ödenecek"
 
 #. module: payment_student
 #: model:mail.template,subject:payment_student.payment_mail
