@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="api_pos_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.pos.form</field>
+    <field name="model">payment.acquirer.jetcheckout.api.pos</field>
+    <field name="arch" type="xml">
+        <form string="Virtual Pos">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="provider_id" required="1" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="is_client_active" invisible="1"/>
+                        <field name="is_merchant_active" invisible="1"/>
+                        <field name="is_apikey_active" invisible="1"/>
+                        <field name="is_terminal_active" invisible="1"/>
+                        <field name="is_username_active" invisible="1"/>
+                        <field name="is_password_active" invisible="1"/>
+                        <field name="is_refid_active" invisible="1"/>
+                        <field name="is_rfnd_username_active" invisible="1"/>
+                        <field name="is_rfnd_password_active" invisible="1"/>
+                        <field name="client_id" attrs="{'invisible': [('is_client_active', '=', False)], 'required': [('is_client_active', '=', True)]}"/>
+                        <field name="merchant_id" attrs="{'invisible': [('is_merchant_active', '=', False)], 'required': [('is_merchant_active', '=', True)]}"/>
+                        <field name="api_key" attrs="{'invisible': [('is_apikey_active', '=', False)], 'required': [('is_apikey_active', '=', True)]}"/>
+                        <field name="terminal_id" attrs="{'invisible': [('is_terminal_active', '=', False)], 'required': [('is_terminal_active', '=', True)]}"/>
+                        <field name="secret_key"/>
+                        <field name="username" attrs="{'invisible': [('is_username_active', '=', False)], 'required': [('is_username_active', '=', True)]}"/> 
+                        <field name="password" attrs="{'invisible': [('is_password_active', '=', False)], 'required': [('is_password_active', '=', True)]}"/>
+                        <field name="rfnd_username" attrs="{'invisible': [('is_rfnd_username_active', '=', False)], 'required': [('is_rfnd_username_active', '=', True)]}"/> 
+                        <field name="rfnd_password" attrs="{'invisible': [('is_rfnd_password_active', '=', False)], 'required': [('is_rfnd_password_active', '=', True)]}"/>
+                        <field name="ref_id" attrs="{'invisible': [('is_refid_active', '=', False)]}"/>
+                    </group>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="is_active" widget="boolean_toggle"/>
+                        <field name="priority"/>
+                        <field name="usage_3d"/>
+                        <field name="mode"/>
+                    </group>
+                    <group colspan="2" string="Notes" class="text-muted" attrs="{'invisible': [('notes', '=', False)]}">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page id="campaigns" string="Campaigns">
+                        <field name="campaign_ids">
+                            <tree string="Campaigns">
+                                <field name="offer_name"/>
+                                <field name="currency_id"/>
+                                <field name="is_active"/>
+                                <field name="from_date"/>
+                                <field name="to_date"/>
+                                <field name="card_family_names" string="Card Families"/>
+                                <field name="installments"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page id="applications" string="Applications">
+                        <field name="application_ids">
+                            <tree string="Applications">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page id="payment_defaults" string="Payment Request Default Values">
+                        <group>
+                            <group>
+                                <field name="customer_ip" attrs="{'invisible': [('customer_ip', '=', False)], 'required': [('customer_ip', '!=', False)]}"/>
+                                <field name="customer_email" attrs="{'invisible': [('customer_email', '=', False)], 'required': [('customer_email', '!=', False)]}"/>
+                                <field name="customer_name" attrs="{'invisible': [('customer_name', '=', False)], 'required': [('customer_name', '!=', False)]}"/>
+                                <field name="customer_surname" attrs="{'invisible': [('customer_surname', '=', False)], 'required': [('customer_surname', '!=', False)]}"/>
+                                <field name="customer_address" attrs="{'invisible': [('customer_address', '=', False)], 'required': [('customer_address', '!=', False)]}"/>
+                                <field name="customer_phone" attrs="{'invisible': [('customer_phone', '=', False)], 'required': [('customer_phone', '!=', False)]}"/>
+                                <field name="customer_id" attrs="{'invisible': [('customer_id', '=', False)], 'required': [('customer_id', '!=', False)]}"/>
+                                <field name="customer_identity" attrs="{'invisible': [('customer_identity', '=', False)], 'required': [('customer_identity', '!=', False)]}"/>
+                                <field name="customer_city" attrs="{'invisible': [('customer_city', '=', False)], 'required': [('customer_city', '!=', False)]}"/>
+                                <field name="customer_country" attrs="{'invisible': [('customer_country', '=', False)], 'required': [('customer_country', '!=', False)]}"/>
+                                <field name="customer_postal_code" attrs="{'invisible': [('customer_postal_code', '=', False)], 'required': [('customer_postal_code', '!=', False)]}"/>
+                                <field name="customer_company" attrs="{'invisible': [('customer_company', '=', False)], 'required': [('customer_company', '!=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="basket_item_id" attrs="{'invisible': [('basket_item_id', '=', False)], 'required': [('basket_item_id', '!=', False)]}"/>
+                                <field name="basket_item_name" attrs="{'invisible': [('basket_item_name', '=', False)], 'required': [('basket_item_name', '!=', False)]}"/>
+                                <field name="basket_item_desc" attrs="{'invisible': [('basket_item_desc', '=', False)], 'required': [('basket_item_desc', '!=', False)]}"/>
+                                <field name="basket_item_categ" attrs="{'invisible': [('basket_item_categ', '=', False)], 'required': [('basket_item_categ', '!=', False)]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="billing_address_contact" attrs="{'invisible': [('billing_address_contact', '=', False)], 'required': [('billing_address_contact', '!=', False)]}"/>
+                                <field name="billing_address" attrs="{'invisible': [('billing_address', '=', False)], 'required': [('billing_address', '!=', False)]}"/>
+                                <field name="billing_address_city" attrs="{'invisible': [('billing_address_city', '=', False)], 'required': [('billing_address_city', '!=', False)]}"/>
+                                <field name="billing_address_country" attrs="{'invisible': [('billing_address_country', '=', False)], 'required': [('billing_address_country', '!=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="shipping_address_contact" attrs="{'invisible': [('shipping_address_contact', '=', False)], 'required': [('shipping_address_contact', '!=', False)]}"/>
+                                <field name="shipping_address" attrs="{'invisible': [('shipping_address', '=', False)], 'required': [('shipping_address', '!=', False)]}"/>
+                                <field name="shipping_address_city" attrs="{'invisible': [('shipping_address_city', '=', False)], 'required': [('shipping_address_city', '!=', False)]}"/>
+                                <field name="shipping_address_country" attrs="{'invisible': [('shipping_address_country', '=', False)], 'required': [('shipping_address_country', '!=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <footer>
+                <button special="save" class="btn-secondary" string="Save" attrs="{'invisible': [('provider_id','=',False)]}"/>
+                <button special="cancel" class="btn-secondary" string="Close"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="api_poses_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.poses.form</field>
+    <field name="model">payment.acquirer.jetcheckout.api.poses</field>
+    <field name="arch" type="xml">
+        <form string="Virtual Pos">
+            <field name="acquirer_id" invisible="1" readonly="1"/>
+            <field name="pos_ids" nolabel="1" mode="kanban" colspan="2">
+                <kanban string="Virtual Pos" create="0" delete="0" default_order="is_active desc">
+                    <field name="name"/>
+                    <field name="provider_id"/>
+                    <field name="is_active"/>
+                    <field name="priority"/>
+                    <field name="mode"/>
+                    <field name="usage_3d"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click my-2 p-0 overflow-hidden #{record.is_active.raw_value ? '' : 'text-400'}" style="border-width: 2px; width: 250px">
+                                <div t-attf-class="o_kanban_image font-weight-bold text-center h-100 d-flex flex-column justify-content-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
+                                    <t t-if="record.is_active.raw_value">
+                                        <i class="fa fa-check"/><br/>Active
+                                    </t>
+                                    <t t-else="">
+                                        <i class="fa fa-times"/><br/>Passive
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div t-attf-class="font-weight-bold mt-3 text-center h4 #{record.is_active.raw_value ? '' : 'text-400'}"><t t-esc="record.name.value"/></div>
+                                    <div class="my-3">
+                                        <div><strong>Provider:</strong> <t t-esc="record.provider_id.value"/></div>
+                                        <div><strong>Priority:</strong> <t t-esc="record.priority.value"/></div>
+                                        <div><strong>Mode:</strong> <t t-esc="record.mode.value"/></div>
+                                        <div><strong>3D Usage:</strong> <t t-esc="record.usage_3d.value"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+            <footer>
+                <button special="cancel" class="btn-secondary" string="Close"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_api_poses" model="ir.actions.act_window">
+    <field name="name">Virtual Pos</field>
+    <field name="res_model">payment.acquirer.jetcheckout.api.poses</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+
+</odoo>

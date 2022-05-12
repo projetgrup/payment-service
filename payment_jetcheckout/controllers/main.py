@@ -16,7 +16,8 @@ _logger = logging.getLogger(__name__)
 
 class jetcheckoutController(http.Controller):
 
-    def jetcheckout_get_acquirer(self, providers=None, limit=None):
+    @staticmethod
+    def jetcheckout_get_acquirer(providers=None, limit=None):
         domain = [('state', 'in', ('enabled', 'test'))]
         if providers:
             domain.append(('provider', 'in', providers))
@@ -147,9 +148,10 @@ class jetcheckoutController(http.Controller):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def jetcheckout_get_card_family(self, acquirer=False, **kwargs):
+    @staticmethod
+    def jetcheckout_get_card_family(acquirer=False, **kwargs):
         if not acquirer:
-            acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+            acquirer = jetcheckoutController.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
         url = '%s/api/v1/prepayment/installment_options' % acquirer._get_jetcheckout_api_url()
         data = {
@@ -246,17 +248,16 @@ class jetcheckoutController(http.Controller):
     @http.route(['/payment/card/payment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        fees = self._jetcheckout_get_fees(acquirer=acquirer, **kwargs)
-        if not isinstance(fees, float):
-            return fees
-
         currency = request.env.company.currency_id
         installment = int(kwargs.get('installment', 1))
         amount = float(kwargs['amount'])
         amount_installment = float(kwargs['amount_installment'])
         if amount_installment > 0 and installment != 1:
             amount = amount_installment
-        amount_int = int((amount * (1 + (fees / 100))) * 100)
+
+        customer_rate = self._jetcheckout_get_fees(acquirer=acquirer, **kwargs)
+        customer_amount = amount * customer_rate / 100
+        amount_int = int((amount + customer_amount) * 100)
 
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         data = {
@@ -292,7 +293,7 @@ class jetcheckoutController(http.Controller):
             tx_vals = {
                 'reference': name,
                 'amount': amount,
-                'fees': fees,
+                'fees': customer_amount,
                 'currency_id': currency.id,
                 'acquirer_id': acquirer.id,
                 'partner_id': partner.id,
@@ -316,6 +317,8 @@ class jetcheckoutController(http.Controller):
                 'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,
+                'jetcheckout_customer_rate': customer_rate,
+                'jetcheckout_customer_amount': customer_amount,
             }
             tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx = request.env['payment.transaction'].sudo().create(tx_vals)
@@ -334,6 +337,8 @@ class jetcheckoutController(http.Controller):
                 'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,
+                'jetcheckout_customer_rate': customer_rate,
+                'jetcheckout_customer_amount': customer_amount,
             }
             tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx.write(tx_vals)

@@ -57,8 +57,8 @@ class StudentPaymentController(jetController):
         currency = company.currency_id
         lang = get_lang(request.env)
         setting = request.env['res.student.setting'].get_settings()
-        acquirer = jetController.jetcheckout_get_acquirer(jetController, providers=['jetcheckout'], limit=1)
-        card_family = jetController.jetcheckout_get_card_family(jetController, acquirer)
+        acquirer = jetController.jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        card_family = jetController.jetcheckout_get_card_family(acquirer)
 
         values = {
             'parent': parent,

@@ -61,3 +61,5 @@ class PaymentResultOutput(Datamodel):
     installment_amount = fields.Float(required=False, allow_none=False)
     commission_rate = fields.Float(required=False, allow_none=False)
     commission_amount = fields.Float(required=False, allow_none=False)
+    customer_rate = fields.Float(required=False, allow_none=False)
+    customer_amount = fields.Float(required=False, allow_none=False)

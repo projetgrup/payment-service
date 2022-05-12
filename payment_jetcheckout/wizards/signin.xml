@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="signin_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.signin.form</field>
+    <field name="model">payment.acquirer.jetcheckout.signin</field>
+    <field name="arch" type="xml">
+        <form string="Sign In">
+            <group>
+                <group>
+                    <p class="font-weight-bold text-center">Please enter your account details</p>
+                </group>
+                <group>
+                    <field name="username" required="1"/>
+                    <field name="password" required="1" password="True"/>
+                    <field name="acquirer_id" invisible="1"/>
+                </group>
+            </group>
+            <footer>
+                <button name="signin" type="object" class="btn-primary" string="Sign In" icon="fa-sign-in"/>
+                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_signin" model="ir.actions.act_window">
+    <field name="name">Sign In</field>
+    <field name="res_model">payment.acquirer.jetcheckout.signin</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+
+</odoo>
