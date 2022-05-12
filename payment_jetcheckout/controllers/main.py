@@ -384,12 +384,14 @@ class jetcheckoutController(http.Controller):
             address.append(tx.partner_state_id.name)
         if tx.partner_country_id:
             address.append(tx.partner_country_id.name)
+        success_url = '/payment/card/result' if kwargs.get('success_url', 'false') == 'false' else kwargs.get('success_url', '')
+        fail_url = '/payment/card/result' if kwargs.get('fail_url', 'false') == 'false' else kwargs.get('fail_url', '')
         data.update({
             "order_id": order_id,
             "card_holder_name": kwargs['card_holder_name'],
             "cvc": kwargs['cvc'],
-            "success_url": "https://%s%s" % (request.httprequest.host, kwargs.get('success_url', '/payment/card/result')),
-            "fail_url": "https://%s%s" % (request.httprequest.host, kwargs.get('fail_url', '/payment/card/result')),
+            "success_url": "https://%s%s" % (request.httprequest.host, success_url),
+            "fail_url": "https://%s%s" % (request.httprequest.host, fail_url),
             "customer":  {
                 "name": fullname[0],
                 "surname": fullname[-1],
