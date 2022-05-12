@@ -204,13 +204,13 @@ class StudentPayment(models.Model):
         for payment in self:
             payment.name = '%s (%s)' % (payment.student_id.name, payment.term_id.name)
 
-    @api.onchange('student_id')
+    @api.depends('student_id')
     def _compute_student(self):
         for payment in self:
             if payment.limited_student_id.id != payment.student_id.id:
                 payment.limited_student_id = payment.student_id.id
 
-    @api.onchange('limited_student_id')
+    @api.depends('limited_student_id')
     def _set_student(self):
         for payment in self:
             if payment.student_id.id != payment.limited_student_id.id:
