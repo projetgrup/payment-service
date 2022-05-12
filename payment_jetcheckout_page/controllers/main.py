@@ -39,7 +39,7 @@ class jetcheckoutPageController(jetController):
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_page_hash','=',request.session.hash)], limit=1)
         if not tx:
             raise ValidationError(_('Access Denied'))
-        acquirers = jetController.jetcheckout_get_acquirer(jetController)
+        acquirers = jetController.jetcheckout_get_acquirer()
         values = {
             'acquirers': acquirers,
             'tx': tx,

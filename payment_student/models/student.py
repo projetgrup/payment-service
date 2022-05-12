@@ -462,9 +462,11 @@ class Partner(models.Model):
     def _compute_payment(self):
         for partner in self:
             if partner.parent_id:
-                partner.payment_count = len(partner.parent_id.payment_ids)
+                partner.payable_count = len(partner.parent_id.payment_ids)
+                partner.paid_count = len(partner.parent_id.paid_ids)
             else:
-                partner.payment_count = len(partner.payment_ids)
+                partner.payable_count = len(partner.payment_ids)
+                partner.paid_count = len(partner.paid_ids)
 
     @api.onchange('parent_id')
     def _compute_sibling(self):
@@ -488,7 +490,9 @@ class Partner(models.Model):
     bursary_id = fields.Many2one('res.student.bursary', ondelete='restrict')
     sibling_ids = fields.One2many('res.partner', compute='_compute_sibling')
     payment_ids = fields.One2many('res.student.payment', 'parent_id', string='Payment Items', copy=False, domain=[('paid','=',False)])
-    payment_count = fields.Integer(string='Items To Pay', compute='_compute_payment')
+    paid_ids = fields.One2many('res.student.payment', 'parent_id', string='Paid Items', copy=False, domain=[('paid','!=',False)])
+    paid_count = fields.Integer(string='Items Paid', compute='_compute_payment')
+    payable_count = fields.Integer(string='Items To Pay', compute='_compute_payment')
     school_ids = fields.Many2many('res.student.school', string='Schools', compute='_compute_schools', store=True, readonly=True)
     date_email_sent = fields.Datetime('Email Sent Date', readonly=True)
 
@@ -589,15 +593,26 @@ class Partner(models.Model):
             return {'month': month, 'installment': line.installment, 'percentage': line.percentage}
         return False
 
-    def action_payment(self):
+    def action_payable(self):
         self.ensure_one()
         action = self.env.ref('payment_student.action_payment').sudo().read()[0]
         if self.parent_id:
             action['domain'] = [('student_id', '=', self.id)]
-            action['context'] = {'default_student_id': self.id, 'domain': self.ids}
+            action['context'] = {'default_student_id': self.id, 'search_default_filterby_payable': True, 'domain': self.ids}
         else:
             action['domain'] = [('parent_id', '=', self.id)]
-            action['context'] = {'domain': self.child_ids.ids}
+            action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_payable': True}
+        return action
+
+    def action_paid(self):
+        self.ensure_one()
+        action = self.env.ref('payment_student.action_payment').sudo().read()[0]
+        if self.parent_id:
+            action['domain'] = [('student_id', '=', self.id)]
+            action['context'] = {'default_student_id': self.id, 'search_default_filterby_paid': True, 'domain': self.ids}
+        else:
+            action['domain'] = [('parent_id', '=', self.id)]
+            action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_paid': True}
         return action
 
     def action_share_payment_link(self):

@@ -123,7 +123,7 @@ class PaymentAPIService(Component):
         if not name:
             raise ValidationError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
-        acquirer = jetController.jetcheckout_get_acquirer(jetController, providers=['transfer'], limit=1)
+        acquirer = jetController.jetcheckout_get_acquirer(providers=['transfer'], limit=1)
         tx = self.env['payment.transaction'].sudo().create({
             'reference': name,
             'acquirer_id': acquirer.id,
@@ -169,4 +169,6 @@ class PaymentAPIService(Component):
             'installment_amount': tx.jetcheckout_installment_amount,
             'commission_rate': tx.jetcheckout_commission_rate,
             'commission_amount': tx.jetcheckout_commission_amount,
+            'customer_rate': tx.jetcheckout_customer_rate,
+            'customer_amount': tx.jetcheckout_customer_amount,
         }

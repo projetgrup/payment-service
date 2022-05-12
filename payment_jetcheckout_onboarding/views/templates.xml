@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="fields" inherit_id="auth_signup.fields" name="Jetcheckout Onboarding Fields">
+        <xpath expr="//input[@name='name']/.." position="after">
+            <div class="form-group field-phone">
+                <label for="name">Your Phone</label>
+                <input type="text" name="phone" id="phone" class="form-control form-control-sm" t-att-readonly="'readonly' if only_passwords else None"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="signup" inherit_id="auth_signup.signup" name="Jetcheckout Onboarding Signup">
+        <xpath expr="//form" position="replace">
+            <div class="o_payment_loading" style="opacity: 0; visibility: hidden">
+                <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
+            </div>
+            <t t-set="only_passwords" t-value="bool(token and not invalid_token)"/>
+            <form class="oe_signup_form card" role="form" method="post" t-if="not message">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <a id="previous" href="#" class="btn btn-secondary position-absolute d-none"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</a>
+                <a id="next" href="#" class="btn btn-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></a>
+                <a id="submit" href="#" class="btn btn-primary text-white position-absolute d-none">Sign up<i class="fa fa-check ml-2" t-translations="off"/></a>
+                <div class="card-grid mt-lg-0 mt-5">
+                    <div id="card0" class="field-card">
+                        <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Personel Information</div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-login">
+                                <input type="text" name="login" t-att-value="login" id="login" class="form-control form-control-sm" autofocus="autofocus" autocapitalize="off" t-att-readonly="'readonly' if only_passwords else None"/>
+                                <span class="bar-container"/>
+                                <label for="login"><span>Your Email</span></label>
+                            </div>
+                            <div class="field-container form-group field-name mt-4">
+                                <input type="text" name="name" t-att-value="name" id="name" class="form-control form-control-sm" t-att-readonly="'readonly' if only_passwords else None" t-att-autofocus="'autofocus' if login and not only_passwords else None" autocapitalize="on"/>
+                                <span class="bar-container"/>
+                                <label for="name"><span>Your Name</span></label>
+                            </div>
+                            <div class="field-container form-group field-phone mt-4">
+                                <input type="text" name="phone" id="phone" class="form-control form-control-sm" t-att-readonly="'readonly' if only_passwords else None"/>
+                                <span class="bar-container"/>
+                                <label for="phone"><span>Your Phone</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-password">
+                                <input type="password" name="password" id="password" class="form-control form-control-sm" t-att-autofocus="'autofocus' if only_passwords else None"/>
+                                <span class="bar-container"/>
+                                <label for="password"><span>Password</span></label>
+                            </div>
+                            <div class="field-container form-group field-confirm_password mt-4">
+                                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-sm"/>
+                                <span class="bar-container"/>
+                                <label for="confirm_password"><span>Confirm Password</span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="card1" class="field-card fly-right">
+                        <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Company Information</div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-company">
+                                <input type="text" name="company" id="company" class="form-control form-control-sm" autocapitalize="on"/>
+                                <span class="bar-container"/>
+                                <label for="company"><span>Company Name</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-vat">
+                                <input type="text" name="vat" id="vat" class="form-control form-control-sm"/>
+                                <span class="bar-container"/>
+                                <label for="vat"><span>Vat</span></label>
+                            </div>
+                            <div class="field-container form-group field-tax mt-4">
+                                <input type="text" name="tax" id="tax" class="form-control form-control-sm"/>
+                                <span class="bar-container"/>
+                                <label for="tax"><span>Tax Office</span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="card2" class="field-card fly-right">
+                        <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Domain Information</div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-domain">
+                                <input type="text" name="domain" id="domain" class="form-control form-control-sm" autocapitalize="off"/>
+                                <span class="bar-container"/>
+                                <label for="domain"><span>Domain Name</span></label>
+                            </div>
+                            <div id="domain_info" class="field-container form-group alert alert-warning d-none">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="radio-container form-group field-type">
+                                <input type="radio" id="retailer" name="type" value="retailer" checked="checked"/>
+                                <label for="retailer">Retailer Payment System</label><br/>  
+                                <input type="radio" id="student" name="type" value="student"/>
+                                <label for="student">Student Payment System</label>
+                                <label class="radio-caption"><span>Type</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="alert" class="alert alert-danger mx-2 d-none" role="alert"></p>
+
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                <input type="hidden" name="token" t-att-value="token"/>
+            </form>
+            <div class="text-center oe_login_buttons pt-3">
+                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link btn-sm" role="button">Already have an account?</a>
+                <div class="o_login_auth"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

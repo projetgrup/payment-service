@@ -33,6 +33,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True)
     jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True)
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
+    jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
+    jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
 
     def _jetcheckout_s2s_get_tx_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
@@ -77,7 +79,7 @@ class PaymentTransaction(models.Model):
             'ref': self.reference,
         }
         payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
-        payment.post_with_jetcheckout(line, self.fees, self.jetcheckout_ip_address)
+        payment.post_with_jetcheckout(line, self.jetcheckout_commission_amount, self.jetcheckout_ip_address)
         self.payment_id = payment
 
         if self.invoice_ids:

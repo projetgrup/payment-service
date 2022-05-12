@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transaction_form" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_form"/>
+    <field name="arch" type="xml">
+        <div name="button_box" position="inside">
+            <field name="is_jetcheckout" invisible="1"/>
+            <button type="object"
+                name="jetcheckout_payment"
+                class="oe_stat_button"
+                icon="fa-money"
+                groups="account.group_account_invoice"
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_cancel"
+                class="oe_stat_button"
+                icon="fa-times"
+                groups="account.group_account_invoice"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}"
+                confirm="Do you confirm cancelling transaction?">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Cancel</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_refund"
+                class="oe_stat_button"
+                icon="fa-undo"
+                groups="account.group_account_invoice"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+            <button type="object"
+                name="jetcheckout_query"
+                class="oe_stat_button"
+                icon="fa-search"
+                groups="account.group_account_invoice"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
+                </div>
+            </button>
+        </div>
+        <xpath expr='//group[@name="transaction_partner"]/..' position="after">
+            <group name="transaction_jetcheckout" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
+                <group>
+                    <field name="jetcheckout_card_name"/>
+                    <field name="jetcheckout_card_number"/>
+                    <field name="jetcheckout_payment_amount"/>
+                    <field name="jetcheckout_installment_count"/>
+                    <!--<field name="jetcheckout_installment_amount"/>-->
+                    <label for="jetcheckout_commission_rate"/>
+                    <div class="o_row">
+                        %<field name="jetcheckout_commission_rate"/>
+                    </div>
+                    <field name="jetcheckout_commission_amount"/>
+                    <label for="jetcheckout_customer_rate"/>
+                    <div class="o_row">
+                        %<field name="jetcheckout_customer_rate"/>
+                    </div>
+                    <field name="jetcheckout_customer_amount"/>
+                </group>
+                <group>
+                    <field name="jetcheckout_card_type"/>
+                    <field name="jetcheckout_card_family"/>
+                    <field name="jetcheckout_order_id"/>
+                    <field name="jetcheckout_transaction_id"/>
+                    <field name="jetcheckout_ip_address"/>
+                    <field name="jetcheckout_vpos_name"/>
+                </group>
+            </group>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="transaction_pivot" model="ir.ui.view">
+    <field name="name">payment.transaction.pivot</field>
+    <field name="model">payment.transaction</field>
+    <field name="arch" type="xml">
+        <pivot string="Payment Transaction">
+            <field name="create_date" type="row"/>
+            <field name="amount" type="measure"/>
+        </pivot>
+    </field>
+    </record>
+
+    <record id="transaction_graph" model="ir.ui.view">
+    <field name="name">payment.transaction.graph</field>
+    <field name="model">payment.transaction</field>
+    <field name="arch" type="xml">
+        <graph string="Payment Transaction" sample="1">
+            <field name="create_date"/>
+            <field name="amount"/>
+        </graph>
+    </field>
+    </record>
+
+    <record id="payment.action_payment_transaction" model="ir.actions.act_window">
+    <field name="view_mode">tree,kanban,graph,pivot,form</field>
+    </record>
+</odoo>

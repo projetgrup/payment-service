@@ -6,22 +6,6 @@
             <field name="value">no</field><!-- no, draft, post -->
         </record>
 
-    	<record id="provider_paynet" model="payment.acquirer.jetcheckout.provider">
-            <field name="name">PayNet</field>
-        </record>
-
-    	<record id="provider_paytr" model="payment.acquirer.jetcheckout.provider">
-            <field name="name">PayTR</field>
-        </record>
-
-    	<record id="provider_iyzico" model="payment.acquirer.jetcheckout.provider">
-            <field name="name">Iyzico</field>
-        </record>
-
-    	<record id="provider_ozanpay" model="payment.acquirer.jetcheckout.provider">
-            <field name="name">Ozanpay</field>
-        </record>
-
         <record id="payment_method_jetcheckout" model="account.payment.method">
             <field name="name">Jetcheckout</field>
             <field name="code">jetcheckout</field>
