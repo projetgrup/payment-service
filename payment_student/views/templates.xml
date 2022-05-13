@@ -132,7 +132,7 @@
                             <div class="bg-white border card table-responsive payment-pivot overflow-auto"/>
                         </div>
                         <div t-if="len(payments) > 0" class="row justify-content-center">
-                            <div class="row justify-content-center payment-card mx-0 w-100 mb-n4">
+                            <div class="justify-content-center mx-0 w-100 mb-n4">
                                 <input id="amount" type="hidden" name="amount" value="0"/>
                                 <input id="amount_installment" type="hidden" name="amount_installment" value="0"/>
                                 <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="currency_separator" t-att-data-thousand="currency_thousand" t-att-data-currency="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>

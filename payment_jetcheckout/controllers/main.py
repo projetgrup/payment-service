@@ -23,7 +23,7 @@ class jetcheckoutController(http.Controller):
             domain.append(('provider', 'in', providers))
         if request.env['res.company'].search_count([]) > 1:
             domain.append(('company_id','=',request.env.company.id))
-        if request.env['website'].search_count([]) > 1:
+        if request.env['website'].search_count([('company_id','=',request.env.company.id)]) > 1:
             domain.append(('website_id','=',request.website.id))
         acquirer = request.env['payment.acquirer'].sudo().search(domain, limit=limit, order='sequence')
         if not acquirer:
