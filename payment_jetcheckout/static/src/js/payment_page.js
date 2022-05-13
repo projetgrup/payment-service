@@ -528,8 +528,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     _enableButton: function () {
         if (this.$order) {
             const widget = _.find(this.getParent().getChildren(), w => w.selector === 'form[name="o_payment_checkout"]');
-            widget._enableButton();
-            $('body').unblock();
+            if (widget) {
+                widget._enableButton();
+                $('body').unblock();
+            }
         }
     },
 

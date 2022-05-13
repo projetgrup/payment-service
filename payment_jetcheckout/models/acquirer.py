@@ -154,7 +154,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             'partner_id': partner,
             'domain': '//'.join([url[0],url[2]]),
         })
-        return self.env['mail.render.mixin']._render_template(self.jetcheckout_terms, 'payment.acquirer.jetcheckout.term', terms.ids)[terms.id]
+        return self.env['mail.render.mixin']._render_template(self.jetcheckout_terms, 'payment.acquirer.jetcheckout.term', terms.ids, engine='inline_template')[terms.id]
 
     def _jetcheckout_sync_providers(self):
         self.ensure_one()

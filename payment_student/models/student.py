@@ -204,13 +204,13 @@ class StudentPayment(models.Model):
         for payment in self:
             payment.name = '%s (%s)' % (payment.student_id.name, payment.term_id.name)
 
-    @api.depends('student_id')
+    @api.onchange('student_id')
     def _compute_student(self):
         for payment in self:
             if payment.limited_student_id.id != payment.student_id.id:
                 payment.limited_student_id = payment.student_id.id
 
-    @api.depends('limited_student_id')
+    @api.onchange('limited_student_id')
     def _set_student(self):
         for payment in self:
             if payment.student_id.id != payment.limited_student_id.id:
@@ -218,7 +218,7 @@ class StudentPayment(models.Model):
 
     name = fields.Char(compute='_compute_name')
     student_id = fields.Many2one('res.partner', required=True, ondelete='restrict')
-    limited_student_id = fields.Many2one('res.partner', compute='_compute_student', inverse='_set_student')
+    limited_student_id = fields.Many2one('res.partner', compute='_compute_student', store=False, readonly=False)
     parent_id = fields.Many2one('res.partner', related='student_id.parent_id', store=True, readonly=True, ondelete='restrict')
     school_id = fields.Many2one('res.student.school', related='student_id.school_id', store=True, readonly=True, ondelete='restrict')
     class_id = fields.Many2one('res.student.class', related='student_id.class_id', store=True, readonly=True, ondelete='restrict')
