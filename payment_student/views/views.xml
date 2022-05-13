@@ -618,7 +618,6 @@
     <field name="model">res.student.payment</field>
     <field name="arch" type="xml">
         <search string="Payment Items">
-            <field name="name"/>
             <field name="student_id"/>
             <field name="parent_id"/>
             <field name="school_id"/>

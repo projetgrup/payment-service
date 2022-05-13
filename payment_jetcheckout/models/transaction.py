@@ -128,7 +128,7 @@ class PaymentTransaction(models.Model):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 0:
+            if int(result['response_code']) in (0,1):
                 values = {'result': result}
             else:
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
