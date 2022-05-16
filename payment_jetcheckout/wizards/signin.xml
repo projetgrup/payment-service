@@ -10,8 +10,14 @@
                     <p class="font-weight-bold text-center">Please enter your account details</p>
                 </group>
                 <group>
-                    <field name="username" required="1"/>
-                    <field name="password" required="1" password="True"/>
+                    <div class="row mx-4" colspan="2">
+                        Username<br/>
+                        <field name="username" required="1"/>
+                    </div>
+                    <div class="row mx-4 mt-4" colspan="2">
+                        Password<br/>
+                        <field name="password" required="1" password="True"/>
+                    </div>
                     <field name="acquirer_id" invisible="1"/>
                 </group>
             </group>
