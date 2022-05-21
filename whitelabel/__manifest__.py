@@ -55,10 +55,9 @@
             "/whitelabel/static/src/components/attachment_viewer/attachment_viewer.esm.js",
             "/whitelabel/static/src/components/hotkey/hotkey.scss",
 
-            '/whitelabel/static/src/js/web_client.js',
-            '/whitelabel/static/src/js/dialog.js',
-            '/whitelabel/static/src/js/my_widget.js',
-            '/whitelabel/static/src/js/user_menu.js',
+            "/whitelabel/static/src/js/dialog.js",
+            "/whitelabel/static/src/js/my_widget.js",
+            "/whitelabel/static/src/js/user_menu.js",
         ],
         'web.assets_qweb': [
             "/whitelabel/static/src/legacy/xml/form_buttons.xml",
@@ -69,18 +68,18 @@
             "/whitelabel/static/src/components/attachment_viewer/attachment_viewer.xml",
             "/whitelabel/static/src/components/hotkey/hotkey.xml",
 
-            'whitelabel/static/src/xml/dashboard.xml',
-            'whitelabel/static/src/xml/base.xml',
-            'whitelabel/static/src/xml/client_action.xml',
+            "/whitelabel/static/src/xml/dashboard.xml",
+            "/whitelabel/static/src/xml/base.xml",
+            "/whitelabel/static/src/xml/client_action.xml",
         ],
         'web._assets_primary_variables': [
-            '/whitelabel/static/src/scss/primary_variables_custom.scss',
+            "/whitelabel/static/src/scss/primary_variables_custom.scss",
         ],
         'web._assets_secondary_variablesweb.assets_backend': [
-            '/whitelabel/static/src/scss/fields_extra_custom.scss',
+            "/whitelabel/static/src/scss/fields_extra_custom.scss",
         ],
         'web._assets_secondary_variables': [
-            '/whitelabel/static/src/scss/secondary_variables.scss',
+            "/whitelabel/static/src/scss/secondary_variables.scss",
         ],
     },
     "application": True,
