@@ -5,12 +5,14 @@ from odoo.exceptions import UserError
 class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.application'
     _description = 'Jetcheckout Application'
+    _remote_name = 'jet.application'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     parent_id = fields.Many2one('payment.acquirer.jetcheckout.api.applications')
-    pos_ids = fields.Many2many('payment.acquirer.jetcheckout.api.pos', 'payment_jetcheckout_api_application_pos_rel', 'application_id', 'pos_id', string='Poses', ondelete='cascade')
+    virtual_pos_ids = fields.Many2many('payment.acquirer.jetcheckout.api.pos', 'payment_jetcheckout_api_application_pos_rel', 'application_id', 'pos_id', string='Poses', ondelete='cascade')
     res_id = fields.Integer(readonly=True)
-    name = fields.Char('Name')
+    in_use = fields.Boolean(readonly=True)
+    name = fields.Char(required=True)
     application_id = fields.Char('Application ID', readonly=True)
     secret_key = fields.Char('Secret Key', readonly=True)
     is_active = fields.Boolean('Active', default=True)
@@ -31,51 +33,38 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
     ], string='Third Selection Criteria')
     virtual_poses = fields.Char('Virtual Pos', readonly=True)
 
-    def setup(self):
-        values = {
-            'name': self.name,
-            'is_active': self.is_active,
-            'user_id': self.acquirer_id.jetcheckout_userid,
-        }
-        self.acquirer_id._rpc('jet.application', 'create', values)
-
     def select(self):
         if not self.is_active:
             raise UserError(_('Please activate this record before selecting it'))
 
-        self.acquirer_id.jetcheckout_api_name = self.name
-        self.acquirer_id.jetcheckout_api_key = self.application_id
-        self.acquirer_id.jetcheckout_secret_key = self.secret_key
+        self.acquirer_id.write({
+            'jetcheckout_api_name': self.name,
+            'jetcheckout_api_key': self.application_id,
+            'jetcheckout_secret_key': self.secret_key
+        })
 
         self.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)] + [(0, 0, {
-            'provider_id': pos.provider_id.id,
-            'pos_id': self.env['payment.acquirer.jetcheckout.pos'].search([('name','=',pos.name)], limit=1).id,
+            'pos_id': self.env['payment.acquirer.jetcheckout.pos'].search([('res_id', '=', pos.res_id)], limit=1).id,
             'company_id': self.acquirer_id.company_id.id,
             'website_id': self.acquirer_id.website_id.id
-        }) for pos in self.pos_ids.filtered(lambda x: x.is_active)]
+        }) for pos in self.virtual_pos_ids.filtered(lambda x: x.is_active)]
 
     def write(self, vals):
-        values = {key: vals[key] for key in (
-            'name',
-            'is_active',
-            'first_selection',
-            'second_selection',
-            'third_selection'
-        ) if key in vals}
-        if 'first_selection' in values:
-            values['first_selection'] = values['first_selection'].replace(' ')
-        if 'second_selection' in values:
-            values['second_selection'] = values['second_selection'].replace(' ')
-        if 'third_selection' in values:
-            values['third_selection'] = values['third_selection'].replace(' ')
+        if 'name' in vals:
+            for app in self:
+                if app.in_use:
+                    app.acquirer_id.jetcheckout_api_name = vals['name']
+                    break
+        return super().write(vals)
 
-        if values:
-            self.acquirer_id._rpc('jet.application', 'write', self.res_id, values)
-
-        res = super().write(vals)
-        if 'name' in vals and self.acquirer_id.jetcheckout_api_key == self.application_id:
-            self.acquirer_id.jetcheckout_api_name = self.name
-        return res
+    def unlink(self):
+        for app in self:
+            if app.in_use:
+                app.acquirer_id.jetcheckout_api_key = False
+                app.acquirer_id.jetcheckout_secret_key = False
+                app.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)]
+                break
+        return super().unlink()
 
 class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.applications'
@@ -84,3 +73,7 @@ class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):
     acquirer_id = fields.Many2one('payment.acquirer')
     application_ids = fields.One2many('payment.acquirer.jetcheckout.api.application', 'parent_id', 'Applications')
 
+    def write(self, vals):
+        data = self.acquirer_id._jetcheckout_api_read()
+        self.acquirer_id._jetcheckout_api_upload(vals, data, self)
+        return super().write(vals)

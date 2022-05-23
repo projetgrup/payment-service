@@ -7,19 +7,29 @@
         <form string="Campaign">
             <sheet>
                 <group>
-                    <field name="pos_id" invisible="1"/>
-                    <field name="offer_name"/>
-                    <field name="currency_id"/>
-                    <field name="family_ids"/>
+                    <field name="offer_name" readonly="context.get('no_edit')"/>
+                    <field name="currency_id" readonly="context.get('no_edit')" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="card_families" readonly="context.get('no_edit')"> 
+                        <tree create="0" edit="0" delete="0">
+                            <field name="name"/>
+                        </tree>
+                        <form create="0" edit="0" delete="0">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
                 </group>
                 <group>
-                    <field name="is_active"/>
-                    <field name="from_date"/>
-                    <field name="to_date"/>
+                    <field name="is_active" readonly="context.get('no_edit')"/>
+                    <field name="from_date" readonly="context.get('no_edit')"/>
+                    <field name="to_date" readonly="context.get('no_edit')"/>
                 </group>
                 <notebook>
                     <page string="Installments">
-                        <field name="installment_ids">
+                        <field name="pos_lines" readonly="context.get('no_edit')">
                             <tree editable="bottom">
                                 <field name="installment_type"/>
                                 <field name="customer_rate"/>
@@ -31,14 +41,30 @@
                         </field>
                     </page>
                     <page string="Excluded Bins">
-                        <field name="excluded_bin_ids"/> 
+                        <field name="excluded_bins" readonly="context.get('no_edit')"> 
+                            <tree create="0" edit="0" delete="0">
+                                <field name="name"/>
+                            </tree>
+                            <form create="0" edit="0" delete="0">
+                                <sheet>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="code"/>
+                                            <field name="bank_code"/>
+                                        </group>
+                                        <group>
+                                            <field name="card_type"/>
+                                            <field name="mandatory_3d"/>
+                                            <field name="program"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
                     </page>
                 </notebook> 
             </sheet>
-            <footer>
-                <!--<button special="save" class="btn-secondary" string="Save" attrs="{'invisible': [('pos_id','=',False)]}"/>-->
-                <button special="cancel" class="btn-secondary" string="Close"/>
-            </footer>
         </form>
     </field>
     </record>

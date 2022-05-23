@@ -1,46 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="api_applications_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.application.tree</field>
+    <field name="model">payment.acquirer.jetcheckout.api.application</field>
+    <field name="arch" type="xml">
+        <tree string="Applications" default_order="is_active desc" decoration-muted="is_active == False">
+            <field name="name"/>
+            <field name="application_id"/>
+            <field name="secret_key"/>
+            <field name="is_active"/>
+            <field name="virtual_poses"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="api_applications_kanban" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.application.kanban</field>
+    <field name="model">payment.acquirer.jetcheckout.api.application</field>
+    <field name="arch" type="xml">
+        <kanban string="Applications" default_order="is_active desc">
+            <field name="name"/>
+            <field name="application_id"/>
+            <field name="secret_key"/>
+            <field name="is_active"/>
+            <field name="virtual_poses"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}">
+                        <div t-attf-class="col-md-2 font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
+                            <t t-if="record.is_active.raw_value">
+                                <i class="fa fa-check mr-2"/>Active
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-times mr-2"/>Passive
+                            </t>
+                        </div>
+                        <div class="col-md-3 font-weight-bold p-2 text-center shadow-lg">
+                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">Name</span>
+                            <t t-esc="record.name.value"/>
+                        </div>
+                        <div class="col-md-3 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">API Key</span>
+                            <t t-esc="record.application_id.value"/>
+                        </div>
+                        <div class="col-md-2 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">Virtual Pos</span>
+                            <t t-esc="record.virtual_poses.value"/>
+                        </div>
+                        <div class="col-md-2 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <button t-if="record.is_active.raw_value" name="select" type="object" class="btn btn-primary">Select</button>
+                            <button t-else="" class="btn text-uppercase bg-muted" disabled="disabled">Select</button>
+                        </div>
+                    </div>
+
+                    <div t-attf-class="oe_kanban_global_click my-2 p-0 overflow-hidden d-md-none d-flex #{record.is_active.raw_value ? '' : 'text-400'}">
+                        <div t-attf-class="font-weight-bold text-center h-100 p-4 w-25 d-flex flex-column justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
+                            <t t-if="record.is_active.raw_value">
+                                <i class="fa fa-check"/><br/>Active
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-times"/><br/>Passive
+                            </t>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div t-attf-class="font-weight-bold mt-3 text-center shadow-sm pb-2 h4 #{record.is_active.raw_value ? '' : 'text-400'}">
+                                <t t-esc="record.name.value"/>
+                            </div>
+                            <div class="m-1">
+                                <div class="m-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong class="text-500 mr-2">API Key</strong> <t t-esc="record.application_id.value"/></div>
+                                <div class="m-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong class="text-500 mr-2">Virtual Pos</strong> <t t-esc="record.virtual_poses.value"/></div>
+                            </div>
+                            <div class="m-1">
+                                <button t-if="record.is_active.raw_value" name="select" type="object" class="btn btn-block btn-primary">Select</button>
+                                <button t-else="" class="btn btn-block text-uppercase bg-muted" disabled="disabled">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
     <record id="api_applications_form" model="ir.ui.view">
     <field name="name">payment.acquirer.jetcheckout.api.applications.form</field>
     <field name="model">payment.acquirer.jetcheckout.api.applications</field>
     <field name="arch" type="xml">
         <form string="Applications">
             <field name="acquirer_id" invisible="1" readonly="1"/>
-            <field name="application_ids" nolabel="1" mode="kanban" colspan="2">
-                <kanban string="Applications" create="0" delete="0" default_order="is_active desc">
-                    <field name="name"/>
-                    <field name="application_id"/>
-                    <field name="secret_key"/>
-                    <field name="is_active"/>
-                    <field name="virtual_poses"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click my-2 p-0 overflow-hidden #{record.is_active.raw_value ? '' : 'text-400'}" style="border-width: 2px; width: 250px">
-                                <div t-attf-class="o_kanban_image font-weight-bold text-center h-100 d-flex flex-column justify-content-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
-                                    <t t-if="record.is_active.raw_value">
-                                        <i class="fa fa-check"/><br/>Active
-                                    </t>
-                                    <t t-else="">
-                                        <i class="fa fa-times"/><br/>Passive
-                                    </t>
-                                </div>
-                                <div class="oe_kanban_details">
-                                    <div t-attf-class="font-weight-bold mt-3 text-center h4 #{record.is_active.raw_value ? '' : 'text-400'}"><t t-esc="record.name.value"/></div>
-                                    <div class="my-3">
-                                        <div><strong>API Key:</strong> <t t-esc="record.application_id.value"/></div>
-                                        <div><strong>Secret Key:</strong> <t t-esc="record.secret_key.value"/></div>
-                                        <div class="font-italic"><t t-esc="record.virtual_poses.value"/></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-            <footer>
-                <button special="cancel" class="btn-secondary" string="Close"/>
-            </footer>
+            <field name="application_ids" nolabel="1" mode="kanban" colspan="2"/>
         </form>
+        <footer>
+            <button special="save" string="Save" class="btn-primary"/>
+            <button special="cancel" string="Cancel"/>
+        </footer>
     </field>
     </record>
 
@@ -49,42 +102,38 @@
     <field name="model">payment.acquirer.jetcheckout.api.application</field>
     <field name="arch" type="xml">
         <form string="Applications">
-            <field name="acquirer_id" invisible="1" readonly="1"/>
-            <group>
+            <sheet>
+                <field name="acquirer_id" invisible="1" readonly="1"/>
                 <group>
-                    <field name="name" required="1"/>
-                    <field name="application_id" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
-                    <field name="secret_key" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
-                    <field name="virtual_poses" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
+                    <group>
+                        <field name="name" readonly="context.get('no_edit')"/>
+                        <field name="application_id" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
+                        <field name="secret_key" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
+                        <field name="virtual_poses" readonly="1" attrs="{'invisible': [('application_id','=',False)]}"/>
+                    </group>
+                    <group>
+                        <field name="id" invisible="1"/>
+                        <field name="is_active" readonly="context.get('no_edit')"/>
+                        <field name="first_selection" readonly="context.get('no_edit')" attrs="{'invisible': [('application_id','=',False)]}"/>
+                        <field name="second_selection" readonly="context.get('no_edit')" attrs="{'invisible': [('application_id','=',False)]}"/>
+                        <field name="third_selection" readonly="context.get('no_edit')" attrs="{'invisible': [('application_id','=',False)]}"/>
+                    </group>
+                    <notebook colspan="2">
+                        <page name="pos" string="Virtual Pos">
+                            <field name="virtual_pos_ids" nolabel="1" domain="[('applications','in',[id])]" context="{'no_edit': 1}" readonly="context.get('no_edit')">
+                                <tree create="0" edit="0" delete="0">
+                                    <field name="name"/>
+                                    <field name="payment_org_id"/>
+                                    <field name="is_active"/>
+                                    <field name="priority"/>
+                                    <field name="usage_3d"/>
+                                    <field name="mode"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </group>
-                <group>
-                    <field name="id" invisible="1"/>
-                    <field name="is_active" widget="boolean_toggle"/>
-                    <field name="first_selection" attrs="{'invisible': [('application_id','=',False)]}"/>
-                    <field name="second_selection" attrs="{'invisible': [('application_id','=',False)]}"/>
-                    <field name="third_selection" attrs="{'invisible': [('application_id','=',False)]}"/>
-                </group>
-                <notebook colspan="2">
-                    <page name="pos" string="Virtual Pos">
-                        <field name="pos_ids" nolabel="1" domain="[('application_ids','in',[id])]">
-                            <tree string="Virtual Pos" create="0" edit="0" delete="0">
-                                <field name="name"/>
-                                <field name="provider_id"/>
-                                <field name="is_active"/>
-                                <field name="priority"/>
-                                <field name="usage_3d"/>
-                                <field name="mode"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
-            </group>
-            <footer>
-                <button name="setup" type="object" class="btn-primary" string="Create" attrs="{'invisible': [('application_id','!=',False)]}"/>
-                <button name="select" type="object" class="btn-primary" string="Select" attrs="{'invisible': [('application_id','=',False)]}"/>
-                <button special="save" class="btn-secondary" string="Save" attrs="{'invisible': [('application_id','=',False)]}"/>
-                <button special="cancel" class="btn-secondary" string="Close"/>
-            </footer>
+            </sheet>
         </form>
     </field>
     </record>

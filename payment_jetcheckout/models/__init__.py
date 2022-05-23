@@ -5,3 +5,4 @@ from . import transaction
 from . import token
 from . import payment
 from . import http
+from . import company

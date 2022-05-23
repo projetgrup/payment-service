@@ -51,7 +51,7 @@
             <t t-set="no_loading" t-value="False"/>
         </t>
         <t t-if="data">
-            <input id="amount" type="hidden" name="amount" t-att-value="account and data.recurring_amount_total or data.amount_total"/>
+            <input id="amount" type="hidden" name="amount" t-att-value="data.amount_total if not account else data.recurring_total"/>
             <input id="currency" type="hidden" t-att-data-decimal="data.currency_id.decimal_places" data-separator="," data-thousand="." t-att-data-currency="data.currency_id.name" t-att-data-id="data.currency_id.id" t-att-data-position="data.currency_id.position" t-att-data-symbol="data.currency_id.symbol"/>
             <t t-set="no_button" t-value="True"/>
             <t t-set="no_card_family" t-value="True"/>

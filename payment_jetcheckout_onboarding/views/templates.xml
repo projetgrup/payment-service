@@ -19,7 +19,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <a id="previous" href="#" class="btn btn-secondary position-absolute d-none"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</a>
                 <a id="next" href="#" class="btn btn-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></a>
-                <a id="submit" href="#" class="btn btn-primary text-white position-absolute d-none">Sign up<i class="fa fa-check ml-2" t-translations="off"/></a>
+                <a id="submit" href="#" class="btn btn-primary text-white position-absolute d-none">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></a>
                 <div class="card-grid mt-lg-0 mt-5">
                     <div id="card0" class="field-card">
                         <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Personel Information</div>
@@ -85,7 +85,7 @@
                                 <span class="bar-container"/>
                                 <label for="domain"><span>Domain Name</span></label>
                             </div>
-                            <div id="domain_info" class="field-container form-group alert alert-warning d-none">
+                            <div id="domain_info" class="field-container form-group border alert shadow-sm d-none">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <p id="alert" class="alert alert-danger mx-2 d-none" role="alert"></p>
+                <p id="alert" class="alert alert-danger mx-2 shadow-sm d-none" role="alert"></p>
 
                 <input type="hidden" name="redirect" t-att-value="redirect"/>
                 <input type="hidden" name="token" t-att-value="token"/>
