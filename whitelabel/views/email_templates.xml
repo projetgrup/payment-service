@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    
+
     <template id="mail_notification_paynow_inheirt" inherit_id="mail.mail_notification_paynow">
         <xpath expr="//table/tr[2]/td[@align='center']" position="replace">
             <td align="center" style="min-width: 590px;">
-                <p>Powered by <a target="_blank" t-att-href="company.website" style="color: #875A7B;"><t t-esc="'%s' % company.name"/></a></p>
+                <p>Powered by <a target="_blank" t-att-href="company.website" style="color: #875A7B;"><t
+                        t-esc="'%s' % company.name"/></a></p>
             </td>
-        </xpath>            
+        </xpath>
     </template>
 
     <template id="mail_notification_borders_inherit" inherit_id="mail.mail_notification_borders">
         <xpath expr="//div/table/tbody/tr[4]/td[@align='center']" position="replace">
-        <td align="center" style="min-width: 590px;">
-                <p>Powered by <a target="_blank" t-att-href="'%r'%company.website" style="color: #875A7B;"><t t-esc="'%s' % company.name"/></a></p>
+            <td align="center" style="min-width: 590px;">
+                <p>Powered by <a target="_blank" t-att-href="'%r'%company.website" style="color: #875A7B;"><t
+                        t-esc="'%s' % company.name"/></a></p>
             </td>
         </xpath>
     </template>
-    
+
     <template id="mail_notification_light_inherit" inherit_id="mail.mail_notification_light">
         <xpath expr="//table/tr[2]/td[@align='center']" position="replace">
             <td align="center" style="min-width: 590px;">
-                <p>Powered by <a target="_blank"  t-att-href="'%r'%company.website" style="color: #875A7B;"><t t-esc="'%s' % company.name"/></a></p>
+                <p>Powered by <a target="_blank" t-att-href="'%r'%company.website" style="color: #875A7B;"><t
+                        t-esc="'%s' % company.name"/></a></p>
             </td>
         </xpath>
     </template>
@@ -28,19 +31,14 @@
     <template id="message_notification_email_inherit" inherit_id="mail.message_notification_email">
         <xpath expr="//div/p" position="replace">
             <p style="color: #555555; margin-top:32px;">
-                Sent
-                <span t-if="company.name">
-                by
-                    <t t-set="website_url" t-value="'company.website'"/>
-                    <a t-if="website_url" t-att-href="'%r'%company.website" style="text-decoration:none; color: #875A7B;">
-                        <span t-esc="company.name"/>
-                    </a>
-                    <span t-if="not website_url" t-esc="company.name"/>
-                </span>
-                <a></a>.
+                Sent <span t-if="company.name"> by
+                <t t-set="website_url" t-value="'company.website'"/>
+                <a t-if="website_url" t-att-href="'%r'%company.website" style="text-decoration:none; color: #875A7B;">
+                    <span t-esc="company.name"/>
+                </a>
+                <span t-if="not website_url" t-esc="company.name"/>
+            </span>.
             </p>
         </xpath>
     </template>
-
-
 </odoo>
