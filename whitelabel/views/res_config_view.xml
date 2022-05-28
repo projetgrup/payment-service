@@ -17,8 +17,8 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16 row">
-                                        <label for="whitelabel_favicon" string="Favicon Image" class="col-xs-3 col-md-3 o_light_label"/>
-                                        <field name="whitelabel_favicon" widget="image" required="1"/>
+                                        <label for="favicon" string="Favicon Image" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="favicon" widget="image" class="float-left oe_avatar"/>
                                     </div>
                                 </div>
                             </div>
