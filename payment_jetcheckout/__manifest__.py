@@ -12,6 +12,7 @@
     'depends': ['account_payment','website_payment'],
     'data': [
         'views/acquirer.xml',
+        'views/company.xml',
         'views/transaction.xml',
         'views/templates.xml',
         'wizards/signin.xml',
