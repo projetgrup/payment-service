@@ -22,3 +22,5 @@ acquirer_manager,acquirer_manager,payment.model_payment_acquirer,payment_student
 journal_user,journal_user,payment_jetcheckout.model_payment_acquirer_jetcheckout_journal,payment_student.group_sps_user,1,0,0,0
 journal_manager,journal_manager,payment_jetcheckout.model_payment_acquirer_jetcheckout_journal,payment_student.group_sps_manager,1,1,1,1
 account_journal_user,account_journal_user,account.model_account_journal,payment_student.group_sps_user,1,0,0,0
+user_manager,user_manager,base.model_res_users,payment_student.group_sps_manager,1,1,1,1
+partner_manager,partner_manager,base.model_res_partner,payment_student.group_sps_manager,1,1,1,1

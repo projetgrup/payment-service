@@ -148,11 +148,15 @@ signup.include({
     },
 
     _onChangeDomain: function (ev) {
-        self.domain_state = false;
+        var self = this;
+        this.domain_state = false;
         let $info = this.$domain_info;
         this._onChangeField(ev);
         $info.innerHTML = '<i class="fa fa-spin fa-circle-o-notch mr-2"></i>' + _t('Loading...');
         $info.classList.remove('d-none');
+        $info.classList.remove('bg-100');
+        $info.classList.remove('text-primary');
+        $info.classList.add('alert-warning');
         rpc.query({
             route: '/web/signup/domain',
             params: {domain: this.$domain.value},
@@ -161,6 +165,9 @@ signup.include({
                 $info.innerHTML = result.error;
                 self.domain_state = false;
             } else {
+                $info.classList.add('bg-100');
+                $info.classList.add('text-primary');
+                $info.classList.remove('alert-warning');
                 $info.innerHTML = result.success;
                 self.domain_state = true;
             }

@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="user_tree" model="ir.ui.view">
+    <field name="name">res.users.tree</field>
+    <field name="model">res.users</field>
+    <field name="arch" type="xml">
+        <tree string="Users" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="login"/>
+            <field name="lang"/>
+            <field name="login_date"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="active" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="user_form" model="ir.ui.view">
+    <field name="name">res.users.form</field>
+    <field name="model">res.users</field>
+    <field name="arch" type="xml">
+        <form string="Users">
+            <header>
+                <button string="Send Password Reset Instructions" type="object" name="action_reset_password" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                <button string="Send an Invitation Email" type="object" name="action_reset_password" context="{'create_user': 1}" attrs="{'invisible': [('state', '!=', 'new')]}"/>
+                <field name="state" widget="statusbar"/>
+            </header>
+            <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}" role="status">
+                <a class="close" data-dismiss="alert" href="#" aria-label="Close"><i title="Close" class="small fa fa-times"/></a>
+                <div attrs="{'invisible': [('state', '!=', 'active')]}">
+                    <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
+                </div>
+                <div attrs="{'invisible': [('state', '!=', 'new')]}">
+                    <strong>An invitation email containing the following subscription link has been sent:</strong>
+                </div>
+                <div><field name="signup_url" widget="url"/></div>
+                    <field name="signup_valid" invisible="1"/>
+                </div>
+            <sheet>
+                <field name="id" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="active_partner" required="0" readonly="1" invisible="1"/>
+                <div class="alert alert-info text-center o_form_header" attrs="{'invisible': ['|', '|','&amp;', ('active', '=', True), ('active_partner', '=', True),'&amp;', ('active', '=', False), ('active_partner', '=', False),'&amp;', ('active', '=', True), ('active_partner', '=', False)]}" role="alert">
+                    <a class="close" data-dismiss="alert" href="#">x</a>
+                    <div>
+                        <strong>The contact linked to this user is still active</strong>
+                    </div>
+                    <div>
+                        You can archive the contact
+                        <field name="partner_id" required="0" readonly="1"/>
+                    </div>
+                </div>
+                <field name="avatar_128" invisible="1"/>
+                <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}"/>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
+                    <field name="email" invisible="1"/>
+                    <label for="login" string="Email Address"/>
+                    <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
+                    <label for="user_type" string="Type"/>
+                    <field name="user_type" widget="radio" options="{'horizontal': true}" class="w-100 mt-1"/>
+                    <group>
+                        <field name="partner_id" readonly="1" required="0" groups="base.group_no_one" attrs="{'invisible': [('id', '=', False)]}"/>
+                    </group>
+                </div>
+                <group>
+                    <group string="Information">
+                        <field name="phone" widget="phone" required="1"/>
+                        <field name="notification_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="signature" options="{'style-inline': true}"/>
+                        <field name="action_id" invisible="1"/>
+                    </group>
+                    <group string="Localization" name="preferences">
+                        <label for="lang"/>
+                        <div class="o_row">
+                            <field name="lang" required="1"/>
+                            <button type="action" name="56" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" title="More languages"/>
+                        </div>
+                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}"/>
+                        <field name="tz_offset" invisible="1"/>
+                    </group>
+                    <group string="Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
+                        <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
+                        <field string="Companies count" name="companies_count" invisible="1"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
     <record id="school_tree" model="ir.ui.view">
     <field name="name">res.student.school.tree</field>
     <field name="model">res.student.school</field>
@@ -869,13 +961,24 @@
     <field name="name">Companies</field>
     <field name="res_model">res.company</field>
     <field name="view_mode">tree,form</field>
+    <!--<field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_company_form')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('payment_jetcheckout.company_tree_hierarchical')}),
+    ]"/>-->
     </record>
 
     <record id="action_user" model="ir.actions.act_window">
     <field name="name">Users</field>
     <field name="res_model">res.users</field>
     <field name="view_mode">tree,form</field>
-    <field name="domain">[('is_sps','=',True)]</field>
+    <field name="context">{'is_sps': True}</field>
+    <field name="domain">[('is_sps','=',True),'|',('active','=',False),('active','=',True)]</field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('user_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('user_form')}),
+    ]"/>
     </record>
 
     <record id="action_mail_template" model="ir.actions.act_window">

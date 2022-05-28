@@ -499,6 +499,15 @@ class Partner(models.Model):
     school_ids = fields.Many2many('res.student.school', string='Schools', compute='_compute_schools', store=True, readonly=True)
     date_email_sent = fields.Datetime('Email Sent Date', readonly=True)
 
+    signup_token = fields.Char(groups="base.group_erp_manager,payment_student.group_sps_manager")
+    signup_type = fields.Char(groups="base.group_erp_manager,payment_student.group_sps_manager")
+    signup_expiration = fields.Datetime(groups="base.group_erp_manager,payment_student.group_sps_manager")
+
+    def signup_cancel(self):
+        if self.env.context.get('is_sps') and self.env.user.has_group('payment_student.group_sps_manager'):
+            return super(Partner, self.sudo()).signup_cancel()
+        return super(Partner, self).signup_cancel()
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -633,15 +642,18 @@ class Partner(models.Model):
 
     @api.constrains('vat', 'email')
     def _check_partner_vals(self):
-        for line in self:
-            if line.vat:
-                student = self.search([('id','!=',self.id),('vat','=',line.vat)], limit=1)
-                if student:
-                    raise UserError(_('There is already a student with the same Vat Number - %s') % student.name)
-            if line.email and line.company_id:
-                parent = self.search([('id','!=',self.id),('email','=',line.email),('company_id','=',line.company_id.id)], limit=1)
-                if parent:
-                    raise UserError(_('There is already a parent with the same email - %s') % parent.name)
+        if not self.env.context.get('onboarding'):
+            is_user = self.env.user.has_group('payment_student.group_sps_user')
+            for line in self:
+                if line.is_sps:
+                    if line.vat:
+                        student = self.search([('id','!=',self.id),('vat','=',line.vat),('company_id','=',line.company_id.id)], limit=1)
+                        if student:
+                            raise UserError(_('There is already a student with the same Vat Number - %s') % (student.name if is_user else line.vat,))
+                    if line.email:
+                        parent = self.search([('id','!=',self.id),('email','=',line.email),('company_id','=',line.company_id.id)], limit=1)
+                        if parent:
+                            raise UserError(_('There is already a parent with the same email - %s') % (parent.name if is_user else line.email,))
 
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'

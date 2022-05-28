@@ -3,7 +3,7 @@
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Student Payment System',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',

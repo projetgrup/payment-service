@@ -27,6 +27,7 @@
                     </p>
                 </group>
                 <group string="Applications" attrs="{'invisible': [('jetcheckout_api_key','=',False)]}">
+                    <field name="id" invisible="1"/>
                     <field name="jetcheckout_api_name" string="Name" readonly="1"/>
                     <field name="jetcheckout_api_key" string="API Key" readonly="1"/>
                     <field name="jetcheckout_secret_key" string="Secret Key" password="True" readonly="1"/>
@@ -47,9 +48,8 @@
         <xpath expr='//page[@name="acquirer_credentials"]' position="after">
             <page string="Journals" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
                 <field name="jetcheckout_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
-                    <tree editable="bottom">
-                        <field name="provider_id" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="pos_id" domain="[('provider_id','=',provider_id)]" context="{'default_provider_id': provider_id}" options="{'no_create': True, 'no_open': True}"/>
+                    <tree editable="bottom" create="0" delete="0">
+                        <field name="pos_id" options="{'no_create': True, 'no_open': True}"/>
                         <field name="currency_id"/>
                         <field name="journal_id" required="1" domain="[('type','=','bank'),('company_id','=',company_id)]"/>
                         <field name="partner_id" required="1" domain="['|',('company_id','=',False),('company_id','=',company_id)]"/>
@@ -157,53 +157,4 @@
         </form>
     </field>
     </record>
-
-    <record id="provider_tree" model="ir.ui.view">
-    <field name="name">payment.acquirer.jetcheckout.provider.tree</field>
-    <field name="model">payment.acquirer.jetcheckout.provider</field>
-    <field name="arch" type="xml">
-        <tree string="Provider" create="0" delete="0" edit="0">
-            <field name="name"/>
-            <field name="active" widget="boolean_toggle"/>
-        </tree>
-    </field>
-    </record>
-
-    <record id="pos_tree" model="ir.ui.view">
-    <field name="name">payment.acquirer.jetcheckout.pos.tree</field>
-    <field name="model">payment.acquirer.jetcheckout.pos</field>
-    <field name="arch" type="xml">
-        <tree string="Pos" create="0" delete="0" edit="0">
-            <field name="name"/>
-            <field name="provider_id"/>
-            <field name="active" widget="boolean_toggle"/>
-        </tree>
-    </field>
-    </record>
-
-    <record id="action_provider" model="ir.actions.act_window">
-    <field name="name">Providers</field>
-    <field name="res_model">payment.acquirer.jetcheckout.provider</field>
-    <field name='view_mode'>tree</field>
-    <field name="help" type="html">
-        <p class="o_view_nocontent_smiling_face">
-            Create a new pos provider
-        </p>
-    </field>
-    </record>
-
-    <record id="action_pos" model="ir.actions.act_window">
-    <field name="name">Virtual Pos</field>
-    <field name="res_model">payment.acquirer.jetcheckout.pos</field>
-    <field name='view_mode'>tree</field>
-    <field name="help" type="html">
-        <p class="o_view_nocontent_smiling_face">
-            Create a new virtual pos
-        </p>
-    </field>
-    </record>
-
-    <menuitem id="provider_menu" action="action_provider" parent="account.root_payment_menu" sequence="11"/>
-    <menuitem id="pos_menu" action="action_pos" parent="account.root_payment_menu" sequence="12"/>
-
 </odoo>

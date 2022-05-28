@@ -8,6 +8,7 @@
     "summary": "White Label",
     "license": "LGPL-3",
     "category": "Tools",
+    "sequence": 1,
     "author": 'Projet',
     "website": 'https://www.jetcheckout.com',
     "excludes": ["web_enterprise"],
