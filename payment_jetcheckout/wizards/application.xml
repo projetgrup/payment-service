@@ -83,18 +83,20 @@
     </record>
 
     <record id="api_applications_form" model="ir.ui.view">
-    <field name="name">payment.acquirer.jetcheckout.api.applications.form</field>
-    <field name="model">payment.acquirer.jetcheckout.api.applications</field>
-    <field name="arch" type="xml">
-        <form string="Applications">
-            <field name="acquirer_id" invisible="1" readonly="1"/>
-            <field name="application_ids" nolabel="1" mode="kanban" colspan="2"/>
-        </form>
-        <footer>
-            <button special="save" string="Save" class="btn-primary"/>
-            <button special="cancel" string="Cancel"/>
-        </footer>
-    </field>
+        <field name="name">payment.acquirer.jetcheckout.api.applications.form</field>
+        <field name="model">payment.acquirer.jetcheckout.api.applications</field>
+        <field name="arch" type="xml">
+            <form string="Applications">
+                <group>
+                    <field name="acquirer_id" invisible="1" readonly="1"/>
+                    <field name="application_ids" nolabel="1" mode="kanban" colspan="2"/>
+                </group>
+                <footer>
+                    <button special="save" string="Save" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
     </record>
 
     <record id="api_application_form" model="ir.ui.view">
