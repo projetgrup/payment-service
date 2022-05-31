@@ -1,0 +1,350 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* whitelabel
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220513\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-31 11:18+0000\n"
+"PO-Revision-Date: 2022-05-31 17:52+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: tr\n"
+"X-Generator: Poedit 2.4.3\n"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/search_panel/search_panel.xml:0
+#, python-format
+msgid "All"
+msgstr "Tümü"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_base
+msgid "Base"
+msgstr "Temel"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/control_panel/control_panel.xml:0
+#, python-format
+msgid "CLEAR"
+msgstr "TEMİZLE"
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_users__chatter_position
+msgid "Chatter Position"
+msgstr "Chatter Pozisyonu"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/js/web_responsive.js:0
+#, python-format
+msgid "Clear"
+msgstr "Temizle"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_res_config_settings
+msgid "Config Settings"
+msgstr "Yapılandırma Ayarları"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Create"
+msgstr "Oluştur"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_ir_default
+msgid "Default Values"
+msgstr "Öntanımlı Değerler"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Vazgeç"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Edit"
+msgstr "Düzenle"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/control_panel/control_panel.xml:0
+#: code:addons/whitelabel/static/src/components/search_panel/search_panel.xml:0
+#, python-format
+msgid "FILTER"
+msgstr "FİLTRE"
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_config_settings__attach_id
+msgid "Favicon Attach ID"
+msgstr "Favicon Eklenti ID"
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "Favicon Image"
+msgstr "Favicon Görseli"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/xml/base.xml:0
+#, python-format
+msgid "Log out"
+msgstr "Çıkış"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr ""
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.login_layout
+msgid "Manage Databases"
+msgstr "Vertabanlarını Yönet"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/attachment_viewer/attachment_viewer.xml:0
+#, python-format
+msgid "Maximize"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/attachment_viewer/attachment_viewer.xml:0
+#, python-format
+msgid "Minimize"
+msgstr ""
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_ir_module_module
+msgid "Module"
+msgstr "Modül"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/xml/client_action.xml:0
+#, python-format
+msgid "Needs your permission to"
+msgstr ""
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "New favicon image."
+msgstr "Yeni favicon görseli"
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "New title brand"
+msgstr "Yeni Başlık Markası"
+
+#. module: whitelabel
+#: model:ir.model.fields.selection,name:whitelabel.selection__res_users__chatter_position__normal
+msgid "Normal"
+msgstr "Normal"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/js/dialog.js:0
+#, python-format
+msgid "Odoo Client Error"
+msgstr "İstemci Hatası"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/js/dialog.js:0
+#, python-format
+msgid "Odoo Network Error"
+msgstr "Network Hatası"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/js/dialog.js:0
+#, python-format
+msgid "Odoo Server Error"
+msgstr "Çalışma Hatası"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Giden Postalar"
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_config_settings__odoo_text_replacement
+msgid "Powered By Text"
+msgstr "Powered By Metni"
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.mail_notification_borders_inherit
+#: model_terms:ir.ui.view,arch_db:whitelabel.mail_notification_light_inherit
+#: model_terms:ir.ui.view,arch_db:whitelabel.mail_notification_paynow_inherit
+msgid "Powered by"
+msgstr "Powered By"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/xml/base.xml:0
+#, python-format
+msgid "Preferences"
+msgstr "Tercihler"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr "Yayıncı Garanti Sözleşmesi"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Quick actions"
+msgstr ""
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "Replace Powered by Text"
+msgstr "Powered By Text Değiştir"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/control_panel/control_panel.xml:0
+#: code:addons/whitelabel/static/src/components/search_panel/search_panel.xml:0
+#, python-format
+msgid "SEE RESULT"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Save"
+msgstr "Kaydet"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/apps_menu/apps_menu.xml:0
+#, python-format
+msgid "Search menus..."
+msgstr "Menüde Ara"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/control_panel/control_panel.xml:0
+#, python-format
+msgid "Search..."
+msgstr "Ara..."
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.message_notification_email_inherit
+msgid "Sent"
+msgstr "Gönder"
+
+#. module: whitelabel
+#: model:ir.model.fields.selection,name:whitelabel.selection__res_users__chatter_position__sided
+msgid "Sided"
+msgstr ""
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_config_settings__title_brand
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "Title Brand"
+msgstr "Marka"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/xml/form_buttons.xml:0
+#, python-format
+msgid "Today"
+msgstr "Bugün"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/legacy/js/kanban_renderer_mobile.js:0
+#, python-format
+msgid "Undefined"
+msgstr "Tanımsız"
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_config_settings__favicon_url
+msgid "Url"
+msgstr "URL"
+
+#. module: whitelabel
+#: model:ir.model,name:whitelabel.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/control_panel/control_panel.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
+
+#. module: whitelabel
+#: model:ir.actions.act_window,name:whitelabel.action_whitelabel_config
+#: model_terms:ir.ui.view,arch_db:whitelabel.res_config_settings_view_form_inherit
+msgid "Whitelabel"
+msgstr ""
+
+#. module: whitelabel
+#: model:ir.model.fields,field_description:whitelabel.field_res_config_settings__whitelabel_favicon
+msgid "Whitelabel Favicon Image"
+msgstr ""
+
+#. module: whitelabel
+#: model_terms:ir.ui.view,arch_db:whitelabel.message_notification_email_inherit
+msgid "by"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/xml/client_action.xml:0
+#, python-format
+msgid "enable desktop notifications"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/apps_menu/apps_menu.xml:0
+#, python-format
+msgid "fade"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/xml/client_action.xml:0
+#, python-format
+msgid "needs your permission to"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/hotkey/hotkey.xml:0
+#, python-format
+msgid "props.withAccessKey ? 'x' : false"
+msgstr ""
+
+#. module: whitelabel
+#. openerp-web
+#: code:addons/whitelabel/static/src/components/hotkey/hotkey.xml:0
+#, python-format
+msgid "props.withAccessKey ? 'z' : false"
+msgstr ""
