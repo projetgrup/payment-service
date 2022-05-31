@@ -8,6 +8,7 @@
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
+    'sequence': 1453,
     'category': 'Accounting/Payment Acquirers',
     'depends': ['account_payment','website_payment'],
     'data': [
@@ -35,7 +36,7 @@
             'payment_jetcheckout/static/src/scss/payment.scss',
         ],
     },
-    'application': True,
+    'application': False,
     'uninstall_hook': 'uninstall_hook',
     'images': ['static/description/icon.png'],
 }
