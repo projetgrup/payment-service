@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="company.button">
+        <div class="o_list_buttons">
+            <button type="button" class="btn btn-primary">Create</button>
+        </div>
+    </t>
+
+    <div t-name="company.search" class="d-none d-md-block">
+        <div class="w-100">
+            <div class="position-relative">
+                <i class="fa fa-search position-absolute" style="right: 0.5rem"/>
+                <input type="text" class="o_input pr-5" placeholder="Search company..."/>
+            </div>
+        </div>
+    </div>
+
+</templates>

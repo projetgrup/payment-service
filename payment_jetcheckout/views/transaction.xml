@@ -7,11 +7,20 @@
         <div name="button_box" position="inside">
             <field name="is_jetcheckout" invisible="1"/>
             <button type="object"
+                name="action_items"
+                class="oe_stat_button"
+                icon="fa-list"
+                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_item_count', '=', 0)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value"><field name="jetcheckout_item_count"/></span><span class="o_stat_text">Items</span>
+                </div>
+            </button>
+            <button type="object"
                 name="jetcheckout_payment"
                 class="oe_stat_button"
                 icon="fa-money"
                 groups="base.group_user"
-                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False)]}">
+                attrs="{'invisible': ['|','|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False),('system', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
                 </div>
@@ -74,8 +83,12 @@
                     <field name="jetcheckout_transaction_id"/>
                     <field name="jetcheckout_ip_address"/>
                     <field name="jetcheckout_vpos_name"/>
+                    <field name="system" invisible="1"/>
                 </group>
             </group>
+        </xpath>
+        <xpath expr='//field[@name="payment_id"]' position="attributes">
+            <attribute name="attrs">{'invisible': [('system', '!=', False)]}</attribute>
         </xpath>
     </field>
     </record>
@@ -99,6 +112,16 @@
             <field name="create_date"/>
             <field name="amount"/>
         </graph>
+    </field>
+    </record>
+
+    <record id="payment_transaction_list" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_list"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="partner_name"]' position="replace">
+            <field name="partner_name" invisible="1"/>
+        </xpath>
     </field>
     </record>
 

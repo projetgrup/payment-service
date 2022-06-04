@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError
 import requests
 import json
-import re
+from datetime import datetime
+
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError, ValidationError
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
@@ -19,6 +20,11 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Please define a country for this company'))
         return country.id
 
+    def _compute_item_count(self):
+        for tx in self:
+            tx.jetcheckout_item_count = len(tx.jetcheckout_item_ids)
+
+    system = fields.Selection(related='company_id.system')
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True)
@@ -35,6 +41,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
     jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
+    jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
+    jetcheckout_item_count = fields.Integer(compute='_compute_item_count')
 
     def _jetcheckout_s2s_get_tx_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
@@ -138,7 +146,7 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_validate_order(self):
         self.ensure_one()
-        orders = self.sale_order_ids
+        orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids
         if not orders:
             return
         orders.with_context(send_email=True).action_confirm()
@@ -152,7 +160,7 @@ class PaymentTransaction(models.Model):
             })
         except Exception as e:
             self.write({
-                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + re.sub('( None)*[^a-z A-Z]+','', str(e)),
+                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
             })
 
     def jetcheckout_cancel(self):
@@ -164,6 +172,7 @@ class PaymentTransaction(models.Model):
             'state': 'cancel',
             'state_message': _('Transaction has been cancelled successfully.')
         })
+        self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
 
     def jetcheckout_refund(self):
         self.ensure_one()
@@ -188,6 +197,7 @@ class PaymentTransaction(models.Model):
                 state = 'cancel'
             else:
                 state = 'done'
+                self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
         else:
             state = 'error'
         self.write({'state': state})
@@ -223,3 +233,11 @@ class PaymentTransaction(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
+
+    def action_items(self):
+        self.ensure_one()
+        system = self.company_id.system
+        action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
+        action['domain'] = [('id', 'in', self.jetcheckout_item_ids.ids)]
+        action['context'] = {'create': False, 'edit': False, 'delete': False}
+        return action

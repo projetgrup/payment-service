@@ -6,6 +6,7 @@ var publicWidget = require('web.public.widget');
 var {Markup} = require('web.utils');
 var core = require('web.core');
 var rpc = require('web.rpc');
+var framework = require('payment_jetcheckout.framework');
 
 var signup = publicWidget.registry.SignUpForm;
 var _t = core._t;
@@ -81,7 +82,7 @@ signup.include({
         ev.preventDefault();
         var self = this;
         if (this._checkCards()) {
-            this._onToggleLoading(true);
+            framework.showLoading();
             rpc.query({
                 route: '/web/signup/prepare',
                 params: this._getParams(),
@@ -89,7 +90,7 @@ signup.include({
                 if ('error' in result) {
                     self.$alert.classList.remove('d-none');
                     self.$alert.innerHTML = _t('An error occured.') + ' ' + result.error;
-                    self._onToggleLoading();
+                    framework.hideLoading();
                     if (result.element) {
                         if (result.page !== 2) {
                             self.page = result.page;
@@ -109,7 +110,7 @@ signup.include({
                 if (config.isDebug()) {
                     console.error(error);
                 }
-                self._onToggleLoading();
+                framework.hideLoading();
             });
         }
     },
@@ -126,18 +127,6 @@ signup.include({
             tax: this.$tax.value,
             domain: this.$domain.value,
             type: this.$type.value,
-        }
-    },
-
-    _onToggleLoading: function (show=false) {
-        const $btn = $(this.$button);
-        const $loading = $('.o_payment_loading');
-        if (show) {
-            $btn.prop('disabled', 'disabled');
-            $loading.css('opacity', 1).css('visibility', 'visible');
-        } else {
-            $btn.prop('disabled', false);
-            $loading.css('opacity', 0).css('visibility', 'hidden');
         }
     },
 

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="payment_student.page">
-        <div t-raw="content"/>
-    </t>
     <t t-name="payment_student.pivot">
         <div t-if="!table" class="text-muted small w-75 text-center my-5 mx-auto">
             <i class="fa fa-info mb-3" t-translation="off"></i><br/>Payment table will be displayed here after you select at least one payment item

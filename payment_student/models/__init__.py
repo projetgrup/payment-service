@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
-from . import mail
+from . import partner
 from . import student
-from . import user
+from . import http
+from . import item
+from . import company
+from . import menu
+from . import settings

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 
+
 class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.pos'
     _description = 'Jetcheckout Pos'

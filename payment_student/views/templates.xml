@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="payment_button" inherit_id="payment_jetcheckout.payment_button">
-        <xpath expr="//li[@id='menu_pay']" position="replace"/>
-    </template>
-
-    <template id="student_payment_page" name="Student Payment">
+    <template id="payment_page" name="Student Payment Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -54,7 +50,7 @@
                                                 <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
                                                 <td class="border text-center">
                                                     <label class="switch" style="margin-bottom: 0;">
-                                                        <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment.is_sibling_paid()" checked="checked"/>
+                                                        <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment._is_student_sibling_paid()" checked="checked"/>
                                                         <span class="slider round fa"/>
                                                     </label>
                                                 </td>
@@ -102,16 +98,16 @@
                             <div class="row table-responsive bg-white border card overflow-auto d-md-block d-none">
                                 <table class="table table-sm mb-0">
                                     <tr>
-                                        <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                                        <td><a id="privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
                                     </tr>
                                     <tr>
-                                        <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                                        <td><a id="distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
                                     </tr>
                                     <tr>
-                                        <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                                        <td><a id="membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
                                     </tr>
                                     <tr>
-                                        <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
+                                        <td><a id="contact" href="#" class="d-block w-100">Contact</a></td>
                                     </tr>
                                 </table>
                             </div>
@@ -126,6 +122,11 @@
                             <div class="row mt-2">
                                 <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
                                 <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                            </div>
+                        </div>
+                        <div t-if="len(payments) == 0" class="row justify-content-center flex-column">
+                            <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
+                                <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
                             </div>
                         </div>
                         <div t-if="len(payments) > 0" class="row justify-content-center flex-column">
@@ -171,16 +172,16 @@
                         <div class="row table-responsive bg-white border card overflow-auto d-md-none d-block">
                             <table class="table table-sm mb-0">
                                 <tr>
-                                    <td><a id="student_privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                                    <td><a id="privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
                                 </tr>
                                 <tr>
-                                    <td><a id="student_distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                                    <td><a id="distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
                                 </tr>
                                 <tr>
-                                    <td><a id="student_membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                                    <td><a id="membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
                                 </tr>
                                 <tr>
-                                    <td><a id="student_contact" href="#" class="d-block w-100">Contact</a></td>
+                                    <td><a id="contact" href="#" class="d-block w-100">Contact</a></td>
                                 </tr>
                             </table>
                         </div>
@@ -218,7 +219,7 @@
     </template>
 
     <template id="student_payment_table" name="Student Payment Table">
-        <table class="table table-bordered mb-0">
+        <table t-if="vals" class="table table-bordered mb-0">
             <thead class="shadow">
                 <tr>
                     <th class="text-right" style="width: 300px;">Payment Details</th>
@@ -290,7 +291,7 @@
     <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
         <xpath expr="//tr[@t-if='is_conveyance']" position="before">
             <t t-call="payment_student.student_payment_table">
-                <t t-set="vals" t-value="doc.student_payment_ids.get_payment_table()"/>
+                <t t-set="vals" t-value="doc.jetcheckout_item_ids.get_student_payment_table()"/>
             </t>
         </xpath>
     </template>

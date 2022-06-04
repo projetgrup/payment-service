@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="school_tree" model="ir.ui.view">
+    <field name="name">res.student.school.tree</field>
+    <field name="model">res.student.school</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="term_tree" model="ir.ui.view">
+    <field name="name">res.student.term.tree</field>
+    <field name="model">res.student.term</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="bursary_tree" model="ir.ui.view">
+    <field name="name">res.student.bursary.tree</field>
+    <field name="model">res.student.bursary</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="percentage"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="class_tree" model="ir.ui.view">
+    <field name="name">res.student.class.tree</field>
+    <field name="model">res.student.class</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="payment_type_tree" model="ir.ui.view">
+    <field name="name">res.student.payment.type.tree</field>
+    <field name="model">res.student.payment.type</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="payment_template_tree" model="ir.ui.view">
+    <field name="name">res.student.payment.template.tree</field>
+    <field name="model">res.student.payment.template</field>
+    <field name="arch" type="xml">
+        <tree editable="top" sample="1">
+            <field name="school_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="term_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="payment_type_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="amount"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="currency_id" force_save="1" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="school_form" model="ir.ui.view">
+    <field name="name">res.student.school.form</field>
+    <field name="model">res.student.school</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="active" invisible="1"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="class_form" model="ir.ui.view">
+    <field name="name">res.student.class.form</field>
+    <field name="model">res.student.class</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="active" invisible="1"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="term_form" model="ir.ui.view">
+    <field name="name">res.student.term.form</field>
+    <field name="model">res.student.term</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="active" invisible="1"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="bursary_form" model="ir.ui.view">
+    <field name="name">res.student.bursary.form</field>
+    <field name="model">res.student.bursary</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <group>
+                        <label for="percentage"/>
+                        <div class="o_row">
+                            <field name="percentage" nolabel="1"/>
+                        </div>
+                    </group>
+                </group>
+                <group>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="payment_type_form" model="ir.ui.view">
+    <field name="name">res.student.payment.type.form</field>
+    <field name="model">res.student.payment.type</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="active" invisible="1"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="payment_table_form" model="ir.ui.view">
+    <field name="name">res.student.payment.table.form</field>
+    <field name="model">res.student.payment.table</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group colspan="2">
+                    <field name="table" colspan="2" nolabel="1"/>
+                </group>
+            </sheet>
+            <footer/>
+        </form>
+    </field>
+    </record>
+
+    <record id="school_search" model="ir.ui.view">
+    <field name="name">res.student.school.search</field>
+    <field name="model">res.student.school</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="term_search" model="ir.ui.view">
+    <field name="name">res.student.term.search</field>
+    <field name="model">res.student.term</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="bursary_search" model="ir.ui.view">
+    <field name="name">res.student.bursary.search</field>
+    <field name="model">res.student.bursary</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="class_search" model="ir.ui.view">
+    <field name="name">res.student.class.search</field>
+    <field name="model">res.student.class</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="payment_type_search" model="ir.ui.view">
+    <field name="name">res.student.payment.type.search</field>
+    <field name="model">res.student.payment.type</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+        </search>
+    </field>
+    </record>
+</odoo>
