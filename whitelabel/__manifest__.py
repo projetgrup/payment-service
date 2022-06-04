@@ -7,7 +7,9 @@
     'version': '1.0',
     "summary": "White Label",
     "license": "LGPL-3",
+    'sequence': 1453,
     "category": "Tools",
+    "sequence": 1,
     "author": 'Projet',
     "website": 'https://www.jetcheckout.com',
     "excludes": ["web_enterprise"],
@@ -82,7 +84,7 @@
             "/whitelabel/static/src/scss/secondary_variables.scss",
         ],
     },
-    "application": True,
+    "application": False,
     "installable": True,
     "auto_install": False,
     "external_dependencies": {}

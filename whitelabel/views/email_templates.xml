@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="mail_notification_paynow_inheirt" inherit_id="mail.mail_notification_paynow">
+    <template id="mail_notification_paynow_inherit" inherit_id="mail.mail_notification_paynow">
         <xpath expr="//table/tr[2]/td[@align='center']" position="replace">
             <td align="center" style="min-width: 590px;">
                 <p>Powered by <a target="_blank" t-att-href="company.website" style="color: #875A7B;"><t
@@ -41,4 +41,5 @@
             </p>
         </xpath>
     </template>
+
 </odoo>

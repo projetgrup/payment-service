@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="whitelabel_web_layout_inherit" inherit_id="web.layout">
-        <xpath expr="//title" position="replace">
-            <title t-esc="title or request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand']"/>
-        </xpath>
-        <xpath expr="//link[@rel='shortcut icon']" position="replace">
-            <t t-set="favicon_url" t-value="request.env['res.config.settings'].sudo().get_debranding_settings()['favicon_url']" />
-            <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or favicon_url"/>
+        <xpath expr="//html/head" position="inside">
+            <t t-if="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand']">
+                <t t-set="title"
+                   t-value="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand']"/>
+            </t>
         </xpath>
     </template>
 
-    <template  id="login_layout" inherit_id="web.login_layout" priority="8">
+    <template id="login_layout" inherit_id="web.login_layout" priority="8">
         <xpath expr="//div[@t-if='not disable_footer']" position="replace">
             <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                 <t t-if="not disable_database_manager">
+
                     <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
                 </t>
                 <a href="" target="_blank"></a>
