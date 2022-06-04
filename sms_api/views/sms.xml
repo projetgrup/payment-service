@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_composer_form" model="ir.ui.view">
+    <field name="model">sms.composer</field>
+    <field name="inherit_id" ref="sms.sms_composer_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='body']" position="before">
+            <field name="template_id" widget="selection" string="Template"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.sms</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="90"/>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="SMS" string="SMS" data-key="mass_mailing_sms">
+                <h2>SMS</h2>
+                <div class="row mt16 o_settings_container" name="sms_provider">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Provider</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Choose your sms provider
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sms_provider"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -90,10 +90,10 @@
                         </div>
                         <div class="col-md-6">
                             <div class="radio-container form-group field-type">
-                                <input type="radio" id="retailer" name="type" value="retailer" checked="checked"/>
-                                <label for="retailer">Retailer Payment System</label><br/>  
-                                <input type="radio" id="student" name="type" value="student"/>
-                                <label for="student">Student Payment System</label>
+                                <t t-foreach="systems" t-as="system">
+                                    <input type="radio" t-att-id="system['code']" name="type" t-att-value="system['code']"/>
+                                    <label t-att-for="system['code']"><t t-esc="system['name']"/></label><br/>
+                                </t>
                                 <label class="radio-caption"><span>Type</span></label>
                             </div>
                         </div>

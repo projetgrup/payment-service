@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.student.form</field>
+    <field name="model">payment.settings</field>
+    <field name="inherit_id" ref="payment_jetcheckout.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="Students" string="Students" data-key="payment_student" invisible="context.get('active_system') != 'student'">
+                <h2>Discounts</h2>
+                <div class="row mt16 o_settings_container" id="student_discounts">
+                    <div class="col-12 col-lg-6 o_setting_box" id="student_sibling_discount">
+                        <div class="o_setting_left_pane">
+                            <field name="student_discount_sibling_active"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="student_discount_sibling_active"/>
+                            <div class="text-muted">
+                                Define discounts when processing payment items of siblings
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('student_discount_sibling_active','=',False)]}">
+                                <div class="row mt16">
+                                    <label for="student_discount_sibling_rate" class="col-lg-4 o_light_label" string="Discount Rate"/>
+                                    % <field name="student_discount_sibling_rate" class="mx-2"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_setting_left_pane pt16" attrs="{'invisible': [('student_discount_sibling_active','=',False)]}">
+                            <field name="student_discount_sibling_maximum"/>
+                        </div>
+                        <div class="o_setting_right_pane pt16" attrs="{'invisible': [('student_discount_sibling_active','=',False)]}">
+                            <label for="student_discount_sibling_maximum" string="Select Maximum Discount"/>
+                            <div class="text-muted">
+                                Select maximum rate between <strong>Sibling Discount</strong> and <strong>Bursary Discount</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="student_advance_discount">
+                        <div class="o_setting_left_pane">
+                            <field name="student_discount_advance_active"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="student_discount_advance_active"/>
+                            <div class="text-muted">
+                                Define discounts when processing payment items with straight payments
+                            </div>
+                        </div>
+                        <div class="o_setting_left_pane" attrs="{'invisible': [('student_discount_advance_active','=',False)]}">
+                        </div>
+                        <div class="o_setting_right_pane" attrs="{'invisible': [('student_discount_advance_active','=',False)]}">
+                            <field name="student_discount_advance_ids" nolabel="1" colspan="2" class="w-100">
+                                <tree editable="top" limit="5">
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="installment"/>
+                                    <field name="percentage"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

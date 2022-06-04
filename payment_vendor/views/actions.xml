@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_child" model="ir.actions.act_window">
+    <field name="name">Contacts</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','vendor'),('parent_id','!=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="context">{'active_system': 'vendor', 'active_child': True}</field>
+    <field name="search_view_id" ref="child_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a vendor contact
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('child_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('child_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_parent" model="ir.actions.act_window">
+    <field name="name">Vendors</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','vendor'),('parent_id','=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="context">{'active_system': 'vendor', 'active_parent': True}</field>
+    <field name="search_view_id" ref="parent_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a vendor
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('parent_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('parent_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_item" model="ir.actions.act_window">
+    <field name="name">Payment Items</field>
+    <field name="res_model">payment.item</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="search_view_id" ref="item_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No payments yet
+        </p>
+        <p>
+            Created payments are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout.item_pivot')}),
+    ]"/>
+    </record>
+
+    <record id="action_settings" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field name="context">{'active_system' : 'vendor'}</field>
+    </record>
+</odoo>

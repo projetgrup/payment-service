@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_tree" model="ir.ui.view">
+    <field name="name">payment.item.student.tree</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout.item_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="attributes">
+            <attribute name="string">Student</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="readonly">1</attribute>
+            <attribute name="context">{'active_system': 'student'}</attribute>
+        </xpath>
+        <xpath expr='//field[@name="child_id"]' position="before">
+            <header>
+                <button name="action_student_payment_table" type="object" string="Payment Table"/>
+            </header>
+        </xpath>
+        <xpath expr='//field[@name="child_id"]' position="after">
+            <field name="student_id" string="Student" options="{'no_open': True, 'no_create': True}" invisible="not context.get('domain',False)" domain="[('id','in',context.get('domain',[]))]"/>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="after">
+            <field name="school_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="term_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="bursary_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="payment_type_id" required="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="item_search" model="ir.ui.view">
+    <field name="name">payment.item.student.search</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout.item_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="attributes">
+            <attribute name="string">Student</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Parent</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="after">
+            <field name="school_id"/>
+            <field name="class_id"/>
+            <field name="term_id"/>
+            <field name="bursary_id"/>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_parent"]' position="after">
+            <filter string="School" name="groupby_school" domain="[]" context="{'group_by':'school_id'}"/>
+            <filter string="Class" name="groupby_class" domain="[]" context="{'group_by':'class_id'}"/>
+            <filter string="Term" name="groupby_term" domain="[]" context="{'group_by':'term_id'}"/>
+            <filter string="Bursary" name="groupby_bursary" domain="[]" context="{'group_by':'bursary_id'}"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

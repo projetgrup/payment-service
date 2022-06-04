@@ -87,13 +87,15 @@
     <field name="model">payment.acquirer.jetcheckout.api.applications</field>
     <field name="arch" type="xml">
         <form string="Applications">
-            <field name="acquirer_id" invisible="1" readonly="1"/>
-            <field name="application_ids" nolabel="1" mode="kanban" colspan="2"/>
+            <sheet>
+                <field name="acquirer_id" invisible="1" readonly="1"/>
+                <field name="application_ids" nolabel="1" mode="kanban" colspan="2"/>
+            </sheet>
+            <footer>
+                <button special="save" string="Save" class="btn-primary"/>
+                <button special="cancel" string="Cancel"/>
+            </footer>
         </form>
-        <footer>
-            <button special="save" string="Save" class="btn-primary"/>
-            <button special="cancel" string="Cancel"/>
-        </footer>
     </field>
     </record>
 

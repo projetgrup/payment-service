@@ -19,7 +19,9 @@ class AuthSignupHome(AuthSignupHome):
     def get_auth_signup_qcontext(self):
         qcontext = super().get_auth_signup_qcontext()
         ncontext = {k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
-        return {**qcontext, **ncontext}
+        values = request.env['res.company']._fields['system'].selection
+        systems = [{'code': code, 'name': name} for code, name in values]
+        return {'systems': systems, **qcontext, **ncontext}
 
     @http.route(['/web/signup/prepare'], type='json', auth='public', sitemap=False, website=True)
     def web_auth_signup_prepare(self, **qcontext):

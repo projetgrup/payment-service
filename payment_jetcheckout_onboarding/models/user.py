@@ -3,7 +3,7 @@ from odoo import models, api, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 
-class ResUsers(models.Model):
+class Users(models.Model):
     _inherit = 'res.users'
 
     @api.model
@@ -31,7 +31,7 @@ class ResUsers(models.Model):
             'currency_id': currency.id,
             'website': values['domain'],
             'tax_office': values['tax'],
-            'usage_type': values['type'],
+            'system': values['type'],
         })
         self.env['website'].create({
             'name': values['company'],

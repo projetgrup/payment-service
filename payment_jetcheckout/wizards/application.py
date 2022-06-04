@@ -58,12 +58,13 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
         return super().write(vals)
 
     def unlink(self):
-        for app in self:
-            if app.in_use:
-                app.acquirer_id.jetcheckout_api_key = False
-                app.acquirer_id.jetcheckout_secret_key = False
-                app.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)]
-                break
+        if 'application' in self.env.context:
+            for app in self:
+                if app.in_use:
+                    app.acquirer_id.jetcheckout_api_key = False
+                    app.acquirer_id.jetcheckout_secret_key = False
+                    app.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)]
+                    break
         return super().unlink()
 
 class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):

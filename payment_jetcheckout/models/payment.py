@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, _
+from odoo import models, _
 from odoo.exceptions import ValidationError
 import base64
-
-class AccountPaymentMethod(models.Model):
-    _inherit = 'account.payment.method'
-
-    @api.model
-    def _get_payment_method_information(self):
-        res = super()._get_payment_method_information()
-        res['jetcheckout'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
-        return res
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'

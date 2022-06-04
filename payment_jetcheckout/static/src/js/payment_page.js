@@ -8,6 +8,7 @@ var rpc = require('web.rpc');
 var utils = require('web.utils');
 var dialog = require('web.Dialog');
 var cards = require('payment_jetcheckout.payment_card');
+var framework = require('payment_jetcheckout.framework');
 
 var round_di = utils.round_decimals;
 var qweb = core.qweb;
@@ -50,6 +51,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$order = document.getElementById('order');
             self.$invoice = document.getElementById('invoice');
             self.$subscription = document.getElementById('subscription');
+            self.$system = document.getElementById('system');
 
             if (self.$amount) {
                 self.amount = new IMask(self.$amount, {
@@ -180,7 +182,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
-                self._onToggleLoading();
+                framework.hideLoading();
             }
         });
     },
@@ -291,7 +293,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }).then(function (content) {
             new dialog(this, {
                 title: _t('Terms & Conditions'),
-                $content: $(qweb.render('payment_jetcheckout.terms', {content: content})),
+                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
             }).open();
         }).guardedCatch(function (error) {
             self.displayNotification({
@@ -535,21 +537,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }
     },
 
-    _onToggleLoading: function (show=false) {
-        const payment_pay = $('.payment_pay');
-        const loading = $('.o_payment_loading');
-        if (show) {
-            payment_pay.addClass('disabled');
-            payment_pay.prop('disabled', 'disabled');
-            loading.css('opacity', 1).css('visibility', 'visible');
-        } else {
-            payment_pay.removeClass('disabled');
-            payment_pay.prop('disabled', false);
-            loading.css('opacity', 0).css('visibility', 'hidden');
-        }
-    },
-
     _getParams: function () {
+        const payment_ids = [];
+        const $payable_items = $('input[type="checkbox"].payment-items:checked');
+        $payable_items.each(function() { payment_ids.push(parseInt($(this).prop('name'))); });
+
         return {
             installment: document.querySelector('input[name="installment_radio"]:checked').value,
             amount: this.amount.typedValue,
@@ -567,13 +559,15 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             order: this.$order && this.$order.value || 0,
             invoice: this.$invoice && this.$invoice.value || 0,
             subscription: this.$subscription && this.$subscription.value || 0,
+            system: this.$system && this.$system.value || false,
+            payment_ids: payment_ids,
         }
     },
     
     clickPay: function () {
         var self = this;
         if (this.checkData()) {
-            self._onToggleLoading(true);
+            framework.showLoading();
             rpc.query({
                 route: '/payment/card/payment',
                 params: this._getParams(),
@@ -584,7 +578,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
-                    self._onToggleLoading();
+                    framework.hideLoading();
                 } else {
                     window.location = result.redirect_url;
                 }
@@ -598,7 +592,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     console.error(error);
                 }
                 self._enableButton();
-                self._onToggleLoading();
+                framework.hideLoading();
             });
         }
     },

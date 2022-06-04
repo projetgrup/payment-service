@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from .rpc import rpc
 
-import json
 
 class PaymentAcquirerJetcheckoutTerms(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.term'
@@ -109,14 +108,17 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     provider = fields.Selection(selection_add=[('jetcheckout', 'jetcheckout')], ondelete={'jetcheckout': 'set default'})
     display_icon = fields.Char(groups='base.group_user')
-    bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
     display_icon_preview = fields.Html(compute='_compute_display_icon', groups='base.group_user', sanitize=False)
-    jetcheckout_gateway = fields.Char(groups='base.group_user')
+    jetcheckout_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
+    jetcheckout_gateway_app = fields.Char(groups='base.group_user')
+    jetcheckout_gateway_url = fields.Char(groups='base.group_user')
+    jetcheckout_gateway_database = fields.Char(groups='base.group_user')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
     jetcheckout_url = fields.Char(compute='_get_jetcheckout_url')
     jetcheckout_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
     jetcheckout_terms = fields.Html(required_if_provider='jetcheckout', groups='base.group_user', sanitize=False, sanitize_attributes=False, sanitize_form=False)
+    jetcheckout_no_terms = fields.Boolean('Hide Terms')
     jetcheckout_username = fields.Char(readonly=True)
     jetcheckout_password = fields.Char(readonly=True)
     jetcheckout_userid = fields.Integer(readonly=True)
@@ -130,7 +132,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _get_jetcheckout_api_url(self):
         self.ensure_one()
-        return self.jetcheckout_gateway or 'https://api.jetcheckout.com'
+        return self.jetcheckout_gateway_url or 'https://api.jetcheckout.com'
 
     def _get_jetcheckout_env(self):
         return 'P' if self.state == 'enabled' else 'T'
@@ -268,7 +270,10 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _rpc(self, *args):
         if not len(self) == 1:
             return
-        return rpc.execute(self.jetcheckout_userid, self.jetcheckout_password, *args)
+
+        url = self.jetcheckout_gateway_app or 'https://app.jetcheckout.com/jsonrpc'
+        database = self.jetcheckout_gateway_database or 'jetcheckout'
+        return rpc.execute(url, database, self.jetcheckout_userid, self.jetcheckout_password, *args)
 
     def _jetcheckout_api_vacuum(self):
         self.env['payment.acquirer.jetcheckout.api.application'].search([]).unlink()
@@ -452,6 +457,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                     'card_families': [(0, 0, {
                         'res_id': family['id'],
                         'name': family['name'],
+                        'logo': family['logo_path'],
                     }) for family in families if family['id'] in price['card_families']],
                     'excluded_bins': [(0, 0, {
                         'res_id': bin['id'],
@@ -521,7 +527,6 @@ class PaymentAcquirerJetcheckout(models.Model):
                             self._rpc(name, 'write', val[1], val[2])
                         elif val[0] == 2:
                             self._rpc(name, 'unlink', val[1])
-        #raise UserError(json.dumps(vals, default=str)) # for testing purposes
 
     def _jetcheckout_api_connect(self, record):
         # Get all data

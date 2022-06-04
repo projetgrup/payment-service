@@ -55,6 +55,7 @@ class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
 
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
+    logo = fields.Char(readonly=True)
 
 class PaymentAcquirerJetcheckoutApiBank(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.bank'
