@@ -75,12 +75,12 @@ def migrate(cr, version):
             """,
         )
     try:
-        for (old, new) in [('payment_student.group_sps_user', 'payment_student.group_student_user'), ('payment_student.group_sps_manager', 'payment_student.group_student_manager')]:
+        for (old, new) in [('group_sps_user', 'group_student_user'), ('group_sps_manager', 'group_student_manager')]:
             cr.execute(
                 """
-                UPDATE ir_model_data SET module = %s, name = %s
-                WHERE module = %s and name = %s
-                """, tuple(new.split('.') + old.split('.'))
+                UPDATE ir_model_data SET name = %s
+                WHERE module = 'payment_student' and name = %s
+                """, tuple(new, old)
             )
 
         cr.execute("""SELECT * FROM res_student_setting""")

@@ -50,7 +50,7 @@
     <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">
-            <group name="transaction_jetcheckout_api" attrs="{'invisible': [('jetcheckout_api_tx', '=', False)]}">
+            <group name="transaction_jetcheckout_api" attrs="{'invisible': [('jetcheckout_api_hash', '=', False)]}">
                 <group>
                     <field name="jetcheckout_api_tx"/>
                     <field name="jetcheckout_api_return_url"/>
