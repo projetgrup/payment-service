@@ -16,7 +16,7 @@ class JetcheckoutController(http.Controller):
 
     @staticmethod
     def _jetcheckout_get_acquirer(providers=None, limit=None):
-        return request.env['payment.acquirer'].sudo()._get_acquirer(providers=providers, limit=limit)
+        return request.env['payment.acquirer'].sudo()._get_acquirer(company=request.env.company, website=request.website, providers=providers, limit=limit)
 
     def _jetcheckout_get_partner(self, **kwargs):
         return 'partner_id' in kwargs and int(kwargs['partner_id']) or request.env.user.partner_id.commercial_partner_id.id
