@@ -109,8 +109,8 @@ class PaymentAcquirerJetcheckout(models.Model):
     display_icon = fields.Char(groups='base.group_user')
     display_icon_preview = fields.Html(compute='_compute_display_icon', groups='base.group_user', sanitize=False)
     jetcheckout_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
+    jetcheckout_gateway_api = fields.Char(groups='base.group_user')
     jetcheckout_gateway_app = fields.Char(groups='base.group_user')
-    jetcheckout_gateway_url = fields.Char(groups='base.group_user')
     jetcheckout_gateway_database = fields.Char(groups='base.group_user')
     jetcheckout_payment_page = fields.Boolean('Show Payment Page')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
@@ -151,7 +151,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _get_jetcheckout_api_url(self):
         self.ensure_one()
-        return self.jetcheckout_gateway_url or 'https://api.jetcheckout.com'
+        return self.jetcheckout_gateway_api or 'https://api.jetcheckout.com'
 
     def _get_jetcheckout_env(self):
         return 'P' if self.state == 'enabled' else 'T'
