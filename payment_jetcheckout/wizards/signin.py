@@ -11,8 +11,8 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
     username = fields.Char('Username')
     password = fields.Char('Password')
     option = fields.Boolean('Advanced Options')
-    gateway_url = fields.Char('Gateway URL')
-    gateway_app = fields.Char('Application URL')
+    gateway_api = fields.Char('API URL')
+    gateway_app = fields.Char('Gateway URL')
     gateway_database = fields.Char('Database Name')
 
     def signin(self):
@@ -30,7 +30,7 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
 
         if self.option:
             if self.gateway_url:
-                vals.update({'jetcheckout_gateway_url': self.gateway_url})
+                vals.update({'jetcheckout_gateway_api': self.gateway_api})
             if self.gateway_app:
                 vals.update({'jetcheckout_gateway_app': url})
             if self.gateway_database:
