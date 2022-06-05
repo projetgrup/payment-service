@@ -108,7 +108,7 @@
     <field name="view_ids" eval="[
         (5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
-        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout.item_pivot')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout_system.item_pivot')}),
     ]"/>
     </record>
 
