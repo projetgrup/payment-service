@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
 from .rpc import rpc
 
 
@@ -129,16 +128,14 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
         self = self.sudo()
         domain = [('state', 'in', ('enabled', 'test'))]
-        if not company:
-            company = request.env.company
-        if not website:
-            website = request.website
         if providers:
             domain.append(('provider', 'in', providers))
-        if self.env['res.company'].search_count([]) > 1:
-            domain.append(('company_id', '=', company.id))
-        if self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
-            domain.append(('website_id','=', website.id))
+        if company:
+            if self.env['res.company'].search_count([]) > 1:
+                domain.append(('company_id', '=', company.id))
+            if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
+                domain.append(('website_id','=', website.id))
+
         acquirer = self.search(domain, limit=limit, order='sequence')
         if not acquirer:
             if raise_exception:
