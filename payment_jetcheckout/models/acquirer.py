@@ -156,13 +156,15 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _get_jetcheckout_env(self):
         return 'P' if self.state == 'enabled' else 'T'
 
-    def _render_jetcheckout_terms(self, company, partner):
-        referrer = request.httprequest.referrer
-        url = referrer.split('/')
+    def _render_jetcheckout_terms(self, domain, company, partner):
+        domain = self.env.context.get('domain', '')
+        if domain:
+            parts = domain.split('/')
+            domain = '//'.join([parts[0], parts[2]])
         terms = self.env['payment.acquirer.jetcheckout.term'].sudo().create({
             'company_id': company,
             'partner_id': partner,
-            'domain': '//'.join([url[0],url[2]]),
+            'domain': domain,
         })
         return self.env['mail.render.mixin']._render_template(self.jetcheckout_terms, 'payment.acquirer.jetcheckout.term', terms.ids, engine='inline_template')[terms.id]
 
