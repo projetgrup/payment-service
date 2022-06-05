@@ -36,7 +36,7 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
             api = api[:-1]
 
         if self.option:
-            if self.gateway_url:
+            if self.gateway_api:
                 vals.update({'jetcheckout_gateway_api': api})
             if self.gateway_app:
                 vals.update({'jetcheckout_gateway_app': url})
