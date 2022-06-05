@@ -16,7 +16,10 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
     gateway_database = fields.Char('Database Name')
 
     def signin(self):
-        url = self.gateway_app and '%s/jsonrpc' % self.gateway_app or 'https://app.jetcheckout.com/jsonrpc'
+        url = self.gateway_app
+        if url and url[-1] == '/':
+            url = url[:-1]
+        url = url and '%s/jsonrpc' % url or 'https://app.jetcheckout.com/jsonrpc'
         database = self.gateway_database or 'jetcheckout'
         uid = rpc.login(url, database, self.username, self.password)
         if not uid:
@@ -28,9 +31,13 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
             'jetcheckout_user_id': uid,
         }
 
+        api = self.gateway_api
+        if api and api[-1] == '/':
+            api = api[:-1]
+
         if self.option:
             if self.gateway_url:
-                vals.update({'jetcheckout_gateway_api': self.gateway_api})
+                vals.update({'jetcheckout_gateway_api': api})
             if self.gateway_app:
                 vals.update({'jetcheckout_gateway_app': url})
             if self.gateway_database:
