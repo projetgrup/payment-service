@@ -110,6 +110,7 @@ def migrate(cr, version):
         )
 
     cr.execute("""DROP TABLE payment_item CASCADE""")
+    cr.execute("""DROP TABLE transaction_item_rel CASCADE""")
     cr.execute("""ALTER TABLE res_student_payment RENAME TO payment_item""")
     cr.execute("""ALTER TABLE payment_item RENAME COLUMN student_id TO child_id""")
     cr.execute("""ALTER SEQUENCE res_student_payment_id_seq RENAME TO payment_item_id_seq""")
