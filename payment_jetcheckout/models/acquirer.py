@@ -130,9 +130,9 @@ class PaymentAcquirerJetcheckout(models.Model):
         domain = [('state', 'in', ('enabled', 'test'))]
         if providers:
             domain.append(('provider', 'in', providers))
-        if company:
-            if self.env['res.company'].search_count([]) > 1:
-                domain.append(('company_id', '=', company.id))
+        if self.env['res.company'].search_count([]) > 1:
+            company = company or self.env.company
+            domain.append(('company_id', '=', company.id))
             if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
                 domain.append(('website_id','=', website.id))
 

@@ -2,7 +2,6 @@
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest.controllers.main import RestController
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
-from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 from odoo.addons.component.core import Component
 from odoo.exceptions import ValidationError
 from odoo import _
@@ -35,10 +34,12 @@ RESPONSE = {
     },
 }
 
+
 class PaymentAPIController(RestController):
     _root_path = "/api/v1/"
     _collection_name = "payment.api.services"
     _default_auth = "public"
+
 
 class PaymentAPIService(Component):
     _inherit = "base.rest.service"
@@ -128,7 +129,7 @@ class PaymentAPIService(Component):
         if not name:
             raise ValidationError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
-        acquirer = JetController._jetcheckout_get_acquirer(providers=['transfer'], limit=1)
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=self.env.company, providers=['transfer'], limit=1)
         tx = self.env['payment.transaction'].sudo().create({
             'reference': name,
             'acquirer_id': acquirer.id,
