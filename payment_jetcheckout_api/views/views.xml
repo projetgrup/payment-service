@@ -66,7 +66,7 @@
     </record>
 
     <record id="action_api" model="ir.actions.act_window">
-    <field name="name">API Keys</field>
+    <field name="name">Payment API Keys</field>
     <field name="res_model">payment.acquirer.jetcheckout.api</field>
     <field name="view_mode">tree,form</field>
     <field name="domain">['|',('active','=',False),('active','=',True)]</field>
