@@ -5,6 +5,10 @@
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <title t-esc="title or 'Odoo'"/>
+            <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
             <t t-set="body_classname" t-value="'payment-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -111,6 +115,8 @@
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -234,6 +240,8 @@
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
