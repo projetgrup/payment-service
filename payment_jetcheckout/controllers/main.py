@@ -202,7 +202,8 @@ class JetcheckoutController(http.Controller):
         if int(kwargs.get('response_code')) == 0:
             tx.write({'state': 'done'})
             tx.jetcheckout_validate_order()
-            tx.jetcheckout_payment()
+            domain = request.httprequest.referrer
+            tx.with_context(domain=domain).jetcheckout_payment()
         else:
             tx.write({
                 'state': 'error',
@@ -476,7 +477,8 @@ class JetcheckoutController(http.Controller):
     @http.route(['/payment/card/terms'], type='json', auth='public', csrf=False, website=True)
     def jetcheckout_terms(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        return acquirer.sudo()._render_jetcheckout_terms(request.env.company.id, self._jetcheckout_get_partner(**kwargs))
+        domain = request.httprequest.referrer
+        return acquirer.sudo().with_context(domain=domain)._render_jetcheckout_terms(request.env.company.id, self._jetcheckout_get_partner(**kwargs))
 
     @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def jetcheckout_report(self, name, order_id, **kwargs):
