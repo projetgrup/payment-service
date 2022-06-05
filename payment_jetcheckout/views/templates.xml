@@ -2,7 +2,7 @@
 <odoo>
     <template id="payment_button" inherit_id="portal.placeholder_user_sign_in" name="Jetcheckout Button">
         <xpath expr="." position="inside">
-            <li t-if="not res_company.system" id="menu_pay" groups="base.group_portal, base.group_user" t-attf-class="#{_item_class} o_no_autohide_item">
+            <li t-if="pay_page" id="menu_pay" groups="base.group_portal, base.group_user" t-attf-class="#{_item_class} o_no_autohide_item">
                 <a href="/pay" t-attf-class="#{_link_class}">
                     <i class="fa fa-credit-card mr-2" t-translation="off"/>Payment
                 </a>
@@ -298,7 +298,6 @@
                                     <span class="slider round fa"/>
                                 </label>
                             </div>
-                            <input t-if="system" id="system" type="hidden" t-att-value="system"/>
                         </div>
                     </div>
                 </div>

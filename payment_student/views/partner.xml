@@ -4,7 +4,7 @@
     <field name="name">res.student.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
@@ -24,7 +24,7 @@
     <field name="name">res.student.parent.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="active"]' position="before">
             <header>
@@ -39,7 +39,7 @@
     <field name="name">res.student.kanban</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_kanban"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
     <field name="arch" type="xml">
         <xpath expr='//ul' position="inside">
             <li><field name="school_id"/></li>
@@ -52,7 +52,7 @@
     <field name="name">res.student.basic.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//div[@name="button_box"]' position="replace"/>
         <xpath expr='//div[@class="oe_chatter"]' position="replace"/>
@@ -73,7 +73,7 @@
     <field name="name">res.student.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="mobile"]' position="replace"/>
@@ -96,7 +96,7 @@
     <field name="name">res.student.parent.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="attributes">
@@ -116,7 +116,7 @@
     <field name="name">res.student.search</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
@@ -144,7 +144,7 @@
     <field name="name">res.student.parent.search</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="mobile"/>

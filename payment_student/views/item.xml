@@ -4,7 +4,7 @@
     <field name="name">payment.item.student.tree</field>
     <field name="model">payment.item</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.item_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="child_id"]' position="attributes">
             <attribute name="string">Student</attribute>
@@ -35,7 +35,7 @@
     <field name="name">payment.item.student.search</field>
     <field name="model">payment.item</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.item_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="child_id"]' position="attributes">
             <attribute name="string">Student</attribute>

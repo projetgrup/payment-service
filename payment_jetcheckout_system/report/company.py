@@ -8,7 +8,7 @@ class ReportCompanyHierarchy(models.AbstractModel):
     @api.model
     def get_html(self, name=False):
         lines = self._get_data(name=name)
-        return self.env.ref('payment_jetcheckout.company_hierarchy')._render({'lines': lines})
+        return self.env.ref('payment_jetcheckout_system.company_hierarchy')._render({'lines': lines})
 
     @api.model
     def _get_children(self, company, companies, child=None):
@@ -41,7 +41,7 @@ class ReportCompanyHierarchy(models.AbstractModel):
     def _get_data_line(self, lines, indent=0):
         html = []
         for line in lines:
-            html.append(self.env.ref('payment_jetcheckout.company_hierarchy_line')._render({'company': line[0], 'indent': indent, 'child': line[1] and True or False}))
+            html.append(self.env.ref('payment_jetcheckout_system.company_hierarchy_line')._render({'company': line[0], 'indent': indent, 'child': line[1] and True or False}))
             if line[1]:
                 html.extend(self._get_data_line(line[1], indent=indent+1))
         return html

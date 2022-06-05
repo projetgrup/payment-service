@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.http import request
-from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
+from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetSystemController
 
 
-class VendorPaymentController(JetController):
+class VendorPaymentController(JetSystemController):
 
     def _jetcheckout_tx_vals(self, **kwargs):
         res = super()._jetcheckout_tx_vals(**kwargs)

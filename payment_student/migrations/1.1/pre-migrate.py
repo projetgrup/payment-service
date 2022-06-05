@@ -69,6 +69,7 @@ def migrate(cr, version):
             """
         )
 
+    cr.execute("""DROP TABLE payment_item CASCADE""")
     cr.execute("""ALTER TABLE res_student_payment RENAME TO payment_item""")
     cr.execute("""ALTER TABLE payment_item RENAME COLUMN student_id TO child_id""")
     cr.execute("""ALTER SEQUENCE res_student_payment_id_seq RENAME TO payment_item_id_seq""")
@@ -87,3 +88,4 @@ def migrate(cr, version):
     cr.execute("""ALTER TABLE transaction_payment_rel RENAME TO transaction_item_rel""")
     cr.execute("""ALTER TABLE transaction_item_rel RENAME COLUMN payment_id TO item_id""")
     cr.execute("""ALTER TABLE transaction_item_rel RENAME CONSTRAINT transaction_payment_rel_payment_id_fkey TO transaction_item_rel_item_id_fkey""")
+    cr.execute("""DROP TABLE res_student_setting CASCADE""")

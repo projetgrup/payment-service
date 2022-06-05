@@ -10,12 +10,12 @@
         <record model="res.groups" id="group_student_user">
             <field name="name">User</field>
             <field name="category_id" ref="module_category_student"/>
-            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_system_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_user'))]"/>
         </record>
         <record model="res.groups" id="group_student_manager">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_student"/>
-            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_system_manager'))]"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 

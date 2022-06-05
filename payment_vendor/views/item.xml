@@ -4,7 +4,7 @@
     <field name="name">payment.item.vendor.tree</field>
     <field name="model">payment.item</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.item_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="child_id"]' position="replace"/>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
@@ -19,7 +19,7 @@
     <field name="name">payment.item.vendor.search</field>
     <field name="model">payment.item</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.item_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="child_id"]' position="attributes">
             <attribute name="string">Authorized</attribute>

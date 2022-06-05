@@ -3,7 +3,7 @@
     <record id="settings_form" model="ir.ui.view">
     <field name="name">payment.settings.student.form</field>
     <field name="model">payment.settings</field>
-    <field name="inherit_id" ref="payment_jetcheckout.settings_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
     <field name="arch" type="xml">
         <xpath expr="//div[hasclass('settings')]" position="inside">
             <div class="app_settings_block" data-string="Students" string="Students" data-key="payment_student" invisible="context.get('active_system') != 'student'">

@@ -6,7 +6,6 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     system = fields.Selection(selection_add=[('student', 'Student Payment System')])
-
     student_discount_sibling_active = fields.Boolean(string='Sibling Discount')
     student_discount_advance_active = fields.Boolean(string='Advance Discount')
     student_discount_sibling_rate = fields.Float(string='Sibling Discount Rate')

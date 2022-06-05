@@ -6,10 +6,30 @@ var publicWidget = require('web.public.widget');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var dialog = require('web.Dialog');
+var paymentPage = publicWidget.registry.JetcheckoutPaymentPage;
 
 var round_di = utils.round_decimals;
 var qweb = core.qweb;
 var _t = core._t;
+
+paymentPage.include({
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$system = document.getElementById('system');
+        });
+    },
+
+    _getParams: function () {
+        const payment_ids = [];
+        const $payable_items = $('input[type="checkbox"].payment-items:checked');
+        $payable_items.each(function() { payment_ids.push(parseInt($(this).prop('name'))); });
+        const params = this._super.apply(this, arguments);
+        params['system'] = this.$system && this.$system.value || false;
+        params['payment_ids'] = payment_ids;
+        return params
+    },
+});
 
 publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import frozendict
-from odoo.http import request
 
 
 class Users(models.Model):
@@ -36,8 +35,8 @@ class Users(models.Model):
                     group_user.sudo().write({'users': [(3, user.id)]})
                     group_admin.sudo().write({'users': [(3, user.id)]})
             else:
-                group_user = self.env.ref('payment_jetcheckout.group_system_user')
-                group_admin = self.env.ref('payment_jetcheckout.group_system_manager')
+                group_user = self.env.ref('payment_jetcheckout_system.group_system_user')
+                group_admin = self.env.ref('payment_jetcheckout_system.group_system_manager')
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
 

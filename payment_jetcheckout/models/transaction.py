@@ -20,11 +20,6 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Please define a country for this company'))
         return country.id
 
-    def _compute_item_count(self):
-        for tx in self:
-            tx.jetcheckout_item_count = len(tx.jetcheckout_item_ids)
-
-    system = fields.Selection(related='company_id.system')
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True)
@@ -41,8 +36,6 @@ class PaymentTransaction(models.Model):
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
     jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
-    jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
-    jetcheckout_item_count = fields.Integer(compute='_compute_item_count')
 
     def _jetcheckout_s2s_get_tx_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
@@ -233,11 +226,3 @@ class PaymentTransaction(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
-
-    def action_items(self):
-        self.ensure_one()
-        system = self.company_id.system
-        action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
-        action['domain'] = [('id', 'in', self.jetcheckout_item_ids.ids)]
-        action['context'] = {'create': False, 'edit': False, 'delete': False}
-        return action

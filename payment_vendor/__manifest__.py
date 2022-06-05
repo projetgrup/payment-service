@@ -8,7 +8,7 @@
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
     'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_jetcheckout'],
+    'depends': ['payment_jetcheckout_system'],
     'data': [
         'data/data.xml',
         'security/security.xml',
