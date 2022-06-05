@@ -51,7 +51,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$order = document.getElementById('order');
             self.$invoice = document.getElementById('invoice');
             self.$subscription = document.getElementById('subscription');
-            self.$system = document.getElementById('system');
 
             if (self.$amount) {
                 self.amount = new IMask(self.$amount, {
@@ -538,10 +537,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     },
 
     _getParams: function () {
-        const payment_ids = [];
-        const $payable_items = $('input[type="checkbox"].payment-items:checked');
-        $payable_items.each(function() { payment_ids.push(parseInt($(this).prop('name'))); });
-
         return {
             installment: document.querySelector('input[name="installment_radio"]:checked').value,
             amount: this.amount.typedValue,
@@ -559,8 +554,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             order: this.$order && this.$order.value || 0,
             invoice: this.$invoice && this.$invoice.value || 0,
             subscription: this.$subscription && this.$subscription.value || 0,
-            system: this.$system && this.$system.value || false,
-            payment_ids: payment_ids,
         }
     },
     

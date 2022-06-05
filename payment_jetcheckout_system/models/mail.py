@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 class MailTemplate(models.Model):
     _inherit = 'mail.template'

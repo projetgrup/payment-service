@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import frozendict
-from odoo.http import request
 
 
 class Users(models.Model):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from .rpc import rpc
 
@@ -113,6 +113,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_gateway_app = fields.Char(groups='base.group_user')
     jetcheckout_gateway_url = fields.Char(groups='base.group_user')
     jetcheckout_gateway_database = fields.Char(groups='base.group_user')
+    jetcheckout_payment_page = fields.Boolean('Show Payment Page')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
     jetcheckout_url = fields.Char(compute='_get_jetcheckout_url')
@@ -121,8 +122,29 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_no_terms = fields.Boolean('Hide Terms')
     jetcheckout_username = fields.Char(readonly=True)
     jetcheckout_password = fields.Char(readonly=True)
-    jetcheckout_userid = fields.Integer(readonly=True)
+    jetcheckout_user_id = fields.Integer(readonly=True)
     jetcheckout_api_name = fields.Char(readonly=True)
+
+    @api.model
+    def _get_acquirer(company=None, website=None, providers=None, limit=None, raise_exception=True):
+        self = self.sudo()
+        domain = [('state', 'in', ('enabled', 'test'))]
+        if not company:
+            company = request.env.company
+        if not website:
+            website = request.website
+        if providers:
+            domain.append(('provider', 'in', providers))
+        if self.env['res.company'].search_count([]) > 1:
+            domain.append(('company_id', '=', company.id))
+        if self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
+            domain.append(('website_id','=', website.id))
+        acquirer = self.search(domain, limit=limit, order='sequence')
+        if not acquirer:
+            if raise_exception:
+                raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
+            return False
+        return acquirer
 
     def _get_default_payment_method_id(self):
         self.ensure_one()
@@ -217,7 +239,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.ensure_one()
         self.jetcheckout_username = False
         self.jetcheckout_password = False
-        self.jetcheckout_userid = False
+        self.jetcheckout_user_id = False
         self.jetcheckout_api_key = False
         self.jetcheckout_secret_key = False
         self.jetcheckout_journal_ids = [(5, 0, 0)]
@@ -244,7 +266,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.ensure_one()
 
         if not poses:
-            poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_userid)])
+            poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
 
         items = {}
         for pos in poses:
@@ -273,7 +295,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
         url = self.jetcheckout_gateway_app or 'https://app.jetcheckout.com/jsonrpc'
         database = self.jetcheckout_gateway_database or 'jetcheckout'
-        return rpc.execute(url, database, self.jetcheckout_userid, self.jetcheckout_password, *args)
+        return rpc.execute(url, database, self.jetcheckout_user_id, self.jetcheckout_password, *args)
 
     def _jetcheckout_api_vacuum(self):
         self.env['payment.acquirer.jetcheckout.api.application'].search([]).unlink()
@@ -350,7 +372,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_create_application(self, record):
         application_table = self.env['payment.acquirer.jetcheckout.api.application']
-        apps = self._rpc('jet.application', 'search_read', [('user_id', '=', self.jetcheckout_userid)])
+        apps = self._rpc('jet.application', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
         for app in apps:
             application_table.create({
                 'acquirer_id': self.id,
@@ -530,7 +552,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_connect(self, record):
         # Get all data
-        poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_userid)])
+        poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
 
         # Vacuum old data
         self._jetcheckout_api_vacuum()

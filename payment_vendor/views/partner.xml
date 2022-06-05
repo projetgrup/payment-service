@@ -4,7 +4,7 @@
     <field name="name">res.vendor.child.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
@@ -19,7 +19,7 @@
     <field name="name">res.vendor.parent.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_tree"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="active"]' position="before">
             <header>
@@ -34,7 +34,7 @@
     <field name="name">res.vendor.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="mobile"]' position="replace"/>
@@ -51,7 +51,7 @@
     <field name="name">res.vendor.parent.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_form"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="attributes">
@@ -65,7 +65,7 @@
     <field name="name">res.vendor.search</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
@@ -86,7 +86,7 @@
     <field name="name">res.vendor.parent.search</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
-    <field name="inherit_id" ref="payment_jetcheckout.partner_search"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="mobile"/>

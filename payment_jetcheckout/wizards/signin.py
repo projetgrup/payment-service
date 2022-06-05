@@ -25,7 +25,7 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
         vals = {
             'jetcheckout_username': self.username,
             'jetcheckout_password': self.password,
-            'jetcheckout_userid': uid,
+            'jetcheckout_user_id': uid,
         }
 
         if self.option:
