@@ -16,6 +16,10 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
     gateway_database = fields.Char('Database Name')
 
     def signin(self):
+        api = self.gateway_api
+        if api and api[-1] == '/':
+            api = api[:-1]
+
         url = self.gateway_app
         if url and url[-1] == '/':
             url = url[:-1]
@@ -31,16 +35,12 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
             'jetcheckout_user_id': uid,
         }
 
-        api = self.gateway_api
-        if api and api[-1] == '/':
-            api = api[:-1]
-
         if self.option:
-            if self.gateway_api:
+            if api:
                 vals.update({'jetcheckout_gateway_api': api})
-            if self.gateway_app:
+            if url:
                 vals.update({'jetcheckout_gateway_app': url})
-            if self.gateway_database:
+            if database:
                 vals.update({'jetcheckout_gateway_database': database})
 
         self.acquirer_id.write(vals)
