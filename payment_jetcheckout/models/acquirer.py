@@ -126,7 +126,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_api_name = fields.Char(readonly=True)
 
     @api.model
-    def _get_acquirer(company=None, website=None, providers=None, limit=None, raise_exception=True):
+    def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
         self = self.sudo()
         domain = [('state', 'in', ('enabled', 'test'))]
         if not company:
