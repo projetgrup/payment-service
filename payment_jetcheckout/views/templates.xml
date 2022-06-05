@@ -145,6 +145,8 @@
 
     <template id="payment_page" name="Payment">
         <t t-call="web.frontend_layout">
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-call="payment_jetcheckout.payment_card"/>
         </t>
     </template>
@@ -349,6 +351,8 @@
 
     <template id="payment_page_result" name="Payment Result">
         <t t-call="web.frontend_layout">
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="payment-result row justify-content-center mx-0">
                 <t t-call="payment_jetcheckout.payment_sidebar">
                     <t t-set="page" t-value="'result'"/>
@@ -382,6 +386,8 @@
 
     <template id="payment_page_ledger" name="Partner Ledger">
         <t t-call="web.frontend_layout">
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="payment-ledger row justify-content-center mx-0">
                 <t t-call="payment_jetcheckout.payment_sidebar">
                     <t t-set="page" t-value="'ledger'"/>
@@ -496,6 +502,8 @@
 
     <template id="payment_page_transaction" name="Payment Transactions">
         <t t-call="web.frontend_layout">
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="payment-transaction row justify-content-center mx-0">
                 <t t-call="payment_jetcheckout.payment_sidebar">
                     <t t-set="page" t-value="'transaction'"/>
