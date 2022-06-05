@@ -43,6 +43,46 @@ def migrate(cr, version):
             """,
         )
 
+    if not column_exists(cr, "website", "payment_footer"):
+        cr.execute(
+            """
+            ALTER TABLE website
+            ADD COLUMN payment_footer text
+            """,
+        )
+
+    if not column_exists(cr, "website", "payment_privacy_policy"):
+        cr.execute(
+            """
+            ALTER TABLE website
+            ADD COLUMN payment_privacy_policy text
+            """,
+        )
+
+    if not column_exists(cr, "website", "payment_sale_agreement"):
+        cr.execute(
+            """
+            ALTER TABLE website
+            ADD COLUMN payment_sale_agreement text
+            """,
+        )
+
+    if not column_exists(cr, "website", "payment_membership_agreement"):
+        cr.execute(
+            """
+            ALTER TABLE website
+            ADD COLUMN payment_membership_agreement text
+            """,
+        )
+
+    if not column_exists(cr, "website", "payment_contact_page"):
+        cr.execute(
+            """
+            ALTER TABLE website
+            ADD COLUMN payment_contact_page text
+            """,
+        )
+
     cr.execute("""SELECT * FROM res_student_setting""")
     result = cr.dictfetchall()
     for res in result:
@@ -60,11 +100,11 @@ def migrate(cr, version):
         cr.execute(
             f"""
             UPDATE website SET
-            payment_footer = "{res['website_footer']}",
-            payment_privacy_policy = "{res['privacy_policy']}",
-            payment_sale_agreement = "{res['sale_agreement']}",
-            payment_membership_agreement = "{res['membership_agreement']}",
-            payment_contact_page = "{res['contact_page']}"
+            payment_footer = '{res['website_footer']}',
+            payment_privacy_policy = '{res['privacy_policy']}',
+            payment_sale_agreement = '{res['sale_agreement']}',
+            payment_membership_agreement = '{res['membership_agreement']}',
+            payment_contact_page = '{res['contact_page']}'
             WHERE company_id = {company}
             """
         )
@@ -75,16 +115,16 @@ def migrate(cr, version):
     cr.execute("""ALTER SEQUENCE res_student_payment_id_seq RENAME TO payment_item_id_seq""")
     cr.execute("""ALTER INDEX res_student_payment_pkey RENAME TO payment_item_pkey""")
     cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_bursary_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_class_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_company_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_create_uid_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_currency_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_parent_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_payment_type_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_school_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_student_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_term_id_fkey TO payment_item_bursary_id_fkey""")
-    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_write_uid_fkey TO payment_item_bursary_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_class_id_fkey TO payment_item_class_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_company_id_fkey TO payment_item_company_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_create_uid_fkey TO payment_item_create_uid_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_currency_id_fkey TO payment_item_currency_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_parent_id_fkey TO payment_item_parent_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_payment_type_id_fkey TO payment_item_payment_type_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_school_id_fkey TO payment_item_school_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_student_id_fkey TO payment_item_student_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_term_id_fkey TO payment_item_term_id_fkey""")
+    cr.execute("""ALTER TABLE payment_item RENAME CONSTRAINT res_student_payment_write_uid_fkey TO payment_item_write_uid_fkey""")
     cr.execute("""ALTER TABLE transaction_payment_rel RENAME TO transaction_item_rel""")
     cr.execute("""ALTER TABLE transaction_item_rel RENAME COLUMN payment_id TO item_id""")
     cr.execute("""ALTER TABLE transaction_item_rel RENAME CONSTRAINT transaction_payment_rel_payment_id_fkey TO transaction_item_rel_item_id_fkey""")
