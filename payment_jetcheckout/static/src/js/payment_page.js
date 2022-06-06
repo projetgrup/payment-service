@@ -577,7 +577,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     input.setAttribute('type', 'hidden');
                     input.setAttribute('name', 'url');
                     input.setAttribute('value', result.url);
-                    console.log(result.url)
                     form.appendChild(input);
 
                     document.body.appendChild(form);

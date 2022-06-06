@@ -429,7 +429,7 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/redirect'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_redirect(self, **kwargs):
-        return request.redirect(kwargs['url'])
+        return request.redirect(kwargs['url'], local=False)
 
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
