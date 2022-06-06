@@ -156,7 +156,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _get_jetcheckout_env(self):
         return 'P' if self.state == 'enabled' else 'T'
 
-    def _render_jetcheckout_terms(self, domain, company, partner):
+    def _render_jetcheckout_terms(self, company, partner):
         domain = self.env.context.get('domain', '')
         if domain:
             parts = domain.split('/')
