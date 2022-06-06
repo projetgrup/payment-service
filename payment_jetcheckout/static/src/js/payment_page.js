@@ -568,20 +568,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 params: this._getParams(),
             }).then(function (result) {
                 if ('url' in result) {
-                    let form = document.createElement('form');
-                    let input = document.createElement('input');
-
-                    form.setAttribute('action', window.location.origin + '/payment/redirect');
-                    form.setAttribute('method', 'POST');
-
-                    input.setAttribute('type', 'hidden');
-                    input.setAttribute('name', 'url');
-                    input.setAttribute('value', result.url);
-                    form.appendChild(input);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                    //window.location.assign(result.url);
+                    window.location.assign(result.url);
                 } else {
                     self.displayNotification({
                         type: 'danger',
