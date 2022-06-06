@@ -162,8 +162,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
                 self.$name.addEventListener('input', self.inputName);
                 self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
-                self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
+                if (self.$payment_terms) {
+                    self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
+                }
                 if (self.$payment_pay) {
                     self.$payment_pay.addEventListener('click', self.clickPay.bind(self));
                 }
