@@ -464,7 +464,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }
     },
 
-    checkData: function () {
+    _checkData: function () {
         if (this.amount.typedValue === '' || this.amount.typedValue === 0) {
             this.displayNotification({
                 type: 'warning',
@@ -513,7 +513,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.$accept_terms.checked) {
+        } else if (this.$accept_terms && !this.$accept_terms.checked) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -559,7 +559,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     
     clickPay: function () {
         var self = this;
-        if (this.checkData()) {
+        if (this._checkData()) {
             framework.showLoading();
             rpc.query({
                 route: '/payment/card/payment',
