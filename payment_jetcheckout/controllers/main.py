@@ -383,8 +383,8 @@ class JetcheckoutController(http.Controller):
             "order_id": order_id,
             "card_holder_name": kwargs['card_holder_name'],
             "cvc": kwargs['cvc'],
-            "success_url": "https://%s%s?db=%s" % (request.httprequest.host, success_url, request.db),
-            "fail_url": "https://%s%s?db=%s" % (request.httprequest.host, fail_url, request.db),
+            "success_url": "https://%s%s" % (request.httprequest.host, success_url),
+            "fail_url": "https://%s%s" % (request.httprequest.host, fail_url),
             "customer":  {
                 "name": fullname[0],
                 "surname": fullname[-1],
