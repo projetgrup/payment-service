@@ -238,7 +238,7 @@ class JetcheckoutController(http.Controller):
             'logo': values['installments'][0]['card_family_logo']
         }
 
-    @http.route(['/payment/card/payment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
+    @http.route(['/payment/card/payment'], type='json', auth='public', csrf=False, sitemap=False, website=True, save_session=False)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
