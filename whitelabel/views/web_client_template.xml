@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="whitelabel_web_layout_inherit" inherit_id="web.layout">
-        <xpath expr="//html/head" position="inside">
-            <t t-if="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand']">
-                <t t-set="title"
-                   t-value="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand']"/>
-            </t>
+        <xpath expr="//title" position="replace">
+            <title t-esc="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand'] or title or 'ERP'"/>
+        </xpath>
+        <xpath expr="//link[@type='image/x-icon']" position="replace">
+            <link type="image/x-icon" rel="shortcut icon" t-att-href="request.env['res.config.settings'].sudo().get_debranding_settings()['favicon_url'] or x_icon or '/whitelabel/static/src/img/favicon.png'"/>
         </xpath>
     </template>
 
@@ -13,7 +13,6 @@
         <xpath expr="//div[@t-if='not disable_footer']" position="replace">
             <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                 <t t-if="not disable_database_manager">
-
                     <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
                 </t>
                 <a href="" target="_blank"></a>
