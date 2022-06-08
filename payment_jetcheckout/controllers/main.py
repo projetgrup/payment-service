@@ -238,7 +238,7 @@ class JetcheckoutController(http.Controller):
             'logo': values['installments'][0]['card_family_logo']
         }
 
-    @http.route(['/payment/card/payment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
+    @http.route(['/payment/card/payment'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
@@ -407,8 +407,8 @@ class JetcheckoutController(http.Controller):
             if int(result['response_code']) in (0, 307):
                 tx.state = 'pending'
                 tx.jetcheckout_transaction_id = result['transaction_id']
-                redirect_url = '%s/%s' % (result['redirect_url'], result['transaction_id'])
-                return {'redirect_url': redirect_url}
+                url = '%s/%s' % (result['redirect_url'], result['transaction_id'])
+                return {'url': url}
             else:
                 tx.state = 'error'
                 message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])

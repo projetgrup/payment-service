@@ -109,9 +109,9 @@ class PaymentAcquirerJetcheckout(models.Model):
     display_icon = fields.Char(groups='base.group_user')
     display_icon_preview = fields.Html(compute='_compute_display_icon', groups='base.group_user', sanitize=False)
     jetcheckout_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
-    jetcheckout_gateway_api = fields.Char(groups='base.group_user')
-    jetcheckout_gateway_app = fields.Char(groups='base.group_user')
-    jetcheckout_gateway_database = fields.Char(groups='base.group_user')
+    jetcheckout_gateway_api = fields.Char(groups='base.group_user', readonly=True)
+    jetcheckout_gateway_app = fields.Char(groups='base.group_user', readonly=True)
+    jetcheckout_gateway_database = fields.Char(groups='base.group_user', readonly=True)
     jetcheckout_payment_page = fields.Boolean('Show Payment Page')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
@@ -156,7 +156,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _get_jetcheckout_env(self):
         return 'P' if self.state == 'enabled' else 'T'
 
-    def _render_jetcheckout_terms(self, domain, company, partner):
+    def _render_jetcheckout_terms(self, company, partner):
         domain = self.env.context.get('domain', '')
         if domain:
             parts = domain.split('/')

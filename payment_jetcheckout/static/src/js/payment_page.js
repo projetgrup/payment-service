@@ -162,8 +162,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
                 self.$name.addEventListener('input', self.inputName);
                 self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
-                self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
+                if (self.$payment_terms) {
+                    self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
+                }
                 if (self.$payment_pay) {
                     self.$payment_pay.addEventListener('click', self.clickPay.bind(self));
                 }
@@ -464,7 +466,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }
     },
 
-    checkData: function () {
+    _checkData: function () {
         if (this.amount.typedValue === '' || this.amount.typedValue === 0) {
             this.displayNotification({
                 type: 'warning',
@@ -513,7 +515,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.$accept_terms.checked) {
+        } else if (this.$accept_terms && !this.$accept_terms.checked) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -559,21 +561,21 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     
     clickPay: function () {
         var self = this;
-        if (this.checkData()) {
+        if (this._checkData()) {
             framework.showLoading();
             rpc.query({
                 route: '/payment/card/payment',
                 params: this._getParams(),
             }).then(function (result) {
-                if ('error' in result) {
+                if ('url' in result) {
+                    window.location.assign(result.url);
+                } else {
                     self.displayNotification({
                         type: 'danger',
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
                     framework.hideLoading();
-                } else {
-                    window.location = result.redirect_url;
                 }
             }).guardedCatch(function (error) {
                 self.displayNotification({

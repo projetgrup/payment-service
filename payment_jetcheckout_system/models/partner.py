@@ -78,7 +78,7 @@ class Partner(models.Model):
 
     def action_share_payment_link(self):
         self.ensure_one()
-        return self.sudo().env.ref('payment_jetcheckout.payment_share').sudo().read()[0]
+        return self.sudo().env.ref('payment_jetcheckout_system.payment_share').sudo().read()[0]
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

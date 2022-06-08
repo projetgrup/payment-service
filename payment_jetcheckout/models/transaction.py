@@ -142,16 +142,22 @@ class PaymentTransaction(models.Model):
         orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids
         if not orders:
             return
-        orders.with_context(send_email=True).action_confirm()
+        try:
+            self.env.cr.commit()
+            orders.with_context(send_email=True).action_confirm()
+        except Exception as e:
+            self.env.cr.rollback()
 
     def jetcheckout_payment(self):
         self.ensure_one()
         try:
+            self.env.cr.commit()
             self.sudo()._jetcheckout_create_payment()
             self.write({
                 'state_message': _('Transaction is succesful and payment has been validated.'),
             })
         except Exception as e:
+            self.env.cr.rollback()
             self.write({
                 'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
             })

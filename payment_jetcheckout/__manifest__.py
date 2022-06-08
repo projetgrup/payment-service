@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+# Set nginx settings to 'proxy_cookie_path / "/; secure; SameSite=none";'
 
 {
     'name': 'Jetcheckout Payment Acquirer',
