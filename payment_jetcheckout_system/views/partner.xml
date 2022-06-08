@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_tree" model="ir.ui.view">
+    <field name="name">res.partner.payment.tree</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="active == False" sample="1">
+            <field name="active" invisible="1"/>
+            <field name="name"/>
+            <field name="vat" string="Vat"/>
+            <field name="parent_id" string="Parent" invisible="not context.get('active_child')"/>
+            <field name="mobile"/>
+            <field name="email"/>
+            <field name="date_email_sent" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="partner_form" model="ir.ui.view">
+    <field name="name">res.partner.payment.form</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+        <form>
+            <field name="system" invisible="1"/>
+            <field name="payable_count" invisible="1"/>
+            <header attrs="{'invisible': [('payable_count', '=', 0)]}">
+                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight"/>
+                <button name="action_send" type="object" string="Send Email"/>
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="paid_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Items Paid</span>
+                    </div>
+                    </button>
+                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="payable_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Items To Pay</span>
+                    </div>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="avatar_128" invisible="1"/>
+                <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'avatar_128'}"/>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group name="general">
+                        <field name="vat" string="Vat"/>
+                        <field name="lang"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'active_system': context.get('active_system')}" required="1" domain="[('system','=',system),('parent_id','=',False),('company_id','=',company_id)]"/>
+                        <field name="id" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <group name="private">
+                        <field name="mobile" widget="phone"/>
+                        <field name="email" widget="email"/>
+                        <field name="date_email_sent"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('active_system')"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name="siblings" string="Siblings" autofocus="autofocus" attrs="{'invisible': [('sibling_ids','=',[])]}">
+                        <field name="sibling_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                    </page>
+                    <page name="children" string="Children" autofocus="autofocus" attrs="{'invisible': [('child_ids','=',[])]}">
+                        <field name="child_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>
+    </field>
+    </record>
+
+    <record id="child_basic" model="ir.ui.view">
+    <field name="name">res.partner.basic.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//div[@class="oe_chatter"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="mobile"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="replace"/>
+        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+    </field>
+    </record>
+
+    <record id="partner_kanban" model="ir.ui.view">
+    <field name="name">res.partner.payment.kanban</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+        <kanban>
+            <field name="id"/>
+            <field name="name"/>
+            <field name="image_128"/>
+            <field name="avatar_128"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img alt="" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                            <img alt="" t-else="" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <strong><field name="name"/></strong>
+                            <ul></ul>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="partner_search" model="ir.ui.view">
+    <field name="name">res.partner.payment.search</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="vat"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+            <separator/>
+            <filter name="filterby_payment" string="Has Payments" domain="[('payment_ids', '=', '')]"/>
+            <filter name="filterby_no_payment" string="Has No Payments" domain="[('payment_ids', '!=', '')]"/>
+            <separator/>
+            <filter name="filterby_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="payment_share" model="ir.actions.server">
+    <field name="name">Share Payment Link</field>
+    <field name="model_id" ref="base.model_res_partner"/>
+    <field name="binding_model_id" ref="base.model_res_partner"/>
+    <field name="binding_view_types">form</field>
+    <field name="state">code</field>
+    <field name="code">action = records.action_share()</field>
+    </record>
+</odoo>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_child" model="ir.actions.act_window">
+    <field name="name">Students</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','student'),('parent_id','!=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="context">{'active_system': 'student', 'active_child': True}</field>
+    <field name="search_view_id" ref="child_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a student
+        </p>
+        <p>
+            Create a student with its parent and start to record payments
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('child_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('child_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_parent" model="ir.actions.act_window">
+    <field name="name">Parents</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','student'),('parent_id','=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="context">{'active_system': 'student', 'active_parent': True}</field>
+    <field name="search_view_id" ref="parent_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a parent
+        </p>
+        <p>
+            Create a parent and link it to any student you want
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('parent_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('parent_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_school" model="ir.actions.act_window">
+    <field name="name">Schools</field>
+    <field name="res_model">res.student.school</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_class" model="ir.actions.act_window">
+    <field name="name">Classes</field>
+    <field name="res_model">res.student.class</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_term" model="ir.actions.act_window">
+    <field name="name">Terms</field>
+    <field name="res_model">res.student.term</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_bursary" model="ir.actions.act_window">
+    <field name="name">Bursaries</field>
+    <field name="res_model">res.student.bursary</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_payment_type" model="ir.actions.act_window">
+    <field name="name">Payment Types</field>
+    <field name="res_model">res.student.payment.type</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_payment_template" model="ir.actions.act_window">
+    <field name="name">Payment Templates</field>
+    <field name="res_model">res.student.payment.template</field>
+    <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_payment_table" model="ir.actions.act_window">
+    <field name="name">Payment Table</field>
+    <field name="res_model">res.student.payment.table</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+
+    <record id="action_item" model="ir.actions.act_window">
+    <field name="name">Payment Items</field>
+    <field name="res_model">payment.item</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="search_view_id" ref="item_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No payments yet
+        </p>
+        <p>
+            Created payments are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout_system.item_pivot')}),
+    ]"/>
+    </record>
+
+    <record id="action_settings" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field name="context">{'active_system' : 'student'}</field>
+    </record>
+</odoo>

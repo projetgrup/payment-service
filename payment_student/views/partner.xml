@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="child_tree" model="ir.ui.view">
+    <field name="name">res.student.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="ref"/>
+            <field name="school_id"/>
+            <field name="class_id"/>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="after">
+            <field name="bursary_id"/>
+        </xpath>
+        <xpath expr='//field[@name="mobile"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="replace"/>
+        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+    </field>
+    </record>
+
+    <record id="parent_tree" model="ir.ui.view">
+    <field name="name">res.student.parent.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="active"]' position="before">
+            <header>
+                <button name="action_send" type="object" string="Send Email"/>
+            </header>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+    </field>
+    </record>
+
+    <record id="child_kanban" model="ir.ui.view">
+    <field name="name">res.student.kanban</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr='//ul' position="inside">
+            <li><field name="school_id"/></li>
+            <li><field name="class_id"/></li>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_basic" model="ir.ui.view">
+    <field name="name">res.student.basic.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//div[@class="oe_chatter"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="mobile"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="replace"/>
+        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="school_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="ref"/>
+            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_form" model="ir.ui.view">
+    <field name="name">res.student.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="mobile"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="replace"/>
+        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="school_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="ref"/>
+            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+        </xpath>
+        <xpath expr='//page[@name="children"]' position="replace"/>
+        <xpath expr='//field[@name="sibling_ids"]' position="attributes">
+            <attribute name="context">{'kanban_view_ref' : 'payment_student.child_kanban', 'form_view_ref' : 'payment_student.child_basic'}</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="parent_form" model="ir.ui.view">
+    <field name="name">res.student.parent.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="attributes">
+            <attribute name="required">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="mobile"]' position="before">
+            <field name="school_ids" widget="many2many_tags"/>
+        </xpath>
+        <xpath expr='//page[@name="siblings"]' position="replace"/>
+        <xpath expr='//field[@name="child_ids"]' position="attributes">
+            <attribute name="context">{'kanban_view_ref' : 'payment_student.child_kanban', 'form_view_ref' : 'payment_student.child_basic'}</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_search" model="ir.ui.view">
+    <field name="name">res.student.search</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="ref"/>
+            <field name="school_id"/>
+            <field name="class_id"/>
+            <field name="parent_id" string="Parent"/>
+            <field name="bursary_id"/>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_company"]' position="before">
+            <filter string="Parent" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
+            <filter string="School" name="groupby_school" domain="[]" context="{'group_by':'school_id'}"/>
+            <filter string="Class" name="groupby_class" domain="[]" context="{'group_by':'class_id'}"/>
+            <filter string="Bursary" name="groupby_bursary" domain="[]" context="{'group_by':'bursary_id'}"/>
+        </xpath>
+        <xpath expr='//separator' position="replace"/>
+        <xpath expr='//filter[@name="filterby_payment"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_no_payment"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_sent_today"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_sent_before"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_sent_no"]' position="replace"/>
+    </field>
+    </record>
+
+    <record id="parent_search" model="ir.ui.view">
+    <field name="name">res.student.parent.search</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="mobile"/>
+        </xpath>
+        <xpath expr='//group' position="after">
+            <searchpanel>
+                <field name="school_ids" select="multi" icon="fa-tag" enable_counters="1"/>
+            </searchpanel>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_main" name="VPS" web_icon="payment_vendor,static/description/icon.png" sequence="24"/>
+    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="0"/>
+    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1"/>
+    <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
+    <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
+
+    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="4" groups="group_vendor_manager"/>
+    <!--<menuitem id="menu_settings" action="action_settings" name="Settings" parent="menu_conf" sequence="0"/>-->
+
+    <menuitem id="menu_companies" name="Company Settings" parent="menu_conf" sequence="1"/>
+    <menuitem id="menu_company" action="payment_jetcheckout_system.action_company_hierarchy" parent="menu_companies" sequence="1"/>
+    <menuitem id="menu_user" action="payment_jetcheckout_system.action_user" parent="menu_companies" sequence="2"/>
+
+    <menuitem id="menu_websites" name="Website Settings" parent="menu_conf" sequence="3"/>
+    <menuitem id="menu_website" action="payment_jetcheckout_system.action_website" name="Websites" parent="menu_websites" sequence="1"/>
+
+    <menuitem id="menu_acquirers" name="Payment Settings" parent="menu_conf" sequence="4"/>
+    <menuitem id="menu_acquirer" action="payment_jetcheckout_system.action_acquirer" name="Payment Acquirers" parent="menu_acquirers" sequence="1"/>
+
+    <menuitem id="menu_emails" name="Email Settings" parent="menu_conf" sequence="5"/>
+    <menuitem id="menu_mail_template" action="payment_jetcheckout_system.action_mail_template" parent="menu_emails" sequence="1"/>
+    <menuitem id="menu_mail_server" action="payment_jetcheckout_system.action_mail_server" parent="menu_emails" sequence="2"/>
+</odoo>

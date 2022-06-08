@@ -1,0 +1,9 @@
+.o_company_hierarchy {
+    .o_company_hierarchy_line {
+        border-top: 1px solid #ccc;
+    }
+
+    .o_company_hierarchy_line:first-child {
+        border-top: none !important;
+    }
+}

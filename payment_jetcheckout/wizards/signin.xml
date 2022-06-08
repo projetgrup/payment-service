@@ -18,6 +18,22 @@
                         <div class="mb-1">Password</div>
                         <field name="password" required="1" password="True"/>
                     </div>
+                    <div class="row mx-4 font-weight-bold justify-content-center mt-4" colspan="2">
+                        <div class="mr-3">Advanced Options</div>
+                        <field name="option" widget="boolean_toggle"/>
+                    </div>
+                    <div class="row mx-4 my-4" colspan="2" attrs="{'invisible': [('option', '=', False)]}">
+                        <div class="mb-1">API URL</div>
+                        <field name="gateway_api" placeholder="https://api.jetcheckout.com"/>
+                    </div>
+                    <div class="row mx-4 my-4" colspan="2" attrs="{'invisible': [('option', '=', False)]}">
+                        <div class="mb-1">Gateway URL</div>
+                        <field name="gateway_app" placeholder="https://app.jetcheckout.com"/>
+                    </div>
+                    <div class="row mx-4 mt-4" colspan="2" attrs="{'invisible': [('option', '=', False)]}">
+                        <div class="mb-1">Database Name</div>
+                        <field name="gateway_database"/>
+                    </div>
                     <field name="acquirer_id" invisible="1"/>
                 </group>
             </group>

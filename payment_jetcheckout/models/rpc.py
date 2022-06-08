@@ -4,15 +4,8 @@ import random
 import urllib.request
 
 from odoo.exceptions import ValidationError
-from odoo.tools import config
 
 class rpc():
-
-    @staticmethod
-    def _connect():
-        url = "https://%s/jsonrpc" % config.get("jetcheckout_host", "app.jetcheckout.com")
-        db = config.get("jetcheckout_database", "jetcheckout")
-        return url, db
 
     @classmethod
     def _rpc(self, url, method, params):
@@ -30,16 +23,13 @@ class rpc():
         return reply["result"]
 
     @classmethod
-    def _call(self, service, method, *args):
-        url, db = self._connect()
-        return self._rpc(url, "call", {"service": service, "method": method, "args": db + args})
+    def _call(self, service, method, url, *args):
+        return self._rpc(url, "call", {"service": service, "method": method, "args": args})
 
     @classmethod
-    def execute(self, *args):
-        url, db = self._connect()
-        return self._rpc(url, "call", {"service": "object", "method": "execute", "args": [db, *args]})
+    def execute(self, url, *args):
+        return self._rpc(url, "call", {"service": "object", "method": "execute", "args": args})
 
     @classmethod
-    def login(self, *args):
-        url, db = self._connect()
-        return self._rpc(url, "call", {"service": "common", "method": "login", "args": [db, *args]})
+    def login(self, url, *args):
+        return self._rpc(url, "call", {"service": "common", "method": "login", "args": args})

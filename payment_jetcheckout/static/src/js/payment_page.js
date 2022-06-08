@@ -8,6 +8,7 @@ var rpc = require('web.rpc');
 var utils = require('web.utils');
 var dialog = require('web.Dialog');
 var cards = require('payment_jetcheckout.payment_card');
+var framework = require('payment_jetcheckout.framework');
 
 var round_di = utils.round_decimals;
 var qweb = core.qweb;
@@ -161,8 +162,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
                 self.$name.addEventListener('input', self.inputName);
                 self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
-                self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
+                if (self.$payment_terms) {
+                    self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
+                }
                 if (self.$payment_pay) {
                     self.$payment_pay.addEventListener('click', self.clickPay.bind(self));
                 }
@@ -180,7 +183,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
                 self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
-                self._onToggleLoading();
+                framework.hideLoading();
             }
         });
     },
@@ -291,7 +294,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }).then(function (content) {
             new dialog(this, {
                 title: _t('Terms & Conditions'),
-                $content: $(qweb.render('payment_jetcheckout.terms', {content: content})),
+                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
             }).open();
         }).guardedCatch(function (error) {
             self.displayNotification({
@@ -463,7 +466,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }
     },
 
-    checkData: function () {
+    _checkData: function () {
         if (this.amount.typedValue === '' || this.amount.typedValue === 0) {
             this.displayNotification({
                 type: 'warning',
@@ -512,7 +515,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.$accept_terms.checked) {
+        } else if (this.$accept_terms && !this.$accept_terms.checked) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -532,20 +535,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 widget._enableButton();
                 $('body').unblock();
             }
-        }
-    },
-
-    _onToggleLoading: function (show=false) {
-        const payment_pay = $('.payment_pay');
-        const loading = $('.o_payment_loading');
-        if (show) {
-            payment_pay.addClass('disabled');
-            payment_pay.prop('disabled', 'disabled');
-            loading.css('opacity', 1).css('visibility', 'visible');
-        } else {
-            payment_pay.removeClass('disabled');
-            payment_pay.prop('disabled', false);
-            loading.css('opacity', 0).css('visibility', 'hidden');
         }
     },
 
@@ -572,21 +561,21 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     
     clickPay: function () {
         var self = this;
-        if (this.checkData()) {
-            self._onToggleLoading(true);
+        if (this._checkData()) {
+            framework.showLoading();
             rpc.query({
                 route: '/payment/card/payment',
                 params: this._getParams(),
             }).then(function (result) {
-                if ('error' in result) {
+                if ('url' in result) {
+                    window.location.assign(result.url);
+                } else {
                     self.displayNotification({
                         type: 'danger',
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
-                    self._onToggleLoading();
-                } else {
-                    window.location = result.redirect_url;
+                    framework.hideLoading();
                 }
             }).guardedCatch(function (error) {
                 self.displayNotification({
@@ -598,7 +587,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     console.error(error);
                 }
                 self._enableButton();
-                self._onToggleLoading();
+                framework.hideLoading();
             });
         }
     },

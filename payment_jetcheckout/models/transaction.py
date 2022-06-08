@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError
 import requests
 import json
-import re
+from datetime import datetime
+
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError, ValidationError
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
@@ -138,21 +139,27 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_validate_order(self):
         self.ensure_one()
-        orders = self.sale_order_ids
+        orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids
         if not orders:
             return
-        orders.with_context(send_email=True).action_confirm()
+        try:
+            self.env.cr.commit()
+            orders.with_context(send_email=True).action_confirm()
+        except Exception as e:
+            self.env.cr.rollback()
 
     def jetcheckout_payment(self):
         self.ensure_one()
         try:
+            self.env.cr.commit()
             self.sudo()._jetcheckout_create_payment()
             self.write({
                 'state_message': _('Transaction is succesful and payment has been validated.'),
             })
         except Exception as e:
+            self.env.cr.rollback()
             self.write({
-                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + re.sub('( None)*[^a-z A-Z]+','', str(e)),
+                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
             })
 
     def jetcheckout_cancel(self):
@@ -164,6 +171,7 @@ class PaymentTransaction(models.Model):
             'state': 'cancel',
             'state_message': _('Transaction has been cancelled successfully.')
         })
+        self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
 
     def jetcheckout_refund(self):
         self.ensure_one()
@@ -188,6 +196,7 @@ class PaymentTransaction(models.Model):
                 state = 'cancel'
             else:
                 state = 'done'
+                self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
         else:
             state = 'error'
         self.write({'state': state})

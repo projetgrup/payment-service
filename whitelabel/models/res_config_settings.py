@@ -16,26 +16,26 @@ class ResConfigSettings(models.TransientModel):
     favicon_url = fields.Char(string="Url")
     attach_id = fields.Integer(string="Favicon Attach ID")
 
-    @api.model
-    def fields_view_get(
-            self, view_id=None, view_type="form", toolbar=False, submenu=False
-    ):
-        ret_val = super().fields_view_get(
-            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
-        )
-
-        page_name = ret_val["name"]
-        if not page_name == "res.config.settings.view.form":
-            return ret_val
-
-        doc = etree.XML(ret_val["arch"])
-
-        query = "//div[div[field[@widget='upgrade_boolean']]]"
-        for item in doc.xpath(query):
-            item.attrib["class"] = "d-none"
-
-        ret_val["arch"] = etree.tostring(doc)
-        return ret_val
+    # @api.model
+    # def fields_view_get(
+    #         self, view_id=None, view_type="form", toolbar=False, submenu=False
+    # ):
+    #     ret_val = super().fields_view_get(
+    #         view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
+    #     )
+    #
+    #     page_name = ret_val["name"]
+    #     if not page_name == "res.config.settings.view.form":
+    #         return ret_val
+    #
+    #     doc = etree.XML(ret_val["arch"])
+    #
+    #     query = "//div[div[field[@widget='upgrade_boolean']]]"
+    #     for item in doc.xpath(query):
+    #         item.attrib["class"] = "d-none"
+    #
+    #     ret_val["arch"] = etree.tostring(doc)
+    #     return ret_val
 
     @api.model
     def get_debranding_settings(self):

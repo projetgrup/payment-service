@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="company_hierarchy_line">
+        <div class="o_company_hierarchy_line d-flex justify-content-between mx-0 py-2 text-600 font-weight-bold position-relative" style="white-space: nowrap;" t-att-data-id="company.id" t-att-data-parent="company.parent_id.id" t-att-data-name="company.name">
+            <div class="align-self-center o_company_fold" t-attf-style="padding-left: #{1+indent*2}rem; min-width: 200px; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">
+                <i t-if="child" class="fa fa-caret-down ml-n3 my-1 position-absolute"/>
+                <t t-esc="company.name"/>
+            </div>
+            <div>
+                <button class="btn btn-secondary o_company_action" data-model="website">Website Settings</button>
+                <button class="btn btn-secondary o_company_action" data-model="res.company">Company Details</button>
+                <button class="btn btn-secondary o_company_action" data-model="res.users">Users</button>
+                <button class="btn btn-secondary o_company_action" data-model="payment.acquirer">Virtual Pos Settings</button>
+                <button class="btn btn-secondary o_company_action" data-model="">Jconda Integration</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="company_hierarchy">
+        <div class="container o_company_hierarchy bg-white card shadow my-4 p-4 overflow-hidden">
+            <div style="overflow-x: auto">
+                <t t-foreach="lines" t-as="line">
+                    <t t-raw="line"/>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

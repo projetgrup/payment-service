@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_company_hierarchy" model="ir.actions.client">
+    <field name="name">Companies</field>
+    <field name="tag">company_hierarchy</field>
+    <field name="context" eval="{'model': 'report.res.company.hierarchy'}" />
+    </record>
+
+    <record id="company_form" model="ir.ui.view">
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//group[@name="social_media"]' position="before">
+            <group name="settings" string="Settings">
+                <field name="system"/>
+                <field name="parent_id" options="{'no_create': True}"/>
+            </group>
+        </xpath>
+    </field>
+    </record>
+</odoo>

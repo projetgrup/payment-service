@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_tree" model="ir.ui.view">
+    <field name="name">payment.item.tree</field>
+    <field name="model">payment.item</field>
+    <field name="arch" type="xml">
+        <tree editable="top" sample="1">
+            <field name="child_id" options="{'no_open': True, 'no_create': True}" invisible="context.get('domain',False)" domain="[('parent_id','!=',False),('company_id','=',company_id)]" force_save="1"/>
+            <field name="parent_id" string="Parent" force_save="1" options="{'no_open': True, 'no_create': True}" domain="[('parent_id','=',False),('child_ids','!=',False),('company_id','=',company_id)]"/>
+            <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
+            <field name="paid"/>
+            <field name="paid_amount" string="Amount" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
+            <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
+            <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+            <field name="currency_id" force_save="1" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="item_pivot" model="ir.ui.view">
+    <field name="name">payment.item.pivot</field>
+    <field name="model">payment.item</field>
+    <field name="arch" type="xml">
+        <pivot sample="1">
+            <field name="paid_date" type="row"/>
+            <field name="amount" type="measure"/>
+        </pivot>
+    </field>
+    </record>
+
+    <record id="item_search" model="ir.ui.view">
+    <field name="name">payment.item.search</field>
+    <field name="model">payment.item</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="child_id"/>
+            <field name="parent_id"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <filter name="filterby_payable" string="Payable" domain="[('paid', '=', False)]"/>
+            <filter name="filterby_paid" string="Paid" domain="[('paid', '=', True)]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Child" name="groupby_child" domain="[]" context="{'group_by':'child_id'}"/>
+                <filter string="Parent" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
+                <filter string="Paid" name="groupby_paid" domain="[]" context="{'group_by':'paid'}"/>
+            </group>
+        </search>
+    </field>
+    </record>
+</odoo>

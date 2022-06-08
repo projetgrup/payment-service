@@ -16,5 +16,4 @@
     <delete id="base.menu_view_base_module_upgrade" model="ir.ui.menu"/>
     <delete id="base_import_module.menu_view_base_module_import" model="ir.ui.menu"/>
 
-
 </odoo>

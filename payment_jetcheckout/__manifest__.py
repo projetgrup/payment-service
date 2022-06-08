@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+# Set nginx settings to 'proxy_cookie_path / "/; secure; SameSite=none";'
 
 {
     'name': 'Jetcheckout Payment Acquirer',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
@@ -13,7 +14,6 @@
     'depends': ['account_payment','website_payment'],
     'data': [
         'views/acquirer.xml',
-        'views/company.xml',
         'views/transaction.xml',
         'views/templates.xml',
         'wizards/signin.xml',
@@ -30,6 +30,7 @@
         ],
         'web.assets_frontend': [
             'payment_jetcheckout/static/src/js/imask.js',
+            'payment_jetcheckout/static/src/js/framework.js',
             'payment_jetcheckout/static/src/js/payment_page.js',
             'payment_jetcheckout/static/src/js/payment_form.js',
             'payment_jetcheckout/static/src/js/payment_card.js',

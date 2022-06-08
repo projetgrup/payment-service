@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, _
+from odoo import models, _
 from odoo.exceptions import ValidationError
 import base64
-
-class AccountPaymentMethod(models.Model):
-    _inherit = 'account.payment.method'
-
-    @api.model
-    def _get_payment_method_information(self):
-        res = super()._get_payment_method_information()
-        res['jetcheckout'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
-        return res
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
@@ -130,24 +121,26 @@ class AccountPayment(models.Model):
 
         IrConfig = self.env['ir.config_parameter'].sudo()
         base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
-        body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
-        layout = self.env.ref('payment_jetcheckout.report_layout')
-        html = layout._render({'body': body, 'base_url': base_url})
-        pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(
-            [html],
-            specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-        )
-        attachment = self.env['ir.attachment'].sudo().create({
-            'name': _('Terms & Conditions.pdf'),
-            'res_model': 'account.payment',
-            'res_id': self.id,
-            'mimetype': 'application/pdf',
-            'datas': base64.b64encode(pdf_content),
-            'type': 'binary',
-        })
+        acquirer = line.acquirer_id
+        if not acquirer.jetcheckout_no_terms:
+            body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
+            layout = self.env.ref('payment_jetcheckout.report_layout')
+            html = layout._render({'body': body, 'base_url': base_url})
+            pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(
+                [html],
+                specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            )
+            attachment = self.env['ir.attachment'].sudo().create({
+                'name': _('Terms & Conditions.pdf'),
+                'res_model': 'account.payment',
+                'res_id': self.id,
+                'mimetype': 'application/pdf',
+                'datas': base64.b64encode(pdf_content),
+                'type': 'binary',
+            })
 
-        body = _('User has accepted Terms & Conditions. User IP Address is %s') % (ip_address,)
-        self.message_post(body=body, attachment_ids=attachment.ids)
+            body = _('User has accepted Terms & Conditions. User IP Address is %s') % (ip_address,)
+            self.message_post(body=body, attachment_ids=attachment.ids)
 
         if commission_product:
             order_vals = {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vendor_mail" model="mail.template">
+            <field name="name">Vendor Payment Email</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">Payment - {{ object.company_id.name }}</field>
+            <field name="partner_to">{{ object.id }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <strong>Sayın <i t-out="object.name"/></strong>,
+                    <br/><br/>
+                    İncelemek ve Online Ödeme için <a t-att-href="object._get_payment_url()" style="color:#3079ed;">tıklayınız.</a>
+                    <br/><br/>
+                    Sağlıklı bir yıl dileriz.
+                    <br/><br/>
+                    Saygılarımızla...
+                    <br/><br/>
+                    <span t-out="object._get_payment_company()"/>
+                </p>
+            </field>
+            <!--<field name="report_template" ref="action_report_template"/>
+            <field name="report_name">{{ (object.name or '') }}</field>-->
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

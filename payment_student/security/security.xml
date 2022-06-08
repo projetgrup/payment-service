@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="module_category_sps" model="ir.module.category">
+        <!-- groups -->
+        <record id="module_category_student" model="ir.module.category">
             <field name="name">Student Payment System</field>
             <field name="description">Student Payment System</field>
             <field name="sequence">4</field>
         </record>
-        <record model="res.groups" id="group_sps_user">
+        <record model="res.groups" id="group_student_user">
             <field name="name">User</field>
-            <field name="category_id" ref="module_category_sps"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="module_category_student"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_user'))]"/>
         </record>
-        <record model="res.groups" id="group_sps_manager">
+        <record model="res.groups" id="group_student_manager">
             <field name="name">Manager</field>
-            <field name="category_id" ref="module_category_sps"/>
-            <field name="implied_ids" eval="[(4, ref('group_sps_user'))]"/>
+            <field name="category_id" ref="module_category_student"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
-        <record id="setting_company_rule" model="ir.rule">
-            <field name="name">Access only related companies for settings</field>
-            <field name="model_id" ref="payment_student.model_res_student_setting"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
+
+        <!-- rules -->
         <record id="discount_company_rule" model="ir.rule">
             <field name="name">Access only related companies for discounts</field>
             <field name="model_id" ref="payment_student.model_res_student_discount"/>
@@ -75,75 +69,6 @@
             <field name="name">Access only related companies for payment types</field>
             <field name="model_id" ref="payment_student.model_res_student_payment_type"/>
             <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="payment_company_rule" model="ir.rule">
-            <field name="name">Access only related companies for payments</field>
-            <field name="model_id" ref="payment_student.model_res_student_payment"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="mail_template_company_rule" model="ir.rule">
-            <field name="name">Access only related companies for mail templates</field>
-            <field name="model_id" ref="mail.model_mail_template"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="mail_template_company_admin_rule" model="ir.rule">
-            <field name="name">Access only related mail templates for admins</field>
-            <field name="model_id" ref="mail.model_mail_template"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="mail_server_company_rule" model="ir.rule">
-            <field name="name">Access only related mail servers for admins</field>
-            <field name="model_id" ref="base.model_ir_mail_server"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="mail_server_company_admin_rule" model="ir.rule">
-            <field name="name">Access only related templates for mail servers</field>
-            <field name="model_id" ref="base.model_ir_mail_server"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="users_company_rule" model="ir.rule">
-            <field name="name">Access only related users for users</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="users_company_admin_rule" model="ir.rule">
-            <field name="name">Access only related users for admins</field>
-            <field name="model_id" ref="base.model_res_users"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
