@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="send_type_email" model="payment.acquirer.jetcheckout.send.type">
+            <field name="name">Email</field>
+            <field name="code">email</field>
+            <field name="icon">fa-envelope-o</field>
+            <field name="sequence">1</field>
+        </record>
+    	<record id="send_type_sms" model="payment.acquirer.jetcheckout.send.type">
+            <field name="name">Sms</field>
+            <field name="code">sms</field>
+            <field name="icon">fa-commenting-o</field>
+            <field name="sequence">2</field>
+        </record>
+    	<record id="send_type_telegram" model="payment.acquirer.jetcheckout.send.type">
+            <field name="name">Telegram</field>
+            <field name="code">telegram</field>
+            <field name="icon">fa-send</field>
+            <field name="sequence">10</field>
+        </record>
+    	<record id="send_type_whatsapp" model="payment.acquirer.jetcheckout.send.type">
+            <field name="name">WhatsApp</field>
+            <field name="code">whatsapp</field>
+            <field name="icon">fa-whatsapp</field>
+            <field name="sequence">11</field>
+        </record>
+        <record id="send_source" model="utm.source">
+            <field name="name">Payment System</field>
+        </record>
+    </data>
+</odoo>

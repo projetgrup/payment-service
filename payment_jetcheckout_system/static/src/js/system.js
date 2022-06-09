@@ -70,7 +70,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         rpc.query({route: '/p/privacy'}).then(function (content) {
             new dialog(this, {
                 title: _t('Privacy Policy'),
-                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
+                $content: $('<div/>').html(content),
             }).open();
         });
     },
@@ -81,7 +81,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         rpc.query({route: '/p/agreement'}).then(function (content) {
             new dialog(this, {
                 title: _t('Distant Sale Agreement'),
-                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
+                $content: $('<div/>').html(content),
             }).open();
         });
     },
@@ -92,7 +92,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         rpc.query({route: '/p/membership'}).then(function (content) {
             new dialog(this, {
                 title: _t('Membership Agreement'),
-                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
+                $content: $('<div/>').html(content),
             }).open();
         });
     },
@@ -103,7 +103,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         rpc.query({route: '/p/contact'}).then(function (content) {
             new dialog(this, {
                 title: _t('Contact'),
-                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
+                $content: $('<div/>').html(content),
             }).open();
         });
     },

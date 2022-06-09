@@ -1,16 +1,9 @@
 # -*- coding: utf-8 -*-
 import werkzeug
-import json
-import requests
-import uuid
-import base64
-import hashlib
 from datetime import datetime
-from odoo import http, SUPERUSER_ID, _
+from odoo import http, _
 from odoo.http import request
-from odoo.tools.misc import formatLang, get_lang
-from odoo.tools.float_utils import float_compare
-from odoo.exceptions import ValidationError
+from odoo.tools.misc import get_lang
 from ..models.partner import PRIMEFACTOR
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 
@@ -50,9 +43,6 @@ class JetcheckoutSystemController(JetController):
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,
-            'currency': currency,
-            'currency_separator' : lang.decimal_point,
-            'currency_thousand' : lang.thousands_sep,
             'acquirer': acquirer,
             'card_family': card_family,
             'footer': '',
@@ -60,13 +50,23 @@ class JetcheckoutSystemController(JetController):
             'fail_url': '/payment/card/fail',
             'tx': transaction,
             'system': system,
+            'currency': {
+                'self' : currency,
+                'id' : currency.id,
+                'name' : currency.name,
+                'decimal' : currency.decimal_places,
+                'symbol' : currency.symbol,
+                'position' : currency.position,
+                'separator' : lang.decimal_point,
+                'thousand' : lang.thousands_sep,
+            },
         }
 
     @http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page_legacy(self, parent_id, access_token, **kwargs):
         parent = request.env['res.partner'].sudo().browse(parent_id)
         if not parent or not parent.access_token == access_token:
-            return werkzeug.utils.redirect('/404')
+            raise werkzeug.exceptions.NotFound()
         token = parent._get_token()
         return self.jetcheckout_system_payment_page(token)
 
@@ -74,13 +74,13 @@ class JetcheckoutSystemController(JetController):
     def jetcheckout_system_payment_page(self, token, **kwargs):
         parent = self._jetcheckout_get_parent(token)
         if not parent:
-            return werkzeug.utils.redirect('/404')
+            raise werkzeug.exceptions.NotFound()
 
         transaction = None
         if '' in kwargs:
             transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs[''])], limit=1)
             if not transaction:
-                return werkzeug.utils.redirect('/404')
+                raise werkzeug.exceptions.NotFound()
 
         company = parent.company_id or request.env.company
         system = company.system
@@ -102,3 +102,8 @@ class JetcheckoutSystemController(JetController):
     @http.route(['/p/contact'], type='json', auth='public', website=True, csrf=False)
     def jetcheckout_contact_page(self):
         return request.website.payment_contact_page
+
+    @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def jetcheckout_portal_payment_page(self, **kwargs):
+        values = self._jetcheckout_get_data()
+        return request.render('payment_jetcheckout_system.payment_page', values)

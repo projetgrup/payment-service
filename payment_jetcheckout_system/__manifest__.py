@@ -10,8 +10,13 @@
     'license': 'LGPL-3',
     'sequence': 1454,
     'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_jetcheckout'],
+    'depends': [
+        'payment_jetcheckout',
+        'mass_mailing',
+        'mass_mailing_sms',
+    ],
     'data': [
+        'data/data.xml',
         'views/company.xml',
         'views/transaction.xml',
         'views/templates.xml',
@@ -23,6 +28,7 @@
         'views/settings.xml',
         'views/actions.xml',
         'report/company.xml',
+        'wizards/send.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
     ],
@@ -33,6 +39,7 @@
         'web.assets_backend': [
             'payment_jetcheckout_system/static/src/js/company.js',
             'payment_jetcheckout_system/static/src/scss/company.scss',
+            'payment_jetcheckout_system/static/src/scss/send.scss',
         ],
         'web.assets_frontend': [
             'payment_jetcheckout_system/static/src/js/system.js',

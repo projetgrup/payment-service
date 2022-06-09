@@ -66,7 +66,7 @@ class PaymentAPIService(Component):
             if not api:
                 return PrepareResponse(**RESPONSE['no_api_key'])
 
-            hash = self._check_hash(api, params.hash, params.reference)
+            hash = self._check_hash(api, params.hash, params.id)
             if not hash:
                 return PrepareResponse(**RESPONSE['no_hash_match'])
 
@@ -111,8 +111,8 @@ class PaymentAPIService(Component):
             domain.append(('secret_key','=',secretkey))
         return self.env["payment.acquirer.jetcheckout.api"].sudo().search(domain, limit=1)
 
-    def _check_hash(self, key, hash, reference):
-        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(reference)]).encode('utf-8')).digest()).decode('utf-8')
+    def _check_hash(self, key, hash, id):
+        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(id)]).encode('utf-8')).digest()).decode('utf-8')
         if hashed != hash:
             return False
         return hash
@@ -140,9 +140,10 @@ class PaymentAPIService(Component):
             'state': 'draft',
             'partner_authorized': params.customer['authorized'],
             'jetcheckout_ip_address': params.customer['ip_address'],
+            'jetcheckout_api_ref': params.order['name'],
             'jetcheckout_api_product': params.product['name'],
             'jetcheckout_api_hash': hash,
-            'jetcheckout_api_tx': params.reference,
+            'jetcheckout_api_tx': params.id,
             'jetcheckout_api_return_url': params.return_url,
         })
         tx.write({

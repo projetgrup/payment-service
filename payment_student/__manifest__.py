@@ -25,6 +25,9 @@
         'web.assets_qweb': [
             'payment_student/static/src/xml/templates.xml',
         ],
+        'web.assets_backend': [
+            'payment_student/static/src/scss/backend.scss',
+        ],
         'web.assets_frontend': [
             'payment_student/static/src/js/frontend.js',
             'payment_student/static/src/scss/frontend.scss',

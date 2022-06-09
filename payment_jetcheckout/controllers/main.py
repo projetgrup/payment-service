@@ -216,7 +216,7 @@ class JetcheckoutController(http.Controller):
     def jetcheckout_payment_page(self, **kwargs):
         values = self._jetcheckout_get_data()
         if not values['acquirer'].jetcheckout_payment_page:
-            return werkzeug.utils.redirect('/404')
+            raise werkzeug.exceptions.NotFound()
         return request.render('payment_jetcheckout.payment_page', values)
 
     @http.route(['/payment/card/installments'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
@@ -277,8 +277,28 @@ class JetcheckoutController(http.Controller):
         invoice_id = int(kwargs.get('invoice'))
         partner = request.env['res.partner'].sudo().browse(self._jetcheckout_get_partner(**kwargs))
 
-        tx = self._jetcheckout_get_transaction()
-        if not tx:
+        if kwargs.get('api'):
+            tx = self._jetcheckout_get_transaction()
+            tx_vals = {
+                'acquirer_id': acquirer.id,
+                'jetcheckout_ip_address': tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+                'jetcheckout_card_name': kwargs['card_holder_name'],
+                'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
+                'jetcheckout_card_type': kwargs['card_type'].capitalize(),
+                'jetcheckout_card_family': kwargs['card_family'].capitalize(),
+                'jetcheckout_vpos_name': vpos,
+                'jetcheckout_order_id': order_id,
+                'jetcheckout_payment_amount': amount,
+                'jetcheckout_installment_count': installment,
+                'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
+                'jetcheckout_commission_rate': rate,
+                'jetcheckout_commission_amount': amount * rate / 100,
+                'jetcheckout_customer_rate': customer_rate,
+                'jetcheckout_customer_amount': customer_amount,
+            }
+            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
+            tx.write(tx_vals)
+        else:
             sequence_code = 'payment.jetcheckout.transaction'
             name = request.env['ir.sequence'].sudo().next_by_code(sequence_code)
             if not name:
@@ -315,26 +335,6 @@ class JetcheckoutController(http.Controller):
             }
             tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx = request.env['payment.transaction'].sudo().create(tx_vals)
-        else:
-            tx_vals = {
-                'acquirer_id': acquirer.id,
-                'jetcheckout_ip_address': tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-                'jetcheckout_card_name': kwargs['card_holder_name'],
-                'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
-                'jetcheckout_card_type': kwargs['card_type'].capitalize(),
-                'jetcheckout_card_family': kwargs['card_family'].capitalize(),
-                'jetcheckout_vpos_name': vpos,
-                'jetcheckout_order_id': order_id,
-                'jetcheckout_payment_amount': amount,
-                'jetcheckout_installment_count': installment,
-                'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
-                'jetcheckout_commission_rate': rate,
-                'jetcheckout_commission_amount': amount * rate / 100,
-                'jetcheckout_customer_rate': customer_rate,
-                'jetcheckout_customer_amount': customer_amount,
-            }
-            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
-            tx.write(tx_vals)
 
         if sale_id:
             tx.sale_order_ids = [(4, sale_id)]
@@ -484,7 +484,7 @@ class JetcheckoutController(http.Controller):
     def jetcheckout_report(self, name, order_id, **kwargs):
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',order_id)])
         if not tx:
-            return werkzeug.utils.redirect('/404')
+            raise werkzeug.exceptions.NotFound()
 
         pdf = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_pdf([tx.id])[0]
         pdfhttpheaders = [
