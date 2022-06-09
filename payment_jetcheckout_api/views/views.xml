@@ -58,6 +58,7 @@
                 </group>
                 <group>
                     <field name="partner_authorized" string="Partner Authorized"/>
+                    <field name="jetcheckout_api_ref" string="Reference"/>
                     <field name="jetcheckout_api_product" string="Product"/>
                 </group>
             </group>

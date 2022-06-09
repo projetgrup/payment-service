@@ -19,4 +19,10 @@
         'views/templates.xml',
         'views/settings.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'payment_vendor/static/src/scss/frontend.scss',
+            'payment_vendor/static/src/js/frontend.js',
+        ],
+    },
 }

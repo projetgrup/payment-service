@@ -5,6 +5,9 @@
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
         <tree decoration-muted="active == False" sample="1">
+            <header>
+                <button name="action_send" type="object" string="Send"/>
+            </header>
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="vat" string="Vat"/>
@@ -12,6 +15,7 @@
             <field name="mobile"/>
             <field name="email"/>
             <field name="date_email_sent" optional="hide"/>
+            <field name="date_sms_sent" optional="hide"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
         </tree>
     </field>
@@ -26,7 +30,7 @@
             <field name="payable_count" invisible="1"/>
             <header attrs="{'invisible': [('payable_count', '=', 0)]}">
                 <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight"/>
-                <button name="action_send" type="object" string="Send Email"/>
+                <button name="action_send" type="object" string="Send"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -63,8 +67,11 @@
                     <group name="private">
                         <field name="mobile" widget="phone"/>
                         <field name="email" widget="email"/>
-                        <field name="date_email_sent"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('active_system')"/>
+                    </group>
+                    <group name="communication" string="Communication Dates">
+                        <field name="date_email_sent" string="Email"/>
+                        <field name="date_sms_sent" string="SMS"/>
                     </group>
                 </group>
                 <notebook>
@@ -96,7 +103,7 @@
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
-        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//group[@name="communication"]' position="replace"/>
     </field>
     </record>
 
@@ -140,9 +147,13 @@
             <filter name="filterby_payment" string="Has Payments" domain="[('payment_ids', '=', '')]"/>
             <filter name="filterby_no_payment" string="Has No Payments" domain="[('payment_ids', '!=', '')]"/>
             <separator/>
-            <filter name="filterby_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-            <filter name="filterby_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-            <filter name="filterby_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>
+            <filter name="filterby_email_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_email_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_email_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>
+            <separator/>
+            <filter name="filterby_sms_sent_today" string="Sent SMS Today" domain="[('date_sms_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sms_sent_before" string="Sent SMS Before" domain="[('date_sms_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sms_sent_no" string="No Sent SMS" domain="[('date_sms_sent', '=', False)]"/>
             <group expand="0" string="Groupby">
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
             </group>

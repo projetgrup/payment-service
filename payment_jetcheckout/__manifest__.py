@@ -25,9 +25,6 @@
         'security/ir.model.access.csv',
     ],
     'assets': {
-        'web.assets_qweb': [
-            'payment_jetcheckout/static/src/xml/templates.xml',
-        ],
         'web.assets_frontend': [
             'payment_jetcheckout/static/src/js/imask.js',
             'payment_jetcheckout/static/src/js/framework.js',

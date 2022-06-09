@@ -23,7 +23,7 @@
         <record id="mail_template_company_rule" model="ir.rule">
             <field name="name">Access only related mail templates for users</field>
             <field name="model_id" ref="mail.model_mail_template"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -43,7 +43,7 @@
         <record id="mail_server_company_rule" model="ir.rule">
             <field name="name">Access only related mail servers for users</field>
             <field name="model_id" ref="base.model_ir_mail_server"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -53,6 +53,26 @@
         <record id="mail_server_company_admin_rule" model="ir.rule">
             <field name="name">Access only related mail servers for admins</field>
             <field name="model_id" ref="base.model_ir_mail_server"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="mailing_company_rule" model="ir.rule">
+            <field name="name">Access only related mailings for users</field>
+            <field name="model_id" ref="mass_mailing.model_mailing_mailing"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="mailing_company_admin_rule" model="ir.rule">
+            <field name="name">Access only related mailings for admins</field>
+            <field name="model_id" ref="mass_mailing.model_mailing_mailing"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="perm_read" eval="True"/>

@@ -33,6 +33,7 @@ class Partner(models.Model):
     paid_count = fields.Integer(string='Items Paid', compute='_compute_payment')
     payable_count = fields.Integer(string='Items To Pay', compute='_compute_payment')
     date_email_sent = fields.Datetime('Email Sent Date', readonly=True)
+    date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
 
     @api.model
     def default_get(self, fields):
@@ -65,12 +66,20 @@ class Partner(models.Model):
         self._portal_ensure_token()
         return self.access_url
 
-    def _get_payment_url(self):
+    def _get_payment_url(self, shorten=False):
         self.ensure_one()
         website = self.env['website'].sudo().search([('company_id','=',self.company_id.id)])
         if not website:
             raise UserError(_('There isn\'t any website related to this partner\'s company'))
-        return website.domain + self._get_share_url()
+
+        url = website.domain + self._get_share_url()
+        if shorten:
+            link = self.env['link.tracker'].sudo().create({
+                'url': url,
+                'title': self.name,
+            })
+            url = link.short_url
+        return url
 
     def _get_payment_company(self):
         self.ensure_one()
@@ -122,9 +131,21 @@ class Partner(models.Model):
         return action
 
     def action_send(self):
-        for rec in self:
-            if len(rec.payment_ids):
-                template = self.env['mail.template'].sudo().search([('company_id','=',rec.company_id.id)], limit=1)
-                if template:
-                    rec.with_context(force_send=True).message_post_with_template(template.id, composition_mode='comment')
-                    rec.date_email_sent = datetime.now()
+        company = self.mapped('company_id')
+        if not len(company) == 1:
+            raise UserError(_('Partners have to be in one company when sending mass messages, but there are %s of them. (%s)') % (len(company), ', '.join(company.mapped('name'))))
+
+        email = self.env.ref('payment_jetcheckout_system.send_type_email')
+        mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
+        sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
+        res = self.env['payment.acquirer.jetcheckout.send'].create({
+            'partner_ids': [(6, 0, self.ids)],
+            'selection': [(6, 0, email.ids)],
+            'type_ids': [(6, 0, email.ids)],
+            'mail_template_id': mail_template.id,
+            'sms_template_id': sms_template.id,
+            'company_id': company.id,
+        })
+        action = self.env.ref('payment_jetcheckout_system.action_system_send').sudo().read()[0]
+        action['res_id'] = res.id
+        return action

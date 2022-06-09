@@ -5,6 +5,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     partner_authorized = fields.Char('API Partner Authorized', readonly=True)
+    jetcheckout_api_ref = fields.Char('API Reference', readonly=True)
     jetcheckout_api_product = fields.Char('API Product', readonly=True)
     jetcheckout_api_hash = fields.Char('API Hash', readonly=True)
     jetcheckout_api_tx = fields.Integer('API TransactionID', readonly=True)
