@@ -67,7 +67,7 @@
                 </div>
                 <group>
                     <group string="Information">
-                        <field name="phone" widget="phone" required="1"/>
+                        <field name="phone" widget="phone"/>
                         <field name="notification_type" widget="radio" options="{'horizontal': true}"/>
                         <field name="signature" options="{'style-inline': true}"/>
                         <field name="action_id" invisible="1"/>

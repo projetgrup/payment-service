@@ -92,18 +92,24 @@ var CompanyHierarchy = AbstractAction.extend({
             alert(_t('This module is working in progress'));
             return;
         }
-        const action = {
-            type: 'ir.actions.act_window',
-            name: name,
-            res_model: model,
-            views: [[false, 'list'], [false, 'form']],
-            target: 'current',
-            domain: [['company_id', '=', company_id]]
-        }
-        if (model === 'res.company') {
-            action['res_id'] = company_id;
-            action['context'] = {'active_id': company_id};
-            action['views'] = [[false, 'form']];
+
+        var action;
+        if (model === 'res.users') {
+            action = 'payment_jetcheckout_system.action_user';
+        } else {
+            action = {
+                type: 'ir.actions.act_window',
+                name: name,
+                res_model: model,
+                views: [[false, 'list'], [false, 'form']],
+                target: 'current',
+                domain: [['company_id', '=', company_id]]
+            }
+            if (model === 'res.company') {
+                action['res_id'] = company_id;
+                action['context'] = {'active_id': company_id};
+                action['views'] = [[false, 'form']];
+            }
         }
         return this.do_action(action);
     },
