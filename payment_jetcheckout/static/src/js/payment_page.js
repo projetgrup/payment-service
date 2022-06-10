@@ -267,10 +267,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         this.$cctype = type;
         if (code) {
             this.$ccicon.innerHTML = cards[code];
-            this.$cclogo.classList.add('show');
+            this.$ccicon.classList.add('show');
         } else {
             this.$ccicon.innerHTML = '';
-            this.$cclogo.classList.remove('show');
+            this.$ccicon.classList.remove('show');
         }
         if (this.$creditcard) {
             this.$ccsingle.innerHTML = code && cards[code + '_single'] || '';
