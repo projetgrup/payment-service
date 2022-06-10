@@ -7,47 +7,40 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-10 19:05+0000\n"
-"PO-Revision-Date: 2022-06-10 23:24+0300\n"
+"PO-Revision-Date: 2022-06-10 19:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
-msgstr "<i title=\"Kapat\" class=\"small fa fa-times\"/>"
-
-#. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid ""
-"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items Paid</span>"
-msgstr "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Ödendi</span>"
-
-#. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid ""
-"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items To Pay</span>"
 msgstr ""
-"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Ödenecek</span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items Paid</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items To Pay</span>"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "<span class=\"o_stat_text\">Items</span>"
-msgstr "<span class=\"o_stat_text\">Ödeme Kalemleri</span>"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid ""
-"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-label="
-"\"Search\" title=\"Search\"/></span>"
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
-"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-label="
-"\"Ara\" title=\"Ara\"/></span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -55,8 +48,6 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"<strong>Bu kullanıcı için şifre sıfırlama talep edildi. Aşağıdaki bağlantıyı "
-"içeren bir eposta gönderildi:</strong>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -64,109 +55,107 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderildi:"
-"</strong>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_kanban
 msgid "<strong>Note</strong>"
-msgstr "<strong>Not</strong>"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_kanban
 msgid "<strong>Template</strong>"
-msgstr "<strong>Şablon</strong>"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "<strong>The contact linked to this user is still active</strong>"
-msgstr "<strong>Bu kullanıcıya bağlı iş ortağı hala aktif</strong>"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_warning
 msgid "Access warning"
-msgstr "Erişim uyarısı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Active"
-msgstr "Aktif"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__admin
 msgid "Administrator"
-msgstr "Yönetici"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
 msgid "Agreements"
-msgstr "Sözleşmeler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Allowed Companies"
-msgstr "İzin Verilen Şirketler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__amount
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Amount"
-msgstr "Tutar"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Archived"
-msgstr "Arşivlendi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "Cancel"
-msgstr "İptal"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/settings.py:0
 #, python-format
 msgid "Cannot duplicate configuration!"
-msgstr "Yapılandırma çoklanamaz!"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__child_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Child"
-msgstr "Alt Cari"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Children"
-msgstr "Alt Cariler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
-msgstr "Kapat"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__code
 msgid "Code"
-msgstr "Kod"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Communication Dates"
-msgstr "İletişim Tarihleri"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.client,name:payment_jetcheckout_system.action_company_hierarchy
 #: model:ir.model,name:payment_jetcheckout_system.model_res_company
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Companies"
-msgstr "Şirketler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Companies count"
-msgstr "Şirket adedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__company_id
@@ -180,17 +169,17 @@ msgstr "Şirket adedi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Company"
-msgstr "Şirket"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Company Details"
-msgstr "Şirket Detayları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_company_hierarchy
 msgid "Company Hierarchy"
-msgstr "Şirket Hiyerarşisi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -199,26 +188,26 @@ msgstr "Şirket Hiyerarşisi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
 #, python-format
 msgid "Contact"
-msgstr "Cari"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_contact_page
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Contact Page"
-msgstr "İletişim Sayfası"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 msgid "Conveyance"
-msgstr "Temlikname"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/company.xml:0
 #, python-format
 msgid "Create"
-msgstr "Oluştur"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_uid
@@ -226,7 +215,7 @@ msgstr "Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_date
@@ -234,37 +223,37 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_date
 msgid "Created on"
-msgstr "Oluşturma Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_item
 msgid "Created payments are listed here"
-msgstr "Oluşturulan ödemeler burada listelenir"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__currency_id
 msgid "Currency"
-msgstr "Para Birimi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_res_partner__access_url
 msgid "Customer Portal URL"
-msgstr "Müşteri Portal Adresi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Default Company"
-msgstr "Varsayılan Şirket"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Details"
-msgstr "Detaylar"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Discard"
-msgstr "Vazgeç"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__display_name
@@ -272,7 +261,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__display_name
 msgid "Display Name"
-msgstr "Görünen Ad"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -280,7 +269,7 @@ msgstr "Görünen Ad"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
 #, python-format
 msgid "Distant Sale Agreement"
-msgstr "Mesafeli Satış Sözleşmesi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_mail_messages
@@ -288,61 +277,61 @@ msgstr "Mesafeli Satış Sözleşmesi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
 msgid "Email"
-msgstr "Eposta"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Email Address"
-msgstr "Eposta Adresi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__date_email_sent
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__date_email_sent
 msgid "Email Sent Date"
-msgstr "Eposta Gönderim Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_template_id
 msgid "Email Template"
-msgstr "Eposta Şablonu"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_mail_template
 #: model:ir.model,name:payment_jetcheckout_system.model_mail_template
 msgid "Email Templates"
-msgstr "Eposta Şablonları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
-msgstr "Epostalar %s üzerinden gönderilecektir"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_footer
 msgid "Footer"
-msgstr "Alt Bilgi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Groupby"
-msgstr "Grupla"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Yönlendirme"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Has No Payments"
-msgstr "Ödemesi Yok"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Has Payments"
-msgstr "Ödemesi Var"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
@@ -350,17 +339,17 @@ msgstr "Ödemesi Var"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__icon
 msgid "Icon"
-msgstr "İkon"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__icon_preview
 msgid "Icon Preview"
-msgstr "İkon Görünümü"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
@@ -368,59 +357,58 @@ msgid ""
 "If you need assistance, you can contact with us by using one of the "
 "following methods."
 msgstr ""
-"Destek almak için aşağıdaki metotların herhangi biriyle bize ulaşabilirsiniz."
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Information"
-msgstr "Bilgiler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Installment"
-msgstr "Taksit"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__installment_count
 msgid "Installment Count"
-msgstr "Taksit Adedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paid_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paid_count
 msgid "Items Paid"
-msgstr "Ödenen"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payable_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payable_count
 msgid "Items To Pay"
-msgstr "Ödenecek"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Jconda Integration"
-msgstr "Jconda Entegrasyonu"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_item_count
 msgid "Jetcheckout Item Count"
-msgstr "Jetcheckout Kalem Adedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send
 msgid "Jetcheckout System Send"
-msgstr "Jetcheckout Sistem Gönderisi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send_type
 msgid "Jetcheckout System Send Types"
-msgstr "Jetcheckout Sistem Gönderi Türü"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__lang
 msgid "Language"
-msgstr "Dil"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send____last_update
@@ -428,7 +416,7 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_uid
@@ -436,7 +424,7 @@ msgstr "Son Düzenleme Tarihi"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_uid
 msgid "Last Updated by"
-msgstr "Son Güncelleyen"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_date
@@ -444,67 +432,67 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Localization"
-msgstr "Yerelleştirme"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_body
 msgid "Mail Body"
-msgstr "Eposta Metni"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_cc
 msgid "Mail Cc"
-msgstr "Eposta Cc"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_from
 msgid "Mail From"
-msgstr "Eposta Kimden"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_reply_to
 msgid "Mail Reply To"
-msgstr "Eposta Cevap Adresi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_ir_mail_server
 msgid "Mail Server"
-msgstr "Eposta Sunucusu"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_mail_server
 msgid "Mail Servers"
-msgstr "Eposta Sunucuları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_subject
 msgid "Mail Subject"
-msgstr "Eposta Başlığı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__mail_template_id
 msgid "Mail Template"
-msgstr "Eposta Şablonu"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_to
 msgid "Mail To"
-msgstr "Eposta Kime"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:res.groups,name:payment_jetcheckout_system.group_system_manager
 msgid "Manager"
-msgstr "Yönetici"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_mailing_mailing
 msgid "Mass Mailing"
-msgstr "Toplu Mesajlaşma"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -514,85 +502,85 @@ msgstr "Toplu Mesajlaşma"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 #, python-format
 msgid "Membership Agreement"
-msgstr "Üyelik Sözleşmesi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_ir_ui_menu
 msgid "Menu"
-msgstr "Menü"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__message
 msgid "Message"
-msgstr "Mesaj"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "More languages"
-msgstr "Daha fazla dil"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__name
 msgid "Name"
-msgstr "Ad"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "No Sent Email"
-msgstr "Eposta Gönderilmedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "No Sent SMS"
-msgstr "SMS Gönderilmedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy
 msgid "No company found"
-msgstr "Bir şirket bulunamadı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_item
 msgid "No payments yet"
-msgstr "Henüz bir ödeme yok"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "No setting found"
-msgstr "Bir ayar bulunamadı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
 msgid "No transactions yet"
-msgstr "Henüz bir işlem yok"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Page Footer"
-msgstr "Sayfa Alt Bilgi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Paid"
-msgstr "Ödendi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid_amount
 msgid "Paid Amount"
-msgstr "Ödeme Tutarı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid_date
 msgid "Paid Date"
-msgstr "Ödeme Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paid_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paid_ids
 msgid "Paid Items"
-msgstr "Ödeme Kalemleri"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__parent_id
@@ -601,93 +589,91 @@ msgstr "Ödeme Kalemleri"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Parent"
-msgstr "Cari"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
 msgid "Partner"
-msgstr "İş Ortağı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_count
 msgid "Partner Count"
-msgstr "İş Ortağı Adedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_ids
 msgid "Partners"
-msgstr "İş Ortakları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid ""
-"Partners have to be in one company when sending mass messages, but there are "
-"%s of them. (%s)"
+"Partners have to be in one company when sending mass messages, but there are"
+" %s of them. (%s)"
 msgstr ""
-"Toplu mesaj gönderirken iş ortakları bir şirkette olmalıdır. Fakat %s adet "
-"görünüyor. (%s)"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Payable"
-msgstr "Ödenecek"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_acquirer
 msgid "Payment Acquirers"
-msgstr "Ödeme Alıcıları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_item
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_item_ids
 msgid "Payment Items"
-msgstr "Ödeme Kalemleri"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
 msgid "Payment Settings"
-msgstr "Ödem Ayarları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
 #: model:ir.module.category,name:payment_jetcheckout_system.module_category_system
 #: model:utm.source,name:payment_jetcheckout_system.send_source
 msgid "Payment System"
-msgstr "Ödeme Sistemi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Ödeme İşlemleri"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
 msgid "Payment transactions are listed here"
-msgstr "Ödeme işlemleri burada listelenir"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_ids
 msgid "Payments"
-msgstr "Ödemeler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
 msgid "Phone"
-msgstr "Telefon"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_url
 msgid "Portal Access URL"
-msgstr "Portal Erişim Adresi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Preview"
-msgstr "Önizleme"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -697,69 +683,69 @@ msgstr "Önizleme"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 #, python-format
 msgid "Privacy Policy"
-msgstr "Gizlilik Politikası"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__privilege
 msgid "Privilege Type"
-msgstr "Yetki Türü"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 msgid "Receipt"
-msgstr "Makbuz"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_sms_messages
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "SMS"
-msgstr "SMS"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_sms_template
 #: model:ir.model,name:payment_jetcheckout_system.model_sms_template
 msgid "SMS Templates"
-msgstr "SMS Şablonları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "SMS messages are going to be sent on %s"
-msgstr "SMS mesajları %s üzerinden gönderilecektir"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_sale_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Sale Agreement"
-msgstr "Satış Sözleşmesi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Save"
-msgstr "Kaydet"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/company.xml:0
 #, python-format
 msgid "Search company..."
-msgstr "Şirket ara..."
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Search..."
-msgstr "Ara..."
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_token
 msgid "Security Token"
-msgstr "Güvenlik Tokeni"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__selection
 msgid "Selection"
-msgstr "Seçim"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_system_send
@@ -767,87 +753,87 @@ msgstr "Seçim"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "Send"
-msgstr "Gönder"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send Password Reset Instructions"
-msgstr "Parola Sıfırlama Talimatlarını Gönder"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send an Invitation Email"
-msgstr "Davet Epostası Gönder"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Sent Email Before"
-msgstr "Eposta Önceden Gönderildi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Sent Email Today"
-msgstr "Eposta Bugün Gönderildi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Sent SMS Before"
-msgstr "SMS Önceden Gönderildi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Sent SMS Today"
-msgstr "SMS Bugün Gönderildi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Settings"
-msgstr "Ayarlar"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.server,name:payment_jetcheckout_system.payment_share
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Share Payment Link"
-msgstr "Ödeme Bağlantısını Paylaş"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__sibling_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__sibling_ids
 msgid "Sibling"
-msgstr "Kardeş"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Siblings"
-msgstr "Kardeşler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_sms
 msgid "Sms"
-msgstr "Sms"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sms_body
 msgid "Sms Body"
-msgstr "Sms Metni"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__date_sms_sent
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__date_sms_sent
 msgid "Sms Sent Date"
-msgstr "Sms Gönderi Tarihi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__sms_template_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sms_template_id
 msgid "Sms Template"
-msgstr "Sms Şablonu"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__system
@@ -856,86 +842,86 @@ msgstr "Sms Şablonu"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__system
 msgid "System"
-msgstr "Sistem"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
 msgid "Tax Office"
-msgstr "Vergi Dairesi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_telegram
 msgid "Telegram"
-msgstr "Telegram"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Template"
-msgstr "Şablon"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__template_name
 msgid "Template Name"
-msgstr "Şablon Adı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "There is not any SMS provider selected"
-msgstr "Bir SMS sağlayıcı seçilmedi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "There is not any outgoing mail server set"
-msgstr "Bir giden eposta sunucusu ayarlanmadı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #, python-format
 msgid "This feature is implemented soon"
-msgstr "Bu özellik yakında entegre edilecektir"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/company.js:0
 #, python-format
 msgid "This module is working in progress"
-msgstr "Bu modül yapım aşamasındadır"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_transaction
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__transaction_ids
 msgid "Transactions"
-msgstr "İşlemler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Try searching for another keyword"
-msgstr "Farklı bir anahtar kelime aramayı deneyin"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Type"
-msgstr "Tür"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__type_ids
 msgid "Types"
-msgstr "Türler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_utm_source
 msgid "UTM Source"
-msgstr "UTM Kaynağı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__user
 #: model:res.groups,name:payment_jetcheckout_system.group_system_user
 msgid "User"
-msgstr "Kullanıcı"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_user
@@ -944,74 +930,72 @@ msgstr "Kullanıcı"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_tree
 msgid "Users"
-msgstr "Kullanıcılar"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Vat"
-msgstr "Vergi No"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Virtual Pos Settings"
-msgstr "Sanal Pos Ayarları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_website
 msgid "Website"
-msgstr "Website"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Website Settings"
-msgstr "Website Ayarları"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_website
 msgid "Websites"
-msgstr "Websiteler"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_whatsapp
 msgid "WhatsApp"
-msgstr "WhatsApp"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
 msgid "Whatsapp"
-msgstr "Whatsapp"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "You can archive the contact"
-msgstr "Bu cariyi arşivleyebilirsiniz"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 msgid ""
-"Your transaction has been failed. Please try again. If this situation occurs "
-"anyway, please contact with system administation."
+"Your transaction has been failed. Please try again. If this situation occurs"
+" anyway, please contact with system administation."
 msgstr ""
-"Ödeme işleminiz başarısız oldu. Lütfen tekrar deneyiniz. Bu durum tekrar "
-"gerçekleşirse, sistem yönetimi ile iletişime geçiniz."
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 msgid "Your transaction has been succeeded. Thank you."
-msgstr "Ödeme işleminiz başarılı oldu. Teşekkür ederiz."
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "e.g. John Doe"
-msgstr "e.g. Ali Veli"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "e.g. email@yourcompany.com"
-msgstr "e.g. eposta@sirketiniz.com"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
-msgstr "kayıt seçildi"
+msgstr ""
