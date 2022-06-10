@@ -23,7 +23,7 @@
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
             <t t-set="payments" t-value="parent.payment_ids"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
-            <t t-set="authorized" t-value="parent.child_ids[0]"/>
+            <t t-set="authorized" t-value="parent.child_ids and parent.child_ids[0]"/>
             <div class="header row mx-0 card border p-2 px-lg-5">
                 <div class="px-xl-3 mx-xl-auto mw-xl-128">
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
@@ -41,8 +41,8 @@
                                     <t t-esc="parent.name"/><br/>
                                     <span t-field="parent.street"/> <t t-if="parent.state_id"><span t-field="parent.state_id"/> / <span t-field="parent.country_id"/></t><t t-else=""><span t-field="parent.country_id"/></t>
                                 </p>
-                                <strong class="text-primary font-weight-bold">Authorized</strong>
-                                <p>
+                                <strong t-if="authorized" class="text-primary font-weight-bold">Authorized</strong>
+                                <p t-if="authorized">
                                     <t t-esc="authorized.name"/><br/>
                                     <t t-esc="authorized.email"/>
                                 </p>

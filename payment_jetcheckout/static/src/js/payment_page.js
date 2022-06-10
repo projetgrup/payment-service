@@ -264,6 +264,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 break;
         }
 
+        console.log(this.$ccicon);
+        console.log(code);
         this.$cctype = type;
         this.$ccicon.innerHTML = code && cards[code] || '';
         if (this.$creditcard) {
