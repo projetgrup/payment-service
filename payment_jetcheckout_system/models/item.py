@@ -40,3 +40,15 @@ class PaymentItem(models.Model):
         action['domain'] = [('id', 'in', self.transaction_ids.ids)]
         action['context'] = {'create': False, 'edit': False, 'delete': False}
         return action
+
+    def action_receipt(self):
+        self.ensure_one()
+        transaction_ids = self.transaction_ids.filtered(lambda x: x.state == 'done')
+        action = self.env.ref('payment_jetcheckout.report_receipt').report_action(transaction_ids.ids)
+        return action
+
+    def action_conveyance(self):
+        self.ensure_one()
+        transaction_ids = self.transaction_ids.filtered(lambda x: x.state == 'done')
+        action = self.env.ref('payment_jetcheckout.report_conveyance').report_action(transaction_ids.ids)
+        return action

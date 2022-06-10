@@ -64,7 +64,8 @@ class PaymentItem(models.Model):
 
     def get_student_payment_table(self):
         if len(self.mapped('company_id')) != 1:
-            raise UserError(_('Payment table cannot be related to more than one company'))
+            return False
+            #raise UserError(_('Payment table cannot be related to more than one company'))
 
         company = self.mapped('company_id')
         if not company.system == 'student':
@@ -91,16 +92,16 @@ class PaymentItem(models.Model):
             term_id = line.term_id
             type_id = line.payment_type_id
 
-            if (term_id.id,type_id.id) not in payment_ids:
-                payment_ids.append([term_id.id, type_id.id])
+            if (term_id.id, type_id.id) not in payment_ids:
+                payment_ids.append((term_id.id, type_id.id))
                 payments.append({
                     'term_id': term_id.id,
                     'type_id': type_id.id,
-                    'name': ' | '.join([term_id.name, type_id.name]),
+                    'name': ' | '.join((term_id.name, type_id.name)),
                     'amount': [],
                 })
 
-            if bursary_id not in bursary_ids:
+            if bursary_id.id not in bursary_ids:
                 bursary_ids.append(bursary_id.id)
                 bursaries.append({
                     'id': bursary_id.id,
@@ -108,7 +109,7 @@ class PaymentItem(models.Model):
                     'amount': [],
                 })
 
-            if student_id not in student_ids:
+            if student_id.id not in student_ids:
                 student_ids.append(student_id.id)
                 students.append({
                     'id': student_id.id,
@@ -163,29 +164,30 @@ class PaymentItem(models.Model):
             subpayment_item['amount'] += round(amount, precision)
 
             sibling_item = list(filter(lambda x: x['id'] == student_id, siblings))[0]
-            sibling_item['amount'] += round(subpayment_item['amount'] * sibling_amount, precision)
+            sibling_item['amount'] = round(subpayment_item['amount'] * sibling_amount, precision)
 
             subsibling_item = list(filter(lambda x: x['id'] == student_id, subsiblings))[0]
-            subsibling_item['amount'] += round(sibling_item['amount'] + subpayment_item['amount'], precision)
+            subsibling_item['amount'] = round(sibling_item['amount'] + subpayment_item['amount'], precision)
 
             bursary = list(filter(lambda x: x['id'] == bursary_id, bursaries))[0]
             bursary_item = list(filter(lambda x: x['id'] == student_id, bursary['amount']))[0]
-            bursary_item['amount'] += round(subsibling_item['amount'] * bursary_amount, precision)
+            bursary_item['amount'] = round(subsibling_item['amount'] * bursary_amount, precision)
 
             subbursary_item = list(filter(lambda x: x['id'] == student_id, subbursaries))[0]
-            subbursary_item['amount'] += round(bursary_item['amount'] + subsibling_item['amount'], precision)
+            subbursary_item['amount'] = round(bursary_item['amount'] + subsibling_item['amount'], precision)
 
             discount_item = list(filter(lambda x: x['id'] == student_id, discounts))[0]
-            discount_item['amount'] += round(subbursary_item['amount'] * discount_amount, precision)
+            discount_item['amount'] = round(subbursary_item['amount'] * discount_amount, precision)
 
             total_item = list(filter(lambda x: x['id'] == student_id, totals))[0]
-            total_item['amount'] += round(discount_item['amount'] + subbursary_item['amount'], precision)
+            total_item['amount'] = round(discount_item['amount'] + subbursary_item['amount'], precision)
 
         amount = 0
         for payment in payments:
             for i in payment['amount']:
                 amount += i['amount']
             payment['amount'].append({'id': 0, 'amount': amount})
+            amount = 0
 
         amount = 0
         for bursary in bursaries:

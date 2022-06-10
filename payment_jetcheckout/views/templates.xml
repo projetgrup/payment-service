@@ -88,13 +88,12 @@
                             <label for="amount"><span>Amount to Pay</span></label>
                         </div>
                         <input id="commission" type="hidden" value="0"/>
-                        <button id="payment_pay0" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay shadow"><i class="fa fa-credit-card mr-2" t-translation="off"/>Pay</button>
                     </t>
                     <t t-elif="page == 'result'">
                         <button t-if="tx != False and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
                         <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
                     </t>
-                    <div t-if="page == 'payment'" class="mt-3">
+                    <div t-if="page == 'payment' and not no_payment_icons" class="mt-3">
                         <ul class="mb-0 text-center list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
@@ -112,15 +111,16 @@
                         </ul>
                     </div>
                 </div>
-                <div t-if="page == 'payment'" style="height: 200px;">
+                <div t-if="page == 'payment' and not no_card_preview" style="height: 200px;">
                     <t t-call="payment_jetcheckout.payment_preview"/>
                 </div>
+                <t t-raw="0"/>
             </div>
         </div>
     </template>
 
     <template id="payment_smart_button" name="Payment Smart Buttons">
-        <div t-if="not s2s_form" class="oe_button_box row mx-0">
+        <div t-if="not no_smart_buttons and not s2s_form" class="oe_button_box row mx-0">
             <a t-if="page != 'payment'" role="button" href="/pay" class="btn oe_stat_button col-md-3">
                 <i class="fa fa-fw o_button_icon fa-undo icon"></i>
                 <div class="o_stat_info">
@@ -152,7 +152,7 @@
     </template>
 
     <template id="payment_card" name="Payment Card">
-        <div class="payment-card row justify-content-center mx-0">
+        <div class="payment-card row justify-content-center mx-0 h-100">
             <t t-call="payment_jetcheckout.payment_sidebar">
                 <t t-set="page" t-value="'payment'"/>
             </t>
@@ -163,7 +163,7 @@
     </template>
 
     <template id="payment_preview" name="Payment Card Preview">
-        <div t-attf-class="creditcard #{'d-none' if s2s_form else ''}">
+        <div class="creditcard">
             <div class="front">
                 <div id="ccsingle"></div>
                 <svg id="cardfront" x="0px" y="0px" viewBox="0 0 750 471" style="enable-background:new 0 0 750 471;" xml:space="preserve">
@@ -255,7 +255,7 @@
         <div t-if="not no_loading" class="o_payment_loading">
             <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
         </div>
-        <div t-attf-class="w-100 bg-white my-4 #{'' if no_border else 'border card'}">
+        <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
                 <t t-set="page" t-value="'payment'"/>
             </t>
@@ -276,9 +276,7 @@
                         <div class="field-container">
                             <input id="cardnumber" type="text" required="required"/>
                             <span class="bar-container"/>
-                            <input id="ccfamily" type="hidden"/>
-                            <input id="ccname" type="hidden"/>
-                            <div id="installment_card" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
+                            <div id="cclogo" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
                             <svg id="ccicon" t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471"/>
                             <label for="cardnumber"><span>Card Number</span></label>
                         </div>
@@ -309,9 +307,6 @@
                     </div>
                     <div t-if="not s2s_form" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
-                    </div>
-                    <div t-if="s2s_form">
-                        <t t-call="payment_jetcheckout.payment_preview"/>
                     </div>
                     <div id="installment_table" class="payment-gradient border card p-3">
                         <div>

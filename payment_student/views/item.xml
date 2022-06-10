@@ -15,7 +15,7 @@
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="before">
             <header>
-                <button name="action_student_payment_table" type="object" string="Payment Table"/>
+                <button name="action_student_payment_table" type="object" string="Payment Table" invisible="not context.get('active_system',False) == 'student'"/>
             </header>
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="after">
@@ -25,7 +25,7 @@
             <field name="school_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="class_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="term_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
-            <field name="bursary_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="bursary_id" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="payment_type_id" required="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
         </xpath>
     </field>

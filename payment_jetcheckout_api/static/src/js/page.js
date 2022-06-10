@@ -6,8 +6,24 @@ var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
 var framework = require('payment_jetcheckout.framework');
+var paymentPage = publicWidget.registry.JetcheckoutPaymentPage;
 
 var _t = core._t;
+
+paymentPage.include({
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$system = document.getElementById('system');
+        });
+    },
+
+    _getParams: function () {
+        const params = this._super.apply(this, arguments);
+        params['api'] = this.$system && this.$system.value == 'api' || false;
+        return params
+    },
+});
 
 publicWidget.registry.JetcheckoutPaymentApiOptions = publicWidget.Widget.extend({
     selector: '.payment-options',
@@ -31,7 +47,8 @@ publicWidget.registry.JetcheckoutPaymentApiOptions = publicWidget.Widget.extend(
 publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
-        'click button': '_onClickButton',
+        'click button#validate': '_onValidateButton',
+        'click button#submit': '_onSubmitButton',
     },
 
     start: function () {
@@ -40,9 +57,9 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
         });
     },
 
-    _onClickButton: function (ev) {
+    _onValidateButton: function (ev) {
         var self = this;
-        new Dialog(self, {
+        let popup = new Dialog(self, {
             size: 'medium',
             title: _t('İşlemi onaylıyor musunuz?'),
             technical: false,
@@ -53,25 +70,23 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
             $content: $('<div/>', {
                 html: 'Onayınız ile birlikte siparişiniz oluşturulacak.',
             }),
-        }).open().opened(function () {
+        });
+        popup.open().opened(function () {
             const $button = $('.modal-footer .btn-validate');
             $button.click(function() {
-                self._onValidateForm();
+                framework.showLoading();
+                window.location.assign('/payment/bank/success')
             });
         });
     },
 
-    _onValidateForm: function () {
+    _onSubmitButton: function () {
         var self = this;
         framework.showLoading();
         this._rpc({
             route: '/payment/bank/validate',
         }).then(function (url) {
-            if (!url) {
-                window.location.reload();
-            } else {
-                window.location.assign(url);
-            }
+            window.location.assign(url);
         }).guardedCatch(function (error) {
             new Dialog(self, {
                 size: 'medium',

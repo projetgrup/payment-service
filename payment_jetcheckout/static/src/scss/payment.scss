@@ -3,22 +3,38 @@
     src: url('../fonts/RockSalt/RockSalt-Regular.ttf');
 }
 
-.modal-content {
-    border-radius: 20px !important;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+.z-index-1 {
+    z-index: 1 !important;
+}
 
-    .modal-header {
-        background-color: #fff !important;
-        border: none !important;
-        h4 {
-            color: #666 !important;
-        }
-    }
 
-    .modal-footer {
-        background-color: #fff !important;
-        border: none !important;
-    }
+.h-fit {
+    height: fit-content;
+}
+
+.mw-xl-128 {
+    width: 100%;
+    max-width: 82rem;
+}
+
+.sidebar-table {
+    font-size: 0.8rem;
+    table-layout: fixed;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: #f7fafc;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 50px;
+}
+
+body::-webkit-scrollbar-corner {
+    background-color: initial;
 }
 
 .switch {
@@ -97,7 +113,7 @@ input:checked + .slider:before {
     cursor: wait;
 }
 
-#installment_card {
+#cclogo {
     height: 38px;
     position: absolute;
     right: 75px;
@@ -204,6 +220,57 @@ input:checked + .slider:before {
 
     .card {
         border-radius: 10px !important;
+    }
+
+    .modal {
+        overflow: hidden;
+    }
+
+    .modal-dialog {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        min-width: 500px;
+
+        .modal-content {
+            border-radius: 10px !important;
+
+            .modal-header {
+                background-color: #ffffff !important;
+                border-radius: 10px 10px 0 0 !important;
+                padding: 25px !important;
+                border-bottom: 1px solid #ddd !important;
+
+                .modal-title {
+                    font-size: 1rem;
+                    font-weight: bold;
+                }
+
+                button {
+                    display: none !important;
+                }
+            }
+
+            .modal-body {
+                color: #888888 !important;
+                padding: 25px !important;
+                border-bottom: 1px solid #ddd !important;
+            }
+
+            .modal-footer {
+                background: #ffffff !important;
+                border-radius: 0 0 10px 10px !important;
+                padding: 20px !important;
+
+                button {
+                    padding: 10px 40px !important;
+                    border-radius: 10px !important;
+                    background-color: theme-color('primary') !important;
+                }
+            }
+
+        }
     }
 
 }
@@ -730,7 +797,7 @@ input:checked + .slider:before {
 .payment-amount {
     > div {
         position: sticky;
-        top: 75px;
+        top: 0;
     }
 }
 

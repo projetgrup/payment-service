@@ -24,16 +24,16 @@ class ReportCompanyHierarchy(models.AbstractModel):
         return cids, children
 
     @api.model
-    def _get_parents(self, company, companies, children=[], name=False):
+    def _get_parents(self, company, companies, company_ids, children=[], name=False):
         pids = [company.id]
         parent = [company, children]
 
-        if not name and company.parent_id:
+        if not name and company.parent_id and company.parent_id.id in company_ids:
             ids, childs = self._get_children(company.parent_id, companies, company)
             pids.extend(ids)
             childs.append([company, children])
 
-            ids, parent = self._get_parents(company.parent_id, companies, childs)
+            ids, parent = self._get_parents(company.parent_id, companies, company_ids, childs)
             pids.extend(ids)
         return pids, parent
 
@@ -50,15 +50,15 @@ class ReportCompanyHierarchy(models.AbstractModel):
     def _get_data(self, name=False):
         lines = []
 
-
-        companies = self.env['res.company'].search([])
+        company_ids = self.env.context.get('allowed_company_ids') or self.env.companies.ids
+        companies = self.env['res.company'].browse(company_ids)
         ids = []
         if name:
-            ids.extend(self.env['res.company'].search([('name', 'not ilike', name)]).ids)
+            ids.extend(self.env['res.company'].search([('id', 'in', company_ids),('name', 'not ilike', f'%{name}%')]).ids)
         for company in companies:
             if company.id not in ids:
                 cids, children = self._get_children(company, companies)
-                pids, parent = self._get_parents(company, companies, children, name)
+                pids, parent = self._get_parents(company, companies, company_ids, children, name)
                 lines.append(parent)
                 ids.extend(cids + pids)
         data = self._get_data_line(lines)

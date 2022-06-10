@@ -9,7 +9,7 @@
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <title t-esc="title or 'Odoo'"/>
             <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
-            <t t-set="body_classname" t-value="'payment-page'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
                 <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
@@ -117,7 +117,7 @@
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="body_classname" t-value="'payment-page'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
@@ -180,6 +180,13 @@
                             </div>
                         </div>
                     </div>
+                    <div t-if="success" id="result" class="row mx-3 border card p-4 text-center">
+                        <div class="text-success h1"><i class="border-success fa fa-check p-3" style="border-radius: 50%; border-style: solid; border-width: 1px;"></i></div>
+                        <div class="text-success mt-3">Sipariş Kodunuz</div>
+                        <div class="font-weight-bold h2 text-center text-success"><t t-esc="tx.jetcheckout_api_ref"/></div>
+                        <div class="mt-4">Siparişiniz başarıyla oluşturulmuştur. Yukarıda belirtilen size özel kod ile yapacağınız eft/havale ödemenizden sonra siparişiniz tamamlanacak ve paketiniz hesabınıza otomatik olarak tanımlanacaktır.</div>
+                        <div class="mt-4"><button id="submit" class="btn btn-primary"><i class="fa fa-arrow-right mr-3"></i>Devam Et</button></div>
+                    </div>
                     <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
                         Banka Hesaplarımız
                     </div>
@@ -227,7 +234,7 @@
                             Siparişi Tamamla dediğinizde size özel olarak üretilen sipariş numarası ile Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz.
                         </div>
                         <div class="col-md-3">
-                            <button class="btn btn-primary btn-block px-5 font-weight-bold">Onayla</button>
+                            <button t-if="not success" id="validate" class="btn btn-primary btn-block px-5 font-weight-bold">Onayla</button>
                         </div>
                     </div>
                 </div>
@@ -242,7 +249,7 @@
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="body_classname" t-value="'payment-page'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
             <t t-set="head_website">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
                 <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
@@ -291,12 +298,12 @@
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold">Ürün Bilgileri</strong>
-                                <p>
+                                <strong class="text-primary font-weight-bold z-index-1">Ürün Bilgileri</strong>
+                                <p class="z-index-1">
                                     <t t-esc="tx.jetcheckout_api_product"/>
                                 </p><br/>
-                                <strong class="text-primary font-weight-bold text-right">Tutar (KDV Dahil)</strong>
-                                <p class="h2 text-right font-weight-bold">
+                                <strong class="text-primary font-weight-bold text-right z-index-1">Tutar (KDV Dahil)</strong>
+                                <p class="h2 text-right font-weight-bold z-index-1">
                                     <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': currency['self']}"/>
                                 </p>
                             </div>
@@ -306,6 +313,7 @@
                         <input id="amount" type="hidden" name="amount" t-att-value="tx.amount"/>
                         <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
                         <input id="order" type="hidden" value="0"/>
+                        <input id="system" type="hidden" value="api"/>
                         <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
                             <t t-set="no_border" t-value="True"/>
                         </t>

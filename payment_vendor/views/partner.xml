@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="child_tree" model="ir.ui.view">
-    <field name="name">res.vendor.child.tree</field>
+    <field name="name">res.vendor.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
@@ -12,6 +12,8 @@
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//field[@name="date_sms_sent"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
     </field>
     </record>
 
@@ -21,11 +23,6 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="active"]' position="before">
-            <header>
-                <button name="action_send" type="object" string="Send Email"/>
-            </header>
-        </xpath>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
     </field>
     </record>
@@ -39,10 +36,10 @@
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
-        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="ref"/>
         </xpath>
+        <xpath expr='//group[@name="communication"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="replace"/>
     </field>
     </record>
@@ -76,9 +73,9 @@
         <xpath expr='//separator' position="replace"/>
         <xpath expr='//filter[@name="filterby_payment"]' position="replace"/>
         <xpath expr='//filter[@name="filterby_no_payment"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_today"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_before"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_no"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_today"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_before"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_no"]' position="replace"/>
     </field>
     </record>
 

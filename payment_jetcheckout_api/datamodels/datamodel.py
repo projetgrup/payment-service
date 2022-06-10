@@ -31,9 +31,10 @@ class PaymentPrepareInput(Datamodel):
     _inherit = "payment.api"
 
     amount = fields.Integer(required=True, allow_none=False)
-    reference = fields.Integer(required=True, allow_none=False)
+    id = fields.Integer(required=True, allow_none=False)
     hash = fields.String(required=True, allow_none=False)
     customer = fields.Dict(required=True, allow_none=False)
+    order = fields.Dict(required=True, allow_none=False)
     product = fields.Dict(required=True, allow_none=False)
     return_url = fields.String(required=True, allow_none=False)
 
@@ -47,6 +48,7 @@ class PaymentResultOutput(Datamodel):
     _name = "payment.result.output"
     _inherit = "payment.response"
 
+    provider = fields.String(required=False, allow_none=False)
     state = fields.String(required=False, allow_none=False)
     fees = fields.Float(required=False, allow_none=False)
     ip_address = fields.String(required=False, allow_none=False)
