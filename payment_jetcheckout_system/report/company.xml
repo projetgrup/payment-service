@@ -22,6 +22,11 @@
                 <t t-foreach="lines" t-as="line">
                     <t t-raw="line"/>
                 </t>
+                <t t-if="not lines">
+                    <p class="h1 o_nocontent_help">
+                        No company found
+                    </p>
+                </t>
             </div>
         </div>
     </template>

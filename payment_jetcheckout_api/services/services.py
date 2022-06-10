@@ -162,6 +162,7 @@ class PaymentAPIService(Component):
 
     def _get_payment_result(self, tx):
         return {
+            'provider': tx.acquirer_id.provider,
             'state': tx.state,
             'fees': tx.fees,
             'ip_address': tx.jetcheckout_ip_address or '',
