@@ -264,10 +264,14 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 break;
         }
 
-        console.log(this.$ccicon);
-        console.log(code);
         this.$cctype = type;
-        this.$ccicon.innerHTML = code && cards[code] || '';
+        if (code) {
+            this.$ccicon.innerHTML = cards[code];
+            this.$cclogo.classList.add('show');
+        } else {
+            this.$ccicon.innerHTML = '';
+            this.$cclogo.classList.remove('show');
+        }
         if (this.$creditcard) {
             this.$ccsingle.innerHTML = code && cards[code + '_single'] || '';
             this.swapColor(color);

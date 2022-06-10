@@ -64,7 +64,8 @@ class PaymentItem(models.Model):
 
     def get_student_payment_table(self):
         if len(self.mapped('company_id')) != 1:
-            raise UserError(_('Payment table cannot be related to more than one company'))
+            return False
+            #raise UserError(_('Payment table cannot be related to more than one company'))
 
         company = self.mapped('company_id')
         if not company.system == 'student':

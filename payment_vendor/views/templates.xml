@@ -32,7 +32,7 @@
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
                 <t t-call="payment_jetcheckout_system.payment_page_result"/>
                 <div class="row mx-0 my-4 card border shadow p-4">
-                    <div class="row mx-0 my-2">
+                    <div t-if="len(payments) > 0" class="row mx-0 my-2">
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
