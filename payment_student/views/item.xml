@@ -15,7 +15,7 @@
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="before">
             <header>
-                <button name="action_student_payment_table" type="object" string="Payment Table"/>
+                <button name="action_student_payment_table" type="object" string="Payment Table" invisible="not context.get('active_system',False) == 'student'"/>
             </header>
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="after">

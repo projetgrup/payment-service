@@ -48,6 +48,7 @@ class PaymentResultOutput(Datamodel):
     _name = "payment.result.output"
     _inherit = "payment.response"
 
+    provider = fields.String(required=False, allow_none=False)
     state = fields.String(required=False, allow_none=False)
     fees = fields.Float(required=False, allow_none=False)
     ip_address = fields.String(required=False, allow_none=False)
