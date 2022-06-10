@@ -50,7 +50,7 @@ class Mailing(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(MailServer, self).default_get(fields)
+        res = super(Mailing, self).default_get(fields)
         res['company_id'] = self.env.company.id
         return res
 
