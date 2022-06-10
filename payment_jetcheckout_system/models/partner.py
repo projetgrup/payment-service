@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 
 PRIMEFACTOR = 3367900313
 
@@ -68,11 +68,7 @@ class Partner(models.Model):
 
     def _get_payment_url(self, shorten=False):
         self.ensure_one()
-        website = self.env['website'].sudo().search([('company_id','=',self.company_id.id)])
-        if not website:
-            raise UserError(_('There isn\'t any website related to this partner\'s company'))
-
-        url = website.domain + self._get_share_url()
+        url = self.get_base_url() + self._get_share_url()
         if shorten:
             link = self.env['link.tracker'].sudo().create({
                 'url': url,
