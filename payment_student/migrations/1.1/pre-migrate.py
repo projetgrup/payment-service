@@ -6,6 +6,11 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
+    cr.execute("""SELECT 1 FROM ir_module_module WHERE name = 'payment_jetcheckout_system' and state = 'installed'""")
+    result = cr.fetchone()
+    if not result:
+        raise Exception('You cannot upgrade this module, you must install module "payment_jetcheckout_system" first.')
+
     if not column_exists(cr, "res_company", "student_discount_sibling_active"):
         cr.execute(
             """
