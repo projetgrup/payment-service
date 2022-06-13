@@ -4,7 +4,7 @@
     <field name="name">payment.acquirer.jetcheckout.api.tree</field>
     <field name="model">payment.acquirer.jetcheckout.api</field>
     <field name="arch" type="xml">
-        <tree string="API Keys" decoration-muted="active == False">
+        <tree decoration-muted="active == False">
             <field name="partner_id"/>
             <field name="api_key"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -17,7 +17,7 @@
     <field name="name">payment.acquirer.jetcheckout.api.form</field>
     <field name="model">payment.acquirer.jetcheckout.api</field>
     <field name="arch" type="xml">
-        <form string="API Keys">
+        <form>
             <sheet>
                 <group>
                     <group>

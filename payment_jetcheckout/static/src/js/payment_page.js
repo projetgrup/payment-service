@@ -41,8 +41,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$creditcard = document.querySelector('.creditcard');
             self.$installments_table = document.getElementById('installments_table');
             self.$payment_pay = document.getElementById('payment_pay');
-            self.$payment_pay0 = document.getElementById('payment_pay0');
-            self.$payment_pay1 = document.getElementById('payment_pay1');
             self.$payment_form = document.getElementById('o_payment_form_pay');
             self.$success_url = document.getElementById('success_url');
             self.$fail_url = document.getElementById('fail_url');
@@ -173,12 +171,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 }
                 if (self.$payment_pay) {
                     self.$payment_pay.addEventListener('click', self.clickPay.bind(self));
-                }
-                if (self.$payment_pay0) {
-                    self.$payment_pay0.addEventListener('click', self.clickPay.bind(self));
-                }
-                if (self.$payment_pay1) {
-                    self.$payment_pay1.addEventListener('click', self.clickPay.bind(self));
                 }
                 if (self.$payment_form) {
                     self.$payment_form.addEventListener('click', self.clickPay.bind(self));
