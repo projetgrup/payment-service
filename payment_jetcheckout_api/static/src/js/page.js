@@ -1,7 +1,6 @@
 odoo.define('payment_jetcheckout_api.payment_page', function (require) {
 "use strict";
 
-var config = require('web.config');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
@@ -48,7 +47,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
         'click button#validate': '_onValidateButton',
-        'click button#submit': '_onSubmitButton',
+        'click button#return': '_onReturnButton',
     },
 
     start: function () {
@@ -68,23 +67,40 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
                 {text: _t("İptal"), close: true},
             ],
             $content: $('<div/>', {
-                html: 'Onayınız ile birlikte siparişiniz oluşturulacak.',
+                html: 'Onayınızla birlikte siparişiniz oluşturulacaktır.',
             }),
         });
         popup.open().opened(function () {
             const $button = $('.modal-footer .btn-validate');
             $button.click(function() {
                 framework.showLoading();
-                window.location.assign('/payment/bank/success')
+                self._rpc({
+                    route: '/payment/bank/validate',
+                }).then(function (url) {
+                    window.location.assign(url);
+                }).guardedCatch(function (error) {
+                    new Dialog(self, {
+                        size: 'medium',
+                        title: _t('Hata'),
+                        technical: false,
+                        buttons: [
+                            {text: _t("Tamam"), classes: 'btn-primary', close: true},
+                        ],
+                        $content: $('<div/>', {
+                            html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
+                        }),
+                    }).open();
+                    framework.hideLoading();
+                });
             });
         });
     },
 
-    _onSubmitButton: function () {
+    _onReturnButton: function () {
         var self = this;
         framework.showLoading();
         this._rpc({
-            route: '/payment/bank/validate',
+            route: '/payment/return',
         }).then(function (url) {
             window.location.assign(url);
         }).guardedCatch(function (error) {
@@ -99,9 +115,6 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
                     html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
                 }),
             }).open();
-            if (config.isDebug()) {
-                console.error(error);
-            }
             framework.hideLoading();
         });
     },

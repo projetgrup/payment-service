@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ast import literal_eval
 from odoo import api, fields, models
 
 
@@ -46,7 +47,13 @@ class MailServer(models.Model):
 class Mailing(models.Model):
     _inherit = 'mailing.mailing'
 
+    @api.depends('mailing_domain')
+    def _compute_partner_ids(self):
+        for mail in self:
+            mail.partner_ids = self.env['res.partner'].sudo().search(literal_eval(self.mailing_domain))
+
     company_id = fields.Many2one('res.company')
+    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', store=True)
 
     @api.model
     def default_get(self, fields):

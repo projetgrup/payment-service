@@ -2,7 +2,6 @@
 <odoo>
     <menuitem id="menu_main" name="VPS" web_icon="payment_vendor,static/description/icon.png" sequence="24"/>
     <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="0"/>
-    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
 
