@@ -71,6 +71,17 @@
                             </div>
                         </div>
                     </div>
+                    <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
+                        <div class="align-self-center text-center col-md-1 py-3 text-center">
+                            <i class="fa fa-warning h4"/>
+                        </div>
+                        <div class="col-md-11 py-3">
+                            <strong>Bilgilendirme</strong>
+                            <p class="mt-3">
+                                Bu satış işlemi için daha önce Banka Transferi yöntemi ile bir işlem yaptığınızı görüyoruz. Eğer yeni bir ödeme yöntemi ile işleminize devam ederseniz önceki işleminiz iptal edilecektir.
+                            </p>
+                        </div>
+                    </div>
                     <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
                         Ödeme Yöntemi Seçiniz
                     </div>
@@ -147,7 +158,7 @@
             <div class="px-lg-5 mx-xl-auto mw-xl-128 payment-bank">
                 <div class="row mx-0 my-4 card border shadow p-4">
                     <div class="text-center text-primary h5 font-weight-bold position-relative">
-                        <a class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Geri</a>
+                        <a t-if="not success" class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Geri</a>
                         Hizmet ve Sözleşme Bilgileriniz
                     </div>
                     <div class="row mx-0 my-2">
@@ -229,12 +240,12 @@
                     <div class="row mx-0 w-100 px-3 mt48">
                         <t t-raw="tx.acquirer_id.pending_msg"/>
                     </div>
-                    <div class="row mx-0 w-100 px-3 mt-4">
+                    <div t-if="not success" class="row mx-0 w-100 px-3 mt-4">
                         <div class="col-md-9 small align-self-center">
-                            Siparişi Tamamla dediğinizde size özel olarak üretilen sipariş numarası ile Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz.
+                            Onayla butonuna tıkladığınızda size özel olarak üretilen sipariş numarası ile Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz.
                         </div>
                         <div class="col-md-3">
-                            <button t-if="not success" id="validate" class="btn btn-primary btn-block px-5 font-weight-bold">Onayla</button>
+                            <button id="validate" class="btn btn-primary btn-block px-5 font-weight-bold">Onayla</button>
                         </div>
                     </div>
                 </div>

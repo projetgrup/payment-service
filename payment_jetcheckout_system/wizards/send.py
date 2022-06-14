@@ -2,22 +2,18 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-MAILFIELDS = {
-    'subject': 'mail_subject',
-    'body_html': 'mail_body',
-    'email_from': 'mail_from',
-    'email_to': 'mail_to',
-    'email_cc': 'mail_cc',
-    'reply_to': 'mail_reply_to',
-}
-
-MASSMAILFIELDS = ['subject', 'body_html', 'email_from', 'reply_to']
-
-
 class PaymentAcquirerJetcheckoutSendType(models.Model):
     _name = 'payment.acquirer.jetcheckout.send.type'
     _description = 'Jetcheckout System Send Types'
     _order = 'sequence'
+    _mail_fields = {
+        'subject': 'mail_subject',
+        'body_html': 'mail_body',
+        'email_from': 'mail_from',
+        'email_to': 'mail_to',
+        'email_cc': 'mail_cc',
+        'reply_to': 'mail_reply_to',
+    }
     
     @api.model
     def _selection_target_model(self):
@@ -84,7 +80,7 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
                 parent.sms_template_id = type.sms_template_id.id
 
     def _set_mail_attributes(self, values=None):
-        for key, val in MAILFIELDS.items():
+        for key, val in self._mail_fields.items():
             field_value = values.get(key, False) if values else self.mail_template_id[key]
             self[val] = field_value
 
@@ -95,7 +91,7 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
                 if type.mail_template_id:
                     template = type.mail_template_id.with_context(lang=type.lang)
                     if self.partner_id:
-                        values = template.with_context(template_preview_lang=type.lang).generate_email(type.partner_id.id, MAILFIELDS.keys())
+                        values = template.with_context(template_preview_lang=type.lang).generate_email(type.partner_id.id, self._mail_fields.keys())
                         type._set_mail_attributes(values=values)
                     else:
                         type._set_mail_attributes()
@@ -193,53 +189,61 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         self.type_ids = self.selection
 
     def send(self):
+        self = self.sudo()
         selections = self.selection.mapped('code')
         mail_template = 'email' in selections and self.mail_template_id or False
         sms_template = 'sms' in selections and self.sms_template_id or False
-        source_id = self.env.ref('payment_jetcheckout_system.send_source').id
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         model_id = self.env['ir.model']._get('res.partner').id
         model_domain = '[("id", "=", %s)]'
         reply_to = self.env.user.email_formatted
         company_id = self.company_id.id
-        messages = []
+        mail_messages = []
+        sms_messages = []
 
 
         for partner in self.partner_ids:
             if mail_template:
-                mail_values = mail_template.with_context(template_preview_lang=partner.lang).generate_email(partner.id, MASSMAILFIELDS)
-                del mail_values['body']
-                del mail_values['mail_server_id']
-                del mail_values['auto_delete']
-                del mail_values['model']
-                del mail_values['res_id']
-                mail_values.update({
-                    'mailing_type': 'mail',
-                    'state': 'in_queue',
-                    'mailing_model_id': model_id,
-                    'mailing_domain': model_domain % partner.id,
+                values = mail_template.with_context(template_preview_lang=partner.lang).generate_email(partner.id, ['subject', 'body_html', 'email_from', 'reply_to', 'email_to', 'scheduled_date'])
+                mail_values = {
+                    'message_type': 'comment',
+                    'subtype_id': subtype_id,
+                    'res_id': values['res_id'],
+                    'recipient_ids': [(6, 0, (values['res_id'],))],
+                    'subject': values['subject'],
+                    'email_from': values['email_from'],
+                    'email_to': values['email_to'],
+                    'body': values['body'],
+                    'body_html': values['body'],
+                    'model': values['model'],
+                    'mail_server_id': values['mail_server_id'],
+                    'auto_delete': values['auto_delete'],
+                    'scheduled_date': values['scheduled_date'],
                     'reply_to': reply_to,
-                    'source_id': source_id,
-                    'company_id': company_id,
-                })
-                messages.append(mail_values)
+                    'state': 'outgoing',
+                    'is_notification': True,
+                    'notification_ids': [(0, 0, {
+                        'res_partner_id': values['res_id'],
+                        'notification_type': 'email',
+                    })]
+                }
+                mail_messages.append(mail_values)
 
             if sms_template:
                 body_plaintext = sms_template._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
                 sms_values = {
-                    'mailing_type': 'sms',
-                    'state': 'in_queue',
-                    'subject': sms_template.name,
                     'body_plaintext': body_plaintext,
                     'mailing_model_id': model_id,
                     'mailing_domain': model_domain % partner.id,
-                    'source_id': source_id,
                     'company_id': company_id,
                 }
                 messages.append(sms_values)
 
-        if messages:
-            self.env['mailing.mailing'].create(messages)
-            self.env.ref('mass_mailing.ir_cron_mass_mailing_queue')._trigger()
+        if mail_messages:
+            records = self.env['mail.mail'].create(mail_messages)
+            for record in records:
+                record.notification_ids.write({'mail_mail_id': record.id})
+            self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()
             sent_values = {}
             now = fields.Datetime.now()
             if mail_template:

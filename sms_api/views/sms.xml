@@ -29,9 +29,13 @@
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
-                                    <field name="sms_provider"/>
+                                    <field name="sms_provider"/> <label for="sms_test_provider" class="btn text-primary" string="Test Connection" attrs="{'invisible': ['|',('sms_test_provider','!=',False),('sms_provider','=',False)]}"/><span class="btn btn-disabled" attrs="{'invisible': [('sms_test_provider','=',False)]}">Test Connection</span><i class="fa fa-spin ml-2 fa-circle-o-notch" attrs="{'invisible': [('sms_test_provider','=',False)]}"/>
+                                    <field name="sms_test_provider" class="d-none"/>
                                 </div>
                             </div>
+                        </div>
+                        <div class="alert alert-info card ml-5 mt-3 shadow-sm" attrs="{'invisible': [('sms_test_message','=',False)]}">
+                            <field name="sms_test_message"/>
                         </div>
                     </div>
                 </div>

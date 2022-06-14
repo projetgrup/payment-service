@@ -34,9 +34,11 @@ class JetcheckoutApiController(JetController):
 
         request.session['hash'] = hash
         acquirers = JetController._jetcheckout_get_acquirer()
+        order = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '!=', hash),('state', '=', 'pending'), ('jetcheckout_api_ref', '=', tx.jetcheckout_api_ref)], limit=1)
         values = {
             'acquirers': acquirers,
             'tx': tx,
+            'order': order
         }
         return request.render('payment_jetcheckout_api.payment_page', values, headers={'Cache-Control': 'no-cache'})
 
@@ -55,6 +57,11 @@ class JetcheckoutApiController(JetController):
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')), ('state', '=', 'draft')], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
+
+        order = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '!=', request.session.get('hash')),('state', '=', 'pending'), ('jetcheckout_api_ref', '=', tx.jetcheckout_api_ref)], limit=1)
+        if order:
+            tx.write({'state': 'pending'})
+            return werkzeug.utils.redirect('/payment/bank/success')
 
         values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
         values.update({'tx': tx})

@@ -1,7 +1,6 @@
 odoo.define('payment_jetcheckout_api.payment_page', function (require) {
 "use strict";
 
-var config = require('web.config');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
@@ -68,7 +67,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
                 {text: _t("İptal"), close: true},
             ],
             $content: $('<div/>', {
-                html: 'Onayınız ile birlikte siparişiniz oluşturulacak.',
+                html: 'Onayınızla birlikte siparişiniz oluşturulacaktır.',
             }),
         });
         popup.open().opened(function () {
@@ -91,9 +90,6 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
                             html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
                         }),
                     }).open();
-                    if (config.isDebug()) {
-                        console.error(error);
-                    }
                     framework.hideLoading();
                 });
             });
@@ -119,9 +115,6 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
                     html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
                 }),
             }).open();
-            if (config.isDebug()) {
-                console.error(error);
-            }
             framework.hideLoading();
         });
     },
