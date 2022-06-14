@@ -9,7 +9,7 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 class JetcheckoutApiController(JetController):
 
     def _jetcheckout_get_transaction(self):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash','=',request.session.get('hash')),('state','=','draft')], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')), ('state', '=', 'draft')], limit=1)
         if not tx:
             raise ValidationError(_('An error occured. Please restart your payment transaction.'))
         return tx
@@ -28,7 +28,7 @@ class JetcheckoutApiController(JetController):
         if not hash:
             raise werkzeug.exceptions.NotFound()
 
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', hash)], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', hash),('state', '=', 'draft')], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
@@ -38,45 +38,53 @@ class JetcheckoutApiController(JetController):
             'acquirers': acquirers,
             'tx': tx,
         }
-        return request.render('payment_jetcheckout_api.payment_page', values)
+        return request.render('payment_jetcheckout_api.payment_page', values, headers={'Cache-Control': 'no-cache'})
 
     @http.route(['/payment/card'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment_api_card_page(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', request.session.get('hash'))], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')),('state','=','draft')], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
         values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
         values.update({'tx': tx})
-        return request.render('payment_jetcheckout_api.payment_card_page', values)
+        return request.render('payment_jetcheckout_api.payment_card_page', values, headers={'Cache-Control': 'no-cache'})
 
     @http.route(['/payment/bank'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment_api_bank_page(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', request.session.get('hash'))], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')), ('state', '=', 'draft')], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
         values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
         values.update({'tx': tx})
-        return request.render('payment_jetcheckout_api.payment_bank_page', values)
+        return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={'Cache-Control': 'no-cache'})
 
     @http.route(['/payment/bank/success'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment_api_bank_success_page(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', request.session.get('hash'))], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')), ('state', '=', 'pending')], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
         values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
         values.update({'tx': tx, 'success': True})
-        return request.render('payment_jetcheckout_api.payment_bank_page', values)
+        return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={'Cache-Control': 'no-cache'})
 
     @http.route(['/payment/bank/validate'], type='json', auth='public')
-    def jetcheckout_payment_api_validate_page(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', request.session.get('hash'))], limit=1)
+    def jetcheckout_payment_api_bank_validate(self, **kwargs):
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash')), ('state', '=', 'draft')], limit=1)
         if not tx:
-            raise AccessError(_('Access Denied'))
+            return '/404'
 
         tx.write({'state': 'pending'})
+        return '/payment/bank/success'
+
+    @http.route(['/payment/return'], type='json', auth='public')
+    def jetcheckout_payment_api_return(self, **kwargs):
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '!=', False),('jetcheckout_api_hash', '=', request.session.get('hash'))], limit=1)
+        if not tx:
+            return '/404'
+
         if 'hash' in request.session:
             del request.session['hash']
         return tx.jetcheckout_api_return_url

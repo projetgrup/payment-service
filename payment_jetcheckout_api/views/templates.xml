@@ -185,7 +185,7 @@
                         <div class="text-success mt-3">Sipariş Kodunuz</div>
                         <div class="font-weight-bold h2 text-center text-success"><t t-esc="tx.jetcheckout_api_ref"/></div>
                         <div class="mt-4">Siparişiniz başarıyla oluşturulmuştur. Yukarıda belirtilen size özel kod ile yapacağınız eft/havale ödemenizden sonra siparişiniz tamamlanacak ve paketiniz hesabınıza otomatik olarak tanımlanacaktır.</div>
-                        <div class="mt-4"><button id="submit" class="btn btn-primary"><i class="fa fa-arrow-right mr-3"></i>Devam Et</button></div>
+                        <div class="mt-4"><button id="return" class="btn btn-primary"><i class="fa fa-arrow-right mr-3"></i>Devam Et</button></div>
                     </div>
                     <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
                         Banka Hesaplarımız

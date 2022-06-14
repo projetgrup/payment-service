@@ -48,7 +48,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
         'click button#validate': '_onValidateButton',
-        'click button#submit': '_onSubmitButton',
+        'click button#return': '_onReturnButton',
     },
 
     start: function () {
@@ -75,16 +75,36 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
             const $button = $('.modal-footer .btn-validate');
             $button.click(function() {
                 framework.showLoading();
-                window.location.assign('/payment/bank/success')
+                self._rpc({
+                    route: '/payment/bank/validate',
+                }).then(function (url) {
+                    window.location.assign(url);
+                }).guardedCatch(function (error) {
+                    new Dialog(self, {
+                        size: 'medium',
+                        title: _t('Hata'),
+                        technical: false,
+                        buttons: [
+                            {text: _t("Tamam"), classes: 'btn-primary', close: true},
+                        ],
+                        $content: $('<div/>', {
+                            html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
+                        }),
+                    }).open();
+                    if (config.isDebug()) {
+                        console.error(error);
+                    }
+                    framework.hideLoading();
+                });
             });
         });
     },
 
-    _onSubmitButton: function () {
+    _onReturnButton: function () {
         var self = this;
         framework.showLoading();
         this._rpc({
-            route: '/payment/bank/validate',
+            route: '/payment/return',
         }).then(function (url) {
             window.location.assign(url);
         }).guardedCatch(function (error) {
