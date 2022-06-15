@@ -6,7 +6,7 @@
     <field name="view_mode">tree,form</field>
     </record>
 
-    <record id="action_mail_messages" model="ir.actions.act_window">
+    <!--<record id="action_mail_messages" model="ir.actions.act_window">
     <field name="name">Email</field>
     <field name="res_model">mailing.mailing</field>
     <field name="view_mode">kanban,tree,graph</field>
@@ -20,7 +20,7 @@
     <field name="view_mode">kanban,tree,graph</field>
     <field name="domain">[('mailing_type', '=', 'sms')]</field>
     <field name="context">{'create': 0, 'delete': 0, 'edit': 0}</field>
-    </record>
+    </record>-->
 
     <record id="action_mail_template" model="ir.actions.act_window">
     <field name="name">Email Templates</field>

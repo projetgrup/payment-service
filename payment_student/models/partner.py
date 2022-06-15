@@ -34,6 +34,7 @@ class Partner(models.Model):
                     for template in templates:
                         val.append({
                             'child_id': student.id,
+                            'parent_id': student.parent_id.id,
                             'term_id': template.term_id.id,
                             'payment_type_id': template.payment_type_id.id,
                             'amount': template.amount,

@@ -30,7 +30,7 @@ class PaymentPrepareInput(Datamodel):
     _name = "payment.prepare.input"
     _inherit = "payment.api"
 
-    amount = fields.Integer(required=True, allow_none=False)
+    amount = fields.Float(required=True, allow_none=False)
     id = fields.Integer(required=True, allow_none=False)
     hash = fields.String(required=True, allow_none=False)
     customer = fields.Dict(required=True, allow_none=False)

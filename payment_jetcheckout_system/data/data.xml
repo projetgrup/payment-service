@@ -25,8 +25,5 @@
             <field name="icon">fa-whatsapp</field>
             <field name="sequence">11</field>
         </record>
-        <record id="send_source" model="utm.source">
-            <field name="name">Payment System</field>
-        </record>
     </data>
 </odoo>

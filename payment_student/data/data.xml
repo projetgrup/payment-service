@@ -30,5 +30,12 @@
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="payment_sms" model="sms.template">
+            <field name="name">Parent Payment SMS</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="body">Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) }}</field>
+            <field name="lang">{{ object.lang }}</field>
+        </record>
     </data>
 </odoo>

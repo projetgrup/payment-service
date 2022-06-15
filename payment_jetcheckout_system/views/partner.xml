@@ -76,10 +76,10 @@
                 </group>
                 <notebook>
                     <page name="siblings" string="Siblings" autofocus="autofocus" attrs="{'invisible': [('sibling_ids','=',[])]}">
-                        <field name="sibling_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                        <field name="sibling_ids" mode="kanban" context="{'kanban_view_ref' : 'payment_jetcheckout_system.partner_kanban', 'form_view_ref': 'payment_jetcheckout_system.child_basic'}"/>
                     </page>
-                    <page name="children" string="Children" autofocus="autofocus" attrs="{'invisible': [('child_ids','=',[])]}">
-                        <field name="child_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                    <page name="children" string="Children" autofocus="autofocus">
+                        <field name="child_ids" mode="kanban" context="{'kanban_view_ref' : 'payment_jetcheckout_system.partner_kanban', 'form_view_ref': 'payment_jetcheckout_system.child_basic', 'default_is_company': False, 'active_child': 1, 'default_parent_id': active_id, 'default_lang': lang}"/>
                     </page>
                 </notebook>
             </sheet>

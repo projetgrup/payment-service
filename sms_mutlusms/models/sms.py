@@ -63,10 +63,10 @@ class SmsApi(models.AbstractModel):
             raise ERRORS.get(code, ERRORS[None])
 
     @api.model
-    def _get_mutlusms_credit(self):
+    def _get_mutlusms_credit(self, username=None, password=None):
         company = self.env.company
-        username = company.sms_mutlusms_username
-        password = company.sms_mutlusms_password
+        username = username or company.sms_mutlusms_username
+        password = password or company.sms_mutlusms_password
         data = f"""<?xml version="1.0" encoding="UTF-8"?><smskredi ka="{username}" pwd="{password}"/>"""
         response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
         code = response.text

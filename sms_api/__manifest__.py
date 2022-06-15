@@ -11,6 +11,7 @@
     'category': 'Hidden/Tools',
     'depends': ['sms'],
     'data': ['views/sms.xml'],
+    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'sms_api/static/src/js/sms.js',

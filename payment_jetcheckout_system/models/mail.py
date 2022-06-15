@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ast import literal_eval
 from odoo import api, fields, models
 
 
@@ -41,24 +42,3 @@ class MailServer(models.Model):
         if self.env.company.system:
             res['company_id'] = self.env.company.id
         return res
-
-
-class Mailing(models.Model):
-    _inherit = 'mailing.mailing'
-
-    company_id = fields.Many2one('res.company')
-
-    @api.model
-    def default_get(self, fields):
-        res = super(Mailing, self).default_get(fields)
-        res['company_id'] = self.env.company.id
-        return res
-
-
-class UtmSource(models.Model):
-    _inherit = 'utm.source'
-
-    def write(self, vals):
-        if self.env.context.get('readonly'):
-            return
-        return super().write(vals)

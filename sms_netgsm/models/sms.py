@@ -83,10 +83,10 @@ class SmsApi(models.AbstractModel):
             raise ERRORS.get(code, ERRORS[None])
 
     @api.model
-    def _get_netgsm_credit(self):
+    def _get_netgsm_credit(self, username=None, password=None):
         company = self.env.company
-        username = company.sms_netgsm_username
-        password = company.sms_netgsm_password
+        username = username or company.sms_netgsm_username
+        password = password or company.sms_netgsm_password
         data = f"""<?xml version='1.0'?>
             <mainbody>
                 <header>

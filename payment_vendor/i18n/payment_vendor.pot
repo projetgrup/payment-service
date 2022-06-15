@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-10 19:05+0000\n"
-"PO-Revision-Date: 2022-06-10 19:05+0000\n"
+"POT-Creation-Date: 2022-06-14 16:38+0000\n"
+"PO-Revision-Date: 2022-06-14 16:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,7 +81,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model:ir.actions.act_window,name:payment_vendor.action_child
-#: model:ir.ui.menu,name:payment_vendor.menu_child
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Contacts"
 msgstr ""
 
@@ -143,11 +143,6 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
-msgstr ""
-
-#. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.child_search
-msgid "Parent"
 msgstr ""
 
 #. module: payment_vendor
@@ -213,6 +208,9 @@ msgid "VPS"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_form
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_search
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_tree
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
 msgid "Vendor"

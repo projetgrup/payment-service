@@ -70,7 +70,7 @@ class Partner(models.Model):
         self.ensure_one()
         url = self.get_base_url() + self._get_share_url()
         if shorten:
-            link = self.env['link.tracker'].sudo().create({
+            link = self.env['link.tracker'].sudo().search_or_create({
                 'url': url,
                 'title': self.name,
             })

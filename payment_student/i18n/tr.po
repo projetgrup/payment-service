@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-10 19:05+0000\n"
-"PO-Revision-Date: 2022-06-10 22:36+0300\n"
+"POT-Creation-Date: 2022-06-14 16:37+0000\n"
+"PO-Revision-Date: 2022-06-14 19:43+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_page
@@ -122,6 +122,11 @@ msgstr "Burslar"
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Bursary"
 msgstr "Burs"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Children"
+msgstr "Çocuklar"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__class_id
@@ -423,6 +428,11 @@ msgid "Parent Payment Email"
 msgstr "Veli Tahsilat Epostası"
 
 #. module: payment_student
+#: model:sms.template,name:payment_student.payment_sms
+msgid "Parent Payment SMS"
+msgstr "Veli Tahsilat SMS"
+
+#. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_parent
 #: model:ir.ui.menu,name:payment_student.menu_parent
 msgid "Parents"
@@ -520,6 +530,13 @@ msgstr "SMS Şablonları"
 #: model:ir.ui.menu,name:payment_student.menu_main
 msgid "SPS"
 msgstr "ÖTS"
+
+#. module: payment_student
+#: model:sms.template,body:payment_student.payment_sms
+msgid ""
+"Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt "
+"ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) }}"
+msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__school_id
@@ -747,9 +764,6 @@ msgstr ""
 
 #~ msgid "Archived"
 #~ msgstr "Arşivlendi"
-
-#~ msgid "Children"
-#~ msgstr "Çocuklar"
 
 #~ msgid "Contact Page"
 #~ msgstr "İletişim Sayfası"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-10 19:05+0000\n"
-"PO-Revision-Date: 2022-06-10 19:05+0000\n"
+"POT-Creation-Date: 2022-06-14 16:38+0000\n"
+"PO-Revision-Date: 2022-06-14 16:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,29 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"<span class=\"btn btn-disabled\" attrs=\"{'invisible': "
+"[('sms_test_provider','=',False)]}\">Test Connection</span><i class=\"fa fa-"
+"spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': "
+"[('sms_test_provider','=',False)]}\"/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"<span class=\"o_form_label\">Credentials</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"<span class=\"o_form_label\">Provider</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -131,6 +154,11 @@ msgid "Children"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Choose your sms provider"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
 msgstr ""
@@ -179,6 +207,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_company_hierarchy
 msgid "Company Hierarchy"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/settings.py:0
+#, python-format
+msgid "Connection is succesful. %s"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -305,6 +339,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Enter your credentials"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -556,6 +595,11 @@ msgid "No transactions yet"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Originator"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Page Footer"
 msgstr ""
@@ -592,6 +636,7 @@ msgid "Parent"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_mailing_mailing__partner_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
 msgid "Partner"
@@ -613,6 +658,11 @@ msgstr ""
 msgid ""
 "Partners have to be in one company when sending mass messages, but there are"
 " %s of them. (%s)"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Password"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -640,7 +690,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
 #: model:ir.module.category,name:payment_jetcheckout_system.module_category_system
-#: model:utm.source,name:payment_jetcheckout_system.send_source
 msgid "Payment System"
 msgstr ""
 
@@ -699,7 +748,13 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_sms_messages
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "SMS"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_provider
+msgid "SMS Provider"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -824,6 +879,16 @@ msgid "Sms Body"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_originator
+msgid "Sms Originator"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_password
+msgid "Sms Password"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__date_sms_sent
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__date_sms_sent
 msgid "Sms Sent Date"
@@ -833,6 +898,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__sms_template_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sms_template_id
 msgid "Sms Template"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_test_message
+msgid "Sms Test Message"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_test_provider
+msgid "Sms Test Provider"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sms_username
+msgid "Sms Username"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -862,6 +942,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__template_name
 msgid "Template Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Test Connection"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -921,6 +1006,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__user
 #: model:res.groups,name:payment_jetcheckout_system.group_system_user
 msgid "User"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Username"
 msgstr ""
 
 #. module: payment_jetcheckout_system

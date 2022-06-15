@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-10 19:05+0000\n"
-"PO-Revision-Date: 2022-06-10 19:05+0000\n"
+"POT-Creation-Date: 2022-06-14 16:37+0000\n"
+"PO-Revision-Date: 2022-06-14 16:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -110,6 +110,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Bursary"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.parent_form
+msgid "Children"
 msgstr ""
 
 #. module: payment_student
@@ -413,6 +418,11 @@ msgid "Parent Payment Email"
 msgstr ""
 
 #. module: payment_student
+#: model:sms.template,name:payment_student.payment_sms
+msgid "Parent Payment SMS"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_parent
 #: model:ir.ui.menu,name:payment_student.menu_parent
 msgid "Parents"
@@ -509,6 +519,14 @@ msgstr ""
 #. module: payment_student
 #: model:ir.ui.menu,name:payment_student.menu_main
 msgid "SPS"
+msgstr ""
+
+#. module: payment_student
+#: model:sms.template,body:payment_student.payment_sms
+msgid ""
+"Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt "
+"ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) "
+"}}"
 msgstr ""
 
 #. module: payment_student

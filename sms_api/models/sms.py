@@ -1,19 +1,42 @@
 # -*- coding: utf-8 -*-
-import requests
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+
 
 class InsufficientCreditError(Exception):
     pass
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
     sms_provider = fields.Selection([], string='SMS Provider')
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     sms_provider = fields.Selection(related='company_id.sms_provider', readonly=False)
+    sms_test_provider = fields.Boolean(store=False)
+    sms_test_message = fields.Char(store=False, readonly=True)
+
+    @api.onchange('sms_provider')
+    def onchange_sms_provider(self):
+        self.update({
+            'sms_test_provider': False,
+            'sms_test_message': False,
+        })
+
+    @api.onchange('sms_test_provider')
+    def onchange_sms_test_provider(self):
+        if self.sms_test_provider:
+            username = getattr(self, 'sms_%s_username' % self.sms_provider)
+            password = getattr(self, 'sms_%s_password' % self.sms_provider)
+            message = getattr(self.env['sms.api'], '_get_%s_credit' % self.sms_provider)(username=username, password=password)
+            self.update({
+                'sms_test_provider': False,
+                'sms_test_message': _('Connection is succesful. %s') % message,
+            })
+
 
 class SmsApi(models.AbstractModel):
     _inherit = 'sms.api'
