@@ -10,7 +10,11 @@
     'license': 'LGPL-3',
     'category': 'Hidden/Tools',
     'depends': ['sms'],
-    'data': ['views/sms.xml'],
+    'data': [
+        'views/sms.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
+    ],
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

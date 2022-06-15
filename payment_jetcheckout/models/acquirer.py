@@ -75,7 +75,7 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     pos_id = fields.Many2one('payment.acquirer.jetcheckout.pos', required=True, readonly=True)
     journal_id = fields.Many2one('account.journal')
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
-    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id.id, readonly=True)
+    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id, readonly=True)
     company_id = fields.Many2one('res.company')
     website_id = fields.Many2one('website')
 

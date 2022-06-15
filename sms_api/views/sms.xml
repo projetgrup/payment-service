@@ -10,37 +10,36 @@
     </field>
     </record>
 
-    <record id="res_config_settings_view_form" model="ir.ui.view">
-    <field name="name">res.config.settings.view.form.inherit.sms</field>
-    <field name="model">res.config.settings</field>
-    <field name="priority" eval="90"/>
-    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <record id="provider_tree" model="ir.ui.view">
+    <field name="name">sms.provider.tree</field>
+    <field name="model">sms.provider</field>
     <field name="arch" type="xml">
-        <xpath expr="//div[hasclass('settings')]" position="inside">
-            <div class="app_settings_block" data-string="SMS" string="SMS" data-key="mass_mailing_sms">
-                <h2>SMS</h2>
-                <div class="row mt16 o_settings_container" name="sms_provider">
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Provider</span>
-                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                            <div class="text-muted">
-                                Choose your sms provider
-                            </div>
-                            <div class="content-group">
-                                <div class="mt16">
-                                    <field name="sms_provider"/> <label for="sms_test_provider" class="btn text-primary" string="Test Connection" attrs="{'invisible': ['|',('sms_test_provider','!=',False),('sms_provider','=',False)]}"/><span class="btn btn-disabled" attrs="{'invisible': [('sms_test_provider','=',False)]}">Test Connection</span><i class="fa fa-spin ml-2 fa-circle-o-notch" attrs="{'invisible': [('sms_test_provider','=',False)]}"/>
-                                    <field name="sms_test_provider" class="d-none"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="alert alert-info card ml-5 mt-3 shadow-sm" attrs="{'invisible': [('sms_test_message','=',False)]}">
-                            <field name="sms_test_message"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </xpath>
+        <tree decoration-muted="active == False" sample="1" editable="bottom">
+            <field name="sequence" widget="handle"/>
+            <field name="type" required="1"/>
+            <field name="username"/>
+            <field name="password" password="True"/>
+            <field name="originator"/>
+            <field name="active" widget="boolean_toggle"/>
+            <button name="action_test_connection" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}"/>
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+        </tree>
     </field>
     </record>
+
+    <record id="action_sms_provider" model="ir.actions.act_window">
+    <field name="name">SMS Providers</field>
+    <field name="res_model">sms.provider</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No SMS providers yet
+        </p>
+        <p>
+            SMS providers are listed here
+        </p>
+    </field>
+    </record>
+
+    <menuitem id="menu_sms_provider" parent="phone_validation.phone_menu_main" action="action_sms_provider" sequence="1"/>
 </odoo>

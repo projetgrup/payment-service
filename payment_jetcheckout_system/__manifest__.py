@@ -12,8 +12,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_jetcheckout',
-        'mass_mailing',
-        'mass_mailing_sms',
+        'sms_api'
     ],
     'data': [
         'data/data.xml',

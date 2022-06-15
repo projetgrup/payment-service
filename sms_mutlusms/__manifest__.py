@@ -10,6 +10,6 @@
     'license': 'LGPL-3',
     'category': 'Hidden/Tools',
     'depends': ['sms_api'],
-    'data': ['views/sms.xml'],
+    'data': [],
     'auto_install': True,
 }

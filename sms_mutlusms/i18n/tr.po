@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-14 19:48+0300\n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 23:11+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #. module: sms_mutlusms
 #: code:addons/sms_mutlusms/models/sms.py:0
@@ -24,66 +24,14 @@ msgid "%s SMS credit(s) left"
 msgstr "%s SMS kredisi kaldı"
 
 #. module: sms_mutlusms
-#: model_terms:ir.ui.view,arch_db:sms_mutlusms.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Credentials</span>\n"
-"                    <span class=\"fa fa-lg fa-building-o\" title=\"Values "
-"set here are company-specific.\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"o_form_label\">Bilgiler</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title="
-"\"Bu ayarlar geçerli şirkete göre değişir\" aria-label=\"Bu ayarlar "
-"geçerli şirkete göre değişir\" groups=\"base.group_multi_company\" role="
-"\"img\"/>"
-
-#. module: sms_mutlusms
-#: model:ir.model,name:sms_mutlusms.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
-
-#. module: sms_mutlusms
-#: model:ir.model,name:sms_mutlusms.model_res_config_settings
-msgid "Config Settings"
-msgstr "Ayarlar"
-
-#. module: sms_mutlusms
-#: model_terms:ir.ui.view,arch_db:sms_mutlusms.res_config_settings_view_form
-msgid "Enter your credentials"
-msgstr "Bilgilerinizi giriniz"
-
-#. module: sms_mutlusms
-#: model:ir.model.fields.selection,name:sms_mutlusms.selection__res_company__sms_provider__mutlusms
+#: model:ir.model.fields.selection,name:sms_mutlusms.selection__sms_provider__type__mutlusms
 msgid "MutluSMS"
 msgstr "MutluSMS"
 
 #. module: sms_mutlusms
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_company__sms_mutlusms_originator
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_config_settings__sms_mutlusms_originator
-msgid "MutluSMS Originator"
-msgstr "MutluSMS Originator"
-
-#. module: sms_mutlusms
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_company__sms_mutlusms_password
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_config_settings__sms_mutlusms_password
-msgid "MutluSMS Password"
-msgstr "MutluSMS Parola"
-
-#. module: sms_mutlusms
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_company__sms_mutlusms_username
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_config_settings__sms_mutlusms_username
-msgid "MutluSMS Username"
-msgstr "MutluSMS Kullanıcı Adı"
-
-#. module: sms_mutlusms
-#: model_terms:ir.ui.view,arch_db:sms_mutlusms.res_config_settings_view_form
-msgid "Originator"
-msgstr "Originator"
-
-#. module: sms_mutlusms
-#: model_terms:ir.ui.view,arch_db:sms_mutlusms.res_config_settings_view_form
-msgid "Password"
-msgstr "Parola"
+#: model:ir.model.fields,field_description:sms_mutlusms.field_sms_provider__type
+msgid "Provider"
+msgstr "Sağlayıcı"
 
 #. module: sms_mutlusms
 #: model:ir.model,name:sms_mutlusms.model_sms_api
@@ -91,11 +39,40 @@ msgid "SMS API"
 msgstr "SMS API"
 
 #. module: sms_mutlusms
-#: model:ir.model.fields,field_description:sms_mutlusms.field_res_company__sms_provider
-msgid "SMS Provider"
-msgstr "SMS Sağlayıcı"
+#: model:ir.model,name:sms_mutlusms.model_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcıları"
 
-#. module: sms_mutlusms
-#: model_terms:ir.ui.view,arch_db:sms_mutlusms.res_config_settings_view_form
-msgid "Username"
-msgstr "Kullanıcı Adı"
+#~ msgid ""
+#~ "<span class=\"o_form_label\">Credentials</span>\n"
+#~ "                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label\">Bilgiler</span>\n"
+#~ "                            <span class=\"fa fa-lg fa-building-o\" title=\"Bu ayarlar geçerli şirkete göre değişir\" aria-label=\"Bu ayarlar geçerli şirkete göre değişir\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#~ msgid "Companies"
+#~ msgstr "Şirketler"
+
+#~ msgid "Config Settings"
+#~ msgstr "Ayarlar"
+
+#~ msgid "Enter your credentials"
+#~ msgstr "Bilgilerinizi giriniz"
+
+#~ msgid "MutluSMS Originator"
+#~ msgstr "MutluSMS Originator"
+
+#~ msgid "MutluSMS Password"
+#~ msgstr "MutluSMS Parola"
+
+#~ msgid "MutluSMS Username"
+#~ msgstr "MutluSMS Kullanıcı Adı"
+
+#~ msgid "Originator"
+#~ msgstr "Originator"
+
+#~ msgid "Password"
+#~ msgstr "Parola"
+
+#~ msgid "Username"
+#~ msgstr "Kullanıcı Adı"

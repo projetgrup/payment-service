@@ -6,6 +6,34 @@ from datetime import datetime
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 
+CODES = {
+    "00": "İşlem Başarılı",
+    "00101": "Belirtilen uygulama anahtarı geçersiz",
+    "00102": "Güvenlik doğrulaması başarısız",
+    "00103": "İşlemi yapabileceğiniz uygun bir pos bulunamadı. İstek parametrelerinizi kontrol ediniz.",
+    "00104": "Bin numarası için tanım bulunamadı",
+    "00105": "Geçersiz Kart Numarası",
+    "00106": "Kart Son Kullanma Tarihi Geçmiş",
+    "50500": "Ödeme servisinde hata alındı",
+    "50501": "Ödeme servisinden cevap alınamadı",
+    "00500": "Sunucuda beklenmeyen hata",
+    "00307": "Ödeme sayfasına devam ediniz",
+    "00303": "Olası güvenlik saldırısı",
+    "00200": "Sipariş numarası için bilgiler bulundu",
+    "00404": "Belirtilen sipariş numarası bulunamadı",
+    "01": "İptal/İade talebiniz alınmıştır",
+    "00107": "Ödeme tutarı formatı hatalı",
+    "50502": "Ödeme servisinden hata iletildi",
+    "00707": "Belirtilen sipariş zaten iptal edilmiş",
+    "00708": "Sadece aynı gün içinde yapılan işlemler iptal edilebilir! . İade servisini kullanınız",
+    "00709": "Belirtilen sipariş için iade işlemi yapılmış, bu nedenle iptal edilemez! İade servisini kullanınız",
+    "00710": "Belirtilen sipariş için iade etmek istediğiniz tutar, iade edilebilir tutardan büyüktür!",
+    "00711": "İade tutarı formatı hatalı",
+    "00108": "Taksit sayısı formatı hatalı",
+    "20100": "Kredi kartı limitinizi kontrol ediniz",
+}
+
+
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
@@ -48,7 +76,7 @@ class PaymentTransaction(models.Model):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 200:
+            if result['response_code'] == "00200":
                 values = {'result': result}
             else:
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
@@ -102,7 +130,7 @@ class PaymentTransaction(models.Model):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 0:
+            if result['response_code'] == "00":
                 values = {'result': result}
             else:
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
@@ -129,7 +157,7 @@ class PaymentTransaction(models.Model):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) in (0,1):
+            if result['response_code'] in ("00", "01"):
                 values = {'result': result}
             else:
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}

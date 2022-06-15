@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-14 16:38+0000\n"
+"POT-Creation-Date: 2022-06-15 20:03+0000\n"
+"PO-Revision-Date: 2022-06-15 20:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,12 +101,7 @@ msgid "Created payments are listed here"
 msgstr ""
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_mail_messages
-msgid "Email"
-msgstr ""
-
-#. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_mailings
+#: model:ir.ui.menu,name:payment_vendor.menu_mail
 msgid "Email Settings"
 msgstr ""
 
@@ -136,11 +131,6 @@ msgid "Menu"
 msgstr ""
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_messages
-msgid "Messages"
-msgstr ""
-
-#. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
 msgstr ""
@@ -156,19 +146,24 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment_vendor
-#: model:ir.actions.act_window,name:payment_vendor.action_item
-#: model:ir.ui.menu,name:payment_vendor.menu_payment
-msgid "Payment Items"
-msgstr ""
-
-#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_acquirers
 msgid "Payment Settings"
 msgstr ""
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_sms_messages
-msgid "SMS"
+#: model:ir.actions.act_window,name:payment_vendor.action_item
+#: model:ir.ui.menu,name:payment_vendor.menu_payment
+msgid "Payments"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms_provider
+msgid "SMS Providers"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms
+msgid "SMS Settings"
 msgstr ""
 
 #. module: payment_vendor

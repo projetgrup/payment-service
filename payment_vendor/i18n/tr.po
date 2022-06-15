@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-15 10:00+0300\n"
+"POT-Creation-Date: 2022-06-15 20:03+0000\n"
+"PO-Revision-Date: 2022-06-15 23:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #. module: payment_vendor
 #: model:mail.template,body_html:payment_vendor.vendor_mail
@@ -112,12 +112,7 @@ msgid "Created payments are listed here"
 msgstr "Oluşturulan ödemeler burada listelenir"
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_mail_messages
-msgid "Email"
-msgstr "Eposta"
-
-#. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_mailings
+#: model:ir.ui.menu,name:payment_vendor.menu_mail
 msgid "Email Settings"
 msgstr "Eposta Ayarları"
 
@@ -147,11 +142,6 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_messages
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
@@ -167,20 +157,25 @@ msgid "Payment Acquirers"
 msgstr "Ödeme Alıcıları"
 
 #. module: payment_vendor
-#: model:ir.actions.act_window,name:payment_vendor.action_item
-#: model:ir.ui.menu,name:payment_vendor.menu_payment
-msgid "Payment Items"
-msgstr "Ödeme Kalemleri"
-
-#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_acquirers
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
 
 #. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_sms_messages
-msgid "SMS"
-msgstr "SMS"
+#: model:ir.actions.act_window,name:payment_vendor.action_item
+#: model:ir.ui.menu,name:payment_vendor.menu_payment
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcılar"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms
+msgid "SMS Settings"
+msgstr "SMS Ayarları"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_sms_template
@@ -255,6 +250,15 @@ msgstr "Website Ayarları"
 #: model:ir.ui.menu,name:payment_vendor.menu_website
 msgid "Websites"
 msgstr "Websiteler"
+
+#~ msgid "Email"
+#~ msgstr "Eposta"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
 
 #~ msgid "Parent"
 #~ msgstr "Bayi"

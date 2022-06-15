@@ -5,6 +5,8 @@ import requests
 import uuid
 import base64
 import hashlib
+
+from ..models.transaction import CODES
 from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
@@ -43,7 +45,7 @@ class JetcheckoutController(http.Controller):
             'acquirer': acquirer,
             'company': company,
             'card_family': card_family,
-            'no_terms': acquirer.jetcheckout_no_terms,
+            'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
                 'self' : currency,
                 'id' : currency.id,
@@ -89,7 +91,7 @@ class JetcheckoutController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 0:
+            if result['response_code'] == "00":
                 installments = []
                 amount = kwargs.get('amount', 0)
                 amount_installment = kwargs.get('amount_installment', 0)
@@ -112,7 +114,7 @@ class JetcheckoutController(http.Controller):
                     'currency': currency,
                     's2s_form': kwargs.get('s2s', False)
                 }
-            elif int(result['response_code']) == 104:
+            elif result['response_code'] == "00104":
                 values = {
                     'installments': [{
                         "card_family": "",
@@ -155,7 +157,7 @@ class JetcheckoutController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 0:
+            if result['response_code'] == "00":
                 installments = result.get('installment_options', [])
                 card_family = []
                 for installment in installments:
@@ -180,7 +182,7 @@ class JetcheckoutController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) == 0:
+            if result['response_code'] == "00":
                 return result.get('virtual_pos_name', '-').split(' - ', 1)[1], result.get('expected_cost_rate', 0)
             else:
                 return {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}, None
@@ -199,7 +201,7 @@ class JetcheckoutController(http.Controller):
             return '/404', None
 
         url = kwargs.get('result_url', '/payment/card/result')
-        if int(kwargs.get('response_code')) == 0:
+        if kwargs.get('response_code') == "00":
             tx.write({'state': 'done'})
             tx.jetcheckout_validate_order()
             domain = request.httprequest.referrer
@@ -207,7 +209,7 @@ class JetcheckoutController(http.Controller):
         else:
             tx.write({
                 'state': 'error',
-                'state_message': _('%s (Error Code: %s)') % (kwargs.get('message', '-'), kwargs.get('response_code','')),
+                'state_message': _('%s (Error Code: %s)') % (CODES.get(kwargs.get('response_code'), kwargs.get('message', '-')), kwargs.get('response_code','')),
             })
 
         return url, tx
@@ -404,14 +406,14 @@ class JetcheckoutController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            if int(result['response_code']) in (0, 307):
+            if result['response_code'] in ("00", "00307"):
                 tx.state = 'pending'
                 tx.jetcheckout_transaction_id = result['transaction_id']
                 url = '%s/%s' % (result['redirect_url'], result['transaction_id'])
                 return {'url': url}
             else:
                 tx.state = 'error'
-                message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                message = _('%s (Error Code: %s)') % (CODES.get(result['response_code'], result['message']), result['response_code'])
                 tx.write({
                     'state': 'error',
                     'state_message': message,

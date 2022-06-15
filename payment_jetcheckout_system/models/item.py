@@ -28,7 +28,7 @@ class PaymentItem(models.Model):
     paid_date = fields.Datetime(readonly=True)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
     system = fields.Selection(related='company_id.system', store=True, readonly=True)
-    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
 
     def onchange(self, values, field_name, field_onchange):

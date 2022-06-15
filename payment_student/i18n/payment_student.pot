@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:37+0000\n"
-"PO-Revision-Date: 2022-06-14 16:37+0000\n"
+"POT-Creation-Date: 2022-06-15 20:03+0000\n"
+"PO-Revision-Date: 2022-06-15 20:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -275,12 +275,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_mail_messages
-msgid "Email"
-msgstr ""
-
-#. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_mailings
+#: model:ir.ui.menu,name:payment_student.menu_mail
 msgid "Email Settings"
 msgstr ""
 
@@ -376,11 +371,6 @@ msgid "Menu"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_messages
-msgid "Messages"
-msgstr ""
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__name
@@ -452,9 +442,7 @@ msgid "Payment Discounts"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.actions.act_window,name:payment_student.action_item
 #: model:ir.model,name:payment_student.model_payment_item
-#: model:ir.ui.menu,name:payment_student.menu_payment
 msgid "Payment Items"
 msgstr ""
 
@@ -507,8 +495,19 @@ msgid ""
 msgstr ""
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_sms_messages
-msgid "SMS"
+#: model:ir.actions.act_window,name:payment_student.action_item
+#: model:ir.ui.menu,name:payment_student.menu_payment
+msgid "Payments"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_sms_provider
+msgid "SMS Providers"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_sms
+msgid "SMS Settings"
 msgstr ""
 
 #. module: payment_student
@@ -677,12 +676,6 @@ msgstr ""
 #: code:addons/payment_student/models/partner.py:0
 #, python-format
 msgid "There is already a student with the same Vat Number - %s"
-msgstr ""
-
-#. module: payment_student
-#: code:addons/payment_student/models/partner.py:0
-#, python-format
-msgid "There isn't any payment item related to this partner"
 msgstr ""
 
 #. module: payment_student

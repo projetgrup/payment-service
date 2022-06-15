@@ -35,15 +35,15 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
         for type in self:
             message = ''
             if type.code == 'email':
-                server = self.env['ir.mail_server'].sudo().search([('company_id', '=', type.company_id.id)], limit=1)
+                server = self.env['ir.mail_server'].search([('company_id', '=', type.company_id.id)], limit=1)
                 if server:
                     message = _('Emails are going to be sent on %s') % server.smtp_host
                 else:
                     message = _('There is not any outgoing mail server set')
             elif type.code == 'sms':
-                provider = getattr(type.company_id, 'sms_provider')
+                provider = self.env['sms.provider'].get(type.company_id.id)
                 if provider:
-                    message = _('SMS messages are going to be sent on %s') % provider.capitalize()
+                    message = _('SMS messages are going to be sent on %s') % provider.type.capitalize()
                 else:
                     message = _('There is not any SMS provider selected')
             else:
@@ -191,12 +191,13 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
 
     def send(self):
         self = self.sudo()
-        company = self.env.company
         selections = self.selection.mapped('code')
         mail_template = 'email' in selections and self.mail_template_id or False
         sms_template = 'sms' in selections and self.sms_template_id or False
         comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.company_id.id)], limit=1)
+        sms_provider_id = self.env['sms.provider'].get(self.company_id.id).id
         reply_to = self.env.user.email_formatted
         mail_messages = []
         sms_messages = []
@@ -216,7 +217,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                     'body': values['body'],
                     'body_html': values['body'],
                     'model': values['model'],
-                    'mail_server_id': values['mail_server_id'],
+                    'mail_server_id': values['mail_server_id'] or mail_server_id,
                     'auto_delete': values['auto_delete'],
                     'scheduled_date': values['scheduled_date'],
                     'reply_to': reply_to,
@@ -236,6 +237,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                     'body': body,
                     'number': partner.mobile,
                     'state': 'outgoing',
+                    'provider_id': sms_provider_id,
                 }
                 sms_messages.append(sms_values)
 
@@ -246,7 +248,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                 sendings = self.env['mail.mail'].create(mail_messages)
                 for sending in sendings:
                     sending.notification_ids.write({'mail_mail_id': sending.id})
-                self.env.ref('mail.ir_cron_mail_scheduler_action').with_company(company)._trigger()
+                self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()
                 sent_values['date_email_sent'] = now
             if sms_messages:
                 sendings = self.env['sms.sms'].create(sms_messages)
@@ -269,6 +271,6 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                         })]
                     })
                 self.env['mail.message'].create(messages)
-                self.env.ref('sms.ir_cron_sms_scheduler_action').with_company(company)._trigger()
+                self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
                 sent_values['date_sms_sent'] = now
             self.partner_ids.write(sent_values)

@@ -19,12 +19,12 @@
                         <div class="oe_kanban_details p-1 text-muted mx-2">
                             <table class="w-100">
                                 <tr>
-                                    <td><strong>Template</strong></td>
-                                    <td><t t-esc="record.template_name.value"/></td>
+                                    <td class="px-2 pt-2 align-top"><strong>Template</strong></td>
+                                    <td class="px-2 pt-2 align-top"><t t-esc="record.template_name.value"/></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Note</strong></td>
-                                    <td><t t-esc="record.message.value"/></td>
+                                    <td class="px-2 pb-2 align-top"><strong>Note</strong></td>
+                                    <td class="px-2 pb-2 align-top"><t t-esc="record.message.value"/></td>
                                 </tr>
                             </table>
                         </div>
