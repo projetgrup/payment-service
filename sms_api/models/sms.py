@@ -74,7 +74,7 @@ class SmsSms(models.Model):
         try:
             results = self.env['sms.api']._send_sms_batch(data)
         except Exception as e:
-            _logger.info('Sent batch %s SMS: %s: failed with exception %s', len(self.ids), self.ids, e)
+            _logger.error('Sent batch %s SMS: %s: failed with exception %s', len(self.ids), self.ids, e)
             if raise_exception:
                 raise
             self._postprocess_iap_sent_sms([{'res_id': sms.id, 'state': 'server_error'} for sms in self], unlink_failed=unlink_failed, unlink_sent=unlink_sent)
@@ -117,7 +117,7 @@ class SmsApi(models.AbstractModel):
 
     @api.model
     def _send_sms_api(self, messages, provider):
-        provider = self.env['sms.provider'].get()
+        provider = self.env['sms.provider'].browse(provider)
         if provider:
             return getattr(self, '_send_%s_sms' % provider.type, [])(messages, provider)
         return []
