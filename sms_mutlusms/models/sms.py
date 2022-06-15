@@ -42,12 +42,11 @@ class SmsApi(models.AbstractModel):
         numbers = [message['number'] for message in messages]
         message = messages[0] if messages else ''
 
+        blocks = [f"<mesaj><metin>{message['content']}</metin><nums>{message['number']}</nums></mesaj>" for message in messages]
+
         data = f"""<?xml version="1.0" encoding="UTF-8"?>
             <smspack ka="{username}" pwd="{password}" org="{originator}" charset="turkish">
-                <mesaj>
-                    <metin>{message}</metin>
-                    <nums>{",".join(numbers)}</nums>
-                </mesaj>
+                {"".join(blocks)}
             </smspack>"""
 
         response = requests.post(SENDURL, data=data.encode('utf-8'), headers=HEADERS)
