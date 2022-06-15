@@ -39,7 +39,7 @@
     </record>
 
     <record id="action_item" model="ir.actions.act_window">
-    <field name="name">Payment Items</field>
+    <field name="name">Payments</field>
     <field name="res_model">payment.item</field>
     <field name="view_mode">tree,pivot</field>
     <field name="search_view_id" ref="item_search"/>

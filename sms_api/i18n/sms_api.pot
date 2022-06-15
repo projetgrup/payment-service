@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-14 16:38+0000\n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 20:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,34 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid ""
-"<span class=\"btn btn-disabled\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\">Test Connection</span><i class=\"fa fa-"
-"spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\"/>"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__active
+msgid "Active"
 msgstr ""
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Provider</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-
-#. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid "Choose your sms provider"
-msgstr ""
-
-#. module: sms_api
-#: model:ir.model,name:sms_api.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: sms_api
-#: model:ir.model,name:sms_api.model_res_config_settings
-msgid "Config Settings"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__company_id
+msgid "Company"
 msgstr ""
 
 #. module: sms_api
@@ -53,8 +32,92 @@ msgid "Connection is succesful. %s"
 msgstr ""
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid "SMS"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__id
+msgid "ID"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "No SMS provider credit method defined"
+msgstr ""
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "No SMS provider defined"
+msgstr ""
+
+#. module: sms_api
+#: model_terms:ir.actions.act_window,help:sms_api.action_sms_provider
+msgid "No SMS providers yet"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__originator
+msgid "Originator"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model,name:sms_api.model_sms_sms
+msgid "Outgoing SMS"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__password
+msgid "Password"
+msgstr ""
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "Please select a provider"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__sequence
+msgid "Priority"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__type
+#: model:ir.model.fields,field_description:sms_api.field_sms_sms__provider_id
+msgid "Provider"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.constraint,message:sms_api.constraint_sms_provider_company_provider_unique
+msgid "Provider must be unique per company"
 msgstr ""
 
 #. module: sms_api
@@ -63,19 +126,20 @@ msgid "SMS API"
 msgstr ""
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_company__sms_provider
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_provider
-msgid "SMS Provider"
+#: model:ir.actions.act_window,name:sms_api.action_sms_provider
+#: model:ir.model,name:sms_api.model_sms_provider
+#: model:ir.ui.menu,name:sms_api.menu_sms_provider
+msgid "SMS Providers"
 msgstr ""
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_test_message
-msgid "Sms Test Message"
+#: model:ir.model,name:sms_api.model_sms_resend
+msgid "SMS Resend"
 msgstr ""
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_test_provider
-msgid "Sms Test Provider"
+#: model_terms:ir.actions.act_window,help:sms_api.action_sms_provider
+msgid "SMS providers are listed here"
 msgstr ""
 
 #. module: sms_api
@@ -84,6 +148,11 @@ msgid "Template"
 msgstr ""
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sms_api.provider_tree
 msgid "Test Connection"
+msgstr ""
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__username
+msgid "Username"
 msgstr ""

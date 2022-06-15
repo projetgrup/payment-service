@@ -122,7 +122,7 @@ class AccountPayment(models.Model):
         IrConfig = self.env['ir.config_parameter'].sudo()
         base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
         acquirer = line.acquirer_id
-        if not acquirer.jetcheckout_no_terms:
+        if not acquirer.provider == 'jetcheckout' or not acquirer.jetcheckout_no_terms:
             body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
             layout = self.env.ref('payment_jetcheckout.report_layout')
             html = layout._render({'body': body, 'base_url': base_url})

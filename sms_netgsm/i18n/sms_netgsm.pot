@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-14 16:38+0000\n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 20:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,58 +22,13 @@ msgid "%s SMS credit(s) left"
 msgstr ""
 
 #. module: sms_netgsm
-#: model_terms:ir.ui.view,arch_db:sms_netgsm.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Credentials</span>\n"
-"                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-
-#. module: sms_netgsm
-#: model:ir.model,name:sms_netgsm.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: sms_netgsm
-#: model:ir.model,name:sms_netgsm.model_res_config_settings
-msgid "Config Settings"
-msgstr ""
-
-#. module: sms_netgsm
-#: model_terms:ir.ui.view,arch_db:sms_netgsm.res_config_settings_view_form
-msgid "Enter your credentials"
-msgstr ""
-
-#. module: sms_netgsm
-#: model:ir.model.fields.selection,name:sms_netgsm.selection__res_company__sms_provider__netgsm
+#: model:ir.model.fields.selection,name:sms_netgsm.selection__sms_provider__type__netgsm
 msgid "Netgsm"
 msgstr ""
 
 #. module: sms_netgsm
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_company__sms_netgsm_originator
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_config_settings__sms_netgsm_originator
-msgid "Netgsm Originator"
-msgstr ""
-
-#. module: sms_netgsm
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_company__sms_netgsm_password
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_config_settings__sms_netgsm_password
-msgid "Netgsm Password"
-msgstr ""
-
-#. module: sms_netgsm
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_company__sms_netgsm_username
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_config_settings__sms_netgsm_username
-msgid "Netgsm Username"
-msgstr ""
-
-#. module: sms_netgsm
-#: model_terms:ir.ui.view,arch_db:sms_netgsm.res_config_settings_view_form
-msgid "Originator"
-msgstr ""
-
-#. module: sms_netgsm
-#: model_terms:ir.ui.view,arch_db:sms_netgsm.res_config_settings_view_form
-msgid "Password"
+#: model:ir.model.fields,field_description:sms_netgsm.field_sms_provider__type
+msgid "Provider"
 msgstr ""
 
 #. module: sms_netgsm
@@ -82,11 +37,6 @@ msgid "SMS API"
 msgstr ""
 
 #. module: sms_netgsm
-#: model:ir.model.fields,field_description:sms_netgsm.field_res_company__sms_provider
-msgid "SMS Provider"
-msgstr ""
-
-#. module: sms_netgsm
-#: model_terms:ir.ui.view,arch_db:sms_netgsm.res_config_settings_view_form
-msgid "Username"
+#: model:ir.model,name:sms_netgsm.model_sms_provider
+msgid "SMS Providers"
 msgstr ""

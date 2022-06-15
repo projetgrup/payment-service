@@ -2,7 +2,7 @@
 import requests
 
 from odoo import models, fields, api, _
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.sms_api.models.sms import InsufficientCreditError
 
 SENDURL = 'https://smsgw.mutlucell.com/smsgw-ws/sndblkex'
@@ -19,20 +19,12 @@ ERRORS = {
     '30': AccessError('Hesap Aktivasyonu sağlanmamış'),
 }
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
 
-    sms_provider = fields.Selection(selection_add=[('mutlusms', 'MutluSMS')])
-    sms_mutlusms_username = fields.Char('MutluSMS Username')
-    sms_mutlusms_password = fields.Char('MutluSMS Password')
-    sms_mutlusms_originator = fields.Char('MutluSMS Originator')
+class SmsProvider(models.Model):
+    _inherit = 'sms.provider'
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    type = fields.Selection(selection_add=[('mutlusms', 'MutluSMS')])
 
-    sms_mutlusms_username = fields.Char(related='company_id.sms_mutlusms_username', readonly=False)
-    sms_mutlusms_password = fields.Char(related='company_id.sms_mutlusms_password', readonly=False)
-    sms_mutlusms_originator = fields.Char(related='company_id.sms_mutlusms_originator', readonly=False)
 
 class SmsApi(models.AbstractModel):
     _inherit = 'sms.api'
@@ -42,11 +34,10 @@ class SmsApi(models.AbstractModel):
         return 'https://www.mutlucell.com.tr/7-tarifeler/'
 
     @api.model
-    def _send_mutlusms_sms(self, messages):
-        company = self.env.company
-        username = company.sms_mutlusms_username
-        password = company.sms_mutlusms_password
-        originator = company.sms_mutlusms_originator
+    def _send_mutlusms_sms(self, messages, provider):
+        username = provider.username
+        password = provider.password
+        originator = provider.originator
 
         numbers = [message['number'] for message in messages]
         message = messages[0] if messages else ''
@@ -67,10 +58,9 @@ class SmsApi(models.AbstractModel):
             raise ERRORS.get(code, ERRORS[None])
 
     @api.model
-    def _get_mutlusms_credit(self, username=None, password=None):
-        company = self.env.company
-        username = username or company.sms_mutlusms_username
-        password = password or company.sms_mutlusms_password
+    def _get_mutlusms_credit(self, provider):
+        username = provider.username
+        password = provider.password
         data = f"""<?xml version="1.0" encoding="UTF-8"?><smskredi ka="{username}" pwd="{password}"/>"""
         response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
         code = response.text

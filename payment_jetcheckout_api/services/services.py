@@ -165,6 +165,7 @@ class PaymentAPIService(Component):
             'provider': tx.acquirer_id.provider,
             'state': tx.state,
             'fees': tx.fees,
+            'message': tx.state_message if not tx.state == 'done' else 'İşlem Başarılı',
             'ip_address': tx.jetcheckout_ip_address or '',
             'card_name': tx.jetcheckout_card_name or '',
             'card_number': tx.jetcheckout_card_number or '',
