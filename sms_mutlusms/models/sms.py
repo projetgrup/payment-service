@@ -38,6 +38,10 @@ class SmsApi(models.AbstractModel):
     _inherit = 'sms.api'
 
     @api.model
+    def _get_mutlusms_credit_url(self):
+        return 'https://www.mutlucell.com.tr/7-tarifeler/'
+
+    @api.model
     def _send_mutlusms_sms(self, messages):
         company = self.env.company
         username = company.sms_mutlusms_username
