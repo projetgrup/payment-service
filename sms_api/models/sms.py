@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class InsufficientCreditError(Exception):
     pass
@@ -62,3 +64,17 @@ class SmsApi(models.AbstractModel):
         if provider:
             return getattr(self, '_get_%s_credit' % provider)()
         return False
+
+class SMSResend(models.TransientModel):
+    _inherit = 'sms.resend'
+
+    def action_buy_credits(self):
+        provider = self.env.company.sms_provider
+        if provider:
+            url = getattr(self.env['sms.api'], '_get_%s_credit_url' % provider)()
+            return {
+                'type': 'ir.actions.act_url',
+                'target': 'new',
+                'url': url,
+            }
+        return super().action_buy_credits()
