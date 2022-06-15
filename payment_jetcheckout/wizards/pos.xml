@@ -22,12 +22,12 @@
                         <field name="merchant_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_merchant_active', '=', False)], 'required': [('is_merchant_active', '=', True)]}"/>
                         <field name="api_key" readonly="context.get('no_edit')" attrs="{'invisible': [('is_apikey_active', '=', False)], 'required': [('is_apikey_active', '=', True)]}"/>
                         <field name="terminal_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_terminal_active', '=', False)], 'required': [('is_terminal_active', '=', True)]}"/>
-                        <field name="secret_key" readonly="context.get('no_edit')"/>
+                        <field name="secret_key" readonly="context.get('no_edit')" password="True"/>
                         <field name="username" readonly="context.get('no_edit')" attrs="{'invisible': [('is_username_active', '=', False)], 'required': [('is_username_active', '=', True)]}"/>
-                        <field name="password" readonly="context.get('no_edit')" attrs="{'invisible': [('is_password_active', '=', False)], 'required': [('is_password_active', '=', True)]}"/>
+                        <field name="password" readonly="context.get('no_edit')" attrs="{'invisible': [('is_password_active', '=', False)], 'required': [('is_password_active', '=', True)]}" password="True"/>
                         <field name="rfnd_username" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_username_active', '=', False)], 'required': [('is_rfnd_username_active', '=', True)]}"/>
                         <field name="rfnd_password" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_password_active', '=', False)], 'required': [('is_rfnd_password_active', '=', True)]}"/>
-                        <field name="ref_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_refid_active', '=', False)]}"/>
+                        <field name="ref_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_refid_active', '=', False)]}" password="True"/>
                     </group>
                     <group>
                         <field name="name" readonly="context.get('no_edit')"/>
