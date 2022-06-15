@@ -2,7 +2,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-import json
 
 class PaymentAcquirerJetcheckoutSendType(models.Model):
     _name = 'payment.acquirer.jetcheckout.send.type'

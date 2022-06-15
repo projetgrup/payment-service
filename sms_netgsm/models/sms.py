@@ -43,6 +43,10 @@ class SmsApi(models.AbstractModel):
     _inherit = 'sms.api'
 
     @api.model
+    def _get_netgsm_credit_url(self):
+        return 'https://www.netgsm.com.tr/fiyatlar/'
+
+    @api.model
     def _process_netgsm_sms(self, text):
         if ' ' in text:
             return text.split(' ')
@@ -75,7 +79,7 @@ class SmsApi(models.AbstractModel):
                 </body>
             </mainbody>"""
 
-        response = requests.post(SENDURL, data=data, headers=HEADERS)
+        response = requests.post(SENDURL, data=data.encode('utf-8'), headers=HEADERS)
         code, id, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
             return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
@@ -96,7 +100,7 @@ class SmsApi(models.AbstractModel):
                 </header>
             </mainbody>"""
 
-        response = requests.post(CREDITURL, data, headers=HEADERS)
+        response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
         code, credit, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
             return _('%s SMS credit(s) left') % int(float(credit))

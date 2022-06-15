@@ -60,7 +60,7 @@ class Partner(models.Model):
         self.ensure_one()
         payments = self.env['payment.item'].sudo().search([('parent_id','=',self.id),('paid','=',False)])
         if not payments:
-            raise UserError(_('There isn\'t any payment item related to this partner'))
+            return ''
         return ', '.join(payments.mapped('term_id.name'))
 
     def _get_setting_line(self):
