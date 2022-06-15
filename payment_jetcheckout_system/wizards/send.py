@@ -191,6 +191,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
 
     def send(self):
         self = self.sudo()
+        company = self.env.company
         selections = self.selection.mapped('code')
         mail_template = 'email' in selections and self.mail_template_id or False
         sms_template = 'sms' in selections and self.sms_template_id or False
@@ -199,7 +200,6 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         reply_to = self.env.user.email_formatted
         mail_messages = []
         sms_messages = []
-
 
         for partner in self.partner_ids:
             if mail_template:
@@ -246,7 +246,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                 sendings = self.env['mail.mail'].create(mail_messages)
                 for sending in sendings:
                     sending.notification_ids.write({'mail_mail_id': sending.id})
-                self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()
+                self.env.ref('mail.ir_cron_mail_scheduler_action').with_company(company)._trigger()
                 sent_values['date_email_sent'] = now
             if sms_messages:
                 sendings = self.env['sms.sms'].create(sms_messages)
@@ -269,6 +269,6 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                         })]
                     })
                 self.env['mail.message'].create(messages)
-                self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
+                self.env.ref('sms.ir_cron_sms_scheduler_action').with_company(company)._trigger()
                 sent_values['date_sms_sent'] = now
             self.partner_ids.write(sent_values)

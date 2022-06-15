@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 
 import logging
+import json
 _logger = logging.getLogger(__name__)
 
 class InsufficientCreditError(Exception):
