@@ -49,8 +49,7 @@ class SmsApi(models.AbstractModel):
         password = provider.password
         originator = provider.originator
 
-        numbers = ['<no>%s</no>' % message['number'] for message in messages]
-        message = messages[0]['content'] if messages else ''
+        blocks = [f"<mp><msg>{message['content']}</msg><no>{message['number']}</no></mp>" for message in messages]
 
         data = f"""<?xml version="1.0" encoding="UTF-8"?>
             <mainbody>
@@ -58,14 +57,11 @@ class SmsApi(models.AbstractModel):
                     <company dil="TR">Netgsm</company>       
                     <usercode>{username}</usercode>
                     <password>{password}</password>
-                    <type>1:n</type>
+                    <type>n:n</type>
                     <msgheader>{originator}</msgheader>
                 </header>
                 <body>
-                    <msg>
-                        <![CDATA[{message}]]>
-                    </msg>
-                    {"".join(numbers)}
+                    {"".join(blocks)}
                 </body>
             </mainbody>"""
 
