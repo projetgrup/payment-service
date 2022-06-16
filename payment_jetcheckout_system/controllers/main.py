@@ -30,7 +30,7 @@ class JetcheckoutSystemController(JetController):
         url, tx = super()._jetcheckout_process(**kwargs)
         if tx.state == 'done':
             tx.jetcheckout_item_ids.write({'paid': True, 'paid_date': datetime.now(), 'installment_count': tx.jetcheckout_installment_count})
-            url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
+        url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx
 
     def _jetcheckout_system_page_values(self, company, system, parent, transaction):
@@ -82,7 +82,9 @@ class JetcheckoutSystemController(JetController):
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
-        company = parent.company_id or request.env.company
+        company = parent.company_id
+        if company and not company == request.env.company:
+            raise werkzeug.exceptions.NotFound()
         system = company.system
         values = self._jetcheckout_system_page_values(company, system, parent, transaction)
         return request.render('payment_%s.payment_page' % system, values)
