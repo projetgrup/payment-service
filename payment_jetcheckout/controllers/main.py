@@ -5,20 +5,22 @@ import requests
 import uuid
 import base64
 import hashlib
+import logging
 
-from ..models.transaction import CODES
 from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import ValidationError
 
+_logger = logging.getLogger(__name__)
+
 
 class JetcheckoutController(http.Controller):
 
     @staticmethod
     def _jetcheckout_get_acquirer(providers=None, limit=None):
-        return request.env['payment.acquirer'].sudo()._get_acquirer(company=request.env.company, website=request.website, providers=providers, limit=limit)
+        return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
     def _jetcheckout_get_partner(self, **kwargs):
         return 'partner_id' in kwargs and int(kwargs['partner_id']) or request.env.user.partner_id.commercial_partner_id.id
@@ -209,7 +211,7 @@ class JetcheckoutController(http.Controller):
         else:
             tx.write({
                 'state': 'error',
-                'state_message': _('%s (Error Code: %s)') % (CODES.get(kwargs.get('response_code'), kwargs.get('message', '-')), kwargs.get('response_code','')),
+                'state_message': _('%s (Error Code: %s)') % (kwargs.get('response_message', '-'), kwargs.get('response_code','')),
             })
 
         return url, tx
@@ -413,7 +415,7 @@ class JetcheckoutController(http.Controller):
                 return {'url': url}
             else:
                 tx.state = 'error'
-                message = _('%s (Error Code: %s)') % (CODES.get(result['response_code'], result['message']), result['response_code'])
+                message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
                 tx.write({
                     'state': 'error',
                     'state_message': message,
