@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:38+0000\n"
-"PO-Revision-Date: 2022-06-14 19:46+0300\n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 23:11+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,48 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid ""
-"<span class=\"btn btn-disabled\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\">Test Connection</span><i class=\"fa fa-"
-"spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\"/>"
-msgstr ""
-"<span class=\"btn btn-disabled\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\">Bağlantıyı Sına</span><i class=\"fa fa-"
-"spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': "
-"[('sms_test_provider','=',False)]}\"/>"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__active
+msgid "Active"
+msgstr "Aktif"
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Provider</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title="
-"\"Values set here are company-specific.\" aria-label=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"o_form_label\">Sağlayıcı</span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title="
-"\"Bu ayarlar geçerli şirkete göre değişir\" aria-label=\"Bu ayarlar geçerli "
-"şirkete göre değişir\" groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid "Choose your sms provider"
-msgstr "Sms sağlayıcınızı seçiniz"
-
-#. module: sms_api
-#: model:ir.model,name:sms_api.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
-
-#. module: sms_api
-#: model:ir.model,name:sms_api.model_res_config_settings
-msgid "Config Settings"
-msgstr "Ayarlar"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__company_id
+msgid "Company"
+msgstr "Şirket"
 
 #. module: sms_api
 #: code:addons/sms_api/models/sms.py:0
@@ -65,9 +34,93 @@ msgid "Connection is succesful. %s"
 msgstr "Bağlantı başarılı. %s"
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
-msgid "SMS"
-msgstr "SMS"
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__create_date
+msgid "Created on"
+msgstr "Oluşturma Tarihi"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__display_name
+msgid "Display Name"
+msgstr "Görünen Ad"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme Tarihi"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme Tarihi"
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "No SMS provider credit method defined"
+msgstr "Tanımlı SMS sağlayıcı kredi metodu bulunamadı"
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "No SMS provider defined"
+msgstr "Tanımlı SMS sağlayıcı bulunamadı"
+
+#. module: sms_api
+#: model_terms:ir.actions.act_window,help:sms_api.action_sms_provider
+msgid "No SMS providers yet"
+msgstr "Henüz bir SMS sağlayıcısı yok"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__originator
+msgid "Originator"
+msgstr "Originator"
+
+#. module: sms_api
+#: model:ir.model,name:sms_api.model_sms_sms
+msgid "Outgoing SMS"
+msgstr "Giden SMS"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__password
+msgid "Password"
+msgstr "Parola"
+
+#. module: sms_api
+#: code:addons/sms_api/models/sms.py:0
+#, python-format
+msgid "Please select a provider"
+msgstr "Lütfen bir sağlayıcı seçin"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__sequence
+msgid "Priority"
+msgstr "Öncelik"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__type
+#: model:ir.model.fields,field_description:sms_api.field_sms_sms__provider_id
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#. module: sms_api
+#: model:ir.model.constraint,message:sms_api.constraint_sms_provider_company_provider_unique
+msgid "Provider must be unique per company"
+msgstr "Sağlayıcı her şirket için bir tane olmalıdır"
 
 #. module: sms_api
 #: model:ir.model,name:sms_api.model_sms_api
@@ -75,20 +128,21 @@ msgid "SMS API"
 msgstr "SMS API"
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_company__sms_provider
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_provider
-msgid "SMS Provider"
-msgstr "SMS Sağlayıcı"
+#: model:ir.actions.act_window,name:sms_api.action_sms_provider
+#: model:ir.model,name:sms_api.model_sms_provider
+#: model:ir.ui.menu,name:sms_api.menu_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcılar"
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_test_message
-msgid "Sms Test Message"
-msgstr "Sms Test Mesajı"
+#: model:ir.model,name:sms_api.model_sms_resend
+msgid "SMS Resend"
+msgstr "SMS Tekrar Gönder"
 
 #. module: sms_api
-#: model:ir.model.fields,field_description:sms_api.field_res_config_settings__sms_test_provider
-msgid "Sms Test Provider"
-msgstr "Sms Sağlayıcı Testi"
+#: model_terms:ir.actions.act_window,help:sms_api.action_sms_provider
+msgid "SMS providers are listed here"
+msgstr "SMS sağlayıcıları burada listelenir"
 
 #. module: sms_api
 #: model_terms:ir.ui.view,arch_db:sms_api.sms_composer_form
@@ -96,6 +150,36 @@ msgid "Template"
 msgstr "Şablon"
 
 #. module: sms_api
-#: model_terms:ir.ui.view,arch_db:sms_api.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sms_api.provider_tree
 msgid "Test Connection"
 msgstr "Bağlantıyı Sına"
+
+#. module: sms_api
+#: model:ir.model.fields,field_description:sms_api.field_sms_provider__username
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#~ msgid "<span class=\"btn btn-disabled\" attrs=\"{'invisible': [('sms_test_provider','=',False)]}\">Test Connection</span><i class=\"fa fa-spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': [('sms_test_provider','=',False)]}\"/>"
+#~ msgstr "<span class=\"btn btn-disabled\" attrs=\"{'invisible': [('sms_test_provider','=',False)]}\">Bağlantıyı Sına</span><i class=\"fa fa-spin ml-2 fa-circle-o-notch\" attrs=\"{'invisible': [('sms_test_provider','=',False)]}\"/>"
+
+#~ msgid ""
+#~ "<span class=\"o_form_label\">Provider</span>\n"
+#~ "                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label\">Sağlayıcı</span>\n"
+#~ "                            <span class=\"fa fa-lg fa-building-o\" title=\"Bu ayarlar geçerli şirkete göre değişir\" aria-label=\"Bu ayarlar geçerli şirkete göre değişir\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#~ msgid "Choose your sms provider"
+#~ msgstr "Sms sağlayıcınızı seçiniz"
+
+#~ msgid "Config Settings"
+#~ msgstr "Ayarlar"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#~ msgid "Sms Test Message"
+#~ msgstr "Sms Test Mesajı"
+
+#~ msgid "Sms Test Provider"
+#~ msgstr "Sms Sağlayıcı Testi"

@@ -51,6 +51,7 @@ class PaymentResultOutput(Datamodel):
     provider = fields.String(required=False, allow_none=False)
     state = fields.String(required=False, allow_none=False)
     fees = fields.Float(required=False, allow_none=False)
+    message = fields.String(required=False, allow_none=False)
     ip_address = fields.String(required=False, allow_none=False)
     card_name = fields.String(required=False, allow_none=False)
     card_number = fields.String(required=False, allow_none=False)

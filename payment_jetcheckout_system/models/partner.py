@@ -131,13 +131,13 @@ class Partner(models.Model):
         if not len(company) == 1:
             raise UserError(_('Partners have to be in one company when sending mass messages, but there are %s of them. (%s)') % (len(company), ', '.join(company.mapped('name'))))
 
-        email = self.env.ref('payment_jetcheckout_system.send_type_email')
+        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
         mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
         sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
         res = self.env['payment.acquirer.jetcheckout.send'].create({
             'partner_ids': [(6, 0, self.ids)],
-            'selection': [(6, 0, email.ids)],
-            'type_ids': [(6, 0, email.ids)],
+            'selection': [(6, 0, type_email.ids)],
+            'type_ids': [(6, 0, type_email.ids)],
             'mail_template_id': mail_template.id,
             'sms_template_id': sms_template.id,
             'company_id': company.id,

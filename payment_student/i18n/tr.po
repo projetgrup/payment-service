@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-14 16:37+0000\n"
-"PO-Revision-Date: 2022-06-14 19:43+0300\n"
+"POT-Creation-Date: 2022-06-15 20:03+0000\n"
+"PO-Revision-Date: 2022-06-15 23:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_page
@@ -286,12 +286,7 @@ msgid "Display Name"
 msgstr "Görünen Ad"
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_mail_messages
-msgid "Email"
-msgstr "Eposta"
-
-#. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_mailings
+#: model:ir.ui.menu,name:payment_student.menu_mail
 msgid "Email Settings"
 msgstr "Eposta Ayarları"
 
@@ -386,11 +381,6 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_messages
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__name
@@ -462,9 +452,7 @@ msgid "Payment Discounts"
 msgstr "Ödeme İndirimleri"
 
 #. module: payment_student
-#: model:ir.actions.act_window,name:payment_student.action_item
 #: model:ir.model,name:payment_student.model_payment_item
-#: model:ir.ui.menu,name:payment_student.menu_payment
 msgid "Payment Items"
 msgstr "Ödeme Kalemleri"
 
@@ -517,9 +505,20 @@ msgid ""
 msgstr "Bir ödeme satırı seçtiğinizde ödeme tablosu burada görünecektir"
 
 #. module: payment_student
-#: model:ir.ui.menu,name:payment_student.menu_sms_messages
-msgid "SMS"
-msgstr "SMS"
+#: model:ir.actions.act_window,name:payment_student.action_item
+#: model:ir.ui.menu,name:payment_student.menu_payment
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcılar"
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_sms
+msgid "SMS Settings"
+msgstr "SMS Ayarları"
 
 #. module: payment_student
 #: model:ir.ui.menu,name:payment_student.menu_sms_template
@@ -688,12 +687,6 @@ msgid "There is already a student with the same Vat Number - %s"
 msgstr "Aynı kimlik numarasına sahip bir öğrenci zaten mevcut - %s"
 
 #. module: payment_student
-#: code:addons/payment_student/models/partner.py:0
-#, python-format
-msgid "There isn't any payment item related to this partner"
-msgstr "Bu kayıt ile ilişkili bir ödeme satırı bulunamadı"
-
-#. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
@@ -741,6 +734,19 @@ msgstr ""
 "Aşağıdaki listelenmiş olan velisi olduğunuz öğrenci veya öğrencilerin "
 "seçimlerini yaparak dinamik olarak hesaplanmış olan ödenecek tutar ve "
 "uygulanan indirimleri görebilirsiniz."
+
+#~ msgid "Email"
+#~ msgstr "Eposta"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#, python-format
+#~ msgid "There isn't any payment item related to this partner"
+#~ msgstr "Bu kayıt ile ilişkili bir ödeme satırı bulunamadı"
 
 #~ msgid ""
 #~ "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items Paid</span>"
@@ -851,9 +857,6 @@ msgstr ""
 #, python-format
 #~ msgid "Payment table cannot be related to more than one company"
 #~ msgstr "Ödeme tablosu birden fazla şirketle ilişkili olamaz"
-
-#~ msgid "Payments"
-#~ msgstr "Ödemeler"
 
 #~ msgid "Phone"
 #~ msgstr "Telefon"

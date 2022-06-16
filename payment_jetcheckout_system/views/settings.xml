@@ -35,56 +35,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="app_settings_block" data-string="SMS" string="SMS" data-key="mass_mailing_sms">
-                        <h2>SMS</h2>
-                        <div class="row mt16 o_settings_container" name="sms_provider">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_right_pane">
-                                    <span class="o_form_label">Provider</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                    <div class="text-muted">
-                                        Choose your sms provider
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16">
-                                            <field name="sms_provider"/> <label for="sms_test_provider" class="btn text-primary" string="Test Connection" attrs="{'invisible': ['|',('sms_test_provider','!=',False),('sms_provider','=',False)]}"/><span class="btn btn-disabled" attrs="{'invisible': [('sms_test_provider','=',False)]}">Test Connection</span><i class="fa fa-spin ml-2 fa-circle-o-notch" attrs="{'invisible': [('sms_test_provider','=',False)]}"/>
-                                            <field name="sms_test_provider" class="d-none"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="alert alert-info card ml-5 mt-3 shadow-sm" attrs="{'invisible': [('sms_test_message','=',False)]}">
-                                    <field name="sms_test_message"/>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('sms_provider','=',False)]}">
-                                <div class="o_setting_right_pane">
-                                    <span class="o_form_label">Credentials</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                    <div class="text-muted">
-                                        Enter your credentials
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="row mt16">
-                                            <label for="sms_username" class="col-lg-3 o_light_label" string="Username"/>
-                                            <field name="sms_username" attrs="{'required': [('sms_provider','!=',False)]}"/>
-                                        </div>
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="row mt16">
-                                            <label for="sms_password" class="col-lg-3 o_light_label" string="Password"/>
-                                            <field name="sms_password" password="True" attrs="{'required': [('sms_provider','!=',False)]}"/>
-                                        </div>
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="row mt16">
-                                            <label for="sms_originator" class="col-lg-3 o_light_label" string="Originator"/>
-                                            <field name="sms_originator" attrs="{'required': [('sms_provider','!=',False)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </form>
