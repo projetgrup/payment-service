@@ -134,7 +134,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             company = company or self.env.company
             domain.append(('company_id', '=', company.id))
             if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
-                domain.append(('website_id','=', website.id))
+                domain.append(('website_id', '=', website.id))
 
         acquirer = self.search(domain, limit=limit, order='sequence')
         if not acquirer:
