@@ -196,7 +196,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         sms_template = 'sms' in selections and self.sms_template_id or False
         comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.company_id.id)], limit=1)
+        mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.company_id.id)], limit=1).id
         sms_provider_id = self.env['sms.provider'].get(self.company_id.id).id
         reply_to = self.env.user.email_formatted
         mail_messages = []
@@ -217,7 +217,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                     'body': values['body'],
                     'body_html': values['body'],
                     'model': values['model'],
-                    'mail_server_id': values['mail_server_id'] or mail_server_id,
+                    'mail_server_id': mail_server_id or values['mail_server_id'],
                     'auto_delete': values['auto_delete'],
                     'scheduled_date': values['scheduled_date'],
                     'reply_to': reply_to,
