@@ -83,7 +83,7 @@
 
     <template id="payment_page" name="Payment">
         <t t-call="payment_jetcheckout_api.layout">
-            <t t-set="classname" t-value="'payment-options'"/>
+            <t t-set="classname" t-value="'payment-options px-3'"/>
             <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
                 <div class="align-self-center text-center col-md-1 py-3 text-center">
                     <i class="fa fa-warning h4"/>
