@@ -25,7 +25,7 @@ def migrate(cr, version):
         result = cr.dictfetchall()
         values = []
         for res in result:
-            values.append(f"""({res['id']}, '{res['name']}'""")
+            values.append(f"""({res['id']}, '{res['name']}')""")
         if values:
             query = [
                 """
