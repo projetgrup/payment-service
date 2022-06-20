@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
+from datetime import datetime
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
@@ -19,3 +20,11 @@ class PaymentTransaction(models.Model):
         action['domain'] = [('id', 'in', self.jetcheckout_item_ids.ids)]
         action['context'] = {'create': False, 'edit': False, 'delete': False}
         return action
+
+    def _jetcheckout_cancel_postprocess(self):
+        super()._jetcheckout_cancel_postprocess()
+        self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
+
+    def _jetcheckout_done_postprocess(self):
+        super()._jetcheckout_done_postprocess()
+        self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})

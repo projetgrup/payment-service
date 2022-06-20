@@ -5,7 +5,7 @@
 
 {
     'name': 'Jetcheckout Payment Acquirer',
-    'version': '1.1',
+    'version': '1.2',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',

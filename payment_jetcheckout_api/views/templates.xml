@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="payment_page" name="Payment">
+    <template id="layout" name="Payment Layout">
         <t t-call="web.layout">
-            <t t-set="no_header" t-value="True"/>
-            <t t-set="no_footer" t-value="True"/>
-            <t t-set="class" t-value="True"/>
-            <t t-set="title" t-value="website.name"/>
-            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <title t-esc="title or 'Odoo'"/>
-            <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
-            <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
             <t t-set="head_website">
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+                <meta http-equiv="Pragma" content="no-cache"/>
+                <meta http-equiv="Expires" content="0"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
                 <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
                 <t t-call-assets="web.assets_common" t-js="false"/>
@@ -28,125 +23,12 @@
                 <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
             </t>
             <t t-set="head" t-value="head_website + (head or '')"/>
-            <div class="o_payment_loading">
-                <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
-            </div>
-            <div class="header row mx-0 card border p-2 px-lg-5">
-                <div class="px-xl-3 mx-xl-auto mw-xl-128">
-                    <img t-att-src="'/web/image/res.company/%s/logo' % tx.company_id.id" t-att-alt="tx.company_id.name"/>
-                </div>
-            </div>
-            <div class="px-lg-5 mx-xl-auto mw-xl-128 payment-options">
-                <div class="row mx-0 my-4 card border shadow p-4">
-                    <div class="text-center text-primary h5 font-weight-bold position-relative">
-                        Hizmet ve Sözleşme Bilgileriniz
-                    </div>
-                    <div class="row mx-0 my-2">
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
-                                <strong class="text-primary font-weight-bold">Hizmet Sağlayıcı Bilgileri</strong>
-                                <p>
-                                    <t t-esc="tx.partner_name"/><br/>
-                                    <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
-                                </p>
-                                <strong class="text-primary font-weight-bold">Yetkili Kişi</strong>
-                                <p>
-                                    <t t-esc="tx.partner_authorized"/><br/>
-                                    <t t-esc="tx.partner_email"/>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold">Ürün Bilgileri</strong>
-                                <p>
-                                    <t t-esc="tx.jetcheckout_api_product"/>
-                                </p><br/>
-                                <strong class="text-primary font-weight-bold text-right">Tutar (KDV Dahil)</strong>
-                                <p class="h2 text-right font-weight-bold">
-                                    <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
-                        <div class="align-self-center text-center col-md-1 py-3 text-center">
-                            <i class="fa fa-warning h4"/>
-                        </div>
-                        <div class="col-md-11 py-3">
-                            <strong>Bilgilendirme</strong>
-                            <p class="mt-3">
-                                Bu satış işlemi için daha önce Banka Transferi yöntemi ile bir işlem yaptığınızı görüyoruz. Eğer yeni bir ödeme yöntemi ile işleminize devam ederseniz önceki işleminiz iptal edilecektir.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
-                        Ödeme Yöntemi Seçiniz
-                    </div>
-                    <div class="row mx-0 w-100 px-3">
-                        Aşağıdaki ödeme yöntemlerinden birini seçerek işleminize devam edebilirsiniz.
-                    </div>
-                    <div class="row mx-0 w-100 card shadow mt-3">
-                        <t t-foreach="acquirers" t-as="acquirer">
-                            <div class="row mx-0 w-100 payment-option border-bottom">
-                                <div class="align-self-center text-center col-md-1 py-3 text-md-right text-center">
-                                    <i t-attf-class="fa text-primary h4 #{acquirer.display_icon}"/>
-                                </div>
-                                <div class="col-md-7 py-3">
-                                    <div class="row mx-0 w-100 h5">
-                                        <t t-esc="acquirer.display_as or acquirer.name"/>
-                                        <span t-if="acquirer.state == 'test'" class="badge badge-warning ml-3">Test</span>
-                                    </div>
-                                    <div class="row mx-0 w-100 font-weight-light">
-                                        <t t-esc="acquirer.pre_msg"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-right align-self-center">
-                                    <ul class="mb-0 list-inline payment_icon_list">
-                                        <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
-                                            <li class="list-inline-item">
-                                                <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
-                                            </li>
-                                        </t>
-                                    </ul>
-                                </div>
-                                <input type="hidden" t-att-value="'bank' if acquirer.provider == 'transfer' else 'card'"/>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="payment_bank_page" name="Bank Payment">
-        <t t-call="web.layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
-            <t t-set="head_website">
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_frontend" t-js="false"/>
-                <script type="text/javascript">
-                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
-                    if (!/(^|;\s)tz=/.test(document.cookie)) {
-                        const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        document.cookie = `tz=${userTZ}; path=/`;
-                    }
-                </script>
-                <t t-call-assets="web.assets_common_minimal" t-css="false" defer_load="True"/>
-                <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
-                <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
-                <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
-            </t>
-            <t t-set="head" t-value="head_website + (head or '')"/>
             <div class="o_payment_loading">
                 <i class="fa fa-spin fa-circle-o-notch text-primary h2"/>
             </div>
@@ -155,24 +37,24 @@
                     <img t-att-src="'/web/image/res.company/%s/logo' % tx.company_id.id" t-att-alt="tx.company_id.name"/>
                 </div>
             </div>
-            <div class="px-lg-5 mx-xl-auto mw-xl-128 payment-bank">
+            <div class="px-lg-5 mx-xl-auto mw-xl-128">
                 <div class="row mx-0 my-4 card border shadow p-4">
                     <div class="text-center text-primary h5 font-weight-bold position-relative">
-                        <a t-if="not success" class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Geri</a>
-                        Hizmet ve Sözleşme Bilgileriniz
+                        <a t-if="not tx_pending" class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
+                        Payment Information
                     </div>
                     <div class="row mx-0 my-2">
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
-                                <strong class="text-primary font-weight-bold">Hizmet Sağlayıcı Bilgileri</strong>
+                                <strong class="text-primary font-weight-bold">Partner</strong>
                                 <p>
                                     <t t-esc="tx.partner_name"/><br/>
                                     <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
                                 </p>
-                                <strong class="text-primary font-weight-bold">Yetkili Kişi</strong>
+                                <strong class="text-primary font-weight-bold">Contact</strong>
                                 <p>
-                                    <t t-esc="tx.partner_authorized"/><br/>
+                                    <t t-esc="tx.jetcheckout_api_contact"/><br/>
                                     <t t-esc="tx.partner_email"/>
                                 </p>
                             </div>
@@ -180,177 +62,173 @@
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold">Ürün Bilgileri</strong>
+                                <strong class="text-primary font-weight-bold">Product</strong>
                                 <p>
                                     <t t-esc="tx.jetcheckout_api_product"/>
                                 </p><br/>
-                                <strong class="text-primary font-weight-bold text-right">Tutar (KDV Dahil)</strong>
+                                <strong class="text-primary font-weight-bold text-right">Amount</strong>
                                 <p class="h3 text-right font-weight-bold">
                                     <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div t-if="success" id="result" class="row mx-3 border card p-4 text-center">
-                        <div class="text-success h1"><i class="border-success fa fa-check p-3" style="border-radius: 50%; border-style: solid; border-width: 1px;"></i></div>
-                        <div class="text-success mt-3">Sipariş Kodunuz</div>
-                        <div class="font-weight-bold h2 text-center text-success"><t t-esc="tx.jetcheckout_api_ref"/></div>
-                        <div class="mt-4">Siparişiniz başarıyla oluşturulmuştur. Yukarıda belirtilen size özel kod ile yapacağınız eft/havale ödemenizden sonra siparişiniz tamamlanacak ve paketiniz hesabınıza otomatik olarak tanımlanacaktır.</div>
-                        <div class="mt-4"><button id="return" class="btn btn-primary"><i class="fa fa-arrow-right mr-3"></i>Sözleşmeye Git</button></div>
-                    </div>
-                    <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
-                        Banka Hesaplarımız
-                    </div>
-                    <div class="row mx-0 w-100 px-3">
-                        Aşağıdaki banka hesaplarımızı Havale veya EFT işlemleriniz için kullanabilirsiniz.
-                    </div>
-                    <t t-foreach="tx.acquirer_id.jetcheckout_bank_ids" t-as="bank">
-                        <div class="row mx-0 w-100 card shadow mt-3">
-                            <div class="row mx-0 w-100">
-                                <div class="align-self-center text-center col-md-3 py-3 text-center">
-                                    <img t-att-src="'/web/image/payment.acquirer.jetcheckout.bank/%s/logo' % bank.id" t-att-alt="bank.name" width="100"/>
-                                </div>
-                                <div class="col-md-4 py-3">
-                                    <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
-                                        IBAN
-                                    </div>
-                                    <div>
-                                        <t t-esc="bank.iban_number"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 py-3">
-                                    <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
-                                        Hesap Numarası
-                                    </div>
-                                    <div>
-                                        <t t-esc="bank.account_number"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 py-3">
-                                    <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
-                                        Şube
-                                    </div>
-                                    <div>
-                                        <t t-esc="bank.branch"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                    <div class="row mx-0 w-100 px-3 mt48">
-                        <t t-raw="tx.acquirer_id.pending_msg"/>
-                    </div>
-                    <div t-if="not success" class="row mx-0 w-100 px-3 mt-4">
-                        <div class="col-md-9 small align-self-center">
-                            Onayla butonuna tıkladığınızda size özel olarak üretilen sipariş numarası ile Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz.
-                        </div>
-                        <div class="col-md-3">
-                            <button id="validate" class="btn btn-primary btn-block px-5 font-weight-bold">Onayla</button>
-                        </div>
+                    <div t-attf-class="row mx-0 #{classname}">
+                        <t t-raw="0"/>
                     </div>
                 </div>
             </div>
         </t>
     </template>
 
-    <template id="payment_card_page" name="Credit Card Payment">
-        <t t-call="web.layout">
-            <t t-set="no_header" t-value="True"/>
-            <t t-set="no_footer" t-value="True"/>
-            <t t-set="class" t-value="True"/>
-            <t t-set="title" t-value="website.name"/>
-            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
-            <t t-set="head_website">
-                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-                <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_frontend" t-js="false"/>
-                <script type="text/javascript">
-                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
-                    if (!/(^|;\s)tz=/.test(document.cookie)) {
-                        const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        document.cookie = `tz=${userTZ}; path=/`;
-                    }
-                </script>
-                <t t-call-assets="web.assets_common_minimal" t-css="false" defer_load="True"/>
-                <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
-                <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
-                <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
-            </t>
-            <t t-set="head" t-value="head_website + (head or '')"/>
-            <div class="header row mx-0 card border p-2 px-lg-5">
-                <div class="px-xl-3 mx-xl-auto mw-xl-128">
-                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
+    <template id="payment_page" name="Payment">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-options'"/>
+            <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
+                <div class="align-self-center text-center col-md-1 py-3 text-center">
+                    <i class="fa fa-warning h4"/>
+                </div>
+                <div class="col-md-11 py-3">
+                    <strong>Notification</strong>
+                    <p class="mt-3">
+                        We have seen that you have recorded a Bank Transfer payment before for this order. If you continue with a new payment option, previous transaction will be cancelled.
+                    </p>
                 </div>
             </div>
-            <div class="px-lg-5 mx-xl-auto mw-xl-128">
-                <div class="row mx-0 my-4 card border shadow p-4">
-                    <div class="my-4 text-center text-primary h5 font-weight-bold position-relative">
-                        <a class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Geri</a>
-                        Hizmet ve Sözleşme Bilgileriniz
-                    </div>
-                    <div class="row mx-0 my-2">
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
-                                <strong class="text-primary font-weight-bold">Hizmet Sağlayıcı Bilgileri</strong>
-                                <p>
-                                    <t t-esc="tx.partner_name"/><br/>
-                                    <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
-                                </p>
-                                <strong class="text-primary font-weight-bold">Yetkili Kişi</strong>
-                                <p>
-                                    <t t-esc="tx.partner_authorized"/><br/>
-                                    <t t-esc="tx.partner_email"/>
-                                </p>
+            <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
+                Select a Payment Type
+            </div>
+            <div class="row mx-0 w-100 px-3">
+                You can continue the transaction with choosing one of the following payment methods.
+            </div>
+            <div class="row mx-0 w-100 card shadow mt-3">
+                <t t-foreach="acquirers" t-as="acquirer">
+                    <div t-att-name="'bank' if acquirer.provider == 'transfer' else 'card'" class="row mx-0 w-100 payment-option border-bottom">
+                        <div class="align-self-center text-center col-md-1 py-3 text-md-right text-center">
+                            <i t-attf-class="fa text-primary h4 #{acquirer.display_icon}"/>
+                        </div>
+                        <div class="col-md-7 py-3">
+                            <div class="row mx-0 w-100 h5">
+                                <t t-esc="acquirer.display_as or acquirer.name"/>
+                                <span t-if="acquirer.state == 'test'" class="badge badge-warning ml-3">Test</span>
+                            </div>
+                            <div class="row mx-0 w-100 font-weight-light">
+                                <t t-esc="acquirer.pre_msg"/>
                             </div>
                         </div>
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold z-index-1">Ürün Bilgileri</strong>
-                                <p class="z-index-1">
-                                    <t t-esc="tx.jetcheckout_api_product"/>
-                                </p><br/>
-                                <strong class="text-primary font-weight-bold text-right z-index-1">Tutar (KDV Dahil)</strong>
-                                <p class="h2 text-right font-weight-bold z-index-1">
-                                    <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': currency['self']}"/>
-                                </p>
+                        <div class="col-md-4 text-right align-self-center">
+                            <ul class="mb-0 list-inline payment_icon_list">
+                                <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                                    <li class="list-inline-item">
+                                        <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment_bank_page" name="Bank Payment">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-bank'"/>
+            <t t-set="tx_pending" t-value="tx.state == 'pending'"/>
+            <div t-if="tx_pending" id="result" class="row mx-3 border card p-4 text-center w-100">
+                <div class="text-success h1"><i class="border-success fa fa-check p-3" style="border-radius: 50%; border-style: solid; border-width: 1px;"></i></div>
+                <div class="text-success mt-3">Order Reference</div>
+                <div class="font-weight-bold h2 text-center text-success"><t t-esc="tx.jetcheckout_api_order"/></div>
+                <div class="mt-4">Please use this code in your bank transfer description for confirming transaction.</div>
+                <div class="mt-4"><button id="return" class="btn btn-primary"><i class="fa fa-arrow-right mr-3" t-translations="off"/>Continue</button></div>
+            </div>
+            <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
+                Bank Accounts
+            </div>
+            <div class="row mx-0 w-100 px-3">
+                You can pick one of the following bank accounts for your bank transfer transaction.
+            </div>
+            <t t-foreach="tx.acquirer_id.jetcheckout_bank_ids" t-as="bank">
+                <div class="row mx-0 w-100 card shadow mt-3">
+                    <div class="row mx-0 w-100">
+                        <div class="align-self-center text-center col-md-3 py-3 text-center">
+                            <img t-att-src="'/web/image/payment.acquirer.jetcheckout.bank/%s/logo' % bank.id" t-att-alt="bank.name" width="100"/>
+                        </div>
+                        <div class="col-md-4 py-3">
+                            <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
+                                IBAN
+                            </div>
+                            <div>
+                                <t t-esc="bank.iban_number"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3 py-3">
+                            <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
+                                Account Number
+                            </div>
+                            <div>
+                                <t t-esc="bank.account_number"/>
+                            </div>
+                        </div>
+                        <div class="col-md-2 py-3">
+                            <div t-attf-class="font-weight-bold" t-attf-style="color:#{bank.color} !important">
+                                Branch
+                            </div>
+                            <div>
+                                <t t-esc="bank.branch"/>
                             </div>
                         </div>
                     </div>
-                    <div class="justify-content-center mx-0 w-100">
-                        <input id="amount" type="hidden" name="amount" t-att-value="tx.amount"/>
-                        <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
-                        <input id="order" type="hidden" value="0"/>
-                        <input id="system" type="hidden" value="api"/>
-                        <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
-                            <t t-set="no_border" t-value="True"/>
+                </div>
+            </t>
+            <div class="row mx-0 w-100 px-3 mt48">
+                <t t-raw="tx.acquirer_id.pending_msg"/>
+            </div>
+            <div t-if="not tx_pending" class="row mx-0 w-100 px-3 mt-4">
+                <div class="col-md-9 small align-self-center">
+                    Click confirm and keep the code for your bank transfer transaction which is produced especially for you.
+                </div>
+                <div class="col-md-3">
+                    <button id="confirm" class="btn btn-primary btn-block px-5 font-weight-bold">Confirm</button>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment_card_page" name="Credit Card Payment">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'px-3'"/>
+            <div class="row w-100 mx-0 my-4 card border shadow p-4">
+                <div class="justify-content-center mx-0 w-100">
+                    <input id="amount" type="hidden" name="amount" t-att-value="tx.amount"/>
+                    <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
+                    <input id="order" type="hidden" value="0"/>
+                    <input id="system" type="hidden" value="api"/>
+                    <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
+                        <t t-set="no_border" t-value="True"/>
+                    </t>
+                </div>
+            </div>
+            <div class="row w-100 mx-0 mt-4 pb-1 border-bottom">
+                <div class="col-md-12">
+                    <ul class="mb-0 list-inline payment_icon_list">
+                        <t t-foreach="card_family" t-as="card">
+                            <li class="list-inline-item">
+                                <img t-att-src="card" alt="" height="40" class="card p-2"/>
+                            </li>
                         </t>
-                    </div>
+                    </ul>
                 </div>
-                <div class="row mx-0 mt-4 pb-1 border-bottom">
-                    <div class="col-md-12">
-                        <ul class="mb-0 list-inline payment_icon_list">
-                            <t t-foreach="card_family" t-as="card">
-                                <li class="list-inline-item">
-                                    <img t-att-src="card" alt="" height="40" class="card p-2"/>
-                                </li>
-                            </t>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row mx-0 pt-1">
-                    <div class="col-md-12 my-2">
-                        <ul class="mb-0 list-inline payment_icon_list">
-                            <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
-                                <li class="list-inline-item">
-                                    <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
-                                </li>
-                            </t>
-                        </ul>
-                    </div>
+            </div>
+            <div class="row w-100 mx-0 pt-1">
+                <div class="col-md-12 my-2">
+                    <ul class="mb-0 list-inline payment_icon_list">
+                        <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                            <li class="list-inline-item">
+                                <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
+                            </li>
+                        </t>
+                    </ul>
                 </div>
             </div>
         </t>

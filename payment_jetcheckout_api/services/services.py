@@ -58,27 +58,28 @@ class PaymentAPIService(Component):
         """
         Prepare Payment
         """
-        PrepareResponse = self.env.datamodels["payment.prepare.output"]
+        Response = self.env.datamodels["payment.prepare.output"]
         try:
             company = self.env.company.id
 
             api = self._check_auth(company, params.application_key)
             if not api:
-                return PrepareResponse(**RESPONSE['no_api_key'])
+                return Response(**RESPONSE['no_api_key'])
 
             hash = self._check_hash(api, params.hash, params.id)
             if not hash:
-                return PrepareResponse(**RESPONSE['no_hash_match'])
+                return Response(**RESPONSE['no_hash_match'])
 
             self._create_transaction(api, hash, params)
-            return PrepareResponse(hash=params.hash, **RESPONSE['success'])
+            return Response(hash=params.hash, **RESPONSE['success'])
         except Exception as e:
-            _logger.error(str(e))
-            return PrepareResponse(**RESPONSE['exception'])
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
 
     @restapi.method(
         [(["/result"], "POST")],
-        input_param=Datamodel("payment.result.input"),
+        input_param=Datamodel("payment.hash.input"),
         output_param=Datamodel("payment.result.output"),
         auth="public",
     )
@@ -86,23 +87,108 @@ class PaymentAPIService(Component):
         """
         Get Payment Result
         """
-        ResultResponse = self.env.datamodels["payment.result.output"]
+        Response = self.env.datamodels["payment.result.output"]
         try:
             company = self.env.company.id
 
             api = self._check_auth(company, params.application_key)
             if not api:
-                return ResultResponse(**RESPONSE['no_api_key'])
+                return Response(**RESPONSE['no_api_key'])
 
             tx = self._get_transaction(params.hash)
             if not tx:
-                return ResultResponse(**RESPONSE['no_transaction'])
+                return Response(**RESPONSE['no_transaction'])
 
             result = self._get_payment_result(tx)
-            return ResultResponse(**result,**RESPONSE['success'])
+            return Response(**result,**RESPONSE['success'])
         except Exception as e:
-            _logger.error(str(e))
-            return ResultResponse(**RESPONSE['exception'])
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
+
+    @restapi.method(
+        [(["/cancel"], "POST")],
+        input_param=Datamodel("payment.token.input"),
+        output_param=Datamodel("payment.response"),
+        auth="public",
+    )
+    def payment_cancel(self, params):
+        """
+        Cancel Payment
+        """
+        Response = self.env.datamodels["payment.response"]
+        try:
+            company = self.env.company.id
+            api = self._check_auth(company, params.application_key)
+            if not api:
+                return Response(**RESPONSE['no_api_key'])
+
+            tx = self._get_transaction_from_token(params.token)
+            if not tx:
+                return Response(**RESPONSE['no_transaction'])
+
+            self._cancel_payment(tx)
+            return Response(**RESPONSE['success'])
+        except Exception as e:
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
+
+    @restapi.method(
+        [(["/refund"], "POST")],
+        input_param=Datamodel("payment.refund.input"),
+        output_param=Datamodel("payment.response"),
+        auth="public",
+    )
+    def payment_refund(self, params):
+        """
+        Refund Payment
+        """
+        Response = self.env.datamodels["payment.response"]
+        try:
+            company = self.env.company.id
+            api = self._check_auth(company, params.application_key)
+            if not api:
+                return Response(**RESPONSE['no_api_key'])
+
+            tx = self._get_transaction_from_token(params.token)
+            if not tx:
+                return Response(**RESPONSE['no_transaction'])
+
+            self._refund_payment(tx, params.amount)
+            return Response(**RESPONSE['success'])
+        except Exception as e:
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
+
+    @restapi.method(
+        [(["/status"], "POST")],
+        input_param=Datamodel("payment.token.input"),
+        output_param=Datamodel("payment.status.output"),
+        auth="public",
+    )
+    def payment_status(self, params):
+        """
+        Payment Status
+        """
+        Response = self.env.datamodels["payment.status.output"]
+        try:
+            company = self.env.company.id
+            api = self._check_auth(company, params.application_key)
+            if not api:
+                return Response(**RESPONSE['no_api_key'])
+
+            tx = self._get_transaction_from_token(params.token)
+            if not tx:
+                return Response(**RESPONSE['no_transaction'])
+
+            result = self._query_payment(tx)
+            return Response(**result, **RESPONSE['success'])
+        except Exception as e:
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
 
     # PRIVATE METHODS
     def _check_auth(self, company, apikey, secretkey=False):
@@ -118,9 +204,9 @@ class PaymentAPIService(Component):
         return hash
 
     def _create_transaction(self, api, hash, params):
-        country = self.env['res.country'].sudo().search([('code','=',params.customer['country_code'])], limit=1) if 'country_code' in params.customer else False
+        country = self.env['res.country'].sudo().search([('code','=',params.partner['country_code'])], limit=1) if 'country_code' in params.partner else False
         if country:
-            state = self.env['res.country.state'].sudo().search([('country_id','=',country.id),('code','=',params.customer['state_code'])], limit=1) if 'state_code' in params.customer else False
+            state = self.env['res.country.state'].sudo().search([('country_id','=',country.id),('code','=',params.partner['state_code'])], limit=1) if 'state_code' in params.partner else False
         else:
             state = False
 
@@ -138,27 +224,32 @@ class PaymentAPIService(Component):
             'currency_id': api.company_id.currency_id.id,
             'company_id': api.company_id.id,
             'state': 'draft',
-            'partner_authorized': params.customer['authorized'],
-            'jetcheckout_ip_address': params.customer['ip_address'],
-            'jetcheckout_api_ref': params.order['name'],
+            'jetcheckout_api_contact': params.partner['contact'],
+            'jetcheckout_ip_address': params.partner['ip_address'],
+            'jetcheckout_api_order': params.order['name'],
             'jetcheckout_api_product': params.product['name'],
             'jetcheckout_api_hash': hash,
-            'jetcheckout_api_tx': params.id,
-            'jetcheckout_api_return_url': params.return_url,
+            'jetcheckout_api_id': params.id,
+            'jetcheckout_api_bank_return_url': params.bank_return_url,
+            'jetcheckout_api_bank_webhook_url': params.bank_webhook_url,
+            'jetcheckout_api_card_return_url': params.card_return_url,
         })
         tx.write({
-            'partner_name': params.customer['name'],
-            'partner_email': params.customer['email'],
-            'partner_address': params.customer['address'],
-            'partner_phone': params.customer['phone'],
-            'partner_zip': params.customer['zip'],
-            'partner_city': params.customer['city'],
+            'partner_name': params.partner['name'],
+            'partner_email': params.partner['email'],
+            'partner_address': params.partner['address'],
+            'partner_phone': params.partner['phone'],
+            'partner_zip': params.partner['zip'],
+            'partner_city': params.partner['city'],
             'partner_country_id': country and country.id or False,
             'partner_state_id': state and state.id or False,
         })
 
     def _get_transaction(self, hash):
         return self.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', hash)], limit=1)
+
+    def _get_transaction_from_token(self, token):
+        return self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', token)], limit=1)
 
     def _get_payment_result(self, tx):
         return {
@@ -181,3 +272,14 @@ class PaymentAPIService(Component):
             'customer_rate': tx.jetcheckout_customer_rate,
             'customer_amount': tx.jetcheckout_customer_amount,
         }
+
+    def _cancel_payment(self, tx):
+        tx._jetcheckout_cancel()
+
+    def _refund_payment(self, tx, amount):
+        tx._jetcheckout_refund(amount)
+
+    def _query_payment(self, tx):
+        vals = tx._jetcheckout_query()
+        del vals['currency_id']
+        return vals

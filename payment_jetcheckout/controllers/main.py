@@ -204,10 +204,8 @@ class JetcheckoutController(http.Controller):
 
         url = kwargs.get('result_url', '/payment/card/result')
         if kwargs.get('response_code') == "00":
-            tx.write({'state': 'done'})
-            tx.jetcheckout_validate_order()
             domain = request.httprequest.referrer
-            tx.with_context(domain=domain).jetcheckout_payment()
+            tx.with_context(domain=domain)._jetcheckout_done_postprocess()
         else:
             tx.write({
                 'state': 'error',
@@ -281,8 +279,8 @@ class JetcheckoutController(http.Controller):
         invoice_id = int(kwargs.get('invoice'))
         partner = request.env['res.partner'].sudo().browse(self._jetcheckout_get_partner(**kwargs))
 
-        if kwargs.get('api'):
-            tx = self._jetcheckout_get_transaction()
+        tx = self._jetcheckout_get_transaction()
+        if tx:
             tx_vals = {
                 'acquirer_id': acquirer.id,
                 'jetcheckout_ip_address': tx.jetcheckout_ip_address or request.httprequest.remote_addr,
