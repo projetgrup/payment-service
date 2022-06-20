@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
-from datetime import datetime
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -38,7 +37,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
 
-    def _jetcheckout_s2s_get_tx_status(self):
+    def _jetcheckout_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
@@ -57,12 +56,15 @@ class PaymentTransaction(models.Model):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def _jetcheckout_create_payment(self):
+    def _jetcheckout_payment_create(self):
+        if self.payment_id:
+            return
+
         self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
         payment_method_line = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
         line = self.env['payment.acquirer.jetcheckout.journal'].sudo().search([
             ('acquirer_id','=',self.acquirer_id.id),
-            ('pos_id.name','=',self.jetcheckout_vpos_name),
+            ('name','=',self.jetcheckout_vpos_name),
         ], limit=1)
         if not line:
             raise UserError(_('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name))
@@ -88,7 +90,14 @@ class PaymentTransaction(models.Model):
             self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
             (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
 
-    def jetcheckout_s2s_do_refund(self, amount=0.0, **kwargs):
+    def _jetcheckout_refund_postprocess(self):
+        if not self.state == 'cancel':
+            self.write({
+                'state': 'cancel',
+                'state_message': _('Transaction has been refunded successfully.')
+            })
+
+    def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
         self.ensure_one()
         url = '%s/api/v1/payment/refund' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
@@ -112,12 +121,9 @@ class PaymentTransaction(models.Model):
 
         if 'error' in values:
             raise UserError(values['error'])
-        self.write({
-            'state': 'cancel',
-            'state_message': _('Transaction has been refunded successfully.')
-        })
+        self._jetcheckout_refund_postprocess()
 
-    def jetcheckout_s2s_do_cancel(self, **kwargs):
+    def _jetcheckout_api_cancel(self, **kwargs):
         self.ensure_one()
         url = '%s/api/v1/payment/cancel' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
@@ -138,14 +144,20 @@ class PaymentTransaction(models.Model):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def jetcheckout_validate_order(self):
+    def _jetcheckout_done_postprocess(self):
+        if not self.state == 'done':
+            self.write({'state': 'done'})
+            self.jetcheckout_order_confirm()
+            self.jetcheckout_payment()
+
+    def jetcheckout_order_confirm(self):
         self.ensure_one()
         orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids
         if not orders:
             return
         try:
             self.env.cr.commit()
-            orders.with_context(send_email=True).action_confirm()
+            orders.filtered(lambda x: x.state not in ('sale','done')).with_context(send_email=True).action_confirm()
         except Exception as e:
             self.env.cr.rollback()
 
@@ -153,7 +165,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         try:
             self.env.cr.commit()
-            self.sudo()._jetcheckout_create_payment()
+            self.sudo()._jetcheckout_payment_create()
             self.write({
                 'state_message': _('Transaction is succesful and payment has been validated.'),
             })
@@ -163,16 +175,29 @@ class PaymentTransaction(models.Model):
                 'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
             })
 
-    def jetcheckout_cancel(self):
+    def _jetcheckout_cancel_postprocess(self):
+        if not self.state == 'cancel':
+            self.write({
+                'state': 'cancel',
+                'state_message': _('Transaction has been cancelled successfully.')
+            })
+
+    def _jetcheckout_cancel(self):
         self.ensure_one()
-        values = self.jetcheckout_s2s_do_cancel()
+        values = self._jetcheckout_api_cancel()
         if 'error' in values:
             raise UserError(values['error'])
-        self.write({
-            'state': 'cancel',
-            'state_message': _('Transaction has been cancelled successfully.')
-        })
-        self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
+        self._jetcheckout_cancel_postprocess()
+
+    def jetcheckout_cancel(self):
+        self.ensure_one()
+        self._jetcheckout_cancel()
+
+    def _jetcheckout_refund(self, amount):
+        self.ensure_one()
+        if amount > self.amount:
+            raise UserError(_('Refund amount cannot be higher than total amount'))
+        self._jetcheckout_api_refund(amount)
 
     def jetcheckout_refund(self):
         self.ensure_one()
@@ -194,28 +219,31 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_process_query(self, vals):
         if vals['successful']:
             if vals['cancelled']:
-                state = 'cancel'
+                self._jetcheckout_cancel_postprocess()
             else:
-                state = 'done'
-                self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
+                self._jetcheckout_done_postprocess()
         else:
-            state = 'error'
-        self.write({'state': state})
+            if not self.state == 'error':
+                self.write({
+                    'state': 'error',
+                    'state_message': 'Ödeme başarısız.',
+                })
 
-    def jetcheckout_query(self):
+    def _jetcheckout_query(self):
         self.ensure_one()
-        values = self._jetcheckout_s2s_get_tx_status()
+        values = self._jetcheckout_api_status()
         if 'error' in values:
             raise UserError(values['error'])
 
         result = values['result']
         vals = {
-            'transaction_date': result['transaction_date'][:19],
-            'vpos_id': result['virtual_pos_name'],
-            'is_successful': result['successful'],
-            'is_completed': result['completed'],
-            'is_cancelled': result['cancelled'],
-            'is_3d': result['is_3d'],
+            'date': result['transaction_date'][:19],
+            'name': result['virtual_pos_name'],
+            'successful': result['successful'],
+            'completed': result['completed'],
+            'cancelled': result['cancelled'],
+            'refunded': result['cancelled'],
+            'threed': result['is_3d'],
             'amount': result['amount'],
             'commission': result['commission_amount'],
             'cost_rate': result['expected_cost_rate'],
@@ -224,6 +252,11 @@ class PaymentTransaction(models.Model):
             'currency_id': self.currency_id.id,
         }
         self._jetcheckout_process_query(result)
+        return vals
+
+    def jetcheckout_query(self):
+        self.ensure_one()
+        vals = self._jetcheckout_query()
         status = self.env['payment.acquirer.jetcheckout.status'].create(vals)
         return {
             'type': 'ir.actions.act_window',
