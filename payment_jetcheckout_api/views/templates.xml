@@ -40,7 +40,7 @@
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
                 <div class="row mx-0 my-4 card border shadow p-4">
                     <div class="text-center text-primary h5 font-weight-bold position-relative">
-                        <a t-if="not tx_pending" class="btn card d-block ml-3 position-absolute shadow-sm text-600" href="/payment"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
+                        <a t-if="not tx_pending and back_url" class="btn card d-block ml-3 position-absolute shadow-sm text-600" t-att-href="back_url"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
                         Payment Information
                     </div>
                     <div class="row mx-0 my-2">
@@ -84,6 +84,7 @@
     <template id="payment_page" name="Payment">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-options px-3'"/>
+            <t t-set="back_url" t-value="tx.jetcheckout_api_bank_return_url"/>
             <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
                 <div class="align-self-center text-center col-md-1 py-3 text-center">
                     <i class="fa fa-warning h4"/>
@@ -135,6 +136,7 @@
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-bank'"/>
             <t t-set="tx_pending" t-value="tx.state == 'pending'"/>
+            <t t-set="back_url" t-value="'/payment'"/>
             <div t-if="tx_pending" id="result" class="row mx-3 border card p-4 text-center w-100">
                 <div class="text-success h1"><i class="border-success fa fa-check p-3" style="border-radius: 50%; border-style: solid; border-width: 1px;"></i></div>
                 <div class="text-success mt-3">Order Reference</div>
@@ -198,6 +200,7 @@
     <template id="payment_card_page" name="Credit Card Payment">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'px-3'"/>
+            <t t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="amount" type="hidden" name="amount" t-att-value="tx.amount"/>
