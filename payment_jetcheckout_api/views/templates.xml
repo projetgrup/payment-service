@@ -206,6 +206,7 @@
                     <input id="system" type="hidden" value="api"/>
                     <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
                         <t t-set="no_border" t-value="True"/>
+                        <t t-set="no_loading" t-value="True"/>
                     </t>
                 </div>
             </div>

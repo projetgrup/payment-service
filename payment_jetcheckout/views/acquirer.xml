@@ -131,7 +131,7 @@
                 </group>
             </group>
             <footer>
-                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
             </footer>
         </form>
     </field>
@@ -155,7 +155,7 @@
             </group>
             <footer>
                 <button name="confirm" type="object" class="btn-primary" string="Refund" icon="fa-undo"/>
-                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
             </footer>
         </form>
     </field>

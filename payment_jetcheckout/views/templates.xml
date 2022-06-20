@@ -48,7 +48,7 @@
             <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
             <t t-set="no_button" t-value="False"/>
             <t t-set="no_card_family" t-value="False"/>
-            <t t-set="no_loading" t-value="False"/>
+            <t t-set="no_loading" t-value="no_loading"/>
         </t>
         <t t-if="data">
             <input id="amount" type="hidden" name="amount" t-att-value="data.amount_total if not account else data.recurring_total"/>
