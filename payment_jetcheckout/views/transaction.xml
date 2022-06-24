@@ -70,10 +70,10 @@
                 <group>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>
+                    <field name="jetcheckout_vpos_name"/>
+                    <field name="jetcheckout_ip_address"/>
                     <field name="jetcheckout_order_id"/>
                     <field name="jetcheckout_transaction_id"/>
-                    <field name="jetcheckout_ip_address"/>
-                    <field name="jetcheckout_vpos_name"/>
                 </group>
             </group>
         </xpath>
