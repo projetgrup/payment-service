@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-10 19:07+0000\n"
-"PO-Revision-Date: 2022-06-10 19:07+0000\n"
+"POT-Creation-Date: 2022-06-20 09:40+0000\n"
+"PO-Revision-Date: 2022-06-20 09:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,52 +16,50 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid ""
 "<br/>\n"
-"                                <strong class=\"text-primary font-weight-bold text-right z-index-1\">Tutar (KDV Dahil)</strong>"
+"                                <strong class=\"text-primary font-weight-bold text-right\">Amount</strong>"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "<strong class=\"text-primary font-weight-bold\">Contact</strong>"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "<strong class=\"text-primary font-weight-bold\">Partner</strong>"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "<strong class=\"text-primary font-weight-bold\">Product</strong>"
+msgstr ""
+
+#. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid ""
-"<br/>\n"
-"                                <strong class=\"text-primary font-weight-bold text-right\">Tutar (KDV Dahil)</strong>"
+msgid "<strong>Notification</strong>"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid "<i class=\"fa fa-arrow-right mr-3\"/>Devam Et"
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_bank_return_url
+msgid "API Bank Return URL"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
-msgid ""
-"<strong class=\"text-primary font-weight-bold z-index-1\">Ürün "
-"Bilgileri</strong>"
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_bank_webhook_url
+msgid "API Bank Webhook URL"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid ""
-"<strong class=\"text-primary font-weight-bold\">Hizmet Sağlayıcı "
-"Bilgileri</strong>"
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_card_return_url
+msgid "API Card Return URL"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid "<strong class=\"text-primary font-weight-bold\">Yetkili Kişi</strong>"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid "<strong class=\"text-primary font-weight-bold\">Ürün Bilgileri</strong>"
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_contact
+msgid "API Contact"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -80,14 +78,8 @@ msgid "API Key will be here"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.api_form
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.api_tree
-msgid "API Keys"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__partner_authorized
-msgid "API Partner Authorized"
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_order
+msgid "API Order"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -96,24 +88,13 @@ msgid "API Product"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_ref
-msgid "API Reference"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_return_url
-msgid "API Return URL"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_tx
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_id
 msgid "API TransactionID"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: code:addons/payment_jetcheckout_api/controllers/main.py:0
-#, python-format
-msgid "Access Denied"
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid "Account Number"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -128,27 +109,70 @@ msgid "An error occured. Please restart your payment transaction."
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid ""
-"Aşağıdaki banka hesaplarımızı Havale veya EFT işlemleriniz için "
-"kullanabilirsiniz."
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#, python-format
+msgid "An error occured. Please try again."
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid ""
-"Aşağıdaki ödeme yöntemlerinden birini seçerek işleminize devam "
-"edebilirsiniz."
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#, python-format
+msgid "Are you confirm the transaction?"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "Back"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid "Banka Hesaplarımız"
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid "Branch"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#, python-format
+msgid "Cancel"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid ""
+"Click confirm and keep the code for your bank transfer transaction which is "
+"produced especially for you."
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__company_id
 msgid "Company"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+#, python-format
+msgid "Confirm"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "Contact"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid "Continue"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -167,33 +191,16 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
-msgid "Geri"
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model:ir.model,name:payment_jetcheckout_api.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#. openerp-web
-#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
-#, python-format
-msgid "Hata"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid "Hesap Numarası"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_card_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid "Hizmet ve Sözleşme Bilgileriniz"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -239,19 +246,24 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #. openerp-web
 #: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
 #, python-format
-msgid "Onayla"
+msgid "Okay"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "Order"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid "Order Reference"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__partner_id
 msgid "Partner"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
-msgid "Partner Authorized"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -261,18 +273,25 @@ msgid "Payment API Keys"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "Payment Information"
+msgstr ""
+
+#. module: payment_jetcheckout_api
 #: model:ir.model,name:payment_jetcheckout_api.model_payment_transaction
 msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
-msgid "Product"
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
+msgid ""
+"Please use this code in your bank transfer description for confirming "
+"transaction."
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
-msgid "Reference"
+msgid "Product"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -286,30 +305,8 @@ msgid "Secret Key will be here"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid "Sipariş Kodunuz"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid ""
-"Siparişi Tamamla dediğinizde size özel olarak üretilen sipariş numarası ile "
-"Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz."
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid ""
-"Siparişiniz başarıyla oluşturulmuştur. Yukarıda belirtilen size özel kod ile"
-" yapacağınız eft/havale ödemenizden sonra siparişiniz tamamlanacak ve "
-"paketiniz hesabınıza otomatik olarak tanımlanacaktır."
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#. openerp-web
-#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
-#, python-format
-msgid "Tamam"
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
+msgid "Select a Payment Type"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -323,31 +320,36 @@ msgid "Total Payment"
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#: code:addons/payment_jetcheckout_api/services/services.py:0
+#. openerp-web
+#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
 #, python-format
-msgid "You have to define a sequence for %s in your company."
+msgid "Transaction is going to be concluded after your confirmation"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
-msgid "Ödeme Yöntemi Seçiniz"
+msgid ""
+"We have seen that you have recorded a Bank Transfer payment before for this "
+"order. If you continue with a new payment option, previous transaction will "
+"be cancelled."
 msgstr ""
 
 #. module: payment_jetcheckout_api
-#. openerp-web
-#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
-#, python-format
-msgid "İptal"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#. openerp-web
-#: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
-#, python-format
-msgid "İşlemi onaylıyor musunuz?"
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
+msgid ""
+"You can continue the transaction with choosing one of the following payment "
+"methods."
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
-msgid "Şube"
+msgid ""
+"You can pick one of the following bank accounts for your bank transfer "
+"transaction."
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
+#, python-format
+msgid "You have to define a sequence for %s in your company."
 msgstr ""

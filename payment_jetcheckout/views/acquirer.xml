@@ -51,7 +51,7 @@
             <page string="Journals" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
                 <field name="jetcheckout_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree editable="bottom" create="0" delete="0">
-                        <field name="pos_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="name"/>
                         <field name="currency_id"/>
                         <field name="journal_id" required="1" domain="[('type','=','bank'),('company_id','=',company_id)]"/>
                         <field name="partner_id" required="1" domain="['|',('company_id','=',False),('company_id','=',company_id)]"/>
@@ -99,23 +99,24 @@
             <div colspan="2">
                 <div class="font-weight-bold m-auto text-center d-flex align-items-center justify-content-center">
                     <div class="float-left text-primary">
-                        <h1 attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','!=',False)]}"><i class="fa fa-check text-primary"/></h1>
-                        <h1 attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','=',False)]}"><i class="fa fa-undo text-primary"/></h1>
-                        <h1 attrs="{'invisible': [('is_successful','!=',False)]}"><i class="fa fa-times text-primary"/></h1>
+                        <h1 attrs="{'invisible': ['|',('successful','=',False),('cancelled','!=',False)]}"><i class="fa fa-check text-primary"/></h1>
+                        <h1 attrs="{'invisible': ['|',('successful','=',False),('cancelled','=',False)]}"><i class="fa fa-undo text-primary"/></h1>
+                        <h1 attrs="{'invisible': [('successful','!=',False)]}"><i class="fa fa-times text-primary"/></h1>
                     </div>
-                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','!=',False)]}"><h2>Transaction is successful</h2></div>
-                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('is_successful','=',False),('is_cancelled','=',False)]}"><h2>Transaction is cancelled</h2></div>
-                    <div class="ml-4 text-primary" attrs="{'invisible': [('is_successful','!=',False)]}"><h2>Transaction is failed</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('successful','=',False),('cancelled','!=',False)]}"><h2>Transaction is successful</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': ['|',('successful','=',False),('cancelled','=',False)]}"><h2>Transaction is cancelled</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': [('successful','!=',False)]}"><h2>Transaction is failed</h2></div>
                 </div>
             </div>
             <group>
                 <group>
-                    <field name="transaction_date"/>
-                    <field name="vpos_id"/>
-                    <field name="is_successful" widget="boolean_toggle" style="pointer-events: none;"/>
-                    <field name="is_completed" widget="boolean_toggle" style="pointer-events: none;"/>
-                    <field name="is_3d" widget="boolean_toggle" style="pointer-events: none;"/>
-                    <field name="is_cancelled" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="successful" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="completed" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="threed" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="cancelled" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="refunded" widget="boolean_toggle" style="pointer-events: none;"/>
                 </group>
                 <group>
                     <field name="currency_id" invisible="1"/>
@@ -130,7 +131,7 @@
                 </group>
             </group>
             <footer>
-                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
             </footer>
         </form>
     </field>
@@ -154,7 +155,7 @@
             </group>
             <footer>
                 <button name="confirm" type="object" class="btn-primary" string="Refund" icon="fa-undo"/>
-                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
             </footer>
         </form>
     </field>

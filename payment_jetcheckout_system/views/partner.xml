@@ -60,7 +60,7 @@
                     <group name="general">
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True, 'active_system': context.get('active_system')}" required="1" domain="[('system','=',system),('parent_id','=',False),('company_id','=',company_id)]"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'active_system': context.get('active_system')}" required="'default_parent_id' not in context" invisible="'default_parent_id' in context" domain="[('system','=',system),('parent_id','=',False),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
