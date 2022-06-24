@@ -9,8 +9,6 @@
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
         </xpath>
-        <xpath expr='//field[@name="mobile"]' position="replace"/>
-        <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
         <xpath expr='//field[@name="date_sms_sent"]' position="replace"/>
         <xpath expr='//header' position="replace"/>
@@ -37,8 +35,6 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//header' position="replace"/>
-        <xpath expr='//field[@name="mobile"]' position="replace"/>
-        <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="ref"/>
         </xpath>
