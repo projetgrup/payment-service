@@ -28,9 +28,16 @@
         <form>
             <field name="system" invisible="1"/>
             <field name="payable_count" invisible="1"/>
-            <header attrs="{'invisible': [('payable_count', '=', 0)]}">
-                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight"/>
-                <button name="action_send" type="object" string="Send"/>
+            <header>
+                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button name="action_send" type="object" string="Send Message" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
+                <field name="is_portal" invisible="1"/>
+                <field name="is_internal" invisible="1"/>
+                <field name="users_id" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -116,6 +123,8 @@
             <field name="name"/>
             <field name="image_128"/>
             <field name="avatar_128"/>
+            <field name="is_portal"/>
+            <field name="is_internal"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
@@ -123,9 +132,23 @@
                             <img alt="" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                             <img alt="" t-else="" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
                         </div>
-                        <div class="oe_kanban_details">
+                        <div class="oe_kanban_details d-flex flex-column">
                             <strong><field name="name"/></strong>
                             <ul></ul>
+                            <div class="o_row">
+                                <t t-if="record.is_internal.value">
+                                    <button string="Internal User" disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
+                                </t>
+                                <t t-else="">
+                                    <t t-if="record.is_portal.value">
+                                        <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"/>
+                                        <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"/>
+                                    </t>
+                                    <t t-else="">
+                                        <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"/>
+                                    </t>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </t>

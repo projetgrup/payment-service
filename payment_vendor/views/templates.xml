@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="payment_page2" name="Vendor Payment Page">
-        <t t-call="web.frontend_layout">
-            <t t-set="no_header" t-value="True"/>
-            <t t-set="no_footer" t-value="True"/>
-            <t t-set="class" t-value="True"/>
-            <t t-set="title" t-value="website.name"/>
-            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
-            <t t-set="payments" t-value="parent.payment_ids"/>
-            <t t-call="payment_jetcheckout.payment_card"/>
-        </t>
-    </template>
-    
     <template id="payment_page" name="Vendor Payment Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
@@ -30,7 +17,7 @@
                 </div>
             </div>
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
-                <t t-call="payment_jetcheckout_system.payment_page_result"/>
+                <t t-call="payment_jetcheckout_system.payment_page_state"/>
                 <div class="row mx-0 my-4 card border shadow p-4">
                     <div t-if="len(payments) > 0" class="row mx-0 my-2">
                         <div class="col-md-6 p-3">

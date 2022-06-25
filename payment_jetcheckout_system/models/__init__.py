@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from . import dashboard
 from . import transaction
 from . import http
 from . import company

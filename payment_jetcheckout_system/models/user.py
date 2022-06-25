@@ -10,10 +10,10 @@ class Users(models.Model):
         for user in self:
             system = user.company_id.system
             if system:
-                if user.has_group('payment_%s.group_%s_user' % (system, system)):
-                    user.privilege = 'user'
-                elif user.has_group('payment_%s.group_%s_manager' % (system, system)):
+                if user.has_group('payment_%s.group_%s_manager' % (system, system)):
                     user.privilege = 'admin'
+                elif user.has_group('payment_%s.group_%s_user' % (system, system)):
+                    user.privilege = 'user'
                 else:
                     user.privilege = ''
             else:
@@ -25,12 +25,12 @@ class Users(models.Model):
             if system:
                 group_user = self.env.ref('payment_%s.group_%s_user' % (system, system))
                 group_admin = self.env.ref('payment_%s.group_%s_manager' % (system, system))
-                if user.privilege == 'user':
+                if user.privilege == 'admin':
+                    group_user.sudo().write({'users': [(4, user.id)]})
+                    group_admin.sudo().write({'users': [(4, user.id)]})
+                elif user.privilege == 'user':
                     group_user.sudo().write({'users': [(4, user.id)]})
                     group_admin.sudo().write({'users': [(3, user.id)]})
-                elif user.privilege == 'admin':
-                    group_user.sudo().write({'users': [(3, user.id)]})
-                    group_admin.sudo().write({'users': [(4, user.id)]})
                 else:
                     group_user.sudo().write({'users': [(3, user.id)]})
                     group_admin.sudo().write({'users': [(3, user.id)]})

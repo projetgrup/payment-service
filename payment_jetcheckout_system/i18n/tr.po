@@ -204,7 +204,7 @@ msgstr "Yetkili"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_contact_page
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Contact Page"
-msgstr "İletişim Sayfası"
+msgstr "İletişim Bilgileri"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree

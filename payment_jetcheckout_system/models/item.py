@@ -19,8 +19,8 @@ class PaymentItem(models.Model):
         self.child_id = self.parent_id.child_ids and self.parent_id.child_ids[0].id if self.parent_id else False
 
     name = fields.Char(compute='_compute_name')
-    child_id = fields.Many2one('res.partner', required=True, ondelete='restrict')
-    parent_id = fields.Many2one('res.partner', required=True, ondelete='restrict')
+    child_id = fields.Many2one('res.partner', ondelete='restrict')
+    parent_id = fields.Many2one('res.partner', ondelete='restrict')
     amount = fields.Monetary()
     paid = fields.Boolean(readonly=True)
     paid_amount = fields.Monetary(readonly=True)

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import werkzeug
-from datetime import datetime
 from odoo import http, _
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -107,4 +106,44 @@ class JetcheckoutSystemController(JetController):
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
         values = self._jetcheckout_get_data()
+        values['success_url'] = '/my/payment/success'
+        values['fail_url'] = '/my/payment/fail'
+
+        # remove hash if exists
+        # it could be there because of api module
+        if 'hash' in request.session:
+            del request.session['hash']
+
         return request.render('payment_jetcheckout_system.payment_page', values)
+
+    @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
+    def jetcheckout_portal_return(self, **kwargs):
+        kwargs['result_url'] = '/my/payment/result'
+        url, tx = self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(url)
+
+    @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def jetcheckout_portal_payment_page_result(self, **kwargs):
+        values = self._jetcheckout_get_data()
+        last_tx_id = request.session.get('__jetcheckout_last_tx_id')
+        values['tx'] = request.env['payment.transaction'].sudo().browse(last_tx_id)
+        if last_tx_id:
+            del request.session['__jetcheckout_last_tx_id']
+        return request.render('payment_jetcheckout_system.payment_page_result', values)
+
+    @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', website=True)
+    def jetcheckout_portal_payment_page_transactions(self, page=0, tpp=20, **kwargs):
+        values = self._jetcheckout_get_data()
+        tx_ids = request.env['payment.transaction'].sudo().search([
+            ('acquirer_id', '=', values['acquirer'].id),
+            ('partner_id', 'in', (values['partner_id'], values['contact_id']))
+        ])
+        pager = request.website.pager(url='/my/payment/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
+        offset = pager['offset']
+        txs = tx_ids[offset: offset + tpp]
+        values.update({
+            'pager': pager,
+            'txs': txs,
+            'tpp': tpp,
+        })
+        return request.render('payment_jetcheckout_system.payment_page_transaction', values)
