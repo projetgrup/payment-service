@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_dashboard" model="ir.actions.act_window">
+    <field name="name">Dashboard</field>
+    <field name="res_model">payment.dashboard</field>
+    <field name="view_mode">kanban</field>
+    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
     <record id="action_website" model="ir.actions.act_window">
     <field name="name">Websites</field>
     <field name="res_model">website</field>
@@ -77,6 +84,7 @@
     <field name="res_model">res.users</field>
     <field name="view_mode">tree,form</field>
     <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    <field name="context">{'search_default_no_share': 1}</field>
     <field name="view_ids" eval="[
         (5, 0, 0),
         (0, 0, {'view_mode': 'tree', 'view_id': ref('user_tree')}),

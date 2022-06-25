@@ -22,7 +22,7 @@
                 <div class="row mx-0 my-4 card border shadow flex-row p-2">
                     <div class="col-md-4 p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <t t-call="payment_jetcheckout_system.payment_page_result">
+                            <t t-call="payment_jetcheckout_system.payment_page_state">
                                 <t t-set="classes" t-value="'d-md-none d-block'"/>
                             </t>
                             <div t-if="payments" class="row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <div class="col-md-8 p-4">
-                        <t t-call="payment_jetcheckout_system.payment_page_result">
+                        <t t-call="payment_jetcheckout_system.payment_page_state">
                             <t t-set="classes" t-value="'d-md-block d-none'"/>
                         </t>
                         <div t-if="len(payments) > 0" class="row justify-content-center flex-column">

@@ -25,6 +25,7 @@
         'views/partner.xml',
         'views/website.xml',
         'views/settings.xml',
+        'views/dashboard.xml',
         'views/actions.xml',
         'report/company.xml',
         'wizards/send.xml',

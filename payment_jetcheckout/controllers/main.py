@@ -42,7 +42,7 @@ class JetcheckoutController(http.Controller):
         vals = {
             'partner_id': partner_commercial.id,
             'partner_name': partner_commercial.name,
-            'contact': partner_contact.id if partner_contact else False,
+            'contact_id': partner_contact.id if partner_contact else False,
             'contact_name': partner_contact.name if partner_contact else False,
             'acquirer': acquirer,
             'company': company,
@@ -498,8 +498,10 @@ class JetcheckoutController(http.Controller):
     @http.route(['/payment/card/transactions', '/payment/card/transactions/page/<int:page>'], type='http', auth='user', website=True)
     def jetcheckout_transactions(self, page=0, tpp=20, **kwargs):
         values = self._jetcheckout_get_data()
-        partner = request.env.user.partner_id
-        tx_ids = request.env['payment.transaction'].sudo().search([('acquirer_id','=',values['acquirer'].id),('partner_id','in',(partner.id, partner.commercial_partner_id.id))])
+        tx_ids = request.env['payment.transaction'].sudo().search([
+            ('acquirer_id', '=', values['acquirer'].id),
+            ('partner_id', 'in', (values['partner_id'], values['contact_id']))
+        ])
         pager = request.website.pager(url='/payment/card/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
         offset = pager['offset']
         txs = tx_ids[offset: offset + tpp]
