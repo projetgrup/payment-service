@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_main" name="SPS" web_icon="payment_student,static/description/icon.png" sequence="24"/>
-    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="0"/>
-    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
-    <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
-    <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_dashboard" action="payment_jetcheckout_system.action_dashboard" parent="menu_main" sequence="0"/>
+    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1"/>
+    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="2"/>
+    <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="4"/>
 
     <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
     <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>

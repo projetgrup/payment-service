@@ -39,4 +39,7 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         self._get_current_system()
-        return super(Http, self).session_info()
+        res = super(Http, self).session_info()
+        if res['user_context'].get('system'):
+            res['home_action_id'] = self.env.ref('payment_jetcheckout_system.action_dashboard').id
+        return res

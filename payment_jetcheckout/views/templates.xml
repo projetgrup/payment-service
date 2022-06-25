@@ -73,8 +73,8 @@
                 <div class="px-3 py-4 bg-white card my-4">
                     <label for="partner" class="text-primary font-weight-bold mb-0">Partner</label>
                     <span t-esc="partner_name" class="text-600"/>
-                    <t t-if="contact">
-                        <label for="contact" class="text-primary font-weight-bold mt-2 mb-0">Contact</label>
+                    <t t-if="contact_id">
+                        <label for="contact_id" class="text-primary font-weight-bold mt-2 mb-0">Contact</label>
                         <span t-esc="contact_name" class="text-600"/>
                     </t>
                     <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
@@ -93,6 +93,7 @@
                         <button t-if="tx != False and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
                         <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
                     </t>
+                    <t t-if="buttons" t-raw="buttons"/>
                     <div t-if="page == 'payment' and not no_payment_icons" class="mt-3">
                         <ul class="mb-0 text-center list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -348,12 +349,12 @@
         <t t-call="web.frontend_layout">
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <div class="payment-result row justify-content-center mx-0">
+            <div class="payment-result row justify-content-center mx-0 h-100">
                 <t t-call="payment_jetcheckout.payment_sidebar">
                     <t t-set="page" t-value="'result'"/>
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                    <div class="border shadow w-100 bg-white text-center mr-4 my-4 pb-4">
+                    <div class="border shadow w-100 bg-white text-center mr-4 my-4 pb-4 h-fit">
                         <t t-call="payment_jetcheckout.payment_smart_button">
                             <t t-set="page" t-value="'result'"/>
                         </t>
@@ -535,7 +536,7 @@
                                                 <tr class="font-weight-bold border">
                                                     <td>Commission Amount</td>
                                                     <td>Installment Count</td>
-                                                    <td rowspan="3" class="border-left p-2">
+                                                    <td rowspan="2" class="border-left p-2">
                                                         <a t-attf-href="/report/pdf/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
                                                         <a t-attf-href="/report/pdf/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
                                                     </td>

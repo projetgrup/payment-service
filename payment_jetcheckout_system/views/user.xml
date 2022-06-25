@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="user_search" model="ir.ui.view">
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base.view_users_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//filter[@name="no_share"]' position="after">
+            <filter name="portal_user" string="Portal Users" domain="[('share','!=',False)]"/>
+        </xpath>
+    </field>
+    </record>
+
     <record id="user_tree" model="ir.ui.view">
     <field name="name">res.users.tree</field>
     <field name="model">res.users</field>
@@ -33,9 +43,11 @@
                 <div attrs="{'invisible': [('state', '!=', 'new')]}">
                     <strong>An invitation email containing the following subscription link has been sent:</strong>
                 </div>
-                <div><field name="signup_url" widget="url"/></div>
-                    <field name="signup_valid" invisible="1"/>
+                <div>
+                    <field name="signup_url" widget="url"/>
                 </div>
+                <field name="signup_valid" invisible="1"/>
+            </div>
             <sheet>
                 <field name="id" invisible="1"/>
                 <field name="active" invisible="1"/>
