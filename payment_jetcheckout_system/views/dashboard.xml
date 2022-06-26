@@ -28,7 +28,11 @@
                             <div class="col-4 o_primary">
                                 <a type="object" name="action_transactions"><field name="name"/></a>
                             </div>
-                            <div class="col-8 d-flex align-items-center font-weight-bold justify-content-end o_secondary text-nowrap">
+                            <div class="col-8 d-sm-flex d-none align-items-center font-weight-bold justify-content-end o_secondary text-nowrap">
+                                <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
+                                <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
+                            </div>
+                            <div class="col-8 d-flex d-sm-none align-items-center font-weight-bold justify-content-end o_secondary">
                                 <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
                                 <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
                             </div>
