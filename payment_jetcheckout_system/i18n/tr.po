@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-25 18:52+0000\n"
-"PO-Revision-Date: 2022-06-25 22:20+0300\n"
+"PO-Revision-Date: 2022-06-26 20:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -46,7 +46,7 @@ msgstr "<span class=\"mr-2\">Peşin Oranı:</span>"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "<span class=\"mr-2\">Success Rate:</span>"
-msgstr "<span class=\"mr-2\">Başarı Rate:</span>"
+msgstr "<span class=\"mr-2\">Başarı Oranı:</span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form

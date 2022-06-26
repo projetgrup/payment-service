@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta, MO
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools.misc import formatLang
 
 import logging
@@ -85,6 +85,7 @@ class PaymentDasboard(models.Model):
             ]
             period = 'hours'
             interval = 4
+            format = DTF
         elif self.period == 'weeks':
             datas = [
                 {'label': _('Monday'), 'value': 0.0, 'type': 'past'},
@@ -97,6 +98,7 @@ class PaymentDasboard(models.Model):
             ]
             period = 'days'
             interval = 1
+            format = DF
         elif self.period == 'months':
             datas = [
                 {'label': _('Week 1'), 'value': 0.0, 'type': 'past'},
@@ -107,6 +109,7 @@ class PaymentDasboard(models.Model):
             ]
             period = 'days'
             interval = 7
+            format = DF
         elif self.period == 'years':
             datas = [
                 {'label': _('January'), 'value': 0.0, 'type': 'past'},
@@ -124,6 +127,7 @@ class PaymentDasboard(models.Model):
             ]
             period = 'months'
             interval = 1
+            format = DF
         else:
             raise UserError(_('This time period is not implemented'))
             
@@ -150,9 +154,10 @@ class PaymentDasboard(models.Model):
             if date_start <= now < date_end:
                 index = i
 
-            query.append("(" + template % (i, company) + " AND create_date >= '" + date_start.strftime(DF) + "' AND create_date < '" + date_end.strftime(DF) + "')")
+            query.append("(" + template % (i, company) + " AND create_date >= '" + date_start.strftime(format) + "' AND create_date < '" + date_end.strftime(format) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
+        _logger.error(query)
         result = self.env.cr.dictfetchall()
 
         count = 0
