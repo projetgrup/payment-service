@@ -11,6 +11,7 @@
     <field name="name">Websites</field>
     <field name="res_model">website</field>
     <field name="view_mode">tree,form</field>
+    <field name="domain">[('company_id', '=', allowed_company_ids[0])]</field>
     </record>
 
     <record id="action_mail_template" model="ir.actions.act_window">

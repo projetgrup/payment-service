@@ -55,17 +55,14 @@ class PaymentDasboard(models.Model):
             success_count += line['success_count']
             advance_count += line['advance_count']
             total_count += line['total_count']
+            average_amount = line['success_amount'] / line['success_count'] if line['success_count'] > 0 else 0
             currency = currencies(line['currency_id'])
             line['total_amount'] = formatLang(self.env, line['total_amount'], currency_obj=currency)
             line['success_amount'] = formatLang(self.env, line['success_amount'], currency_obj=currency)
-            line['average_amount'] = formatLang(self.env, line['average_amount'], currency_obj=currency)
+            line['average_amount'] = formatLang(self.env, average_amount, currency_obj=currency)
 
-        if total_count > 0:
-            success_rate = int(100 * success_count / total_count)
-            advance_rate = int(100 * advance_count / total_count)
-        else:
-            success_rate = 0
-            advance_rate = 0
+        success_rate = int(100 * success_count / total_count) if total_count > 0 else 0
+        advance_rate = int(100 * advance_count / success_count) if success_count > 0 else 0
 
         return {
             'lines': lines,
@@ -134,10 +131,12 @@ class PaymentDasboard(models.Model):
             SELECT %s AS line, COUNT(id) AS count, SUM(amount) AS amount
             FROM payment_transaction
             WHERE state = 'done'
+            AND company_id = %s
         """
         query = []
         index = 0
         length = len(datas)
+        company = self.env.company.id
         date_first, date_last = self._get_dates()
         date_first = datetime.combine(date_first, datetime.min.time())
         date_last = datetime.combine(date_last, datetime.min.time())
@@ -151,7 +150,7 @@ class PaymentDasboard(models.Model):
             if date_start <= now < date_end:
                 index = i
 
-            query.append("(" + template % i + " AND create_date >= '" + date_start.strftime(DF) + "' AND create_date < '" + date_end.strftime(DF) + "')")
+            query.append("(" + template % (i, company) + " AND create_date >= '" + date_start.strftime(DF) + "' AND create_date < '" + date_end.strftime(DF) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
         result = self.env.cr.dictfetchall()
@@ -197,10 +196,12 @@ class PaymentDasboard(models.Model):
 
     def _get_domain(self):
         date_start, date_end = self._get_dates()
-        return [('company_id', '=', self.env.company.id), ('create_date', '>=', date_start), ('create_date', '<', date_end), ('state', 'in', ('done', 'pending', 'error'))]
+        company = self.env.company.id
+        return [('company_id', '=', company), ('create_date', '>=', date_start), ('create_date', '<', date_end), ('state', 'in', ('done', 'pending', 'error'))]
 
     def _get_domain_query(self):
         date_start, date_end = self._get_dates()
+        company = self.env.company.id
         query = """
             SELECT
                 COUNT(*) AS total_count,
@@ -208,7 +209,7 @@ class PaymentDasboard(models.Model):
                 AVG(t.amount) AS average_amount,
                 SUM(CASE WHEN t.state = 'done' THEN 1 ELSE 0 END) AS success_count,
                 SUM(CASE WHEN t.state = 'done' THEN t.amount ELSE 0 END) AS success_amount,
-                SUM(CASE WHEN t.jetcheckout_installment_count = 1 THEN 1 ELSE 0 END) AS advance_count,
+                SUM(CASE WHEN t.jetcheckout_installment_count = 1 AND t.state = 'done' THEN 1 ELSE 0 END) AS advance_count,
                 c.name AS currency_name,
                 c.id AS currency_id
             FROM payment_transaction t
@@ -216,9 +217,10 @@ class PaymentDasboard(models.Model):
             WHERE t.state IN ('done', 'pending', 'error')
             AND t.create_date >= %s
             AND t.create_date < %s
+            AND t.company_id = %s
             GROUP BY c.name, c.id
         """
-        self.env.cr.execute(query, (date_start, date_end))
+        self.env.cr.execute(query, (date_start, date_end, company))
         return self.env.cr.dictfetchall()
 
     def action_transactions(self):

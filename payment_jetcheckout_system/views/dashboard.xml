@@ -9,7 +9,7 @@
             <field name="data"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div class="o_kanban_record p-0">
+                    <div class="o_kanban_record p-0" style="padding-left: 0 !important; padding-right: 0 !important;">
                         <t t-value="JSON.parse(record.data.raw_value)" t-set="data"/>
                         <t t-call="header"/>
                         <div t-att-class="'container px-4 o_kanban_card_content' + (data.is_sample_data ? ' o_sample_data' : '')">
@@ -28,7 +28,11 @@
                             <div class="col-4 o_primary">
                                 <a type="object" name="action_transactions"><field name="name"/></a>
                             </div>
-                            <div class="col-8 d-flex align-items-center font-weight-bold justify-content-end o_secondary">
+                            <div class="col-8 d-sm-flex d-none align-items-center font-weight-bold justify-content-end o_secondary text-nowrap">
+                                <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
+                                <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
+                            </div>
+                            <div class="col-8 d-flex d-sm-none align-items-center font-weight-bold justify-content-end o_secondary">
                                 <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
                                 <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
                             </div>
