@@ -11,9 +11,6 @@ from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools.misc import formatLang
 
-import logging
-_logger = logging.getLogger(__name__)
-
 
 class PaymentDasboard(models.Model):
     _name = 'payment.dashboard'
@@ -157,7 +154,6 @@ class PaymentDasboard(models.Model):
             query.append("(" + template % (i, company) + " AND create_date >= '" + date_start.strftime(format) + "' AND create_date < '" + date_end.strftime(format) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
-        _logger.error(query)
         result = self.env.cr.dictfetchall()
 
         count = 0
