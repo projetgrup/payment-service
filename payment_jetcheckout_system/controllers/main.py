@@ -119,8 +119,8 @@ class JetcheckoutSystemController(JetController):
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_portal_return(self, **kwargs):
         kwargs['result_url'] = '/my/payment/result'
-        url, tx = self._jetcheckout_process(**kwargs)
-        return werkzeug.utils.redirect(url)
+        self._jetcheckout_process(**kwargs)
+        return werkzeug.utils.redirect(kwargs['result_url'])
 
     @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_result(self, **kwargs):

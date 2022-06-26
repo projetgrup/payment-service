@@ -9,7 +9,7 @@
             <field name="data"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div class="o_kanban_record p-0">
+                    <div class="o_kanban_record p-0" style="padding-left: 0 !important; padding-right: 0 !important;">
                         <t t-value="JSON.parse(record.data.raw_value)" t-set="data"/>
                         <t t-call="header"/>
                         <div t-att-class="'container px-4 o_kanban_card_content' + (data.is_sample_data ? ' o_sample_data' : '')">
