@@ -11,4 +11,4 @@ class Partner(models.Model):
             partner.acquirer_ids = [(6, 0, acquirers.ids)]
 
     acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers')
-    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='PoS Campaign', ondelete='set null')
+    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='PoS Campaign', ondelete='set null', copy=False)

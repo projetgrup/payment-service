@@ -26,6 +26,7 @@ class PaymentItem(models.Model):
     paid_amount = fields.Monetary(readonly=True)
     installment_count = fields.Integer(readonly=True)
     paid_date = fields.Datetime(readonly=True)
+    campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
     system = fields.Selection(related='company_id.system', store=True, readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company)
