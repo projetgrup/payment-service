@@ -151,8 +151,5 @@ class PaymentAcquirerJetcheckoutApiPoses(models.TransientModel):
     def write(self, vals):
         data = self.acquirer_id._jetcheckout_api_read()
         self.acquirer_id._jetcheckout_api_upload(vals, data, self)
-        for val in vals['pos_ids']:
-            if val[0] == 0 or val[0] == 1 and 'name' in val[2] or val[0] == 2:
-                self.acquirer_id._jetcheckout_api_sync()
-                break
+        self.acquirer_id._jetcheckout_api_sync_campaign(self.pos_ids)
         return super().write(vals)

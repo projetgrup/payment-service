@@ -275,19 +275,19 @@
                             <label for="name"><span>Name</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardnumber" type="text" required="required"/>
+                            <input id="cardnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
                             <span class="bar-container"/>
                             <div id="cclogo" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
                             <svg id="ccicon" t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471"/>
                             <label for="cardnumber"><span>Card Number</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="expirationdate" placeholder="MM/YY" type="text" required="required"/>
+                            <input id="expirationdate" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
                             <span class="bar-container"/>
                             <label for="expirationdate"><span>Expiration</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="securitycode" type="text" required="required"/>
+                            <input id="securitycode" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
                             <span class="bar-container"/>
                             <label for="securitycode"><span t-if="s2s_form">CVC</span><span t-else="">Security Code</span></label>
                         </div>

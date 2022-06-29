@@ -121,7 +121,7 @@ input:checked + .slider:before {
     width: 60px;
     display: flex;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 5px !important;
     padding: 5px;
     img {
         width: 100%;
@@ -950,5 +950,22 @@ input:checked + .slider:before {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+}
+
+@media (max-width: 460px), (min-width: 768px) and (max-width: 1125px) {
+    .payment-card {
+        .ccicon {
+            top: auto !important;
+            bottom: -20px !important;
+            width: 50px !important;
+            height: 30px !important;
+        }
+        #cclogo {
+            top: auto !important;
+            bottom: -20px !important;
+            width: 50px !important;
+            height: 30px !important;
+        }
     }
 }
