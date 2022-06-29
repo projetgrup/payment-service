@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-25 18:52+0000\n"
-"PO-Revision-Date: 2022-06-25 18:52+0000\n"
+"POT-Creation-Date: 2022-06-29 11:12+0000\n"
+"PO-Revision-Date: 2022-06-29 11:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,20 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "<span class=\"o_stat_text\" style=\"font-weight: bold;\">Items To Pay</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid ""
+"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Transaction "
+"Done</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid ""
+"<span class=\"o_stat_text\" style=\"font-weight: bold;\">Transaction "
+"Failed</span>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -230,6 +244,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__graph_type__bar
 msgid "Bar"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__campaign_id
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Campaign"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -448,6 +468,12 @@ msgid "Distant Sale Agreement"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_done_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_done_ids
+msgid "Done Transactions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
@@ -483,6 +509,8 @@ msgid "Emails are going to be sent on %s"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_failed_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Failed Transactions"
 msgstr ""
@@ -949,6 +977,12 @@ msgid "Payable"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_ids
+msgid "Payable Items"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
 msgid "Payment"
@@ -978,6 +1012,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
 msgstr ""
 
@@ -1010,12 +1045,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
 msgid "Payment transactions are listed here"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_ids
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_ids
-msgid "Payments"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1221,7 +1250,13 @@ msgid "Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share
+#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Share Payment Form"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_link
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Share Payment Link"
 msgstr ""
@@ -1415,6 +1450,18 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
 msgid "Transaction"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_done_count
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_done_count
+msgid "Transaction Done"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_failed_count
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_count
+msgid "Transaction Failed"
 msgstr ""
 
 #. module: payment_jetcheckout_system

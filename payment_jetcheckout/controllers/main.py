@@ -22,12 +22,14 @@ class JetcheckoutController(http.Controller):
     def _jetcheckout_get_acquirer(providers=None, limit=None):
         return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
-    def _jetcheckout_get_partner(self, **kwargs):
+    @staticmethod
+    def _jetcheckout_get_partner(**kwargs):
         id = 'partner_id' in kwargs and int(kwargs['partner_id']) or False
         return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
 
-    def _jetcheckout_get_partner_campaign(self, partner=None):
-        partner = partner or self._jetcheckout_get_partner()
+    @staticmethod
+    def _jetcheckout_get_partner_campaign(partner=None):
+        partner = partner or JetcheckoutController._jetcheckout_get_partner()
         return partner.campaign_id.name or ''
 
     def _jetcheckout_tx_vals(self, **kwargs):

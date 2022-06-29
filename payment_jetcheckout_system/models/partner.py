@@ -15,13 +15,13 @@ class Partner(models.Model):
             if partner.parent_id:
                 partner.payable_count = len(partner.parent_id.payment_ids)
                 partner.paid_count = len(partner.parent_id.paid_ids)
-                partner.transaction_done_count = len(partner.parent_id.transaction_done_count)
-                partner.transaction_failed_count = len(partner.parent_id.transaction_failed_count)
+                partner.transaction_done_count = len(partner.parent_id.transaction_done_ids)
+                partner.transaction_failed_count = len(partner.parent_id.transaction_failed_ids)
             else:
                 partner.payable_count = len(partner.payment_ids)
                 partner.paid_count = len(partner.paid_ids)
-                partner.transaction_done_count = len(partner.transaction_done_count)
-                partner.transaction_failed_count = len(partner.transaction_failed_count)
+                partner.transaction_done_count = len(partner.transaction_done_ids)
+                partner.transaction_failed_count = len(partner.transaction_failed_ids)
 
     @api.onchange('parent_id')
     def _compute_sibling(self):
@@ -90,11 +90,28 @@ class Partner(models.Model):
     def _get_token(self):
         return '%s-%x' % (self.access_token, self.id * PRIMEFACTOR)
 
-    def _compute_access_url(self):
-        for rec in self:
-            rec.access_url = '/p/%s' % rec._get_token()
+    @api.model
+    def _resolve_token(self, token):
+        try:
+            data = token.rsplit('-', 1)
+            token = data[0]
+            id = int(int(data[1], 16) / PRIMEFACTOR)
+            return id, token
+        except:
+            return False
 
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+    @api.depends_context('active_type')
+    def _compute_access_url(self):
+        type = self.env.context.get('active_type')
+        if type == 'form':
+            prefix = '/my/payment'
+        else:
+            prefix = '/p'
+
+        for rec in self:
+            rec.access_url = '%s/%s' % (prefix, rec._get_token())
+
+    def _get_share_url(self, **kwargs):
         self.ensure_one()
         self._portal_ensure_token()
         return self.access_url
@@ -113,10 +130,6 @@ class Partner(models.Model):
     def _get_payment_company(self):
         self.ensure_one()
         return self.company_id and self.company_id.name or self.env.company.name
-
-    def action_share_payment_link(self):
-        self.ensure_one()
-        return self.sudo().env.ref('payment_jetcheckout_system.payment_share').sudo().read()[0]
 
     def action_grant_access(self):
         self.ensure_one()
@@ -259,6 +272,24 @@ class Partner(models.Model):
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
         action['domain'] = [('state', '!=', 'done')]
         return action
+
+    def action_share_link(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
+        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'link'}
+        return action
+
+    def action_share_form(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
+        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'form'}
+        return action
+
+    def action_share_payment_link(self):
+        self.ensure_one()
+        return self.sudo().env.ref('payment_jetcheckout_system.payment_share_link').sudo().read()[0]
+
+    def action_share_payment_form(self):
+        self.ensure_one()
+        return self.sudo().env.ref('payment_jetcheckout_system.payment_share_form').sudo().read()[0]
 
     def action_send(self):
         company = self.mapped('company_id')

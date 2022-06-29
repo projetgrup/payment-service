@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.tools import frozendict
+from odoo.exceptions import AccessDenied
 
 
 class Users(models.Model):
@@ -41,6 +42,26 @@ class Users(models.Model):
                 group_admin.sudo().write({'users': [(3, user.id)]})
 
     privilege = fields.Selection([('user','User'),('admin','Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
+
+    def _check_token(self, token):
+        id, token = self.partner_id._resolve_token(token)
+        if not self.partner_id.id == id or not self.partner_id.access_token == token:
+            raise AccessDenied()
+
+    def _check_credentials(self, password, env):
+        env = env or {}
+        if env.get('token', False):
+            return self._check_token(env['token'])
+        return super()._check_credentials(password, env)
+
+    @classmethod
+    def authenticate(cls, db, login, password, env):
+        if isinstance(password, dict):
+            if password['token']:
+                env = env or {}
+                env['token'] = password['token']
+                password = password['token']
+        return super(Users, cls).authenticate(db, login, password, env)
 
     @api.model
     def default_get(self, fields):
