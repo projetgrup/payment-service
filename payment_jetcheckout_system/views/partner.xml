@@ -27,7 +27,6 @@
     <field name="arch" type="xml">
         <form>
             <field name="system" invisible="1"/>
-            <field name="payable_count" invisible="1"/>
             <header>
                 <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
                 <button name="action_send" type="object" string="Send Message" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
@@ -41,13 +40,25 @@
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('id','=',False)]}">
+                    <button name="action_transaction_done" type="object" class="oe_stat_button" icon="fa-check-square-o" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="transaction_done_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transaction Done</span>
+                    </div>
+                    </button>
+                    <button name="action_transaction_failed" type="object" class="oe_stat_button" icon="fa-share-square-o" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="transaction_failed_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transaction Failed</span>
+                    </div>
+                    </button>
+                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-edit" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="paid_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items Paid</span>
                     </div>
                     </button>
-                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-plus-square-o" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="payable_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items To Pay</span>
@@ -80,6 +91,10 @@
                         <field name="date_email_sent" string="Email"/>
                         <field name="date_sms_sent" string="SMS"/>
                     </group>
+                    <group name="payment" string="Payment Settings">
+                        <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="acquirer_ids" invisible="1"/>
+                    </group>
                 </group>
                 <notebook>
                     <page name="siblings" string="Siblings" autofocus="autofocus" attrs="{'invisible': [('sibling_ids','=',[])]}">
@@ -111,6 +126,7 @@
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
     </field>
     </record>
 

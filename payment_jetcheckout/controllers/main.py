@@ -23,7 +23,12 @@ class JetcheckoutController(http.Controller):
         return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
     def _jetcheckout_get_partner(self, **kwargs):
-        return 'partner_id' in kwargs and int(kwargs['partner_id']) or request.env.user.partner_id.commercial_partner_id.id
+        id = 'partner_id' in kwargs and int(kwargs['partner_id']) or False
+        return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
+
+    def _jetcheckout_get_partner_campaign(self, partner=None):
+        partner = partner or self._jetcheckout_get_partner()
+        return partner.campaign_id.name or ''
 
     def _jetcheckout_tx_vals(self, **kwargs):
         return {}
@@ -84,7 +89,7 @@ class JetcheckoutController(http.Controller):
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": "",
+            "campaign_name": self._jetcheckout_get_partner_campaign(),
             "is_3d": True,
         }
         if prefix:
@@ -152,7 +157,7 @@ class JetcheckoutController(http.Controller):
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": "",
+            "campaign_name": JetcheckoutController._jetcheckout_get_partner_campaign(),
             "is_3d": True,
         }
 
@@ -254,11 +259,12 @@ class JetcheckoutController(http.Controller):
         customer_amount = amount * customer_rate / 100
         amount_int = int((amount + customer_amount) * 100)
 
+        partner = self._jetcheckout_get_partner(**kwargs)
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
-            "campaign_name": "",
+            "campaign_name": self._jetcheckout_get_partner_campaign(partner),
             "amount": amount_int,
             "currency": currency.name,
             "installment_count": kwargs['installment'],
@@ -277,7 +283,6 @@ class JetcheckoutController(http.Controller):
         order_id = str(uuid.uuid4())
         sale_id = int(kwargs.get('order'))
         invoice_id = int(kwargs.get('invoice'))
-        partner = request.env['res.partner'].sudo().browse(self._jetcheckout_get_partner(**kwargs))
 
         tx = self._jetcheckout_get_transaction()
         if tx:
@@ -480,7 +485,8 @@ class JetcheckoutController(http.Controller):
     def jetcheckout_terms(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         domain = request.httprequest.referrer
-        return acquirer.sudo().with_context(domain=domain)._render_jetcheckout_terms(request.env.company.id, self._jetcheckout_get_partner(**kwargs))
+        partner = self._jetcheckout_get_partner(**kwargs)
+        return acquirer.sudo().with_context(domain=domain)._render_jetcheckout_terms(request.env.company.id, partner.id)
 
     @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def jetcheckout_report(self, name, order_id, **kwargs):

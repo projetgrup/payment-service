@@ -49,6 +49,8 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
             'website_id': self.acquirer_id.website_id.id
         }) for pos in self.virtual_pos_ids.filtered(lambda x: x.is_active)]
 
+        self.acquirer_id._jetcheckout_api_sync_campaign(self.virtual_pos_ids)
+
     def write(self, vals):
         if 'name' in vals:
             for app in self:
@@ -77,4 +79,5 @@ class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):
     def write(self, vals):
         data = self.acquirer_id._jetcheckout_api_read()
         self.acquirer_id._jetcheckout_api_upload(vals, data, self)
+        self.acquirer_id._jetcheckout_api_sync_campaign(self.application_ids.virtual_pos_ids)
         return super().write(vals)

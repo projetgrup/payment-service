@@ -9,7 +9,7 @@
     <template id="payment_page_footer" name="Payment System Page Footer">
         <div class="row mx-0 flex-column">
             <div class="row mx-0 mt-4 pb-1 border-bottom">
-                <div class="col-md-12">
+                <div class="col-md-12 text-center text-md-left">
                     <ul class="mb-0 list-inline payment_icon_list">
                         <t t-foreach="card_family" t-as="card">
                             <li class="list-inline-item">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="row mx-0 pt-2 h-0">
-                <div class="col-md-6">
+                <div class="col-md-6 text-center text-md-left">
                     <ul class="list-inline payment_icon_list">
                         <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
                             <li class="list-inline-item">
@@ -29,7 +29,7 @@
                         </t>
                     </ul>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 text-center text-md-right">
                     <t t-raw="footer"/>
                 </div>
             </div>
@@ -41,18 +41,21 @@
             If you need assistance, you can contact with us by using one of the following methods.
         </div>
         <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto mb-3 #{classes}">
-            <table class="table table-sm sidebar-table mb-0">
+            <table class="table table-sm small mb-0">
                 <tr>
-                    <td style="padding-left: 20%"><i class="fa fa-phone mr-2" t-translation="off"/>Phone</td>
-                    <td><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
+                    <td class="text-right text-nowrap w-md-25"><i class="fa fa-phone mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Phone</td>
+                    <td class="text-nowrap"><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 20%"><i class="fa fa-whatsapp mr-2" t-translation="off"/>Whatsapp</td>
-                    <td><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
+                    <td class="text-right text-nowrap"><i class="fa fa-whatsapp mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Whatsapp</td>
+                    <td class="text-nowrap"><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 20%"><i class="fa fa-envelope-o mr-2" t-translation="off"/>Email</td>
-                    <td><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
+                    <td class="text-right text-nowrap"><i class="fa fa-envelope mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Email</td>
+                    <td class="text-nowrap"><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
                 </tr>
             </table>
         </div>
@@ -64,7 +67,7 @@
                 Agreements
             </div>
             <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto #{classes}">
-                <table class="table table-sm sidebar-table mb-0">
+                <table class="table table-sm small mb-0">
                     <tr>
                         <td><a id="privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
                     </tr>
@@ -82,10 +85,10 @@
         </t>
         <t t-else="">
             <div class="row mx-5 my-3 justify-content-around">
-                <button id="privacy_policy" class="btn btn-light text-primary">Privacy Policy</button>
-                <button id="distant_sale_agreement" class="btn btn-light text-primary">Distant Sale Agreement</button>
-                <button id="membership_agreement" class="btn btn-light text-primary">Membership Agreement</button>
-                <button id="contact" class="btn btn-light text-primary">Contact Page</button>
+                <button id="privacy_policy" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Privacy Policy</button>
+                <button id="distant_sale_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Distant Sale Agreement</button>
+                <button id="membership_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Membership Agreement</button>
+                <button id="contact" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Contact Page</button>
             </div>
         </t>
     </template>
@@ -123,7 +126,7 @@
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
                     <t t-set="buttons">
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_page_contact"/>
                 </t>
@@ -159,8 +162,8 @@
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
                     <t t-set="buttons">
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_page_contact"/>
                 </t>
@@ -209,7 +212,7 @@
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
                     <t t-set="buttons">
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_page_contact"/>
                 </t>

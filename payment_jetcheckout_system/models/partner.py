@@ -15,9 +15,13 @@ class Partner(models.Model):
             if partner.parent_id:
                 partner.payable_count = len(partner.parent_id.payment_ids)
                 partner.paid_count = len(partner.parent_id.paid_ids)
+                partner.transaction_done_count = len(partner.parent_id.transaction_done_count)
+                partner.transaction_failed_count = len(partner.parent_id.transaction_failed_count)
             else:
                 partner.payable_count = len(partner.payment_ids)
                 partner.paid_count = len(partner.paid_ids)
+                partner.transaction_done_count = len(partner.transaction_done_count)
+                partner.transaction_failed_count = len(partner.transaction_failed_count)
 
     @api.onchange('parent_id')
     def _compute_sibling(self):
@@ -49,11 +53,15 @@ class Partner(models.Model):
                 partner.is_portal = False
 
     system = fields.Selection(related='company_id.system', store=True, readonly=True)
-    payment_ids = fields.One2many('payment.item', 'parent_id', string='Payments', copy=False, domain=[('paid','=',False)])
+    payment_ids = fields.One2many('payment.item', 'parent_id', string='Payable Items', copy=False, domain=[('paid','=',False)])
     paid_ids = fields.One2many('payment.item', 'parent_id', string='Paid Items', copy=False, domain=[('paid','!=',False)])
+    transaction_done_ids = fields.One2many('payment.transaction', 'partner_id', string='Done Transactions', copy=False, domain=[('state','=','done')])
+    transaction_failed_ids = fields.One2many('payment.transaction', 'partner_id', string='Failed Transactions', copy=False, domain=[('state','!=','done')])
     sibling_ids = fields.One2many('res.partner', compute='_compute_sibling')
     paid_count = fields.Integer(string='Items Paid', compute='_compute_payment')
     payable_count = fields.Integer(string='Items To Pay', compute='_compute_payment')
+    transaction_done_count = fields.Integer(string='Transaction Done', compute='_compute_payment')
+    transaction_failed_count = fields.Integer(string='Transaction Failed', compute='_compute_payment')
     date_email_sent = fields.Datetime('Email Sent Date', readonly=True)
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     is_portal = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
@@ -238,6 +246,18 @@ class Partner(models.Model):
         else:
             action['domain'] = [('parent_id', '=', self.id)]
             action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_paid': True, 'create': False, 'edit': False, 'delete': False}
+        return action
+
+    def action_transaction_done(self):
+        self.ensure_one()
+        action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
+        action['domain'] = [('state', '=', 'done')]
+        return action
+
+    def action_transaction_failed(self):
+        self.ensure_one()
+        action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
+        action['domain'] = [('state', '!=', 'done')]
         return action
 
     def action_send(self):
