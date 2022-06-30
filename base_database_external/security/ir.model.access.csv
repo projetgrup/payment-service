@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-database_external_user,database_external_user,model_ir_database_external,base.group_user,1,0,0,0
 database_external_manager,database_external_manager,model_ir_database_external,base.group_system,1,1,1,1
+database_external_method_manager,database_external_method_manager,model_ir_database_external_method,base.group_system,1,1,1,1
+database_external_mapping_manager,database_external_mapping_manager,model_ir_database_external_mapping,base.group_system,1,1,1,1

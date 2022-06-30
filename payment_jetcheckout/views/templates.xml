@@ -77,6 +77,7 @@
                         <label for="contact_id" class="text-primary font-weight-bold mt-2 mb-0">Contact</label>
                         <span t-esc="contact_name" class="text-600"/>
                     </t>
+                    <t t-if="labels" t-raw="labels"/>
                     <input id="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
                     <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
                     <t t-if="page == 'payment'">

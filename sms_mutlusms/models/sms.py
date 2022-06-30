@@ -23,7 +23,7 @@ ERRORS = {
 class SmsProvider(models.Model):
     _inherit = 'sms.provider'
 
-    type = fields.Selection(selection_add=[('mutlusms', 'MutluSMS')])
+    type = fields.Selection(selection_add=[('mutlusms', 'MutluSMS')], ondelete={'mutlusms': 'cascade'})
 
 
 class SmsApi(models.AbstractModel):
