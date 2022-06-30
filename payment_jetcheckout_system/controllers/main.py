@@ -3,20 +3,21 @@ import werkzeug
 from odoo import http, _
 from odoo.http import request
 from odoo.tools.misc import get_lang
-from ..models.partner import PRIMEFACTOR
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 
 
 class JetcheckoutSystemController(JetController):
 
-    def _jetcheckout_get_parent(self, datas):
-        try:
-            data = datas.rsplit('-', 1)
-            token = data[0]
-            id = int(int(data[1], 16) / PRIMEFACTOR)
-            return request.env['res.partner'].sudo().search([('id', '=', id), ('access_token', '=', token)], limit=1)
-        except:
-            return False
+    def _jetcheckout_get_parent(self, token):
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            raise werkzeug.exceptions.NotFound()
+
+        partner = request.env['res.partner'].sudo().search([('id', '=', id), ('access_token', '=', token)], limit=1)
+        if not partner:
+            raise werkzeug.exceptions.NotFound()
+
+        return partner
 
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)
@@ -71,9 +72,6 @@ class JetcheckoutSystemController(JetController):
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page(self, token, **kwargs):
         parent = self._jetcheckout_get_parent(token)
-        if not parent:
-            raise werkzeug.exceptions.NotFound()
-
         transaction = None
         if '' in kwargs:
             transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs[''])], limit=1)
@@ -102,6 +100,13 @@ class JetcheckoutSystemController(JetController):
     @http.route(['/p/contact'], type='json', auth='public', website=True, csrf=False)
     def jetcheckout_contact_page(self):
         return request.website.payment_contact_page
+
+    @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
+    def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
+        parent = self._jetcheckout_get_parent(token)
+        user = parent.users_id
+        request.session.authenticate(request.db, user.login, {'token': token})
+        return werkzeug.utils.redirect('/my/payment')
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):

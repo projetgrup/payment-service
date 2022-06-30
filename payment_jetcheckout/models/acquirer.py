@@ -63,6 +63,14 @@ class PaymentAcquirerJetcheckoutBank(models.Model):
     color = fields.Char()
 
 
+class PaymentAcquirerJetcheckoutCampaign(models.Model):
+    _name = 'payment.acquirer.jetcheckout.campaign'
+    _description = 'Jetcheckout Campaign'
+
+    acquirer_id = fields.Many2one('payment.acquirer')
+    name = fields.Char(required=True)
+
+
 class PaymentAcquirerJetcheckoutJournal(models.Model):
     _name = 'payment.acquirer.jetcheckout.journal'
     _description = 'Jetcheckout Journal Items'
@@ -114,6 +122,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
     jetcheckout_url = fields.Char(compute='_get_jetcheckout_url')
     jetcheckout_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
+    jetcheckout_campaign_ids = fields.One2many('payment.acquirer.jetcheckout.campaign', 'acquirer_id', groups='base.group_user')
     jetcheckout_terms = fields.Html(required_if_provider='jetcheckout', groups='base.group_user', sanitize=False, sanitize_attributes=False, sanitize_form=False)
     jetcheckout_no_terms = fields.Boolean('Hide Terms')
     jetcheckout_username = fields.Char(readonly=True)
@@ -184,7 +193,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             token.jetcheckout_card_installment = kwargs.get('installment_id', '1')
             return token
 
-        token = self.env['payment.token'].sudo().create({
+        return self.env['payment.token'].sudo().create({
             'acquirer_id': int(kwargs['acquirer_id']),
             'acquirer_ref': kwargs.get('cc_holder_name'),
             'jetcheckout_card_holder': kwargs.get('cc_holder_name'),
@@ -198,15 +207,6 @@ class PaymentAcquirerJetcheckout(models.Model):
             'partner_id': partner_id,
             'name': 'XXXX-XXXX-XXXX-%s - %s' % (kwargs['cc_number'][-4:], kwargs['cc_holder_name'])
         })
-        #if kwargs.get('save'):
-        #    card = self.iyzico_store_card(token, kwargs)
-        #    if card['status'] == 'success':
-        #        token.write({
-        #            'iyzico_card_userkey': card['cardUserKey'],
-        #            'iyzico_card_token': card['cardToken'],
-        #        })
-        #        return token
-        return token
 
     def jetcheckout_s2s_form_validate(self, data):
         self.ensure_one()
@@ -475,6 +475,29 @@ class PaymentAcquirerJetcheckout(models.Model):
         data['payment.acquirer.jetcheckout.api.currency'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.currency'].search_read([], ['id', 'res_id'])}
         data['acquirer'] = self
         return data
+
+    def _jetcheckout_api_sync_campaign(self, poses):
+        api_campaigns_list = poses.filtered(lambda x: x.is_active).mapped('pos_price').filtered(lambda x: x.is_active).mapped('offer_name')
+        acq_campaigns_list = self.jetcheckout_campaign_ids.mapped('name')
+        api_campaigns = set(api_campaigns_list)
+        acq_campaigns = set(acq_campaigns_list)
+        creates = []
+        unlinks = []
+
+        for campaign in acq_campaigns:
+            if campaign not in api_campaigns:
+                unlinks.append(campaign)
+
+        for campaign in api_campaigns:
+            if campaign not in acq_campaigns:
+                creates.append(campaign)
+
+        self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([('acquirer_id', '=', self.id), ('name', 'in', unlinks)]).unlink()
+        self.env['payment.acquirer.jetcheckout.campaign'].sudo().create([{
+            'acquirer_id': self.id,
+            'name': name,
+        } for name in creates])
+
 
     def _jetcheckout_api_upload_vals(self, vals, data, table):
         values = {}

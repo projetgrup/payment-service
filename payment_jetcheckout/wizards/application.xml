@@ -26,25 +26,25 @@
             <field name="virtual_poses"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}">
+                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
                         <div t-attf-class="col-md-2 font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
                             <t t-if="record.is_active.raw_value">
-                                <i class="fa fa-check mr-2"/>Active
+                                <i class="fa fa-check mr-2"/><span>Active</span>
                             </t>
                             <t t-else="">
-                                <i class="fa fa-times mr-2"/>Passive
+                                <i class="fa fa-times mr-2"/><span>Passive</span>
                             </t>
                         </div>
-                        <div class="col-md-3 font-weight-bold p-2 text-center shadow-lg">
-                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">Name</span>
+                        <div class="col-md-3 font-weight-bold p-2 text-center shadow">
+                            <span class="text-300 position-absolute" style="bottom: 5px; right: 0; left: 0; font-size: smaller;">Name</span>
                             <t t-esc="record.name.value"/>
                         </div>
                         <div class="col-md-3 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">API Key</span>
+                            <span class="text-300 position-absolute" style="bottom: 5px; right: 0; left: 0; font-size: smaller;">API Key</span>
                             <t t-esc="record.application_id.value"/>
                         </div>
                         <div class="col-md-2 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            <span class="text-300 position-absolute" style="bottom: 2px; right: 0; left: 0; font-size: smaller;">Virtual Pos</span>
+                            <span class="text-300 position-absolute" style="bottom: 5px; right: 0; left: 0; font-size: smaller;">Virtual Pos</span>
                             <t t-esc="record.virtual_poses.value"/>
                         </div>
                         <div class="col-md-2 p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -53,13 +53,13 @@
                         </div>
                     </div>
 
-                    <div t-attf-class="oe_kanban_global_click my-2 p-0 overflow-hidden d-md-none d-flex #{record.is_active.raw_value ? '' : 'text-400'}">
+                    <div t-attf-class="oe_kanban_global_click my-2 p-0 overflow-hidden d-md-none d-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
                         <div t-attf-class="font-weight-bold text-center h-100 p-4 w-25 d-flex flex-column justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
                             <t t-if="record.is_active.raw_value">
-                                <i class="fa fa-check"/><br/>Active
+                                <i class="fa fa-check"/><br/><span>Active</span>
                             </t>
                             <t t-else="">
-                                <i class="fa fa-times"/><br/>Passive
+                                <i class="fa fa-times"/><br/><span>Passive</span>
                             </t>
                         </div>
                         <div class="oe_kanban_details">

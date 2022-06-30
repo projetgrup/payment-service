@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_form" model="ir.ui.view">
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//page[@name="sales_purchases"]//group[@name="sale"]' position="inside">
+            <field name="campaign_id" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}"/>
+            <field name="acquirer_ids" invisible="1"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

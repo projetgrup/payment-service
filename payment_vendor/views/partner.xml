@@ -39,6 +39,7 @@
             <field name="ref"/>
         </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="replace"/>
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="string">Vendor</attribute>

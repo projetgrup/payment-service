@@ -63,6 +63,7 @@
             <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
         </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
     </field>
     </record>
 
@@ -82,6 +83,7 @@
             <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
         </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="replace"/>
         <xpath expr='//field[@name="sibling_ids"]' position="attributes">
             <attribute name="context">{'kanban_view_ref' : 'payment_student.child_kanban', 'form_view_ref' : 'payment_student.child_basic'}</attribute>

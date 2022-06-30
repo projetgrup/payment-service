@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-20 09:35+0000\n"
-"PO-Revision-Date: 2022-06-20 12:37+0300\n"
+"POT-Creation-Date: 2022-06-29 11:13+0000\n"
+"PO-Revision-Date: 2022-06-29 14:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -77,26 +77,26 @@ msgstr "<br/>Vergi No:"
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
-msgid "<i class=\"fa fa-check mr-2\"/>Active"
-msgstr "<i class=\"fa fa-check\"/><br/>Aktif"
+msgid "<i class=\"fa fa-check mr-2\"/><span>Active</span>"
+msgstr "<i class=\"fa fa-check mr-2\"/><span>Aktif</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
-msgid "<i class=\"fa fa-check\"/><br/>Active"
-msgstr "<i class=\"fa fa-check\"/><br/>Aktif"
+msgid "<i class=\"fa fa-check\"/><br/><span>Active</span>"
+msgstr "<i class=\"fa fa-check\"/><br/><span>Aktif</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
-msgid "<i class=\"fa fa-times mr-2\"/>Passive"
-msgstr "<i class=\"fa fa-times\"/><br/>Pasif"
+msgid "<i class=\"fa fa-times mr-2\"/><span>Passive</span>"
+msgstr "<i class=\"fa fa-times mr-2\"/><span>Pasif</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
-msgid "<i class=\"fa fa-times\"/><br/>Passive"
-msgstr "<i class=\"fa fa-times\"/><br/>Pasif"
+msgid "<i class=\"fa fa-times\"/><br/><span>Passive</span>"
+msgstr "<i class=\"fa fa-times\"/><br/><span>Pasif</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_result
@@ -176,65 +176,65 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">3D Usage</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">3D Kullanımı</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">API Key</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">API Anahtarı</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Mode</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Mod</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Name</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Ad</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Priority</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Öncelik</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Provider</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Saylayıcı</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 msgid ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Virtual Pos</span>"
 msgstr ""
-"<span class=\"text-300 position-absolute\" style=\"bottom: 2px; right: 0; "
+"<span class=\"text-300 position-absolute\" style=\"bottom: 5px; right: 0; "
 "left: 0; font-size: smaller;\">Sanal Pos</span>"
 
 #. module: payment_jetcheckout
@@ -393,6 +393,7 @@ msgstr "Hesap Numarası"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__acquirer_id
 msgid "Acquirer"
@@ -694,6 +695,7 @@ msgstr ""
 "Bağlantı başarısız. Lütfen kullanıcı adınızı veya parolanızı doğrulayınız."
 
 #. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_res_partner
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Contact"
 msgstr "İlgili"
@@ -736,6 +738,7 @@ msgstr "%s için iade oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__create_uid
@@ -757,6 +760,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__create_date
@@ -982,6 +986,7 @@ msgstr "Görünen İkon Önizleme"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__display_name
@@ -1067,6 +1072,7 @@ msgstr "IBAN"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__id
@@ -1216,6 +1222,12 @@ msgid "Jetcheckout Bank"
 msgstr "Jetcheckout Banka"
 
 #. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_campaign
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_campaign_ids
+msgid "Jetcheckout Campaign"
+msgstr "Jetcheckout Kampanya"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_api
 msgid "Jetcheckout Gateway Api"
 msgstr "Jetcheckout Geçit Api"
@@ -1325,6 +1337,7 @@ msgstr "Yevmiyeler"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin____last_update
@@ -1346,6 +1359,7 @@ msgstr "Son Düzenlenme Tarihi"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__write_uid
@@ -1367,6 +1381,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__write_date
@@ -1443,6 +1458,7 @@ msgstr "Aylık Ödeme"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__name
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
@@ -1531,6 +1547,12 @@ msgstr "Ödeme"
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Ödeme Alıcısı"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__acquirer_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__acquirer_ids
+msgid "Payment Acquirers"
+msgstr "Ödeme Alıcıları"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_amount
@@ -1688,6 +1710,12 @@ msgstr "Artı Taksit"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__plus_installment_description
 msgid "Plus Installment Description"
 msgstr "Artı Taksit Açıklaması"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__campaign_id
+msgid "PoS Campaign"
+msgstr "PoS Kampanya"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__pos_price_id
