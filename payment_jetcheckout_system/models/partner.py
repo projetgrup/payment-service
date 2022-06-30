@@ -264,13 +264,15 @@ class Partner(models.Model):
     def action_transaction_done(self):
         self.ensure_one()
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
-        action['domain'] = [('state', '=', 'done')]
+        partner_id = self.parent_id.id or self.id
+        action['domain'] = [('state', '=', 'done'), ('partner_id', '=', partner_id)]
         return action
 
     def action_transaction_failed(self):
         self.ensure_one()
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
-        action['domain'] = [('state', '!=', 'done')]
+        partner_id = self.parent_id.id or self.id
+        action['domain'] = [('state', '!=', 'done'), ('partner_id', '=', partner_id)]
         return action
 
     def action_share_link(self):
