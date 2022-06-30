@@ -28,4 +28,6 @@
     <menuitem id="menu_sms" name="SMS Settings" parent="menu_conf" sequence="6"/>
     <menuitem id="menu_sms_template" action="payment_jetcheckout_system.action_sms_template" parent="menu_sms" sequence="1"/>
     <menuitem id="menu_sms_provider" action="payment_jetcheckout_system.action_sms_provider" parent="menu_sms" sequence="2"/>
+    <menuitem id="menu_database" name="Database Settings" parent="menu_conf" sequence="7"/>
+    <menuitem id="menu_database_external" action="base_database_external.action_database_external" parent="menu_database" sequence="1"/>
 </odoo>
