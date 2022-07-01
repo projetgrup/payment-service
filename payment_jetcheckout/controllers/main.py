@@ -51,6 +51,7 @@ class JetcheckoutController(http.Controller):
             'partner_name': partner_commercial.name,
             'contact_id': partner_contact.id if partner_contact else False,
             'contact_name': partner_contact.name if partner_contact else False,
+            'partner': partner_commercial,
             'acquirer': acquirer,
             'company': company,
             'card_family': card_family,

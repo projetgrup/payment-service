@@ -49,7 +49,7 @@
                         <field name="username"/>
                         <field name="password" password="True"/>
                         <field name="originator"/>
-                        <button name="action_test_connection" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2"/>
+                        <button name="action_test_connection" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2" class="btn btn-secondary border border-primary m-3 py-2 px-5"/>
                     </group>
                     <group>
                         <field name="active" widget="boolean_toggle"/>
