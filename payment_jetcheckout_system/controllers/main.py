@@ -45,6 +45,7 @@ class JetcheckoutSystemController(JetController):
             'acquirer': acquirer,
             'card_family': card_family,
             'footer': '',
+            'partner_id': parent.id,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
             'tx': transaction,
