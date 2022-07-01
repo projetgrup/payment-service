@@ -79,7 +79,7 @@ class IrDatabaseExternalMapping(models.Model):
 
     method_id = fields.Many2one('ir.database.external.method')
     type = fields.Selection([('parameter', 'Parameter'), ('response', 'Response')])
-    column = fields.Selection([('string', 'String'), ('integer', 'Integer'), ('float', 'Float')], default='string')
+    column = fields.Selection([('string', 'String'), ('integer', 'Integer'), ('float', 'Float')], default='string', string='Data Type')
     name = fields.Char(required=True, string='Name')
     remote = fields.Char(required=True, string='Remote Name')
     company_id = fields.Many2one(related='method_id.company_id', store=True)
