@@ -317,6 +317,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 amount: this.amount.typedValue,
                 amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                 cardnumber: this.cardnumber.typedValue,
+                partner_id: this.$partner_id && this.$partner_id.value || 0
             },
         }).then(function (result) {
             if ('error' in result) {
@@ -411,6 +412,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                         cardnumber: this.cardnumber.typedValue,
                         prefix: 'bin_',
+                        partner_id: this.$partner_id && this.$partner_id.value || 0,
                         s2s: !(!this.$order && !this.$invoice && !this.$subscription),
                     },
                 }).then(function (result) {
