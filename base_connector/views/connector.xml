@@ -31,15 +31,17 @@
                 <group>
                     <group>
                         <field name="type" required="1"/>
-                        <field name="subtype" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="subtype" options="{'no_create': True, 'no_open': True}" domain="[('type', '=', type)]"/>
                         <field name="server"/>
                         <field name="username"/>
                         <field name="password" password="True"/>
-                        <button name="action_test" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2"/>
                     </group>
                     <group>
                         <field name="active" widget="boolean_toggle"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group>
+                        <button name="action_test" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
                     </group>
                 </group>
                 <notebook>
@@ -57,8 +59,9 @@
     <field name="model">ir.connector.line</field>
     <field name="arch" type="xml">
         <tree>
-            <field name="method_id"/>
+            <field name="method_id" options="{'no_create': True, 'no_open': True}"/>
             <field name="procedure"/>
+            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
             <field name="parameter_ids"/>
             <field name="response_ids"/>
             <button name="action_test" string="Test Procedure" type="object" icon="fa-terminal"/>
@@ -72,19 +75,45 @@
     <field name="arch" type="xml">
         <form>
             <sheet>
-                <p class="text-center">
-                    <field name="method_id" class="w-25" placeholder="Method" required="1"/>
-                    <span class="fa fa-long-arrow-right mx-5"></span>
-                    <field name="procedure" class="w-25" placeholder="Procedure"/>
-                </p>
+                <div class="d-flex justify-content-center text-center">
+                    <div class="d-flex flex-column">
+                        <field name="method_id" options="{'no_create': True, 'no_open': True}"/>
+                        <label for="method_id" class="font-weight-normal text-muted" style="font-size: 0.9rem"/>
+                    </div>
+                    <div class="mt-1">
+                        <span class="fa fa-long-arrow-right mx-5"></span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <field name="procedure"/>
+                        <label for="procedure" class="font-weight-normal text-muted" style="font-size: 0.9rem"/>
+                    </div>
+                </div>
                 <group>
+                    <group colspan="2">
+                        <field name="description" nolabel="1"/>
+                        <field name="model_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="method_code" invisible="1"/>
+                    </group>
                     <group string="Parameters">
                         <field name="parameter_ids" nolabel="1" colspan="2" context="{'default_type': 'parameter'}"/>
                     </group>
                     <group string="Responses">
-                        <field name="response_ids" nolabel="1" colspan="2" context="{'default_type': 'response'}"/>
+                        <field name="response_ids" nolabel="1" colspan="2" context="{'default_type': 'response'}">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="type" invisible="1"/>
+                            <field name="key" readonly="1" force_save="1"/>
+                            <field name="key_type" string="Type" force_save="1"/>
+                            <field name="value"/>
+                            <field name="value_type" required="1" string="Type"/>
+                        </tree>
+                        </field>
                     </group>
-                    <button name="action_test" string="Test Procedure" type="object" icon="fa-terminal"/>
+                    <group>
+                        <button name="action_test" string="Test Procedure" type="object" icon="fa-terminal" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
+                    </group>
+                    <group>
+                        <button name="action_reset" string="Reset to Defaults" type="object" icon="fa-undo" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
+                    </group>
                 </group>
             </sheet>
         </form>
@@ -97,10 +126,10 @@
     <field name="arch" type="xml">
         <tree editable="bottom">
             <field name="type" invisible="1"/>
-            <field name="key"/>
-            <field name="key_type"/>
+            <field name="key" force_save="1"/>
+            <field name="key_type" string="Type"/>
             <field name="value"/>
-            <field name="value_type" required="1"/>
+            <field name="value_type" required="1" string="Type"/>
         </tree>
     </field>
     </record>
@@ -111,11 +140,19 @@
     <field name="arch" type="xml">
         <form>
             <sheet>
-                <p class="text-center">
-                    <field name="key" class="w-25" placeholder="Key"/>
-                    <span class="fa fa-long-arrow-right mx-5"></span>
-                    <field name="value" class="w-25" placeholder="Value"/>
-                </p>
+                <div class="d-flex justify-content-center text-center">
+                    <div class="d-flex flex-column">
+                        <field name="key" options="{'no_create': True, 'no_open': True}"/>
+                        <label for="key" class="font-weight-normal text-muted" style="font-size: 0.9rem"/>
+                    </div>
+                    <div class="mt-1">
+                        <span class="fa fa-long-arrow-right mx-5"></span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <field name="value"/>
+                        <label for="value" class="font-weight-normal text-muted" style="font-size: 0.9rem"/>
+                    </div>
+                </div>
             </sheet>
         </form>
     </field>
@@ -127,6 +164,7 @@
     <field name="arch" type="xml">
         <tree>
             <field name="name"/>
+            <field name="type"/>
             <field name="code"/>
         </tree>
     </field>
@@ -146,9 +184,10 @@
                 </div>
                 <group>
                     <group>
-                        <field name="code"/>
+                        <field name="type"/>
                     </group>
                     <group>
+                        <field name="code"/>
                     </group>
                 </group>
             </sheet>
@@ -162,6 +201,7 @@
     <field name="arch" type="xml">
         <tree>
             <field name="name"/>
+            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
             <field name="code"/>
         </tree>
     </field>
@@ -181,9 +221,19 @@
                 </div>
                 <group>
                     <group>
-                        <field name="code"/>
+                        <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                     <group>
+                        <field name="code"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="Parameters">
+                        <field name="parameter_ids" nolabel="1" colspan="2" context="{'default_type': 'parameter'}"/>
+                    </group>
+                    <group string="Responses">
+                        <field name="response_ids" nolabel="1" colspan="2" context="{'default_type': 'response'}"/>
                     </group>
                 </group>
             </sheet>

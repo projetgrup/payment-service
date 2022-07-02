@@ -2,16 +2,14 @@
 import pymssql
 from pymssql._pymssql import OperationalError
 
-from odoo import models, fields, _
+from odoo import models, _
 from odoo.exceptions import UserError
 
 
-class IrDatabaseExternal(models.Model):
-    _inherit = 'ir.database.external'
+class IrConnector(models.Model):
+    _inherit = 'ir.connector'
 
-    type = fields.Selection(selection_add=[('mssql', 'Microsoft SQL')], ondelete={'mssql': 'cascade'})
-
-    def _test_mssql_connection(self):
+    def _test_database_mssql_connection(self):
         try:
             pymssql.connect(self.server, self.username, self.password, self.database)
         except OperationalError as e:
@@ -19,12 +17,16 @@ class IrDatabaseExternal(models.Model):
         except:
             raise UserError(_('Connection failed. Please check database settings.'))
 
-    def _execute_mssql_query(self, procedure, params):
+    def _execute_database_mssql_query(self, procedure, parameters):
         try:
+            params = []
+            for key, value in parameters.items():
+                params.append('@%s = %s' % (key, value))
+
             conn = pymssql.connect(self.server, self.username, self.password, self.database)
             cursor = conn.cursor(as_dict=True)
             cursor.execute(f"""EXEC {procedure} {', '.join(params)}""")
-            result = cursor.fetchone()
+            result = cursor.fetchall()
             conn.close()
             return result
         except OperationalError as e:

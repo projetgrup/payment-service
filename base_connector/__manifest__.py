@@ -13,5 +13,6 @@
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/connector.xml',
+        'data/data.xml',
     ],
 }
