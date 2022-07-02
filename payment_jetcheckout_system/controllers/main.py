@@ -116,10 +116,14 @@ class JetcheckoutSystemController(JetController):
         values['fail_url'] = '/my/payment/fail'
 
         try:
-            db_source = request.env['ir.database.external'].sudo().search([('company_id', '=', values['company'].id)], limit=1)
-            result = db_source._get('partner_balance', values['partner'])
-            values['balance'] = result['amount']
-            values['balance_currency'] = request.env['res.currency'].sudo().search([('name', '=', result['currency'])], limit=1)
+            result = request.env['ir.connector'].sudo().execute('partner_balance', values['partner'], values['company'].id)
+            balances = []
+            for res in result:
+                balances.append({
+                    'amount': res['amount'],
+                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency'])], limit=1)
+                })
+            values['balances'] = balances
             values['show_balance'] = True
         except:
             values['show_balance'] = False

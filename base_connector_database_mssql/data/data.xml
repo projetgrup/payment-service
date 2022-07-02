@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="method_mssql" model="ir.connector.subtype">
+            <field name="name">Microsoft SQL</field>
+            <field name="code">mssql</field>
+            <field name="type">database</field>
+        </record>
+    </data>
+</odoo>

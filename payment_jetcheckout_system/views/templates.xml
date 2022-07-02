@@ -128,7 +128,9 @@
                     <t t-set="labels">
                         <t t-if="show_balance">
                             <label for="balance" class="text-primary font-weight-bold mt-2 mb-0">Balance</label>
-                            <span t-esc="balance" class="text-600" t-options="{'widget': 'monetary', 'display_currency': balance_currency}"/>
+                            <t t-foreach="balances" t-as="balance">
+                                <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                            </t>
                         </t>
                     </t>
                     <t t-set="buttons">
