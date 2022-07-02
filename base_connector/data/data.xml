@@ -5,13 +5,10 @@
             <field name="name">Partner Balance</field>
             <field name="code">partner_balance</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="parameter_ids" eval="[
+            <field name="mapping_ids" eval="[
                 (5, 0, 0),
                 (0, 0, {'type': 'parameter', 'key': 'company_id.id', 'key_type': 'integer', 'value': 'company_id', 'value_type': 'integer'}),
                 (0, 0, {'type': 'parameter', 'key': 'vat', 'key_type': 'char', 'value': 'vat_number', 'value_type': 'string'}),
-            ]"/>
-            <field name="response_ids" eval="[
-                (5, 0, 0),
                 (0, 0, {'type': 'response', 'key': 'amount', 'key_type': 'float', 'value': 'amount', 'value_type': 'float'}),
                 (0, 0, {'type': 'response', 'key': 'currency', 'key_type': 'char', 'value': 'currency', 'value_type': 'string'}),
             ]"/>

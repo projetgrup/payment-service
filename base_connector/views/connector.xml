@@ -32,21 +32,24 @@
                     <group>
                         <field name="type" required="1"/>
                         <field name="subtype" options="{'no_create': True, 'no_open': True}" domain="[('type', '=', type)]"/>
-                        <field name="server"/>
-                        <field name="username"/>
-                        <field name="password" password="True"/>
+                        <field name="server" attrs="{'invisible': [('server_required', '=', False)], 'required': [('server_required', '!=', False)]}"/>
+                        <field name="username" attrs="{'invisible': [('username_required', '=', False)], 'required': [('username_required', '!=', False)]}"/>
+                        <field name="password" password="True" attrs="{'invisible': [('password_required', '=', False)], 'required': [('password_required', '!=', False)]}"/>
+                        <field name="server_required" invisible="1"/>
+                        <field name="username_required" invisible="1"/>
+                        <field name="password_required" invisible="1"/>
                     </group>
                     <group>
                         <field name="active" widget="boolean_toggle"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                     <group>
-                        <button name="action_test" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
+                        <button name="action_test" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}" colspan="2" class="border-0 btn btn-block btn-secondary font-weight-bold m-3 mx-5 px-5 py-2 text-primary text-uppercase"/>
                     </group>
                 </group>
                 <notebook>
                     <page name="lines" string="Methods">
-                        <field name="line_ids"/>
+                        <field name="line_ids" context="{'default_company_id': company_id}"/>
                     </page>
                 </notebook>
             </sheet>
@@ -93,6 +96,7 @@
                         <field name="description" nolabel="1"/>
                         <field name="model_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
                         <field name="method_code" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                     </group>
                     <group string="Parameters">
                         <field name="parameter_ids" nolabel="1" colspan="2" context="{'default_type': 'parameter'}"/>
@@ -109,10 +113,10 @@
                         </field>
                     </group>
                     <group>
-                        <button name="action_test" string="Test Procedure" type="object" icon="fa-terminal" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
+                        <button name="action_test" string="Test Procedure" type="object" icon="fa-terminal" colspan="2" class="border-0 btn btn-block btn-secondary font-weight-bold m-3 mx-5 px-5 py-2 text-primary text-uppercase"/>
                     </group>
                     <group>
-                        <button name="action_reset" string="Reset to Defaults" type="object" icon="fa-undo" colspan="2" class="btn btn-block btn-secondary m-3 py-2 px-5"/>
+                        <button name="action_reset" string="Reset to Defaults" type="object" icon="fa-undo" colspan="2" class="border-0 btn btn-block btn-secondary font-weight-bold m-3 mx-5 px-5 py-2 text-primary text-uppercase"/>
                     </group>
                 </group>
             </sheet>
