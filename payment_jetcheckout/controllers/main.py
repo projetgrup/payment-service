@@ -23,13 +23,12 @@ class JetcheckoutController(http.Controller):
         return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
     @staticmethod
-    def _jetcheckout_get_partner(**kwargs):
-        id = 'partner_id' in kwargs and int(kwargs['partner_id']) or False
+    def _jetcheckout_get_partner(id=None):
         return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
 
     @staticmethod
-    def _jetcheckout_get_partner_campaign(partner=None):
-        partner = partner or JetcheckoutController._jetcheckout_get_partner()
+    def _jetcheckout_get_partner_campaign(partner=None, id=None):
+        partner = partner or JetcheckoutController._jetcheckout_get_partner(id)
         return partner.campaign_id.name or ''
 
     def _jetcheckout_tx_vals(self, **kwargs):
@@ -51,6 +50,7 @@ class JetcheckoutController(http.Controller):
             'partner_name': partner_commercial.name,
             'contact_id': partner_contact.id if partner_contact else False,
             'contact_name': partner_contact.name if partner_contact else False,
+            'partner': partner_commercial,
             'acquirer': acquirer,
             'company': company,
             'card_family': card_family,
@@ -86,13 +86,13 @@ class JetcheckoutController(http.Controller):
         bin_number = kwargs['cardnumber'][:6] if len(kwargs['cardnumber']) >= 6 else False
         prefix = kwargs.get('prefix', '')
         url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_jetcheckout_api_url(), prefix)
+        pid = 'partner_id' in kwargs and int(kwargs['partner_id']) or None
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": self._jetcheckout_get_partner_campaign(),
-            "is_3d": True,
+            "campaign_name": self._jetcheckout_get_partner_campaign(id=pid),
         }
         if prefix:
             data.update({"bin": bin_number})
@@ -154,12 +154,13 @@ class JetcheckoutController(http.Controller):
             acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
         url = '%s/api/v1/prepayment/installment_options' % acquirer._get_jetcheckout_api_url()
+        pid = 'partner_id' in kwargs and int(kwargs['partner_id']) or None
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": JetcheckoutController._jetcheckout_get_partner_campaign(),
+            "campaign_name": JetcheckoutController._jetcheckout_get_partner_campaign(id=pid),
             "is_3d": True,
         }
 
@@ -261,12 +262,13 @@ class JetcheckoutController(http.Controller):
         customer_amount = amount * customer_rate / 100
         amount_int = int((amount + customer_amount) * 100)
 
-        partner = self._jetcheckout_get_partner(**kwargs)
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
+        pid = 'partner_id' in kwargs and int(kwargs['partner_id']) or None
+        partner = self._jetcheckout_get_partner(pid)
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
-            "campaign_name": self._jetcheckout_get_partner_campaign(partner),
+            "campaign_name": self._jetcheckout_get_partner_campaign(partner=partner),
             "amount": amount_int,
             "currency": currency.name,
             "installment_count": kwargs['installment'],

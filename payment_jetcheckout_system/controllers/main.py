@@ -45,6 +45,7 @@ class JetcheckoutSystemController(JetController):
             'acquirer': acquirer,
             'card_family': card_family,
             'footer': '',
+            'partner_id': parent.id,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
             'tx': transaction,
@@ -113,6 +114,15 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_get_data()
         values['success_url'] = '/my/payment/success'
         values['fail_url'] = '/my/payment/fail'
+
+        try:
+            db_source = request.env['ir.database.external'].sudo().search([('company_id', '=', values['company'].id)], limit=1)
+            result = db_source._get('partner_balance', values['partner'])
+            values['balance'] = result['amount']
+            values['balance_currency'] = request.env['res.currency'].sudo().search([('name', '=', result['currency'])], limit=1)
+            values['show_balance'] = True
+        except:
+            values['show_balance'] = False
 
         # remove hash if exists
         # it could be there because of api module

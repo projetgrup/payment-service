@@ -12,6 +12,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_jetcheckout',
+        'base_database_external',
         'sms_api'
     ],
     'data': [
