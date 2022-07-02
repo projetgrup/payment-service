@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+connector_manager,connector_manager,model_ir_connector,base.group_system,1,1,1,1
+connector_subtype_manager,connector_subtype_manager,model_ir_connector_subtype,base.group_system,1,1,1,1
+connector_method_manager,connector_method_manager,model_ir_connector_method,base.group_system,1,1,1,1
+connector_line_manager,connector_line_manager,model_ir_connector_line,base.group_system,1,1,1,1
+connector_mapping_manager,connector_mapping_manager,model_ir_connector_line_mapping,base.group_system,1,1,1,1
