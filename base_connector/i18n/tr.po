@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-02 17:40+0000\n"
-"PO-Revision-Date: 2022-07-02 20:41+0300\n"
+"POT-Creation-Date: 2022-07-02 19:34+0000\n"
+"PO-Revision-Date: 2022-07-02 22:35+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -195,6 +195,11 @@ msgid "Line"
 msgstr "Satır"
 
 #. module: base_connector
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector_method__mapping_ids
+msgid "Mappings"
+msgstr "Eşlemeler"
+
+#. module: base_connector
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector_line__method_id
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector_line_mapping__method_id
 msgid "Method"
@@ -270,6 +275,27 @@ msgid "Password"
 msgstr "Parola"
 
 #. module: base_connector
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector__password_required
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector_subtype__password_required
+msgid "Password Required"
+msgstr "Parola Zorunlu"
+
+#. module: base_connector
+#: model_terms:ir.ui.view,arch_db:base_connector.connector_line_form
+msgid ""
+"Please fill Parameters table with using fields in the following model. You "
+"can use a normal fields or relational fields with joined with dots in Key "
+"column. The field served from remote server which is matched with the key "
+"must be specified in Value column, then data type of this value is needed to "
+"be selected."
+msgstr ""
+"Parametreler tablosunu aşağıda belirtilen model içindeki alanları kullanarak "
+"doldurunuz. Anahtar sütununda normal bir alan veya noktalar ile "
+"birleştirilmiş ilişkili bir alan kullanabilirsiniz. Değer kısmına ise "
+"bağlantı kurulacak sistemde anahtar alanıyla eşleşecek bir alan girilir, "
+"daha sonra bu alanın sahip olduğu veri türü belirtilir."
+
+#. module: base_connector
 #: code:addons/base_connector/models/connector.py:0
 #, python-format
 msgid "Please select a connector subtype"
@@ -316,9 +342,26 @@ msgid "Responses"
 msgstr "Yanıtlar"
 
 #. module: base_connector
+#: model_terms:ir.ui.view,arch_db:base_connector.connector_line_form
+msgid ""
+"Responses table is automatically filled with selected method. Only value, "
+"which is posted from remote server as a response, and its data type have to "
+"be specified."
+msgstr ""
+"Yanıtlar tablosu, seçilen metoda göre otomatik olarak tamamlanır. Sadece "
+"bağlantı yapıldığında yanıt olarak dönecek değer ve değer veri türleri, "
+"ilgili alanlarla eşleşecek şekilde girilir."
+
+#. module: base_connector
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector__server
 msgid "Server"
 msgstr "Sunucu"
+
+#. module: base_connector
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector__server_required
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector_subtype__server_required
+msgid "Server Required"
+msgstr "Sunucu Zorunlu"
 
 #. module: base_connector
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector__subtype
@@ -350,6 +393,11 @@ msgid "Test Procedure"
 msgstr "Prosedürü Test Et"
 
 #. module: base_connector
+#: model_terms:ir.ui.view,arch_db:base_connector.connector_line_form
+msgid "The model to be used with the method:"
+msgstr "Bu metot ile kullanılacak model:"
+
+#. module: base_connector
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector__type
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector_line_mapping__type
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector_subtype__type
@@ -362,6 +410,12 @@ msgstr "Tür"
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector__username
 msgid "Username"
 msgstr "Kullanıcı Adı"
+
+#. module: base_connector
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector__username_required
+#: model:ir.model.fields,field_description:base_connector.field_ir_connector_subtype__username_required
+msgid "Username Required"
+msgstr "Kullanıcı Adı Zorunlu"
 
 #. module: base_connector
 #: model:ir.model.fields,field_description:base_connector.field_ir_connector_line_mapping__value
