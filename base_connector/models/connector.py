@@ -11,9 +11,9 @@ class IrConnector(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(string='Priority', default=10)
     name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='restrict')
     type = fields.Selection([])
-    subtype = fields.Many2one('ir.connector.subtype')
+    subtype = fields.Many2one('ir.connector.subtype', ondelete='restrict')
     server = fields.Char()
     username = fields.Char()
     password = fields.Char()
@@ -26,7 +26,7 @@ class IrConnector(models.Model):
             raise
         return getattr(self, '_get_%s_%s' % (self.type, code))(line, record)
 
-    def action_test_connection(self):
+    def action_test(self):
         if not self.type:
             raise UserError(_('Please select a connector type'))
         if not self.subtype:
@@ -43,18 +43,38 @@ class IrConnector(models.Model):
             }
         }
 
+class IrConnectorSubtype(models.Model):
+    _name = 'ir.connector.subtype'
+    _description = 'Connector Subtypes'
+
+    active = fields.Boolean(default=True)
+    name = fields.Char()
+    code = fields.Char()
+
+
+class IrConnectorMethod(models.Model):
+    _name = 'ir.connector.method'
+    _description = 'Connector Methods'
+
+    active = fields.Boolean(default=True)
+    name = fields.Char()
+    code = fields.Char()
+
 
 class IrConnectorLine(models.Model):
     _name = 'ir.connector.line'
     _description = 'Connector Lines'
 
-    connector_id = fields.Many2one('ir.connector')
-    method_id = fields.Many2one('ir.connector.line.method')
+    connector_id = fields.Many2one('ir.connector', ondelete='cascade')
+    method_id = fields.Many2one('ir.connector.method', ondelete='restrict', required=True)
     procedure = fields.Char(required=True, string='Procedure')
     parameter_ids = fields.One2many('ir.connector.line.mapping', 'line_id', string='Parameters', copy=True, domain=[('type', '=', 'parameter')])
     response_ids = fields.One2many('ir.connector.line.mapping', 'line_id', string='Responses', copy=True, domain=[('type', '=', 'response')])
     model_id = fields.Many2one('ir.model', string='Model')
     company_id = fields.Many2one(related='connector_id.company_id', store=True)
+
+    def action_test(self):
+        pass
 
 
 class IrConnectorLineMapping(models.Model):
@@ -80,7 +100,7 @@ class IrConnectorLineMapping(models.Model):
         for mapping in self:
             mapping.key_type = mapping._get_field_type(mapping.model_id.model, mapping.key)
 
-    line_id = fields.Many2one('ir.connector.line.method')
+    line_id = fields.Many2one('ir.connector.line', ondelete='cascade')
     type = fields.Selection([('parameter', 'Parameter'), ('response', 'Response')])
     key = fields.Char(required=True)
     key_type = fields.Char(string='Key Type', compute='_compute_key_type', compute_sudo=True)
