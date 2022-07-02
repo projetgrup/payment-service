@@ -93,8 +93,17 @@
                 </div>
                 <group>
                     <group colspan="2">
-                        <field name="description" nolabel="1"/>
-                        <field name="model_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="description" nolabel="1" colspan="2"/>
+                        <div class="text-600 d-flex" colspan="2">
+                            <div class="text-center pt-2 px-4">
+                                <i class="fa fa-info text-primary h1"/>
+                            </div>
+                            <div style="font-size: 0.9rem">
+                                <p style="text-indent: 10px">Please fill Parameters table with using fields in the following model. You can use a normal fields or relational fields with joined with dots in Key column. The field served from remote server which is matched with the key must be specified in Value column, then data type of this value is needed to be selected.</p>
+                                <p style="text-indent: 10px">Responses table is automatically filled with selected method. Only value, which is posted from remote server as a response, and its data type have to be specified.</p>
+                                <p style="text-indent: 10px">The model to be used with the method: <field name="model_id" nolabel="1" options="{'no_create': True, 'no_open': True}"/></p>
+                            </div>
+                        </div>
                         <field name="method_code" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                     </group>

@@ -110,7 +110,7 @@ class IrConnectorMethod(models.Model):
     name = fields.Char(translate=True, required=True)
     code = fields.Char(required=True)
     model_id = fields.Many2one('ir.model')
-    description = fields.Html(sanitize=False)
+    description = fields.Html(translate=True, sanitize=False)
     mapping_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Mappings')
     parameter_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Parameters', domain=[('type', '=', 'parameter')])
     response_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Responses', domain=[('type', '=', 'response')])
