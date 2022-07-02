@@ -11,13 +11,16 @@ class IrConnector(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(string='Priority', default=10)
     name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='restrict')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='restrict', required=True)
     type = fields.Selection([])
     subtype = fields.Many2one('ir.connector.subtype', required=True, ondelete='restrict')
     server = fields.Char()
     username = fields.Char()
     password = fields.Char()
     line_ids = fields.One2many('ir.connector.line', 'connector_id', string='Methods', copy=True)
+    server_required = fields.Boolean(related='subtype.server_required')
+    username_required = fields.Boolean(related='subtype.username_required')
+    password_required = fields.Boolean(related='subtype.password_required')
 
     @api.onchange('type')
     def onchange_type(self):
@@ -94,6 +97,9 @@ class IrConnectorSubtype(models.Model):
     name = fields.Char(translate=True)
     code = fields.Char()
     type = fields.Selection([])
+    server_required = fields.Boolean()
+    username_required = fields.Boolean()
+    password_required = fields.Boolean()
 
 
 class IrConnectorMethod(models.Model):
@@ -105,6 +111,7 @@ class IrConnectorMethod(models.Model):
     code = fields.Char(required=True)
     model_id = fields.Many2one('ir.model')
     description = fields.Html(sanitize=False)
+    mapping_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Mappings')
     parameter_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Parameters', domain=[('type', '=', 'parameter')])
     response_ids = fields.One2many('ir.connector.line.mapping', 'method_id', string='Responses', domain=[('type', '=', 'response')])
 
