@@ -10,11 +10,7 @@
     'license': 'LGPL-3',
     'sequence': 1454,
     'category': 'Accounting/Payment Acquirers',
-    'depends': [
-        'payment_jetcheckout',
-        'base_database_external',
-        'sms_api'
-    ],
+    'depends': ['payment_jetcheckout'],
     'data': [
         'data/data.xml',
         'views/company.xml',
