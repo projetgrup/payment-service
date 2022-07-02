@@ -115,15 +115,18 @@ class JetcheckoutSystemController(JetController):
         values['success_url'] = '/my/payment/success'
         values['fail_url'] = '/my/payment/fail'
 
-        result = request.env['ir.connector'].sudo().execute('partner_balance', values['partner'], values['company'].id)
-        balances = []
-        for res in result:
-            balances.append({
-                'amount': res['amount'],
-                'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency'])], limit=1)
-            })
-        values['balances'] = balances
-        values['show_balance'] = True
+        try:
+            result = request.env['ir.connector'].sudo().execute('partner_balance', values['partner'], values['company'].id)
+            balances = []
+            for res in result:
+                balances.append({
+                    'amount': res['amount'],
+                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency'])], limit=1)
+                })
+            values['balances'] = balances
+            values['show_balance'] = True
+        except:
+            values['show_balance'] = False
 
         # remove hash if exists
         # it could be there because of api module

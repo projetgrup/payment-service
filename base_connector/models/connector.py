@@ -24,9 +24,9 @@ class IrConnector(models.Model):
         self.subtype = False
 
     @api.model
-    def execute(self, method_code, record, company=None):
+    def execute(self, method_code, record, company=None, line=None):
         company = company or self.env.company.id
-        line = self.env['ir.connector.line'].search([('company_id', '=', company), ('method_code', '=', method_code)], limit=1)
+        line = line or self.env['ir.connector.line'].search([('company_id', '=', company), ('method_code', '=', method_code)], limit=1)
         if not line:
             raise
 
@@ -64,13 +64,23 @@ class IrConnector(models.Model):
         if not self.subtype:
             raise UserError(_('Please select a connector subtype'))
 
-        getattr(self, '_test_%s_%s_connection' % (self.type, self.subtype.code))()
+        try:
+            getattr(self, '_test_%s_%s_connection' % (self.type, self.subtype.code))()
+            title = _('Success')
+            type = 'info'
+            message = _('Connection is succesful')
+        except Exception as e:
+            title = _('Error')
+            type = 'danger'
+            message = str(e)
+
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': _('Connection is succesful'),
-                'type': 'info',
+                'message': message,
+                'title': title,
+                'type': type,
                 'sticky': False,
             }
         }
@@ -135,10 +145,33 @@ class IrConnectorLine(models.Model):
         return {'value': {'parameter_ids': parameters, 'response_ids': responses}}
 
     def action_test(self):
-        pass
+        record = self.env[self.model_id.model].search([], limit=1)
+        company = self.env.company.id
+        try:
+            self.connector_id.execute(self.method_code, record, company, self)
+            title = _('Success')
+            type = 'info'
+            message = _('Query is succesful')
+        except Exception as e:
+            title = _('Error')
+            type = 'danger'
+            message = str(e)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': message,
+                'title': title,
+                'type': type,
+                'sticky': False,
+            }
+        }
 
     def action_reset(self):
-        pass
+        values = self.onchange_method_id()
+        self.parameter_ids = values['value']['parameter_ids']
+        self.response_ids = values['value']['response_ids']
 
 
 class IrConnectorLineMapping(models.Model):
