@@ -42,6 +42,9 @@
                                 <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
                                 <p class="h2 text-right font-weight-bold z-index-1">
                                     <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency['self']}"/>
+                                    <t t-foreach="payments" t-as="payment">
+                                        <input type="checkbox" class="payment-items d-none" t-att-name="payment.id" t-att-data-amount="payment.amount" checked="checked"/>
+                                    </t>
                                 </p>
                             </div>
                         </div>

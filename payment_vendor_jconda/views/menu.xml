@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_connectors" name="Connector Settings" parent="menu_conf" sequence="7"/>
+    <menuitem id="menu_connector" action="jconda.action_connector" parent="menu_connectors" sequence="1"/>
+</odoo>
