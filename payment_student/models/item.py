@@ -6,19 +6,6 @@ from odoo.exceptions import UserError
 class PaymentItem(models.Model):
     _inherit = 'payment.item'
 
-    @api.onchange('child_id')
-    def _compute_student(self):
-        for payment in self:
-            if payment.student_id.id != payment.child_id.id:
-                payment.student_id = payment.child_id.id
-
-    @api.onchange('student_child_id')
-    def _set_student(self):
-        for payment in self:
-            if payment.child_id.id != payment.student_id.id:
-                payment.child_id = payment.student_id.id
-
-    student_id = fields.Many2one('res.partner', compute='_compute_student', store=False, readonly=False)
     school_id = fields.Many2one('res.student.school', related='child_id.school_id', store=True, readonly=True, ondelete='restrict')
     class_id = fields.Many2one('res.student.class', related='child_id.class_id', store=True, readonly=True, ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', related='child_id.bursary_id', store=True, readonly=True, ondelete='restrict')

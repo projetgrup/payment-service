@@ -6,20 +6,16 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="child_id"]' position="attributes">
-            <attribute name="string">Student</attribute>
-        </xpath>
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="readonly">1</attribute>
             <attribute name="context">{'active_system': 'student'}</attribute>
         </xpath>
-        <xpath expr='//field[@name="child_id"]' position="before">
+        <xpath expr='//field[@name="parent_id"]' position="before">
             <header>
                 <button name="action_student_payment_table" type="object" string="Payment Table" invisible="not context.get('active_system',False) == 'student'"/>
             </header>
-        </xpath>
-        <xpath expr='//field[@name="child_id"]' position="after">
-            <field name="student_id" string="Student" options="{'no_open': True, 'no_create': True}" invisible="not context.get('domain',False)" domain="[('id','in',context.get('domain',[]))]"/>
+            <field name="child_id" string="Student" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain'])] or [('parent_id','!=',False),('company_id','=',company_id)]" required="1"/>
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="after">
             <field name="school_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
