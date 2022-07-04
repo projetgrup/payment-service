@@ -181,8 +181,8 @@ class PaymentDasboard(models.Model):
             vals_start = {'days': start}
             vals_end = {'days': end}
         elif self.period == 'weeks':
-            vals_start = {'weekday': 0, 'weeks': start + 1}
-            vals_end = {'weekday':0, 'weeks': end + 1}
+            vals_start = {'weekday': 0, 'weeks': start}
+            vals_end = {'weekday':0, 'weeks': end}
         elif self.period == 'months':
             vals_start = {'day': 1, 'months': start}
             vals_end = {'day': 1, 'months': end}

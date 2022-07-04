@@ -2,18 +2,13 @@
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Microsoft SQL Database Integration',
+    'name': 'Vendor Payment System - jConda',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
-    'category': 'Hidden',
-    'depends': ['base_database_external'],
-    'data': [],
-    "external_dependencies": {
-        "python": [
-            "pymssql",
-        ]
-    },
+    'category': 'Accounting/Payment Acquirers',
+    'depends': ['payment_vendor', 'jconda'],
+    'data': ['views/menu.xml'],
     'auto_install': True,
 }

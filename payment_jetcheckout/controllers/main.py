@@ -489,7 +489,8 @@ class JetcheckoutController(http.Controller):
     def jetcheckout_terms(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         domain = request.httprequest.referrer
-        partner = self._jetcheckout_get_partner(**kwargs)
+        pid = 'partner_id' in kwargs and int(kwargs['partner_id']) or None
+        partner = self._jetcheckout_get_partner(pid)
         return acquirer.sudo().with_context(domain=domain)._render_jetcheckout_terms(request.env.company.id, partner.id)
 
     @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
