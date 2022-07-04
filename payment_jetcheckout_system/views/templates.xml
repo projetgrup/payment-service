@@ -125,14 +125,6 @@
                     <t t-set="page" t-value="'payment'"/>
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
-                    <t t-set="labels">
-                        <t t-if="show_balance">
-                            <label for="balance" class="text-primary font-weight-bold mt-2 mb-0">Balance</label>
-                            <t t-foreach="balances" t-as="balance">
-                                <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
-                            </t>
-                        </t>
-                    </t>
                     <t t-set="buttons">
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                     </t>
