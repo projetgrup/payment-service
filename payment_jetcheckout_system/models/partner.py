@@ -103,7 +103,7 @@ class Partner(models.Model):
     @api.depends_context('active_type')
     def _compute_access_url(self):
         type = self.env.context.get('active_type')
-        if type == 'form':
+        if type == 'page':
             prefix = '/my/payment'
         else:
             prefix = '/p'
@@ -283,18 +283,18 @@ class Partner(models.Model):
         action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'link'}
         return action
 
-    def action_share_form(self):
+    def action_share_page(self):
         action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
-        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'form'}
+        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'page'}
         return action
 
     def action_share_payment_link(self):
         self.ensure_one()
         return self.sudo().env.ref('payment_jetcheckout_system.payment_share_link').sudo().read()[0]
 
-    def action_share_payment_form(self):
+    def action_share_payment_page(self):
         self.ensure_one()
-        return self.sudo().env.ref('payment_jetcheckout_system.payment_share_form').sudo().read()[0]
+        return self.sudo().env.ref('payment_jetcheckout_system.payment_share_page').sudo().read()[0]
 
     def action_send(self):
         company = self.mapped('company_id')

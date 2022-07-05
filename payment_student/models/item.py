@@ -74,7 +74,7 @@ class PaymentItem(models.Model):
         totals = []
 
         for line in self:
-            student_id = line.student_id
+            student_id = line.child_id
             bursary_id = line.bursary_id
             term_id = line.term_id
             type_id = line.payment_type_id
@@ -128,7 +128,7 @@ class PaymentItem(models.Model):
             sibling_discount = company.student_discount_sibling_rate if company.student_discount_sibling_active else 0
 
         for line in self:
-            student_id = line.student_id.id
+            student_id = line.child_id.id
             bursary_id = line.bursary_id.id
             term_id = line.term_id.id
             type_id = line.payment_type_id.id

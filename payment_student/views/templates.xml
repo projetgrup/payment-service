@@ -41,11 +41,11 @@
                                         <t t-foreach="payments" t-as="payment">
                                             <tr>
                                                 <td class="text-center">Student Name<br/>School | Class | Type</td>
-                                                <td class="text-center"><t t-esc="payment.student_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/> | <t t-esc="payment.payment_type_id.name"/></td>
+                                                <td class="text-center"><t t-esc="payment.child_id.name"/><br/><t t-esc="payment.school_id.name"/> | <t t-esc="payment.class_id.name"/> | <t t-esc="payment.payment_type_id.name"/></td>
                                                 <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
                                                 <td class="border text-center">
                                                     <label class="switch" style="margin-bottom: 0;">
-                                                        <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.student_id.id" t-att-data-student-name="payment.student_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment._is_student_sibling_paid()" checked="checked"/>
+                                                        <input type="checkbox" class="payment-items" t-att-name="payment.id" t-att-data-student-id="payment.child_id.id" t-att-data-student-name="payment.child_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment._is_student_sibling_paid()" checked="checked"/>
                                                         <span class="slider round fa"/>
                                                     </label>
                                                 </td>
