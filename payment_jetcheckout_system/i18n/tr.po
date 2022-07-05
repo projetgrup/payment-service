@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-05 09:06+0000\n"
-"PO-Revision-Date: 2022-07-05 12:07+0300\n"
+"POT-Creation-Date: 2022-07-05 09:17+0000\n"
+"PO-Revision-Date: 2022-07-05 12:19+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -1404,16 +1404,16 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_jetcheckout_system
-#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_form
+#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_page
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Share Payment Form"
-msgstr "Ödeme Formunu Paylaş"
+msgid "Payment Page"
+msgstr "Ödeme Sayfası"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_link
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Share Payment Link"
-msgstr "Ödeme Bağlantısını Paylaş"
+msgid "Payment Link"
+msgstr "Ödeme Linki"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__sibling_ids
@@ -1806,6 +1806,9 @@ msgstr "e.g. eposta@sirketiniz.com"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#~ msgid "Share Payment Form"
+#~ msgstr "Ödeme Formunu Paylaş"
 
 #~ msgid "Balance"
 #~ msgstr "Bakiye"
