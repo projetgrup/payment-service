@@ -138,21 +138,22 @@ class Partner(models.Model):
         if self.is_portal or self.is_internal:
             raise UserError(_('The partner "%s" already has the portal access.', self.partner_id.name))
 
-        group_portal = self.env.ref('base.group_portal')
-        group_public = self.env.ref('base.group_public')
+        self_sudo = self.sudo()
+        group_portal = self_sudo.env.ref('base.group_portal')
+        group_public = self_sudo.env.ref('base.group_public')
 
         user = self.users_id
 
         if not user:
             company = self.company_id or self.env.company
-            user = self.sudo().with_company(company.id)._create_portal_user()
+            user = self_sudo.with_company(company.id)._create_portal_user()
 
         user = user.sudo()
         if not user.active or user.has_group('base.group_public'):
             user.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
-            self.signup_prepare()
+            self_sudo.signup_prepare()
 
-        self.with_context(active_test=True)._send_portal_email()
+        self_sudo.with_context(active_test=True)._send_portal_email()
         return True
 
     def action_revoke_access(self):
@@ -162,9 +163,10 @@ class Partner(models.Model):
         if not self.is_portal:
             raise UserError(_('The partner "%s" has no portal access.', self.name))
 
-        group_portal = self.env.ref('base.group_portal')
-        group_public = self.env.ref('base.group_public')
-        self.sudo().signup_token = False
+        self_sudo = self.sudo()
+        group_portal = self_sudo.env.ref('base.group_portal')
+        group_public = self_sudo.env.ref('base.group_public')
+        self_sudo.signup_token = False
 
         user = self.users_id
         if not user:
@@ -182,7 +184,8 @@ class Partner(models.Model):
         self.ensure_one()
         if not self.is_portal:
             raise UserError(_('You should first grant the portal access to the partner "%s".', self.name))
-        self.with_context(active_test=True)._send_portal_email()
+        self_sudo = self.sudo()
+        self_sudo.with_context(active_test=True)._send_portal_email()
 
     def _check_portal_user(self):
         self.ensure_one()
