@@ -210,7 +210,7 @@
     <field name="code">action = records.action_share_link()</field>
     </record>
 
-    <record id="payment_share_form" model="ir.actions.server">
+    <record id="payment_share_page" model="ir.actions.server">
     <field name="name">Payment Page</field>
     <field name="model_id" ref="base.model_res_partner"/>
     <field name="binding_model_id" ref="base.model_res_partner"/>
