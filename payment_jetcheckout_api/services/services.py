@@ -164,7 +164,7 @@ class PaymentAPIService(Component):
 
     @restapi.method(
         [(["/status"], "POST")],
-        input_param=Datamodel("payment.token.input"),
+        input_param=Datamodel("payment.hash.input"),
         output_param=Datamodel("payment.status.output"),
         auth="public",
     )
@@ -179,7 +179,7 @@ class PaymentAPIService(Component):
             if not api:
                 return Response(**RESPONSE['no_api_key'])
 
-            tx = self._get_transaction_from_token(params.token)
+            tx = self._get_transaction(params.hash)
             if not tx:
                 return Response(**RESPONSE['no_transaction'])
 
