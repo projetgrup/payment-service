@@ -26,8 +26,10 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     threed = fields.Boolean(readonly=True)
     currency_id =fields.Many2one('res.currency', readonly=True)
     amount = fields.Monetary(readonly=True)
-    commission = fields.Monetary(readonly=True)
-    cost_rate = fields.Float(readonly=True)
+    commission_amount = fields.Monetary(readonly=True)
+    commission_rate = fields.Float(readonly=True)
+    customer_amount = fields.Monetary(readonly=True)
+    customer_rate = fields.Float(readonly=True)
     auth_code = fields.Char(readonly=True)
     service_ref_id = fields.Char(readonly=True)
 

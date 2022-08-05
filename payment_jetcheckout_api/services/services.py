@@ -28,6 +28,10 @@ RESPONSE = {
         "response_code": 7,
         "response_message": "İşlem bulunamadı",
     },
+    "incomplete_transaction": {
+        "response_code": 8,
+        "response_message": "İşlem henüz tamamlanmamış görünüyor",
+    },
     "exception": {
         "response_code": -1,
         "response_message": "Sunucu hatası",
@@ -182,6 +186,9 @@ class PaymentAPIService(Component):
             tx = self._get_transaction(params.hash)
             if not tx:
                 return Response(**RESPONSE['no_transaction'])
+            elif not tx.jetcheckout_order_id:
+                return Response(**RESPONSE['incomplete_transaction'])
+                
 
             result = self._query_payment(tx)
             return Response(**result, **RESPONSE['success'])
@@ -261,6 +268,7 @@ class PaymentAPIService(Component):
             'card_name': tx.jetcheckout_card_name or '',
             'card_number': tx.jetcheckout_card_number or '',
             'card_type': tx.jetcheckout_card_type or '',
+            'card_family': tx.jetcheckout_card_family or '',
             'vpos_name': tx.jetcheckout_vpos_name or '',
             'order_id': tx.jetcheckout_order_id or '',
             'transaction_id': tx.jetcheckout_transaction_id or '',
