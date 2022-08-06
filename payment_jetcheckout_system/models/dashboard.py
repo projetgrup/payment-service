@@ -132,12 +132,12 @@ class PaymentDasboard(models.Model):
             SELECT %s AS line, COUNT(id) AS count, SUM(amount) AS amount
             FROM payment_transaction
             WHERE state = 'done'
-            AND company_id = %s
+            AND company_id IN %s
         """
         query = []
         index = 0
         length = len(datas)
-        company = self.env.company.id
+        companies = tuple(self.env.companies.ids + [0])
         date_first, date_last = self._get_dates()
         date_first = datetime.combine(date_first, datetime.min.time())
         date_last = datetime.combine(date_last, datetime.min.time())
@@ -151,7 +151,7 @@ class PaymentDasboard(models.Model):
             if date_start <= now < date_end:
                 index = i
 
-            query.append("(" + template % (i, company) + " AND create_date >= '" + date_start.strftime(format) + "' AND create_date < '" + date_end.strftime(format) + "')")
+            query.append("(" + template % (i, companies) + " AND create_date >= '" + date_start.strftime(format) + "' AND create_date < '" + date_end.strftime(format) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
         result = self.env.cr.dictfetchall()
@@ -198,12 +198,12 @@ class PaymentDasboard(models.Model):
 
     def _get_domain(self):
         date_start, date_end = self._get_dates()
-        company = self.env.company.id
-        return [('company_id', '=', company), ('create_date', '>=', date_start), ('create_date', '<', date_end), ('state', 'in', ('done', 'pending', 'error'))]
+        companies = self.env.companies.ids
+        return [('company_id', 'in', companies), ('create_date', '>=', date_start), ('create_date', '<', date_end), ('state', 'in', ('done', 'pending', 'error'))]
 
     def _get_domain_query(self):
         date_start, date_end = self._get_dates()
-        company = self.env.company.id
+        companies = tuple(self.env.companies.ids + [0])
         query = """
             SELECT
                 COUNT(*) AS total_count,
@@ -219,10 +219,10 @@ class PaymentDasboard(models.Model):
             WHERE t.state IN ('done', 'pending', 'error')
             AND t.create_date >= %s
             AND t.create_date < %s
-            AND t.company_id = %s
+            AND t.company_id IN %s
             GROUP BY c.name, c.id
         """
-        self.env.cr.execute(query, (date_start, date_end, company))
+        self.env.cr.execute(query, (date_start, date_end, companies))
         return self.env.cr.dictfetchall()
 
     def action_transactions(self):
