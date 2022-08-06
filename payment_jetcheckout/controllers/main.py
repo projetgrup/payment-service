@@ -169,10 +169,10 @@ class JetcheckoutController(http.Controller):
             result = response.json()
             if result['response_code'] == "00":
                 installments = result.get('installment_options', [])
-                card_family = []
+                card_family = set()
                 for installment in installments:
-                    card_family.append(installment['card_family_logo'])
-                return card_family
+                    card_family.add(installment['card_family_logo'])
+                return list(card_family)
             else:
                 return []
         else:
@@ -253,6 +253,7 @@ class JetcheckoutController(http.Controller):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
         installment = int(kwargs.get('installment', 1))
+        installment_desc = kwargs.get('installment_desc')
         amount = float(kwargs['amount'])
         amount_installment = float(kwargs['amount_installment'])
         if amount_installment > 0 and installment != 1:
@@ -301,6 +302,7 @@ class JetcheckoutController(http.Controller):
                 'jetcheckout_order_id': order_id,
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment,
+                'jetcheckout_installment_description': installment_desc,
                 'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,
@@ -338,6 +340,7 @@ class JetcheckoutController(http.Controller):
                 'jetcheckout_order_id': order_id,
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment,
+                'jetcheckout_installment_description': installment_desc,
                 'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
                 'jetcheckout_commission_rate': rate,
                 'jetcheckout_commission_amount': amount * rate / 100,

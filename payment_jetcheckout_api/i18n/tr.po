@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-20 09:40+0000\n"
-"PO-Revision-Date: 2022-06-20 12:48+0300\n"
+"POT-Creation-Date: 2022-08-05 16:28+0000\n"
+"PO-Revision-Date: 2022-08-05 19:29+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,18 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid ""
 "<br/>\n"
 "                                <strong class=\"text-primary font-weight-"
-"bold text-right\">Amount</strong>"
+"bold text-right z-index-1\">Amount</strong>"
 msgstr ""
 "<br/>\n"
 "                                <strong class=\"text-primary font-weight-"
-"bold text-right\">Tutar</strong>"
+"bold text-right z-index-1\">Tutar</strong>"
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1\">Product</strong>"
+msgstr ""
+"<strong class=\"text-primary font-weight-bold z-index-1\">Ürün</strong>"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
@@ -37,11 +44,6 @@ msgstr "<strong class=\"text-primary font-weight-bold\">Yetkili Kişi</strong>"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid "<strong class=\"text-primary font-weight-bold\">Partner</strong>"
 msgstr "<strong class=\"text-primary font-weight-bold\">İş Ortağı</strong>"
-
-#. module: payment_jetcheckout_api
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
-msgid "<strong class=\"text-primary font-weight-bold\">Product</strong>"
-msgstr "<strong class=\"text-primary font-weight-bold\">Ürün</strong>"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
@@ -109,6 +111,11 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "Address"
+msgstr "Adres"
+
+#. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/controllers/main.py:0
 #, python-format
 msgid "An error occured. Please restart your payment transaction."
@@ -151,6 +158,11 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "City"
+msgstr "İlçe"
+
+#. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
 msgid ""
 "Click confirm and keep the code for your bank transfer transaction which is "
@@ -181,6 +193,11 @@ msgstr "Yetkili Kişi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
 msgid "Continue"
 msgstr "Devam Et"
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "Country"
+msgstr "Ülke"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__create_uid
@@ -268,6 +285,7 @@ msgstr "Sipariş Referansı"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__partner_id
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
 msgid "Partner"
 msgstr "İş Ortağı"
 
@@ -317,6 +335,11 @@ msgid "Select a Payment Type"
 msgstr "Ödeme Yöntemi Seçiniz"
 
 #. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "State"
+msgstr "Şehir"
+
+#. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
 msgid "Test"
 msgstr "Test"
@@ -341,8 +364,8 @@ msgid ""
 "be cancelled."
 msgstr ""
 "Bu sipariş için daha önce Banka Transferi yöntemi ile bir işlem yaptığınızı "
-"görüyoruz. Eğer yeni bir ödeme yöntemi ile işleminize devam ederseniz "
-"önceki işleminiz iptal edilecektir."
+"görüyoruz. Eğer yeni bir ödeme yöntemi ile işleminize devam ederseniz önceki "
+"işleminiz iptal edilecektir."
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
@@ -350,8 +373,7 @@ msgid ""
 "You can continue the transaction with choosing one of the following payment "
 "methods."
 msgstr ""
-"Aşağıdaki ödeme yöntemlerinden birini seçerek işleminize devam "
-"edebilirsiniz."
+"Aşağıdaki ödeme yöntemlerinden birini seçerek işleminize devam edebilirsiniz."
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
@@ -367,6 +389,11 @@ msgstr ""
 #, python-format
 msgid "You have to define a sequence for %s in your company."
 msgstr "Şirketinizde %s sıralamasını tanımlamalısınız."
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "ZIP"
+msgstr "Posta Kodu"
 
 #~ msgid "API Keys"
 #~ msgstr "API Anahtarları"
