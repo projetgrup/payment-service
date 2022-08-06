@@ -31,6 +31,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True)
     jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True)
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True)
+    jetcheckout_installment_description = fields.Char('Installment Description', readonly=True)
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True)
     jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True)
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)

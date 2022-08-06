@@ -222,16 +222,16 @@ input:checked + .slider:before {
         border-radius: 10px !important;
     }
 
-    .modal {
+    /*.modal {
         overflow: hidden;
-    }
+    }*/
 
     .modal-dialog {
-        position: absolute !important;
+        /*position: absolute !important;
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
-        min-width: 500px;
+        min-width: 500px;*/
 
         .modal-content {
             border-radius: 10px !important;
@@ -247,9 +247,9 @@ input:checked + .slider:before {
                     font-weight: bold;
                 }
 
-                button {
+                /*button {
                     display: none !important;
-                }
+                }*/
             }
 
             .modal-body {

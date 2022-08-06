@@ -274,6 +274,7 @@ class PaymentAPIService(Component):
             'transaction_id': tx.jetcheckout_transaction_id or '',
             'payment_amount': tx.jetcheckout_payment_amount,
             'installment_count': tx.jetcheckout_installment_count,
+            'installment_desc': tx.jetcheckout_installment_description,
             'installment_amount': tx.jetcheckout_installment_amount,
             'commission_rate': tx.jetcheckout_commission_rate,
             'commission_amount': tx.jetcheckout_commission_amount,

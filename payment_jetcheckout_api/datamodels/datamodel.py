@@ -76,6 +76,7 @@ class PaymentResultOutput(Datamodel):
     transaction_id = fields.String(required=False, allow_none=False)
     payment_amount = fields.Float(required=False, allow_none=False)
     installment_count = fields.Integer(required=False, allow_none=False)
+    installment_desc = fields.String(required=False, allow_none=False)
     installment_amount = fields.Float(required=False, allow_none=False)
     commission_rate = fields.Float(required=False, allow_none=False)
     commission_amount = fields.Float(required=False, allow_none=False)
