@@ -121,10 +121,15 @@
                 <group>
                     <field name="currency_id" invisible="1"/>
                     <field name="amount"/>
-                    <field name="commission"/>
-                    <label for="cost_rate"/>
+                    <field name="commission_amount"/>
+                    <label for="commission_rate"/>
                     <div class="o_row">
-                        % <field name="cost_rate"/>
+                        % <field name="commission_rate"/>
+                    </div>
+                    <field name="customer_amount"/>
+                    <label for="customer_rate"/>
+                    <div class="o_row">
+                        % <field name="customer_rate"/>
                     </div>
                     <field name="auth_code"/>
                     <field name="service_ref_id" style="word-break: break-all;"/>

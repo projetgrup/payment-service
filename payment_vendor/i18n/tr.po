@@ -55,7 +55,7 @@ msgstr ""
 "<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Ödeme</"
 "strong>\n"
 "                                <strong class=\"text-primary font-weight-"
-"bold text-right z-index-1\">Miktar</strong>"
+"bold text-right z-index-1\">Tutar</strong>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page

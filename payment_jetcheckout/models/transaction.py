@@ -31,6 +31,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True)
     jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True)
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True)
+    jetcheckout_installment_description = fields.Char('Installment Description', readonly=True)
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True)
     jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True)
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
@@ -245,8 +246,10 @@ class PaymentTransaction(models.Model):
             'refunded': result['cancelled'],
             'threed': result['is_3d'],
             'amount': result['amount'],
-            'commission': result['commission_amount'],
-            'cost_rate': result['expected_cost_rate'],
+            'customer_amount': result['commission_amount'],
+            'customer_rate': 100 * result['commission_amount'] / result['amount'] if not result['amount'] == 0 else 0,
+            'commission_amount': result['amount'] * result['expected_cost_rate'] / 100,
+            'commission_rate': result['expected_cost_rate'],
             'auth_code': result['auth_code'],
             'service_ref_id': result['service_ref_id'],
             'currency_id': self.currency_id.id,

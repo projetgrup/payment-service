@@ -62,12 +62,13 @@
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold">Product</strong>
-                                <p>
+                                <strong class="text-primary font-weight-bold z-index-1">Product</strong>
+                                <p class="z-index-1">
                                     <t t-esc="tx.jetcheckout_api_product"/>
-                                </p><br/>
-                                <strong class="text-primary font-weight-bold text-right">Amount</strong>
-                                <p class="h3 text-right font-weight-bold">
+                                </p>
+                                <br/>
+                                <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
+                                <p class="h3 text-right font-weight-bold z-index-1">
                                     <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </p>
                             </div>
