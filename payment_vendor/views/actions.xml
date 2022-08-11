@@ -4,7 +4,7 @@
     <field name="name">Contacts</field>
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
-    <field name="domain">[('system','=','vendor'),('parent_id','!=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="domain">[('system','=','vendor'),('parent_id','!=',False),('partner_share','!=',False)]</field>
     <field name="context">{'active_system': 'vendor', 'active_child': True}</field>
     <field name="search_view_id" ref="child_search"/>
     <field name="help" type="html">
@@ -23,7 +23,7 @@
     <field name="name">Vendors</field>
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
-    <field name="domain">[('system','=','vendor'),('parent_id','=',False),'|',('active','=',False),('active','=',True)]</field>
+    <field name="domain">[('system','=','vendor'),('parent_id','=',False),('partner_share','!=',False)]</field>
     <field name="context">{'active_system': 'vendor', 'active_parent': True}</field>
     <field name="search_view_id" ref="parent_search"/>
     <field name="help" type="html">
@@ -39,10 +39,11 @@
     </record>
 
     <record id="action_item" model="ir.actions.act_window">
-    <field name="name">Payment Items</field>
+    <field name="name">Payments</field>
     <field name="res_model">payment.item</field>
     <field name="view_mode">tree,pivot</field>
     <field name="search_view_id" ref="item_search"/>
+    <field name="context">{'active_system' : 'vendor'}</field>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
             No payments yet

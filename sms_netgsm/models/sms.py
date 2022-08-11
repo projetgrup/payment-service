@@ -24,23 +24,18 @@ ERRORS = {
 }
 
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class SmsProvider(models.Model):
+    _inherit = 'sms.provider'
 
-    sms_provider = fields.Selection(selection_add=[('netgsm', 'Netgsm')])
-    sms_netgsm_username = fields.Char('Netgsm Username')
-    sms_netgsm_password = fields.Char('Netgsm Password')
-    sms_netgsm_originator = fields.Char('Netgsm Originator')
+    type = fields.Selection(selection_add=[('netgsm', 'Netgsm')], ondelete={'netgsm': 'cascade'})
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
-
-    sms_netgsm_username = fields.Char(related='company_id.sms_netgsm_username', readonly=False)
-    sms_netgsm_password = fields.Char(related='company_id.sms_netgsm_password', readonly=False)
-    sms_netgsm_originator = fields.Char(related='company_id.sms_netgsm_originator', readonly=False)
 
 class SmsApi(models.AbstractModel):
     _inherit = 'sms.api'
+
+    @api.model
+    def _get_netgsm_credit_url(self):
+        return 'https://www.netgsm.com.tr/fiyatlar/'
 
     @api.model
     def _process_netgsm_sms(self, text):
@@ -49,14 +44,12 @@ class SmsApi(models.AbstractModel):
         return text, '0'
 
     @api.model
-    def _send_netgsm_sms(self, messages):
-        company = self.env.company
-        username = company.sms_netgsm_username
-        password = company.sms_netgsm_password
-        originator = company.sms_netgsm_originator
+    def _send_netgsm_sms(self, messages, provider):
+        username = provider.username
+        password = provider.password
+        originator = provider.originator
 
-        numbers = ['<no>%s</no>' % message['number'] for message in messages]
-        message = messages[0]['content'] if messages else ''
+        blocks = [f"<mp><msg>{message['content']}</msg><no>{message['number']}</no></mp>" for message in messages]
 
         data = f"""<?xml version="1.0" encoding="UTF-8"?>
             <mainbody>
@@ -64,18 +57,15 @@ class SmsApi(models.AbstractModel):
                     <company dil="TR">Netgsm</company>       
                     <usercode>{username}</usercode>
                     <password>{password}</password>
-                    <type>1:n</type>
+                    <type>n:n</type>
                     <msgheader>{originator}</msgheader>
                 </header>
                 <body>
-                    <msg>
-                        <![CDATA[{message}]]>
-                    </msg>
-                    {"".join(numbers)}
+                    {"".join(blocks)}
                 </body>
             </mainbody>"""
 
-        response = requests.post(SENDURL, data=data, headers=HEADERS)
+        response = requests.post(SENDURL, data=data.encode('utf-8'), headers=HEADERS)
         code, id, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
             return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
@@ -83,10 +73,9 @@ class SmsApi(models.AbstractModel):
             raise ERRORS.get(code, ERRORS[None])
 
     @api.model
-    def _get_netgsm_credit(self):
-        company = self.env.company
-        username = company.sms_netgsm_username
-        password = company.sms_netgsm_password
+    def _get_netgsm_credit(self, provider):
+        username = provider.username
+        password = provider.password
         data = f"""<?xml version='1.0'?>
             <mainbody>
                 <header>
@@ -96,7 +85,7 @@ class SmsApi(models.AbstractModel):
                 </header>
             </mainbody>"""
 
-        response = requests.post(CREDITURL, data, headers=HEADERS)
+        response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
         code, credit, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
             return _('%s SMS credit(s) left') % int(float(credit))

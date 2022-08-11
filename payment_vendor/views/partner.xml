@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="child_tree" model="ir.ui.view">
-    <field name="name">res.vendor.child.tree</field>
+    <field name="name">res.vendor.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
@@ -9,9 +9,12 @@
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
         </xpath>
-        <xpath expr='//field[@name="mobile"]' position="replace"/>
-        <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//field[@name="date_sms_sent"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
     </field>
     </record>
 
@@ -21,11 +24,6 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="active"]' position="before">
-            <header>
-                <button name="action_send" type="object" string="Send Email"/>
-            </header>
-        </xpath>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
     </field>
     </record>
@@ -37,13 +35,15 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//header' position="replace"/>
-        <xpath expr='//field[@name="mobile"]' position="replace"/>
-        <xpath expr='//field[@name="email"]' position="replace"/>
-        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="ref"/>
         </xpath>
+        <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
     </field>
     </record>
 
@@ -58,6 +58,9 @@
             <attribute name="required">1</attribute>
         </xpath>
         <xpath expr='//page[@name="siblings"]' position="replace"/>
+        <xpath expr='//page[@name="children"]' position="attributes">
+            <attribute name="string">Contacts</attribute>
+        </xpath>
     </field>
     </record>
 
@@ -71,14 +74,14 @@
             <field name="ref"/>
         </xpath>
         <xpath expr='//filter[@name="groupby_company"]' position="before">
-            <filter string="Parent" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
+            <filter string="Vendor" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
         </xpath>
         <xpath expr='//separator' position="replace"/>
         <xpath expr='//filter[@name="filterby_payment"]' position="replace"/>
         <xpath expr='//filter[@name="filterby_no_payment"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_today"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_before"]' position="replace"/>
-        <xpath expr='//filter[@name="filterby_sent_no"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_today"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_before"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_no"]' position="replace"/>
     </field>
     </record>
 

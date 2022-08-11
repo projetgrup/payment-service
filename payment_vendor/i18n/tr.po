@@ -1,0 +1,279 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_vendor
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-30 21:11+0000\n"
+"PO-Revision-Date: 2022-07-01 00:12+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1\n"
+
+#. module: payment_vendor
+#: model:mail.template,body_html:payment_vendor.vendor_mail
+msgid ""
+"<p>\n"
+"                    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
+"                    <br/><br/>\n"
+"                    İncelemek ve Online Ödeme için <a t-att-href=\"object."
+"_get_payment_url()\" style=\"color:#3079ed;\">tıklayınız.</a>\n"
+"                    <br/><br/>\n"
+"                    Sağlıklı bir yıl dileriz.\n"
+"                    <br/><br/>\n"
+"                    Saygılarımızla...\n"
+"                    <br/><br/>\n"
+"                    <span t-out=\"object._get_payment_company()\"/>\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid ""
+"<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
+"transaction related to you"
+msgstr ""
+"<strong class=\"h4\">Teşekkür Ederiz!</strong><br/>Size ait ödenmemiş bir "
+"işlem yok"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</"
+"strong>\n"
+"                                <strong class=\"text-primary font-weight-"
+"bold text-right z-index-1\">Amount</strong>"
+msgstr ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Ödeme</"
+"strong>\n"
+"                                <strong class=\"text-primary font-weight-"
+"bold text-right z-index-1\">Tutar</strong>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
+msgstr "<strong class=\"text-primary font-weight-bold\">Bilgiler</strong>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
+#: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Authorized"
+msgstr "Yetkili"
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_res_company
+#: model:ir.ui.menu,name:payment_vendor.menu_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_companies
+msgid "Company Settings"
+msgstr "Şirket Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_res_partner
+msgid "Contact"
+msgstr "Yetkili"
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_child
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "Contacts"
+msgstr "Yetkililer"
+
+#. module: payment_vendor
+#: model_terms:ir.actions.act_window,help:payment_vendor.action_parent
+msgid "Create a vendor"
+msgstr "Bir bayi oluştur"
+
+#. module: payment_vendor
+#: model_terms:ir.actions.act_window,help:payment_vendor.action_child
+msgid "Create a vendor contact"
+msgstr "Bir bayi yetkilisi oluştur"
+
+#. module: payment_vendor
+#: model_terms:ir.actions.act_window,help:payment_vendor.action_item
+msgid "Created payments are listed here"
+msgstr "Oluşturulan ödemeler burada listelenir"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_dashboard
+msgid "Dashboard"
+msgstr "Panel"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_database
+msgid "Database Settings"
+msgstr "Veritabanı Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_mail
+msgid "Email Settings"
+msgstr "Eposta Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_mail_template
+msgid "Email Templates"
+msgstr "Eposta Şablonları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_database_external
+msgid "External Databases"
+msgstr "Harici Veritabanları"
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Yönlendirme"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_mail_server
+msgid "Mail Servers"
+msgstr "Eposta Sunucuları"
+
+#. module: payment_vendor
+#: model:res.groups,name:payment_vendor.group_vendor_manager
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menü"
+
+#. module: payment_vendor
+#: model_terms:ir.actions.act_window,help:payment_vendor.action_item
+msgid "No payments yet"
+msgstr "Henüz bir ödeme yok"
+
+#. module: payment_vendor
+#: model:mail.template,subject:payment_vendor.vendor_mail
+msgid "Payment - {{ object.company_id.name }}"
+msgstr "Ödeme - {{ object.company_id.name }}"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_acquirer
+msgid "Payment Acquirers"
+msgstr "Ödeme Alıcıları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_acquirers
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_item
+#: model:ir.ui.menu,name:payment_vendor.menu_payment
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcılar"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms
+msgid "SMS Settings"
+msgstr "SMS Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sms_template
+msgid "SMS Templates"
+msgstr "SMS Şablonları"
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_settings
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_res_company__system
+msgid "System"
+msgstr "Sistem"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_transaction
+msgid "Transactions"
+msgstr "İşlemler"
+
+#. module: payment_vendor
+#: model:res.groups,name:payment_vendor.group_vendor_user
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_user
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_main
+msgid "VPS"
+msgstr "BTS"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_form
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_search
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_tree
+#: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
+#: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
+msgid "Vendor"
+msgstr "Bayi"
+
+#. module: payment_vendor
+#: model:mail.template,name:payment_vendor.vendor_mail
+msgid "Vendor Payment Email"
+msgstr "Bayi Tahsilat Epostası"
+
+#. module: payment_vendor
+#: model:ir.model.fields.selection,name:payment_vendor.selection__res_company__system__vendor
+#: model:ir.module.category,description:payment_vendor.module_category_vendor
+#: model:ir.module.category,name:payment_vendor.module_category_vendor
+msgid "Vendor Payment System"
+msgstr "Bayi Tahsilat Sistemi"
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_parent
+#: model:ir.ui.menu,name:payment_vendor.menu_parent
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Vendors"
+msgstr "Bayiler"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_websites
+msgid "Website Settings"
+msgstr "Website Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_website
+msgid "Websites"
+msgstr "Websiteler"
+
+#~ msgid "Email"
+#~ msgstr "Eposta"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#~ msgid "Parent"
+#~ msgstr "Bayi"

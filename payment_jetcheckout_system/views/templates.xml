@@ -5,4 +5,272 @@
             <input t-if="system" id="system" type="hidden" t-att-value="system"/>
         </xpath>
     </template>
+
+    <template id="payment_page_footer" name="Payment System Page Footer">
+        <div class="row mx-0 flex-column">
+            <div class="row mx-0 mt-4 pb-1 border-bottom">
+                <div class="col-md-12 text-center text-md-left">
+                    <ul class="mb-0 list-inline payment_icon_list">
+                        <t t-foreach="card_family" t-as="card">
+                            <li class="list-inline-item">
+                                <img t-att-src="card" alt="" height="40" class="card p-2"/>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mx-0 pt-2 h-0">
+                <div class="col-md-6 text-center text-md-left">
+                    <ul class="list-inline payment_icon_list">
+                        <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
+                            <li class="list-inline-item">
+                                <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+                <div class="col-md-6 text-center text-md-right">
+                    <t t-raw="footer"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_page_contact" name="Payment System Page Contact">
+        <div t-attf-class="row mx-0 shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold #{classes}">
+            If you need assistance, you can contact with us by using one of the following methods.
+        </div>
+        <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto mb-3 #{classes}">
+            <table class="table table-sm small mb-0">
+                <tr>
+                    <td class="text-right text-nowrap w-md-25"><i class="fa fa-phone mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Phone</td>
+                    <td class="text-nowrap"><a t-esc="company.phone" t-attf-href="tel:#{company.phone}"/></td>
+                </tr>
+                <tr>
+                    <td class="text-right text-nowrap"><i class="fa fa-whatsapp mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Whatsapp</td>
+                    <td class="text-nowrap"><a t-esc="company.mobile" t-attf-href="https://wa.me/#{company.mobile}"/></td>
+                </tr>
+                <tr>
+                    <td class="text-right text-nowrap"><i class="fa fa-envelope mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Email</td>
+                    <td class="text-nowrap"><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <template id="payment_page_agreements" name="Payment System Page Agreements">
+        <t t-if="sidebar">
+            <div t-attf-class="row mx-0 shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold #{classes}">
+                Agreements
+            </div>
+            <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto #{classes}">
+                <table class="table table-sm small mb-0">
+                    <tr>
+                        <td><a id="privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                    </tr>
+                    <tr>
+                        <td><a id="distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                    </tr>
+                    <tr>
+                        <td><a id="membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                    </tr>
+                    <tr>
+                        <td><a id="contact" href="#" class="d-block w-100">Contact Page</a></td>
+                    </tr>
+                </table>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="row mx-5 my-3 justify-content-around">
+                <button id="privacy_policy" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Privacy Policy</button>
+                <button id="distant_sale_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Distant Sale Agreement</button>
+                <button id="membership_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Membership Agreement</button>
+                <button id="contact" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Contact Page</button>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment_page_state" name="Payment System Page Result">
+        <div t-if="tx and tx.state == 'error'" t-attf-class="row alert alert-danger text-center my-2 #{classes}">
+            <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+            <small class="d-block mt-1" t-esc="tx.state_message"/>
+        </div>
+        <div t-elif="tx and tx.state == 'done'" t-attf-class="row alert alert-success text-center justify-content-center my-2 #{classes}">
+            <div class="w-100">Your transaction has been succeeded. Thank you.</div>
+            <div class="row mt-2 justify-content-center">
+                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_page" name="Payment System Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="header row mx-0 card border p-2 px-lg-5">
+                <div class="px-xl-3 mx-xl-auto mw-xl-128">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
+                </div>
+            </div>
+            <div class="payment-card row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'payment'"/>
+                    <t t-set="no_payment_icons" t-value="True"/>
+                    <t t-set="no_card_preview" t-value="True"/>
+                    <t t-set="buttons">
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                    </t>
+                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                </t>
+                <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                    <t t-call="payment_jetcheckout.payment_form">
+                        <t t-set="no_smart_buttons" t-value="True"/>
+                    </t>
+                    <input id="success_url" type="hidden" name="success_url" t-att-value="success_url"/>
+                    <input id="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
+                </div>
+            </div>
+            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
+            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+        </t>
+    </template>
+
+    <template id="payment_page_result" name="Payment System Page Result">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="header row mx-0 card border p-2 px-lg-5">
+                <div class="px-xl-3 mx-xl-auto mw-xl-128">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
+                </div>
+            </div>
+            <div class="payment-result row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'result'"/>
+                    <t t-set="no_payment_icons" t-value="True"/>
+                    <t t-set="no_card_preview" t-value="True"/>
+                    <t t-set="buttons">
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                    </t>
+                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                </t>
+                <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                    <div class="px-3 py-4 bg-white card my-4 w-100">
+                        <h4 t-if="tx != False and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="text-center w-100">Payment is successful. Thank you.</div>
+                            <div class="row w-100 mt-2">
+                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                            </div>
+                        </h4>
+                        <h4 t-elif="tx != False and tx.state == 'pending'" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="mb-3 text-center w-100">Payment is successful, but it will be processed later.</div>
+                            <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                        </h4>
+                        <h4 t-else="" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="mb-3 text-center w-100">Payment is not successful. Please try again later.</div>
+                            <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                            <span t-esc="tx.state_message" class="font-italic font-weight-light btn-sm"/>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
+            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+        </t>
+    </template>
+
+    <template id="payment_page_transaction" name="Payment System Page Transactions">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="header row mx-0 card border p-2 px-lg-5">
+                <div class="px-xl-3 mx-xl-auto mw-xl-128">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
+                </div>
+            </div>
+            <div class="payment-transaction row justify-content-center mx-0">
+                <t t-call="payment_jetcheckout.payment_sidebar">
+                    <t t-set="page" t-value="'transaction'"/>
+                    <t t-set="no_payment_icons" t-value="True"/>
+                    <t t-set="no_card_preview" t-value="True"/>
+                    <t t-set="buttons">
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
+                    </t>
+                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                </t>
+                <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                    <div class="px-3 py-4 bg-white card my-4 w-100">
+                        <table class="table table-borderless table-responsive-md w-100 table-fold small">
+                            <thead>
+                                <tr class="font-weight-bold border shadow">
+                                    <th class="py-3">Date</th>
+                                    <th>Transaction</th>
+                                    <th>Card Holder Name</th>
+                                    <th>Card Number</th>
+                                    <th class="text-right">Payment Amount</th>
+                                    <th class="text-center">State</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="txs" t-as="tx">
+                                    <tr class="border row-view">
+                                        <td class="py-2"><span t-field="tx.create_date"/></td>
+                                        <td><span t-field="tx.reference"/></td>
+                                        <td><span t-field="tx.jetcheckout_card_name"/></td>
+                                        <td><span t-field="tx.jetcheckout_card_number"/></td>
+                                        <td class="text-right"><span t-field="tx.jetcheckout_payment_amount"/></td>
+                                        <td class="border-right font-weight-bold text-center px-2"><span t-field="tx.state" t-attf-class="py-1 w-100 badge #{'badge-success' if tx.state == 'done' else 'badge-danger'}"/></td>
+                                    </tr>
+                                    <tr class="border bg-100 row-fold">
+                                        <td colspan="99">
+                                            <table class="w-100">
+                                                <tr class="font-weight-bold border">
+                                                    <td class="pl-2">Commission Amount</td>
+                                                    <td>Installment Count</td>
+                                                    <td rowspan="2" class="border-left p-2">
+                                                        <a t-attf-href="/report/pdf/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
+                                                        <a t-attf-href="/report/pdf/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border">
+                                                    <td class="pl-2"><span t-field="tx.jetcheckout_customer_amount"/></td>
+                                                    <td><span t-field="tx.jetcheckout_installment_count"/></td>
+                                                </tr>
+                                                <tr class="border">
+                                                    <td colspan="5" class="text-left pl-2"><span class="font-weight-bold">Message:</span> <span t-field="tx.state_message"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-inline justify-content-center mt-3">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+            </div>
+            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
+            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+        </t>
+    </template>
 </odoo>

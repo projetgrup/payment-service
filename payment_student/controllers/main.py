@@ -16,7 +16,7 @@ class StudentPaymentController(JetSystemController):
                 payment_table = payment_ids.get_student_payment_table()
                 amounts = payment_table['totals'] if int(kwargs.get('installment', 1)) == 1 else payment_table['subbursaries']
 
-                students = {i: 0 for i in payment_ids.mapped('student_id').ids}
+                students = {i: 0 for i in payment_ids.mapped('child_id').ids}
                 for payment in payment_ids:
                     sid = payment.child_id.id
                     students[sid] += payment.amount

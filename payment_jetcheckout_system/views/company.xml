@@ -12,8 +12,9 @@
     <field name="arch" type="xml">
         <xpath expr='//group[@name="social_media"]' position="before">
             <group name="settings" string="Settings">
-                <field name="system"/>
+                <field name="system" attrs="{'readonly': [('is_admin', '=', False)]}"/>
                 <field name="parent_id" options="{'no_create': True}"/>
+                <field name="is_admin" invisible="1"/>
             </group>
         </xpath>
     </field>

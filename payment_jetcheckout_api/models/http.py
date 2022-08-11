@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import models
 
-class Http(models.AbstractModel):
+class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
     def _get_translation_frontend_modules_name(cls):
-        mods = super(Http, cls)._get_translation_frontend_modules_name()
+        mods = super(IrHttp, cls)._get_translation_frontend_modules_name()
         return mods + ['payment_jetcheckout_api']

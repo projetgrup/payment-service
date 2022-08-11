@@ -1,0 +1,12 @@
+.o_student_payment_table .o_form_sheet {
+    padding: 0 !important;
+    > table {
+        margin: -2px 0 0 0 !important;
+        > tbody > tr > td {
+            padding: 0 !important;
+            .oe_form_field_html {
+                margin-bottom: -6px !important;
+            }
+        }
+    }
+}

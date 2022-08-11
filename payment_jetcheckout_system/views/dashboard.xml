@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dashboard_kanban" model="ir.ui.view">
+    <field name="name">payment.dashboard.kanban</field>
+    <field name="model">payment.dashboard</field>
+    <field name="arch" type="xml">
+        <kanban create="false" class="oe_background_grey o_kanban_dashboard o_account_kanban" js_class="account_dashboard_kanban">
+            <field name="id"/>
+            <field name="data"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="o_kanban_record p-0" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <t t-value="JSON.parse(record.data.raw_value)" t-set="data"/>
+                        <t t-call="header"/>
+                        <div t-att-class="'container px-4 o_kanban_card_content' + (data.is_sample_data ? ' o_sample_data' : '')">
+                            <div>
+                                <t t-call="body"/>
+                            </div>
+                            <t t-call="graph"/>
+                        </div>
+                        <t t-call="footer"/>
+                    </div>
+                </t>
+
+                <t t-name="header">
+                    <div class="o_kanban_card_header py-3 shadow-sm">
+                        <div class="row mx-0 col-12 o_kanban_card_header_title">
+                            <div class="col-4 o_primary">
+                                <a type="object" name="action_transactions"><field name="name"/></a>
+                            </div>
+                            <div class="col-8 d-sm-flex d-none align-items-center font-weight-bold justify-content-end o_secondary text-nowrap">
+                                <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
+                                <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
+                            </div>
+                            <div class="col-8 d-flex d-sm-none align-items-center font-weight-bold justify-content-end o_secondary">
+                                <div class="d-inline border-right px-2 text-right"><span class="mr-2">Success Rate:</span><span class="text-success" t-esc="data.success_rate"/></div>
+                                <div class="d-inline px-2"><span class="mr-2">Advance Rate:</span><span t-esc="data.advance_rate"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-name="footer">
+                    <div class="o_kanban_card_header py-3">
+                        <div class="row mx-0 flex-nowrap justify-content-end o_kanban_card_header_title font-weight-bold">
+                            <div class="d-inline border-right px-2 text-center">
+                                <a type="object" name="action_success_transactions">Success Transactions</a>
+                            </div>
+                            <div class="d-inline border-right px-2 text-center">
+                                <a type="object" name="action_failed_transactions">Failed Transactions</a>
+                            </div>
+                            <div class="d-inline px-2 text-center">
+                                <a type="object" name="action_pos_distribution">PoS Distribution</a>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-name="body">
+                    <t t-if="data.lines.length > 0">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle border-top-0">Count<br/>(All / Success)</th>
+                                    <th class="text-center align-middle border-top-0">Amount<br/>(All / Success)</th>
+                                    <th class="text-center align-middle border-top-0">Amount Average</th>
+                                    <th class="text-center align-middle border-top-0">Currency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data.lines" t-as="line">
+                                    <tr>
+                                        <td class="text-center align-middle"><t t-esc="line.total_count"/> / <t t-esc="line.success_count"/></td>
+                                        <td class="text-center align-middle"><t t-esc="line.total_amount"/> / <t t-esc="line.success_amount"/></td>
+                                        <td class="text-center align-middle"><t t-esc="line.average_amount"/></td>
+                                        <td class="text-center align-middle"><t t-esc="line.currency_name"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-else="">
+                        <div class="font-weight-bold h2 text-center text-muted w-100 pt-4">No records found</div>
+                    </t>
+                </t>
+
+                <t t-name="graph">
+                    <field name="graph" t-att-graph_type="data.graph_type" class="mx-0" widget="dashboard_graph"/>
+                </t>
+        </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="dashboard_search" model="ir.ui.view">
+    <field name="name">payment.dashboard.search</field>
+    <field name="model">payment.dashboard</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name" string="Term"/>
+            <filter name="today" string="Today" domain="[('code', '=', 'today')]"/>
+            <filter name="yesterday" string="Yesterday" domain="[('code', '=', 'yesterday')]"/>
+            <filter name="this_week" string="This Week" domain="[('code', '=', 'this_week')]"/>
+            <filter name="last_week" string="Last Week" domain="[('code', '=', 'last_week')]"/>
+            <filter name="this_month" string="This Month" domain="[('code', '=', 'this_month')]"/>
+            <filter name="last_month" string="Last Month" domain="[('code', '=', 'last_month')]"/>
+            <filter name="this_year" string="This Year" domain="[('code', '=', 'this_year')]"/>
+            <filter name="last_year" string="Last Year" domain="[('code', '=', 'last_year')]"/>
+        </search>
+    </field>
+    </record>
+</odoo>

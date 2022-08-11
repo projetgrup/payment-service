@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
+import logging
 from odoo.tools.sql import column_exists
+
+_logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
+    cr.execute("""SELECT 1 FROM ir_module_module WHERE name = 'payment_jetcheckout_system' and state = 'installed'""")
+    result = cr.fetchone()
+    if not result:
+        raise Exception('You cannot upgrade this module, you must install module "payment_jetcheckout_system" first.')
+
     if not column_exists(cr, "res_company", "student_discount_sibling_active"):
         cr.execute(
             """
@@ -75,13 +83,18 @@ def migrate(cr, version):
             """,
         )
     try:
-        for (old, new) in [('group_sps_user', 'group_student_user'), ('group_sps_manager', 'group_student_manager')]:
-            cr.execute(
-                """
-                UPDATE ir_model_data SET name = %s
-                WHERE module = 'payment_student' and name = %s
-                """, tuple(new, old)
-            )
+        cr.execute(
+            """
+            UPDATE ir_model_data SET name = 'group_student_user'
+            WHERE module = 'payment_student' and name = 'group_sps_user'
+            """
+        )
+        cr.execute(
+            """
+            UPDATE ir_model_data SET name = 'group_student_manager'
+            WHERE module = 'payment_student' and name = 'group_sps_manager'
+            """
+        )
 
         cr.execute("""SELECT * FROM res_student_setting""")
         result = cr.dictfetchall()
@@ -130,5 +143,6 @@ def migrate(cr, version):
         cr.execute("""ALTER TABLE transaction_item_rel RENAME COLUMN payment_id TO item_id""")
         cr.execute("""ALTER TABLE transaction_item_rel RENAME CONSTRAINT transaction_payment_rel_payment_id_fkey TO transaction_item_rel_item_id_fkey""")
         cr.execute("""DROP TABLE res_student_setting CASCADE""")
-    except:
-        pass
+    except Exception as e:
+        _logger.error(str(e))
+        raise

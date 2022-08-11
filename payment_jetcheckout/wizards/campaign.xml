@@ -15,8 +15,8 @@
                             <field name="logo"/>
                             <templates>
                                 <t t-name="kanban-box">
-                                    <div class="oe_kanban_global_click d-flex justify-content-center align-items-center shadow-sm overflow-hidden" style="width: 100px;">
-                                        <img t-att-src="record.logo.value" t-att-alt="record.name.value" t-att-title="record.name.value" style="width: 100px; height: 50px;"/>
+                                    <div class="oe_kanban_global_click d-flex justify-content-center align-items-center shadow-sm overflow-hidden" style="width: 100px; height: 100px;">
+                                        <img t-att-src="record.logo.value" t-att-alt="record.name.value" t-att-title="record.name.value"/>
                                     </div>
                                 </t>
                             </templates>

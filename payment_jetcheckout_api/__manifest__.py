@@ -19,12 +19,8 @@
         'views/views.xml'
     ],
     'assets': {
-        #'web.assets_qweb': [
-        #    'payment_jetcheckout_api/static/src/xml/templates.xml',
-        #],
         'web.assets_frontend': [
             'payment_jetcheckout_api/static/src/js/page.js',
-            'payment_jetcheckout_api/static/src/scss/font.scss',
             'payment_jetcheckout_api/static/src/scss/page.scss',
         ],
     },

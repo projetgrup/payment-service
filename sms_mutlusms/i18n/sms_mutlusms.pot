@@ -1,0 +1,42 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sms_mutlusms
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 20:04+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sms_mutlusms
+#: code:addons/sms_mutlusms/models/sms.py:0
+#, python-format
+msgid "%s SMS credit(s) left"
+msgstr ""
+
+#. module: sms_mutlusms
+#: model:ir.model.fields.selection,name:sms_mutlusms.selection__sms_provider__type__mutlusms
+msgid "MutluSMS"
+msgstr ""
+
+#. module: sms_mutlusms
+#: model:ir.model.fields,field_description:sms_mutlusms.field_sms_provider__type
+msgid "Provider"
+msgstr ""
+
+#. module: sms_mutlusms
+#: model:ir.model,name:sms_mutlusms.model_sms_api
+msgid "SMS API"
+msgstr ""
+
+#. module: sms_mutlusms
+#: model:ir.model,name:sms_mutlusms.model_sms_provider
+msgid "SMS Providers"
+msgstr ""

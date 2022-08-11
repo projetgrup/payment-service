@@ -1,34 +1,8 @@
-.mw-xl-128 {
-    width: 100%;
-    max-width: 82rem;
-}
-
-body::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    background-color: #f7fafc;
-}
-
-body::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 50px;
-}
-
-body::-webkit-scrollbar-corner {
-    background-color: initial;
-}
-
-.payment-page {
-    font-family: Montserrat, sans-serif !important;
-    //font-family: "Source Sans Pro", "Odoo Unicode Support Noto", sans-serif !important;
+.payment-api-page {
     font-size: 90%;
     background-color: #f7fafc;
     color: #888888 !important;
     overflow: auto !important;
-
-    h1, h2, h3, h4, h5 {
-        font-family: Montserrat, sans-serif !important;
-    }
 
     .header {
         img {
@@ -74,56 +48,6 @@ body::-webkit-scrollbar-corner {
             top: 40px;
             font-size: 2rem;
             color: #edf2f7;
-        }
-    }
-
-    .modal {
-        overflow: hidden;
-    }
-
-    .modal-dialog {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        min-width: 500px;
-
-        .modal-content {
-            border-radius: 10px !important;
-
-            .modal-header {
-                background-color: #ffffff !important;
-                border-radius: 10px 10px 0 0 !important;
-                padding: 25px !important;
-                border-bottom: 1px solid #ddd !important;
-
-                .modal-title {
-                    font-size: 1rem;
-                    font-weight: bold;
-                }
-
-                button {
-                    display: none !important;
-                }
-            }
-
-            .modal-body {
-                color: #888888 !important;
-                padding: 25px !important;
-                border-bottom: 1px solid #ddd !important;
-            }
-
-            .modal-footer {
-                background: #ffffff !important;
-                border-radius: 0 0 10px 10px !important;
-                padding: 20px !important;
-
-                button {
-                    padding: 10px 40px !important;
-                    border-radius: 10px !important;
-                }
-            }
-
         }
     }
 }

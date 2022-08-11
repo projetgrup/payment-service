@@ -5,7 +5,7 @@
 
 {
     'name': 'Jetcheckout Payment Acquirer',
-    'version': '1.1',
+    'version': '1.4',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
@@ -15,6 +15,7 @@
     'data': [
         'views/acquirer.xml',
         'views/transaction.xml',
+        'views/partner.xml',
         'views/templates.xml',
         'wizards/signin.xml',
         'wizards/application.xml',
@@ -25,9 +26,6 @@
         'security/ir.model.access.csv',
     ],
     'assets': {
-        'web.assets_qweb': [
-            'payment_jetcheckout/static/src/xml/templates.xml',
-        ],
         'web.assets_frontend': [
             'payment_jetcheckout/static/src/js/imask.js',
             'payment_jetcheckout/static/src/js/framework.js',

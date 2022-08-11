@@ -16,19 +16,19 @@ var _t = core._t;
 
 publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     selector: '.payment-card',
-    xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
+            self.$cctype = '';
+            self.$ccfamily = '';
             self.$name = document.getElementById('name');
             self.$cardnumber = document.getElementById('cardnumber');
             self.$expirationdate = document.getElementById('expirationdate');
             self.$securitycode = document.getElementById('securitycode');
             self.$ccicon = document.getElementById('ccicon');
             self.$ccsingle = document.getElementById('ccsingle');
-            self.$ccname = document.getElementById('ccname');
-            self.$ccfamily = document.getElementById('ccfamily');
+            self.$cclogo = document.getElementById('cclogo');
             self.$amount = document.getElementById('amount');
             self.$amount_installment = document.getElementById('amount_installment');
             self.$currency = document.getElementById('currency');
@@ -40,10 +40,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$svgnumber = document.getElementById('svgnumber');
             self.$creditcard = document.querySelector('.creditcard');
             self.$installments_table = document.getElementById('installments_table');
-            self.$cclogo = document.getElementById('installment_card');
             self.$payment_pay = document.getElementById('payment_pay');
-            self.$payment_pay0 = document.getElementById('payment_pay0');
-            self.$payment_pay1 = document.getElementById('payment_pay1');
             self.$payment_form = document.getElementById('o_payment_form_pay');
             self.$success_url = document.getElementById('success_url');
             self.$fail_url = document.getElementById('fail_url');
@@ -157,32 +154,28 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 });
 
                 self.cardnumber.on('accept', self.acceptCardNumber.bind(self));
-                self.expirationdate.on('accept', self.acceptExpirationDate.bind(self));
-                self.securitycode.on('accept', self.acceptSecurityCode.bind(self));
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
-                self.$name.addEventListener('input', self.inputName);
-                self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
+                if (self.$creditcard) {
+                    self.expirationdate.on('accept', self.acceptExpirationDate.bind(self));
+                    self.securitycode.on('accept', self.acceptSecurityCode.bind(self));
+                    self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
+                    self.$name.addEventListener('input', self.inputName);
+                    self.$name.addEventListener('focus', self.removeFlipped.bind(self));
+                    self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
+                    self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
+                    self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
+                }
                 if (self.$payment_terms) {
                     self.$payment_terms.addEventListener('click', self.clickPaymentTerms.bind(self));
                 }
                 if (self.$payment_pay) {
                     self.$payment_pay.addEventListener('click', self.clickPay.bind(self));
                 }
-                if (self.$payment_pay0) {
-                    self.$payment_pay0.addEventListener('click', self.clickPay.bind(self));
-                }
-                if (self.$payment_pay1) {
-                    self.$payment_pay1.addEventListener('click', self.clickPay.bind(self));
-                }
                 if (self.$payment_form) {
                     self.$payment_form.addEventListener('click', self.clickPay.bind(self));
                 }
                 self.$row.addEventListener('click', self.clickRow.bind(self));
-                self.$name.addEventListener('focus', self.removeFlipped.bind(self));
-                self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
-                self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
-                self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
                 framework.hideLoading();
             }
         });
@@ -207,67 +200,73 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
 
     acceptCardNumber: function () {
         this.getInstallment();
+        let type = '';
+        let code = '';
+        let color = 'gray';
         switch (this.cardnumber.masked.currentMask.cardtype) {
             case 'american express':
-                this.$ccicon.innerHTML = cards['amex'];
-                this.$ccsingle.innerHTML = cards['amex_single'];
-                this.$ccname.value = 'amex';
-                this.swapColor('green');
+                type = 'American Express';
+                code = 'amex';
+                color = 'green';
                 break;
             case 'visa':
-                this.$ccicon.innerHTML = cards['visa'];
-                this.$ccsingle.innerHTML = cards['visa_single'];
-                this.$ccname.value = 'visa';
-                this.swapColor('lime');
+                type = 'Visa';
+                code = 'visa';
+                color = 'lime';
                 break;
             case 'diners':
-                this.$ccicon.innerHTML = cards['diners'];
-                this.$ccsingle.innerHTML = cards['diners_single'];
-                this.$ccname.value = 'diners';
-                this.swapColor('orange');
+                type = 'Diners';
+                code = 'diners';
+                color = 'orange';
                 break;
             case 'discover':
-                this.$ccicon.innerHTML = cards['discover'];
-                this.$ccsingle.innerHTML = cards['discover_single'];
-                this.$ccname.value = 'discover';
-                this.swapColor('purple');
+                type = 'Discover';
+                code = 'discover';
+                color = 'purple';
                 break;
             case ('jcb' || 'jcb15'):
-                this.$ccicon.innerHTML = cards['jcb'];
-                this.$ccsingle.innerHTML = cards['jcb_single'];
-                this.$ccname.value = 'jcb';
-                this.swapColor('red');
+                type = 'JCB';
+                code = 'jcb';
+                color = 'red';
                 break;
             case 'maestro':
-                this.$ccicon.innerHTML = cards['maestro'];
-                this.$ccsingle.innerHTML = cards['maestro_single'];
-                this.$ccname.value = 'maestro';
-                this.swapColor('yellow');
+                type = 'Maestro';
+                code = 'maestro';
+                color = 'yellow';
                 break;
             case 'mastercard':
-                this.$ccicon.innerHTML = cards['mastercard'];
-                this.$ccsingle.innerHTML = cards['mastercard_single'];
-                this.$ccname.value = 'master';
-                this.swapColor('lightblue');
+                type = 'Mastercard';
+                code = 'mastercard';
+                color = 'lightblue';
                 break;
             case 'troy':
-                this.$ccicon.innerHTML = cards['troy'];
-                this.$ccsingle.innerHTML = cards['troy_single'];
-                this.$ccname.value = 'troy';
-                this.swapColor('white');
+                type = 'Troy';
+                code = 'troy';
+                color = 'white';
                 break;
             case 'unionpay':
-                this.$ccicon.innerHTML = cards['unionpay'];
-                this.$ccsingle.innerHTML = cards['unionpay_single'];
-                this.$ccname.value = 'unionpay';
-                this.swapColor('cyan');
+                type = 'UnionPay';
+                code = 'unionpay';
+                color = 'cyan';
                 break;
             default:
-                this.$ccicon.innerHTML = '';
-                this.$ccsingle.innerHTML = '';
-                this.$ccname.value = '';
-                this.swapColor('grey');
+                type = '';
+                code = '';
+                color = 'grey';
                 break;
+        }
+
+        this.$cctype = type;
+        if (code) {
+            this.$ccicon.innerHTML = cards[code];
+            this.$ccicon.classList.add('show');
+        } else {
+            this.$ccicon.innerHTML = '';
+            this.$ccicon.classList.remove('show');
+        }
+        if (this.$creditcard) {
+            this.$ccsingle.innerHTML = code && cards[code + '_single'] || '';
+            this.swapColor(color);
         }
     },
 
@@ -294,7 +293,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }).then(function (content) {
             new dialog(this, {
                 title: _t('Terms & Conditions'),
-                $content: $(qweb.render('payment_jetcheckout.content', {content: content})),
+                $content: $('<div/>').html(content),
             }).open();
         }).guardedCatch(function (error) {
             self.displayNotification({
@@ -318,6 +317,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 amount: this.amount.typedValue,
                 amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                 cardnumber: this.cardnumber.typedValue,
+                partner_id: this.$partner_id && this.$partner_id.value || 0
             },
         }).then(function (result) {
             if ('error' in result) {
@@ -391,15 +391,19 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     getInstallment: function () {
         var self = this;
         if (this.cardnumber.value.length == 0) {
-            this.$svgnumber.innerHTML = '0123 4567 8910 1112';
+            if (self.$creditcard) {
+                this.$svgnumber.innerHTML = '0123 4567 8910 1112';
+            }
             this.$empty.classList.remove('d-none');
             this.$row.classList.add('d-none');
             this.$row.innerHTML = '';
             this.$cclogo.innerHTML = '';
             this.$cclogo.classList.remove('show');
-            this.$ccfamily.value = '';
+            this.$ccfamily = '';
         } else {
-            this.$svgnumber.innerHTML = this.cardnumber.value;
+            if (self.$creditcard) {
+                this.$svgnumber.innerHTML = this.cardnumber.value;
+            }
             if (this.cardnumber.typedValue.length >= 6){
                 rpc.query({
                     route: '/payment/card/installment',
@@ -408,6 +412,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                         cardnumber: this.cardnumber.typedValue,
                         prefix: 'bin_',
+                        partner_id: this.$partner_id && this.$partner_id.value || 0,
                         s2s: !(!this.$order && !this.$invoice && !this.$subscription),
                     },
                 }).then(function (result) {
@@ -428,7 +433,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         if (result.card) {
                             self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
                             self.$cclogo.classList.add('show');
-                            self.$ccfamily.value = result.card;
+                            self.$ccfamily = result.card;
                         }
                     }
                 }).guardedCatch(function (error) {
@@ -446,7 +451,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 this.$row.innerHTML = '';
                 this.$cclogo.innerHTML = '';
                 this.$cclogo.classList.remove('show');
-                this.$ccfamily.value = '';
+                this.$ccfamily = '';
             }
         }
     },
@@ -541,6 +546,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     _getParams: function () {
         return {
             installment: document.querySelector('input[name="installment_radio"]:checked').value,
+            installment_desc: document.querySelector('input[name="installment_radio"]:checked').dataset.value,
             amount: this.amount.typedValue,
             amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
             cardnumber: this.cardnumber.typedValue,
@@ -548,8 +554,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             expire_month: this.expirationdate.typedValue.substring(0,2),
             expire_year: this.expirationdate.typedValue.substring(3),
             cvc: this.securitycode.typedValue,
-            card_type: this.$ccname.value,
-            card_family: this.$ccfamily.value,
+            card_type: this.$cctype,
+            card_family: this.$ccfamily,
             success_url: this.$success_url && this.$success_url.value || false,
             fail_url: this.$fail_url && this.$fail_url.value || false,
             partner_id: this.$partner_id && this.$partner_id.value || 0,

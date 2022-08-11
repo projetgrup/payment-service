@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sms_netgsm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-15 20:04+0000\n"
+"PO-Revision-Date: 2022-06-15 23:12+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1\n"
+
+#. module: sms_netgsm
+#: code:addons/sms_netgsm/models/sms.py:0
+#, python-format
+msgid "%s SMS credit(s) left"
+msgstr "%s SMS kredisi kaldı"
+
+#. module: sms_netgsm
+#: model:ir.model.fields.selection,name:sms_netgsm.selection__sms_provider__type__netgsm
+msgid "Netgsm"
+msgstr "Netgsm"
+
+#. module: sms_netgsm
+#: model:ir.model.fields,field_description:sms_netgsm.field_sms_provider__type
+msgid "Provider"
+msgstr "Sağlayıcılar"
+
+#. module: sms_netgsm
+#: model:ir.model,name:sms_netgsm.model_sms_api
+msgid "SMS API"
+msgstr "SMS API"
+
+#. module: sms_netgsm
+#: model:ir.model,name:sms_netgsm.model_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcıları"
+
+#~ msgid ""
+#~ "<span class=\"o_form_label\">Credentials</span>\n"
+#~ "                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label\">Bilgiler</span>\n"
+#~ "                            <span class=\"fa fa-lg fa-building-o\" title=\"Bu ayarlar geçerli şirkete göre değişir\" aria-label=\"Bu ayarlar geçerli şirkete göre değişir\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#~ msgid "Companies"
+#~ msgstr "Şirketler"
+
+#~ msgid "Config Settings"
+#~ msgstr "Ayarlar"
+
+#~ msgid "Enter your credentials"
+#~ msgstr "Bilgilerinizi giriniz"
+
+#~ msgid "Netgsm Originator"
+#~ msgstr "Netgsm Originator"
+
+#~ msgid "Netgsm Password"
+#~ msgstr "Netgsm Parola"
+
+#~ msgid "Netgsm Username"
+#~ msgstr "Netgsm Kullanıcı Adı"
+
+#~ msgid "Originator"
+#~ msgstr "Originator"
+
+#~ msgid "Password"
+#~ msgstr "Parola"
+
+#~ msgid "Username"
+#~ msgstr "Kullanıcı Adı"

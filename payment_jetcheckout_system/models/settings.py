@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+
+import json
 
 
 class PaymentSettings(models.TransientModel):
@@ -22,9 +24,12 @@ class PaymentSettings(models.TransientModel):
         }
 
     def execute(self):
-        return self.cancel()
+        return self.refresh()
 
     def cancel(self):
+        return self.refresh()
+
+    def refresh(self):
         actions = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
         if actions:
             return actions.read()[0]

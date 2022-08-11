@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_main" name="VPS" web_icon="payment_vendor,static/description/icon.png" sequence="24"/>
-    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="0"/>
-    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1"/>
+    <menuitem id="menu_dashboard" action="payment_jetcheckout_system.action_dashboard" parent="menu_main" sequence="0"/>
+    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
 
-    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="4" groups="group_vendor_manager"/>
-    <!--<menuitem id="menu_settings" action="action_settings" name="Settings" parent="menu_conf" sequence="0"/>-->
+    <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
+    <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>
+    <menuitem id="menu_sms_messages" action="payment_jetcheckout_system.action_sms_messages" parent="menu_messages" sequence="1"/>-->
+
+    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="5" groups="group_vendor_manager"/>
 
     <menuitem id="menu_companies" name="Company Settings" parent="menu_conf" sequence="1"/>
     <menuitem id="menu_company" action="payment_jetcheckout_system.action_company_hierarchy" parent="menu_companies" sequence="1"/>
@@ -17,9 +20,12 @@
     <menuitem id="menu_website" action="payment_jetcheckout_system.action_website" name="Websites" parent="menu_websites" sequence="1"/>
 
     <menuitem id="menu_acquirers" name="Payment Settings" parent="menu_conf" sequence="4"/>
-    <menuitem id="menu_acquirer" action="payment_jetcheckout_system.action_acquirer" name="Payment Acquirers" parent="menu_acquirers" sequence="1"/>
+    <menuitem id="menu_acquirer" action="payment_jetcheckout_system.action_payment_acquirer" name="Payment Acquirers" parent="menu_acquirers" sequence="1"/>
 
-    <menuitem id="menu_emails" name="Email Settings" parent="menu_conf" sequence="5"/>
-    <menuitem id="menu_mail_template" action="payment_jetcheckout_system.action_mail_template" parent="menu_emails" sequence="1"/>
-    <menuitem id="menu_mail_server" action="payment_jetcheckout_system.action_mail_server" parent="menu_emails" sequence="2"/>
+    <menuitem id="menu_mail" name="Email Settings" parent="menu_conf" sequence="5"/>
+    <menuitem id="menu_mail_template" action="payment_jetcheckout_system.action_mail_template" parent="menu_mail" sequence="1"/>
+    <menuitem id="menu_mail_server" action="payment_jetcheckout_system.action_mail_server" parent="menu_mail" sequence="2"/>
+    <menuitem id="menu_sms" name="SMS Settings" parent="menu_conf" sequence="6"/>
+    <menuitem id="menu_sms_template" action="payment_jetcheckout_system.action_sms_template" parent="menu_sms" sequence="1"/>
+    <menuitem id="menu_sms_provider" action="payment_jetcheckout_system.action_sms_provider" parent="menu_sms" sequence="2"/>
 </odoo>

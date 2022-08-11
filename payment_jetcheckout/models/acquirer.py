@@ -12,22 +12,27 @@ class PaymentAcquirerJetcheckoutTerms(models.TransientModel):
     partner_id = fields.Many2one('res.partner')
     domain = fields.Char()
 
+
 class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.status'
     _description = 'Jetcheckout Status'
 
-    transaction_date = fields.Datetime(readonly=True)
-    vpos_id = fields.Char(readonly=True)
-    is_successful = fields.Boolean(readonly=True)
-    is_completed = fields.Boolean(readonly=True)
-    is_cancelled = fields.Boolean(readonly=True)
-    is_3d = fields.Boolean(readonly=True)
+    date = fields.Datetime(readonly=True)
+    name = fields.Char(readonly=True)
+    successful = fields.Boolean(readonly=True)
+    completed = fields.Boolean(readonly=True)
+    cancelled = fields.Boolean(readonly=True)
+    refunded = fields.Boolean(readonly=True)
+    threed = fields.Boolean(readonly=True)
     currency_id =fields.Many2one('res.currency', readonly=True)
     amount = fields.Monetary(readonly=True)
-    commission = fields.Monetary(readonly=True)
-    cost_rate = fields.Float(readonly=True)
+    commission_amount = fields.Monetary(readonly=True)
+    commission_rate = fields.Float(readonly=True)
+    customer_amount = fields.Monetary(readonly=True)
+    customer_rate = fields.Float(readonly=True)
     auth_code = fields.Char(readonly=True)
     service_ref_id = fields.Char(readonly=True)
+
 
 class PaymentAcquirerJetcheckoutRefund(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.refund'
@@ -35,23 +40,15 @@ class PaymentAcquirerJetcheckoutRefund(models.TransientModel):
 
     transaction_id = fields.Many2one('payment.transaction', readonly=True)
     currency_id = fields.Many2one('res.currency', readonly=True)
-    total = fields.Monetary(readonly=True)
+    total = fields.Monetary(readonly=True, required=True)
     amount = fields.Monetary()
 
     def confirm(self):
         if self.amount > self.total:
             raise UserError(_('Refund amount cannot be higher than total amount'))
-        self.transaction_id.jetcheckout_s2s_do_refund(amount=self.amount)
+        self.transaction_id._jetcheckout_api_refund(amount=self.amount)
         return {'type': 'ir.actions.act_window_close'}
 
-class PaymentAcquirerJetcheckoutPos(models.Model):
-    _name = 'payment.acquirer.jetcheckout.pos'
-    _description = 'Jetcheckout Pos'
-
-    active = fields.Boolean(default=True)
-    name = fields.Char(required=True)
-    res_id = fields.Integer(required=True)
-    acquirer_id = fields.Many2one('payment.acquirer', required=True)
 
 class PaymentAcquirerJetcheckoutBank(models.Model):
     _name = 'payment.acquirer.jetcheckout.bank'
@@ -67,17 +64,27 @@ class PaymentAcquirerJetcheckoutBank(models.Model):
     branch = fields.Char()
     color = fields.Char()
 
+
+class PaymentAcquirerJetcheckoutCampaign(models.Model):
+    _name = 'payment.acquirer.jetcheckout.campaign'
+    _description = 'Jetcheckout Campaign'
+
+    acquirer_id = fields.Many2one('payment.acquirer')
+    name = fields.Char(required=True)
+
+
 class PaymentAcquirerJetcheckoutJournal(models.Model):
     _name = 'payment.acquirer.jetcheckout.journal'
     _description = 'Jetcheckout Journal Items'
 
     acquirer_id = fields.Many2one('payment.acquirer')
-    pos_id = fields.Many2one('payment.acquirer.jetcheckout.pos', required=True, readonly=True)
+    name = fields.Char(required=True, readonly=True)
     journal_id = fields.Many2one('account.journal')
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
-    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id.id, readonly=True)
+    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id, readonly=True)
     company_id = fields.Many2one('res.company')
     website_id = fields.Many2one('website')
+
 
 class PaymentAcquirerJetcheckout(models.Model):
     _inherit = 'payment.acquirer'
@@ -117,6 +124,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
     jetcheckout_url = fields.Char(compute='_get_jetcheckout_url')
     jetcheckout_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
+    jetcheckout_campaign_ids = fields.One2many('payment.acquirer.jetcheckout.campaign', 'acquirer_id', groups='base.group_user')
     jetcheckout_terms = fields.Html(required_if_provider='jetcheckout', groups='base.group_user', sanitize=False, sanitize_attributes=False, sanitize_form=False)
     jetcheckout_no_terms = fields.Boolean('Hide Terms')
     jetcheckout_username = fields.Char(readonly=True)
@@ -134,7 +142,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             company = company or self.env.company
             domain.append(('company_id', '=', company.id))
             if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
-                domain.append(('website_id','=', website.id))
+                domain.append(('website_id', '=', website.id))
 
         acquirer = self.search(domain, limit=limit, order='sequence')
         if not acquirer:
@@ -187,7 +195,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             token.jetcheckout_card_installment = kwargs.get('installment_id', '1')
             return token
 
-        token = self.env['payment.token'].sudo().create({
+        return self.env['payment.token'].sudo().create({
             'acquirer_id': int(kwargs['acquirer_id']),
             'acquirer_ref': kwargs.get('cc_holder_name'),
             'jetcheckout_card_holder': kwargs.get('cc_holder_name'),
@@ -201,15 +209,6 @@ class PaymentAcquirerJetcheckout(models.Model):
             'partner_id': partner_id,
             'name': 'XXXX-XXXX-XXXX-%s - %s' % (kwargs['cc_number'][-4:], kwargs['cc_holder_name'])
         })
-        #if kwargs.get('save'):
-        #    card = self.iyzico_store_card(token, kwargs)
-        #    if card['status'] == 'success':
-        #        token.write({
-        #            'iyzico_card_userkey': card['cardUserKey'],
-        #            'iyzico_card_token': card['cardToken'],
-        #        })
-        #        return token
-        return token
 
     def jetcheckout_s2s_form_validate(self, data):
         self.ensure_one()
@@ -260,33 +259,6 @@ class PaymentAcquirerJetcheckout(models.Model):
         action['res_id'] = app.id
         action['context'] = {'dialog_size': 'large', 'create': False, 'delete': False, 'application': True}
         return action
-
-    def _jetcheckout_api_sync(self, poses=None):
-        self.ensure_one()
-
-        if not poses:
-            poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
-
-        items = {}
-        for pos in poses:
-            items.update({pos['id']: pos['name']})
-
-        pos_ids = self.env['payment.acquirer.jetcheckout.pos'].search([('acquirer_id', '=', self.id)])
-        for pos in pos_ids:
-            if pos.res_id not in items:
-                self.env['payment.acquirer.jetcheckout.journal'].search([('pos_id', '=', pos.id)]).unlink()
-                pos.unlink()
-            else:
-                if items[pos.res_id] != pos.name:
-                    pos.write({'name': items[pos.res_id]})
-                del items[pos.res_id]
-
-        for id, name in items.items():
-            self.env['payment.acquirer.jetcheckout.pos'].create({
-                'acquirer_id': self.id,
-                'res_id': id,
-                'name': name,
-            })
 
     def _rpc(self, *args):
         if not len(self) == 1:
@@ -506,6 +478,29 @@ class PaymentAcquirerJetcheckout(models.Model):
         data['acquirer'] = self
         return data
 
+    def _jetcheckout_api_sync_campaign(self, poses):
+        api_campaigns_list = poses.filtered(lambda x: x.is_active).mapped('pos_price').filtered(lambda x: x.is_active).mapped('offer_name')
+        acq_campaigns_list = self.jetcheckout_campaign_ids.mapped('name')
+        api_campaigns = set(api_campaigns_list)
+        acq_campaigns = set(acq_campaigns_list)
+        creates = []
+        unlinks = []
+
+        for campaign in acq_campaigns:
+            if campaign not in api_campaigns:
+                unlinks.append(campaign)
+
+        for campaign in api_campaigns:
+            if campaign not in acq_campaigns:
+                creates.append(campaign)
+
+        self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([('acquirer_id', '=', self.id), ('name', 'in', unlinks)]).unlink()
+        self.env['payment.acquirer.jetcheckout.campaign'].sudo().create([{
+            'acquirer_id': self.id,
+            'name': name,
+        } for name in creates])
+
+
     def _jetcheckout_api_upload_vals(self, vals, data, table):
         values = {}
         fields = table._fields.values()
@@ -555,9 +550,6 @@ class PaymentAcquirerJetcheckout(models.Model):
 
         # Vacuum old data
         self._jetcheckout_api_vacuum()
-
-        # Sync necessary records
-        self._jetcheckout_api_sync(poses)
 
         # Create transient records
         self._jetcheckout_api_create(poses, record)

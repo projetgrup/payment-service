@@ -1,7 +1,6 @@
 odoo.define('payment_jetcheckout_api.payment_page', function (require) {
 "use strict";
 
-var config = require('web.config');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var Dialog = require('web.Dialog');
@@ -23,15 +22,16 @@ publicWidget.registry.JetcheckoutPaymentApiOptions = publicWidget.Widget.extend(
 
     _onClickPaymentOption: function (ev) {
         framework.showLoading();
-        const method = $(ev.currentTarget).find('input').val();
-        window.location.assign('/payment/' + method);
+        const option = $(ev.currentTarget).attr('name');
+        window.location.assign('/payment/' + option);
     },
 });
 
 publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
-        'click button': '_onClickButton',
+        'click button#confirm': '_onBankConfirmButton',
+        'click button#return': '_onBankReturnButton',
     },
 
     start: function () {
@@ -40,53 +40,65 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
         });
     },
 
-    _onClickButton: function (ev) {
+    _onBankConfirmButton: function (ev) {
         var self = this;
-        new Dialog(self, {
+        let popup = new Dialog(self, {
             size: 'medium',
-            title: _t('İşlemi onaylıyor musunuz?'),
+            title: _t('Are you confirm the transaction?'),
             technical: false,
             buttons: [
-                {text: _t("Onayla"), classes: 'btn-primary btn-validate'},
-                {text: _t("İptal"), close: true},
+                {text: _t("Confirm"), classes: 'btn-primary btn-confirm'},
+                {text: _t("Cancel"), close: true},
             ],
             $content: $('<div/>', {
-                html: 'Onayınız ile birlikte siparişiniz oluşturulacak.',
+                html: _t('Transaction is going to be concluded after your confirmation'),
             }),
-        }).open().opened(function () {
-            const $button = $('.modal-footer .btn-validate');
+        });
+        popup.open().opened(function () {
+            const $button = $('.modal-footer .btn-confirm');
             $button.click(function() {
-                self._onValidateForm();
+                framework.showLoading();
+                self._rpc({
+                    route: '/payment/bank/confirm',
+                }).then(function (url) {
+                    window.location.assign(url);
+                }).guardedCatch(function (error) {
+                    new Dialog(self, {
+                        size: 'medium',
+                        title: _t('Error'),
+                        technical: false,
+                        buttons: [
+                            {text: _t("Okay"), classes: 'btn-primary', close: true},
+                        ],
+                        $content: $('<div/>', {
+                            html: _t('An error occured. Please try again.'),
+                        }),
+                    }).open();
+                    framework.hideLoading();
+                });
             });
         });
     },
 
-    _onValidateForm: function () {
+    _onBankReturnButton: function () {
         var self = this;
         framework.showLoading();
         this._rpc({
-            route: '/payment/bank/validate',
+            route: '/payment/bank/return',
         }).then(function (url) {
-            if (!url) {
-                window.location.reload();
-            } else {
-                window.location.assign(url);
-            }
+            window.location.assign(url);
         }).guardedCatch(function (error) {
             new Dialog(self, {
                 size: 'medium',
-                title: _t('Hata'),
+                title: _t('Error'),
                 technical: false,
                 buttons: [
-                    {text: _t("Tamam"), classes: 'btn-primary', close: true},
+                    {text: _t("Okay"), classes: 'btn-primary', close: true},
                 ],
                 $content: $('<div/>', {
-                    html: 'Bir hata meydana geldi. Lütfen tekrar deneyiniz.',
+                    html: _t('An error occured. Please try again.'),
                 }),
             }).open();
-            if (config.isDebug()) {
-                console.error(error);
-            }
             framework.hideLoading();
         });
     },

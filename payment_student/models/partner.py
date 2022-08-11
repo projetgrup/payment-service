@@ -34,6 +34,7 @@ class Partner(models.Model):
                     for template in templates:
                         val.append({
                             'child_id': student.id,
+                            'parent_id': student.parent_id.id,
                             'term_id': template.term_id.id,
                             'payment_type_id': template.payment_type_id.id,
                             'amount': template.amount,
@@ -59,7 +60,7 @@ class Partner(models.Model):
         self.ensure_one()
         payments = self.env['payment.item'].sudo().search([('parent_id','=',self.id),('paid','=',False)])
         if not payments:
-            raise UserError(_('There isn\'t any payment item related to this partner'))
+            return ''
         return ', '.join(payments.mapped('term_id.name'))
 
     def _get_setting_line(self):

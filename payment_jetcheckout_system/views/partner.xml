@@ -5,6 +5,9 @@
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
         <tree decoration-muted="active == False" sample="1">
+            <header>
+                <button name="action_send" type="object" string="Send"/>
+            </header>
             <field name="active" invisible="1"/>
             <field name="name"/>
             <field name="vat" string="Vat"/>
@@ -12,6 +15,7 @@
             <field name="mobile"/>
             <field name="email"/>
             <field name="date_email_sent" optional="hide"/>
+            <field name="date_sms_sent" optional="hide"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
         </tree>
     </field>
@@ -23,20 +27,39 @@
     <field name="arch" type="xml">
         <form>
             <field name="system" invisible="1"/>
-            <field name="payable_count" invisible="1"/>
-            <header attrs="{'invisible': [('payable_count', '=', 0)]}">
-                <button name="action_share_payment_link" type="object" string="Share Payment Link" class="oe_highlight"/>
-                <button name="action_send" type="object" string="Send Email"/>
+            <header>
+                <button name="action_share_payment_link" type="object" string="Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button name="action_share_payment_page" type="object" string="Payment Page" class="oe_highlight" attrs="{'invisible': [('is_portal', '=', False)]}"/>
+                <button name="action_send" type="object" string="Send Message" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
+                <field name="is_portal" invisible="1"/>
+                <field name="is_internal" invisible="1"/>
+                <field name="users_id" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-check" attrs="{'invisible': [('id','=',False)]}">
+                    <button name="action_transaction_done" type="object" class="oe_stat_button" icon="fa-check-square-o" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="transaction_done_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transaction Done</span>
+                    </div>
+                    </button>
+                    <button name="action_transaction_failed" type="object" class="oe_stat_button" icon="fa-share-square-o" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="transaction_failed_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transaction Failed</span>
+                    </div>
+                    </button>
+                    <button name="action_paid" type="object" class="oe_stat_button" icon="fa-edit" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="paid_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items Paid</span>
                     </div>
                     </button>
-                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('id','=',False)]}">
+                    <button name="action_payable" type="object" class="oe_stat_button" icon="fa-plus-square-o" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="payable_count" nolabel="1"/></span>
                         <span class="o_stat_text" style="font-weight: bold;">Items To Pay</span>
@@ -56,23 +79,30 @@
                     <group name="general">
                         <field name="vat" string="Vat"/>
                         <field name="lang"/>
-                        <field name="parent_id" string="Parent" context="{'show_address': True, 'active_system': context.get('active_system')}" required="1" domain="[('system','=',system),('parent_id','=',False),('company_id','=',company_id)]"/>
+                        <field name="parent_id" string="Parent" context="{'show_address': True, 'active_system': context.get('active_system')}" required="'default_parent_id' not in context" invisible="'default_parent_id' in context" domain="[('system','=',system),('parent_id','=',False),('company_id','=',company_id)]"/>
                         <field name="id" invisible="1"/>
                         <field name="active" invisible="1"/>
                     </group>
                     <group name="private">
                         <field name="mobile" widget="phone"/>
                         <field name="email" widget="email"/>
-                        <field name="date_email_sent"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('active_system')"/>
+                    </group>
+                    <group name="communication" string="Communication Dates">
+                        <field name="date_email_sent" string="Email"/>
+                        <field name="date_sms_sent" string="SMS"/>
+                    </group>
+                    <group name="payment" string="Payment Settings">
+                        <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="acquirer_ids" invisible="1"/>
                     </group>
                 </group>
                 <notebook>
                     <page name="siblings" string="Siblings" autofocus="autofocus" attrs="{'invisible': [('sibling_ids','=',[])]}">
-                        <field name="sibling_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                        <field name="sibling_ids" mode="kanban" context="{'kanban_view_ref' : 'payment_jetcheckout_system.partner_kanban', 'form_view_ref': 'payment_jetcheckout_system.child_basic'}"/>
                     </page>
-                    <page name="children" string="Children" autofocus="autofocus" attrs="{'invisible': [('child_ids','=',[])]}">
-                        <field name="child_ids" mode="kanban" context="{'form_view_ref' : 'payment_jetcheckout.child_basic'}"/>
+                    <page name="children" string="Children" autofocus="autofocus">
+                        <field name="child_ids" mode="kanban" context="{'kanban_view_ref' : 'payment_jetcheckout_system.partner_kanban', 'form_view_ref': 'payment_jetcheckout_system.child_basic', 'default_is_company': False, 'active_child': 1, 'default_parent_id': active_id, 'default_lang': lang}"/>
                     </page>
                 </notebook>
             </sheet>
@@ -96,7 +126,8 @@
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
-        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
     </field>
     </record>
 
@@ -109,6 +140,8 @@
             <field name="name"/>
             <field name="image_128"/>
             <field name="avatar_128"/>
+            <field name="is_portal"/>
+            <field name="is_internal"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
@@ -116,9 +149,23 @@
                             <img alt="" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                             <img alt="" t-else="" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
                         </div>
-                        <div class="oe_kanban_details">
+                        <div class="oe_kanban_details d-flex flex-column">
                             <strong><field name="name"/></strong>
                             <ul></ul>
+                            <div class="o_row">
+                                <t t-if="record.is_internal.value">
+                                    <button string="Internal User" disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
+                                </t>
+                                <t t-else="">
+                                    <t t-if="record.is_portal.value">
+                                        <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"/>
+                                        <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"/>
+                                    </t>
+                                    <t t-else="">
+                                        <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"/>
+                                    </t>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </t>
@@ -140,9 +187,13 @@
             <filter name="filterby_payment" string="Has Payments" domain="[('payment_ids', '=', '')]"/>
             <filter name="filterby_no_payment" string="Has No Payments" domain="[('payment_ids', '!=', '')]"/>
             <separator/>
-            <filter name="filterby_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-            <filter name="filterby_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-            <filter name="filterby_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>
+            <filter name="filterby_email_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_email_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_email_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>
+            <separator/>
+            <filter name="filterby_sms_sent_today" string="Sent SMS Today" domain="[('date_sms_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sms_sent_before" string="Sent SMS Before" domain="[('date_sms_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter name="filterby_sms_sent_no" string="No Sent SMS" domain="[('date_sms_sent', '=', False)]"/>
             <group expand="0" string="Groupby">
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
             </group>
@@ -150,12 +201,21 @@
     </field>
     </record>
 
-    <record id="payment_share" model="ir.actions.server">
-    <field name="name">Share Payment Link</field>
+    <record id="payment_share_link" model="ir.actions.server">
+    <field name="name">Payment Link</field>
     <field name="model_id" ref="base.model_res_partner"/>
     <field name="binding_model_id" ref="base.model_res_partner"/>
     <field name="binding_view_types">form</field>
     <field name="state">code</field>
-    <field name="code">action = records.action_share()</field>
+    <field name="code">action = records.action_share_link()</field>
+    </record>
+
+    <record id="payment_share_page" model="ir.actions.server">
+    <field name="name">Payment Page</field>
+    <field name="model_id" ref="base.model_res_partner"/>
+    <field name="binding_model_id" ref="base.model_res_partner"/>
+    <field name="binding_view_types">form</field>
+    <field name="state">code</field>
+    <field name="code">action = records.action_share_page()</field>
     </record>
 </odoo>

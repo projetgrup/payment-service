@@ -176,7 +176,7 @@
     <field name="name">res.student.payment.table.form</field>
     <field name="model">res.student.payment.table</field>
     <field name="arch" type="xml">
-        <form>
+        <form class="o_student_payment_table">
             <sheet>
                 <group colspan="2">
                     <field name="table" colspan="2" nolabel="1"/>

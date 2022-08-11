@@ -4,8 +4,21 @@
     <field name="model">mail.template</field>
     <field name="inherit_id" ref="mail.email_template_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="report_name"]' position="after">
-            <field name="company_id" groups="base.group_multi_company" invisible="context.get('settings',False)"/>
+        <xpath expr='//field[@name="model_id"]' position="after">
+            <field name="company_id" groups="base.group_multi_company"/>
+        </xpath>
+        <xpath expr='//field[@name="model_id"]' position="attributes">
+            <attribute name="invisible">context.get('settings',False)</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="sms_template_form" model="ir.ui.view">
+    <field name="model">sms.template</field>
+    <field name="inherit_id" ref="sms.sms_template_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="lang"]' position="after">
+            <field name="company_id" groups="base.group_multi_company"/>
         </xpath>
         <xpath expr='//field[@name="model_id"]' position="attributes">
             <attribute name="invisible">context.get('settings',False)</attribute>
