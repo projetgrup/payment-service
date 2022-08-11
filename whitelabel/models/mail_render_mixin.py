@@ -90,6 +90,6 @@ class MailRenderMixin(models.AbstractModel):
 
     def _replace_local_links(self, html, base_url=None):
         message = super()._replace_local_links(html)
-        if message.find("odoo") != -1:
-            message = re.sub(r'(Powered by\s(.*)Odoo</a>)', '<div> </div>', message)
+        #if message.find("odoo") != -1:
+            #message = re.sub(r'(Powered by\s(.*)Odoo</a>)', '<div> </div>', message)
         return message
