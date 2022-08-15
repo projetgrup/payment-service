@@ -13,6 +13,22 @@ class PaymentTransaction(models.Model):
         for rec in self:
             rec.is_jetcheckout = rec.acquirer_id.provider == 'jetcheckout'
 
+    def _calc_installment_description_long(self):
+        for rec in self:
+            desc = rec.jetcheckout_installment_description
+            desc_long = ''
+            try:
+                installment = int(desc)
+                if installment == 0:
+                    desc_long = ''
+                elif installment == 1:
+                    desc_long = _('Single payment')
+                else:
+                    desc_long = _('%s installment') % desc
+            except:
+                desc_long = desc
+            rec.jetcheckout_installment_description_long = desc_long
+
     @api.model
     def _get_default_partner_country_id(self):
         country = self.env.company.country_id
@@ -32,6 +48,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True)
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True)
     jetcheckout_installment_description = fields.Char('Installment Description', readonly=True)
+    jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True)
     jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True)
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
