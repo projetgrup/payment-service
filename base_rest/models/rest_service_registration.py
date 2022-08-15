@@ -205,7 +205,6 @@ class RestServiceRegistration(models.AbstractModel):
 
         module_list = [name for (name,) in self.env.cr.fetchall() if name not in graph]
         graph.add_modules(self.env.cr, module_list)
-
         for module in graph:
             self.load_services(module.name, services_registry)
 

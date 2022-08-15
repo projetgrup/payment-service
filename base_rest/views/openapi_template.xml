@@ -5,20 +5,11 @@
     <template id="openapi" name="OpenAPI">
         <t t-call="web.layout">
             <t t-set="head">
-                <meta name="generator" content="Odoo OpenAPI" />
-                <meta name="description" content="Odoo OpenAPI UI" />
-                <link
-                    rel="stylesheet"
-                    href="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui.css"
-                />
-                <script
-                    type="text/javascript"
-                    src="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui-bundle.js"
-                />
-                <script
-                    type="text/javascript"
-                    src="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui-standalone-preset.js"
-                />
+                <meta name="generator" content="OpenAPI" />
+                <meta name="description" content="OpenAPI UI" />
+                <link rel="stylesheet" href="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui.css"/>
+                <script type="text/javascript" src="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui-bundle.js"/>
+                <script type="text/javascript" src="/base_rest/static/lib/swagger-ui-3.51.1/swagger-ui-standalone-preset.js"/>
                 <script type="text/javascript">
                     odoo.session_info = {
                     is_superuser:<t
@@ -30,22 +21,9 @@
 
                 <t t-call-assets="web.assets_common" t-js="false" />
                 <t t-call-assets="base_rest.assets_swagger" t-js="false" />
-                <link
-                    href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700"
-                    rel="stylesheet"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    href="/base_rest/static/lib/swagger-ui-3.51.1/favicon-32x32.png"
-                    sizes="32x32"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    href="/base_rest/static/lib/swagger-ui-3.51.1/favicon-16x16.png"
-                    sizes="16x16"
-                />
+                <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet"/>
+                <link rel="icon" type="image/png" href="/base_rest/static/lib/swagger-ui-3.51.1/favicon-32x32.png" sizes="32x32"/>
+                <link rel="icon" type="image/png" href="/base_rest/static/lib/swagger-ui-3.51.1/favicon-16x16.png" sizes="16x16"/>
 
                 <t t-call-assets="web.assets_common" t-css="false" />
                 <t t-call-assets="web.assets_frontend" t-css="false" />
@@ -54,8 +32,8 @@
             <t t-set="head" t-value="head" />
         </t>
 
-        <body>
-            <div id="swagger-ui" t-att-data-settings='json.dumps(swagger_settings)' />
+        <body class="openapi">
+            <div id="swagger-ui" t-att-data-settings='json.dumps(settings)' />
 
             <script>
                  odoo.define('base_rest.swagger', function (require) {
@@ -71,28 +49,27 @@
     </template>
 
     <template id="openapi_redoc" name="OpenAPI Redoc">
-        <html>
-        <head>
-            <title>Redoc</title>
-            <!-- needed for adaptive design -->
-            <meta charset="utf-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet"/>
+        <t t-call="web.layout">
+            <t t-set="head">
+                <!-- needed for adaptive design -->
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet"/>
 
-            <!--
-            Redoc doesn't change outer page styles
-            -->
-            <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            </style>
-        </head>
-        <body>
-            <redoc t-att-spec-url="swagger_settings['urls'][0]['url']"></redoc>
-            <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"> </script>
-        </body>
-        </html>
+                <!--
+                Redoc doesn't change outer page styles
+                -->
+                <style>
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                </style>
+            </t>
+            <body>
+                <redoc t-att-spec-url="settings['urls'][0]['url']"></redoc>
+                <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"> </script>
+            </body>
+        </t>
     </template>
 </odoo>
