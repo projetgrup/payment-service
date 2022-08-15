@@ -145,8 +145,9 @@ class PaymentAcquirerJetcheckoutApiPoses(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.poses'
     _description = 'Jetcheckout Poses'
 
-    acquirer_id = fields.Many2one('payment.acquirer')
+    acquirer_id = fields.Many2one('payment.acquirer', readonly=True)
     pos_ids = fields.One2many('payment.acquirer.jetcheckout.api.pos', 'parent_id', 'Poses')
+    application_id = fields.Char(readonly=True)
 
     def write(self, vals):
         data = self.acquirer_id._jetcheckout_api_read()

@@ -202,7 +202,11 @@
         <form string="Virtual Pos">
             <sheet>
                 <field name="acquirer_id" invisible="1" readonly="1"/>
+                <field name="application_id" invisible="1" readonly="1"/>
                 <field name="pos_ids" nolabel="1" mode="kanban" colspan="2"/>
+                <p class="h2 text-center text-muted" attrs="{'invisible': [('application_id', '!=', False)]}">
+                    No application selected
+                </p>
             </sheet>
             <footer>
                 <button special="save" string="Save" class="btn-primary"/>
