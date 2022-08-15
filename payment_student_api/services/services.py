@@ -40,7 +40,7 @@ class StudentAPIService(Component):
     _description = """This API helps you connect student payment system with your specially generated key"""
 
     @restapi.method(
-        [(["/school"], "POST")],
+        [(["/schools"], "POST")],
         input_param=Datamodel("school.search"),
         output_param=Datamodel("school.response"),
         auth="public",
@@ -68,7 +68,7 @@ class StudentAPIService(Component):
         return SchoolResponse(schools=schools,**RESPONSE['success'])
 
     @restapi.method(
-        [(["/class"], "POST")],
+        [(["/classes"], "POST")],
         input_param=Datamodel("class.search"),
         output_param=Datamodel("class.response"),
         auth="public",
@@ -96,7 +96,7 @@ class StudentAPIService(Component):
         return ClassResponse(classes=classes,**RESPONSE["success"])
 
     @restapi.method(
-        [(["/"], "POST")],
+        [(["/students"], "POST")],
         input_param=Datamodel("student.search"),
         output_param=Datamodel("student.response"),
         auth="public",
@@ -124,7 +124,7 @@ class StudentAPIService(Component):
         return StudentResponse(students=students,**RESPONSE["success"])
 
     @restapi.method(
-        [(["/payment"], "POST")],
+        [(["/payments"], "POST")],
         input_param=Datamodel("payment.search"),
         output_param=Datamodel("payment.response"),
         auth="public",

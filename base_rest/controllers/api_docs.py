@@ -27,15 +27,16 @@ class ApiDocsController(Controller):
         auth="public",
     )
     def index(self, **params):
+        urls = self._get_api_urls()
         system = getattr(request.env.company, 'system', False)
         if system:
             service = 'api/v1: %s' % system
-            urls = []
-            for url in self._get_api_urls():
+            service_url = []
+            for url in urls:
                 if url['name'] == service:
-                    urls.append(url)
-        else:
-            urls = self._get_api_urls()
+                    service_url.append(url)
+                    break
+            urls = service_url
         settings = {"urls": urls}
         return request.render("base_rest.openapi_redoc", {"settings": settings})
 
