@@ -48,7 +48,7 @@
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
                                 <strong class="text-primary font-weight-bold">Partner</strong>
-                                <p>
+                                <p class="mr-5 pr-5">
                                     <t t-esc="tx.partner_name"/><br/>
                                     <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
                                 </p>
@@ -66,8 +66,7 @@
                                 <p class="z-index-1">
                                     <t t-esc="tx.jetcheckout_api_product"/>
                                 </p>
-                                <br/>
-                                <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
+                                <strong class="text-primary font-weight-bold text-right z-index-1 mt-5">Amount</strong>
                                 <p class="h3 text-right font-weight-bold z-index-1">
                                     <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </p>

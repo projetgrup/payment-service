@@ -8,9 +8,6 @@ from odoo import _
 import base64
 import hashlib
 
-import logging
-_logger = logging.getLogger(__name__)
-
 RESPONSE = {
     "success": {
         "response_code": 0,
@@ -41,16 +38,16 @@ RESPONSE = {
 
 class PaymentAPIController(RestController):
     _root_path = "/api/v1/"
-    _collection_name = "payment.api.services"
+    _collection_name = "payment"
     _default_auth = "public"
 
 
 class PaymentAPIService(Component):
     _inherit = "base.rest.service"
-    _name = "payment.api.service"
+    _name = "payment"
     _usage = "payment"
-    _collection = "payment.api.services"
-    _description = """Payment API Services"""
+    _collection = "payment"
+    _description = """This API helps you create payments and query their states with your specially generated key"""
 
     @restapi.method(
         [(["/prepare"], "POST")],
@@ -61,6 +58,7 @@ class PaymentAPIService(Component):
     def payment_prepare(self, params):
         """
         Prepare Payment
+        tags: ['Payment Preparation']
         """
         Response = self.env.datamodels["payment.prepare.output"]
         try:
@@ -89,7 +87,8 @@ class PaymentAPIService(Component):
     )
     def payment_result(self, params):
         """
-        Get Payment Result
+        Payment Result
+        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.result.output"]
         try:
@@ -111,6 +110,38 @@ class PaymentAPIService(Component):
             return Response(**exception)
 
     @restapi.method(
+        [(["/status"], "POST")],
+        input_param=Datamodel("payment.hash.input"),
+        output_param=Datamodel("payment.status.output"),
+        auth="public",
+    )
+    def payment_status(self, params):
+        """
+        Payment Status
+        tags: ['Payment Operations']
+        """
+        Response = self.env.datamodels["payment.status.output"]
+        try:
+            company = self.env.company.id
+            api = self._check_auth(company, params.application_key)
+            if not api:
+                return Response(**RESPONSE['no_api_key'])
+
+            tx = self._get_transaction(params.hash)
+            if not tx:
+                return Response(**RESPONSE['no_transaction'])
+            elif not tx.jetcheckout_order_id:
+                return Response(**RESPONSE['incomplete_transaction'])
+                
+
+            result = self._query_payment(tx)
+            return Response(**result, **RESPONSE['success'])
+        except Exception as e:
+            exception = {**RESPONSE['exception']}
+            exception['response_message'] = str(e)
+            return Response(**exception)
+
+    @restapi.method(
         [(["/cancel"], "POST")],
         input_param=Datamodel("payment.token.input"),
         output_param=Datamodel("payment.response"),
@@ -119,6 +150,7 @@ class PaymentAPIService(Component):
     def payment_cancel(self, params):
         """
         Cancel Payment
+        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.response"]
         try:
@@ -147,6 +179,7 @@ class PaymentAPIService(Component):
     def payment_refund(self, params):
         """
         Refund Payment
+        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.response"]
         try:
@@ -161,37 +194,6 @@ class PaymentAPIService(Component):
 
             self._refund_payment(tx, params.amount)
             return Response(**RESPONSE['success'])
-        except Exception as e:
-            exception = {**RESPONSE['exception']}
-            exception['response_message'] = str(e)
-            return Response(**exception)
-
-    @restapi.method(
-        [(["/status"], "POST")],
-        input_param=Datamodel("payment.hash.input"),
-        output_param=Datamodel("payment.status.output"),
-        auth="public",
-    )
-    def payment_status(self, params):
-        """
-        Payment Status
-        """
-        Response = self.env.datamodels["payment.status.output"]
-        try:
-            company = self.env.company.id
-            api = self._check_auth(company, params.application_key)
-            if not api:
-                return Response(**RESPONSE['no_api_key'])
-
-            tx = self._get_transaction(params.hash)
-            if not tx:
-                return Response(**RESPONSE['no_transaction'])
-            elif not tx.jetcheckout_order_id:
-                return Response(**RESPONSE['incomplete_transaction'])
-                
-
-            result = self._query_payment(tx)
-            return Response(**result, **RESPONSE['success'])
         except Exception as e:
             exception = {**RESPONSE['exception']}
             exception['response_message'] = str(e)

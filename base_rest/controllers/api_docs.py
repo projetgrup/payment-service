@@ -27,30 +27,30 @@ class ApiDocsController(Controller):
         auth="public",
     )
     def index(self, **params):
-        self._get_api_urls()
-        primary_name = params.get("urls.primaryName")
-        swagger_settings = {
-            "urls": self._get_api_urls(),
-            "urls.primaryName": primary_name,
-        }
-        values = {"swagger_settings": swagger_settings}
-        return request.render("base_rest.openapi", values)
+        system = getattr(request.env.company, 'system', False)
+        if system:
+            service = 'api/v1: %s' % system
+            urls = []
+            for url in self._get_api_urls():
+                if url['name'] == service:
+                    urls.append(url)
+        else:
+            urls = self._get_api_urls()
+        settings = {"urls": urls}
+        return request.render("base_rest.openapi_redoc", {"settings": settings})
 
     @route(
-        ["/api/r"],
+        ["/api/s"],
         methods=["GET"],
         type="http",
         auth="public",
     )
-    def index_redoc(self, **params):
-        self._get_api_urls()
-        primary_name = params.get("urls.primaryName")
-        swagger_settings = {
+    def index_swagger(self, **params):
+        settings = {
             "urls": self._get_api_urls(),
-            "urls.primaryName": primary_name,
+            "service": params.get("service"),
         }
-        values = {"swagger_settings": swagger_settings}
-        return request.render("base_rest.openapi_redoc", values)
+        return request.render("base_rest.openapi", {"settings": settings})
 
     @route("/api/<path:collection>/<string:service_name>.json", auth="public")
     def api(self, collection, service_name):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
-from odoo.addons.base_rest.controllers import main
 from odoo.addons.component.core import Component
 from odoo import _
 
@@ -26,21 +25,19 @@ RESPONSE = {
         "response_code": 6,
         "response_message": "Ödeme bulunamadı",
     },
+    "exception": {
+        "response_code": -1,
+        "response_message": "Sunucu hatası",
+    },
 }
-
-
-class StudentAPIController(main.RestController):
-    _root_path = "/api/v1/"
-    _collection_name = "student.api.services"
-    _default_auth = "public"
 
 
 class StudentAPIService(Component):
     _inherit = "base.rest.service"
-    _name = "student.api.service"
+    _name = "student"
     _usage = "student"
-    _collection = "student.api.services"
-    _description = """Öğrenci API Servisleri"""
+    _collection = "payment"
+    _description = """This API helps you connect student payment system with your specially generated key"""
 
     @restapi.method(
         [(["/school"], "POST")],
@@ -50,9 +47,8 @@ class StudentAPIService(Component):
     )
     def list_school(self, params):
         """
-        Okul Listele
-        :param params: Okul Kodu
-        :return: Okul Listesi
+        List School
+        tags: ['List']
         """
         SchoolResponse = self.env.datamodels["school.response"]
         company = self.env.company.id
@@ -79,9 +75,8 @@ class StudentAPIService(Component):
     )
     def list_class(self, params):
         """
-        Sınıf Listele
-        :param params: Sınıf Kodu
-        :return: Sınıf Listesi
+        List Class
+        tags: ['List']
         """
         ClassResponse = self.env.datamodels["class.response"]
         company = self.env.company.id
@@ -108,9 +103,8 @@ class StudentAPIService(Component):
     )
     def list_student(self, params):
         """
-        Öğrenci ve Veli Listele
-        :param params: Adı, TCKN
-        :return: Öğrenci Listesi
+        List Student And Parent
+        tags: ['List']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company.id
@@ -137,9 +131,8 @@ class StudentAPIService(Component):
     )
     def list_payment(self, params):
         """
-        Ödeme Listele
-        :param params: Veli Eposta
-        :return: Ödeme Listesi
+        List Payment
+        tags: ['List']
         """
         PaymentResponse = self.env.datamodels["payment.response"]
         company = self.env.company.id
@@ -164,9 +157,8 @@ class StudentAPIService(Component):
     )
     def create_student(self, params):
         """
-        Öğrenci ve Veli Listele
-        :param params: name, vat, school_code, bursary_code, parent_name, parent_email, parent_mobile
-        :return: Oluşan Öğrencilerin Listesi
+        Create Student
+        tags: ['Create']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company.id
