@@ -51,7 +51,8 @@ class BaseRestServiceAPISpec(APISpec):
             if spec["collection_name"] == self._service._collection:
                 collection_path = path
                 break
-        url = env.company_id.website_id.domain
+        base_url = env["ir.config_parameter"].sudo().get_param("web.base.url")
+        url = env.company.website_id.domain or env.company.website or base_url
         return [
             {
                 "url": "%s/%s/%s"
