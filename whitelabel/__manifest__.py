@@ -9,7 +9,6 @@
     "license": "LGPL-3",
     'sequence': 1453,
     "category": "Tools",
-    "sequence": 1,
     "author": 'Projet',
     "website": 'https://www.jetcheckout.com',
     "excludes": ["web_enterprise"],
