@@ -3,6 +3,7 @@
 
 import inspect
 import textwrap
+import ast
 
 from apispec import APISpec
 
@@ -19,17 +20,24 @@ class BaseRestServiceAPISpec(APISpec):
 
     def __init__(self, service_component, **params):
         self._service = service_component
+        env = self._service.env
         super(BaseRestServiceAPISpec, self).__init__(
-            title="%s REST services" % self._service._usage,
+            title="%s REST Services" % self._service._usage.capitalize(),
             version="",
             openapi_version="3.0.0",
             info={
-                "description": textwrap.dedent(
-                    getattr(self._service, "_description", "") or ""
-                )
+                "x-logo": dict(url="/web/image/website/%s/logo" % env.company.id)
             },
             servers=self._get_servers(),
             plugins=self._get_plugins(),
+            tags = [{
+                "name": "API Description",
+                "description": textwrap.dedent(getattr(self._service, "_description", "") or ""),
+                #"externalDocs": {
+                #    "description": "You can take a look at postman collection",
+                #    "url": "/api/v1/%s/postman" % self._service._usage
+                #}
+            }]
         )
         self._params = params
 
@@ -61,18 +69,35 @@ class BaseRestServiceAPISpec(APISpec):
         ]
 
     def _add_method_path(self, method):
-        description = textwrap.dedent(method.__doc__ or "")
+        doc = textwrap.dedent(method.__doc__ or "")
+        values = {'summary': doc, 'tags': 'Other'}
+        if doc:
+            vals = doc.split("\n")
+            for val in vals:
+                if not val:
+                    continue
+                if ':' in val:
+                    key, value = val.split(':')
+                    values[key] = ast.literal_eval(value.strip())
+                else:
+                    values['summary'] = val
+
         routing = method.routing
         for paths, method in routing["routes"]:
             for path in paths:
-                self.path(
-                    path,
-                    operations={method.lower(): {"summary": description}},
-                    routing=routing,
-                )
+                operations = {method.lower(): values}
+                self.path(path, operations=operations, routing=routing)
 
     def generate_paths(self):
-        for _name, method in inspect.getmembers(self._service, inspect.ismethod):
+        def sort_methods(method):
+            try:
+                return inspect.getsourcelines(method[1])[1]
+            except:
+                return -1
+
+        methods = inspect.getmembers(self._service, inspect.ismethod)
+        methods.sort(key=sort_methods)
+        for name, method in methods:
             routing = getattr(method, "routing", None)
             if not routing:
                 continue

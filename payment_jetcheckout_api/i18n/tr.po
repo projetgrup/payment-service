@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 16:28+0000\n"
-"PO-Revision-Date: 2022-08-05 19:29+0300\n"
+"POT-Creation-Date: 2022-08-09 11:09+0000\n"
+"PO-Revision-Date: 2022-08-09 14:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -20,13 +20,10 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid ""
-"<br/>\n"
-"                                <strong class=\"text-primary font-weight-"
-"bold text-right z-index-1\">Amount</strong>"
+"<strong class=\"text-primary font-weight-bold text-right z-index-1 "
+"mt-5\">Amount</strong>"
 msgstr ""
-"<br/>\n"
-"                                <strong class=\"text-primary font-weight-"
-"bold text-right z-index-1\">Tutar</strong>"
+"<strong class=\"text-primary font-weight-bold z-index-1 mt-5\">Tutar</strong>"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
@@ -394,6 +391,15 @@ msgstr "Şirketinizde %s sıralamasını tanımlamalısınız."
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
 msgid "ZIP"
 msgstr "Posta Kodu"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                <strong class=\"text-primary font-weight-"
+#~ "bold text-right z-index-1\">Amount</strong>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                <strong class=\"text-primary font-weight-"
+#~ "bold text-right z-index-1\">Tutar</strong>"
 
 #~ msgid "API Keys"
 #~ msgstr "API Anahtarları"
