@@ -35,8 +35,8 @@ class ApiDocsController(Controller):
             for url in urls:
                 if url['name'] == service:
                     service_url.append(url)
+                    urls = service_url
                     break
-            urls = service_url
         settings = {"urls": urls}
         return request.render("base_rest.openapi_redoc", {"settings": settings})
 
