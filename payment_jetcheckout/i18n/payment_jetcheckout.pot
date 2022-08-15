@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-06 08:13+0000\n"
-"PO-Revision-Date: 2022-08-06 08:13+0000\n"
+"POT-Creation-Date: 2022-08-15 13:28+0000\n"
+"PO-Revision-Date: 2022-08-15 13:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,12 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "%s Transaction Status"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "%s installment"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -397,6 +403,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__application_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__application_id
 msgid "Application"
 msgstr ""
 
@@ -608,12 +615,12 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/payment.py:0
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission
 #, python-format
 msgid "Commission"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission_amount
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_amount
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
@@ -621,6 +628,7 @@ msgid "Commission Amount"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission_rate
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_rate
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Commission Rate"
@@ -659,7 +667,6 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__cost_rate
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__cost_rate
 msgid "Cost Rate"
 msgstr ""
 
@@ -819,11 +826,13 @@ msgid "Customer City"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__customer_amount
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_amount
 msgid "Customer Commission Amount"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__customer_rate
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_rate
 msgid "Customer Commission Rate"
 msgstr ""
@@ -1053,6 +1062,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
 msgid "Installment"
 msgstr ""
 
@@ -1078,6 +1088,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Installment Information"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_installment_description_long
+msgid "Installment Long Description"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1429,6 +1444,11 @@ msgstr ""
 msgid ""
 "No application is selected\n"
 "                        <br/>"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
+msgid "No application selected"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1886,6 +1906,12 @@ msgid "Sign in with an account"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Single payment"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__from_date
 msgid "Start Date"
 msgstr ""
@@ -1959,6 +1985,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "There is no journal line for %s in %s"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
+msgid "There is not any pos record related to selected application"
 msgstr ""
 
 #. module: payment_jetcheckout

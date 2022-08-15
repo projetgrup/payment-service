@@ -50,6 +50,7 @@ class JetcheckoutSystemController(JetController):
             'fail_url': '/payment/card/fail',
             'tx': transaction,
             'system': system,
+            'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
                 'self' : currency,
                 'id' : currency.id,

@@ -35,14 +35,6 @@ odoo.define("base_rest.swagger_ui", function (require) {
                     return result;
                 },
                 tagsSorter: "alpha",
-                onComplete: function () {
-                    if (this.web_btn === undefined) {
-                        this.web_btn = $(
-                            "<a class='fa fa-th swg-odoo-web-btn' href='/web' accesskey='h'></a>"
-                        );
-                        $(".topbar").prepend(this.web_btn);
-                    }
-                },
             };
             const config = this.$el.data("settings");
             return Object.assign({}, defaults, config);

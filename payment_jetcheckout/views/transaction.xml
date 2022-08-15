@@ -108,6 +108,11 @@
         <xpath expr='//field[@name="partner_name"]' position="replace">
             <field name="partner_name" invisible="1"/>
         </xpath>
+        <xpath expr='//field[@name="fees"]' position="replace">
+            <field name="fees" invisible="1"/>
+            <field name="jetcheckout_installment_count" invisible="1"/>
+            <field name="jetcheckout_installment_description_long" string="Installment" decoration-info="jetcheckout_installment_count == 1" widget="badge"/>
+        </xpath>
     </field>
     </record>
 

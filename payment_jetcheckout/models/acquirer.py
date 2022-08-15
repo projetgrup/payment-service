@@ -28,8 +28,8 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     amount = fields.Monetary(readonly=True)
     commission_amount = fields.Monetary(readonly=True)
     commission_rate = fields.Float(readonly=True)
-    customer_amount = fields.Monetary(readonly=True)
-    customer_rate = fields.Float(readonly=True)
+    customer_amount = fields.Monetary(readonly=True, string='Customer Commission Amount')
+    customer_rate = fields.Float(readonly=True, string='Customer Commission Rate')
     auth_code = fields.Char(readonly=True)
     service_ref_id = fields.Char(readonly=True)
 
@@ -244,7 +244,7 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def action_jetcheckout_pos(self):
         self.ensure_one()
-        pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id})
+        pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id, 'application_id': self.jetcheckout_api_key})
         self._jetcheckout_api_connect(pos)
         action = self.env.ref('payment_jetcheckout.action_api_poses').sudo().read()[0]
         action['res_id'] = pos.id
@@ -343,7 +343,10 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_create_application(self, record):
         application_table = self.env['payment.acquirer.jetcheckout.api.application']
-        apps = self._rpc('jet.application', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
+        domain = [('user_id', '=', self.jetcheckout_user_id)]
+        if record._name == 'payment.acquirer.jetcheckout.api.poses':
+            domain.append(('application_id', '=', self.jetcheckout_api_key))
+        apps = self._rpc('jet.application', 'search_read', domain)
         for app in apps:
             application_table.create({
                 'acquirer_id': self.id,
@@ -546,7 +549,10 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_connect(self, record):
         # Get all data
-        poses = self._rpc('jet.virtual.pos', 'search_read', [('user_id', '=', self.jetcheckout_user_id)])
+        domain = [('user_id', '=', self.jetcheckout_user_id)]
+        if record._name == 'payment.acquirer.jetcheckout.api.poses':
+            domain.append(('applications.application_id', '=', self.jetcheckout_api_key))
+        poses = self._rpc('jet.virtual.pos', 'search_read', domain)
 
         # Vacuum old data
         self._jetcheckout_api_vacuum()
