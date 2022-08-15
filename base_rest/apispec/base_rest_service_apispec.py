@@ -26,7 +26,9 @@ class BaseRestServiceAPISpec(APISpec):
             version="",
             openapi_version="3.0.0",
             info={
-                "x-logo": dict(url="/web/image/website/%s/logo" % env.company.website_id.id)
+                "description": textwrap.dedent(
+                    getattr(self._service, "_description", "") or ""
+                )
             },
             servers=self._get_servers(),
             plugins=self._get_plugins(),
