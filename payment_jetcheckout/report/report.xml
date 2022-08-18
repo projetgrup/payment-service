@@ -155,7 +155,8 @@
         </html>
     </template>
 
-    <report id="report_receipt" model="payment.transaction" string="Receipt" report_type="qweb-pdf" name="payment_jetcheckout.payment_receipt" file="payment_jetcheckout.payment_receipt"/>
-
-    <report id="report_conveyance" model="payment.transaction" string="Conveyance" report_type="qweb-pdf" name="payment_jetcheckout.payment_conveyance" file="payment_jetcheckout.payment_conveyance"/>
+    <!--<report id="report_receipt" model="payment.transaction" string="Receipt" report_type="qweb-pdf" name="payment_jetcheckout.payment_receipt" file="payment_jetcheckout.payment_receipt"/>
+    <report id="report_conveyance" model="payment.transaction" string="Conveyance" report_type="qweb-pdf" name="payment_jetcheckout.payment_conveyance" file="payment_jetcheckout.payment_conveyance"/>-->
+    <report id="report_receipt" model="payment.transaction" string="Receipt" report_type="qweb-html" name="payment_jetcheckout.payment_receipt" file="payment_jetcheckout.payment_receipt"/>
+    <report id="report_conveyance" model="payment.transaction" string="Conveyance" report_type="qweb-html" name="payment_jetcheckout.payment_conveyance" file="payment_jetcheckout.payment_conveyance"/>
 </odoo>

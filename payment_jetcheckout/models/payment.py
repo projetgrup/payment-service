@@ -119,10 +119,31 @@ class AccountPayment(models.Model):
         else:
             commission_product = False
 
-        IrConfig = self.env['ir.config_parameter'].sudo()
-        base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
+        if commission_product:
+            order_vals = {
+                'partner_id': self.partner_id.id,
+                'order_line': [(0, 0, {
+                    'product_id': commission_product.id,
+                    'price_unit': commission
+                })]
+            }
+            order = self.env['sale.order'].sudo().create(order_vals)
+            order.action_confirm()
+
+            parameter = self.env['ir.config_parameter'].sudo().get_param('payment_jetcheckout.commission_invoice', 'no')
+            if parameter == 'draft' or parameter == 'post':
+                moves = order._create_invoices()
+                if parameter == 'post':
+                    moves.sudo().action_post()
+
+        self._generate_jetcheckout_terms(line, ip_address)
+        return True
+
+    def _generate_jetcheckout_terms(self, line, ip_address):
+        icp = self.env['ir.config_parameter'].sudo()
+        base_url = icp.get_param('report.url') or icp.get_param('web.base.url')
         acquirer = line.acquirer_id
-        if not acquirer.provider == 'jetcheckout' or not acquirer.jetcheckout_no_terms:
+        if acquirer.provider == 'jetcheckout' and not acquirer.jetcheckout_no_terms:
             body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
             layout = self.env.ref('payment_jetcheckout.report_layout')
             html = layout._render({'body': body, 'base_url': base_url})
@@ -141,21 +162,3 @@ class AccountPayment(models.Model):
 
             body = _('User has accepted Terms & Conditions. User IP Address is %s') % (ip_address,)
             self.message_post(body=body, attachment_ids=attachment.ids)
-
-        if commission_product:
-            order_vals = {
-                'partner_id': self.partner_id.id,
-                'order_line': [(0, 0, {
-                    'product_id': commission_product.id,
-                    'price_unit': commission
-                })]
-            }
-            order = self.env['sale.order'].sudo().create(order_vals)
-            order.action_confirm()
-
-            parameter = IrConfig.get_param('payment_jetcheckout.commission_invoice', 'no')
-            if parameter == 'draft' or parameter == 'post':
-                moves = order._create_invoices()
-                if parameter == 'post':
-                    moves.sudo().action_post()
-        return True
