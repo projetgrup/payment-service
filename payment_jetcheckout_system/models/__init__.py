@@ -10,3 +10,4 @@ from . import partner
 from . import item
 from . import website
 from . import settings
+from . import payment

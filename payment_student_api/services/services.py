@@ -21,8 +21,12 @@ RESPONSE = {
         "response_code": 7,
         "response_message": "Belirtilen burs bulunamadı",
     },
-    "no_payment": {
+    "no_classroom": {
         "response_code": 6,
+        "response_message": "Belirtilen sınıf bulunamadı",
+    },
+    "no_payment": {
+        "response_code": 5,
         "response_message": "Ödeme bulunamadı",
     },
     "exception": {
@@ -173,6 +177,10 @@ class StudentAPIService(Component):
         bursary = self.env['res.student.bursary'].sudo().search([('code','=',params.bursary_code)], limit=1)
         if not bursary:
             return StudentResponse(**RESPONSE["no_bursary"])
+
+        classroom = self.env['res.student.class'].sudo().search([('code','=',params.class_code)], limit=1)
+        if not classroom:
+            return StudentResponse(**RESPONSE["no_classroom"])
 
         parent = self.env['res.partner'].sudo().search([('email','=',params.parent_email)], limit=1)
         if not parent:
