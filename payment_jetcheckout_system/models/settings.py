@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, _
 from odoo.exceptions import UserError
-
-import json
 
 
 class PaymentSettings(models.TransientModel):

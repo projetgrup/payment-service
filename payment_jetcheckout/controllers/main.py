@@ -502,12 +502,14 @@ class JetcheckoutController(http.Controller):
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
-        pdf = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_pdf([tx.id])[0]
-        pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
-        ]
-        return request.make_response(pdf, headers=pdfhttpheaders)
+        #pdf = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_pdf([tx.id])[0]
+        #pdfhttpheaders = [
+        #    ('Content-Type', 'application/pdf'),
+        #    ('Content-Length', len(pdf)),
+        #]
+        #return request.make_response(pdf, headers=pdfhttpheaders)
+        html = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_html([tx.id])[0]
+        return request.make_response(html)
 
     @http.route(['/payment/card/transactions', '/payment/card/transactions/page/<int:page>'], type='http', auth='user', website=True)
     def jetcheckout_transactions(self, page=0, tpp=20, **kwargs):
