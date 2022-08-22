@@ -15,7 +15,7 @@
                 <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
             </div>
             <t t-set="only_passwords" t-value="bool(token and not invalid_token)"/>
-            <form class="oe_signup_form card" role="form" method="post" t-if="not message">
+            <form class="oe_sign_form card" role="form" method="post" t-if="not message">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <a id="previous" href="#" class="btn btn-secondary position-absolute d-none"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</a>
                 <a id="next" href="#" class="btn btn-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></a>

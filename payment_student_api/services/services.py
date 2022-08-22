@@ -44,110 +44,110 @@ class StudentAPIService(Component):
     _description = """This API helps you connect student payment system with your specially generated key"""
 
     @restapi.method(
-        [(["/schools"], "POST")],
+        [(["/schools"], "GET")],
         input_param=Datamodel("school.search"),
         output_param=Datamodel("school.response"),
         auth="public",
     )
     def list_school(self, params):
         """
-        List School
-        tags: ['List']
+        List Schools
+        tags: ['List Methods']
         """
         SchoolResponse = self.env.datamodels["school.response"]
         company = self.env.company.id
-        key = self._auth(company, params.api_key)
+        key = self._auth(company, params.application_key)
         if not key:
             return SchoolResponse(**RESPONSE['no_api_key'])
 
         domain = [("company_id","=", company)]
         if params.name:
-            domain.append(("name", "like", params.name))
+            domain.append(("name", "ilike", params.name))
         if params.code:
-            domain.append(("code", "=", params.code))
+            domain.append(("code", "ilike", params.code))
 
         schools = []
-        for i in self.env["res.student.school"].search(domain):
+        for i in self.env["res.student.school"].sudo().search(domain):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
         return SchoolResponse(schools=schools,**RESPONSE['success'])
 
     @restapi.method(
-        [(["/classes"], "POST")],
+        [(["/classes"], "GET")],
         input_param=Datamodel("class.search"),
         output_param=Datamodel("class.response"),
         auth="public",
     )
     def list_class(self, params):
         """
-        List Class
-        tags: ['List']
+        List Classes
+        tags: ['List Methods']
         """
         ClassResponse = self.env.datamodels["class.response"]
         company = self.env.company.id
-        key = self._auth(company, params.api_key)
+        key = self._auth(company, params.application_key)
         if not key:
             return ClassResponse(**RESPONSE["no_api_key"])
 
         domain = [("company_id","=", company)]
         if params.name:
-            domain.append(("name", "like", params.name))
+            domain.append(("name", "ilike", params.name))
         if params.code:
-            domain.append(("code", "=", params.code))
+            domain.append(("code", "ilike", params.code))
 
         classes = []
-        for i in self.env["res.student.class"].search(domain):
+        for i in self.env["res.student.class"].sudo().search(domain):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
         return ClassResponse(classes=classes,**RESPONSE["success"])
 
     @restapi.method(
-        [(["/students"], "POST")],
+        [(["/students"], "GET")],
         input_param=Datamodel("student.search"),
         output_param=Datamodel("student.response"),
         auth="public",
     )
     def list_student(self, params):
         """
-        List Student And Parent
-        tags: ['List']
+        List Students And Parents
+        tags: ['List Methods']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company.id
-        key = self._auth(company, params.api_key)
+        key = self._auth(company, params.application_key)
         if not key:
             return StudentResponse(**RESPONSE["no_api_key"])
 
         domain = [("company_id","=", company),("system","=", "student"),("parent_id","!=", False),("is_company","=", False)]
         if params.name:
-            domain.append(("name", "like", params.name))
+            domain.append(("name", "ilike", params.name))
         if params.vat:
             domain.append(("code", "ilike", params.vat))
 
         students = []
-        for i in self.env["res.partner"].search(domain):
+        for i in self.env["res.partner"].sudo().search(domain):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
         return StudentResponse(students=students,**RESPONSE["success"])
 
     @restapi.method(
-        [(["/payments"], "POST")],
+        [(["/payments"], "GET")],
         input_param=Datamodel("payment.search"),
         output_param=Datamodel("payment.response"),
         auth="public",
     )
     def list_payment(self, params):
         """
-        List Payment
-        tags: ['List']
+        List Payments
+        tags: ['List Methods']
         """
         PaymentResponse = self.env.datamodels["payment.response"]
         company = self.env.company.id
-        key = self._auth(company, params.api_key)
+        key = self._auth(company, params.application_key)
         if not key:
             return PaymentResponse(**RESPONSE["no_api_key"])
 
         domain = [("company_id","=", company),("partner_id.email","=", params.email)]
 
         payments = []
-        for i in self.env["payment.transaction"].search(domain):
+        for i in self.env["payment.transaction"].sudo().search(domain):
             payments.append(dict(id=i.id, date=i.create_date.strftime("%d-%m-%Y"), amount=i.amount, state=i.state))
         if not payments:
             return PaymentResponse(**RESPONSE["no_payment"])
@@ -162,11 +162,11 @@ class StudentAPIService(Component):
     def create_student(self, params):
         """
         Create Student
-        tags: ['Create']
+        tags: ['Create Methods']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company.id
-        key = self._auth(company, params.api_key, params.secret_key)
+        key = self._auth(company, params.application_key, params.secret_key)
         if not key:
             return StudentResponse(**RESPONSE["no_api_key"])
 
