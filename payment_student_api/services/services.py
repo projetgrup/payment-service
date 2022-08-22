@@ -4,6 +4,7 @@ from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.addons.component.core import Component
 from odoo import _
 
+PAGE_SIZE = 100
 RESPONSE = {
     "success": {
         "response_code": 0,
@@ -67,7 +68,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         schools = []
-        for i in self.env["res.student.school"].sudo().search(domain):
+        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
         return SchoolResponse(schools=schools,**RESPONSE['success'])
 
@@ -95,7 +96,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         classes = []
-        for i in self.env["res.student.class"].sudo().search(domain):
+        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
         return ClassResponse(classes=classes,**RESPONSE["success"])
 
@@ -123,7 +124,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.vat))
 
         students = []
-        for i in self.env["res.partner"].sudo().search(domain):
+        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
         return StudentResponse(students=students,**RESPONSE["success"])
 
@@ -147,7 +148,7 @@ class StudentAPIService(Component):
         domain = [("company_id","=", company),("partner_id.email","=", params.email)]
 
         payments = []
-        for i in self.env["payment.transaction"].sudo().search(domain):
+        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             payments.append(dict(id=i.id, date=i.create_date.strftime("%d-%m-%Y"), amount=i.amount, state=i.state))
         if not payments:
             return PaymentResponse(**RESPONSE["no_payment"])
