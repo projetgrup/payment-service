@@ -36,6 +36,7 @@ class SchoolSearch(Datamodel):
     _name = "school.search"
     _inherit = "api.keys"
 
+    page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     code = fields.String(required=False, allow_none=False, title="School Code", description="A part of school code can be entered. For example, when you enter 'JOH', the codes which contain this word will be listed. It is not a required field.", example="JOHNDC")
     name = fields.String(required=False, allow_none=False, title="School Name", description="A part of school name can be entered. For example, when you enter 'College', the names which contain this word will be listed. It is not a required field.", example="John Doe College")
 
@@ -46,6 +47,7 @@ class ClassSearch(Datamodel):
     _name = "class.search"
     _inherit = "api.keys"
 
+    page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     code = fields.String(required=False, allow_none=False, title="Class Code", description="A part of class code can be entered. For example, when you enter 'CLA', the codes which contain this word will be listed. It is not a required field.", example="CLASS1")
     name = fields.String(required=False, allow_none=False, title="Class Name", description="A part of class name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Class 1")
 
@@ -56,6 +58,7 @@ class StudentSearch(Datamodel):
     _name = "student.search"
     _inherit = "api.keys"
 
+    page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     name = fields.String(required=False, allow_none=False, title="Student Name", description="Student name", example="Jane Doe")
     vat = fields.String(required=False, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
 
@@ -66,6 +69,7 @@ class PaymentSearch(Datamodel):
     _name = "payment.search"
     _inherit = "api.keys"
 
+    page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     email = fields.String(required=True, allow_none=False, title="Email", description="Email address", example="test@example.com")
 
 class SchoolResponse(Datamodel):
