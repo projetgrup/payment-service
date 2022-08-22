@@ -38,6 +38,8 @@ class PartnerOtp(models.Model):
         template.with_context(lang=self.lang).send_mail(self.id, force_send=True)
 
     def send_sms(self):
-        template = self.env.ref('payment_jetcheckout_system_otp.otp_sms_template')
-        message = template._render_field('body', [self.id], set_lang=self.lang)[self.id]
-        self.env['sms.api'].with_context(otp=True, no_exception=True)._send_sms(self.partner_id.mobile or self.partner_id.phone, message)
+        phone = self.partner_id.mobile or self.partner_id.phone
+        if phone:
+            template = self.env.ref('payment_jetcheckout_system_otp.otp_sms_template')
+            message = template._render_field('body', [self.id], set_lang=self.lang)[self.id]
+            self.env['sms.api'].with_context(otp=True, no_exception=True)._send_sms(phone, message)
