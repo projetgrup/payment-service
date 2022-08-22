@@ -3,19 +3,25 @@
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Jetcheckout Payment Acquirer - Onboarding',
+    'name': 'Jetcheckout Payment System - OTP Login',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
+    'sequence': 1455,
     'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_jetcheckout_system'],
+    'depends': [
+        'payment_jetcheckout_system',
+    ],
     'data': [
+        'data/data.xml',
         'views/templates.xml',
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_jetcheckout_onboarding/static/src/js/frontend.js',
+            'payment_jetcheckout_system_otp/static/src/js/frontend.js',
         ],
     },
+    'application': False,
+    'images': ['static/description/icon.png'],
 }

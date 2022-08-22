@@ -43,9 +43,9 @@
         ],
         'web.assets_frontend': [
             'payment_jetcheckout_system/static/src/js/system.js',
+            'payment_jetcheckout_system/static/src/scss/frontend.scss',
         ],
     },
     'application': False,
-    'uninstall_hook': 'uninstall_hook',
     'images': ['static/description/icon.png'],
 }

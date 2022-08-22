@@ -246,18 +246,18 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid ""
-"<span style=\"width: 322px; display: block; color: #a3a3a3;\">Partner</span>"
+"<span style=\"width: 322px; display: block; color: #000000;\">Partner</span>"
 msgstr ""
-"<span style=\"width: 322px; display: block; color: #a3a3a3;\">İş Ortağı</"
+"<span style=\"width: 322px; display: block; color: #000000;\">İş Ortağı</"
 "span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid ""
-"<span style=\"width:322px;display:block;color:#a3a3a3;\">System User "
+"<span style=\"width:322px;display:block;color: #000000;\">System User "
 "Company</span>"
 msgstr ""
-"<span style=\"width:322px;display:block;color:#a3a3a3;\">Sistemi Kullanan "
+"<span style=\"width:322px;display:block;color: #000000;\">Sistemi Kullanan "
 "Şirket</span>"
 
 #. module: payment_jetcheckout

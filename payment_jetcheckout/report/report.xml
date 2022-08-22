@@ -20,7 +20,7 @@
                                                 <img t-if="website" t-att-src="'%s/web/image/website/%s/logo' % (website.domain, website.id)" t-att-alt="website.name" class="w-100"/>
                                                 <img t-else="" t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="w-100"/>
                                             </td>
-                                            <td width="454" height="96" style="width: 454px; height: 96px; text-align: right; font-size: 12px; color: #808080; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
+                                            <td width="454" height="96" style="width: 454px; height: 96px; text-align: right; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
                                                 <div style="width: 454px; height: 96px;overflow:hidden;">
                                                     <span t-field="company.name"/><br/>
                                                     <span t-field="company.street"/><br/>
@@ -42,21 +42,21 @@
                                 <td width="644" height="372">
                                     <table width="644" height="372" border="0" cellpadding="0" cellspacing="0" align="center">
                                         <tr>
-                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: left; font-size: 12px; color: #808080; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">Payment Date: <strong style="color: #ff6b6b;"><span t-field="doc.create_date"/></strong>
+                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: left; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">Payment Date: <strong style="color: #ff6b6b;"><span t-field="doc.create_date"/></strong>
                                             </td>
-                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: right; font-size: 12px; color: #808080; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="right" valign="middle">Receipt ID: <strong style="color: #ff6b6b;"><span t-field="doc.reference"/></strong>
+                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: right; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="right" valign="middle">Receipt ID: <strong style="color: #ff6b6b;"><span t-field="doc.reference"/></strong>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="322" height="93" style="width: 322px; height: 93px; text-align: left; font-size: 12px; color: #9a9a9a; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
-                                                <span style="width: 322px; display: block; color: #a3a3a3;">Partner</span>
-                                                <span style="font-size: 16px; color: #808080; font-weight: bold; display: block; width: 322px;"><span t-field="partner.name"/></span>
-                                                <span style="font-size: 14px; color: #808080; display: block; width: 322px;">Vat: <span t-field="partner.vat"/></span>
+                                            <td width="322" height="93" style="width: 322px; height: 93px; text-align: left; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
+                                                <span style="width: 322px; display: block; color: #000000;">Partner</span>
+                                                <span style="font-size: 16px; color: #000000; font-weight: bold; display: block; width: 322px;"><span t-field="partner.name"/></span>
+                                                <span style="font-size: 14px; color: #000000; display: block; width: 322px;">Vat: <span t-field="partner.vat"/></span>
                                             </td>
-                                            <td t-if="is_conveyance" width="322" height="93" style="width:322px;height:93px;text-align:right;font-size:12px;color:#9a9a9a;font-family:'Trebuchet MS', Arial, Verdana, sans-serif" align="right" valign="middle">			
-                                                <span style="width:322px;display:block;color:#a3a3a3;">System User Company</span>
-                                                <span style="font-size:16px;color:#808080;font-weight:bold;display:block;width:322px;"><span t-field="company.name"/></span>
-                                                <span style="font-size:14px;color:#808080;display:block;width:322px;">Vat: <span t-field="company.vat"/></span>
+                                            <td t-if="is_conveyance" width="322" height="93" style="width:322px;height:93px;text-align:right;font-size:12px;color: #000000;font-family:'Trebuchet MS', Arial, Verdana, sans-serif" align="right" valign="middle">			
+                                                <span style="width:322px;display:block;color: #000000;">System User Company</span>
+                                                <span style="font-size:16px;color: #000000;font-weight:bold;display:block;width:322px;"><span t-field="company.name"/></span>
+                                                <span style="font-size:14px;color: #000000;display:block;width:322px;">Vat: <span t-field="company.vat"/></span>
                                             </td>
                                             <td t-else="is_conveyance"></td>
                                         </tr>
@@ -64,24 +64,24 @@
                                             <td colspan="2" width="644" height="150" style="width: 644px; height: 129px;" valign="top">
                                                 <table width="644" height="75" border="0" cellpadding="0" cellspacing="0" align="center">
                                                     <tr>
-                                                        <td width="174" height="25" style="width: 174px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Holder Name</td>
-                                                        <td width="92" height="25" style="width: 92px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Type</td>
-                                                        <td width="116" height="25" style="width: 116px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Number</td>
-                                                        <td width="92" height="25" style="width: 92px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Payment Amount</td>                                    
-                                                        <td width="79" height="25" style="width: 79px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Installment Count</td>
-                                                        <td width="91" height="25" style="width: 91px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Installment Amount</td>
+                                                        <td width="174" height="25" style="width: 174px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Holder Name</td>
+                                                        <td width="92" height="25" style="width: 92px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Type</td>
+                                                        <td width="116" height="25" style="width: 116px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Card Number</td>
+                                                        <td width="92" height="25" style="width: 92px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Payment Amount</td>                                    
+                                                        <td width="79" height="25" style="width: 79px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Installment Count</td>
+                                                        <td width="91" height="25" style="width: 91px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Installment Amount</td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6" width="644" height="50" style="width: 644px; height: 50px;">
 
                                                             <table width="644" height="50" border="0" cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td width="174" height="50" style="width: 174px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_name"/></td>
-                                                                    <td width="92" height="50" style="width: 92px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_type"/></td>
-                                                                    <td width="116" height="50" style="width: 116px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_number"/></td>
-                                                                    <td width="92" height="50" style="width: 92px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_payment_amount"/></td>
-                                                                    <td width="79" height="50" style="width: 79px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_installment_count"/></td>
-                                                                    <td width="91" height="50" style="width: 91px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_installment_amount"/></td>
+                                                                    <td width="174" height="50" style="width: 174px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_name"/></td>
+                                                                    <td width="92" height="50" style="width: 92px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_type"/></td>
+                                                                    <td width="116" height="50" style="width: 116px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_card_number"/></td>
+                                                                    <td width="92" height="50" style="width: 92px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_payment_amount"/></td>
+                                                                    <td width="79" height="50" style="width: 79px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_installment_count"/></td>
+                                                                    <td width="91" height="50" style="width: 91px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_installment_amount"/></td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -89,17 +89,17 @@
                                                 </table>
                                                 <table width="644" height="75" border="0" cellpadding="0" cellspacing="0" align="center">
                                                     <tr>
-                                                        <td width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Commission Rate</td>
-                                                        <td width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Commission Amount</td>
-                                                        <td width="464" height="25" style="width: 244px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle"></td>
+                                                        <td width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Commission Rate</td>
+                                                        <td width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Commission Amount</td>
+                                                        <td width="464" height="25" style="width: 244px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle"></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6" width="644" height="50" style="width: 644px; height: 50px;">
                                                             <table width="644" height="50" border="0" cellpadding="0" cellspacing="0">
                                                                 <tr>
-                                                                    <td width="110" height="50" style="width: 110px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top">% <span t-esc="doc.jetcheckout_customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></td>
-                                                                    <td width="110" height="50" style="width: 110px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_customer_amount"/></td>
-                                                                    <td width="464" height="50" style="width: 244px; height: 50px; text-align: center; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"></td>
+                                                                    <td width="110" height="50" style="width: 110px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top">% <span t-esc="doc.jetcheckout_customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></td>
+                                                                    <td width="110" height="50" style="width: 110px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"><span t-field="doc.jetcheckout_customer_amount"/></td>
+                                                                    <td width="464" height="50" style="width: 244px; height: 50px; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif; padding-top: 5px;" align="center" valign="top"></td>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -108,13 +108,13 @@
                                             </td>
                                         </tr>
                                         <tr t-if="is_conveyance">
-                                            <td colspan="2" width="644" height="108" style="width: 644px; height: 89px; text-align: left; font-size: 12px; color: #a3a3a3; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle" t-translation="off">Sanal POS ile Kredi kartımdan çekilen <strong style="color: #ff6b6b;" t-field="doc.jetcheckout_payment_amount"/> tutarının <strong style="color: #ff6b6b;" t-field="partner.name"/> firması adına <strong style="color: #ff6b6b;" t-field="company.name"/> firmasına ödemiş bulunduğumu, ilgili firma ile aramda oluşabilecek anlaşmazlıktan dolayı <strong style="color: #ff6b6b;" t-field="company.name"/> firmasını sorumlu tutmayacağımı beyan ve taahhüt ederim.
+                                            <td colspan="2" width="644" height="108" style="width: 644px; height: 89px; text-align: left; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle" t-translation="off">Sanal POS ile Kredi kartımdan çekilen <strong style="color: #ff6b6b;" t-field="doc.jetcheckout_payment_amount"/> tutarının <strong style="color: #ff6b6b;" t-field="partner.name"/> firması adına <strong style="color: #ff6b6b;" t-field="company.name"/> firmasına ödemiş bulunduğumu, ilgili firma ile aramda oluşabilecek anlaşmazlıktan dolayı <strong style="color: #ff6b6b;" t-field="company.name"/> firmasını sorumlu tutmayacağımı beyan ve taahhüt ederim.
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: left; font-size: 12px; color: #808080; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">Payer: <strong t-field="doc.partner_id.name"/>
+                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: left; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">Payer: <strong t-field="doc.partner_id.name"/>
                                             </td>
-                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: right; font-size: 12px; color: #808080; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="right" valign="middle"><span t-field="partner.email"/>
+                                            <td width="322" height="25" style="width: 322px; height: 25px; text-align: right; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="right" valign="middle"><span t-field="partner.email"/>
                                             </td>
                                         </tr>
                                     </table>

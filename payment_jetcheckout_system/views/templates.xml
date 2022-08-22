@@ -113,7 +113,7 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="header row mx-0 card border p-2 px-lg-5">
                 <div class="px-xl-3 mx-xl-auto mw-xl-128">
@@ -149,7 +149,7 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="header row mx-0 card border p-2 px-lg-5">
                 <div class="px-xl-3 mx-xl-auto mw-xl-128">
@@ -199,7 +199,7 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="header row mx-0 card border p-2 px-lg-5">
                 <div class="px-xl-3 mx-xl-auto mw-xl-128">

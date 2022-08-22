@@ -2,8 +2,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import email_normalize
-
-PRIMEFACTOR = 3367900313
+from .constants import PRIMEFACTOR
 
 
 class Partner(models.Model):

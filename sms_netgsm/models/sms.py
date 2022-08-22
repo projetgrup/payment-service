@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 SENDURL = 'https://api.netgsm.com.tr/sms/send/xml'
+OTPSENDURL = 'https://api.netgsm.com.tr/sms/send/otp'
 CREDITURL = 'https://api.netgsm.com.tr/balance/list/xml'
 REPORTURL = 'https://api.netgsm.com.tr/sms/report'
 HEADERS = {'content-type': 'application/xml'}
@@ -49,28 +50,46 @@ class SmsApi(models.AbstractModel):
         password = provider.password
         originator = provider.originator
 
-        blocks = [f"<mp><msg>{message['content']}</msg><no>{message['number']}</no></mp>" for message in messages]
+        if self.env.context.get('otp'):
+            url = OTPSENDURL
+            blocks = [f"<msg>{message['content']}</msg><no>{message['number']}</no>" for message in messages]
+            data = f"""<?xml version="1.0" encoding="UTF-8"?>
+                <mainbody>
+                    <header>    
+                        <usercode>{username}</usercode>
+                        <password>{password}</password>
+                        <msgheader>{originator}</msgheader>
+                    </header>
+                    <body>
+                        {"".join(blocks)}
+                    </body>
+                </mainbody>"""
+        else:
+            url = SENDURL
+            blocks = [f"<mp><msg>{message['content']}</msg><no>{message['number']}</no></mp>" for message in messages]
+            data = f"""<?xml version="1.0" encoding="UTF-8"?>
+                <mainbody>
+                    <header>
+                        <company dil="TR">Netgsm</company>       
+                        <usercode>{username}</usercode>
+                        <password>{password}</password>
+                        <type>n:n</type>
+                        <msgheader>{originator}</msgheader>
+                    </header>
+                    <body>
+                        {"".join(blocks)}
+                    </body>
+                </mainbody>"""
 
-        data = f"""<?xml version="1.0" encoding="UTF-8"?>
-            <mainbody>
-                <header>
-                    <company dil="TR">Netgsm</company>       
-                    <usercode>{username}</usercode>
-                    <password>{password}</password>
-                    <type>n:n</type>
-                    <msgheader>{originator}</msgheader>
-                </header>
-                <body>
-                    {"".join(blocks)}
-                </body>
-            </mainbody>"""
-
-        response = requests.post(SENDURL, data=data.encode('utf-8'), headers=HEADERS)
+        response = requests.post(url, data=data.encode('utf-8'), headers=HEADERS)
         code, id, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
             return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
         else:
-            raise ERRORS.get(code, ERRORS[None])
+            if self.env.context.get('no_exception'):
+                return []
+            else:
+                raise ERRORS.get(code, ERRORS[None])
 
     @api.model
     def _get_netgsm_credit(self, provider):
