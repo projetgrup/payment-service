@@ -1,40 +1,11 @@
 # -*- coding: utf-8 -*-
+from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.addons.component.core import Component
 from odoo import _
 
 PAGE_SIZE = 100
-RESPONSE = {
-    "success": {
-        "response_code": 0,
-        "response_message": "İşlem Başarılı",
-    },
-    "no_api_key": {
-        "response_code": 9,
-        "response_message": "API Anahtarı bulunamadı",
-    },
-    "no_school": {
-        "response_code": 8,
-        "response_message": "Belirtilen okul bulunamadı",
-    },
-    "no_bursary": {
-        "response_code": 7,
-        "response_message": "Belirtilen burs bulunamadı",
-    },
-    "no_classroom": {
-        "response_code": 6,
-        "response_message": "Belirtilen sınıf bulunamadı",
-    },
-    "no_payment": {
-        "response_code": 5,
-        "response_message": "Ödeme bulunamadı",
-    },
-    "exception": {
-        "response_code": -1,
-        "response_message": "Sunucu hatası",
-    },
-}
 
 
 class StudentAPIService(Component):
@@ -59,7 +30,11 @@ class StudentAPIService(Component):
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
-            return SchoolResponse(**RESPONSE['no_api_key'])
+            raise Unauthorized("Application key not found")
+
+        page = params.page - 1
+        if page < 1:
+            raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id","=", company)]
         if params.name:
@@ -70,7 +45,9 @@ class StudentAPIService(Component):
         schools = []
         for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
-        return SchoolResponse(schools=schools,**RESPONSE['success'])
+        if not schools:
+            raise NotFound("No school records found")
+        return SchoolResponse(schools=schools, response_code=0, response_message='Success')
 
     @restapi.method(
         [(["/classes"], "GET")],
@@ -87,7 +64,11 @@ class StudentAPIService(Component):
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
-            return ClassResponse(**RESPONSE["no_api_key"])
+            raise Unauthorized("Application key not found")
+
+        page = params.page - 1
+        if page < 1:
+            raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id","=", company)]
         if params.name:
@@ -98,7 +79,9 @@ class StudentAPIService(Component):
         classes = []
         for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
-        return ClassResponse(classes=classes,**RESPONSE["success"])
+        if not classes:
+            raise NotFound("No class records found")
+        return ClassResponse(classes=classes, response_code=0, response_message='Success')
 
     @restapi.method(
         [(["/students"], "GET")],
@@ -115,7 +98,11 @@ class StudentAPIService(Component):
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
-            return StudentResponse(**RESPONSE["no_api_key"])
+            raise Unauthorized("Application key not found")
+
+        page = params.page - 1
+        if page < 1:
+            raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id","=", company),("system","=", "student"),("parent_id","!=", False),("is_company","=", False)]
         if params.name:
@@ -126,7 +113,9 @@ class StudentAPIService(Component):
         students = []
         for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
-        return StudentResponse(students=students,**RESPONSE["success"])
+        if not students:
+            raise NotFound("No student records found")
+        return StudentResponse(students=students, response_code=0, response_message='Success')
 
     @restapi.method(
         [(["/payments"], "GET")],
@@ -143,16 +132,19 @@ class StudentAPIService(Component):
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
-            return PaymentResponse(**RESPONSE["no_api_key"])
+            raise Unauthorized("Application key not found")
 
-        domain = [("company_id","=", company),("partner_id.email","=", params.email)]
+        page = params.page - 1
+        if page < 1:
+            raise BadRequest("Page number cannot be lower than 1")
 
         payments = []
-        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
+        domain = [("company_id","=", company),("partner_id.email","=", params.email)]
+        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE*page, limit=100):
             payments.append(dict(id=i.id, date=i.create_date.strftime("%d-%m-%Y"), amount=i.amount, state=i.state))
         if not payments:
-            return PaymentResponse(**RESPONSE["no_payment"])
-        return PaymentResponse(payments=payments,**RESPONSE["success"])
+            raise NotFound("No payment records found")
+        return PaymentResponse(payments=payments, response_code=0, response_message='Success')
 
     @restapi.method(
         [(["/create"], "POST")],
@@ -169,19 +161,19 @@ class StudentAPIService(Component):
         company = self.env.company.id
         key = self._auth(company, params.application_key, params.secret_key)
         if not key:
-            return StudentResponse(**RESPONSE["no_api_key"])
+            raise Unauthorized("Application key not found")
 
         school = self.env['res.student.school'].sudo().search([('code','=',params.school_code)], limit=1)
         if not school:
-            return StudentResponse(**RESPONSE["no_school"])
+            raise NotFound("No school found with given code")
 
         bursary = self.env['res.student.bursary'].sudo().search([('code','=',params.bursary_code)], limit=1)
         if not bursary:
-            return StudentResponse(**RESPONSE["no_bursary"])
+            raise NotFound("No bursary found with given code")
 
         classroom = self.env['res.student.class'].sudo().search([('code','=',params.class_code)], limit=1)
         if not classroom:
-            return StudentResponse(**RESPONSE["no_classroom"])
+            raise NotFound("No classroom found with given code")
 
         parent = self.env['res.partner'].sudo().search([('email','=',params.parent_email)], limit=1)
         if not parent:
@@ -203,7 +195,7 @@ class StudentAPIService(Component):
         })
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
-        return StudentResponse(students=students,**RESPONSE["success"])
+        return StudentResponse(students=students, response_code=0, response_message='Success')
 
     # PRIVATE METHODS
     def _auth(self, _company, _apikey, _secretkey=False):
