@@ -1,4 +1,4 @@
-odoo.define('payment_jetcheckout.signup_page', function (require) {
+odoo.define('payment_jetcheckout_onboarding.signup_page', function (require) {
 "use strict";
 
 var config = require('web.config');
@@ -33,7 +33,6 @@ signup.include({
             self.$tax = document.getElementById('tax');
             self.$type = document.querySelector('input[name="type"]:checked');
             self.$domain = document.getElementById('domain');
-            self.$button = document.getElementById('submit');
             self.$alert = document.getElementById('alert');
             self.domain_state = false;
             self.$domain_info = document.getElementById('domain_info');

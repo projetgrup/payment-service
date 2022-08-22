@@ -1,6 +1,15 @@
-.oe_signup_form {
+.oe_sign_form {
     max-width: 900px !important;
-    margin-bottom: 0 !important;
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type=number] {
+        -moz-appearance:textfield;
+    }
 
     .bar-caption {
         line-height: 60px;

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="otp_login_page" name="OTP Login Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="o_payment_loading" style="opacity: 0; visibility: hidden">
+                <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
+            </div>
+            <form class="oe_sign_form oe_otp_form card mx-auto my-5" role="form" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="id" id="id" value="0"/>
+                <a id="next" href="#" class="btn btn-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></a>
+                <a id="submit" href="#" class="btn btn-primary text-white position-absolute d-none">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></a>
+                <div class="card-grid mt-lg-0 mt-5">
+                    <div id="card0" class="field-card">
+                        <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Credentials</div>
+                        <div class="col-md-6 pb-4 pb-md-0">
+                            <div class="field-container form-group text-center small">
+                                Please enter one of your email address, phone number or citizen number.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-login">
+                                <input type="text" name="login" t-att-value="login" id="login" class="form-control form-control-sm" autocapitalize="off" required="required"/>
+                                <span class="bar-container"/>
+                                <label for="login"><span>Email, phone or citizen number</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group text-muted small">
+                                <ul>
+                                    <li>test@test.com (Email address in regular format)</li>
+                                    <li>5301111111 (Phone number without leading zero)</li>
+                                    <li>12345678901 (Citizen number with eleven digits)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="card1" class="field-card fly-right">
+                        <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Authentication</div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-counter text-center">
+                                Time left for entering authentication code is
+                                <div id="countdown" class="h3"/>
+                                <br/>
+                                <a id="resend" href="#" class="btn text-primary d-none"><i class="fa fa-undo mr-2" t-translations="off"/>Resend Code</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group field-code">
+                                <input type="test" name="code" id="code" class="form-control form-control-sm" autocomplete="off" inputmode="numeric" maxlength="6" pattern="^[0-9]\d{5}$"/>
+                                <span class="bar-container"/>
+                                <label for="code"><span>Code</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </template>
+</odoo>

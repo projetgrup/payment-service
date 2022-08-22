@@ -1,0 +1,282 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_jetcheckout_system_otp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-22 16:12+0000\n"
+"PO-Revision-Date: 2022-08-22 16:12+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "12345678901 (Citizen number with eleven digits)"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "5301111111 (Phone number without leading zero)"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "<span>Code</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "<span>Email, phone or citizen number</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:mail.template,body_html:payment_jetcheckout_system_otp.otp_mail_template
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Dear</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.partner_id.name or ''\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div style=\"text-align: center\">\n"
+"                        Your specially generated authentication code is<br/>\n"
+"                        <h1><strong><t t-out=\"object.code\">123456</t></strong></h1><br/>\n"
+"                        Have a nice day!\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+90 530-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Authentication"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: code:addons/payment_jetcheckout_system_otp/controllers/main.py:0
+#, python-format
+msgid "Authentication code is not correct. Please check and retype."
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__code
+msgid "Code"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "Code must be 6 digits"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__company_id
+msgid "Company"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Credentials"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__date
+msgid "Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__lang
+msgid "Language"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Next"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model,name:payment_jetcheckout_system_otp.model_res_partner_otp
+msgid "OTP Authentication"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:mail.template,name:payment_jetcheckout_system_otp.otp_mail_template
+#: model:sms.template,name:payment_jetcheckout_system_otp.otp_sms_template
+msgid "OTP: Partner"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:sms.template,body:payment_jetcheckout_system_otp.otp_sms_template
+msgid ""
+"Please do not share this code to anyone. Your authentication code is {{ "
+"object.code }}, expires on {{ object.date }}"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid ""
+"Please enter one of your email address, phone number or citizen number."
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "Please enter your email address, phone number or citizen number"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Resend Code"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Sign Up"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Time left for entering authentication code is"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model:mail.template,subject:payment_jetcheckout_system_otp.otp_mail_template
+msgid "Your Authentication Code"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "expired"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
+#, python-format
+msgid "seconds"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "test@test.com (Email address in regular format)"
+msgstr ""

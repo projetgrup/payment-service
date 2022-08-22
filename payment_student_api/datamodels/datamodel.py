@@ -36,8 +36,8 @@ class SchoolSearch(Datamodel):
     _name = "school.search"
     _inherit = "api.keys"
 
-    code = fields.String(required=False, allow_none=False, title="School Code", description="School codename", example="JOHNDC")
-    name = fields.String(required=False, allow_none=False, title="School Name", description="School name", example="John Doe College")
+    code = fields.String(required=False, allow_none=False, title="School Code", description="A part of school code can be entered. For example, when you enter 'JOH', the codes which contain this word will be listed. It is not a required field.", example="JOHNDC")
+    name = fields.String(required=False, allow_none=False, title="School Name", description="A part of school name can be entered. For example, when you enter 'College', the names which contain this word will be listed. It is not a required field.", example="John Doe College")
 
 class ClassSearch(Datamodel):
     class Meta:
@@ -46,8 +46,8 @@ class ClassSearch(Datamodel):
     _name = "class.search"
     _inherit = "api.keys"
 
-    code = fields.String(required=False, allow_none=False, title="Class Code", description="Class codename", example="CLASS1")
-    name = fields.String(required=False, allow_none=False, title="Class Name", description="Class name", example="Class 1")
+    code = fields.String(required=False, allow_none=False, title="Class Code", description="A part of class code can be entered. For example, when you enter 'CLA', the codes which contain this word will be listed. It is not a required field.", example="CLASS1")
+    name = fields.String(required=False, allow_none=False, title="Class Name", description="A part of class name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Class 1")
 
 class StudentSearch(Datamodel):
     class Meta:
