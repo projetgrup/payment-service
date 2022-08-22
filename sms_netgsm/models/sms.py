@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import ast
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -107,6 +108,11 @@ class SmsApi(models.AbstractModel):
         response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
         code, credit, *args = self._process_netgsm_sms(response.text)
         if code.startswith('0'):
-            return _('%s SMS credit(s) left') % int(float(credit))
+            try:
+                credit = float(credit)
+            except:
+                credit = credit.replace('.','').replace(',','.')
+                credit = ast.literal_eval(credit)
+            return _('%s SMS credit(s) left') % int(credit)
         else:
             raise ERRORS.get(code, ERRORS[None])
