@@ -32,8 +32,8 @@ class StudentAPIService(Component):
         if not key:
             raise Unauthorized("Application key not found")
 
-        page = params.page
-        if page < 1:
+        page = params.page - 1
+        if page < 0:
             raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id", "=", company)]
@@ -43,7 +43,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         schools = []
-        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
+        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
         if not schools:
             raise NotFound("No school records found")
@@ -66,8 +66,8 @@ class StudentAPIService(Component):
         if not key:
             raise Unauthorized("Application key not found")
 
-        page = params.page
-        if page < 1:
+        page = params.page - 1
+        if page < 0:
             raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id", "=", company)]
@@ -77,7 +77,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         classes = []
-        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
+        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
         if not classes:
             raise NotFound("No class records found")
@@ -100,8 +100,8 @@ class StudentAPIService(Component):
         if not key:
             raise Unauthorized("Application key not found")
 
-        page = params.page
-        if page < 1:
+        page = params.page - 1
+        if page < 0:
             raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id", "=", company), ("system", "=", "student"), ("parent_id", "!=", False),
@@ -112,7 +112,7 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.vat))
 
         students = []
-        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
+        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
         if not students:
             raise NotFound("No student records found")
@@ -135,8 +135,8 @@ class StudentAPIService(Component):
         if not key:
             raise Unauthorized("Application key not found")
 
-        page = params.page
-        if page < 1:
+        page = params.page - 1
+        if page < 0:
             raise BadRequest("Page number cannot be lower than 1")
 
         payments = []
@@ -168,11 +168,9 @@ class StudentAPIService(Component):
         if not school:
             raise NotFound("No school found with given code")
 
-        bursary = False
+        bursary = self.env['res.student.bursary'].sudo()
         if hasattr(params, 'bursary_code') and params.bursary_code:
-            bursary = self.env['res.student.bursary'].sudo().search([('code', '=', params.bursary_code)], limit=1)
-            if bursary:
-                bursary = bursary.id
+            bursary = bursary.search([('code', '=', params.bursary_code)], limit=1)
 
         classroom = self.env['res.student.class'].sudo().search([('code', '=', params.class_code)], limit=1)
         if not classroom:
@@ -191,29 +189,26 @@ class StudentAPIService(Component):
         if not params.ref:
             raise NotFound("No Ref found with given code")
 
-        STUDENT_PARTNER = self.env['res.partner'].with_context({
-            'no_vat_validation': True,
-            'active_system': 'student'
-        }).sudo()
-        student = STUDENT_PARTNER.search([('ref', '=', params.ref)])
-        if len(student):
+        students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo()
+        student = students.search([('ref', '=', params.ref)])
+        if len(student) > 1:
             raise BadRequest(_("There is more than one student with the same characteristics in the records. "
                                "Please contact the system administrator."))
 
-        student_val = {
+        vals = {
             'name': params.name,
             'vat': params.vat,
             'school_id': school.id,
-            'bursary_id': bursary,
+            'bursary_id': bursary.id,
             'ref': params.ref,
             'class_id': classroom.id,
             'parent_id': parent.id,
             'is_company': False,
         }
         if student:
-            student.write(student_val)
+            student.write(vals)
         else:
-            student = STUDENT_PARTNER.create(student_val)
+            student = students.create(vals)
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
         return StudentResponse(students=students, response_code=0, response_message='Success')

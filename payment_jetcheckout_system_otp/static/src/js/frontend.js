@@ -58,7 +58,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             self.duration = 120;
             self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
             self.interval = setInterval(function() {
-                if (self.duration < 0) {
+                if (self.duration === 0) {
                     clearInterval(self.interval);
                     self.$countdown.innerHTML = _t('expired');
                     self.$validate.classList.add('d-none');
