@@ -167,9 +167,8 @@ class StudentAPIService(Component):
         if not school:
             raise NotFound("No school found with given code")
 
-        bursary = self.env['res.student.bursary'].sudo().search([('code','=',params.bursary_code)], limit=1)
-        if not bursary:
-            raise NotFound("No bursary found with given code")
+        if params.bursary_code:
+            bursary = self.env['res.student.bursary'].sudo().search([('code','=',params.bursary_code)], limit=1)
 
         classroom = self.env['res.student.class'].sudo().search([('code','=',params.class_code)], limit=1)
         if not classroom:
@@ -185,11 +184,13 @@ class StudentAPIService(Component):
                 'parent_id': False,
             })
 
-        student = self.env['res.partner'].sudo().create({
+        student = self.env['res.partner'].with_context(no_vat_validation=True).sudo().create({
             'name': params.name,
             'vat': params.vat,
             'school_id': school.id,
             'bursary_id': bursary.id,
+            'ref': params.ref,
+            'class_id': classroom.id,
             'parent_id': parent.id,
             'is_company': False,
         })
