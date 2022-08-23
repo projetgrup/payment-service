@@ -168,8 +168,11 @@ class StudentAPIService(Component):
         if not school:
             raise NotFound("No school found with given code")
 
-        if params.bursary_code:
+        bursary = False
+        if hasattr(params, 'bursary_code') and params.bursary_code:
             bursary = self.env['res.student.bursary'].sudo().search([('code', '=', params.bursary_code)], limit=1)
+            if bursary:
+                bursary = bursary.id
 
         classroom = self.env['res.student.class'].sudo().search([('code', '=', params.class_code)], limit=1)
         if not classroom:
@@ -201,7 +204,7 @@ class StudentAPIService(Component):
             'name': params.name,
             'vat': params.vat,
             'school_id': school.id,
-            'bursary_id': bursary.id,
+            'bursary_id': bursary,
             'ref': params.ref,
             'class_id': classroom.id,
             'parent_id': parent.id,
