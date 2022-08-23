@@ -33,7 +33,7 @@ class StudentAPIService(Component):
             raise Unauthorized("Application key not found")
 
         page = params.page - 1
-        if page < 1:
+        if page < 0:
             raise BadRequest("Page number cannot be lower than 1")
 
         domain = [("company_id","=", company)]
