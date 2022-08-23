@@ -123,4 +123,4 @@ class StudentCreate(Datamodel):
     parent_name = fields.String(required=True, allow_none=False, title="Parent Name", description="Parent name of related student", example="John Doe")
     parent_email = fields.String(required=True, allow_none=False, title="Parent Email", description="Email address of related parent", example="test@example.com")
     parent_mobile = fields.String(required=True, allow_none=False, title="Parent Mobile", description="Mobile phone number of related parent", example="+905001234567")
-    ref = fields.String(allow_none=True, title="Ref", description="Student your REF number", example="ABC01")
+    ref = fields.String(required=True, allow_none=False, title="Ref", description="Student your REF number", example="ABC01")
