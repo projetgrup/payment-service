@@ -36,14 +36,14 @@ class StudentAPIService(Component):
         if page < 1:
             raise BadRequest("Page number cannot be lower than 1")
 
-        domain = [("company_id","=", company)]
+        domain = [("company_id", "=", company)]
         if params.name:
             domain.append(("name", "ilike", params.name))
         if params.code:
             domain.append(("code", "ilike", params.code))
 
         schools = []
-        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
+        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
         if not schools:
             raise NotFound("No school records found")
@@ -70,14 +70,14 @@ class StudentAPIService(Component):
         if page < 1:
             raise BadRequest("Page number cannot be lower than 1")
 
-        domain = [("company_id","=", company)]
+        domain = [("company_id", "=", company)]
         if params.name:
             domain.append(("name", "ilike", params.name))
         if params.code:
             domain.append(("code", "ilike", params.code))
 
         classes = []
-        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
+        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
         if not classes:
             raise NotFound("No class records found")
@@ -104,14 +104,15 @@ class StudentAPIService(Component):
         if page < 1:
             raise BadRequest("Page number cannot be lower than 1")
 
-        domain = [("company_id","=", company),("system","=", "student"),("parent_id","!=", False),("is_company","=", False)]
+        domain = [("company_id", "=", company), ("system", "=", "student"), ("parent_id", "!=", False),
+                  ("is_company", "=", False)]
         if params.name:
             domain.append(("name", "ilike", params.name))
         if params.vat:
             domain.append(("code", "ilike", params.vat))
 
         students = []
-        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE*(params.page - 1), limit=100):
+        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE * (params.page - 1), limit=100):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
         if not students:
             raise NotFound("No student records found")
@@ -139,8 +140,8 @@ class StudentAPIService(Component):
             raise BadRequest("Page number cannot be lower than 1")
 
         payments = []
-        domain = [("company_id","=", company),("partner_id.email","=", params.email)]
-        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE*page, limit=100):
+        domain = [("company_id", "=", company), ("partner_id.email", "=", params.email)]
+        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
             payments.append(dict(id=i.id, date=i.create_date.strftime("%d-%m-%Y"), amount=i.amount, state=i.state))
         if not payments:
             raise NotFound("No payment records found")
@@ -163,18 +164,18 @@ class StudentAPIService(Component):
         if not key:
             raise Unauthorized("Application key not found")
 
-        school = self.env['res.student.school'].sudo().search([('code','=',params.school_code)], limit=1)
+        school = self.env['res.student.school'].sudo().search([('code', '=', params.school_code)], limit=1)
         if not school:
             raise NotFound("No school found with given code")
 
         if params.bursary_code:
-            bursary = self.env['res.student.bursary'].sudo().search([('code','=',params.bursary_code)], limit=1)
+            bursary = self.env['res.student.bursary'].sudo().search([('code', '=', params.bursary_code)], limit=1)
 
-        classroom = self.env['res.student.class'].sudo().search([('code','=',params.class_code)], limit=1)
+        classroom = self.env['res.student.class'].sudo().search([('code', '=', params.class_code)], limit=1)
         if not classroom:
             raise NotFound("No classroom found with given code")
 
-        parent = self.env['res.partner'].sudo().search([('email','=',params.parent_email)], limit=1)
+        parent = self.env['res.partner'].sudo().search([('email', '=', params.parent_email)], limit=1)
         if not parent:
             parent = self.env['res.partner'].sudo().create({
                 'name': params.parent_name,
@@ -187,10 +188,13 @@ class StudentAPIService(Component):
         if not params.ref:
             raise NotFound("No Ref found with given code")
 
-        STUDENT_PARTNER = self.env['res.partner'].with_context(no_vat_validation=True).sudo()
+        STUDENT_PARTNER = self.env['res.partner'].with_context({
+            'no_vat_validation': True,
+            'active_system': 'student'
+        }).sudo()
         student = STUDENT_PARTNER.search([('ref', '=', params.ref)])
         if len(student):
-            raise BadRequest(_("There is more than one student with the same characteristics in the records. " 
+            raise BadRequest(_("There is more than one student with the same characteristics in the records. "
                                "Please contact the system administrator."))
 
         student_val = {
@@ -213,9 +217,9 @@ class StudentAPIService(Component):
 
     # PRIVATE METHODS
     def _auth(self, _company, _apikey, _secretkey=False):
-        domain = [('company_id','=',_company),('api_key','=',_apikey)]
+        domain = [('company_id', '=', _company), ('api_key', '=', _apikey)]
         if _secretkey:
-            domain.append(('secret_key','=',_secretkey))
+            domain.append(('secret_key', '=', _secretkey))
         return self.env["payment.acquirer.jetcheckout.api"].sudo().search(domain, limit=1)
 
     def _create(self, _name):
