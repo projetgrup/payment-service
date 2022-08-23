@@ -189,6 +189,10 @@ class StudentAPIService(Component):
 
         STUDENT_PARTNER = self.env['res.partner'].with_context(no_vat_validation=True).sudo()
         student = STUDENT_PARTNER.search([('ref', '=', params.ref)])
+        if len(student):
+            raise BadRequest(_("There is more than one student with the same characteristics in the records. " 
+                               "Please contact the system administrator."))
+
         student_val = {
             'name': params.name,
             'vat': params.vat,
