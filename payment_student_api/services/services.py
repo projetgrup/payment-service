@@ -184,7 +184,12 @@ class StudentAPIService(Component):
                 'parent_id': False,
             })
 
-        student = self.env['res.partner'].with_context(no_vat_validation=True).sudo().create({
+        if not params.ref:
+            raise NotFound("No Ref found with given code")
+
+        STUDENT_PARTNER = self.env['res.partner'].with_context(no_vat_validation=True).sudo()
+        student = STUDENT_PARTNER.search([('ref', '=', params.ref)])
+        student_val = {
             'name': params.name,
             'vat': params.vat,
             'school_id': school.id,
@@ -193,7 +198,11 @@ class StudentAPIService(Component):
             'class_id': classroom.id,
             'parent_id': parent.id,
             'is_company': False,
-        })
+        }
+        if student:
+            student.write(student_val)
+        else:
+            student = STUDENT_PARTNER.create(student_val)
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
         return StudentResponse(students=students, response_code=0, response_message='Success')
