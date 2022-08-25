@@ -12,6 +12,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="id" id="id" value="0"/>
                 <a id="next" href="#" class="btn btn-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></a>
+                <a id="previous" href="#" class="btn btn-secondary position-absolute d-none"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</a>
                 <a id="submit" href="#" class="btn btn-primary text-white position-absolute d-none">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></a>
                 <div class="card-grid mt-lg-0 mt-5">
                     <div id="card0" class="field-card">
@@ -54,6 +55,15 @@
                                 <input type="test" name="code" id="code" class="form-control form-control-sm" autocomplete="off" inputmode="numeric" maxlength="6" pattern="^[0-9]\d{5}$"/>
                                 <span class="bar-container"/>
                                 <label for="code"><span>Code</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field-container form-group text-muted small">
+                                <ul>
+                                    <li>Email Address:<span id="email" class="ml-2" t-translations="off"/></li>
+                                    <li>Phone Number:<span id="phone" class="ml-2" t-translations="off"/></li>
+                                    <li>Citizen Number:<span id="vat" class="ml-2" t-translations="off"/></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

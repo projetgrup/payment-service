@@ -72,7 +72,7 @@
         <record id="otp_sms_template" model="sms.template">
             <field name="name">OTP: Partner</field>
             <field name="model_id" ref="payment_jetcheckout_system_otp.model_res_partner_otp"/>
-            <field name="body">Please do not share this code to anyone. Your authentication code is {{ object.code }}, expires on {{ object.date }}</field>
+            <field name="body">Please do not share this code to anyone. Your authentication code is {{ object.code }}, expires on {{ object.date_local }}</field>
             <field name="lang">{{ object.lang }}</field>
         </record>
     </data>

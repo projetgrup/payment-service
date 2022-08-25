@@ -2,15 +2,21 @@
 import random
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 
 class PartnerOtp(models.Model):
     _name = "res.partner.otp"
     _description = "OTP Authentication"
 
+    def _compute_date(self):
+        for otp in self:
+            otp.date_local = fields.Datetime.context_timestamp(otp, otp.date).strftime(DATETIME_FORMAT)
+
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True, copy=False)
     code = fields.Integer(string='Code', readonly=True, copy=False)
     date = fields.Datetime(string='Date', readonly=True, copy=False)
+    date_local = fields.Char(compute='_compute_date')
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False)
     lang = fields.Char(string='Language', readonly=True, copy=False)
 
@@ -23,7 +29,7 @@ class PartnerOtp(models.Model):
                 'date': fields.Datetime.now() + relativedelta(minutes=2)
             })
             res = super().create(vals)
-            res.send_mail()
+            #res.send_mail()
             res.send_sms()
             return res
         return
