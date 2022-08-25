@@ -19,6 +19,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             self.duration = 0;
             self.interval = undefined;
             self.$next = document.getElementById('next');
+            self.$previous = document.getElementById('previous');
             self.$card0 = document.getElementById('card0');
             self.$card1 = document.getElementById('card1');
             self.$validate = document.getElementById('submit');
@@ -26,12 +27,22 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             self.$login = document.getElementById('login');
             self.$code = document.getElementById('code');
             self.$id = document.getElementById('id');
+            self.$email = document.getElementById('email');
+            self.$phone = document.getElementById('phone');
+            self.$vat= document.getElementById('vat');
             self.$countdown = document.getElementById('countdown');
             self.$next.addEventListener('click', self._onSend.bind(self));
+            self.$previous.addEventListener('click', self._onPrevious.bind(self));
             self.$validate.addEventListener('click', self._onValidate.bind(self));
             self.$resend.addEventListener('click', self._onResend.bind(self));
             self.$code.addEventListener('change', self._onChangeField.bind(self));
         });
+    },
+
+    _onPrevious: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();        
+        window.location.reload();    
     },
 
     _onSend: function (ev) {
@@ -52,13 +63,14 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
         rpc.query({
             route: '/otp/prepare',
             params: this._getParams(),
-        }).then(function (id) {
+        }).then(function (result) {
+            self.$previous.classList.remove('d-none');
             self.$validate.classList.remove('d-none');
             self.$resend.classList.add('d-none');
             self.duration = 120;
             self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
             self.interval = setInterval(function() {
-                if (self.duration < 0) {
+                if (self.duration === 0) {
                     clearInterval(self.interval);
                     self.$countdown.innerHTML = _t('expired');
                     self.$validate.classList.add('d-none');
@@ -68,7 +80,10 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
                 self.duration -= 1;
                 self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
             }, 1000);
-            self.$id.value = id;
+            self.$id.value = result.id;
+            self.$email.innerHTML = result.email;
+            self.$phone.innerHTML = result.phone;
+            self.$vat.innerHTML = result.vat;
             if (self.page !== 1) {
                 self.page = 1;
                 self.$next.classList.add('d-none');

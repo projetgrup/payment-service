@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-22 16:12+0000\n"
-"PO-Revision-Date: 2022-08-22 16:12+0000\n"
+"POT-Creation-Date: 2022-08-25 10:42+0000\n"
+"PO-Revision-Date: 2022-08-25 10:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -117,6 +117,11 @@ msgid "Authentication code is not correct. Please check and retype."
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Citizen Number:"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__code
 msgid "Code"
 msgstr ""
@@ -156,6 +161,11 @@ msgstr ""
 #. module: payment_jetcheckout_system_otp
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Email Address:"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
@@ -213,6 +223,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Phone Number:"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
 #: model:sms.template,body:payment_jetcheckout_system_otp.otp_sms_template
 msgid ""
 "Please do not share this code to anyone. Your authentication code is {{ "
@@ -230,6 +245,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
 #, python-format
 msgid "Please enter your email address, phone number or citizen number"
+msgstr ""
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "Previous"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp

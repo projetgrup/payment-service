@@ -9,7 +9,7 @@
             <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" domain="[('parent_id','=',False),('child_ids','!=',False),('company_id','=',company_id)]"/>
             <field name="campaign_id" optional="show" options="{'no_create': True, 'no_open': True}"/>
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
-            <field name="paid"/>
+            <field name="paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
             <field name="paid_amount" string="Amount" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
@@ -18,6 +18,7 @@
             <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" optional="hide"/>
             <field name="currency_id" force_save="1" invisible="1"/>
+            <field name="is_admin" invisible="1"/>
         </tree>
     </field>
     </record>

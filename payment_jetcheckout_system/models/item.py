@@ -10,6 +10,11 @@ class PaymentItem(models.Model):
         for payment in self:
             payment.name = payment.parent_id.name
 
+    def _compute_is_admin(self):
+        is_admin = self.env.user.has_group('base.group_system')
+        for payment in self:
+            payment.is_admin = is_admin
+
     @api.onchange('child_id')
     def _onchange_child_id(self):
         self.parent_id = self.child_id.parent_id.id if self.child_id else False
@@ -22,7 +27,8 @@ class PaymentItem(models.Model):
     child_id = fields.Many2one('res.partner', ondelete='restrict')
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
     amount = fields.Monetary()
-    paid = fields.Boolean(readonly=True)
+    paid = fields.Boolean()
+    is_admin = fields.Boolean(compute='_compute_is_admin')
     paid_amount = fields.Monetary(readonly=True)
     installment_count = fields.Integer(readonly=True)
     paid_date = fields.Datetime(readonly=True)
