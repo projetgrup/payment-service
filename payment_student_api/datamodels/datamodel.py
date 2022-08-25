@@ -51,6 +51,17 @@ class ClassSearch(Datamodel):
     code = fields.String(required=False, allow_none=False, title="Class Code", description="A part of class code can be entered. For example, when you enter 'CLA', the codes which contain this word will be listed. It is not a required field.", example="CLASS1")
     name = fields.String(required=False, allow_none=False, title="Class Name", description="A part of class name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Class 1")
 
+class BursarySearch(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "bursary.search"
+    _inherit = "api.keys"
+
+    page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
+    code = fields.String(required=False, allow_none=False, title="Bursary Code", description="A part of bursary code can be entered. For example, when you enter 'BUR', the codes which contain this word will be listed. It is not a required field.", example="BURSARY50")
+    name = fields.String(required=False, allow_none=False, title="Bursary Name", description="A part of bursary name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Bursary 50%")
+
 class StudentSearch(Datamodel):
     class Meta:
         ordered = True
@@ -90,6 +101,15 @@ class ClassResponse(Datamodel):
 
     classes = fields.List(fields.Dict, title="Classes", description="List of classes", example=[{"id": 34, "name": "Class 1", "code": "CLASS1"}])
 
+class BursaryResponse(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "bursary.response"
+    _inherit = "response"
+
+    bursaries = fields.List(fields.Dict, title="Bursaries", description="List of bursaries", example=[{"id": 12, "name": "Bursary 50%", "code": "BURSARY50"}])
+
 class StudentResponse(Datamodel):
     class Meta:
         ordered = True
@@ -108,6 +128,7 @@ class PaymentResponse(Datamodel):
 
     payments = fields.List(fields.Dict, title="Payments", description="List of payments", example=[{"id": 76, "date": "25-01-2021", "amount": 145.30, "state": "done"}])
 
+
 class StudentCreate(Datamodel):
     class Meta:
         ordered = True
@@ -124,3 +145,13 @@ class StudentCreate(Datamodel):
     parent_email = fields.String(required=True, allow_none=False, title="Parent Email", description="Email address of related parent", example="test@example.com")
     parent_mobile = fields.String(required=True, allow_none=False, title="Parent Mobile", description="Mobile phone number of related parent", example="+905001234567")
     ref = fields.String(required=True, allow_none=False, title="Ref", description="Student your REF number", example="ABC01")
+
+
+class StudentDelete(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.delete"
+    _inherit = "api.secret.keys"
+
+    vat = fields.String(required=True, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
