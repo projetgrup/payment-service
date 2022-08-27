@@ -48,7 +48,7 @@ AND (
         vat = '90*******00'
         ref = '12*******34'
         if result:
-            partner = request.env['res.partner'].browse(result[0])
+            partner = request.env['res.partner'].sudo().browse(result[0])
             id = request.env['res.partner.otp'].sudo().create({
                 'partner_id': partner.id,
                 'company_id': partner.company_id.id,
