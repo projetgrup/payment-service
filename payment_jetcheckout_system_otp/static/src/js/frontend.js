@@ -119,12 +119,12 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         
-        const codeRegex = /^[0-9]\d{5}$/;
+        const codeRegex = /^[0-9]\d{3}$/;
         if (!codeRegex.test(this.$code.value)) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
-                message: _t('Code must be 6 digits'),
+                message: _t('Code must be 4 digits'),
             });
             this.$code.focus();
             return;
