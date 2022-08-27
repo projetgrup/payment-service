@@ -24,21 +24,31 @@ class JetcheckoutSystemOtpController(JetController):
     @http.route(['/otp/prepare'], type='json', auth='public', sitemap=False, website=True)
     def jetcheckout_system_otp_login_prepare(self, **kwargs):
         company = request.env.company
-        country = company.country_id
         login = kwargs['login']
-        number = phone_validation.phone_format(
-            login,
-            country.code if country else None,
-            country.phone_code if country else None,
-            force_format='INTERNATIONAL',
-            raise_exception=False
-        )
-        partner = request.env['res.partner'].sudo().search([('company_id', '=', company.id), ('parent_id', '=', False), '|', '|', '|', ('email', '=ilike', login), ('child_ids.vat', 'like', '%%%s' % login), ('phone', '=', number), ('mobile', '=', number)], limit=1)
+        query = f"""
+SELECT id
+FROM res_partner
+WHERE active IS TRUE
+AND company_id = {company.id}
+AND parent_id IS NULL
+AND (
+    email = '{login}'
+    OR RIGHT(REPLACE(phone, ' ', ''), 10) = '{login}'
+    OR RIGHT(REPLACE(mobile, ' ', ''), 10) = '{login}'
+    OR id IN (SELECT id FROM res_partner WHERE ref = '{login}')
+    OR id IN (SELECT id FROM res_partner WHERE vat ILIKE '%{login}')
+)
+"""
+        request.env.cr.execute(query)
+        result = request.env.cr.fetchone()
+
         id = 0
         email = 'a***@a***.com'
         phone = '+90 5** *** 1234'
         vat = '90*******00'
-        if partner:
+        ref = '12*******34'
+        if result:
+            partner = request.env['res.partner'].browse(result[0])
             id = request.env['res.partner.otp'].sudo().create({
                 'partner_id': partner.id,
                 'company_id': partner.company_id.id,
@@ -60,26 +70,43 @@ class JetcheckoutSystemOtpController(JetController):
                 phone = '-'
 
             if partner.child_ids:
-                child = partner.child_ids.filtered(lambda x: login in x.vat)
+                child = partner.child_ids.filtered(lambda x: x.vat and login in x.vat)
                 if child:
                     vat = child.vat
-                    vat = '%s******%s' % (vat[:2], vat[-2:0]) if vat else '-'
+                    vat = '%s******%s' % (vat[:2], vat[-2:]) if vat and len(vat) > 5 else '-'
                 else:
                     vat = partner.child_ids[0].vat
-                    vat = '%s******%s' % (vat[:2], vat[-2:0]) if vat else '-'
+                    vat = '%s******%s' % (vat[:2], vat[-2:]) if vat and len(vat) > 5 else '-'
+
+                child = partner.child_ids.filtered(lambda x: x.ref and login == x.ref)
+                if child:
+                    ref = child.ref
+                    ref = '%s******%s' % (ref[:2], ref[-2:]) if ref and len(ref) > 5 else '-'
+                else:
+                    ref = partner.child_ids[0].ref
+                    ref = '%s******%s' % (ref[:2], ref[-2:]) if ref and len(ref) > 5 else '-'
             else:
                 vat = '-'
+                ref = '-'
 
         return {
             'id': id,
             'email': email,
             'phone': phone,
             'vat': vat,
+            'ref': ref,
         }
 
     @http.route(['/otp/validate'], type='json', auth='public', sitemap=False, website=True)
     def jetcheckout_system_otp_login_validate(self, **kwargs):
-        otp = request.env['res.partner.otp'].sudo().search([('company_id', '=', request.env.company.id), ('id', '=', kwargs['id']), ('partner_id', '!=', False), ('code', '=', kwargs['code']), ('date', '>', fields.Datetime.now())], limit=1)
+        otp = request.env['res.partner.otp'].sudo().search([
+            ('company_id', '=', request.env.company.id),
+            ('id', '=', kwargs['id']),
+            ('partner_id', '!=', False),
+            ('code', '=', kwargs['code']),
+            ('date', '>', fields.Datetime.now())
+        ], limit=1)
+
         if otp:
             return {
                 'url': otp.partner_id._get_payment_url()

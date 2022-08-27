@@ -154,4 +154,5 @@ class StudentDelete(Datamodel):
     _name = "student.delete"
     _inherit = "api.secret.keys"
 
-    vat = fields.String(required=True, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
+    vat = fields.String(required=False, allow_none=False, title="Student Citizen Number", description="Citizen number on student form", example="12345678912")
+    ref = fields.String(required=False, allow_none=False, title="Student Reference Number", description="Reference on student form", example="123456789")

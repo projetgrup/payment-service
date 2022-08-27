@@ -22,25 +22,24 @@ class Partner(models.Model):
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        for student in res:
-            if student.company_id.system == 'student' and student.parent_id:
-                templates = self.env['res.student.payment.template'].search([
-                    ('school_id','=',student.school_id.id),
-                    '|', ('class_id','=',student.class_id.id), ('class_id','=',False),
-                    ('company_id','=',student.company_id.id),
-                ])
-                if templates:
-                    val = []
-                    for template in templates:
-                        val.append({
-                            'child_id': student.id,
-                            'parent_id': student.parent_id.id,
-                            'term_id': template.term_id.id,
-                            'payment_type_id': template.payment_type_id.id,
-                            'amount': template.amount,
-                            'company_id': student.company_id.id,
-                        })
-                    self.env['payment.item'].sudo().create(val)
+        if res.company_id.system == 'student' and res.parent_id:
+            templates = self.env['res.student.payment.template'].search([
+                ('school_id','=',res.school_id.id),
+                '|', ('class_id','=',res.class_id.id), ('class_id','=',False),
+                ('company_id','=',res.company_id.id),
+            ])
+            if templates:
+                val = []
+                for template in templates:
+                    val.append({
+                        'child_id': res.id,
+                        'parent_id': res.parent_id.id,
+                        'term_id': template.term_id.id,
+                        'payment_type_id': template.payment_type_id.id,
+                        'amount': template.amount,
+                        'company_id': res.company_id.id,
+                    })
+                self.env['payment.item'].sudo().create(val)
         return res
 
     def _get_name(self):

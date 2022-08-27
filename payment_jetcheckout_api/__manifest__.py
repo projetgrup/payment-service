@@ -13,6 +13,7 @@
         'base_rest_datamodel',
     ],
     'data': [
+        'data/data.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/templates.xml',
