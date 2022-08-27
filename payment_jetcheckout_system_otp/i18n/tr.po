@@ -241,8 +241,8 @@ msgstr "Kod"
 #. openerp-web
 #: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
 #, python-format
-msgid "Code must be 6 digits"
-msgstr "Yetki kodu 6 haneli olmalıdır"
+msgid "Code must be 4 digits"
+msgstr "Yetki kodu 4 haneli olmalıdır"
 
 #. module: payment_jetcheckout_system_otp
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__company_id

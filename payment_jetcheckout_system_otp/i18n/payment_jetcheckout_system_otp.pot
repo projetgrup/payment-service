@@ -130,7 +130,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
 #, python-format
-msgid "Code must be 6 digits"
+msgid "Code must be 4 digits"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
