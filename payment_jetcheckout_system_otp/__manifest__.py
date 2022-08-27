@@ -11,7 +11,6 @@
     'sequence': 1455,
     'category': 'Accounting/Payment Acquirers',
     'depends': [
-        'phone_validation',
         'payment_jetcheckout_system',
     ],
     'data': [

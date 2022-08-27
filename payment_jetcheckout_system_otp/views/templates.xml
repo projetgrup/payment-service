@@ -63,6 +63,7 @@
                                     <li>Email Address:<span id="email" class="ml-2" t-translations="off"/></li>
                                     <li>Phone Number:<span id="phone" class="ml-2" t-translations="off"/></li>
                                     <li>Citizen Number:<span id="vat" class="ml-2" t-translations="off"/></li>
+                                    <li>Student Number:<span id="ref" class="ml-2" t-translations="off"/></li>
                                 </ul>
                             </div>
                         </div>

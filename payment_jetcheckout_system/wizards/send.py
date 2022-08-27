@@ -192,6 +192,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
     def send(self):
         self = self.sudo()
         selections = self.selection.mapped('code')
+        partner_ids = self.env.context.get('partners', self.partner_ids)
         mail_template = 'email' in selections and self.mail_template_id or False
         sms_template = 'sms' in selections and self.sms_template_id or False
         comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
@@ -202,7 +203,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         mail_messages = []
         sms_messages = []
 
-        for partner in self.partner_ids:
+        for partner in partner_ids:
             if mail_template:
                 values = mail_template.with_context(template_preview_lang=partner.lang).generate_email(partner.id, ['subject', 'body_html', 'email_from', 'reply_to', 'email_to', 'scheduled_date'])
                 mail_values = {
@@ -266,11 +267,11 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                             'notification_type': 'sms',
                             'sms_id': sending.id,
                             'is_read': True,
-                            'notification_status': 'ready' if sending.state == 'outgoing' else 'exception',
-                            'failure_type': '' if sending.state == 'outgoing' else sending.failure_type,
+                            'notification_status': 'ready',
+                            'failure_type': '',
                         })]
                     })
                 self.env['mail.message'].create(messages)
                 self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
                 sent_values['date_sms_sent'] = now
-            self.partner_ids.write(sent_values)
+            partner_ids.write(sent_values)

@@ -87,7 +87,9 @@ class SmsApi(models.AbstractModel):
         if code.startswith('0'):
             return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
         else:
-            if self.env.context.get('no_exception'):
+            if self.env.context.get('otp'):
+                return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
+            elif self.env.context.get('no_exception'):
                 return []
             else:
                 raise ERRORS.get(code, ERRORS[None])
