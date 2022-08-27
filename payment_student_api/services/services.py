@@ -193,24 +193,25 @@ class StudentAPIService(Component):
         tags: ['Create Methods']
         """
         StudentResponse = self.env.datamodels["student.response"]
-        company = self.env.company.id
-        key = self._auth(company, params.application_key, params.secret_key)
+        company = self.env.company
+        key = self._auth(company.id, params.application_key, params.secret_key)
         if not key:
             return Response("Application key and secret key are not matched", status=401, mimetype="application/json")
 
-        school = self.env['res.student.school'].sudo().search([('code', '=', params.school_code)], limit=1)
+        school = self.env['res.student.school'].sudo().search([('company_id', '=', company.id), ('code', '=', params.school_code)], limit=1)
         if not school:
             return Response("No school found with given code", status=404, mimetype="application/json")
 
         bursary = self.env['res.student.bursary'].sudo()
         if hasattr(params, 'bursary_code') and params.bursary_code:
-            bursary = bursary.search([('code', '=', params.bursary_code)], limit=1)
+            bursary = bursary.search([('company_id', '=', company.id), ('code', '=', params.bursary_code)], limit=1)
 
-        classroom = self.env['res.student.class'].sudo().search([('code', '=', params.class_code)], limit=1)
+        classroom = self.env['res.student.class'].sudo().search([('company_id', '=', company.id), ('code', '=', params.class_code)], limit=1)
         if not classroom:
             return Response("No classroom found with given code", status=404, mimetype="application/json")
 
-        parent = self.env['res.partner'].sudo().search([('email', '=', params.parent_email)], limit=1)
+        categ_api = self.env.ref('payment_jetcheckout_api.categ_api')
+        parent = self.env['res.partner'].sudo().search([('company_id', '=', company.id), ('email', '=', params.parent_email)], limit=1)
         if not parent:
             parent = self.env['res.partner'].sudo().create({
                 'name': params.parent_name,
@@ -218,13 +219,15 @@ class StudentAPIService(Component):
                 'mobile': params.parent_mobile,
                 'is_company': True,
                 'parent_id': False,
+                'company_id': company.id,
+                'category_id': [(6, 0, categ_api.ids)],
             })
 
         if not params.ref:
             return Response("No ref found with given code", status=404, mimetype="application/json")
 
         students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo()
-        student = students.search([('ref', '=', params.ref)])
+        student = students.search([('company_id', '=', company.id), ('ref', '=', params.ref)])
         if len(student) > 1:
             return Response("There is more than one student with the same characteristics in the records. Please contact the system administrator.", status=400, mimetype="application/json")
 
@@ -237,11 +240,26 @@ class StudentAPIService(Component):
             'class_id': classroom.id,
             'parent_id': parent.id,
             'is_company': False,
+            'company_id': company.id,
+            'category_id': [(6, 0, categ_api.ids)],
         }
         if student:
             student.write(vals)
         else:
             student = students.create(vals)
+
+        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
+        type_sms = self.env.ref('payment_jetcheckout_system.send_type_sms')
+        mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
+        sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
+        sending = self.env['payment.acquirer.jetcheckout.send'].sudo().with_context(partners=parent).create({
+            'selection': [(6, 0, type_email.ids + type_sms.ids)],
+            'type_ids': [(6, 0, type_email.ids + type_sms.ids)],
+            'mail_template_id': mail_template.id,
+            'sms_template_id': sms_template.id,
+            'company_id': company.id,
+        })
+        sending.send()
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
         return StudentResponse(students=students, response_code=0, response_message='Success')
@@ -261,13 +279,23 @@ class StudentAPIService(Component):
         if not key:
             return Response("Application key and secret key are not matched", status=401, mimetype="application/json")
 
-        student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('vat', '=ilike', '%%%s' % params.vat)], limit=1)
-        if not student:
-            return Response("No student found with given citizen number", status=404, mimetype="application/json")
-        if len(student.payment_ids) + len(student.paid_ids) > 0:
-            return Response("Student who has payment items cannot be deleted", status=400, mimetype="application/json")
+        if hasattr(params, 'vat') and params.vat:
+            student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('parent_id', '!=', False), ('vat', '=ilike', '%%%s' % params.vat)], limit=1)
+        elif hasattr(params, 'ref') and params.ref:
+            student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('parent_id', '!=', False), ('ref', '=', params.ref)], limit=1)
+        else:
+            return Response("Student citizen number or reference number must be provided", status=400, mimetype="application/json")
 
-        student.unlink()
+        if not student:
+            return Response("No student found with given parameters", status=404, mimetype="application/json")
+        if self.env['payment.item'].sudo().search_count([('company_id', '=', company), ('child_id', '=', student.id), ('paid', '=', True)]):
+            return Response("Student who has paid items cannot be deleted", status=400, mimetype="application/json")
+
+        student.write({'active': False})
+        student.message_post(body=_('Student has been archieved from API'))
+        if not self.env['res.partner'].sudo().search_count([('company_id', '=', company), ('parent_id', '=', student.parent_id.id), ('active', '=', True)]):
+            student.parent_id.write({'active': False})
+            student.parent_id.message_post(body=_('Student has been archieved from API'))
         return Response("Deleted", status=204, mimetype="application/json")
 
     # PRIVATE METHODS

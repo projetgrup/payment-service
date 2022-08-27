@@ -304,7 +304,6 @@ class Partner(models.Model):
         mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
         sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
         res = self.env['payment.acquirer.jetcheckout.send'].create({
-            'partner_ids': [(6, 0, self.ids)],
             'selection': [(6, 0, type_email.ids)],
             'type_ids': [(6, 0, type_email.ids)],
             'mail_template_id': mail_template.id,

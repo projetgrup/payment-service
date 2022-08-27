@@ -30,6 +30,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             self.$email = document.getElementById('email');
             self.$phone = document.getElementById('phone');
             self.$vat= document.getElementById('vat');
+            self.$ref= document.getElementById('ref');
             self.$countdown = document.getElementById('countdown');
             self.$next.addEventListener('click', self._onSend.bind(self));
             self.$previous.addEventListener('click', self._onPrevious.bind(self));
@@ -84,6 +85,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             self.$email.innerHTML = result.email;
             self.$phone.innerHTML = result.phone;
             self.$vat.innerHTML = result.vat;
+            self.$ref.innerHTML = result.ref;
             if (self.page !== 1) {
                 self.page = 1;
                 self.$next.classList.add('d-none');
@@ -94,7 +96,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             framework.hideLoading();
         }).guardedCatch(function (error) {
             self.displayNotification({
-                type: 'error',
+                type: 'danger',
                 title: _t('Error'),
                 message: _t('An error occured. Please contact with your system administrator.'),
             });
@@ -147,7 +149,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             }
         }).guardedCatch(function (error) {
             self.displayNotification({
-                type: 'error',
+                type: 'danger',
                 title: _t('Error'),
                 message: _t('An error occured. Please contact with your system administrator.'),
             });
