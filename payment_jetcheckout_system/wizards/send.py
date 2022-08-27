@@ -190,9 +190,10 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         self.type_ids = self.selection
 
     def send(self):
-        authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
-        user = self.env['res.users'].search([('company_id', '=', self.company_id.id), ('partner_id.category_id', 'in', [authorized.id])], limit=1)
+        authorized = self.sudo().env.ref('payment_jetcheckout_system.categ_authorized')
+        user = self.env['res.users'].sudo().search([('company_id', '=', self.company_id.id), ('partner_id.category_id', 'in', [authorized.id])], limit=1)
         self = self.sudo().with_user(user or self.env.user)
+
         selections = self.selection.mapped('code')
         partner_ids = self.env.context.get('partners', self.partner_ids)
         mail_template = 'email' in selections and self.mail_template_id or False
