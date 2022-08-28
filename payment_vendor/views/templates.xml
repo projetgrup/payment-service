@@ -8,7 +8,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
-            <t t-set="payments" t-value="parent.payment_ids"/>
+            <t t-set="payments" t-value="parent.payable_ids"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
             <t t-set="authorized" t-value="parent.child_ids and parent.child_ids[0]"/>
             <div class="header row mx-0 card border p-2 px-lg-5">

@@ -197,8 +197,8 @@
             <field name="company_id" groups="base.group_multi_company"/>
             <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
             <separator/>
-            <filter name="filterby_payment" string="Has Payments" domain="[('payment_ids', '=', '')]"/>
-            <filter name="filterby_no_payment" string="Has No Payments" domain="[('payment_ids', '!=', '')]"/>
+            <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>
+            <filter name="filterby_no_payment" string="Has No Payments" domain="[('payable_ids', '=', False)]"/>
             <separator/>
             <filter name="filterby_email_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
             <filter name="filterby_email_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>

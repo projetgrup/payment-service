@@ -8,7 +8,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-student navbar-light'"/>
-            <t t-set="payments" t-value="parent.payment_ids"/>
+            <t t-set="payments" t-value="parent.payable_ids"/>
             <t t-set="payment_types" t-value="payments.mapped('payment_type_id')"/>
             <div class="px-4">
                 <div class="row mx-0 my-4">
