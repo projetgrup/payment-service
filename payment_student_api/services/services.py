@@ -248,6 +248,8 @@ class StudentAPIService(Component):
         else:
             student = students.create(vals)
 
+        authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
+        user = self.env['res.users'].sudo().search([('company_id', '=', company.id), ('partner_id.category_id', 'in', [authorized.id])], limit=1) or self.env.user
         type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
         type_sms = self.env.ref('payment_jetcheckout_system.send_type_sms')
         mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
@@ -259,7 +261,7 @@ class StudentAPIService(Component):
             'sms_template_id': sms_template.id,
             'company_id': company.id,
         })
-        sending.send()
+        sending.with_user(user).send()
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
         return StudentResponse(students=students, response_code=0, response_message='Success')

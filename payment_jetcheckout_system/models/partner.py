@@ -11,16 +11,24 @@ class Partner(models.Model):
 
     def _compute_payment(self):
         for partner in self:
-            if partner.parent_id:
-                partner.payable_count = len(partner.parent_id.payment_ids)
-                partner.paid_count = len(partner.parent_id.paid_ids)
-                partner.transaction_done_count = len(partner.parent_id.transaction_done_ids)
-                partner.transaction_failed_count = len(partner.parent_id.transaction_failed_ids)
-            else:
-                partner.payable_count = len(partner.payment_ids)
-                partner.paid_count = len(partner.paid_ids)
-                partner.transaction_done_count = len(partner.transaction_done_ids)
-                partner.transaction_failed_count = len(partner.transaction_failed_ids)
+            item_ids = self.env['payment.item'].search([('child_id' if partner.parent_id else 'parent_id', '=', partner.id)])
+            transaction_ids = item_ids.mapped('transaction_ids')
+            partner.payable_ids = item_ids.filtered(lambda x: x.paid == False)
+            partner.paid_ids = item_ids.filtered(lambda x: x.paid != False)
+            partner.transaction_failed_ids = transaction_ids.filtered(lambda x: x.state != 'done')
+            partner.transaction_done_ids = transaction_ids.filtered(lambda x: x.state == 'done')
+            partner.payable_count = len(partner.payable_ids)
+            partner.paid_count = len(partner.paid_ids)
+            partner.transaction_done_count = len(partner.transaction_done_ids)
+            partner.transaction_failed_count = len(partner.transaction_failed_ids)
+
+    def _search_payment(self, operator, operand):
+        payables = self.env['payment.item'].search([('paid', '=', False)]).mapped('parent_id')
+        if operator == '!=':
+            return [('id', 'in', payables.ids)]
+        if operator == '=':
+            return [('id', 'not in', payables.ids)]
+        return [('id', '=', 0)]
 
     @api.onchange('parent_id')
     def _compute_sibling(self):
@@ -52,10 +60,10 @@ class Partner(models.Model):
                 partner.is_portal = False
 
     system = fields.Selection(related='company_id.system', store=True, readonly=True)
-    payment_ids = fields.One2many('payment.item', 'parent_id', string='Payable Items', copy=False, domain=[('paid','=',False)])
-    paid_ids = fields.One2many('payment.item', 'parent_id', string='Paid Items', copy=False, domain=[('paid','!=',False)])
-    transaction_done_ids = fields.One2many('payment.transaction', 'partner_id', string='Done Transactions', copy=False, domain=[('state','=','done')])
-    transaction_failed_ids = fields.One2many('payment.transaction', 'partner_id', string='Failed Transactions', copy=False, domain=[('state','!=','done')])
+    payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment')
+    paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment')
+    transaction_done_ids = fields.One2many('payment.transaction', string='Done Transactions', copy=False, compute='_compute_payment')
+    transaction_failed_ids = fields.One2many('payment.transaction', string='Failed Transactions', copy=False, compute='_compute_payment')
     sibling_ids = fields.One2many('res.partner', compute='_compute_sibling')
     paid_count = fields.Integer(string='Items Paid', compute='_compute_payment')
     payable_count = fields.Integer(string='Items To Pay', compute='_compute_payment')
@@ -243,11 +251,10 @@ class Partner(models.Model):
         self.ensure_one()
         system = self.company_id and self.company_id.system or self.env.context.get('active_system')
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
+        action['domain'] = [('id', 'in', self.payable_ids.ids)]
         if self.parent_id:
-            action['domain'] = [('child_id', '=', self.id)]
             action['context'] = {'default_child_id': self.id, 'search_default_filterby_payable': True, 'domain': self.ids}
         else:
-            action['domain'] = [('parent_id', '=', self.id)]
             action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_payable': True}
         return action
 
@@ -255,26 +262,23 @@ class Partner(models.Model):
         self.ensure_one()
         system = self.company_id and self.company_id.system or self.env.context.get('active_system')
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
+        action['domain'] = [('id', 'in', self.paid_ids.ids)]
         if self.parent_id:
-            action['domain'] = [('child_id', '=', self.id)]
             action['context'] = {'default_child_id': self.id, 'search_default_filterby_paid': True, 'domain': self.ids, 'create': False, 'edit': False, 'delete': False}
         else:
-            action['domain'] = [('parent_id', '=', self.id)]
             action['context'] = {'domain': self.child_ids.ids, 'search_default_filterby_paid': True, 'create': False, 'edit': False, 'delete': False}
         return action
 
     def action_transaction_done(self):
         self.ensure_one()
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
-        partner_id = self.parent_id.id or self.id
-        action['domain'] = [('state', '=', 'done'), ('partner_id', '=', partner_id)]
+        action['domain'] = [('id', 'in', self.transaction_done_ids.ids)]
         return action
 
     def action_transaction_failed(self):
         self.ensure_one()
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
-        partner_id = self.parent_id.id or self.id
-        action['domain'] = [('state', '!=', 'done'), ('partner_id', '=', partner_id)]
+        action['domain'] = [('id', 'in', self.transaction_failed_ids.ids)]
         return action
 
     def action_share_link(self):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 
 
@@ -190,10 +190,8 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         self.type_ids = self.selection
 
     def send(self):
-        authorized = self.sudo().env.ref('payment_jetcheckout_system.categ_authorized')
-        user = self.env['res.users'].sudo().search([('company_id', '=', self.company_id.id), ('partner_id.category_id', 'in', [authorized.id])], limit=1)
-        self = self.sudo().with_user(user or self.env.user)
-
+        user = self.env.user
+        self = self.sudo()
         selections = self.selection.mapped('code')
         partner_ids = self.env.context.get('partners', self.partner_ids)
         mail_template = 'email' in selections and self.mail_template_id or False
@@ -202,7 +200,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.company_id.id)], limit=1).id
         sms_provider_id = self.env['sms.provider'].get(self.company_id.id).id
-        reply_to = user.email_formatted
+        email_from = user.email_formatted
         mail_messages = []
         sms_messages = []
 
@@ -216,7 +214,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                     'recipient_ids': [(6, 0, (values['res_id'],))],
                     'partner_ids': [(6, 0, (values['res_id'],))],
                     'subject': values['subject'],
-                    'email_from': values['email_from'],
+                    'email_from': email_from,
                     'email_to': values['email_to'],
                     'body': values['body'],
                     'body_html': values['body'],
@@ -224,7 +222,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                     'mail_server_id': mail_server_id or values['mail_server_id'],
                     'auto_delete': values['auto_delete'],
                     'scheduled_date': values['scheduled_date'],
-                    'reply_to': reply_to,
+                    'reply_to': email_from,
                     'state': 'outgoing',
                     'is_notification': True,
                     'notification_ids': [(0, 0, {
