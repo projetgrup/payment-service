@@ -205,43 +205,44 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         sms_messages = []
 
         for partner in partner_ids:
-            if mail_template:
-                values = mail_template.with_context(template_preview_lang=partner.lang).generate_email(partner.id, ['subject', 'body_html', 'email_from', 'reply_to', 'email_to', 'scheduled_date'])
-                mail_values = {
-                    'message_type': 'comment',
-                    'subtype_id': comment,
-                    'res_id': values['res_id'],
-                    'recipient_ids': [(6, 0, (values['res_id'],))],
-                    'partner_ids': [(6, 0, (values['res_id'],))],
-                    'subject': values['subject'],
-                    'email_from': email_from,
-                    'email_to': values['email_to'],
-                    'body': values['body'],
-                    'body_html': values['body'],
-                    'model': values['model'],
-                    'mail_server_id': mail_server_id or values['mail_server_id'],
-                    'auto_delete': values['auto_delete'],
-                    'scheduled_date': values['scheduled_date'],
-                    'reply_to': email_from,
-                    'state': 'outgoing',
-                    'is_notification': True,
-                    'notification_ids': [(0, 0, {
-                        'res_partner_id': values['res_id'],
-                        'notification_type': 'email',
-                    })]
-                }
-                mail_messages.append(mail_values)
+            if partner.payable_count > 0:
+                if mail_template:
+                    values = mail_template.with_context(template_preview_lang=partner.lang).generate_email(partner.id, ['subject', 'body_html', 'email_from', 'reply_to', 'email_to', 'scheduled_date'])
+                    mail_values = {
+                        'message_type': 'comment',
+                        'subtype_id': comment,
+                        'res_id': values['res_id'],
+                        'recipient_ids': [(6, 0, (values['res_id'],))],
+                        'partner_ids': [(6, 0, (values['res_id'],))],
+                        'subject': values['subject'],
+                        'email_from': email_from,
+                        'email_to': values['email_to'],
+                        'body': values['body'],
+                        'body_html': values['body'],
+                        'model': values['model'],
+                        'mail_server_id': mail_server_id or values['mail_server_id'],
+                        'auto_delete': values['auto_delete'],
+                        'scheduled_date': values['scheduled_date'],
+                        'reply_to': email_from,
+                        'state': 'outgoing',
+                        'is_notification': True,
+                        'notification_ids': [(0, 0, {
+                            'res_partner_id': values['res_id'],
+                            'notification_type': 'email',
+                        })]
+                    }
+                    mail_messages.append(mail_values)
 
-            if sms_template:
-                body = sms_template._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
-                sms_values = {
-                    'partner_id': partner.id,
-                    'body': body,
-                    'number': partner.mobile,
-                    'state': 'outgoing',
-                    'provider_id': sms_provider_id,
-                }
-                sms_messages.append(sms_values)
+                if sms_template:
+                    body = sms_template._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
+                    sms_values = {
+                        'partner_id': partner.id,
+                        'body': body,
+                        'number': partner.mobile,
+                        'state': 'outgoing',
+                        'provider_id': sms_provider_id,
+                    }
+                    sms_messages.append(sms_values)
 
         if mail_messages or sms_messages:
             sent_values = {}

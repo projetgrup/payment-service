@@ -60,7 +60,7 @@ class PartnerOtp(models.Model):
             'auto_delete': values['auto_delete'],
             'scheduled_date': values['scheduled_date'],
             'reply_to': reply_to,
-            'state': 'sent',
+            'state': 'outgoing',
             'is_notification': True,
             'notification_ids': [(0, 0, {
                 'res_partner_id': self.partner_id.id,
