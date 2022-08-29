@@ -15,12 +15,12 @@
         line-height: 60px;
     }
 
-    a#previous {
+    button#previous {
         top: 10px;
         left: 10px;
         z-index: 9;
     }
-    a#submit, a#next {
+    button#submit, button#next {
         top: 10px;
         right: 10px;
         z-index: 9;
