@@ -48,8 +48,8 @@ class PartnerOtp(models.Model):
             'message_type': 'comment',
             'subtype_id': comment,
             'res_id': self.partner_id.id,
-            'recipient_ids': [(6, 0, (self.partner_id.id,))],
-            'partner_ids': [(6, 0, (self.partner_id.id,))],
+            #'recipient_ids': [(6, 0, (self.partner_id.id,))],
+            #'partner_ids': [(6, 0, (self.partner_id.id,))],
             'subject': values['subject'],
             'email_from': values['email_from'],
             'email_to': values['email_to'],
@@ -100,4 +100,5 @@ class PartnerOtp(models.Model):
                     'failure_type': '',
                 })]
             })
-            sms.with_context(otp=True, no_exception=True)._send()
+            sms.with_context(otp=True, no_exception=True)._send() # send otp sms
+            #sms.with_context(no_exception=True)._send() # send normal sms

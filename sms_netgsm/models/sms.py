@@ -52,8 +52,9 @@ class SmsApi(models.AbstractModel):
         originator = provider.originator
 
         if self.env.context.get('otp'):
+            # when sending otp messages, manipulate numbers with removing country code and spaces
             url = OTPSENDURL
-            blocks = [f"<msg>{message['content']}</msg><no>{message['number']}</no>" for message in messages]
+            blocks = [f"<msg>{message['content']}</msg><no>{message['number'].replace(' ','')[-10:]}</no>" for message in messages]
             data = f"""<?xml version="1.0" encoding="UTF-8"?>
                 <mainbody>
                     <header>    

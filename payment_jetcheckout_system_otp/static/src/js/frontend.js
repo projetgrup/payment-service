@@ -53,7 +53,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
-                message: _t('Please enter your email address, phone number or citizen number'),
+                message: _t('Please enter your email address or phone number'),
             });
             this.$login.focus();
             return;

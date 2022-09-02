@@ -2,6 +2,7 @@
 import json
 import random
 import ast
+import pytz
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -70,7 +71,6 @@ class PaymentDasboard(models.Model):
         }
 
     def _get_graph(self):
-        now = fields.Datetime.now()
         if self.period == 'days':
             datas = [
                 {'label': '00:00 - 03:59', 'value': 0.0, 'type': 'past'},
@@ -138,9 +138,9 @@ class PaymentDasboard(models.Model):
         index = 0
         length = len(datas)
         companies = tuple(self.env.companies.ids + [0])
-        date_first, date_last = self._get_dates()
-        date_first = datetime.combine(date_first, datetime.min.time())
-        date_last = datetime.combine(date_last, datetime.min.time())
+        dates = self._get_dates()
+        date_first = datetime.combine(dates['start'] + dates['offset'], datetime.min.time())
+        date_last = datetime.combine(dates['end'] + dates['offset'], datetime.min.time())
         for i in range(0, length):
             date_start = date_first + relativedelta(**{period: i * interval})
             if i == length - 1:
@@ -148,10 +148,10 @@ class PaymentDasboard(models.Model):
             else:
                 date_end = date_start + relativedelta(**{period: interval})
 
-            if date_start <= now < date_end:
+            if date_start <= dates['now'] < date_end:
                 index = i
 
-            query.append("(" + template % (i, companies) + " AND create_date >= '" + date_start.strftime(format) + "' AND create_date < '" + date_end.strftime(format) + "')")
+            query.append("(" + template % (i, companies) + " AND create_date >= '" + (date_start - dates['offset']).strftime(format) + "' AND create_date < '" + (date_end - dates['offset']).strftime(format) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
         result = self.env.cr.dictfetchall()
@@ -174,14 +174,21 @@ class PaymentDasboard(models.Model):
         return [{'values': datas, 'title': _('Transactions'), 'key': graph_key, 'is_sample_data': is_sample_data}]
 
     def _get_dates(self):
-        today = fields.Date.today()
+        now = fields.Datetime.now()
+        timezone = self._context.get('tz') or self.env.user.tz
+        try:
+            tz = pytz.timezone(timezone)
+        except:
+            tz = pytz.timezone('UTC')
+        offset = tz.utcoffset(now)
+
         start = self.offset
         end = start - self.limit
         if self.period == 'days':
             vals_start = {'days': start}
             vals_end = {'days': end}
         elif self.period == 'weeks':
-            factor = 1 if today.weekday() else 0
+            factor = 1 if now.weekday() else 0
             vals_start = {'weekday': 0, 'weeks': start + factor}
             vals_end = {'weekday':0, 'weeks': end + factor}
         elif self.period == 'months':
@@ -192,17 +199,22 @@ class PaymentDasboard(models.Model):
             vals_end = {'day': 1, 'month': 1, 'years': end}
         else:
             raise UserError(_('This time period is not implemented'))
-        date_start = today - relativedelta(**vals_start)
-        date_end = today - relativedelta(**vals_end)
-        return date_start, date_end
+        date_start = now - relativedelta(**vals_start)
+        date_end = now - relativedelta(**vals_end)
+        return {
+            'start': (date_start + offset).replace(hour=0, minute=0, second=0, microsecond=0) - offset,
+            'end': (date_end + offset).replace(hour=0, minute=0, second=0, microsecond=0) - offset,
+            'offset': offset,
+            'now': now,
+        }
 
     def _get_domain(self):
-        date_start, date_end = self._get_dates()
+        dates = self._get_dates()
         companies = self.env.companies.ids
-        return [('company_id', 'in', companies), ('create_date', '>=', date_start), ('create_date', '<', date_end), ('state', 'in', ('done', 'pending', 'error'))]
+        return [('company_id', 'in', companies), ('create_date', '>=', dates['start']), ('create_date', '<', dates['end']), ('state', 'in', ('done', 'pending', 'error'))]
 
     def _get_domain_query(self):
-        date_start, date_end = self._get_dates()
+        dates = self._get_dates()
         companies = tuple(self.env.companies.ids + [0])
         query = """
             SELECT
@@ -222,7 +234,7 @@ class PaymentDasboard(models.Model):
             AND t.company_id IN %s
             GROUP BY c.name, c.id
         """
-        self.env.cr.execute(query, (date_start, date_end, companies))
+        self.env.cr.execute(query, (dates['start'], dates['end'], companies))
         return self.env.cr.dictfetchall()
 
     def action_transactions(self):
