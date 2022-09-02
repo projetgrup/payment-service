@@ -75,10 +75,10 @@ class Partner(models.Model):
         if self.env.user.has_group('payment_student.group_student_user'):
             for line in self:
                 if line.vat:
-                    student = self.search([('id','!=',self.id),('vat','=',line.vat),('company_id','=',line.company_id.id)], limit=1)
+                    student = self.search([('id','!=',line.id),('vat','=',line.vat),('company_id','=',line.company_id.id)], limit=1)
                     if student:
                         raise UserError(_('There is already a student with the same Vat Number - %s') % student.name)
                 if line.email:
-                    parent = self.search([('id','!=',self.id),('email','=',line.email),('company_id','=',line.company_id.id)], limit=1)
+                    parent = self.search([('id','!=',line.id),('email','=',line.email),('company_id','=',line.company_id.id)], limit=1)
                     if parent:
                         raise UserError(_('There is already a parent with the same email - %s') % line.email)
