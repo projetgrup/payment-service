@@ -35,9 +35,8 @@ AND (
     email = '{login}'
     OR RIGHT(REPLACE(phone, ' ', ''), 10) = '{login}'
     OR RIGHT(REPLACE(mobile, ' ', ''), 10) = '{login}'
-    OR id IN (SELECT id FROM res_partner WHERE ref = '{login}')
-    OR id IN (SELECT id FROM res_partner WHERE vat ILIKE '%{login}')
 )
+LIMIT 1
 """
         request.env.cr.execute(query)
         result = request.env.cr.fetchone()

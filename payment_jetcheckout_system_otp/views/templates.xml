@@ -11,22 +11,22 @@
             <div class="oe_sign_form oe_otp_form card mx-auto my-5">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="id" id="id" value="0"/>
-                <button id="next" class="btn-primary position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></button>
+                <button id="next" class="btn-primary bg-primary text-white position-absolute">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></button>
                 <button id="previous" class="btn-secondary position-absolute d-none"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</button>
-                <button id="submit" class="btn-primary position-absolute d-none">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></button>
+                <button id="submit" class="btn-primary bg-primary text-white position-absolute d-none">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></button>
                 <div class="card-grid mt-lg-0 mt-5">
                     <div id="card0" class="field-card">
                         <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Credentials</div>
                         <div class="col-md-6 pb-4 pb-md-0">
-                            <div class="field-container form-group text-center small">
-                                Please enter one of your email address, phone number or citizen number.
+                            <div class="field-container form-group text-center">
+                                Please enter one of your email address or phone number.
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="field-container form-group field-login">
                                 <input type="text" name="login" t-att-value="login" id="login" class="form-control form-control-sm" autocapitalize="off"/>
                                 <span class="bar-container"/>
-                                <label for="login"><span>Email, phone or citizen number</span></label>
+                                <label for="login"><span>Email address or phone number</span></label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -34,7 +34,6 @@
                                 <ul>
                                     <li>test@test.com (Email address in regular format)</li>
                                     <li>5301111111 (Phone number without leading zero)</li>
-                                    <li>12345678901 (Citizen number with eleven digits)</li>
                                 </ul>
                             </div>
                         </div>

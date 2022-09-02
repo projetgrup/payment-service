@@ -32,7 +32,7 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <div style="text-align: center">
                         Your specially generated authentication code is<br/>
-                        <h1><strong><t t-out="object.code">123456</t></strong></h1><br/>
+                        <h1><strong><t t-out="object.code">1234</t></strong></h1><br/>
                         Have a nice day!
                     </div>
                 </td></tr>
