@@ -148,7 +148,6 @@ class PaymentAcquirerJetcheckout(models.Model):
         if not acquirer:
             if raise_exception:
                 raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
-            return False
         return acquirer
 
     def _get_default_payment_method_id(self):
