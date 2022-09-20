@@ -33,7 +33,8 @@ class JetcheckoutApiController(JetController):
             raise ValidationError(_('An error occured. Please restart your payment transaction.'))
         return tx
 
-    def _jetcheckout_process(self, **kwargs):
+    @staticmethod
+    def _jetcheckout_process(**kwargs):
         url, tx = super()._jetcheckout_process(**kwargs)
         if tx.jetcheckout_api_hash:
             if 'hash' in request.session:
