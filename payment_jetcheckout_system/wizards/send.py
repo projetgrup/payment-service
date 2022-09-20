@@ -212,7 +212,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                         'message_type': 'comment',
                         'subtype_id': comment,
                         'res_id': values['res_id'],
-                        #'recipient_ids': [(6, 0, (values['res_id'],))],
+                        'recipient_ids': [(6, 0, (values['res_id'],))],
                         #'partner_ids': [(6, 0, (values['res_id'],))],
                         'subject': values['subject'],
                         'email_from': email_from,

@@ -48,7 +48,7 @@ class PartnerOtp(models.Model):
             'message_type': 'comment',
             'subtype_id': comment,
             'res_id': self.partner_id.id,
-            #'recipient_ids': [(6, 0, (self.partner_id.id,))],
+            'recipient_ids': [(6, 0, (self.partner_id.id,))],
             #'partner_ids': [(6, 0, (self.partner_id.id,))],
             'subject': values['subject'],
             'email_from': values['email_from'],

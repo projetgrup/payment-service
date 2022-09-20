@@ -7,7 +7,7 @@ class Partner(models.Model):
 
     def _compute_acquirers(self):
         for partner in self:
-            acquirers = self.env['payment.acquirer'].sudo()._get_acquirer(company=self.env.company, providers=['jetcheckout'])
+            acquirers = self.env['payment.acquirer'].sudo()._get_acquirer(company=self.env.company, providers=['jetcheckout'], raise_exception=False)
             partner.acquirer_ids = [(6, 0, acquirers.ids)]
 
     acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers')

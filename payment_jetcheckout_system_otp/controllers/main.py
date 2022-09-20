@@ -11,12 +11,10 @@ class JetcheckoutSystemOtpController(JetController):
     def jetcheckout_system_otp_login_page(self, **kwargs):
         company = request.env.company
         system = company.system
-        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         values = {
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,
-            'acquirer': acquirer,
             'system': system,
         }
         return request.render('payment_jetcheckout_system_otp.otp_login_page', values)
