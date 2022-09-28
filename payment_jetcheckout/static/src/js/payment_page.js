@@ -44,7 +44,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$payment_form = document.getElementById('o_payment_form_pay');
             self.$success_url = document.getElementById('success_url');
             self.$fail_url = document.getElementById('fail_url');
-            self.$partner = document.getElementById('partner');
+            self.$partner_id = document.getElementById('partner_id');
             self.$order = document.getElementById('order');
             self.$invoice = document.getElementById('invoice');
             self.$subscription = document.getElementById('subscription');
@@ -150,7 +150,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     }
                 });
                 self.securitycode = new IMask(self.$securitycode, {
-                    mask: '000[0]',
+                    mask: '0000',
                 });
 
                 self.cardnumber.on('accept', self.acceptCardNumber.bind(self));
@@ -288,7 +288,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         rpc.query({
             route: '/payment/card/terms',
             params: {
-                partner: this.$partner && this.$partner.value || 0
+                partner_id: this.$partner_id && this.$partner_id.value || 0
             }
         }).then(function (content) {
             new dialog(this, {
@@ -317,7 +317,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 amount: this.amount.typedValue,
                 amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                 cardnumber: this.cardnumber.typedValue,
-                partner: this.$partner && this.$partner.value || 0
+                partner_id: this.$partner_id && this.$partner_id.value || 0
             },
         }).then(function (result) {
             if ('error' in result) {
@@ -412,8 +412,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                         cardnumber: this.cardnumber.typedValue,
                         prefix: 'bin_',
-                        render: true,
-                        partner: this.$partner && this.$partner.value || 0,
+                        partner_id: this.$partner_id && this.$partner_id.value || 0,
                         s2s: !(!this.$order && !this.$invoice && !this.$subscription),
                     },
                 }).then(function (result) {
@@ -559,7 +558,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             card_family: this.$ccfamily,
             success_url: this.$success_url && this.$success_url.value || false,
             fail_url: this.$fail_url && this.$fail_url.value || false,
-            partner: this.$partner && this.$partner.value || 0,
+            partner_id: this.$partner_id && this.$partner_id.value || 0,
             order: this.$order && this.$order.value || 0,
             invoice: this.$invoice && this.$invoice.value || 0,
             subscription: this.$subscription && this.$subscription.value || 0,

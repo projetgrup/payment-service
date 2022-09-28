@@ -13,6 +13,8 @@ class ResConfigSettings(models.TransientModel):
     whitelabel_favicon = fields.Binary(string="Whitelabel Favicon Image")
     title_brand = fields.Char(string="Title Brand")
     odoo_text_replacement = fields.Char(string='Powered By Text')
+    favicon_url = fields.Char(string="Url")
+    attach_id = fields.Integer(string="Favicon Attach ID")
 
     # @api.model
     # def fields_view_get(
@@ -39,29 +41,13 @@ class ResConfigSettings(models.TransientModel):
     def get_debranding_settings(self):
         IrDefault = self.env['ir.default'].sudo()
         whitelabel_favicon = IrDefault.get('res.config.settings', "whitelabel_favicon")
-
         title_brand = IrDefault.get('res.config.settings', "title_brand")
-        if not title_brand:
-            title_brand = self.website_name
-
         odoo_text_replacement = IrDefault.get('res.config.settings', "odoo_text_replacement")
-
-        website_id = self.website_id and self.website_id.id or False
-        if not website_id:
-            website_id = self.env.context.get('website_id', False)
-
-        if whitelabel_favicon:
-            website_id = False
-
-        attach_id = self.env['ir.attachment'].sudo().search([
-                ('name', '=', 'Favicon'),
-                ('website_id', '=', website_id)
-            ])
-
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        favicon_url = base_url + '/web/image/?model=ir.attachment&id=' + str(attach_id.id) + '&field=datas'
-
+        favicon_url = IrDefault.get('res.config.settings', "favicon_url")
+        attach_id = IrDefault.get('res.config.settings', "attach_id")
         return {
+            'whitelabel_favicon': whitelabel_favicon,
+            'attach_id': attach_id,
             'title_brand': title_brand,
             'odoo_text_replacement': odoo_text_replacement,
             'favicon_url': favicon_url,
@@ -70,39 +56,30 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         IrDefault = self.env['ir.default'].sudo()
-
-        whitelabel_favicon = False
-        if self.whitelabel_favicon:
-            whitelabel_favicon = self.whitelabel_favicon.decode("utf-8")
-            IrDefault.set('res.config.settings', "whitelabel_favicon", whitelabel_favicon)
-        else:
-            IrDefault.set('res.config.settings', "whitelabel_favicon", False)
-
+        IrDefault.set('res.config.settings', "whitelabel_favicon", self.whitelabel_favicon.decode("utf-8"))
         IrDefault.set('res.config.settings', "title_brand", self.title_brand)
         IrDefault.set('res.config.settings', "odoo_text_replacement", self.odoo_text_replacement)
 
-        website_id = self.website_id and self.website_id.id or False
-        if whitelabel_favicon:
-            website_id = False
-
-        if not whitelabel_favicon and self.favicon:
-            whitelabel_favicon = self.favicon
-
-        attach_id = self.env['ir.attachment'].sudo().search([
-            ('name', '=', 'Favicon'),
-            ('website_id', '=', website_id)
-        ])
-        if attach_id:
-            attach_id.write({
-                'datas': whitelabel_favicon,
-            })
+        attach_id = self.attach_id
+        if not self.attach_id:
+            attach_id = self.env['ir.attachment'].sudo().search([('name', '=', 'Favicon')])
+            if attach_id:
+                attach_id.write({
+                    'datas': self.whitelabel_favicon.decode("utf-8"),
+                })
+            else:
+                attach_id = self.env['ir.attachment'].sudo().create({
+                    'name': 'Favicon',
+                    'datas': self.whitelabel_favicon.decode("utf-8"),
+                    'public': True
+                })
         else:
-            self.env['ir.attachment'].sudo().create({
-                'name': 'Favicon',
-                'datas': whitelabel_favicon,
-                'public': True,
-                'website_id': website_id
+            attach_id.write({
+                'datas': self.whitelabel_favicon.decode("utf-8"),
             })
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        image_url = base_url + '/web/image/?model=ir.attachment&id=' + str(attach_id.id) + '&field=datas'
+        IrDefault.set('res.config.settings', "favicon_url", image_url)
 
     @api.model
     def get_values(self):
@@ -111,9 +88,13 @@ class ResConfigSettings(models.TransientModel):
         whitelabel_favicon = IrDefault.get('res.config.settings', "whitelabel_favicon")
         title_brand = IrDefault.get('res.config.settings', "title_brand")
         odoo_text_replacement = IrDefault.get('res.config.settings', "odoo_text_replacement")
+        favicon_url = IrDefault.get('res.config.settings', 'favicon_url')
+        attach_id = IrDefault.get('res.config.settings', 'attach_id')
         res.update(
             whitelabel_favicon=whitelabel_favicon,
             title_brand=title_brand,
             odoo_text_replacement=odoo_text_replacement,
+            favicon_url=favicon_url,
+            attach_id=attach_id,
         )
         return res
