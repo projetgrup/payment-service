@@ -17,9 +17,9 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16 row">
-                                        <label for="whitelabel_favicon" string="Favicon Image"
+                                        <label for="favicon" string="Favicon Image"
                                                class="col-xs-3 col-md-3 o_light_label"/>
-                                        <field name="whitelabel_favicon" widget="image" class="float-left oe_avatar"/>
+                                        <field name="favicon" widget="image" class="float-left oe_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                     <div class="mt16">
                                         <label for="title_brand" string="Title Brand"
                                                class="col-xs-3 col-md-3 o_light_label"/>
-                                        <field name="title_brand"/>
+                                        <field name="title_brand" required="1"/>
                                     </div>
                                 </div>
                             </div>
