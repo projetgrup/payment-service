@@ -105,9 +105,12 @@ class JetcheckoutSystemController(JetController):
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
         parent = self._jetcheckout_get_parent(token)
-        user = parent.users_id
-        request.session.authenticate(request.db, user.login, {'token': token})
-        return werkzeug.utils.redirect('/my/payment')
+        if parent.is_portal:
+            user = parent.users_id
+            request.session.authenticate(request.db, user.login, {'token': token})
+            return werkzeug.utils.redirect('/my/payment')
+        else:
+            return werkzeug.utils.redirect('/p/%s' % token)
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
