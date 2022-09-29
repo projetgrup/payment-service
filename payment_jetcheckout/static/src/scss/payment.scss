@@ -666,7 +666,7 @@ input:checked + .slider:before {
 
     > input:focus {
         outline: none;
-        border-color: theme-color('primary') !important;
+        border-color: theme-color('primary');
     }
 
     > input::placeholder {
@@ -787,6 +787,25 @@ input:checked + .slider:before {
         justify-content: center;
         align-content: center;
         align-items: center;
+    }
+}
+
+.field-container.is-invalid {
+    > input {
+        border-color: theme-color('danger');
+    }
+
+    > input:focus {
+        outline: none;
+        border-color: theme-color('danger');
+    }
+
+    > label {
+        border-color: theme-color('danger');
+    }
+
+    > .bar-container:before, > .bar-container:after {
+        background: theme-color('danger');
     }
 }
 
