@@ -26,8 +26,7 @@ class JetcheckoutSystemController(JetController):
             vals.update({'jetcheckout_item_ids': [(6, 0, ids)]})
         return vals
 
-    @staticmethod
-    def _jetcheckout_process(**kwargs):
+    def _jetcheckout_process(self, **kwargs):
         url, tx = super()._jetcheckout_process(**kwargs)
         if tx.company_id.system:
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
@@ -45,7 +44,7 @@ class JetcheckoutSystemController(JetController):
             'footer': request.website.payment_footer,
             'acquirer': acquirer,
             'card_family': card_family,
-            'partner': parent.id,
+            'partner_id': parent.id,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
             'tx': transaction,
@@ -146,7 +145,7 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_get_data()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
-            ('partner_id', 'in', (values['partner'], values['contact']))
+            ('partner_id', 'in', (values['partner_id'], values['contact_id']))
         ])
         pager = request.website.pager(url='/my/payment/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
         offset = pager['offset']
