@@ -2,6 +2,7 @@
 from . import dashboard
 from . import transaction
 from . import http
+from . import model
 from . import company
 from . import mail
 from . import menu
