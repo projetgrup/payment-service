@@ -106,7 +106,7 @@ LIMIT 1
 
         if otp:
             return {
-                'url': otp.partner_id._get_payment_url()
+                'url': '/my/payment/%s' % otp.partner_id._get_token()
             }
         else:
             return {
