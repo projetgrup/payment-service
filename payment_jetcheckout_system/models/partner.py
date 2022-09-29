@@ -127,7 +127,10 @@ class Partner(models.Model):
         self.ensure_one()
         company = self.company_id or self.env.company
         website = self.env['website'].search([('company_id', '=', company.id)], limit=1)
-        return website and website.domain or self.get_base_url()
+        domain = website and website.domain or self.get_base_url() or ''
+        if domain and not domain[-1] == '/':
+            domain += '/'
+        return domain
 
     def _get_payment_url(self, shorten=False):
         self.ensure_one()
