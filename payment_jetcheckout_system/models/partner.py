@@ -123,18 +123,9 @@ class Partner(models.Model):
         self._portal_ensure_token()
         return self.access_url
 
-    def _get_website_url(self):
-        self.ensure_one()
-        company = self.company_id or self.env.company
-        website = self.env['website'].search([('company_id', '=', company.id)], limit=1)
-        domain = website and website.domain or self.get_base_url() or ''
-        if domain and not domain[-1] == '/':
-            domain += '/'
-        return domain
-
     def _get_payment_url(self, shorten=False):
         self.ensure_one()
-        url = self._get_website_url() + self._get_share_url()
+        url = self.get_base_url() + self._get_share_url()
         if shorten:
             link = self.env['link.tracker'].sudo().search_or_create({
                 'url': url,
