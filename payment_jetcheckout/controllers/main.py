@@ -526,7 +526,7 @@ class JetcheckoutController(http.Controller):
         values = self._jetcheckout_get_data()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
-            ('partner_id', 'in', (values['partner'], values['contact']))
+            ('partner_id', '=', values['partner'].id)
         ])
         pager = request.website.pager(url='/payment/card/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
         offset = pager['offset']
