@@ -24,8 +24,8 @@ class VendorPaymentController(JetSystemController):
                     payment.paid_amount = payment.amount
         return res
 
-    #def _jetcheckout_system_page_values(self, company, system, parent, transaction):
-    #    res = super()._jetcheckout_system_page_values(company, system, parent, transaction)
+    #def _jetcheckout_system_page_values(self, company, system, partner, transaction):
+    #    res = super()._jetcheckout_system_page_values(company, system, partner, transaction)
     #    if system == 'vendor':
     #        pass
     #    return res

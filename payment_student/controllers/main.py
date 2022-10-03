@@ -28,8 +28,8 @@ class StudentPaymentController(JetSystemController):
                     payment.paid_amount = payment.amount * rate
         return res
 
-    def _jetcheckout_system_page_values(self, company, system, parent, transaction):
-        res = super()._jetcheckout_system_page_values(company, system, parent, transaction)
+    def _jetcheckout_system_page_values(self, company, system, partner, transaction):
+        res = super()._jetcheckout_system_page_values(company, system, partner, transaction)
         if system == 'student':
             res.update({
                 'advance_discount': company.get_student_discount() if company.student_discount_advance_active else 0,

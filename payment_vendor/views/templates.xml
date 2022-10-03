@@ -55,6 +55,7 @@
                         <input id="order" type="hidden" value="0"/>
                         <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
                             <t t-set="no_border" t-value="True"/>
+                            <t t-set="partner" t-value="partner"/>
                         </t>
                     </div>
                     <div t-else="" class="row justify-content-center flex-column">
