@@ -33,19 +33,18 @@ class JetcheckoutSystemController(JetController):
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx
 
-    def _jetcheckout_system_page_values(self, company, system, parent, transaction):
+    def _jetcheckout_system_page_values(self, company, system, partner, transaction):
         currency = company.currency_id
         lang = get_lang(request.env)
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         card_family = self._jetcheckout_get_card_family(acquirer)
         return {
-            'parent': parent,
+            'partner': partner,
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,
             'acquirer': acquirer,
             'card_family': card_family,
-            'partner': parent.id,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
             'tx': transaction,
@@ -146,7 +145,7 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_get_data()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
-            ('partner_id', 'in', (values['partner'], values['contact']))
+            ('partner_id', 'in', (values['partner'].id, values['contact'].id))
         ])
         pager = request.website.pager(url='/my/payment/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
         offset = pager['offset']
