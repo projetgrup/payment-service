@@ -1,11 +1,15 @@
 /** @odoo-module **/
 
 import core from 'web.core';
+import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
+
 var AbstractAction = require('web.AbstractAction');
 var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
+
+SwitchCompanyMenu.template = "system.SwitchCompanyMenu";
 
 var CompanyHierarchy = AbstractAction.extend({
     hasControlPanel: true,
