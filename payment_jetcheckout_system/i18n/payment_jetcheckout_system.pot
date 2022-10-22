@@ -181,59 +181,6 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_transaction_done
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <div>\n"
-"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                        A transaction has been done for your customer <t t-out=\"ctx['partner'].name or ''\">Eric Demo</t><br/><br/>\n"
-"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"                            <a t-att-href=\"'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
-"                                <strong>Receipt</strong>\n"
-"                            </a>\n"
-"                            <a t-att-href=\"'%s/report/html/payment_jetcheckout.payment_conveyance/%s' % (ctx['url'], ctx['tx'].id)\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
-"                                <strong>Conveyance</strong>\n"
-"                            </a>\n"
-"                        </div>\n"
-"                    </div>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
-"                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"ctx['company'].email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
-"                    </t>\n"
-"                    <t t-if=\"ctx['company'].website\">\n"
-"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
-"                    </t>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"</table>"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_warning
 msgid "Access warning"
 msgstr ""
@@ -1547,16 +1494,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_failed_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_count
 msgid "Transaction Failed"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:mail.template,subject:payment_jetcheckout_system.mail_template_transaction_done
-msgid "Transaction has been done for {{ ctx['partner'].name }}"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:mail.template,name:payment_jetcheckout_system.mail_template_transaction_done
-msgid "Transaction: Done Email"
 msgstr ""
 
 #. module: payment_jetcheckout_system
