@@ -8,7 +8,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-student navbar-light'"/>
-            <t t-set="payments" t-value="parent.payable_ids"/>
+            <t t-set="payments" t-value="partner.payable_ids"/>
             <t t-set="payment_types" t-value="payments.mapped('payment_type_id')"/>
             <div class="px-4">
                 <div class="row mx-0 my-4">
@@ -16,7 +16,7 @@
                         <img t-att-src="'/web/image/website/%s/logo/' % website.id" t-att-alt="website.name" height="80"/>
                     </div>
                     <div class="col-md-6 text-right align-self-center">
-                        <span class="font-weight-bold text-secondary">Welcome <t t-esc="parent.name"/></span>
+                        <span class="font-weight-bold text-secondary">Welcome <t t-esc="partner.name"/></span>
                     </div>
                 </div>
                 <div class="row mx-0 my-4 card border shadow flex-row p-2">

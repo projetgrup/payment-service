@@ -8,9 +8,9 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
-            <t t-set="payments" t-value="parent.payable_ids"/>
+            <t t-set="payments" t-value="partner.payable_ids"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
-            <t t-set="authorized" t-value="parent.child_ids and parent.child_ids[0]"/>
+            <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
             <div class="header row mx-0 card border p-2 px-lg-5">
                 <div class="px-xl-3 mx-xl-auto mw-xl-128">
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
@@ -25,8 +25,8 @@
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
                                 <strong class="text-primary font-weight-bold">Information</strong>
                                 <p>
-                                    <t t-esc="parent.name"/><br/>
-                                    <span t-field="parent.street"/> <t t-if="parent.state_id"><span t-field="parent.state_id"/> / <span t-field="parent.country_id"/></t><t t-else=""><span t-field="parent.country_id"/></t>
+                                    <t t-esc="partner.name"/><br/>
+                                    <span t-field="partner.street"/> <t t-if="partner.state_id"><span t-field="partner.state_id"/> / <span t-field="partner.country_id"/></t><t t-else=""><span t-field="partner.country_id"/></t>
                                 </p>
                                 <strong t-if="authorized" class="text-primary font-weight-bold">Authorized</strong>
                                 <p t-if="authorized">
