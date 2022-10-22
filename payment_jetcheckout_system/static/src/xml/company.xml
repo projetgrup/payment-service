@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
+    <t t-name="system.SwitchCompanyMenu" owl="1">
+        <Dropdown class="o_switch_company_menu" position="'bottom-end'">
+            <t t-set-slot="toggler">
+                <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
+                    <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
+                </span>
+            </t>
+            <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.name.localeCompare(c2.name))" t-as="company">
+                <t t-call="web.SwitchCompanyItem">
+                    <t t-set="company" t-value="company"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
     <t t-name="company.button">
         <div class="o_list_buttons">
             <button type="button" class="btn btn-primary">Create</button>
@@ -14,5 +29,4 @@
             </div>
         </div>
     </div>
-
 </templates>
