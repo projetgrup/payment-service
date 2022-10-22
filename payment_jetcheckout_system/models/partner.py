@@ -11,8 +11,17 @@ class Partner(models.Model):
 
     def _compute_payment(self):
         for partner in self:
-            item_ids = self.env['payment.item'].search([('child_id' if partner.parent_id else 'parent_id', '=', partner.id)])
-            transaction_ids = item_ids.mapped('transaction_ids')
+            domain_items = []
+            domain_transactions = []
+            if partner.parent_id:
+                domain_items = [('child_id', '=', partner.id)]
+                domain_transactions = [('partner_id', '=', partner.id)]
+            else:
+                domain_items = [('parent_id', '=', partner.id)]
+                domain_transactions = [('partner_id', 'in', partner.child_ids.ids + [partner.id])]
+
+            item_ids = self.env['payment.item'].search(domain_items)
+            transaction_ids = self.env['payment.transaction'].search(domain_transactions)
             partner.payable_ids = item_ids.filtered(lambda x: x.paid == False)
             partner.paid_ids = item_ids.filtered(lambda x: x.paid != False)
             partner.transaction_failed_ids = transaction_ids.filtered(lambda x: x.state != 'done')

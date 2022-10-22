@@ -54,7 +54,8 @@ class ReportCompanyHierarchy(models.AbstractModel):
         companies = self.env['res.company'].browse(company_ids)
         ids = []
         if name:
-            ids.extend(self.env['res.company'].search([('id', 'in', company_ids),('name', 'not ilike', f'%{name}%')]).ids)
+            cids = self.env['res.company'].search([('id', 'in', company_ids),('name', 'not ilike', f'%{name}%')], order='name')
+            ids.extend(cids.ids)
         for company in companies:
             if company.id not in ids:
                 cids, children = self._get_children(company, companies)

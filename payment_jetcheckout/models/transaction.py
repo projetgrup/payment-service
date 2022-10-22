@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import requests
+import logging
 import json
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -165,8 +168,26 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_done_postprocess(self):
         if not self.state == 'done':
             self.write({'state': 'done'})
+            self.jetcheckout_send_done_email()
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()
+
+    def jetcheckout_send_done_email(self):
+        self.ensure_one()
+        try:
+            self.env.cr.commit()
+            template = self.env.ref('payment_jetcheckout.mail_template_transaction_done')
+            partner = self.partner_id.commercial_partner_id
+            followers = self.env['mail.followers'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+            partners = followers.mapped('partner_id')
+            context = self.env.context.copy()
+            context['partner'] = partner
+            context['tx'] = self
+            for partner in partners:
+                template.with_context(context).send_mail(partner.id, force_send=True)
+        except Exception as e:
+            self.env.cr.rollback()
+            _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))
 
     def jetcheckout_order_confirm(self):
         self.ensure_one()
@@ -178,6 +199,7 @@ class PaymentTransaction(models.Model):
             orders.filtered(lambda x: x.state not in ('sale','done')).with_context(send_email=True).action_confirm()
         except Exception as e:
             self.env.cr.rollback()
+            _logger.error('Confirming order for transaction %s is failed\n%s' % (self.reference, e))
 
     def jetcheckout_payment(self):
         self.ensure_one()
@@ -192,6 +214,7 @@ class PaymentTransaction(models.Model):
             self.write({
                 'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
             })
+            _logger.warning('Creating payment for transaction %s is failed\n%s' % (self.reference, e))
 
     def _jetcheckout_cancel_postprocess(self):
         if not self.state == 'cancel':

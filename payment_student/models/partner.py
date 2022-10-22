@@ -74,11 +74,11 @@ class Partner(models.Model):
     def _check_student_vals(self):
         if self.env.user.has_group('payment_student.group_student_user'):
             for line in self:
-                if line.vat:
+                if line.vat and not line.is_company:
                     student = self.search([('id','!=',line.id),('vat','=',line.vat),('company_id','=',line.company_id.id)], limit=1)
                     if student:
                         raise UserError(_('There is already a student with the same Vat Number - %s') % student.name)
-                if line.email:
+                elif line.email and line.is_company:
                     parent = self.search([('id','!=',line.id),('email','=',line.email),('company_id','=',line.company_id.id)], limit=1)
                     if parent:
                         raise UserError(_('There is already a parent with the same email - %s') % line.email)
