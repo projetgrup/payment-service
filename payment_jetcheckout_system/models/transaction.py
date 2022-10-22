@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+import logging
 from datetime import datetime
+from odoo import fields, models
+
+_logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
@@ -27,4 +30,25 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
+        self.jetcheckout_send_done_email()
         self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
+
+    def jetcheckout_send_done_email(self):
+        self.ensure_one()
+        try:
+            self.env.cr.commit()
+            template = self.env.ref('payment_jetcheckout_system.mail_template_transaction_done')
+            partner = self.partner_id.commercial_partner_id
+            followers = self.env['mail.followers'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+            partners = followers.mapped('partner_id')
+            context = self.env.context.copy()
+            context['partner'] = partner
+            context['tx'] = self
+            context['company'] = self.env.company
+            context['url'] = self.jetcheckout_website_id.domain
+            values = {'mail_server_id': context['company'].mail_server_id.id}
+            for partner in partners:
+                template.with_context(context).send_mail(partner.id, force_send=True, email_values=values)
+        except Exception as e:
+            self.env.cr.rollback()
+            _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))

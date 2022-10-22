@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-05 09:17+0000\n"
-"PO-Revision-Date: 2022-07-05 09:17+0000\n"
+"POT-Creation-Date: 2022-10-22 13:28+0000\n"
+"PO-Revision-Date: 2022-10-22 13:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -181,6 +181,59 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_transaction_done
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        A transaction has been done for your customer <t t-out=\"ctx['partner'].name or ''\">Eric Demo</t><br/><br/>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Receipt</strong>\n"
+"                            </a>\n"
+"                            <a t-att-href=\"'%s/report/html/payment_jetcheckout.payment_conveyance/%s' % (ctx['url'], ctx['tx'].id)\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Conveyance</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_warning
 msgid "Access warning"
 msgstr ""
@@ -224,6 +277,21 @@ msgid "Amount<br/>(All / Success)"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
+#, python-format
+msgid "An error occured."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "April"
@@ -242,8 +310,18 @@ msgid "August"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:res.partner.category,name:payment_jetcheckout_system.categ_authorized
+msgid "Authorized"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__graph_type__bar
 msgid "Bar"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_base
+msgid "Base"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -623,6 +701,7 @@ msgid "Internal User"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__is_admin
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__is_admin
 msgid "Is Admin"
 msgstr ""
@@ -776,6 +855,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_ir_mail_server
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__mail_server_id
 msgid "Mail Server"
 msgstr ""
 
@@ -977,8 +1057,8 @@ msgid "Payable"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_ids
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payable_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payable_ids
 msgid "Payable Items"
 msgstr ""
 
@@ -1008,6 +1088,18 @@ msgstr ""
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_item_ids
 msgid "Payment Items"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_link
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Payment Link"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Payment Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1045,6 +1137,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
 msgid "Payment transactions are listed here"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_account_payment
+msgid "Payments"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1247,18 +1344,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Settings"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Payment Page"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_link
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Payment Link"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1465,6 +1550,16 @@ msgid "Transaction Failed"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_transaction_done
+msgid "Transaction has been done for {{ ctx['partner'].name }}"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_transaction_done
+msgid "Transaction: Done Email"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_transaction
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__transaction_ids
@@ -1522,6 +1617,13 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Virtual Pos Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: payment_jetcheckout_system

@@ -15,7 +15,7 @@ class ReportCompanyHierarchy(models.AbstractModel):
         cids = [company.id]
         children = []
 
-        items = companies.filtered(lambda x: child and x.id != child.id and x.parent_id.id == company.id or x.parent_id.id == company.id)
+        items = companies.filtered(lambda x: child and x.id != child.id and x.parent_id.id == company.id or x.parent_id.id == company.id).sorted(lambda x: x.name.lower())
         for item in items:
             if not item == child:
                 ids, childs = self._get_children(item, companies)
@@ -51,10 +51,10 @@ class ReportCompanyHierarchy(models.AbstractModel):
         lines = []
 
         company_ids = self.env.context.get('allowed_company_ids') or self.env.companies.ids
-        companies = self.env['res.company'].browse(company_ids)
+        companies = self.env['res.company'].browse(company_ids).sorted(lambda x: x.name.lower())
         ids = []
         if name:
-            cids = self.env['res.company'].search([('id', 'in', company_ids),('name', 'not ilike', f'%{name}%')], order='name')
+            cids = self.env['res.company'].search([('id', 'in', company_ids), ('name', 'not ilike', f'%{name}%')], order='name')
             ids.extend(cids.ids)
         for company in companies:
             if company.id not in ids:

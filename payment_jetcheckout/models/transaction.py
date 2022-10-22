@@ -57,6 +57,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
     jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
+    jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True)
 
     def _jetcheckout_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
@@ -168,26 +169,8 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_done_postprocess(self):
         if not self.state == 'done':
             self.write({'state': 'done'})
-            self.jetcheckout_send_done_email()
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()
-
-    def jetcheckout_send_done_email(self):
-        self.ensure_one()
-        try:
-            self.env.cr.commit()
-            template = self.env.ref('payment_jetcheckout.mail_template_transaction_done')
-            partner = self.partner_id.commercial_partner_id
-            followers = self.env['mail.followers'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
-            partners = followers.mapped('partner_id')
-            context = self.env.context.copy()
-            context['partner'] = partner
-            context['tx'] = self
-            for partner in partners:
-                template.with_context(context).send_mail(partner.id, force_send=True)
-        except Exception as e:
-            self.env.cr.rollback()
-            _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))
 
     def jetcheckout_order_confirm(self):
         self.ensure_one()

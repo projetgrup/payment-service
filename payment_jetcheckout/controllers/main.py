@@ -342,6 +342,7 @@ class JetcheckoutController(http.Controller):
                 'partner_state_id': partner.state_id.id,
                 'partner_country_id': partner.country_id.id,
                 'jetcheckout_ip_address': request.httprequest.remote_addr,
+                'jetcheckout_website_id': request.website.id,
                 'jetcheckout_card_name': kwargs['card_holder_name'],
                 'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
                 'jetcheckout_card_type': kwargs['card_type'].capitalize(),
