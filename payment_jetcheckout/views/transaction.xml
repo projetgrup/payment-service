@@ -4,7 +4,7 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_form"/>
     <field name="arch" type="xml">
-        <div name="button_box" position="inside">
+        <xpath expr="//div[@name='button_box']" position="inside">
             <field name="is_jetcheckout" invisible="1"/>
             <button type="object"
                 name="jetcheckout_payment"
@@ -47,8 +47,11 @@
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
-        </div>
-        <xpath expr='//group[@name="transaction_partner"]/..' position="after">
+        </xpath>
+        <xpath expr="//field[@name='acquirer_id']" position="after">
+            <field name="jetcheckout_website_id"/>
+        </xpath>
+        <xpath expr="//group[@name='transaction_partner']/.." position="after">
             <group name="transaction_jetcheckout" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
                 <group>
                     <field name="jetcheckout_card_name"/>
