@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ast import literal_eval
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class MailTemplate(models.Model):
@@ -34,7 +34,17 @@ class SmsTemplate(models.Model):
 class MailServer(models.Model):
     _inherit = 'ir.mail_server'
 
+    @api.depends('company_id', 'email')
+    def _compute_email_formatted(self):
+        for server in self:
+            if server.email:
+                server.email_formatted = tools.formataddr((server.company_id.name or u"False", server.email or u"False"))
+            else:
+                server.email_formatted = ''
+
     company_id = fields.Many2one('res.company')
+    email = fields.Char('Default Email Address')
+    email_formatted = fields.Char(string='Formatted Default Email Address', compute="_compute_email_formatted")
 
     @api.model
     def default_get(self, fields):
