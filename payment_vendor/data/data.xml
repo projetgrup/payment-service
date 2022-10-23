@@ -31,7 +31,7 @@
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="subject">{{ ctx['domain'] }} | Successful Transaction Notification</field>
             <field name="email_to">{{ object.email_formatted }}</field>
-            <field name="email_from">{{ ctx['company'].email_formatted }}</field>
+            <field name="email_from">{{ ctx['from'] }}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -72,10 +72,10 @@
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     <t t-out="ctx['company'].phone or ''">+1 650-123-4567</t>
                     <t t-if="ctx['company'].email">
-                        | <a t-attf-href="'mailto:%s' % {{ ctx['company'].email }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].email or ''">info@yourcompany.com</a>
+                        | <a t-attf-href="mailto:{{ ctx['company'].email }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].email or ''">info@yourcompany.com</a>
                     </t>
                     <t t-if="ctx['company'].website">
-                        | <a t-attf-href="'%s' % {{ ctx['company'].website }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].website or ''">http://www.example.com</a>
+                        | <a t-attf-href="{{ ctx['company'].website }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].website or ''">http://www.example.com</a>
                     </t>
                 </td></tr>
             </table>
