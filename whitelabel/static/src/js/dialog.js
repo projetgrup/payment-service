@@ -7,6 +7,7 @@ import { patch } from "@web/core/utils/patch";
 patch(RPCErrorDialog.prototype, "whitelabel.Dialog", {
 
     inferTitle() {
+        // If the server provides an exception name that we have in a registry.
         if (this.props.exceptionName && odooExceptionTitleMap.has(this.props.exceptionName)) {
             this.title = odooExceptionTitleMap.get(this.props.exceptionName).toString();
             return;
@@ -14,6 +15,7 @@ patch(RPCErrorDialog.prototype, "whitelabel.Dialog", {
         // Fall back to a name based on the error type.
         if (!this.props.type) return;
         switch (this.props.type) {
+
             case "server":
                 this.title = this.env._t("Odoo Server Error");
                 break;
