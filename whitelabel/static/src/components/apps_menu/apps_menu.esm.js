@@ -4,7 +4,7 @@
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
 import {NavBar} from "@web/webclient/navbar/navbar";
-import {useAutofocus, useBus, useService} from "@web/core/utils/hooks";
+import {useAutofocus, useBus, useEffect, useService} from "@web/core/utils/hooks";
 import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
 import {scrollTo} from "@web/core/utils/scrolling";
 import {debounce} from "@web/core/utils/timing";
@@ -12,17 +12,57 @@ import {fuzzyLookup} from "@web/core/utils/search";
 import {WebClient} from "@web/webclient/webclient";
 import {patch} from "web.utils";
 
-const {Component} = owl;
-const {useState, useRef} = owl.hooks;
+import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { registry } from "@web/core/registry";
+import { DebugMenu } from "@web/core/debug/debug_menu";
+import { localization } from "@web/core/l10n/localization";
+import { useTooltip } from "@web/core/tooltip/tooltip_hook";
+import { Dialog } from "@web/core/dialog/dialog";
+
+
+const { Component } = owl;
+const {useState, useRef, useExternalListener} = owl.hooks;
+
+const rpc = require('web.rpc');
+
 
 // Patch WebClient to show AppsMenu instead of default app
 patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
     setup() {
         this._super();
+
         useBus(this.env.bus, "APPS_MENU:STATE_CHANGED", (payload) => {
             this.el.classList.toggle("o_apps_menu_opened", payload);
             this.el.classList.toggle("o_first_app", false);
         });
+
+        self = this;
+
+        rpc.query({
+            model: "res.config.settings",
+            method: 'get_debranding_settings',
+        }, {
+            shadow: true
+        }).then(function(debranding_settings) {
+            odoo.debranding_settings = debranding_settings;
+            self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
+            localStorage.setItem('odoo_value', odoo.debranding_settings['odoo_text_replacement'],1);
+            Dialog.title = localStorage.getItem("odoo_value");
+        });
+
+        var hours = 1; // to clear the localStorage after 1 hour
+               // (if someone want to clear after 8hrs simply change hours=8)
+        var now = new Date().getTime();
+        var setupTime = localStorage.getItem('odoo_value');
+        if (setupTime == null) {
+            localStorage.setItem('odoo_value', now)
+        } else {
+            if(now-setupTime > hours*60*60*1000) {
+                localStorage.clear()
+                localStorage.setItem('odoo_value', now);
+            }
+        }
+
     },
     _loadDefaultApp() {
         var menu_apps_dropdown = document.querySelector(

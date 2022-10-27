@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="debrand_layout_footer_copyright" inherit_id="web.brand_promotion" name="Hide Odoo Promotional Link">
+        <xpath expr="//div[hasclass('o_brand_promotion')]" position="attributes">
+            <attribute name="t-attf-style">display: {{'none'}};</attribute>
+        </xpath>
+    </template>
+
     <template id="whitelabel_web_layout_inherit" inherit_id="web.layout">
         <xpath expr="//title" position="replace">
             <title t-esc="request.env['res.config.settings'].sudo().get_debranding_settings()['title_brand'] or title or 'ERP'"/>
