@@ -8,7 +8,6 @@
                 <div class="user-heading">
                     <h3>
                          <t t-esc="widget.odoo_text_replacement"/>
-                        (Community Edition)
                     </h3>
                 </div>
             </div>
