@@ -4,7 +4,7 @@
         <xpath expr="//div[@class='paymentmethods-container']" position="after">
             <div class="paymentmethods-vpos">
                 <div class="payment-buttons">
-                    <div class="button altlight">
+                    <div class="button altlight" t-on-click="showInstallments">
                         <i role="img" aria-label="Installment Table" title="Installment Table" class="fa fa-list"></i>
                         <span class="js_installment_table">Installment Table</span>
                     </div>

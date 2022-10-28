@@ -19,7 +19,13 @@ _logger = logging.getLogger(__name__)
 class JetcheckoutController(http.Controller):
 
     @staticmethod
-    def _jetcheckout_get_acquirer(providers=None, limit=None):
+    def _jetcheckout_get_acquirer(acquirer=False, providers=None, limit=None):
+        if acquirer:
+            if isinstance(acquirer, int):
+                return request.env['payment.acquirer'].sudo().browse(acquirer)
+            else:
+                return acquirer
+
         return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
     @staticmethod
@@ -36,8 +42,7 @@ class JetcheckoutController(http.Controller):
 
     @staticmethod
     def _jetcheckout_get_data(acquirer=False, company=False, transaction=False, balance=True):
-        if not acquirer:
-            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         company = company or request.env.company
         currency = transaction and transaction.currency_id or company.currency_id
         lang = get_lang(request.env)
@@ -78,10 +83,9 @@ class JetcheckoutController(http.Controller):
         return vals
 
     def _jetcheckout_get_installment_data(self, acquirer=False, **kwargs):
-        if not acquirer:
-            acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        acquirer = self._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
-        bin_number = kwargs['cardnumber'][:6] if len(kwargs['cardnumber']) >= 6 else False
+        bin_number = kwargs['cardnumber'][:6] if len(kwargs.get('cardnumber', [])) >= 6 else False
         prefix = kwargs.get('prefix', '')
         url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_jetcheckout_api_url(), prefix)
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
@@ -148,8 +152,7 @@ class JetcheckoutController(http.Controller):
 
     @staticmethod
     def _jetcheckout_get_card_family(acquirer=False, **kwargs):
-        if not acquirer:
-            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
         url = '%s/api/v1/prepayment/installment_options' % acquirer._get_jetcheckout_api_url()
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
@@ -227,23 +230,15 @@ class JetcheckoutController(http.Controller):
         return {'id': acquirer.id}
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_type(self, id=False):
-        if not id:
-            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        else:
-            acquirer = request.env['payment.acquirer'].sudo().browse(id)
-
+    def jetcheckout_payment_card_type(self, acquirer=False):
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         if acquirer:
             return [{'id': icon.id, 'name': icon.name, 'src': icon.image} for icon in acquirer.payment_icon_ids]
         return []
 
     @http.route('/payment/card/family', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_family(self, id=False):
-        if not id:
-            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        else:
-            acquirer = request.env['payment.acquirer'].sudo().browse(id)
-
+    def jetcheckout_payment_card_family(self, acquirer=False):
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         if acquirer:
             return self._jetcheckout_get_card_family(acquirer=acquirer)
         return []
@@ -260,6 +255,10 @@ class JetcheckoutController(http.Controller):
         values = self._jetcheckout_get_installment_data(**kwargs)
         if 'error' in values:
             return values
+
+        if kwargs.get('list'):
+            return values
+
         return {'render': request.env['ir.ui.view']._render_template('payment_jetcheckout.installments', values)}
 
     @http.route(['/payment/card/installment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)

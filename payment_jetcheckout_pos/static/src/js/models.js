@@ -1,5 +1,5 @@
 odoo.define('payment_jetcheckout_pos.models', function (require) {
-"use strict";
+'use strict';
 
 const PosModel = require('point_of_sale.models');
 
@@ -12,23 +12,21 @@ PosModel.PosModel = PosModel.PosModel.extend({
             loaded: function (self) {
                 return self.session.rpc('/payment/card/acquirer',{}).then(function (acquirer) {
                     self.vpos_acquirer = acquirer;
-                    //self.vpos_card_types = res.types;
                     self.vpos_card_types = [];
+                    self.vpos_card_families = [];
                 });
             }
         }, {
             label: 'payment.card.type',
             loaded: function (self) {
-                return self.session.rpc('/payment/card/type',{id: self.vpos_acquirer.id}).then(function (types) {
-                    console.log(types);
+                return self.session.rpc('/payment/card/type', {acquirer: self.vpos_acquirer.id}).then(function (types) {
                     self.vpos_card_types = types;
                 });
             }
         }, {
             label: 'payment.card.family',
             loaded: function (self) {
-                return self.session.rpc('/payment/card/family',{id: self.vpos_acquirer.id}).then(function (families) {
-                    console.log(families);
+                return self.session.rpc('/payment/card/family', {acquirer: self.vpos_acquirer.id}).then(function (families) {
                     self.vpos_card_families = families;
                 });
             }

@@ -20,7 +20,8 @@
     'assets': {
         'point_of_sale.assets': [
             'payment_jetcheckout_pos/static/src/js/models.js',
-            'payment_jetcheckout_pos/static/src/js/payment.js',
+            'payment_jetcheckout_pos/static/src/js/paymentScreen.js',
+            'payment_jetcheckout_pos/static/src/js/installmentPopup.js',
             'payment_jetcheckout_pos/static/src/scss/payment.scss',
         ],
         'web.assets_qweb': [

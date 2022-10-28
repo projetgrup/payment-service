@@ -1,4 +1,76 @@
-.payment-screen{
+.installment-dialog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .installment-popup {
+        position: initial !important;
+        transform: none !important;
+        max-width: 1000px !important;
+
+        .installment-table {
+            background-color: #ffffff;
+            color: #888 !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+            font-size: 12px;
+            padding: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+
+            img {
+                max-height: 50px;
+            }
+            table {
+                table-layout: fixed;
+            }
+            tr {
+                height: 25px;
+            }
+            th {
+                height: 40px;
+            }
+            tr:nth-child(odd) {
+                background-color: #f7fafc;
+            }
+            thead tr:first-child, tr:last-child {
+                background-color: initial !important;
+            }
+            .side-border {
+                border-right: 1px solid #eee;
+                border-left: 1px solid #eee;
+            }
+            .bottom-border {
+                border-bottom: 1px solid #eee;
+            }
+            > div {
+                width: 33%;
+                > div {
+                    margin: 15px;
+                    border: 1px solid #ddd;
+                    border-radius: 10px;
+                    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+                    > table {
+                        width: 100%;
+                        .badge {
+                            position: absolute;
+                            background-color: #f00;
+                            color: #fff;
+                            padding: 2px;
+                            margin: -2px 0 0 2px;
+                            font-size: 90%;
+                            padding: 3px;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.payment-screen {
 
     .left-content {
         display: flex;
@@ -42,7 +114,6 @@
                         margin: auto;
                     }
                 }
-
             }
 
             ul.card_types {
@@ -70,11 +141,7 @@
                         margin: auto;
                     }
                 }
-
             }
-
         }
-
     }
-
 }
