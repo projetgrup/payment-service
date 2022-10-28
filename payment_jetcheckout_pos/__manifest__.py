@@ -18,8 +18,13 @@
         'views/pos.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
-            'payment_jetcheckout_pos/static/src/js/pos.js',
+        'point_of_sale.assets': [
+            'payment_jetcheckout_pos/static/src/js/models.js',
+            'payment_jetcheckout_pos/static/src/js/payment.js',
+            'payment_jetcheckout_pos/static/src/scss/payment.scss',
+        ],
+        'web.assets_qweb': [
+            'payment_jetcheckout_pos/static/src/xml/**/*',
         ],
     },
     'application': False,

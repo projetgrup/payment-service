@@ -221,6 +221,33 @@ class JetcheckoutController(http.Controller):
 
         return url, tx
 
+    @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
+    def jetcheckout_payment_acquirer(self):
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        return {'id': acquirer.id}
+
+    @http.route('/payment/card/type', type='json', auth='user', website=True)
+    def jetcheckout_payment_card_type(self, id=False):
+        if not id:
+            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        else:
+            acquirer = request.env['payment.acquirer'].sudo().browse(id)
+
+        if acquirer:
+            return [{'id': icon.id, 'name': icon.name, 'src': icon.image} for icon in acquirer.payment_icon_ids]
+        return []
+
+    @http.route('/payment/card/family', type='json', auth='user', website=True)
+    def jetcheckout_payment_card_family(self, id=False):
+        if not id:
+            acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        else:
+            acquirer = request.env['payment.acquirer'].sudo().browse(id)
+
+        if acquirer:
+            return self._jetcheckout_get_card_family(acquirer=acquirer)
+        return []
+
     @http.route(['/pay'], type='http', auth='user', website=True)
     def jetcheckout_payment_page(self, **kwargs):
         values = self._jetcheckout_get_data()
