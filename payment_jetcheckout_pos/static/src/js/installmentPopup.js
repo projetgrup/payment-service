@@ -11,14 +11,16 @@ class InstallmentPopup extends AbstractAwaitablePopup {
 
     async willStart() {
         try {
+            const order = this.env.pos.get_order();
+            this.amount = order.get_total_with_tax();
             this.installments = await this.env.session.rpc('/payment/card/installments', {
-                acquirer: this.props.acquirer.id,
                 list: true,
+                acquirer: this.props.acquirer.id,
+                amount: this.amount,
             });
             if ('error' in this.installments) {
                 this.error = this.installments.error;
             }
-            console.log(this.installments);
         } catch (error) {
             this.error = error;
         }

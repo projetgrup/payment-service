@@ -121,7 +121,7 @@ class JetcheckoutController(http.Controller):
 
                 values = {
                     'installments': installments,
-                    'amount':amount,
+                    'amount': amount,
                     'currency': currency,
                     's2s_form': kwargs.get('s2s', False)
                 }

@@ -89,7 +89,9 @@
 
             ul.card_families {
                 display: flex;
-                justify-content: center;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
                 padding: 15px;
                 background-color: #e5e5e5;
 
@@ -98,7 +100,7 @@
                     width: 50px;
                     height: 25px;
                     overflow: hidden;
-                    margin: 0 10px;
+                    margin: 5px;
                     border: 2px solid #cccccc;
                     border-radius: 5px;
                     padding: 5px;
