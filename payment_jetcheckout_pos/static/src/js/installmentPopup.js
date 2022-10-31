@@ -11,12 +11,10 @@ class InstallmentPopup extends AbstractAwaitablePopup {
 
     async willStart() {
         try {
-            const order = this.env.pos.get_order();
-            this.amount = order.get_total_with_tax();
             this.installments = await this.env.session.rpc('/payment/card/installments', {
                 list: true,
                 acquirer: this.props.acquirer.id,
-                amount: this.amount,
+                amount: this.props.amount,
             });
             if ('error' in this.installments) {
                 this.error = this.installments.error;
@@ -41,6 +39,8 @@ class InstallmentPopup extends AbstractAwaitablePopup {
 InstallmentPopup.template = 'InstallmentPopup';
 InstallmentPopup.defaultProps = {
     title: '',
+    acquirer: 0,
+    amount: 0,
 };
 
 Registries.Component.add(InstallmentPopup);

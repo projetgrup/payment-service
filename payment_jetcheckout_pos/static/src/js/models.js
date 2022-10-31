@@ -31,12 +31,14 @@ PosModel.PosModel = PosModel.PosModel.extend({
                 });
             }
         });
-        /*const method = _.find(this.models, function(model){
+
+        const method = _.find(this.models, function(model) {
             return model.model === 'pos.payment.method';
         });
+
         if (method) {
-            method.fields.push('');
-        }*/
+            method.fields.push('is_vpos');
+        }
     }
 });
 });

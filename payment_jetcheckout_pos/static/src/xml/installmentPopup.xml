@@ -34,7 +34,7 @@
                                             <t t-set="installment_rate" t-value="row.installment_rate"/>
                                             <t t-set="installment_count" t-value="row.total_installment"/>
                                             <tr t-if="installment_count > 0">
-                                                <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                                                <t t-set="installment_amount" t-value="props.amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
                                                 <td>
                                                     <span t-esc="row.installment_count"/>
                                                     <span t-if="row.plus_installment" t-esc="'+' + row.plus_installment" class="badge" t-att-title="row.plus_installment_description"/>

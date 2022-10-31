@@ -75,6 +75,11 @@
         display: none !important;
     }
 
+    .visible {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
     .text-center {
         text-align: center !important;
     }
@@ -225,6 +230,7 @@
                     width: 50px;
                 }
             }
+
             .installment-table {
                 width: 50%;
                 background-color: #ffffff;
@@ -233,7 +239,25 @@
                 margin: 10px 10px 10px 5px;
                 display: flex;
                 flex-direction: column;
+                position: relative;
+                overflow: hidden;
                 box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+
+                .installment-loading {
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: 0.2s ease all;
+                    position: absolute;
+                    background-color: #ffffff;
+                    color: #43996E;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    top: 25px;
+                    text-align: center;
+                    z-index: 1;
+                    padding-top: 75px;
+                }
 
                 .installment-header {
                     display: flex;
@@ -354,6 +378,9 @@
                         }
                     }
                 }
+                .installment-rows::-webkit-scrollbar-thumb {
+                    background-color: #43996E !important;
+                }
             }
 
             .field-container {
@@ -393,8 +420,8 @@
                     font-size: 14px;
                     font-weight: bold;
                     color: #43996E;
-                    transition: 0.2s ease all; 
-                    -moz-transition: 0.2s ease all; 
+                    transition: 0.2s ease all;
+                    -moz-transition: 0.2s ease all;
                     -webkit-transition: 0.2s ease all;
                     span {
                         background: #fff;
@@ -417,8 +444,8 @@
                     bottom: 1px; 
                     position: absolute;
                     background: #43996E;
-                    transition: 0.2s ease all; 
-                    -moz-transition: 0.2s ease all; 
+                    transition: 0.2s ease all;
+                    -moz-transition: 0.2s ease all;
                     -webkit-transition: 0.2s ease all;
                 }
 

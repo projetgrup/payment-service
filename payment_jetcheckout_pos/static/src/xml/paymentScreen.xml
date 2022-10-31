@@ -26,7 +26,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@class='payment-buttons-container']" position="after">
-            <div class="payment-vpos">
+            <div class="payment-vpos" t-att-class="{'d-none': vpos_amount &lt;= 0}">
                 <div class="payment-table">
                     <div class="field-container">
                         <input id="ccname" type="text" required="required"/>
@@ -56,6 +56,9 @@
                         <div>INSTALLMENT</div>
                         <div>MONTHLY</div>
                         <div>TOTAL</div>
+                    </div>
+                    <div id="installment_loading" class="installment-loading">
+                        <i class="fa fa-3x fa-circle-o-notch fa-spin"/>
                     </div>
                     <div id="installment_rows" class="installment-rows"/>
                     <div id="installment_empty" class="installment-empty">
