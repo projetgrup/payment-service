@@ -25,5 +25,45 @@
                 </ul>
             </div>
         </xpath>
+        <xpath expr="//div[@class='payment-buttons-container']" position="after">
+            <div class="payment-vpos">
+                <div class="payment-table">
+                    <div class="field-container">
+                        <input id="ccname" type="text" required="required"/>
+                        <span class="bar-container"/>
+                        <label for="ccname"><span>Name</span></label>
+                    </div>
+                    <div class="field-container">
+                        <input id="ccnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                        <span class="bar-container"/>
+                        <div id="cclogo" class="overflow-hidden fade card flex-row"/>
+                        <svg id="ccicon" class="fade" width="750" height="471" viewBox="0 0 750 471"/>
+                        <label for="ccnumber"><span>Card Number</span></label>
+                    </div>
+                    <div class="field-container">
+                        <input id="ccexpiry" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
+                        <span class="bar-container"/>
+                        <label for="ccexpiry"><span>Expiration</span></label>
+                    </div>
+                    <div class="field-container">
+                        <input id="ccsecurity" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                        <span class="bar-container"/>
+                        <label for="ccsecurity"><span>Security Code</span></label>
+                    </div>
+                </div>
+                <div class="installment-table">
+                    <div class="installment-header">
+                        <div>INSTALLMENT</div>
+                        <div>MONTHLY</div>
+                        <div>TOTAL</div>
+                    </div>
+                    <div id="installment_rows" class="installment-rows"/>
+                    <div id="installment_empty" class="installment-empty">
+                        <i class="fa fa-info-circle mb-3" t-translation="off"/>
+                        <span>Appliable installment options will be displayed here after you enter your credit card number</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
     </t>
 </templates>

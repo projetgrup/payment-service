@@ -19,6 +19,8 @@
     ],
     'assets': {
         'point_of_sale.assets': [
+            'payment_jetcheckout/static/src/js/imask.js',
+            'payment_jetcheckout/static/src/js/cards.js',
             'payment_jetcheckout_pos/static/src/js/models.js',
             'payment_jetcheckout_pos/static/src/js/paymentScreen.js',
             'payment_jetcheckout_pos/static/src/js/installmentPopup.js',
