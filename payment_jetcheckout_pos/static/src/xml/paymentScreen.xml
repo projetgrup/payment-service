@@ -4,7 +4,7 @@
         <xpath expr="//div[@class='paymentmethods-container']" position="after">
             <div class="paymentmethods-vpos">
                 <div class="payment-buttons">
-                    <div class="button altlight" t-on-click="showInstallments">
+                    <div class="button altlight" t-on-click="showCardInstallments">
                         <i role="img" aria-label="Installment Table" title="Installment Table" class="fa fa-list"></i>
                         <span class="js_installment_table">Installment Table</span>
                     </div>
@@ -26,29 +26,36 @@
             </div>
         </xpath>
         <xpath expr="//div[@class='payment-buttons-container']" position="after">
+            <div id="vpos_payment_loading" class="payment-vpos-loading">
+                <i class="fa fa-5x fa-circle-o-notch fa-spin"/>
+            </div>
+            <div id="vpos_payment_threed" class="payment-vpos-threed">
+                <iframe id="vpos_card_threed"/>
+                <input id="vpos_card_result" type="hidden"/>
+            </div>
             <div class="payment-vpos" t-att-class="{'d-none': vpos_amount &lt;= 0}">
                 <div class="payment-table">
                     <div class="field-container">
-                        <input id="ccname" type="text" required="required"/>
+                        <input id="vpos_card_name" type="text" required="required"/>
                         <span class="bar-container"/>
-                        <label for="ccname"><span>Name</span></label>
+                        <label for="vpos_card_name"><span>Name</span></label>
                     </div>
                     <div class="field-container">
-                        <input id="ccnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                        <input id="vpos_card_number" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
                         <span class="bar-container"/>
-                        <div id="cclogo" class="overflow-hidden fade card flex-row"/>
-                        <svg id="ccicon" class="fade" width="750" height="471" viewBox="0 0 750 471"/>
-                        <label for="ccnumber"><span>Card Number</span></label>
+                        <div id="vpos_card_logo" class="card-logo"/>
+                        <svg id="vpos_card_icon" class="card-icon" width="750" height="471" viewBox="0 0 750 471"/>
+                        <label for="vpos_card_number"><span>Card Number</span></label>
                     </div>
                     <div class="field-container">
-                        <input id="ccexpiry" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
+                        <input id="vpos_card_expiry" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
                         <span class="bar-container"/>
-                        <label for="ccexpiry"><span>Expiration</span></label>
+                        <label for="vpos_card_expiry"><span>Expiration</span></label>
                     </div>
                     <div class="field-container">
-                        <input id="ccsecurity" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                        <input id="vpos_card_security" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
                         <span class="bar-container"/>
-                        <label for="ccsecurity"><span>Security Code</span></label>
+                        <label for="vpos_card_security"><span>Security Code</span></label>
                     </div>
                 </div>
                 <div class="installment-table">
@@ -57,11 +64,11 @@
                         <div>MONTHLY</div>
                         <div>TOTAL</div>
                     </div>
-                    <div id="installment_loading" class="installment-loading">
+                    <div id="vpos_installment_loading" class="installment-loading">
                         <i class="fa fa-3x fa-circle-o-notch fa-spin"/>
                     </div>
-                    <div id="installment_rows" class="installment-rows"/>
-                    <div id="installment_empty" class="installment-empty">
+                    <div id="vpos_installment_rows" class="installment-rows"/>
+                    <div id="vpos_installment_empty" class="installment-empty">
                         <i class="fa fa-info-circle mb-3" t-translation="off"/>
                         <span>Appliable installment options will be displayed here after you enter your credit card number</span>
                     </div>
