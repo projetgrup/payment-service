@@ -14,8 +14,8 @@ class PaymentAcquirerJetcheckoutApi(models.Model):
     name = fields.Char(compute='_compute_name')
     api_key = fields.Char(string='API Key', readonly=True)
     secret_key = fields.Char(readonly=True)
-    partner_id = fields.Many2one('res.partner', required=True)
-    company_id = fields.Many2one('res.company', required=True)
+    partner_id = fields.Many2one('res.partner', required=True, ondelete='cascade')
+    company_id = fields.Many2one('res.company', required=True, ondelete='cascade')
     active = fields.Boolean(default=True)
 
     @api.model
