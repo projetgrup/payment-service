@@ -11,7 +11,7 @@ from odoo.tools.image import image_data_uri
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    mail_powered_by = fields.Boolean('Mail Powered By', default=True)
+    #mail_powered_by = fields.Boolean('Mail Powered By', default=True)
 
     @api.model
     def reset_company_logo(self):
