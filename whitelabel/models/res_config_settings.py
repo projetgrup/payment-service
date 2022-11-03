@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
     whitelabel_favicon = fields.Binary(string="Whitelabel Favicon Image")
     title_brand = fields.Char(string="Title Brand")
     odoo_text_replacement = fields.Char(string='Powered By Text')
-    mail_powered_by = fields.Boolean('Mail Powered By', related='company_id.mail_powered_by')
+    #mail_powered_by = fields.Boolean('Mail Powered By', related='company_id.mail_powered_by')
 
     # @api.model
     # def fields_view_get(

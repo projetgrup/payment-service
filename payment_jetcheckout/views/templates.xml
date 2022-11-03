@@ -440,8 +440,14 @@
                     <t t-set="installment_rate" t-value="row['installment_rate']"/>
                     <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
                     <div class="installment-cell">
-                        <div class="text-center"><input type="radio" name="installment_radio" t-att-value="row['installment_count'] + row['plus_installment']" t-att-data-value="'%s + %s (%s)' % (row['installment_count'], row['plus_installment'], row['plus_installment_description']) if row['plus_installment'] > 0 and row['plus_installment_description'] else '%s + %s' % (row['installment_count'], row['plus_installment']) if row['plus_installment'] > 0 else '%s' % row['installment_count']" t-att-checked="row['installment_count'] == 1"/></div>
-                        <div><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></div>
+                        <div class="text-center">
+                            <input type="radio" name="installment_radio" t-att-value="row['installment_count'] + row['plus_installment']" t-att-data-value="'%s + %s (%s)' % (row['installment_count'], row['plus_installment'], row['plus_installment_description']) if row['plus_installment'] > 0 and row['plus_installment_description'] else '%s + %s' % (row['installment_count'], row['plus_installment']) if row['plus_installment'] > 0 else '%s' % row['installment_count']" t-att-checked="row['installment_count'] == 1"/>
+                            <span class="installment-radio"/>
+                        </div>
+                        <div>
+                            <span t-esc="row['installment_count']"/>
+                            <span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/>
+                        </div>
                     </div>
                     <div t-if="not s2s_form" class="text-center side-border">%<span t-esc="customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></div>
                     <div class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>

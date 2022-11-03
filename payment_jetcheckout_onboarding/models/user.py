@@ -33,6 +33,9 @@ class Users(models.Model):
             'tax_office': values['tax'],
             'system': values['type'],
         })
+        company.partner_id.write({
+            'company_id': company.id,
+        })
         self.env['website'].create({
             'name': values['company'],
             'domain': values['domain'],
