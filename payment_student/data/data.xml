@@ -8,23 +8,22 @@
             <field name="partner_to">{{ object.id }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="body_html" type="html">
-                <t t-set="line" t-value="object._get_setting_line()"/>
-                <p>
-                    <strong>Sayın <i t-out="object.name"/></strong>,
-                    <br/><br/>
-                    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-out="object._get_payment_terms()"/> hizmetlerimizle ilgili kayıt ücretini 
-                    <t t-if="line"><t t-out="line['month']"/> dönemi içerisinde kredi kartınız ile online olarak <t t-out="line['installment']"/> taksitle yada tek çekimde %<t t-out="line['percentage']"/> indirim ile ödeyebilirsiniz.</t>
-                    <t t-else="">kredi kartınız ile online olarak ödeyebilirsiniz.</t>
-                    <br/>
-                    İncelemek ve Online Ödeme için <a t-att-href="object._get_payment_url()" style="color:#3079ed;">tıklayınız.</a>
-                    <br/><br/>
-                    Sağlıklı bir yıl dileriz.
-                    <br/><br/>
-                    Saygılarımızla...
-                    <br/><br/>
-                    <span t-out="object._get_payment_company()"/>
-                </p>
-            </field>
+<t t-set="line" t-value="object._get_setting_line()"/>
+<p>
+    <strong>Dear <i t-out="object.name"/></strong>,
+    <br/><br/>
+    You can pay register fee of students, who has been already registered at school, for our <t t-out="object._get_payment_terms()"/> services with your credit online
+    <t t-if="line"> for <t t-out="line['month']"/> term by choosing either <t t-out="line['installment']"/> installments or single payment with <t t-out="line['percentage']"/>% discount.</t>
+    <t t-else="">.</t>
+    <br/>
+    If you want to view and pay online, <a t-att-href="object._get_payment_url()" style="color:#3079ed;">click here.</a>
+    <br/><br/>
+    Have a nice day.
+    <br/><br/>
+    Sincerely...
+    <br/><br/>
+    <span t-out="object._get_payment_company()"/>
+</p></field>
             <!--<field name="report_template" ref="action_report_template"/>
             <field name="report_name">{{ (object.name or '') }}</field>-->
             <field name="lang">{{ object.lang }}</field>
@@ -34,7 +33,7 @@
         <record id="payment_sms" model="sms.template">
             <field name="name">Parent Payment SMS</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) }}</field>
+            <field name="body">Dear {{ object.name }}, for viewing and paying register fee of students, who has been already registered at school, {{ object._get_payment_url(shorten=True) }}</field>
             <field name="lang">{{ object.lang }}</field>
         </record>
     </data>

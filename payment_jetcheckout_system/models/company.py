@@ -10,7 +10,7 @@ class Company(models.Model):
 
     def _compute_mail_server(self):
         for company in self:
-            company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.id)], limit=1).id
+            company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
 
     tax_office = fields.Char()
     system = fields.Selection([])
