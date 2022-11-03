@@ -28,5 +28,9 @@ class PointOfSaleVpos(Controller):
 
         tx = request.env['payment.transaction'].sudo().browse(int(kwargs['']))
         return request.render('payment_jetcheckout_pos.payment_result', {
-            'result': json.dumps({'state': tx.state, 'message': tx.state_message.replace('"', '\\"').replace('\n', ' ')})
+            'result': json.dumps({
+                'id': tx.id,
+                'state': tx.state,
+                'message': tx.state_message.replace('"', '\\"').replace('\n', ' ')
+            })
         })

@@ -11,6 +11,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             this.vpos_acquirer = this.env.pos.vpos_acquirer;
             this.vpos_card_types = this.env.pos.vpos_card_types;
             this.vpos_card_families = this.env.pos.vpos_card_families;
+            this.vpos_paid = false;
             this.vpos_card_bin = 0;
             this.vpos_amount = 0;
             this.vpos_partner = 0;
@@ -129,33 +130,32 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             $('.button.next').addClass('disabled');
         }
 
-        
         _onChangeResult(ev) {
             const value = ev.target.value.replaceAll('&#34;','"');
             const result = JSON.parse(value);
             if (result.state === 'done') {
-                console.log('yes');
-                console.log(result);
+                this.vpos_paid = true;
+                this._finalizeValidation();
             } else {
-                console.log('no');
-                console.log(result);
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: result.message || this.env._t('An error occured. Please try again.') ,
                 });
             }
 
+            this.currentOrder.transaction_ids.push(result.id)
             this.$vpos_payment_loading.classList.remove('visible-half');
             this.$vpos_payment_threed.classList.remove('visible');
+            this._enablePayButton();
         }
 
         async _finalizeValidation() {
-            if (this.vpos_amount > 0) {
+            if (!this.vpos_paid && this.vpos_amount > 0) {
                 this._disablePayButton();
                 this._onCardPay();
                 return;
             }
-            this._super.apply(this, arguments);
+            await super._finalizeValidation();
         }
 
         async showCardInstallments() {
@@ -228,7 +228,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                         title: this.env._t('Error'),
                         body: this.env._t('An error occured. Please contact with your system administrator.'),
                     });
-                    console.log(error);
+                    console.error(error);
                     $(this.$vpos_installment_loading).removeClass('visible');
                 }
             }
@@ -298,6 +298,12 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             let $el = $(ev.target).closest('div.installment-row');
             $el.addClass('installment-selected');
             $el.find('input').attr({'checked': true});
+        }
+
+        closeCardThreed() {
+            this.$vpos_payment_threed.classList.remove('visible');
+            this.$vpos_payment_loading.classList.remove('visible-half');
+            this._enablePayButton();
         }
 
         _checkCardData() {
@@ -376,7 +382,6 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                         if ('url' in result) {
                             self.$vpos_card_threed.src = result.url;
                             self.$vpos_payment_threed.classList.add('visible');
-                            console.log(result);
                         } else {
                             self.showPopup('ErrorPopup', {
                                 title: self.env._t('Error'),
@@ -390,7 +395,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                         body: this.env._t('An error occured. Please contact with your system administrator.'),
                     });
                     this._enablePayButton();
-                    console.log(error);
+                    console.error(error);
                     this.$vpos_payment_loading.classList.remove('visible-half');
                 }
             } else {

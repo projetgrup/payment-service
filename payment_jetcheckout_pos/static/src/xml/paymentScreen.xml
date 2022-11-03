@@ -32,6 +32,7 @@
             <div id="vpos_payment_threed" class="payment-vpos-threed">
                 <iframe id="vpos_card_threed"/>
                 <input id="vpos_card_result" type="hidden"/>
+                <button t-on-click="closeCardThreed"><i class="fa fa-times"/></button>
             </div>
             <div class="payment-vpos" t-att-class="{'d-none': vpos_amount &lt;= 0}">
                 <div class="payment-table">
