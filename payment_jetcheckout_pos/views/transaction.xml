@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transaction_form" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='payment_id']" position="after">
+            <field name="pos_order_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

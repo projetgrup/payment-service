@@ -28,10 +28,10 @@
     'assets': {
         'web.assets_frontend': [
             'payment_jetcheckout/static/src/js/imask.js',
+            'payment_jetcheckout/static/src/js/cards.js',
             'payment_jetcheckout/static/src/js/framework.js',
             'payment_jetcheckout/static/src/js/payment_page.js',
             'payment_jetcheckout/static/src/js/payment_form.js',
-            'payment_jetcheckout/static/src/js/payment_card.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
         ],
     },

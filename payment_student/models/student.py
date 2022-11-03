@@ -13,7 +13,7 @@ class StudentDiscount(models.Model):
     _description = 'Payment Discounts'
     _order = 'id desc'
 
-    company_id = fields.Many2one('res.company')
+    company_id = fields.Many2one('res.company', ondelete='cascade')
     date_start = fields.Date(string='Start Date')
     date_end = fields.Date(string='End Date')
     installment = fields.Integer(string='Installment')

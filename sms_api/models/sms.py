@@ -18,7 +18,7 @@ class SmsProvider(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(string='Priority', default=10)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', ondelete='cascade', string='Company', default=lambda self: self.env.company)
     type = fields.Selection([], string='Provider')
     username = fields.Char(required=True)
     password = fields.Char(required=True)
