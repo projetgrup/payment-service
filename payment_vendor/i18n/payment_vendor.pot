@@ -416,7 +416,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.mail_transaction_daily
-msgid "{{ ctx['domain'] }} | About transaction on {{ ctx['date'] }}"
+msgid "{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}"
 msgstr ""
 
 #. module: payment_vendor

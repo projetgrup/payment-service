@@ -91,7 +91,7 @@
         <record id="mail_transaction_daily" model="mail.template">
             <field name="name">Transaction: Daily Report</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="subject">{{ ctx['domain'] }} | About transaction on {{ ctx['date'] }}</field>
+            <field name="subject">{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
             <field name="email_from">{{ ctx['from'] }}</field>
             <field name="body_html" type="html">
