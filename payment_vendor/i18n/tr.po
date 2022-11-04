@@ -711,9 +711,9 @@ msgstr "Websiteler"
 
 #. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.mail_transaction_daily
-msgid "{{ ctx['domain'] }} | About transaction on {{ ctx['date'] }}"
+msgid "{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}"
 msgstr ""
-"{{ ctx['domain'] }} | {{ ctx['date'] }} tarihindeki işlemleriniz hakkında"
+"{{ ctx['domain'] }} | {{ ctx['date'] }} tarihindeki ödeme işlemleriniz hakkında"
 
 #. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.mail_transaction_successful

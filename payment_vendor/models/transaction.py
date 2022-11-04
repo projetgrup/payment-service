@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
+from itertools import groupby
+from operator import itemgetter
 from urllib.parse import urlparse
 from odoo import models, api
 
@@ -45,13 +47,12 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def jetcheckout_send_daily_email(self):
-        websites = self.env['website'].sudo().search([])
+        companies = self.env['res.company'].sudo().search([])
         template = self.env.ref('payment_vendor.mail_transaction_daily')
         users = self.env.ref('payment_vendor.group_vendor_manager').mapped('users')
         now = datetime.now()
 
-        for website in websites:
-            company = website.company_id
+        for company in companies:
             if not company.system == 'vendor':
                 continue
 
@@ -59,7 +60,6 @@ class PaymentTransaction(models.Model):
             if not user:
                 continue
 
-            txs = {}
             mail_server = company.mail_server_id
             timezone = user[0].tz
             try:
@@ -67,41 +67,41 @@ class PaymentTransaction(models.Model):
             except:
                 tz = pytz.timezone('UTC')
             offset = tz.utcoffset(now)
-            date_start = (now + offset).replace(hour=0, minute=0, second=0, microsecond=0) - offset
             date_end = (now + offset).replace(hour=0, minute=0, second=0, microsecond=0) - offset
+            date_start = date_end - timedelta(days=1)
 
             context = self.env.context.copy()
             context['date'] = date_start.strftime('%d.%m.%Y')
             context['partner'] = company.partner_id
             context['company'] = company
             context['server'] = mail_server
-            context['url'] = website.domain
-            context['domain'] = urlparse(context['url']).netloc
             context['from'] = mail_server.email_formatted or company.email_formatted
 
             transactions = self.env['payment.transaction'].sudo().search([
                 ('company_id', '=', company.id),
-                ('last_state_change', '>=',  '2022-01-01 00:00:00'),
-                ('last_state_change', '<',  date_end),
+                ('last_state_change', '>=', date_start),
+                ('last_state_change', '<', date_end),
+                ('state', '=', 'done'),
             ])
-            for transaction in transactions:
-                pid = transaction.partner_id.id
-                amount_new = transaction.jetcheckout_payment_amount
 
-                if pid not in txs:
-                    name = transaction.partner_id.name
-                    txs[pid] = {'name': name, 'amount': 0}
+            key = itemgetter('jetcheckout_website_id')
+            for key, group in groupby(sorted(transactions, key=key), key=key):
+                txs = {}
+                for tx in list(group):
+                    pid = tx.partner_id.id
+                    if pid not in txs:
+                        name = tx.partner_id.name
+                        txs[pid] = {'name': name, 'amount': 0}
+                    txs[pid]['amount'] += tx.jetcheckout_payment_amount
 
-                amount_now = txs[pid]['amount']
-                amount_total = amount_now + amount_new
-                txs[pid]['amount'] = amount_total
+                context['url'] = key.domain
+                context['domain'] = urlparse(context['url']).netloc
+                context['transactions'] = txs.items()
+                context['total'] = 0
+                for key, value in context['transactions']:
+                    context['total'] += value['amount']
 
-            context['transactions'] = txs.items()
-            context['total'] = 0
-            for key, value in context['transactions']:
-                context['total'] += value['amount']
-
-            try:
-                template.with_context(context).send_mail(context['partner'].id, force_send=True, email_values={'mail_server_id': mail_server.id})
-            except Exception as e:
-                _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
+                try:
+                    template.with_context(context).send_mail(context['partner'].id, force_send=True, email_values={'mail_server_id': mail_server.id})
+                except Exception as e:
+                    _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
