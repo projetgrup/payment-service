@@ -129,9 +129,9 @@
                                 <tbody>
                                     <t t-foreach="ctx['transactions']" t-as="line">
                                         <tr>
-                                            <td style="border-bottom: 1px solid #ccc; text-align: left;"><t t-out="line[1]['name']"/></td>
-                                            <td style="border-bottom: 1px solid #ccc; text-align: right;"><t t-out="format_amount(line[1]['amount'], ctx['company'].currency_id) or ''"/></td>
-                                            <td style="border-bottom: 1px solid #ccc; text-align: right;">% <t t-out="'%.2f' % round(100 * line[1]['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0"/></td>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: left;"><t t-out="line['name']"/></td>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: right;"><t t-out="format_amount(line['amount'], ctx['company'].currency_id) or ''"/></td>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: right;">% <t t-out="'%.2f' % round(100 * line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0"/></td>
                                         </tr>
                                     </t>
                                     <tr style="font-weight:bold;">
