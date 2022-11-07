@@ -112,12 +112,19 @@ class PaymentTransaction(models.Model):
             self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
             (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
 
-    def _jetcheckout_refund_postprocess(self):
-        if not self.state == 'cancel':
-            self.write({
-                'state': 'cancel',
-                'state_message': _('Transaction has been refunded successfully.')
-            })
+    def _jetcheckout_refund_postprocess(self, amount=None):
+        values = {
+            'jetcheckout_card_name': self.jetcheckout_card_name,
+            'jetcheckout_card_number': self.jetcheckout_card_number,
+            'jetcheckout_card_type': self.jetcheckout_card_type,
+            'jetcheckout_card_family': self.jetcheckout_card_family,
+            'jetcheckout_vpos_name': self.jetcheckout_vpos_name,
+            'is_post_processed': True,
+            'state': 'done',
+            'state_message': _('Transaction has been refunded successfully.')
+        }
+        transaction = self._create_refund_transaction(amount_to_refund=amount, **values)
+        transaction._log_sent_message()
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
         self.ensure_one()
@@ -143,7 +150,7 @@ class PaymentTransaction(models.Model):
 
         if 'error' in values:
             raise UserError(values['error'])
-        self._jetcheckout_refund_postprocess()
+        self._jetcheckout_refund_postprocess(amount)
 
     def _jetcheckout_api_cancel(self, **kwargs):
         self.ensure_one()
@@ -171,6 +178,7 @@ class PaymentTransaction(models.Model):
             self.write({'state': 'done'})
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()
+            self.is_post_processed = True
 
     def jetcheckout_order_confirm(self):
         self.ensure_one()
@@ -266,7 +274,6 @@ class PaymentTransaction(models.Model):
             'successful': result['successful'],
             'completed': result['completed'],
             'cancelled': result['cancelled'],
-            'refunded': result['cancelled'],
             'threed': result['is_3d'],
             'amount': result['amount'],
             'customer_amount': result['commission_amount'],
