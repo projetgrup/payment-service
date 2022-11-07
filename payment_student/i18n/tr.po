@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-15 20:03+0000\n"
-"PO-Revision-Date: 2022-06-15 23:06+0300\n"
+"POT-Creation-Date: 2022-11-03 15:36+0000\n"
+"PO-Revision-Date: 2022-11-03 18:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_page
@@ -35,30 +35,48 @@ msgstr ""
 #: model:mail.template,body_html:payment_student.payment_mail
 msgid ""
 "<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
-"                <p>\n"
-"                    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
-"                    <br/><br/>\n"
-"                    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için "
-"<t t-out=\"object._get_payment_terms()\"/> hizmetlerimizle ilgili kayıt "
-"ücretini \n"
-"                    <t t-if=\"line\"><t t-out=\"line['month']\"/> dönemi "
-"içerisinde kredi kartınız ile online olarak <t t-out=\"line['installment']\"/"
-"> taksitle yada tek çekimde %<t t-out=\"line['percentage']\"/> indirim ile "
-"ödeyebilirsiniz.</t>\n"
-"                    <t t-else=\"\">kredi kartınız ile online olarak "
-"ödeyebilirsiniz.</t>\n"
-"                    <br/>\n"
-"                    İncelemek ve Online Ödeme için <a t-att-href=\"object."
-"_get_payment_url()\" style=\"color:#3079ed;\">tıklayınız.</a>\n"
-"                    <br/><br/>\n"
-"                    Sağlıklı bir yıl dileriz.\n"
-"                    <br/><br/>\n"
-"                    Saygılarımızla...\n"
-"                    <br/><br/>\n"
-"                    <span t-out=\"object._get_payment_company()\"/>\n"
-"                </p>\n"
-"            "
+"<p>\n"
+"    <strong>Dear <i t-out=\"object.name\"/></strong>,\n"
+"    <br/><br/>\n"
+"    You can pay register fee of students, who has been already registered at "
+"school, for our <t t-out=\"object._get_payment_terms()\"/> services with "
+"your credit online\n"
+"    <t t-if=\"line\"> for <t t-out=\"line['month']\"/> term by choosing "
+"either <t t-out=\"line['installment']\"/> installments or single payment "
+"with <t t-out=\"line['percentage']\"/>% discount.</t>\n"
+"    <t t-else=\"\">.</t>\n"
+"    <br/>\n"
+"    If you want to view and pay online, <a t-att-href=\"object."
+"_get_payment_url()\" style=\"color:#3079ed;\">click here.</a>\n"
+"    <br/><br/>\n"
+"    Have a nice day.\n"
+"    <br/><br/>\n"
+"    Sincerely...\n"
+"    <br/><br/>\n"
+"    <span t-out=\"object._get_payment_company()\"/>\n"
+"</p>"
 msgstr ""
+"<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
+"<p>\n"
+"    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
+"    <br/><br/>\n"
+"    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-out="
+"\"object._get_payment_terms()\"/> hizmetlerimizle ilgili kayıt ücretini \n"
+"    <t t-if=\"line\"><t t-out=\"line['month']\"/> dönemi içerisinde kredi "
+"kartınız ile online olarak <t t-out=\"line['installment']\"/> taksitle yada "
+"tek çekimde %<t t-out=\"line['percentage']\"/> indirim ile ödeyebilirsiniz.</"
+"t>\n"
+"    <t t-else=\"\">kredi kartınız ile online olarak ödeyebilirsiniz.</t>\n"
+"    <br/>\n"
+"    İncelemek ve Online Ödeme için <a t-att-href=\"object."
+"_get_payment_url()\" style=\"color:#3079ed;\">tıklayınız.</a>\n"
+"    <br/><br/>\n"
+"    Sağlıklı bir yıl dileriz.\n"
+"    <br/><br/>\n"
+"    Saygılarımızla...\n"
+"    <br/><br/>\n"
+"    <span t-out=\"object._get_payment_company()\"/>\n"
+"</p>"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__active
@@ -242,6 +260,21 @@ msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_dashboard
+msgid "Dashboard"
+msgstr "Panel"
+
+#. module: payment_student
+#: model:sms.template,body:payment_student.payment_sms
+msgid ""
+"Dear {{ object.name }}, for viewing and paying register fee of students, who "
+"has been already registered at school, {{ object."
+"_get_payment_url(shorten=True) }}"
+msgstr ""
+"Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt "
+"ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) }}"
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
 msgid "Define discounts when processing payment items of siblings"
 msgstr "Kardeşlere ait ödeme kalemlerini işlerken indirimler tanımlayın"
@@ -370,7 +403,6 @@ msgid "Mail Servers"
 msgstr "Eposta Sunucuları"
 
 #. module: payment_student
-#: model:res.groups,name:payment_student.group_sps_manager
 #: model:res.groups,name:payment_student.group_student_manager
 msgid "Manager"
 msgstr "Yönetici"
@@ -529,13 +561,6 @@ msgstr "SMS Şablonları"
 #: model:ir.ui.menu,name:payment_student.menu_main
 msgid "SPS"
 msgstr "ÖTS"
-
-#. module: payment_student
-#: model:sms.template,body:payment_student.payment_sms
-msgid ""
-"Sayın {{ object.name }}, öğrencileriniz için hizmetlerimizle ilgili kayıt "
-"ücretini incelemek ve ödemek için {{ object._get_payment_url(shorten=True) }}"
-msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__school_id

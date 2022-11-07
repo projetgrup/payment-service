@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="vendor_mail" model="mail.template">
             <field name="name">Vendor Payment Email</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -8,25 +8,24 @@
             <field name="partner_to">{{ object.id }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="body_html" type="html">
-                <p>
-                    <strong>Sayın <i t-out="object.name"/></strong>,
-                    <br/><br/>
-                    İncelemek ve Online Ödeme için <a t-att-href="object._get_payment_url()" style="color:#3079ed;">tıklayınız.</a>
-                    <br/><br/>
-                    Sağlıklı bir yıl dileriz.
-                    <br/><br/>
-                    Saygılarımızla...
-                    <br/><br/>
-                    <span t-out="object._get_payment_company()"/>
-                </p>
-            </field>
+<p>
+    <strong>Dear <i t-out="object.name"/></strong>,
+    <br/><br/>
+    If you want to view and pay online, <a t-att-href="object._get_payment_url()" style="color:#3079ed;">click here.</a>
+    <br/><br/>
+    Have a nice day.
+    <br/><br/>
+    Sincerely...
+    <br/><br/>
+    <span t-out="object._get_payment_company()"/>
+</p></field>
             <!--<field name="report_template" ref="action_report_template"/>
             <field name="report_name">{{ (object.name or '') }}</field>-->
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <record id="mail_successful_transaction" model="mail.template">
+        <record id="mail_transaction_successful" model="mail.template">
             <field name="name">Transaction: Successful Email</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="subject">{{ ctx['domain'] }} | Successful Transaction Notification</field>
@@ -43,10 +42,10 @@
                     <div>
                         Hello <strong t-out="object.name or ''">Marc Demo</strong>,<br/><br/>
                         Successful transaction information as follows.<br/><br/>
-                        Transaction Owner Company : <t t-esc="ctx['partner'].name or ''"/><br/>
+                        Transaction Owner Company : <t t-out="ctx['partner'].name or ''"/><br/>
                         Transaction Date : <t t-out="ctx['tx'].last_state_change.strftime('%d.%m.%Y %H:%M:%S')">01.01.2022 00:00:00</t><br/>
-                        Transaction Amount : <t t-esc="format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''"/><br/>
-                        Installment Count : <t t-esc="ctx['tx'].jetcheckout_installment_description_long or ''"/><br/><br/>
+                        Transaction Amount : <t t-out="format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''"/><br/>
+                        Installment Count : <t t-out="ctx['tx'].jetcheckout_installment_description_long or ''"/><br/><br/>
                         <div style="margin: 16px 0px 16px 0px; text-align: center;">
                             <a t-att-href="'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
                                 <strong>Receipt</strong>
@@ -87,6 +86,115 @@
 </table></field>
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_transaction_daily" model="mail.template">
+            <field name="name">Transaction: Daily Report</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="email_from">{{ ctx['from'] }}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="700" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <tr>
+        <td align="center" style="min-width: 700px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="700" style="min-width: 700px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="top" style="font-size: 13px;">
+                        <div>
+                            Hello <strong t-out="object.name or ''">Marc Demo</strong>,<br/><br/>
+                        </div>
+                    </td>
+                </tr>
+                <t t-if="ctx['total'] > 0 and len(ctx['transactions']) > 0">
+                    <tr>
+                        <td valign="top" style="font-size: 13px;">
+                            <div>
+                                Summary of transactions related to your company on <t t-out="ctx['date']"/> as follows.<br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="font-size: 13px; text-align: center;">
+                            <table style="table-layout: fixed; width: 90%;">
+                                <thead>
+                                    <tr>
+                                        <th style="border-bottom: 2px solid #ccc; text-align: left;">Vendor/Customer Name</th>
+                                        <th style="border-bottom: 2px solid #ccc; text-align: right;">Amount of payment</th>
+                                        <th style="border-bottom: 2px solid #ccc; text-align: right;">Share of payment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="ctx['transactions']" t-as="line">
+                                        <tr>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: left;"><t t-out="line['name']"/></td>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: right;"><t t-out="format_amount(line['amount'], ctx['company'].currency_id) or ''"/></td>
+                                            <td style="border-bottom: 1px solid #ccc; text-align: right;">% <t t-out="'%.2f' % round(100 * line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr style="font-weight:bold;">
+                                        <td style="text-align: left;">Total</td>
+                                        <td style="text-align: right;"><t t-out="format_amount(ctx['total'], ctx['company'].currency_id) or ''"/></td>
+                                        <td style="text-align: right;">% <t t-out="'%.2f' % 100"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </t>
+                <t t-else="">
+                    <tr>
+                        <td valign="top" style="font-size: 13px;">
+                            <div>
+                                There is no payment transactions related to your company on <t t-out="ctx['date']"/><br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="ctx['company'].name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="ctx['company'].phone or ''">+1 650-123-4567</t>
+                    <t t-if="ctx['company'].email">
+                        | <a t-attf-href="mailto:{{ ctx['company'].email }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="ctx['company'].website">
+                        | <a t-attf-href="{{ ctx['company'].website }}" style="text-decoration:none; color: #454748;" t-out="ctx['company'].website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+</table></field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="crom_transaction_daily" model="ir.cron">
+            <field name="name">Send daily report email of transactions</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="state">code</field>
+            <field name="code">model.jetcheckout_send_daily_email()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')"/>
+            <field name="numbercall">-1</field>
         </record>
     </data>
 </odoo>

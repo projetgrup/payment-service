@@ -7,7 +7,7 @@ var publicWidget = require('web.public.widget');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var dialog = require('web.Dialog');
-var cards = require('payment_jetcheckout.payment_card');
+var cards = require('payment_jetcheckout.cards');
 var framework = require('payment_jetcheckout.framework');
 
 var round_di = utils.round_decimals;
