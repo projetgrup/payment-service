@@ -69,7 +69,7 @@ class PaymentTransaction(models.Model):
                 mail_server = company.mail_server_id
                 context = self.env.context.copy()
                 context['date'] = date_start.strftime('%d.%m.%Y')
-                context['partner'] = company.partner_id
+                context['partner'] = user.partner_id
                 context['company'] = company
                 context['server'] = mail_server
                 context['from'] = mail_server.email_formatted or company.email_formatted
