@@ -39,7 +39,10 @@ class PaymentTransaction(models.Model):
             context['from'] = mail_server.email_formatted or company.email_formatted
 
             for partner in partners:
-                template.with_context(context).send_mail(partner.id, force_send=True, email_values={'mail_server_id': mail_server.id})
+                template.with_context(context).send_mail(partner.id, force_send=True, email_values={
+                    'is_notification': True,
+                    'mail_server_id': mail_server.id,
+                })
 
         except Exception as e:
             self.env.cr.rollback()
@@ -92,6 +95,9 @@ class PaymentTransaction(models.Model):
                         context['total'] += transaction['amount']
 
                     try:
-                        template.with_context(context).send_mail(context['partner'].id, force_send=True, email_values={'mail_server_id': mail_server.id})
+                        template.with_context(context).send_mail(context['partner'].id, force_send=True, email_values={
+                            'is_notification': True,
+                            'mail_server_id': mail_server.id,
+                        })
                     except Exception as e:
                         _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
