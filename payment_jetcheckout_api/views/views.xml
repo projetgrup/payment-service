@@ -72,7 +72,7 @@
             </group>
         </xpath>
         <xpath expr='//field[@name="jetcheckout_ip_address"]' position="attributes">
-            <attribute name="attrs">{'invisible': [('jetcheckout_api_hash', '!=', False)]}</attribute>
+            <attribute name="attrs">{'invisible': ['|', ('source_transaction_id', '!=', False), ('jetcheckout_api_hash', '!=', False)]}</attribute>
         </xpath>
         <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">
             <group name="transaction_api" attrs="{'invisible': [('jetcheckout_api_hash', '=', False)]}">

@@ -21,7 +21,7 @@
                 class="oe_stat_button"
                 icon="fa-times"
                 groups="base.group_user"
-                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}"
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error'))]}"
                 confirm="Do you confirm cancelling transaction?">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Cancel</span><span class="o_stat_text">Transaction</span>
@@ -32,7 +32,7 @@
                 class="oe_stat_button"
                 icon="fa-undo"
                 groups="base.group_user"
-                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('state', 'in', ('draft','cancel','error'))]}">
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error'))]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
                 </div>
@@ -49,33 +49,33 @@
             </button>
         </xpath>
         <xpath expr="//field[@name='acquirer_id']" position="after">
-            <field name="jetcheckout_website_id"/>
+            <field name="jetcheckout_website_id" attrs="{'invisible': [('jetcheckout_website_id', '=', False)]}"/>
         </xpath>
         <xpath expr="//group[@name='transaction_partner']/.." position="after">
             <group name="transaction_jetcheckout" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
                 <group>
                     <field name="jetcheckout_card_name"/>
                     <field name="jetcheckout_card_number"/>
-                    <field name="jetcheckout_payment_amount"/>
-                    <field name="jetcheckout_installment_description"/>
-                    <label for="jetcheckout_commission_rate"/>
-                    <div class="o_row">
+                    <field name="jetcheckout_payment_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_installment_description" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <label for="jetcheckout_commission_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
                         %<field name="jetcheckout_commission_rate"/>
                     </div>
-                    <field name="jetcheckout_commission_amount"/>
-                    <label for="jetcheckout_customer_rate"/>
-                    <div class="o_row">
+                    <field name="jetcheckout_commission_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <label for="jetcheckout_customer_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
                         %<field name="jetcheckout_customer_rate"/>
                     </div>
-                    <field name="jetcheckout_customer_amount"/>
+                    <field name="jetcheckout_customer_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                 </group>
                 <group>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>
                     <field name="jetcheckout_vpos_name"/>
-                    <field name="jetcheckout_ip_address"/>
-                    <field name="jetcheckout_order_id"/>
-                    <field name="jetcheckout_transaction_id"/>
+                    <field name="jetcheckout_ip_address" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_order_id" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_transaction_id" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                 </group>
             </group>
         </xpath>

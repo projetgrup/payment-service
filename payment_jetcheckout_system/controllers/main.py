@@ -8,6 +8,17 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 
 class JetcheckoutSystemController(JetController):
 
+    def _jetcheckout_check_redirect(self, url):
+        website = request.website
+        company = request.env.company
+        if not website.company_id.id == company.id:
+            website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
+            if website:
+                return werkzeug.utils.redirect(website.domain + url)
+            else:
+                raise werkzeug.exceptions.NotFound()
+        return False
+
     def _jetcheckout_get_parent(self, token):
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -62,13 +73,14 @@ class JetcheckoutSystemController(JetController):
             },
         }
 
-    @http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
-    def jetcheckout_system_payment_page_legacy(self, parent_id, access_token, **kwargs):
-        parent = request.env['res.partner'].sudo().browse(parent_id)
-        if not parent or not parent.access_token == access_token:
-            raise werkzeug.exceptions.NotFound()
-        token = parent._get_token()
-        return self.jetcheckout_system_payment_page(token)
+    #TODO remove it asap
+    #@http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
+    #def jetcheckout_system_payment_page_legacy(self, parent_id, access_token, **kwargs):
+    #    parent = request.env['res.partner'].sudo().browse(parent_id)
+    #    if not parent or not parent.access_token == access_token:
+    #        raise werkzeug.exceptions.NotFound()
+    #    token = parent._get_token()
+    #    return self.jetcheckout_system_payment_page(token)
 
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page(self, token, **kwargs):
@@ -104,6 +116,10 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
+        redirect = self._jetcheckout_check_redirect('/my/payment/%s' % token)
+        if redirect:
+            return redirect
+
         parent = self._jetcheckout_get_parent(token)
         if parent.is_portal:
             user = parent.users_id
@@ -114,6 +130,10 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
+        redirect = self._jetcheckout_check_redirect('/my/payment')
+        if redirect:
+            return redirect
+
         values = self._jetcheckout_get_data()
         values['success_url'] = '/my/payment/success'
         values['fail_url'] = '/my/payment/fail'
