@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import werkzeug
+from urllib.parse import urlparse
+
 from odoo import http, _
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -8,13 +10,13 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 
 class JetcheckoutSystemController(JetController):
 
-    def _jetcheckout_check_redirect(self, url):
-        website = request.website
-        company = request.env.company
-        if not website.company_id.id == company.id:
-            website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
+    def _jetcheckout_check_redirect(self, partner):
+        company_id = partner.company_id.id or request.env.company.id
+        path = urlparse(request.httprequest.url).path
+        if not request.website.company_id.id == company_id:
+            website = request.env['website'].sudo().search([('company_id', '=', company_id)], limit=1)
             if website:
-                return werkzeug.utils.redirect(website.domain + url)
+                return werkzeug.utils.redirect(website.domain + path)
             else:
                 raise werkzeug.exceptions.NotFound()
         return False
@@ -116,13 +118,14 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
-        redirect = self._jetcheckout_check_redirect('/my/payment/%s' % token)
+        partner = self._jetcheckout_get_parent(token)
+
+        redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
             return redirect
 
-        parent = self._jetcheckout_get_parent(token)
-        if parent.is_portal:
-            user = parent.users_id
+        if partner.is_portal:
+            user = partner.users_id
             request.session.authenticate(request.db, user.login, {'token': token})
             return werkzeug.utils.redirect('/my/payment')
         else:
@@ -130,7 +133,9 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
-        redirect = self._jetcheckout_check_redirect('/my/payment')
+        partner = request.env.user.partner_id
+
+        redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
             return redirect
 
