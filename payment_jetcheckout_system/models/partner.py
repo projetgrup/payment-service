@@ -292,12 +292,22 @@ class Partner(models.Model):
 
     def action_share_link(self):
         action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
-        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'link'}
+        action['context'] = {
+            'active_id': self.env.context['active_id'],
+            'active_model': self.env.context['active_model'],
+            'active_type': 'link',
+            'company': self.company_id.id or self.env.company.id,
+        }
         return action
 
     def action_share_page(self):
         action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
-        action['context'] = {'active_id': self.env.context['active_id'], 'active_model': self.env.context['active_model'], 'active_type': 'page'}
+        action['context'] = {
+            'active_id': self.env.context['active_id'],
+            'active_model': self.env.context['active_model'],
+            'active_type': 'page',
+            'company': self.company_id.id or self.env.company.id,
+        }
         return action
 
     def action_share_payment_link(self):
