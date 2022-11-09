@@ -22,7 +22,6 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     successful = fields.Boolean(readonly=True)
     completed = fields.Boolean(readonly=True)
     cancelled = fields.Boolean(readonly=True)
-    refunded = fields.Boolean(readonly=True)
     threed = fields.Boolean(readonly=True)
     currency_id =fields.Many2one('res.currency', readonly=True)
     amount = fields.Monetary(readonly=True)
