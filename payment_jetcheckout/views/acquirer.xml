@@ -116,7 +116,6 @@
                     <field name="completed" widget="boolean_toggle" style="pointer-events: none;"/>
                     <field name="threed" widget="boolean_toggle" style="pointer-events: none;"/>
                     <field name="cancelled" widget="boolean_toggle" style="pointer-events: none;"/>
-                    <field name="refunded" widget="boolean_toggle" style="pointer-events: none;"/>
                 </group>
                 <group>
                     <field name="currency_id" invisible="1"/>

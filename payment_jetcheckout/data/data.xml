@@ -25,8 +25,8 @@
 
         <record id="payment_acquirer_jetcheckout" model="payment.acquirer">
             <field name="support_authorization">False</field>
-            <field name="support_fees_computation">False</field>
-            <field name="support_refund"></field>
+            <field name="support_fees_computation">True</field>
+            <field name="support_refund">partial</field>
             <field name="support_tokenization">True</field>
             <field name="allow_tokenization">True</field>
             <field name="name">Jetcheckout</field>

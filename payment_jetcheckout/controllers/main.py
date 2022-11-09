@@ -356,6 +356,7 @@ class JetcheckoutController(http.Controller):
                 'reference': name,
                 'amount': amount,
                 'fees': customer_amount,
+                'operation': 'online_direct',
                 'currency_id': currency.id,
                 'acquirer_id': acquirer.id,
                 'partner_id': partner.id,
@@ -456,10 +457,15 @@ class JetcheckoutController(http.Controller):
         if response.status_code == 200:
             result = response.json()
             if result['response_code'] in ("00", "00307"):
-                tx.state = 'pending'
-                tx.jetcheckout_transaction_id = result['transaction_id']
-                url = '%s/%s' % (result['redirect_url'], result['transaction_id'])
-                return {'url': url}
+                rurl = result['redirect_url']
+                txid = result['transaction_id']
+                tx.write({
+                    'state': 'pending',
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
+
+                })
+                return {'url': '%s/%s' % (rurl, txid)}
             else:
                 tx.state = 'error'
                 message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
