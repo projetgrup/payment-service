@@ -116,9 +116,9 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
-        to_redirect = self._jetcheckout_check_redirect('/my/payment/%s' % token)
-        if to_redirect:
-            return to_redirect
+        redirect = self._jetcheckout_check_redirect('/my/payment/%s' % token)
+        if redirect:
+            return redirect
 
         parent = self._jetcheckout_get_parent(token)
         if parent.is_portal:
@@ -130,9 +130,9 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
-        to_redirect = self._jetcheckout_check_redirect('/my/payment')
-        if to_redirect:
-            return to_redirect
+        redirect = self._jetcheckout_check_redirect('/my/payment')
+        if redirect:
+            return redirect
 
         values = self._jetcheckout_get_data()
         values['success_url'] = '/my/payment/success'
