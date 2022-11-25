@@ -23,19 +23,19 @@
             <input id="fail_url" type="hidden" name="fail_url" value="/payment/card/shop"/>
             <input id="order" type="hidden" name="order_id" t-att-value="order.id"/>
         </t>
-        <t t-elif="sale_order">
+        <t t-elif="sale_order and sale_order._name == 'sale.order'">
             <t t-set="data" t-value="sale_order"/>
             <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
             <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
             <input id="order" type="hidden" name="order_id" t-att-value="sale_order.id"/>
         </t>
-        <t t-elif="invoice">
+        <t t-elif="invoice and invoice._name == 'account.move'">
             <t t-set="data" t-value="invoice"/>
             <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
             <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
             <input id="invoice" type="hidden" name="invoice_id" t-att-value="invoice.id"/>
         </t>
-        <t t-elif="account">
+        <t t-elif="account and account._name == 'sale.subscription'">
             <t t-set="data" t-value="account"/>
             <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
             <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
@@ -43,12 +43,25 @@
         </t>
         <t t-else="">
             <t t-set="data" t-value="None"/>
-            <input id="success_url" type="hidden" name="success_url" t-att-value="success_url"/>
-            <input id="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
-            <input id="partner" type="hidden" name="partner" t-att-value="partner.id"/>
-            <t t-set="no_button" t-value="False"/>
-            <t t-set="no_card_family" t-value="False"/>
-            <t t-set="no_loading" t-value="no_loading"/>
+            <t t-if="amount">
+                <input id="amount" type="hidden" name="amount" t-att-value="amount"/>
+                <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" data-separator="," data-thousand="." t-att-data-currency="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>
+                <input id="order" type="hidden" name="order_id" t-att-value="sale_order_id"/>
+                <input id="invoice" type="hidden" name="invoice_id" t-att-value="invoice_id"/>
+                <input id="success_url" type="hidden" name="success_url" t-att-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
+                <input id="fail_url" type="hidden" name="fail_url" t-att-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
+                <t t-set="no_button" t-value="True"/>
+                <t t-set="no_card_family" t-value="True"/>
+                <t t-set="no_loading" t-value="True"/>
+            </t>
+            <t t-else="">
+                <input id="success_url" type="hidden" name="success_url" t-att-value="success_url"/>
+                <input id="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
+                <t t-set="no_button" t-value="False"/>
+                <t t-set="no_card_family" t-value="False"/>
+                <t t-set="no_loading" t-value="no_loading"/>
+            </t>
+            <input id="partner" type="hidden" name="partner" t-att-value="partner and partner.id or partner_id"/>
         </t>
         <t t-if="data">
             <input id="amount" type="hidden" name="amount" t-att-value="data.amount_total if not account else data.recurring_total"/>
