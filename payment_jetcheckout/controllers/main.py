@@ -522,6 +522,15 @@ class JetcheckoutController(http.Controller):
             del request.session['__jetcheckout_last_tx_id']
         return werkzeug.utils.redirect(url)
 
+    @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
+    def jetcheckout_custom(self, record, access_token, **kwargs):
+        kwargs['result_url'] = '/payment/confirmation'
+        url, tx = self._jetcheckout_process(**kwargs)
+        url += '?tx_id=%s&access_token=%s' % (tx.id, access_token)
+        if request.session.get('__jetcheckout_last_tx_id'):
+            del request.session['__jetcheckout_last_tx_id']
+        return werkzeug.utils.redirect(url)
+
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], csrf=False, website=True, sitemap=False)
     def jetcheckout_result(self, **kwargs):
         values = self._jetcheckout_get_data()
