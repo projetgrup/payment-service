@@ -3,14 +3,17 @@
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Jetcheckout Payment System - jConda',
+    'name': 'jConda Connector',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
-    'sequence': 1455,
-    'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_jetcheckout_system', 'jconda'],
-    'data': ['security/ir.model.access.csv'],
+    'sequence': 1071,
+    'depends': ['base'],
+    'data': [
+        'views/jconda.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
+    ],
     'auto_install': True,
 }

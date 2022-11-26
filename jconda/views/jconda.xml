@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="connector_tree" model="ir.ui.view">
+    <field name="name">jconda.connector.tree</field>
+    <field name="model">jconda.connector</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="api_key"/>
+            <field name="active" widget="boolean_toggle"/>
+            <field name="company_id" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="connector_form" model="ir.ui.view">
+    <field name="name">jconda.connector.form</field>
+    <field name="model">jconda.connector</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="api_key"/>
+                        <field name="secret_key"/>
+                    </group>
+                    <group>
+                        <field name="active" widget="boolean_toggle"/>
+                        <field name="company_id" invisible="1" force_save="1"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_connector" model="ir.actions.act_window">
+    <field name="name">jConda Integrations</field>
+    <field name="res_model">jconda.connector</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No jConda integrations yet
+        </p>
+        <p>
+            jConda integrations are listed here
+        </p>
+    </field>
+    </record>
+</odoo>
