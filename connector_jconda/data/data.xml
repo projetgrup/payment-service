@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="method_partner_balance" model="jconda.method">
+            <field name="name">Partner Balance</field>
+            <field name="code">partner_balance</field>
+        </record>
+
+    	<record id="method_partner_ledger" model="jconda.method">
+            <field name="name">Partner Ledger</field>
+            <field name="code">partner_ledger</field>
+        </record>
+
+    	<record id="method_partner_payment" model="jconda.method">
+            <field name="name">Partner Payment</field>
+            <field name="code">partner_payment</field>
+        </record>
+    </data>
+</odoo>

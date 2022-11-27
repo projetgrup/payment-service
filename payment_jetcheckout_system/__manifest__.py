@@ -12,7 +12,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_jetcheckout',
-        'jconda',
+        'connector_jconda',
         'sms_api'
     ],
     'data': [

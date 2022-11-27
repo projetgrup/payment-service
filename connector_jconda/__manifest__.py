@@ -11,9 +11,10 @@
     'sequence': 1071,
     'depends': ['base'],
     'data': [
+        'data/data.xml',
         'views/jconda.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }
