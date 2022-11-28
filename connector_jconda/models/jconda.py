@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import requests
+import logging
 
 from odoo import models, api, fields, _
-from odoo.exceptions import ValidationError
-from odoo.tools import config
+from odoo.exceptions import RedirectWarning, ValidationError
 
+_logger = logging.getLogger(__name__)
 
 class JCondaConnector(models.Model):
     _name = 'jconda.connector'
@@ -17,48 +18,104 @@ class JCondaConnector(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='cascade', required=True, readonly=True)
     method_ids = fields.Many2many('jconda.method', 'jconda_connector_method_rel', string='Methods', readonly=True)
     active = fields.Boolean(default=True)
-    connected = fields.Boolean()
+    connected = fields.Boolean(readonly=True)
+
+    @api.model
+    def _execute(self, method, params={}, company=None):
+        url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
+        if not url:
+            raise ValidationError(_('No jConda endpoint URL found'))
+
+        if not company:
+            company = self.env.company
+
+        connector = self.search([('company_id', '=', company.id), ('connected', '=', True), ('method_ids.code', 'in', [method])], limit=1)
+        if not connector:
+            raise ValidationError(_('No connector found'))
+
+        result = []
+        try:
+            url += '/api/v1/execute'
+            response = requests.post(url, json={
+                'username': connector.username,
+                'token': connector.token,
+                'method': method,
+                'params': params,
+            })
+            if response.status_code == 200:
+                result = response.json().get('result', {})
+                if not result['response_code'] == 0:
+                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, result['message']))
+            else:
+                _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, response.reason))
+        except Exception as e:
+            _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, e))
+
+        return result
 
     def _connect(self):
-        url = config.get('jconda_url')
+        url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
         if not url:
-            url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
-        if not url:
-            self.write({'connected': False})
+            self.write({
+                'connected': False,
+                'method_ids': [(5, 0, 0)],
+            })
             self.env.cr.commit()
-            raise ValidationError(_('You must specify a jConda endpoint url in your config file with key "jconda_url" or add it as a system parameter with key "jconda.url"'))
+            if self.env.user.has_group('base.group_system'):
+                action = self.env.ref('connector_jconda.action_jconda_config_settings')
+                message = _('You must specify a jConda endpoint URL address in settings')
+                raise RedirectWarning(message, action.id, _('Go to settings'))
+            else:
+                raise ValidationError(_('Connection error is occured. Please contact with system administrator.'))
 
         url += '/api/v1/connect'
         result = {}
         for connector in self:
-            response = requests.post(url, json={'username': connector.username, 'token': connector.token})
-            if response.status_code == 200:
-                result = response.json()
-                if result['response_code'] == 0:
-                    methods = self.env['jconda.method'].sudo().search([('code', 'in', result['methods'])])
-                    connector.write({
-                        'connected': True,
-                        'method_ids': [(6, 0, methods.ids)]
-                    })
-                    result[connector.id] = {
-                        'type': 'info',
-                        'title': _('Success'),
-                        'message': _('Connection is succesful')
-                    }
+            try:
+                response = requests.post(url, json={'username': connector.username, 'token': connector.token})
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == 0:
+                        methods = self.env['jconda.method'].sudo().search([('code', 'in', result['methods'])])
+                        connector.write({
+                            'connected': True,
+                            'method_ids': [(6, 0, methods.ids)]
+                        })
+                        result[connector.id] = {
+                            'type': 'info',
+                            'title': _('Success'),
+                            'message': _('Connection is succesful')
+                        }
+                    else:
+                        connector.write({
+                            'connected': False,
+                            'method_ids': [(5, 0, 0)],
+                        })
+                        result[connector.id] = {
+                            'type': 'danger',
+                            'title': _('Error'),
+                            'message': _('An error occured when connecting: %s' % result['response_message'])
+                        }
                 else:
-                    self.write({'connected': False})
+                    connector.write({
+                        'connected': False,
+                        'method_ids': [(5, 0, 0)],
+                    })
                     result[connector.id] = {
                         'type': 'danger',
                         'title': _('Error'),
-                        'message': _('An error occured when connecting: %s' % result['response_message'])
+                        'message': _('An error occured when connecting: %s' % response.reason)
                     }
-            else:
-                self.write({'connected': False})
-                result[connector.id] = {
-                    'type': 'danger',
-                    'title': _('Error'),
-                    'message': _('An error occured when connecting: %s' % response.reason)
-                }
+            except Exception as e:
+                    connector.write({
+                        'connected': False,
+                        'method_ids': [(5, 0, 0)],
+                    })
+                    result[connector.id] = {
+                        'type': 'danger',
+                        'title': _('Error'),
+                        'message': _('An error occured when connecting: %s' % e)
+                    }
         return result
 
     @api.model

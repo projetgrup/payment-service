@@ -12,6 +12,7 @@
     'depends': ['base'],
     'data': [
         'data/data.xml',
+        'views/config.xml',
         'views/jconda.xml',
         'security/ir.model.access.csv',
         'security/security.xml',

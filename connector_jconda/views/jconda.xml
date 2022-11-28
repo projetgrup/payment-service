@@ -9,6 +9,7 @@
             <field name="username"/>
             <field name="token"/>
             <field name="method_ids" widget="many2many_tags"/>
+            <field name="connected"/>
             <field name="active" widget="boolean_toggle"/>
             <field name="company_id" invisible="1"/>
         </tree>
@@ -39,9 +40,13 @@
                         <field name="token"/>
                     </group>
                     <group>
-                        <field name="method_ids" widget="many2many_checkboxes"/>
+                        <label for="method_ids"/>
+                        <div class="o_row">
+                            <field name="method_ids" widget="many2many_checkboxes" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>
+                            <span class="text-muted" attrs="{'invisible': [('connected','!=',False)]}">Methods will be available after connection is successful</span>
+                        </div>
                         <field name="active" invisible="1"/>
-                        <field name="connected" invisible="1"/>
+                        <field name="connected" invisible="1" force_save="1"/>
                         <field name="company_id" invisible="1" force_save="1"/>
                     </group>
                 </group>

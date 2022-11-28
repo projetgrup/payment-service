@@ -70,7 +70,7 @@ class JetcheckoutController(http.Controller):
             },
         }
         if balance:
-            balance = partner_commercial.credit-partner_commercial.debit
+            balance = partner_commercial.credit - partner_commercial.debit
             balance_str = formatLang(request.env, abs(balance), currency_obj=currency)
             balance_sign = float_compare(balance, 0.0, precision_rounding=currency.rounding) < 0
             vals.update({
