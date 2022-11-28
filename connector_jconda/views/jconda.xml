@@ -6,7 +6,8 @@
     <field name="arch" type="xml">
         <tree decoration-muted="active == False" sample="1">
             <field name="name"/>
-            <field name="api_key"/>
+            <field name="username"/>
+            <field name="token"/>
             <field name="method_ids" widget="many2many_tags"/>
             <field name="active" widget="boolean_toggle"/>
             <field name="company_id" invisible="1"/>
@@ -21,8 +22,10 @@
         <form>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_toggle_active" type="object" class="oe_stat_button" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}" string="Passive"/>
-                    <button name="action_toggle_active" type="object" class="oe_stat_button" icon="fa-toggle-on" attrs="{'invisible': [('active','=',False)]}" string="Active"/>
+                    <button name="action_connect" type="object" class="oe_stat_button text-danger" icon="fa-unlink" attrs="{'invisible': [('connected','!=',False)]}" string="Not Connected"/>
+                    <button name="action_connect" type="object" class="oe_stat_button text-success" icon="fa-chain" attrs="{'invisible': [('connected','=',False)]}" string="Connected"/>
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-muted" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}" string="Passive"/>
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-success" icon="fa-toggle-on" attrs="{'invisible': [('active','=',False)]}" string="Active"/>
                 </div>
                 <div class="oe_title">
                     <label for="name"/>
@@ -32,12 +35,13 @@
                 </div>
                 <group>
                     <group>
-                        <field name="api_key"/>
-                        <field name="secret_key" invisible="1"/>
+                        <field name="username"/>
+                        <field name="token"/>
                     </group>
                     <group>
                         <field name="method_ids" widget="many2many_checkboxes"/>
                         <field name="active" invisible="1"/>
+                        <field name="connected" invisible="1"/>
                         <field name="company_id" invisible="1" force_save="1"/>
                     </group>
                 </group>

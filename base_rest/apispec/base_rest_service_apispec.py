@@ -21,13 +21,20 @@ class BaseRestServiceAPISpec(APISpec):
     def __init__(self, service_component, **params):
         self._service = service_component
         env = self._service.env
+        company = env.company
+        website = getattr(company, 'website_id', False)
+        if website:
+            url = "/web/image/website/%s/logo" % website.id
+        else:
+            url = "/web/image/res.company/%s/logo" % company.id
+
         super(BaseRestServiceAPISpec, self).__init__(
             title="%s REST Services" % self._service._usage.capitalize(),
             version="",
             openapi_version="3.0.0",
             info={
                 "description": textwrap.dedent(getattr(self._service, "_description", "") or ""),
-                "x-logo": dict(url="/web/image/website/%s/logo" % env.company.website_id.id)
+                "x-logo": dict(url=url)
             },
             servers=self._get_servers(),
             plugins=self._get_plugins(),
@@ -50,8 +57,16 @@ class BaseRestServiceAPISpec(APISpec):
             if spec["collection_name"] == self._service._collection:
                 collection_path = path
                 break
-        base_url = env["ir.config_parameter"].sudo().get_param("web.base.url")
-        url = env.company.website_id.domain or env.company.website or base_url
+
+        company = env.company
+        website = getattr(company, 'website_id', False)
+        if website:
+            url = website.domain
+        else:
+            url = company.website
+        if not url:
+            url = env["ir.config_parameter"].sudo().get_param("web.base.url")
+
         return [
             {
                 "url": "%s/%s/%s"
