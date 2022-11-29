@@ -29,7 +29,7 @@ class JetcheckoutSystemController(JetController):
             for res in result:
                 balances.append({
                     'amount': res['amount'],
-                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency'])], limit=1)
+                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_id'])], limit=1)
                 })
             values['balances'] = balances
             values['show_balance'] = bool(balances)
