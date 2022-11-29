@@ -21,20 +21,42 @@ class JCondaConnector(models.Model):
     connected = fields.Boolean(readonly=True)
 
     @api.model
-    def _execute(self, method, params={}, company=None):
-        url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
-        if not url:
-            raise ValidationError(_('No jConda endpoint URL found'))
-
+    def _count(self, method, company=None):
         if not company:
             company = self.env.company
 
-        connector = self.search([('company_id', '=', company.id), ('connected', '=', True), ('method_ids.code', 'in', [method])], limit=1)
-        if not connector:
-            raise ValidationError(_('No connector found'))
+        return self.search_count([
+            ('company_id', '=', company.id),
+            ('connected', '=', True),
+            ('method_ids.code', 'in', [method])
+        ])
 
+    @api.model
+    def _find(self, method, company=None):
+        if not company:
+            company = self.env.company
+
+        return self.search([
+            ('company_id', '=', company.id),
+            ('connected', '=', True),
+            ('method_ids.code', 'in', [method])
+        ], limit=1)
+
+    @api.model
+    def _execute(self, method, params={}, company=None):
         result = []
         try:
+            url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
+            if not url:
+                raise ValidationError(_('No jConda endpoint URL found'))
+
+            if not company:
+                company = self.env.company
+
+            connector = self._find(method, company)
+            if not connector:
+                raise ValidationError(_('No connector found'))
+
             url += '/api/v1/execute'
             response = requests.post(url, json={
                 'username': connector.username,
