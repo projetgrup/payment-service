@@ -65,9 +65,10 @@ class JCondaConnector(models.Model):
                 'params': params,
             })
             if response.status_code == 200:
-                result = response.json().get('result', {})
-                if not result['response_code'] == 0:
-                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, result['message']))
+                results = response.json()
+                if not results['response_code'] == 0:
+                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, results['message']))
+                result = results.get('result', [])
             else:
                 _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, response.reason))
         except Exception as e:
@@ -162,7 +163,11 @@ class JCondaConnector(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {'sticky': False, **result[self.id]}
+            'params': {
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+                **result[self.id]
+            }
         }
 
     

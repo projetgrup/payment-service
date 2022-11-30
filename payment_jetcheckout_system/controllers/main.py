@@ -25,7 +25,7 @@ class JetcheckoutSystemController(JetController):
         values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, transaction=transaction, balance=balance)
         connector = request.env['jconda.connector'].sudo()
         balance = []
-        result = connector._execute('partner_balance', params={
+        result = connector._execute('get_partner_balance', params={
             'company_id': values['company'].id,
             'vat': values['partner'].vat
         }, company=company)
@@ -37,7 +37,7 @@ class JetcheckoutSystemController(JetController):
 
         values['balances'] = balance
         values['show_balance'] = bool(balance)
-        values['show_ledger'] = connector._count('partner_ledger', company=company)
+        values['show_ledger'] = connector._count('get_partner_ledger', company=company)
         return values
 
     def _jetcheckout_get_parent(self, token):
@@ -190,7 +190,7 @@ class JetcheckoutSystemController(JetController):
     def jetcheckout_portal_payment_page_ledger(self, page=0, step=20, **kwargs):
         values = self._jetcheckout_get_data()
         lines = []
-        result = request.env['jconda.connector'].sudo()._execute('partner_ledger', params={
+        result = request.env['jconda.connector'].sudo()._execute('get_partner_ledger', params={
             'company_id': values['company'].id,
             'partner_id': values['partner'].vat,
             'currency_id': 'TRY',
@@ -205,7 +205,7 @@ class JetcheckoutSystemController(JetController):
                 'amount': res['amount'],
                 'balance': res['balance'],
             })
-        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=len(lines), scope=7, url_args=kwargs)
+        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=len(lines) or 1, scope=7, url_args=kwargs)
         offset = pager['offset']
         lines = lines[offset: offset + step]
         values.update({
