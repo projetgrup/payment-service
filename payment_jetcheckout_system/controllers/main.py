@@ -29,11 +29,12 @@ class JetcheckoutSystemController(JetController):
             'company_id': values['company'].id,
             'vat': values['partner'].vat
         }, company=company)
-        for res in result:
-            balance.append({
-                'amount': res['amount'],
-                'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_id'])], limit=1)
-            })
+        if result:
+            for res in result:
+                balance.append({
+                    'amount': res['amount'],
+                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_name'])], limit=1)
+                })
 
         values['balances'] = balance
         values['show_balance'] = bool(balance)
@@ -190,28 +191,37 @@ class JetcheckoutSystemController(JetController):
     @http.route(['/my/payment/ledger', '/my/payment/ledger/page/<int:page>'], type='http', auth='user', website=True)
     def jetcheckout_portal_payment_page_ledger(self, page=0, step=10, **kwargs):
         values = self._jetcheckout_get_data()
-        lines = []
+        currencies = {}
+        total = 0
         result = request.env['jconda.connector'].sudo()._execute('get_partner_ledger', params={
             'company_id': values['company'].id,
-            'partner_id': values['partner'].vat,
-            'currency_id': 'TRY',
+            'vat': values['partner'].vat
         }, company=values['company'])
-        for res in result:
-            lines.append({
-                'date': res['date'],
-                'due_date': res['due_date'],
-                'type': res['type'],
-                'description': res['description'],
-                'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_id'])], limit=1),
-                'amount': res['amount'],
-                'balance': res['balance'],
-            })
-        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
-        offset = pager['offset']
-        lines = lines[offset: offset + step]
+        if result:
+            for res in result:
+                currency = res['currency_name']
+                lines = [{
+                    'date': res['date'],
+                    'due_date': res['due_date'],
+                    'type': res['type'],
+                    'name': res['name'],
+                    'description': res['description'],
+                    'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_name'])], limit=1),
+                    'amount': res['amount'],
+                    'balance': res['balance'],
+                }]
+                if currency in currencies:
+                    currencies[currency].extend(lines)
+                else:
+                    currencies[currency] = lines
+                total += 1
+
+        pager = request.website.pager(url='/my/payment/ledger', total=total, page=page, step=step, scope=7, url_args=kwargs)
+        #offset = pager['offset']
+        #lines = lines[offset: offset + step]
         values.update({
             'pager': pager,
-            'lines': lines,
+            'currencies': currencies,
             'step': step,
         })
         return request.render('payment_jetcheckout_system.payment_page_ledger', values)
@@ -221,14 +231,16 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_get_data()
         lines = []
         result = request.env['jconda.connector'].sudo()._execute('get_partner_list', params={}, company=values['company'])
-        for res in result:
-            lines.append({
-                'vat': res['vat'],
-                'company_name': res['company_name'],
-                'mobile': res['mobile'],
-                'email': res['email'],
-                'city': res['city'],
-            })
+        if result:
+            for res in result:
+                lines.append({
+                    'vat': res['vat'],
+                    'company_name': res['company_name'],
+                    'mobile': res['mobile'],
+                    'email': res['email'],
+                    'city': res['city'],
+                })
+
         pager = request.website.pager(url='/my/payment/partners', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
         offset = pager['offset']
         lines = lines[offset: offset + step]

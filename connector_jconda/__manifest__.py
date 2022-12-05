@@ -11,7 +11,6 @@
     'sequence': 1071,
     'depends': ['base'],
     'data': [
-        'data/data.xml',
         'views/config.xml',
         'views/jconda.xml',
         'security/ir.model.access.csv',

@@ -320,6 +320,7 @@
                                 <tr class="font-weight-bold">
                                     <th class="py-3 pl-2">Date</th>
                                     <th>Due Date</th>
+                                    <th>Name</th>
                                     <th>Type</th>
                                     <th>Description</th>
                                     <th class="text-right">Amount</th>
@@ -327,18 +328,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!--<t t-set="amount_balance" t-value="balance - balance_sum"/>-->
-                                <t t-foreach="lines" t-as="line">
+                                <t t-foreach="currencies.items()" t-as="currency">
                                     <tr class="border">
-                                        <td class="py-2 pl-2"><span t-esc="line['date']" t-options='{"widget": "date"}'/></td>
-                                        <td><span t-esc="line['due_date']" t-options='{"widget": "date"}'/></td>
-                                        <td><span t-esc="line['type']"/></td>
-                                        <td><span t-esc="line['description']"/></td>
-                                        <td class="text-right"><span t-esc="line['amount']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/></td>
-                                        <td class="border-right text-right pr-2"><span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/></td>
+                                        <td class="bg-primary-light font-italic pl-2 py-2" colspan="7"><span t-esc="currency[0]"/></td>
                                     </tr>
-                                    <!--<t t-set="amount_balance" t-value="amount_balance - line['balance']"/>-->
-                                </t>
+                                    <!--<t t-set="amount_balance" t-value="balance - balance_sum"/>-->
+                                    <t t-foreach="currency[1]" t-as="line">
+                                        <tr class="border">
+                                            <td class="py-2 pl-2"><span t-esc="line['date']" t-options='{"widget": "date"}'/></td>
+                                            <td><span t-esc="line['due_date']" t-options='{"widget": "date"}'/></td>
+                                            <td><span t-esc="line['name']"/></td>
+                                            <td><span t-esc="line['type']"/></td>
+                                            <td><span t-esc="line['description']"/></td>
+                                            <td class="text-right"><span t-esc="line['amount']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/></td>
+                                            <td class="border-right text-right pr-2"><span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/></td>
+                                        </tr>
+                                        <!--<t t-set="amount_balance" t-value="amount_balance - line['balance']"/>-->
+                                        </t>
+                                    </t>
                             </tbody>
                         </table>
                     </div>
