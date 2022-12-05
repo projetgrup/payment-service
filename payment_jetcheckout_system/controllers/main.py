@@ -187,7 +187,7 @@ class JetcheckoutSystemController(JetController):
         return request.render('payment_jetcheckout_system.payment_page_transaction', values)
 
     @http.route(['/my/payment/ledger', '/my/payment/ledger/page/<int:page>'], type='http', auth='user', website=True)
-    def jetcheckout_portal_payment_page_ledger(self, page=0, step=20, **kwargs):
+    def jetcheckout_portal_payment_page_ledger(self, page=0, step=10, **kwargs):
         values = self._jetcheckout_get_data()
         lines = []
         result = request.env['jconda.connector'].sudo()._execute('get_partner_ledger', params={
@@ -205,7 +205,7 @@ class JetcheckoutSystemController(JetController):
                 'amount': res['amount'],
                 'balance': res['balance'],
             })
-        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=len(lines) or 1, scope=7, url_args=kwargs)
+        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
         offset = pager['offset']
         lines = lines[offset: offset + step]
         values.update({
@@ -214,6 +214,29 @@ class JetcheckoutSystemController(JetController):
             'step': step,
         })
         return request.render('payment_jetcheckout_system.payment_page_ledger', values)
+
+    @http.route(['/my/payment/partners', '/my/payment/partners/page/<int:page>'], type='http', auth='user', website=True)
+    def jetcheckout_portal_payment_page_partners(self, page=0, step=10, **kwargs):
+        values = self._jetcheckout_get_data()
+        lines = []
+        result = request.env['jconda.connector'].sudo()._execute('get_partner_list', params={}, company=values['company'])
+        for res in result:
+            lines.append({
+                'vat': res['vat'],
+                'company_name': res['company_name'],
+                'mobile': res['mobile'],
+                'email': res['email'],
+                'city': res['city'],
+            })
+        pager = request.website.pager(url='/my/payment/partners', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
+        offset = pager['offset']
+        lines = lines[offset: offset + step]
+        values.update({
+            'pager': pager,
+            'lines': lines,
+            'step': step,
+        })
+        return request.render('payment_jetcheckout_system.payment_page_partners', values)
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):

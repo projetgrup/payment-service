@@ -11,6 +11,11 @@
             <field name="code">get_partner_ledger</field>
         </record>
 
+    	<record id="method_get_partner_list" model="jconda.method">
+            <field name="name">Get Partner List</field>
+            <field name="code">get_partner_list</field>
+        </record>
+
     	<record id="method_post_partner_payment" model="jconda.method">
             <field name="name">Post Partner Payment</field>
             <field name="code">post_partner_payment</field>
