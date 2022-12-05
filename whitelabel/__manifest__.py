@@ -86,5 +86,6 @@
     "application": False,
     "installable": True,
     "auto_install": False,
-    "external_dependencies": {}
+    "external_dependencies": {},
+    "post_init_hook": 'post_init_hook'
 }
