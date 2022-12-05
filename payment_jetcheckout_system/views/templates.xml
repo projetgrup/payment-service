@@ -130,6 +130,9 @@
                         <t t-if="show_ledger">
                             <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/ledger"><i class="fa fa-book mr-2" t-translation="off"/>Ledger</a>
                         </t>
+                        <t t-if="show_partners">
+                            <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/partners"><i class="fa fa-users mr-2" t-translation="off"/>Partners</a>
+                        </t>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_page_contact"/>
                     <t t-set="labels">
@@ -389,13 +392,12 @@
                                 <!--<t t-set="amount_balance" t-value="balance - balance_sum"/>-->
                                 <t t-foreach="lines" t-as="line">
                                     <tr class="border">
-                                        <td class="py-2 pl-2"><span t-esc="line['date']"/></td>
-                                        <td><span t-esc="line['vat']"/></td>
+                                        <td class="py-2 pl-2"><span t-esc="line['vat']"/></td>
                                         <td><span t-esc="line['company_name']"/></td>
                                         <td><span t-esc="line['mobile']"/></td>
                                         <td><span t-esc="line['email']"/></td>
                                         <td><span t-esc="line['city']"/></td>
-                                        <td class="text-center pr-2">Select</td>
+                                        <td class="text-center pr-2"><button class="btn btn-primary btn-sm">Select</button></td>
                                     </tr>
                                     <!--<t t-set="amount_balance" t-value="amount_balance - line['balance']"/>-->
                                 </t>

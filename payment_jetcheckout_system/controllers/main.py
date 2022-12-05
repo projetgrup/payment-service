@@ -38,6 +38,7 @@ class JetcheckoutSystemController(JetController):
         values['balances'] = balance
         values['show_balance'] = bool(balance)
         values['show_ledger'] = connector._count('get_partner_ledger', company=company)
+        values['show_partners'] = connector._count('get_partner_list', company=company)
         return values
 
     def _jetcheckout_get_parent(self, token):
