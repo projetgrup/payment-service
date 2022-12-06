@@ -25,7 +25,7 @@ class JetcheckoutSystemController(JetController):
         values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, transaction=transaction, balance=balance)
         connector = request.env['jconda.connector'].sudo()
         balance = []
-        result = connector._execute('get_partner_balance', params={
+        result = connector._execute('payment_get_partner_balance', params={
             'company_id': values['company'].id,
             'vat': values['partner'].vat
         }, company=company)
@@ -38,8 +38,8 @@ class JetcheckoutSystemController(JetController):
 
         values['balances'] = balance
         values['show_balance'] = bool(balance)
-        values['show_ledger'] = connector._count('get_partner_ledger', company=company)
-        values['show_partners'] = connector._count('get_partner_list', company=company)
+        values['show_ledger'] = connector._count('payment_get_partner_ledger', company=company)
+        values['show_partners'] = connector._count('payment_get_partner_list', company=company)
         return values
 
     def _jetcheckout_get_parent(self, token):
@@ -193,7 +193,7 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_get_data()
         currencies = {}
         total = 0
-        result = request.env['jconda.connector'].sudo()._execute('get_partner_ledger', params={
+        result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_ledger', params={
             'company_id': values['company'].id,
             'vat': values['partner'].vat
         }, company=values['company'])
@@ -230,7 +230,7 @@ class JetcheckoutSystemController(JetController):
     def jetcheckout_portal_payment_page_partners(self, page=0, step=10, **kwargs):
         values = self._jetcheckout_get_data()
         lines = []
-        result = request.env['jconda.connector'].sudo()._execute('get_partner_list', params={}, company=values['company'])
+        result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={}, company=values['company'])
         if result:
             for res in result:
                 lines.append({

@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
         if not self.jetcheckout_connector_state:
             return
 
-        result = self.env['jconda.connector'].sudo()._execute('post_partner_payment', params={
+        result = self.env['jconda.connector'].sudo()._execute('payment_post_partner_payment', params={
             'account_name': '108.01',
             'transaction_id': self.jetcheckout_transaction_id,
             'pos_name': self.jetcheckout_vpos_name,
@@ -49,4 +49,5 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
         self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
+        self.write({'jetcheckout_connector_state': True})
         self.action_process_connector()

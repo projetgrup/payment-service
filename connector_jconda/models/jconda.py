@@ -16,7 +16,7 @@ class JCondaConnector(models.Model):
     username = fields.Char(string='Username', required=True)
     token = fields.Char(string='Token', required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='cascade', required=True, readonly=True)
-    method_ids = fields.Many2many('jconda.method', 'jconda_connector_method_rel', string='Methods', readonly=True)
+    method_ids = fields.One2many('jconda.method', 'connector_id', string='Methods', readonly=True)
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
 
@@ -28,7 +28,7 @@ class JCondaConnector(models.Model):
         return self.search_count([
             ('company_id', '=', company.id),
             ('connected', '=', True),
-            ('method_ids.code', 'in', [method])
+            ('method_ids.code', '=', method)
         ])
 
     @api.model
@@ -39,7 +39,7 @@ class JCondaConnector(models.Model):
         return self.search([
             ('company_id', '=', company.id),
             ('connected', '=', True),
-            ('method_ids.code', 'in', [method])
+            ('method_ids.code', '=', method)
         ], limit=1)
 
     @api.model
@@ -67,7 +67,7 @@ class JCondaConnector(models.Model):
             if response.status_code == 200:
                 results = response.json()
                 if not results['response_code'] == 0:
-                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, results['message']))
+                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, results['response_message']))
                     return None
                 result = results.get('result', [])
             else:
@@ -102,10 +102,12 @@ class JCondaConnector(models.Model):
                 if response.status_code == 200:
                     result = response.json()
                     if result['response_code'] == 0:
-                        methods = self.env['jconda.method'].sudo().search([('code', 'in', result['methods'])])
                         connector.write({
                             'connected': True,
-                            'method_ids': [(6, 0, methods.ids)]
+                            'method_ids': [(5, 0, 0)] + [(0, 0, {
+                                'code': code,
+                                'name': name,
+                            }) for code, name in result['methods'].items()]
                         })
                         result[connector.id] = {
                             'type': 'info',
@@ -133,15 +135,15 @@ class JCondaConnector(models.Model):
                         'message': _('An error occured when connecting: %s' % response.reason)
                     }
             except Exception as e:
-                    connector.write({
-                        'connected': False,
-                        'method_ids': [(5, 0, 0)],
-                    })
-                    result[connector.id] = {
-                        'type': 'danger',
-                        'title': _('Error'),
-                        'message': _('An error occured when connecting: %s' % e)
-                    }
+                connector.write({
+                    'connected': False,
+                    'method_ids': [(5, 0, 0)],
+                })
+                result[connector.id] = {
+                    'type': 'danger',
+                    'title': _('Error'),
+                    'message': _('An error occured when connecting: %s' % e)
+                }
         return result
 
     @api.model
@@ -178,5 +180,6 @@ class JCondaMethod(models.Model):
     _name = 'jconda.method'
     _description = 'jConda Methods'
 
-    name = fields.Char(translate=True)
+    connector_id = fields.Many2one('jconda.connector', 'Connector', index=True, ondelete='cascade')
+    name = fields.Char()
     code = fields.Char()

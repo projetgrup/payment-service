@@ -42,8 +42,8 @@
                     </group>
                     <group>
                         <label for="method_ids"/>
-                        <div class="o_row">
-                            <field name="method_ids" widget="many2many_checkboxes" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>
+                        <div>
+                            <field name="method_ids" widget="many2many_tags" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>
                             <span class="text-muted" attrs="{'invisible': [('connected','!=',False)]}">Methods will be available after connection is successful</span>
                         </div>
                         <field name="active" invisible="1"/>
