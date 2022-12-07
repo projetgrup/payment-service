@@ -9,10 +9,10 @@
             <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': [('jetcheckout_connector_state', '=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='partner_id']" position="after">
-            <br attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
             <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
             <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
-            <br attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
         </xpath>
     </field>
     </record>
