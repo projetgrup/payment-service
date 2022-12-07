@@ -21,26 +21,6 @@ class JetcheckoutSystemController(JetController):
                 raise werkzeug.exceptions.NotFound()
         return False
 
-    def _jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
-        values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, transaction=transaction, balance=balance)
-        connector = request.env['jconda.connector'].sudo()
-        balance = []
-        result = connector._execute('get_partner_balance', params={
-            'company_id': values['company'].id,
-            'vat': values['partner'].vat
-        }, company=company)
-        for res in result:
-            balance.append({
-                'amount': res['amount'],
-                'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_id'])], limit=1)
-            })
-
-        values['balances'] = balance
-        values['show_balance'] = bool(balance)
-        values['show_ledger'] = connector._count('get_partner_ledger', company=company)
-        values['show_partners'] = connector._count('get_partner_list', company=company)
-        return values
-
     def _jetcheckout_get_parent(self, token):
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -95,15 +75,6 @@ class JetcheckoutSystemController(JetController):
             },
         }
 
-    #TODO remove it asap
-    #@http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
-    #def jetcheckout_system_payment_page_legacy(self, parent_id, access_token, **kwargs):
-    #    parent = request.env['res.partner'].sudo().browse(parent_id)
-    #    if not parent or not parent.access_token == access_token:
-    #        raise werkzeug.exceptions.NotFound()
-    #    token = parent._get_token()
-    #    return self.jetcheckout_system_payment_page(token)
-
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page(self, token, **kwargs):
         parent = self._jetcheckout_get_parent(token)
@@ -145,8 +116,11 @@ class JetcheckoutSystemController(JetController):
             return redirect
 
         values = self._jetcheckout_get_data()
-        values['success_url'] = '/my/payment/success'
-        values['fail_url'] = '/my/payment/fail'
+        values.update({
+            'fail_url': '/my/payment/success',
+            'success_url': '/my/payment/fail',
+            'show_reset': True,
+        })
 
         # remove hash if exists
         # it could be there because of api module
@@ -187,62 +161,9 @@ class JetcheckoutSystemController(JetController):
         })
         return request.render('payment_jetcheckout_system.payment_page_transaction', values)
 
-    @http.route(['/my/payment/ledger', '/my/payment/ledger/page/<int:page>'], type='http', auth='user', website=True)
-    def jetcheckout_portal_payment_page_ledger(self, page=0, step=10, **kwargs):
-        values = self._jetcheckout_get_data()
-        lines = []
-        result = request.env['jconda.connector'].sudo()._execute('get_partner_ledger', params={
-            'company_id': values['company'].id,
-            'partner_id': values['partner'].vat,
-            'currency_id': 'TRY',
-        }, company=values['company'])
-        for res in result:
-            lines.append({
-                'date': res['date'],
-                'due_date': res['due_date'],
-                'type': res['type'],
-                'description': res['description'],
-                'currency': request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', res['currency_id'])], limit=1),
-                'amount': res['amount'],
-                'balance': res['balance'],
-            })
-        pager = request.website.pager(url='/my/payment/ledger', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
-        offset = pager['offset']
-        lines = lines[offset: offset + step]
-        values.update({
-            'pager': pager,
-            'lines': lines,
-            'step': step,
-        })
-        return request.render('payment_jetcheckout_system.payment_page_ledger', values)
-
-    @http.route(['/my/payment/partners', '/my/payment/partners/page/<int:page>'], type='http', auth='user', website=True)
-    def jetcheckout_portal_payment_page_partners(self, page=0, step=10, **kwargs):
-        values = self._jetcheckout_get_data()
-        lines = []
-        result = request.env['jconda.connector'].sudo()._execute('get_partner_list', params={}, company=values['company'])
-        for res in result:
-            lines.append({
-                'vat': res['vat'],
-                'company_name': res['company_name'],
-                'mobile': res['mobile'],
-                'email': res['email'],
-                'city': res['city'],
-            })
-        pager = request.website.pager(url='/my/payment/partners', total=len(lines), page=page, step=step, scope=7, url_args=kwargs)
-        offset = pager['offset']
-        lines = lines[offset: offset + step]
-        values.update({
-            'pager': pager,
-            'lines': lines,
-            'step': step,
-        })
-        return request.render('payment_jetcheckout_system.payment_page_partners', values)
-
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
         partner = self._jetcheckout_get_parent(token)
-
         redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
             return redirect

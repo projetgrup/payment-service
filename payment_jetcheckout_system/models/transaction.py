@@ -28,16 +28,3 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
         self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
-        self.env['jconda.connector'].sudo()._execute('post_partner_payment', params={
-            'account_id': '108.01',
-            'transaction_id': self.jetcheckout_transaction_id,
-            'pos_id': self.jetcheckout_vpos_name,
-            'date': self.last_state_change.strftime('%Y-%m-%d'),
-            'partner_id': self.partner_id.name,
-            'card_number': self.jetcheckout_card_number,
-            'installments': self.jetcheckout_installment_description,
-            'currency_id': self.currency_id.name,
-            'amount': self.jetcheckout_payment_amount,
-            'amount_commision_cost': self.jetcheckout_commission_amount,
-            'amount_customer_cost': self.jetcheckout_customer_amount
-        }, company=self.company_id)

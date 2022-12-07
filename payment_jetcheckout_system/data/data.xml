@@ -4,24 +4,28 @@
     	<record id="categ_authorized" model="res.partner.category">
             <field name="name">Authorized</field>
         </record>
+
     	<record id="send_type_email" model="payment.acquirer.jetcheckout.send.type">
             <field name="name">Email</field>
             <field name="code">email</field>
             <field name="icon">fa-envelope-o</field>
             <field name="sequence">1</field>
         </record>
+
     	<record id="send_type_sms" model="payment.acquirer.jetcheckout.send.type">
             <field name="name">Sms</field>
             <field name="code">sms</field>
             <field name="icon">fa-commenting-o</field>
             <field name="sequence">2</field>
         </record>
+
     	<record id="send_type_telegram" model="payment.acquirer.jetcheckout.send.type">
             <field name="name">Telegram</field>
             <field name="code">telegram</field>
             <field name="icon">fa-send</field>
             <field name="sequence">10</field>
         </record>
+
     	<record id="send_type_whatsapp" model="payment.acquirer.jetcheckout.send.type">
             <field name="name">WhatsApp</field>
             <field name="code">whatsapp</field>
@@ -38,6 +42,7 @@
             <field name="limit">1</field>
             <field name="sequence">0</field>
         </record>
+
     	<record id="dashboard_type_yesterday" model="payment.dashboard">
             <field name="name">Yesterday</field>
             <field name="code">yesterday</field>
@@ -47,6 +52,7 @@
             <field name="limit">1</field>
             <field name="sequence">1</field>
         </record>
+
     	<record id="dashboard_type_this_week" model="payment.dashboard">
             <field name="name">This Week</field>
             <field name="code">this_week</field>
@@ -56,6 +62,7 @@
             <field name="limit">1</field>
             <field name="sequence">2</field>
         </record>
+
     	<record id="dashboard_type_last_week" model="payment.dashboard">
             <field name="name">Last Week</field>
             <field name="code">last_week</field>
@@ -65,6 +72,7 @@
             <field name="limit">1</field>
             <field name="sequence">3</field>
         </record>
+
     	<record id="dashboard_type_this_month" model="payment.dashboard">
             <field name="name">This Month</field>
             <field name="code">this_month</field>
@@ -74,6 +82,7 @@
             <field name="limit">1</field>
             <field name="sequence">4</field>
         </record>
+
     	<record id="dashboard_type_last_month" model="payment.dashboard">
             <field name="name">Last Month</field>
             <field name="code">last_month</field>
@@ -83,6 +92,7 @@
             <field name="limit">1</field>
             <field name="sequence">5</field>
         </record>
+
     	<record id="dashboard_type_this_year" model="payment.dashboard">
             <field name="name">This Year</field>
             <field name="code">this_year</field>
@@ -92,6 +102,7 @@
             <field name="limit">1</field>
             <field name="sequence">6</field>
         </record>
+
     	<record id="dashboard_type_last_year" model="payment.dashboard">
             <field name="name">Last Year</field>
             <field name="code">last_year</field>
