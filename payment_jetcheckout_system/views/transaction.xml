@@ -6,7 +6,6 @@
     <field name="arch" type="xml">
         <xpath expr='//button[@name="jetcheckout_payment"]' position="before">
             <field name="system" invisible="1"/>
-            <field name="jetcheckout_connector_state" invisible="1"/>
             <button type="object"
                 name="action_items"
                 class="oe_stat_button"
@@ -16,9 +15,6 @@
                     <span class="o_stat_value"><field name="jetcheckout_item_count"/></span><span class="o_stat_text">Items</span>
                 </div>
             </button>
-        </xpath>
-        <xpath expr='//button[@name="action_void"]' position="after">
-            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': [('jetcheckout_connector_state','=',False)]}"/>
         </xpath>
         <xpath expr='//button[@name="jetcheckout_payment"]' position="attributes">
             <attribute name="attrs">{'invisible': ['|','|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False),('system', '!=', False)]}</attribute>

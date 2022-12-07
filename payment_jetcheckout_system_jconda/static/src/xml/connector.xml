@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="payment_jetcheckout_system_jconda.partner_list">
+        <t t-if="partners">
+            <table class="table">
+                <thead>
+                    <tr class="font-weight-bold">
+                        <th class="pl-3">VAT</th>
+                        <th>Company</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>City</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="partners" t-as="partner">
+                        <tr class="border">
+                            <td class="pl-3"><span t-esc="partner['vat']"/></td>
+                            <td><span t-esc="partner['company_name']"/></td>
+                            <td><span t-esc="partner['mobile']"/></td>
+                            <td><span t-esc="partner['email']"/></td>
+                            <td><span t-esc="partner['city']"/></td>
+                            <td class="text-center pr-2">
+                                <button class="bg-primary border-primary btn btn-primary rounded o_connector_select_partner" t-att-data-vat="partner['vat']" t-att-data-company="partner['company_name']">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+        <t t-else="">
+            No partners found. If you think that it is an error, please try again.
+        </t>
+    </t>
+</templates>

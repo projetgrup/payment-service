@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="transaction_form" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.transaction_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//button[@name='action_void']" position="after">
+            <field name="jetcheckout_connector_state" invisible="1"/>
+            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': [('jetcheckout_connector_state', '=', False)]}"/>
+        </xpath>
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <br attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <br attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

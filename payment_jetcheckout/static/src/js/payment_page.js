@@ -457,21 +457,6 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         }
     },
 
-    format_currency: function(amount, info) {
-        const decimals = parseInt(info.data('decimal'));
-        const position = info.data('position');
-        const symbol = info.data('symbol');
-        const amount_formatted = parseFloat(round_di(amount, decimals).toFixed(decimals));
-        let currency_formatted = _.str.sprintf('%.' + decimals + 'f', amount_formatted || 0).split('.');
-        currency_formatted[0] = utils.insert_thousand_seps(currency_formatted[0]);
-        const value = currency_formatted.join(core._t.database.parameters.decimal_point);
-        if (position === 'after') {
-            return value + ' ' + symbol;
-        } else {
-            return symbol + ' ' + value;
-        }
-    },
-
     _checkData: function () {
         if (this.amount.typedValue === '' || this.amount.typedValue === 0) {
             this.displayNotification({
