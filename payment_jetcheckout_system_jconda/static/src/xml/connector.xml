@@ -2,48 +2,78 @@
 <templates>
     <t t-name="payment_jetcheckout_system_jconda.partner_list">
         <main style="padding: 0 !important;">
-            <t t-if="partners">
-                <div class="bg-light d-flex justify-content-center py-3 text-center">
-                    <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_query_partner" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
-                    <button class="btn btn-warning shadow-sm o_connector_search_partner" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr class="font-weight-bold">
-                                <th class="pl-3">VAT</th>
-                                <th>Company</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
-                                <th>City</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-call="payment_jetcheckout_system_jconda.partner_list_line"/>
-                        </tbody>
-                    </table>
-                </div>
-            </t>
-            <t t-else="">
-                No partners found. If you think that it is an error, please try again.
-            </t>
+            <div t-if="partners" class="bg-light d-flex justify-content-center py-3 text-center">
+                <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_query_partner" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
+                <button class="btn btn-warning shadow-sm o_connector_search_partner" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0" style="table-layout: fixed;">
+                    <colgroup>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col style="width: 10%;"/>
+                    </colgroup>
+                    <thead>
+                        <tr class="font-weight-bold">
+                            <th class="pl-3">VAT</th>
+                            <th>Company</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>City</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-call="payment_jetcheckout_system_jconda.partner_list_line"/>
+                    </tbody>
+                </table>
+            </div>
+            <div class="bg-light d-flex flex-row justify-content-center p-2">
+                <t t-call="payment_jetcheckout_system_jconda.partner_list_page"/>
+            </div>
         </main>
     </t>
+
     <t t-name="payment_jetcheckout_system_jconda.partner_list_line">
-        <t t-foreach="partners" t-as="partner">
-            <tr class="border">
-                <td class="pl-3"><span t-esc="partner['vat']"/></td>
-                <td><span t-esc="partner['company_name']"/></td>
-                <td><span t-esc="partner['mobile']"/></td>
-                <td><span t-esc="partner['email']"/></td>
-                <td><span t-esc="partner['city']"/></td>
-                <td class="text-center pr-2">
-                    <button class="bg-primary border-primary btn btn-primary rounded o_connector_select_partner" t-att-data-vat="partner['vat']" t-att-data-company="partner['company_name']">
-                        Select
-                    </button>
+        <t t-if="partners.length">
+            <t t-foreach="partners" t-as="partner">
+                <tr class="border">
+                    <td class="pl-3"><span t-esc="partner['vat']"/></td>
+                    <td><span t-esc="partner['company_name']"/></td>
+                    <td><span t-esc="partner['mobile']"/></td>
+                    <td><span t-esc="partner['email']"/></td>
+                    <td><span t-esc="partner['city']"/></td>
+                    <td class="text-center pr-2 py-1">
+                        <button class="bg-primary border-primary btn btn-primary rounded o_connector_select_partner" t-att-data-vat="partner['vat']" t-att-data-company="partner['company_name']">
+                            Select
+                        </button>
+                    </td>
+                </tr>
+            </t>
+        </t>
+        <t t-else="">
+            <tr>
+                <td colspan="6" class="text-center">
+                    <i class="fa fa-search-minus h1 text-muted" style="font-size: 3rem;"/>
+                    <span class="d-block h2 mt-4 text-muted">No partners found. If you think that it is an error, please try again.</span>
                 </td>
             </tr>
+        </t>
+    </t>
+
+    <t t-name="payment_jetcheckout_system_jconda.partner_list_page">
+        <t t-foreach="pages" t-as="page">
+            <t t-if="page === 0">
+                ...
+            </t>
+            <t t-else="">
+                <button class="btn btn-outline-primary shadow-sm">
+                    <t t-esc="page"/>
+                </button>
+            </t>
         </t>
     </t>
 </templates>
