@@ -27,8 +27,21 @@ paymentSystemPage.include({
             const popup = new dialog(this, {
                 title: _t('Select a partner'),
                 $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners}),
+                dialogClass: 'o_connector_table_partner'
             })
             popup.opened(function() {
+                $('.o_connector_search_partner').on('click', function(e) {
+                    const query = $('.o_connector_query_partner').val();
+                    let filtered;
+                    if (query) {
+                        let regex = new RegExp(query, 'i');
+                        filtered = partners.filter((p) => p.company_name.match(regex));
+                    } else {
+                        filtered = partners;
+                    }
+                    const render = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: filtered});
+                    $('.o_connector_table_partner tbody').html(render);
+                });
                 $('.o_connector_select_partner').on('click', function(e) {
                     const $el = $(e.currentTarget);
                     rpc.query({
