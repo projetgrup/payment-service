@@ -85,7 +85,6 @@ class JetcheckoutSystemJcondaController(JetController):
     def jetcheckout_portal_payment_page_partners(self, **kwargs):
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={})
         if not result == None:
-            result[2]['company_name'] = 'test'
             return result
         return False
 
