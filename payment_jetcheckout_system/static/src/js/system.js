@@ -1,4 +1,4 @@
-odoo.define('payment_jetcheckout.payment_system_page', function (require) {
+odoo.define('payment_jetcheckout_system.payment_page', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -9,7 +9,6 @@ var dialog = require('web.Dialog');
 var paymentPage = publicWidget.registry.JetcheckoutPaymentPage;
 
 var round_di = utils.round_decimals;
-var qweb = core.qweb;
 var _t = core._t;
 
 paymentPage.include({
@@ -45,10 +44,10 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
             self.$agreement = $('#distant_sale_agreement');
             self.$membership = $('#membership_agreement');
             self.$contact = $('#contact');
-            self.$privacy.on('click', self.onClickPrivacy.bind(self));
-            self.$agreement.on('click', self.onClickAgreement.bind(self));
-            self.$membership.on('click', self.onClickMembership.bind(self));
-            self.$contact.on('click', self.onClickContact.bind(self));
+            self.$privacy.on('click', self._onClickPrivacy.bind(self));
+            self.$agreement.on('click', self._onClickAgreement.bind(self));
+            self.$membership.on('click', self._onClickMembership.bind(self));
+            self.$contact.on('click', self._onClickContact.bind(self));
         });
     },
 
@@ -64,7 +63,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         }
     },
 
-    onClickPrivacy: function (ev) {
+    _onClickPrivacy: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         rpc.query({route: '/p/privacy'}).then(function (content) {
@@ -75,7 +74,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         });
     },
 
-    onClickAgreement: function (ev) {
+    _onClickAgreement: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         rpc.query({route: '/p/agreement'}).then(function (content) {
@@ -86,7 +85,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         });
     },
 
-    onClickMembership: function (ev) {
+    _onClickMembership: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         rpc.query({route: '/p/membership'}).then(function (content) {
@@ -97,7 +96,7 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         });
     },
 
-    onClickContact: function (ev) {
+    _onClickContact: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         rpc.query({route: '/p/contact'}).then(function (content) {

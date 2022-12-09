@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="jconda_connector_rule" model="ir.rule">
+            <field name="name">Access only related jconda connectors</field>
+            <field name="model_id" ref="model_jconda_connector"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="jconda_connector_admin_rule" model="ir.rule">
+            <field name="name">Access only related jconda connectors for admins</field>
+            <field name="model_id" ref="model_jconda_connector"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo>

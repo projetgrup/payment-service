@@ -43,7 +43,7 @@
         </t>
         <t t-else="">
             <t t-set="data" t-value="None"/>
-            <t t-if="amount">
+            <t t-if="access_token">
                 <input id="amount" type="hidden" name="amount" t-att-value="amount"/>
                 <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" data-separator="," data-thousand="." t-att-data-currency="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>
                 <input id="order" type="hidden" name="order_id" t-att-value="sale_order_id"/>

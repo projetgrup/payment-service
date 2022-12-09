@@ -3,7 +3,7 @@
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Jetcheckout Payment System',
+    'name': 'jetCheckout Payment System',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',

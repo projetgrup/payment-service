@@ -11,7 +11,6 @@
                 <button class="btn btn-secondary o_company_action" data-model="res.company">Company Details</button>
                 <button class="btn btn-secondary o_company_action" data-model="res.users">Users</button>
                 <button class="btn btn-secondary o_company_action" data-model="payment.acquirer">Virtual Pos Settings</button>
-                <button class="btn btn-secondary o_company_action" data-model="">Jconda Integration</button>
             </div>
         </div>
     </template>

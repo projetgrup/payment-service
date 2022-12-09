@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': 'Vendor Payment System - jConda',
+    'name': 'jConda Connector',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
-    'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_vendor', 'jconda'],
-    'data': ['views/menu.xml'],
-    'auto_install': True,
+    'sequence': 1071,
+    'depends': ['base'],
+    'data': [
+        'views/config.xml',
+        'views/jconda.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
+    ],
+    'auto_install': False,
 }

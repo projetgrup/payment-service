@@ -75,15 +75,6 @@ class JetcheckoutSystemController(JetController):
             },
         }
 
-    #TODO remove it asap
-    #@http.route('/p/<int:parent_id>/<string:access_token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
-    #def jetcheckout_system_payment_page_legacy(self, parent_id, access_token, **kwargs):
-    #    parent = request.env['res.partner'].sudo().browse(parent_id)
-    #    if not parent or not parent.access_token == access_token:
-    #        raise werkzeug.exceptions.NotFound()
-    #    token = parent._get_token()
-    #    return self.jetcheckout_system_payment_page(token)
-
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page(self, token, **kwargs):
         parent = self._jetcheckout_get_parent(token)
@@ -116,21 +107,6 @@ class JetcheckoutSystemController(JetController):
     def jetcheckout_contact_page(self):
         return request.website.payment_contact_page
 
-    @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
-    def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
-        partner = self._jetcheckout_get_parent(token)
-
-        redirect = self._jetcheckout_check_redirect(partner)
-        if redirect:
-            return redirect
-
-        if partner.is_portal:
-            user = partner.users_id
-            request.session.authenticate(request.db, user.login, {'token': token})
-            return werkzeug.utils.redirect('/my/payment')
-        else:
-            return werkzeug.utils.redirect('/p/%s' % token)
-
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
         partner = request.env.user.partner_id
@@ -140,8 +116,11 @@ class JetcheckoutSystemController(JetController):
             return redirect
 
         values = self._jetcheckout_get_data()
-        values['success_url'] = '/my/payment/success'
-        values['fail_url'] = '/my/payment/fail'
+        values.update({
+            'fail_url': '/my/payment/success',
+            'success_url': '/my/payment/fail',
+            'show_reset': True,
+        })
 
         # remove hash if exists
         # it could be there because of api module
@@ -181,3 +160,17 @@ class JetcheckoutSystemController(JetController):
             'tpp': tpp,
         })
         return request.render('payment_jetcheckout_system.payment_page_transaction', values)
+
+    @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
+    def jetcheckout_portal_payment_page_signin(self, token, **kwargs):
+        partner = self._jetcheckout_get_parent(token)
+        redirect = self._jetcheckout_check_redirect(partner)
+        if redirect:
+            return redirect
+
+        if partner.is_portal:
+            user = partner.users_id
+            request.session.authenticate(request.db, user.login, {'token': token})
+            return werkzeug.utils.redirect('/my/payment')
+        else:
+            return werkzeug.utils.redirect('/p/%s' % token)
