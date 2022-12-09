@@ -84,10 +84,7 @@ class PaymentTransaction(models.Model):
 
         self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
         payment_method_line = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
-        line = self.env['payment.acquirer.jetcheckout.journal'].sudo().search([
-            ('acquirer_id','=',self.acquirer_id.id),
-            ('name','=',self.jetcheckout_vpos_name),
-        ], limit=1)
+        line = self.acquirer_id.sudo()._get_journal_line(name=self.jetcheckout_vpos_name)
         if not line:
             raise UserError(_('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name))
 

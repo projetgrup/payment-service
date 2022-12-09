@@ -9,34 +9,54 @@ let paymentSystemPage = publicWidget.registry.JetcheckoutPaymentSystemPage;
 
 let qweb = core.qweb;
 let _t = core._t;
-let pageSize = 2;
+let pageSize = 5;
 
 paymentSystemPage.include({
     events: _.extend({}, paymentSystemPage.prototype.events, {
-        'click .o_connector_get_partner': '_onClickConnectorGetPartner',
-        'click .o_connector_reset_partner': '_onClickConnectorResetPartner',
+        'click .o_connector_partner_get': '_onClickConnectorPartnerGet',
+        'click .o_connector_partner_reset': '_onClickConnectorPartnerReset',
     }),
 
     xmlDependencies: (paymentSystemPage.prototype.xmlDependencies || []).concat(
         ["/payment_jetcheckout_system_jconda/static/src/xml/connector.xml"]
     ),
 
-    _onClickConnectorGetPartner: function (ev) {
+    init: function () {
+        this._super.apply(this, arguments);
+        this.connector = {
+            partners: [],
+            partner: [],
+            filter: false,
+            page: 1,
+            getPartners: function () {
+                return this.filter && this.partner || this.partners;
+            }
+        };
+    },
+
+    _onClickConnectorPartnerGet: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         const self = this;
         rpc.query({route: '/my/payment/partners'}).then(function (partners) {
-            const pages = self._onClickConnectorPagePartner(partners);
+            self.connector.partners = partners;
+            self.connector.partner = [];
+            self.connector.filter = false;
+            self.connector.page = 1;
+            const pages = self._getConnectorPartnerPages();
             const popup = new dialog(this, {
                 title: _t('Select a partner'),
-                $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners.slice(0, pageSize), pages: pages}),
-                dialogClass: 'o_connector_table_partner'
+                $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners.slice(0, pageSize), pages: pages, page: 1}),
+                dialogClass: 'o_connector_partner_table'
             });
             popup.opened(function() {
-                $('.o_connector_search_partner').click(function(e) { self._onClickConnectorSearchPartner(partners); });
-                $('.o_connector_query_partner').keypress(function(e) { if (e.key === 'Enter') self._onClickConnectorSearchPartner(partners); });
-                $('.o_connector_select_partner').click(function(e) {
-                    const $el = $(e.currentTarget);
+                $('.o_connector_partner_pages').click(self._onClickConnectorPartnerPage.bind(self));
+                $('.o_connector_partner_search').click(self._onClickConnectorPartnerSearch.bind(self));
+                $('.o_connector_partner_query').keypress(self._onClickConnectorPartnerSearch.bind(self));
+                $('.o_connector_partner_table tbody').click(function(ev) {
+                    const $el = $(ev.target);
+                    if ($el.prop('tagName') !== 'BUTTON') return;
+                    $('.o_connector_partner_select').prop({'disabled': 'disabled'}).addClass('disabled');
                     rpc.query({
                         route: '/my/payment/partners/select',
                         params: {
@@ -47,7 +67,7 @@ paymentSystemPage.include({
                         $el.prop({'disabled': 'disabled'}).addClass('disabled');
                         $('label[for="partner"] + span').text($el.data('company'));
                         $('.o_connector_balance').html(result.render);
-                        $('.o_connector_reset_partner').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
+                        $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
                         popup.destroy();
                     }).guardedCatch(function () {
                         popup.destroy();
@@ -58,22 +78,38 @@ paymentSystemPage.include({
         });
     },
 
-    _onClickConnectorSearchPartner: function (partners) {
-        const pages = self._onClickConnectorPagePartner(partners);
-        const query = $('.o_connector_query_partner').val();
-        let filtered;
+    _onClickConnectorPartnerSearch: function (ev) {
+        if (ev.key && ev.key !== 'Enter') return;
+        const query = $('.o_connector_partner_query').val();
+        var partners = this.connector.partners;
         if (query) {
             let regex = new RegExp(query, 'i');
-            filtered = partners.filter((p) => p.company_name.match(regex));
+            partners = partners.filter((p) => p.company_name.match(regex));
+            this.connector.partner = partners;
+            this.connector.filter = true;
+            this.connector.page = 1;
         } else {
-            filtered = partners;
+            this.connector.partner = [];
+            this.connector.filter = false;
+            this.connector.page = 1;
         }
-        const render = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: filtered.slice(0, pageSize)});
-        $('.o_connector_table_partner tbody').html(render);
+        const render = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: partners.slice(0, pageSize)});
+        $('.o_connector_partner_table tbody').html(render);
+        this._renderConnectorPartnerPages(1);
     },
 
-    _onClickConnectorPagePartner: function (partners) {
-        const total = Math.ceil(partners.length / pageSize);
+    _onClickConnectorPartnerPage: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const $el = $(ev.target);
+        if ($el.prop('tagName') !== 'BUTTON') return;
+        const page = $el.data('page');
+        this._renderConnectorPartnerPages(page);
+    },
+
+    _getConnectorPartnerPages: function () {
+        const partners = this.connector.getPartners();
+        let total = Math.ceil(partners.length / pageSize) || 1;
         const firstPages = [];
         const lastPages = [];
         for(let i=1;i<=5;i++) {
@@ -84,18 +120,28 @@ paymentSystemPage.include({
         }
         if (total > 5) {
             for(let i=1;i<=3;i++) {
-                if (total === 5) {
-                    firstPages.push(0);
-                    break;
-                }
+                if (total === 5) break;
                 lastPages.unshift(total);
                 total--;
+                if (i === 3 && total !== 5) firstPages.push(0);
             }
         }
         return firstPages.concat(lastPages);
     },
 
-    _onClickConnectorResetPartner: function (ev) {
+    _renderConnectorPartnerPages: function (page=1) {
+        const partners = this.connector.getPartners();
+        const pages = this._getConnectorPartnerPages();
+
+        const render_page = qweb.render('payment_jetcheckout_system_jconda.partner_list_page', {pages: pages, page: page});
+        $('.o_connector_partner_pages').html(render_page);
+
+        const firstLine = (page - 1) * pageSize;
+        const render_list = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: partners.slice(firstLine, firstLine + pageSize)});
+        $('.o_connector_partner_table tbody').html(render_list);
+    },
+
+    _onClickConnectorPartnerReset: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         const $el = $(ev.currentTarget);
