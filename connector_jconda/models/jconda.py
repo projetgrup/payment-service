@@ -67,14 +67,14 @@ class JCondaConnector(models.Model):
             if response.status_code == 200:
                 results = response.json()
                 if not results['response_code'] == 0:
-                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, results['response_message']))
+                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['response_message']))
                     return None
                 result = results.get('result', [])
             else:
-                _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, response.reason))
+                _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.reason))
                 return None
         except Exception as e:
-            _logger.error('An error occured when executing method %s for %s: %s' % (method, company.name, e))
+            _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', e))
             return None
 
         return result
