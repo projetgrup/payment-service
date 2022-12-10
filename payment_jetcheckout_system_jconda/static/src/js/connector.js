@@ -103,30 +103,65 @@ paymentSystemPage.include({
         ev.preventDefault();
         const $el = $(ev.target);
         if ($el.prop('tagName') !== 'BUTTON') return;
-        const page = $el.data('page');
+        const page = parseInt($el.data('page'));
+        this.connector.page = page;
         this._renderConnectorPartnerPages(page);
     },
 
     _getConnectorPartnerPages: function () {
         const partners = this.connector.getPartners();
-        let total = Math.ceil(partners.length / pageSize) || 1;
+        const page = this.connector.page;
         const firstPages = [];
+        const middlePages = [];
         const lastPages = [];
-        for(let i=1;i<=5;i++) {
+
+        let total = Math.ceil(partners.length / pageSize) || 1;
+        let limit = total;
+        let iterator = 0;
+        for(let i=1; i<=3; i++) {
             firstPages.push(i);
-            if (total === i) {
-                break;
-            }
+            if (total === i) break;
         }
-        if (total > 5) {
-            for(let i=1;i<=3;i++) {
-                if (total === 5) break;
-                lastPages.unshift(total);
-                total--;
-                if (i === 3 && total !== 5) firstPages.push(0);
-            }
+
+        for(let i=1; i<=3; i++) {
+            if (limit === 1) break;
+            lastPages.unshift(limit);
+            limit--;
         }
-        return firstPages.concat(lastPages);
+
+        if (total > 6) {
+            if (page < 4) {
+                for(let i=4; i<=limit; i++) {
+                    middlePages.push(i);
+                    iterator++;
+                    if (iterator === 3) break;
+                }
+            } else if (page > limit){
+                for(let i=limit; i>=4; i--) {
+                    middlePages.unshift(i);
+                    iterator++;
+                    if (iterator === 3) break;
+                }
+            } else {
+                for(let i=-1; i<=1; i++) {
+                    middlePages.push(page + i);
+                }
+            }
+
+            if (middlePages[0] === 3) {
+                middlePages.shift();
+                if (!lastPages.includes(6)) middlePages.push(6);
+            }
+            if (middlePages.at(-1) === lastPages[0]) {
+                middlePages.pop();
+                if (!firstPages.includes(limit - 2)) middlePages.unshift(limit - 2);
+            }
+
+            if (middlePages[0] > 4) middlePages.unshift(0);
+            if (middlePages.at(-1) < limit) middlePages.push(0);
+        }
+
+        return firstPages.concat(middlePages.concat(lastPages));
     },
 
     _renderConnectorPartnerPages: function (page=1) {
