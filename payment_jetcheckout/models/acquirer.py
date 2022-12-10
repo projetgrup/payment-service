@@ -82,6 +82,7 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
     currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id, readonly=True)
     company_id = fields.Many2one('res.company', ondelete='cascade')
+    user_id = fields.Many2one('res.users', ondelete='cascade')
     website_id = fields.Many2one('website', ondelete='cascade')
 
 
@@ -148,6 +149,12 @@ class PaymentAcquirerJetcheckout(models.Model):
             if raise_exception:
                 raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
         return acquirer
+
+    def _get_journal_line(self, name, user=None):
+        domain = [('acquirer_id', '=', self.id), ('name', '=', name)]
+        if user and not user.share:
+            domain.append(('user', '=', user.id))
+        return self.env['payment.acquirer.jetcheckout.journal'].search(domain, limit=1, order='user_id')
 
     def _get_default_payment_method_id(self):
         self.ensure_one()

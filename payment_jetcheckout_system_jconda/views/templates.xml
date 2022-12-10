@@ -2,7 +2,10 @@
 <odoo>
     <template id="payment_sidebar" name="Payment Sidebar - jConda" inherit_id="payment_jetcheckout.payment_sidebar">
         <xpath expr="//label[@for='partner']" position="inside">
-            <button t-attf-class="btn btn-sm float-right font-weight-bold text-primary o_connector_reset_partner #{'' if partner_related and show_reset else 'd-none'}"><i class="fa fa-undo mr-1" t-translation="off"/>Reset</button>
+            <t t-if="show_partners">
+                <a role="button" t-attf-class="btn btn-sm float-right font-weight-bold text-primary o_connector_partner_get #{'' if show_reset else 'd-none'}" href="#"><i class="fa fa-users mr-2" t-translation="off"/>Partners</a>
+                <a role="button" t-attf-class="btn btn-sm float-right font-weight-bold text-primary o_connector_partner_reset #{'' if partner_related and show_reset else 'd-none'}" href="#"><i class="fa fa-undo mr-1" t-translation="off"/>Reset</a>
+            </t>
         </xpath>
         <xpath expr="//span[@t-esc='partner.name']" position="attributes">
             <attribute name="t-esc">partner_related and partner_related['name'] or partner.name</attribute>
@@ -10,24 +13,19 @@
     </template>
 
     <template id="payment_partner_balance" name="Payment System Page - jConda Partner Balance">
-        <label for="balance" class="text-primary font-weight-bold mt-2 mb-0">Balance</label>
         <t t-foreach="balances" t-as="balance">
             <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
         </t>
     </template>
 
     <template id="payment_page" name="Payment System Page - jConda" inherit_id="payment_jetcheckout_system.payment_page">
-        <xpath expr="//t[@t-set='buttons']" position="inside">
-            <t t-if="show_ledger">
-                <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/ledger"><i class="fa fa-book mr-2" t-translation="off"/>Ledger</a>
-            </t>
-            <t t-if="show_partners">
-                <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_connector_get_partner" href="#"><i class="fa fa-users mr-2" t-translation="off"/>Partners</a>
-            </t>
-        </xpath>
         <xpath expr="//t[@t-set='labels']" position="inside">
             <t t-if="show_balance">
-                <div class="o_connector_balance d-flex flex-column">                    
+                <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
+                    Balance
+                    <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger"><i class="fa fa-book mr-2" t-translation="off"/>See Ledger</a>
+                </label>
+                <div class="o_connector_balance d-flex flex-column">
                     <t t-call="payment_jetcheckout_system_jconda.payment_partner_balance"/>
                 </div>
             </t>

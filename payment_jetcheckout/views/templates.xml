@@ -84,10 +84,10 @@
         <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
             <div>
                 <div class="px-3 py-4 bg-white card my-4">
-                    <label for="partner" class="text-primary font-weight-bold mb-0">Partner</label>
+                    <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
                     <span t-esc="partner.name" class="text-600"/>
                     <t t-if="contact">
-                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0">Contact</label>
+                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
                         <span t-esc="contact.name" class="text-600"/>
                     </t>
                     <t t-if="labels" t-raw="labels"/>
