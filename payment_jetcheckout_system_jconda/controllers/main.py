@@ -8,8 +8,11 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutS
 
 class JetcheckoutSystemJcondaController(JetController):
 
-    def _jetcheckout_connector_get_partner_balance(self, company, vat=None):
+    def _jetcheckout_connector_get_partner_balance(self, company=None, vat=None):
         balance = []
+        if not company:
+            company = request.env.company
+
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_balance', params={
             'company_id': company.partner_id.ref,
             'vat': vat
