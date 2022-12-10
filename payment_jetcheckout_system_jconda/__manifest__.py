@@ -26,6 +26,7 @@
         ],
         'web.assets_frontend': [
             'payment_jetcheckout_system_jconda/static/src/js/connector.js',
+            'payment_jetcheckout_system_jconda/static/src/scss/connector.scss',
         ],
     },
     'application': False,

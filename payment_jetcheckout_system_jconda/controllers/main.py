@@ -37,7 +37,7 @@ class JetcheckoutSystemJcondaController(JetController):
         values['balances'] = self._jetcheckout_connector_get_partner_balance(vat=values['partner'].vat, company=company)
         values['show_balance'] = bool(values['balances'])
         values['show_ledger'] = request.env['jconda.connector'].sudo()._count('payment_get_partner_ledger', company=company)
-        values['show_partners'] = request.env['jconda.connector'].sudo()._count('payment_get_partner_list', company=company)
+        values['show_partners'] = not request.env.user.share and request.env['jconda.connector'].sudo()._count('payment_get_partner_list', company=company)
         values['partner_related'] = '__jetcheckout_partner_related' in request.session and request.session['__jetcheckout_partner_related']
         return values
 
@@ -83,13 +83,21 @@ class JetcheckoutSystemJcondaController(JetController):
 
     @http.route(['/my/payment/partners'], type='json', auth='user', website=True)
     def jetcheckout_portal_payment_page_partners(self, **kwargs):
+        if request.env.user.share:
+            return []
+
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={})
+        result[2]['company_name'] = 'test'
+        result[3]['company_name'] = 'testt'
         if not result == None:
-            return result
-        return False
+            return result + result + result + result + result + result + result + result + result
+        return []
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
     def jetcheckout_portal_payment_page_partners_select(self, **kwargs):
+        if request.env.user.share:
+            return False
+
         request.session['__jetcheckout_partner_related'] = {
             'name': kwargs.get('company'),
             'vat': kwargs.get('vat'),

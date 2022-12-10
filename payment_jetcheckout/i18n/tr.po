@@ -1334,6 +1334,11 @@ msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__user_id
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/payment.py:0
 #, python-format
 msgid "Journal default account missing"
