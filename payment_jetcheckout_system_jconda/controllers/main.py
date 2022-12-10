@@ -14,7 +14,7 @@ class JetcheckoutSystemJcondaController(JetController):
             company = request.env.company
 
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_balance', params={
-            'company_id': company.partner_id.ref,
+            'company_id': company.sudo().partner_id.ref,
             'vat': vat
         }, company=company)
         if result:
