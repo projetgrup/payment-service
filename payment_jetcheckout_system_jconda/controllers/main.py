@@ -8,10 +8,10 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutS
 
 class JetcheckoutSystemJcondaController(JetController):
 
-    def _jetcheckout_connector_get_partner_balance(self, vat=None, company=None):
+    def _jetcheckout_connector_get_partner_balance(self, company, vat=None):
         balance = []
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_balance', params={
-            'company_id': 1,
+            'company_id': company.partner_id.ref,
             'vat': vat
         }, company=company)
         if result:
@@ -34,7 +34,7 @@ class JetcheckoutSystemJcondaController(JetController):
 
     def _jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
         values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, transaction=transaction, balance=balance)
-        values['balances'] = self._jetcheckout_connector_get_partner_balance(vat=values['partner'].vat, company=company)
+        values['balances'] = self._jetcheckout_connector_get_partner_balance(company, values['partner'].vat)
         values['show_balance'] = bool(values['balances'])
         values['show_ledger'] = request.env['jconda.connector'].sudo()._count('payment_get_partner_ledger', company=company)
         values['show_partners'] = not request.env.user.share and request.env['jconda.connector'].sudo()._count('payment_get_partner_list', company=company)
@@ -47,7 +47,7 @@ class JetcheckoutSystemJcondaController(JetController):
         currencies = {}
         total = 0
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_ledger', params={
-            'company_id': 1,
+            'company_id': values['company'].partner_id.ref,
             'vat': values['partner_related']['vat'] if values['partner_related'] else values['partner'].vat
         }, company=values['company'])
         if result == None:
@@ -87,10 +87,8 @@ class JetcheckoutSystemJcondaController(JetController):
             return []
 
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={})
-        result[2]['company_name'] = 'test'
-        result[3]['company_name'] = 'testt'
         if not result == None:
-            return result + result + result + result + result + result + result + result + result
+            return result
         return []
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
@@ -104,7 +102,7 @@ class JetcheckoutSystemJcondaController(JetController):
         }
         return {
             'render': request.env['ir.ui.view']._render_template('payment_jetcheckout_system_jconda.payment_partner_balance', {
-                'balances': self._jetcheckout_connector_get_partner_balance(kwargs.get('vat'))
+                'balances': self._jetcheckout_connector_get_partner_balance(request.env.company, kwargs.get('vat'))
             })
         }
 
