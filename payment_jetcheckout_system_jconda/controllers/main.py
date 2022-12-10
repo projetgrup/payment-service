@@ -87,10 +87,8 @@ class JetcheckoutSystemJcondaController(JetController):
             return []
 
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={})
-        result[2]['company_name'] = 'test'
-        result[3]['company_name'] = 'testt'
         if not result == None:
-            return result + result + result + result + result + result + result + result + result
+            return result
         return []
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
