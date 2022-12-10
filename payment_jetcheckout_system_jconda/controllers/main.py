@@ -103,7 +103,9 @@ class JetcheckoutSystemJcondaController(JetController):
         if request.env.user.share:
             return []
 
-        result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={})
+        result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={
+            'company_id': request.env.company.sudo().partner_id.ref,
+        })
         if not result == None:
             return result
         return []
