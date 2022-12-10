@@ -118,6 +118,7 @@ paymentSystemPage.include({
         let total = Math.ceil(partners.length / pageSize) || 1;
         let limit = total;
         let iterator = 0;
+
         for(let i=1; i<=3; i++) {
             firstPages.push(i);
             if (total === i) break;
