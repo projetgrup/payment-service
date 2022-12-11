@@ -73,6 +73,7 @@ paymentSystemPage.include({
                     route: '/my/payment/partners/select',
                     params: {
                         vat: $el.data('vat'),
+                        ref: $el.data('ref'),
                         company: $el.data('company'),
                     },
                 }).then(function (result) {

@@ -46,7 +46,7 @@
                     <td><span t-esc="partner['mobile']"/></td>
                     <td><span t-esc="partner['email']"/></td>
                     <td><span t-esc="partner['city']"/></td>
-                    <td class="text-center pr-2 py-1 align-middle">
+                    <td class="text-center pr-2 pb-1 pt-2">
                         <button class="bg-primary border-primary btn btn-primary rounded o_connector_partner_select" t-att-data-vat="partner['vat']" t-att-data-ref="partner['ref']" t-att-data-company="partner['company_name']">
                             Select
                         </button>

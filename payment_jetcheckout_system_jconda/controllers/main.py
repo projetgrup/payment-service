@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import werkzeug
 
-from odoo import http, _
+from odoo import http, fields, _
 from odoo.http import request
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetController
 
@@ -9,13 +9,14 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutS
 class JetcheckoutSystemJcondaController(JetController):
 
     def _jetcheckout_connector_get_partner_balance(self, vat, ref, company=None):
-        balance = []
+        balances = []
         company = company or request.env.company
         company_id = company.sudo().partner_id.ref
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_balance', params={
             'company_id': company_id,
             'vat': vat,
-            'ref': ref,
+            'ref': vat,
+            #'ref': ref, TODO will be soon asap
         }, company=company)
         if result:
             for res in result:
@@ -29,13 +30,20 @@ class JetcheckoutSystemJcondaController(JetController):
                 if not currency:
                     continue
 
-                balance.append({'amount': res['amount'], 'currency': currency})
-        return balance
+                balances.append({'amount': res['amount'], 'currency': currency})
+        return balances
 
-    def _jetcheckout_connector_can_access_partners(self, company=None):
+    def _jetcheckout_connector_can_show_partner_ledger(self, company=None):
+        company = company or request.env.company
+        return request.env['jconda.connector'].sudo()._count('payment_get_partner_ledger', company=company)
+
+    def _jetcheckout_connector_can_show_partner_balance(self, balance):
+        return bool(balance)
+
+    def _jetcheckout_connector_can_access_partner_list(self, company=None):
         user = request.env.user.sudo()
         company = company or request.env.company
-        return not user.share and company.id in user.company_ids.ids
+        return not user.share and company.id in user.company_ids.ids and request.env['jconda.connector'].sudo()._count('payment_get_partner_list', company=company)
 
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)
@@ -59,10 +67,10 @@ class JetcheckoutSystemJcondaController(JetController):
             ref = values['partner'].ref
 
         values['balances'] = self._jetcheckout_connector_get_partner_balance(vat, ref, company)
-        values['show_balance'] = bool(values['balances'])
-        values['show_ledger'] = request.env['jconda.connector'].sudo()._count('payment_get_partner_ledger', company=company)
-        values['show_partners'] = self._jetcheckout_connector_can_access_partners(company=company) and request.env['jconda.connector'].sudo()._count('payment_get_partner_list', company=company)
-        values['partner_related'] = '__jetcheckout_partner_related' in request.session and request.session['__jetcheckout_partner_related']
+        values['show_balance'] = self._jetcheckout_connector_can_show_partner_balance(values['balances'])
+        values['show_ledger'] = self._jetcheckout_connector_can_show_partner_ledger(company)
+        values['show_partners'] = self._jetcheckout_connector_can_access_partner_list(company)
+        values['partner_related'] = request.session.get('__jetcheckout_partner_related', {})
         return values
 
     @http.route(['/my/payment/ledger', '/my/payment/ledger/page/<int:page>'], type='http', auth='user', website=True)
@@ -70,15 +78,22 @@ class JetcheckoutSystemJcondaController(JetController):
         values = self._jetcheckout_get_data()
         currencies = {}
         total = 0
+        year = fields.Date.today().year
+        date_start = '%s-01-01 00:00:00' % year
+        date_end = '%s-12-31 23:59:59' % year
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_ledger', params={
-            'company_id': values['company'].partner_id.ref,
-            'vat': values['partner_related']['vat'] if values['partner_related'] else values['partner'].vat
+            'company_id': values['company'].sudo().partner_id.ref,
+            'vat': values['partner_related']['vat'] if values['partner_related'] else values['partner'].vat,
+            'ref': values['partner_related']['vat'] if values['partner_related'] else values['partner'].vat,
+            #'ref': values['partner_related']['ref'] if values['partner_related'] else values['partner'].ref, TODO will be soon asap
+            'date_start': date_start,
+            'date_end': date_end,
         }, company=values['company'])
         if result == None:
             raise werkzeug.exceptions.NotFound()
 
         for res in result:
-            currency = res['currency_name']
+            currency_name = res['currency_name']
             if currency_name == 'TRL':
                 currency_name = 'TRY'
 
@@ -96,10 +111,10 @@ class JetcheckoutSystemJcondaController(JetController):
                 'balance': res['balance'],
                 'currency': currency,
             }]
-            if currency in currencies:
-                currencies[currency].extend(lines)
+            if currency_name in currencies:
+                currencies[currency_name].extend(lines)
             else:
-                currencies[currency] = lines
+                currencies[currency_name] = lines
             total += 1
 
         pager = request.website.pager(url='/my/payment/ledger', total=total, page=page, step=step, scope=7, url_args=kwargs)
@@ -114,7 +129,7 @@ class JetcheckoutSystemJcondaController(JetController):
 
     @http.route(['/my/payment/partners'], type='json', auth='user', website=True)
     def jetcheckout_portal_payment_page_partners(self, **kwargs):
-        if not self._jetcheckout_connector_can_access_partners():
+        if not self._jetcheckout_connector_can_access_partner_list():
             return []
 
         result = request.env['jconda.connector'].sudo()._execute('payment_get_partner_list', params={
@@ -126,7 +141,7 @@ class JetcheckoutSystemJcondaController(JetController):
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
     def jetcheckout_portal_payment_page_partners_select(self, **kwargs):
-        if not self._jetcheckout_connector_can_access_partners():
+        if not self._jetcheckout_connector_can_access_partner_list():
             return False
 
         request.session['__jetcheckout_partner_related'] = {
@@ -134,9 +149,13 @@ class JetcheckoutSystemJcondaController(JetController):
             'vat': kwargs.get('vat'),
             'ref': kwargs.get('ref'),
         }
+
+        balances = self._jetcheckout_connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
         return {
             'render': request.env['ir.ui.view']._render_template('payment_jetcheckout_system_jconda.payment_partner_balance', {
-                'balances': self._jetcheckout_connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
+                'balances': balances,
+                'show_balance': self._jetcheckout_connector_can_show_partner_balance(balances),
+                'show_ledger': self._jetcheckout_connector_can_show_partner_ledger(),
             })
         }
 

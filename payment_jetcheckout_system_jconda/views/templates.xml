@@ -13,22 +13,26 @@
     </template>
 
     <template id="payment_partner_balance" name="Payment System Page - jConda Partner Balance">
-        <t t-foreach="balances" t-as="balance">
-            <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+        <t t-if="show_balance">
+            <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
+                Balance
+                <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
+                    <i class="fa fa-book mr-2" t-translation="off"/>See Ledger
+                </a>
+            </label>
+            <div class="d-flex flex-column">
+                <t t-foreach="balances" t-as="balance">
+                    <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                </t>
+            </div>
         </t>
     </template>
 
     <template id="payment_page" name="Payment System Page - jConda" inherit_id="payment_jetcheckout_system.payment_page">
         <xpath expr="//t[@t-set='labels']" position="inside">
-            <t t-if="show_balance">
-                <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
-                    Balance
-                    <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger"><i class="fa fa-book mr-2" t-translation="off"/>See Ledger</a>
-                </label>
-                <div class="o_connector_balance d-flex flex-column">
-                    <t t-call="payment_jetcheckout_system_jconda.payment_partner_balance"/>
-                </div>
-            </t>
+            <div class="o_connector_balance">
+                <t t-call="payment_jetcheckout_system_jconda.payment_partner_balance"/>
+            </div>
         </xpath>
     </template>
 
@@ -50,6 +54,11 @@
                     <t t-set="page" t-value="'ledger'"/>
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
+                    <t t-set="labels">
+                        <div class="o_connector_balance">
+                            <t t-call="payment_jetcheckout_system_jconda.payment_partner_balance"/>
+                        </div>
+                    </t>
                     <t t-set="buttons">
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
@@ -70,7 +79,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="currencies.items()" t-as="currency">
+                                <t t-if="not currencies">
+                                    <tr>
+                                        <td colspan="7" class="p-5 text-center">
+                                            <i class="fa fa-search-minus h1 text-muted" style="font-size: 3rem;"/>
+                                            <span class="d-block h4 mt-4 text-muted">No records found. If you think that it is an error, please try again.</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-else="" t-foreach="currencies.items()" t-as="currency">
                                     <tr class="border">
                                         <td class="bg-primary-light font-italic pl-2 py-2" colspan="7"><span t-esc="currency[0]"/></td>
                                     </tr>
@@ -86,8 +103,8 @@
                                             <td class="border-right text-right pr-2"><span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/></td>
                                         </tr>
                                         <!--<t t-set="amount_balance" t-value="amount_balance - line['balance']"/>-->
-                                        </t>
                                     </t>
+                                </t>
                             </tbody>
                         </table>
                     </div>
