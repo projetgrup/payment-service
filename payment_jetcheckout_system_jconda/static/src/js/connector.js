@@ -5,6 +5,7 @@ let core = require('web.core');
 let publicWidget = require('web.public.widget');
 let rpc = require('web.rpc');
 let dialog = require('web.Dialog');
+var framework = require('payment_jetcheckout.framework');
 let paymentSystemPage = publicWidget.registry.JetcheckoutPaymentSystemPage;
 
 let qweb = core.qweb;
@@ -37,45 +38,56 @@ paymentSystemPage.include({
     _onClickConnectorPartnerGet: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const self = this;
-        rpc.query({route: '/my/payment/partners'}).then(function (partners) {
-            self.connector.partners = partners;
-            self.connector.partner = [];
-            self.connector.filter = false;
-            self.connector.page = 1;
-            const pages = self._getConnectorPartnerPages();
-            const popup = new dialog(this, {
-                title: _t('Select a partner'),
-                $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners.slice(0, pageSize), pages: pages, page: 1}),
-                dialogClass: 'o_connector_partner_table'
+        framework.showLoading();
+        if (!this.connector.partners.length) {
+            const self = this;
+            rpc.query({route: '/my/payment/partners'}).then(function (partners) {
+                self._getConnectorPartners(partners);
             });
-            popup.opened(function() {
-                $('.o_connector_partner_pages').click(self._onClickConnectorPartnerPage.bind(self));
-                $('.o_connector_partner_search').click(self._onClickConnectorPartnerSearch.bind(self));
-                $('.o_connector_partner_query').keypress(self._onClickConnectorPartnerSearch.bind(self));
-                $('.o_connector_partner_table tbody').click(function(ev) {
-                    const $el = $(ev.target);
-                    if ($el.prop('tagName') !== 'BUTTON') return;
-                    $('.o_connector_partner_select').prop({'disabled': 'disabled'}).addClass('disabled');
-                    rpc.query({
-                        route: '/my/payment/partners/select',
-                        params: {
-                            vat: $el.data('vat'),
-                            company: $el.data('company'),
-                        },
-                    }).then(function (result) {
-                        $el.prop({'disabled': 'disabled'}).addClass('disabled');
-                        $('label[for="partner"] + span').text($el.data('company'));
-                        $('.o_connector_balance').html(result.render);
-                        $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
-                        popup.destroy();
-                    }).guardedCatch(function () {
-                        popup.destroy();
-                    });
+        } else {
+            this._getConnectorPartners(this.connector.partners);
+        }
+    },
+
+    _getConnectorPartners: function (partners) {
+        this.connector.partners = partners;
+        this.connector.partner = [];
+        this.connector.filter = false;
+        this.connector.page = 1;
+        const self = this;
+        const pages = this._getConnectorPartnerPages();
+        const popup = new dialog(this, {
+            title: _t('Select a partner'),
+            $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners.slice(0, pageSize), pages: pages, page: 1}),
+            dialogClass: 'o_connector_partner_table'
+        });
+        popup.opened(function() {
+            $('.o_connector_partner_pages').click(self._onClickConnectorPartnerPage.bind(self));
+            $('.o_connector_partner_search').click(self._onClickConnectorPartnerSearch.bind(self));
+            $('.o_connector_partner_query').keypress(self._onClickConnectorPartnerSearch.bind(self));
+            $('.o_connector_partner_table tbody').click(function(ev) {
+                const $el = $(ev.target);
+                if ($el.prop('tagName') !== 'BUTTON') return;
+                $('.o_connector_partner_select').prop({'disabled': 'disabled'}).addClass('disabled');
+                rpc.query({
+                    route: '/my/payment/partners/select',
+                    params: {
+                        vat: $el.data('vat'),
+                        company: $el.data('company'),
+                    },
+                }).then(function (result) {
+                    $el.prop({'disabled': 'disabled'}).addClass('disabled');
+                    $('label[for="partner"] + span').text($el.data('company'));
+                    $('.o_connector_balance').html(result.render);
+                    $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
+                    popup.destroy();
+                }).guardedCatch(function () {
+                    popup.destroy();
                 });
             });
-            popup.open();
         });
+        popup.open();
+        framework.hideLoading();
     },
 
     _onClickConnectorPartnerSearch: function (ev) {
