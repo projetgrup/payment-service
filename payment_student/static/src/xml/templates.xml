@@ -19,46 +19,46 @@
                     <tr>
                         <td class="text-right"><t t-esc="payment.name"/></td>
                         <t t-foreach="payment.amount" t-as="amount">
-                            <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                            <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                         </t>
                     </tr>
                 </t>
                 <tr t-if="has_payment" class="bg-light">
                     <td class="text-right">Subtotal</td>
                     <t t-foreach="subpayments" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
                 <tr t-if="siblings" class="text-danger">
                     <td class="text-right">Sibling Discount<span t-translation="off"> %<t t-esc="sibling_discount"/></span></td>
                     <t t-foreach="siblings" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
                 <tr t-if="siblings" class="bg-light">
                     <td class="text-right">Subtotal</td>
                     <t t-foreach="subsiblings" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
                 <t t-if="bursaries" t-foreach="bursaries" t-as="bursary">
                     <tr t-if="bursary.id" class="text-danger">
                         <td class="text-right"><t t-esc="bursary.name"/></td>
                         <t t-foreach="bursary.amount" t-as="amount">
-                            <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                            <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                         </t>
                     </tr>
                 </t>
                 <tr t-if="has_bursary" class="bg-light">
                     <td class="text-right">Subtotal</td>
                     <t t-foreach="subbursaries" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
                 <tr t-if="advance_discount" class="text-danger">
                     <td class="text-right">Advance Payment Discount<span t-translation="off"> %<t t-esc="advance_discount"/></span></td>
                     <t t-foreach="discounts" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
             </tbody>
@@ -66,7 +66,7 @@
                 <tr class="bg-light">
                     <td class="text-right">Amount To Pay</td>
                     <t t-foreach="totals" t-as="amount">
-                        <td class="text-right"><t t-esc="widget.format_currency(amount.amount)"/></td>
+                        <td class="text-right"><t t-esc="widget.formatCurrency(amount.amount)"/></td>
                     </t>
                 </tr>
             </tfoot>

@@ -267,9 +267,7 @@
     </template>
 
     <template id="payment_form" name="Payment Form">
-        <div t-if="not no_loading" class="o_payment_loading">
-            <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
-        </div>
+        <t t-call="payment_jetcheckout.payment_loading"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
                 <t t-set="page" t-value="'payment'"/>
@@ -356,6 +354,12 @@
                 </div>
             </div>
             <div id="payment_installments" class="row mx-0 d-none"/>
+        </div>
+    </template>
+
+    <template id="payment_loading" name="Payment Loading">
+        <div t-if="not no_loading" class="o_payment_loading">
+            <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
         </div>
     </template>
 

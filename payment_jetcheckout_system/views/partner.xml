@@ -86,6 +86,7 @@
                     <group name="private">
                         <field name="mobile" widget="phone"/>
                         <field name="email" widget="email"/>
+                        <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('active_system')"/>
                     </group>
                     <group name="communication" string="Communication Dates">
