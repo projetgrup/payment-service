@@ -10,7 +10,6 @@ let paymentSystemPage = publicWidget.registry.JetcheckoutPaymentSystemPage;
 
 let qweb = core.qweb;
 let _t = core._t;
-let pageSize = 5;
 
 paymentSystemPage.include({
     events: _.extend({}, paymentSystemPage.prototype.events, {
@@ -24,45 +23,74 @@ paymentSystemPage.include({
 
     init: function () {
         this._super.apply(this, arguments);
+        const self = this;
         this.connector = {
-            partners: [],
-            partner: [],
-            filter: false,
-            page: 1,
-            getPartners: function () {
-                return this.filter && this.partner || this.partners;
-            }
+            dateFormat: 'DD-MM-YYYY',
         };
+        this.connector.tools = {
+            formatDate: (date) => moment(date).format(self.connector.dateFormat),
+            formatCurrency: (amount, currency) => self.formatCurrency(amount, currency.position, currency.symbol, currency.precision),
+        };
+        this.connector.partner = {
+            page: 1,
+            pageSize: 5,
+            list: [],
+            flist: [],
+            filter: false,
+            getRows: () => self.connector.partner.filter && self.connector.partner.flist || self.connector.partner.list,
+            lines: 'payment_jetcheckout_system_jconda.partner_list_line',
+            $lines: () => $('.o_connector_partner_table tbody'),
+        };
+        this.connector.ledger = {
+            page: 1,
+            pageSize: 10,
+            list: [],
+            getRows: () => self.connector.ledger.list,
+            lines: 'payment_jetcheckout_system_jconda.partner_ledger_line',
+            $lines: () => $('.o_connector_partner_ledger_table tbody'),
+        };
+    },
+
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            let $ledger_button = $('.o_connector_partner_ledger_date');
+            if ($ledger_button.length) {
+                $ledger_button.click(self._onClickConnectorPartnerLedgerDate.bind(self));
+                self._getConnectorPartnerLedgerList();
+            }
+        });
     },
 
     _onClickConnectorPartnerGet: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         framework.showLoading();
-        if (!this.connector.partners.length) {
+        if (!this.connector.partner.list.length) {
             const self = this;
             rpc.query({route: '/my/payment/partners'}).then(function (partners) {
                 self._getConnectorPartners(partners);
             });
         } else {
-            this._getConnectorPartners(this.connector.partners);
+            this._getConnectorPartners(this.connector.partner.list);
         }
     },
 
     _getConnectorPartners: function (partners) {
-        this.connector.partners = partners;
-        this.connector.partner = [];
-        this.connector.filter = false;
-        this.connector.page = 1;
+        const partner = this.connector.partner;
+        partner.list = partners;
+        partner.flist = [];
+        partner.filter = false;
         const self = this;
-        const pages = this._getConnectorPartnerPages();
         const popup = new dialog(this, {
             title: _t('Select a partner'),
-            $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {partners: partners.slice(0, pageSize), pages: pages, page: 1}),
+            $content: qweb.render('payment_jetcheckout_system_jconda.partner_list', {}),
             dialogClass: 'o_connector_partner_table'
         });
         popup.opened(function() {
-            $('.o_connector_partner_pages').click(self._onClickConnectorPartnerPage.bind(self));
+            self._renderConnectorPages('partner');
+            $('.o_connector_pages').click(self._onClickConnectorPage.bind(self));
+
             $('.o_connector_partner_search').click(self._onClickConnectorPartnerSearch.bind(self));
             $('.o_connector_partner_query').keypress(self._onClickConnectorPartnerSearch.bind(self));
             $('.o_connector_partner_table tbody').click(function(ev) {
@@ -79,7 +107,7 @@ paymentSystemPage.include({
                 }).then(function (result) {
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');
                     $('label[for="partner"] + span').text($el.data('company'));
-                    $('.o_connector_balance').html(result.render);
+                    $('.o_connector_partner_balance').html(result.render);
                     $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
                     popup.destroy();
                 }).guardedCatch(function () {
@@ -94,41 +122,83 @@ paymentSystemPage.include({
     _onClickConnectorPartnerSearch: function (ev) {
         if (ev.key && ev.key !== 'Enter') return;
         const query = $('.o_connector_partner_query').val();
-        var partners = this.connector.partners;
+        const partner = this.connector.partner;
+        var partners = partner.list;
         if (query) {
             let regex = new RegExp(query, 'i');
             partners = partners.filter((p) => p.company_name.match(regex));
-            this.connector.partner = partners;
-            this.connector.filter = true;
-            this.connector.page = 1;
+            partner.flist = partners;
+            partner.filter = true;
         } else {
-            this.connector.partner = [];
-            this.connector.filter = false;
-            this.connector.page = 1;
+            partner.flist = [];
+            partner.filter = false;
         }
-        const render = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: partners.slice(0, pageSize)});
-        $('.o_connector_partner_table tbody').html(render);
-        this._renderConnectorPartnerPages(1);
+        this._renderConnectorPages('partner');
     },
 
-    _onClickConnectorPartnerPage: function (ev) {
+    _onClickConnectorPage: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         const $el = $(ev.target);
         if ($el.prop('tagName') !== 'BUTTON') return;
         const page = parseInt($el.data('page'));
-        this.connector.page = page;
-        this._renderConnectorPartnerPages(page);
+        const type = $el.data('type');
+        this._renderConnectorPages(type, page);
     },
 
-    _getConnectorPartnerPages: function () {
-        const partners = this.connector.getPartners();
-        const page = this.connector.page;
+    _getConnectorPartnerLedgerList: function () {
+        const self = this;
+        const $date_start = $('#date_start');
+        const $date_end = $('#date_end');
+        const format = $('#date_start').data('date-format')
+        framework.showLoading();
+        rpc.query({
+            route: '/my/payment/partners/ledger/list',
+            params: {
+                start: $date_start.val(),
+                end: $date_end.val(),
+                format: format,
+            },
+        }).then(function (result) {
+            if (result.error) {
+                self.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: result.error,
+                });
+            } else {
+                const ledger = self.connector.ledger;
+                ledger.dateFormat = format;
+                ledger.list = result.ledgers;
+                self._renderConnectorPages('ledger');
+                $('.o_connector_pages').click(self._onClickConnectorPage.bind(self));
+            }
+            framework.hideLoading();
+        }).guardedCatch(function () {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured.'),
+            });
+            const render = qweb.render('payment_jetcheckout_system_jconda.partner_ledger_line', {ledgers: []});
+            $('.o_connector_partner_ledger_table tbody').html(render);
+            framework.hideLoading();
+        });
+    },
+
+    _onClickConnectorPartnerLedgerDate: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this._getConnectorPartnerLedgerList();
+    },
+
+    _getConnectorPages: function (connector) {
+        const page = connector.page;
         const firstPages = [];
         const middlePages = [];
         const lastPages = [];
 
-        let total = Math.ceil(partners.length / pageSize) || 1;
+        let total = Math.ceil(connector.getRows().length / connector.pageSize) || 1;
         let limit = total;
         let iterator = 0;
 
@@ -178,16 +248,20 @@ paymentSystemPage.include({
         return firstPages.concat(middlePages.concat(lastPages));
     },
 
-    _renderConnectorPartnerPages: function (page=1) {
-        const partners = this.connector.getPartners();
-        const pages = this._getConnectorPartnerPages();
-
-        const render_page = qweb.render('payment_jetcheckout_system_jconda.partner_list_page', {pages: pages, page: page});
-        $('.o_connector_partner_pages').html(render_page);
+    _renderConnectorPages: function (type, page=1) {
+        const connector = this.connector[type];
+        connector.page = page;
+        const pageSize = connector.pageSize || 5;
+        const pages = this._getConnectorPages(connector);
+        const buttons = qweb.render('payment_jetcheckout_system_jconda.pages', {pages: pages, page: page, type: type});
+        $('.o_connector_pages').html(buttons);
 
         const firstLine = (page - 1) * pageSize;
-        const render_list = qweb.render('payment_jetcheckout_system_jconda.partner_list_line', {partners: partners.slice(firstLine, firstLine + pageSize)});
-        $('.o_connector_partner_table tbody').html(render_list);
+        const lines = qweb.render(connector.lines, {
+            rows: connector.getRows().slice(firstLine, firstLine + pageSize),
+            tools: this.connector.tools,
+        });
+        connector.$lines().html(lines);
     },
 
     _onClickConnectorPartnerReset: function (ev) {
@@ -200,7 +274,7 @@ paymentSystemPage.include({
         }).then(function (result) {
             if (!result) return false;
             $('label[for="partner"] + span').text(result.name);
-            $('.o_connector_balance').html(result.render);
+            $('.o_connector_partner_balance').html(result.render);
             $el.addClass('d-none');
         });
     },
