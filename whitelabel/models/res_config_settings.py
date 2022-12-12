@@ -57,7 +57,7 @@ class ResConfigSettings(models.TransientModel):
         attach_id = self.env['ir.attachment'].sudo().search([
                 ('name', '=', 'Favicon'),
                 ('website_id', '=', website_id)
-            ])
+            ], limit=1)
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         favicon_url = base_url + '/web/image/?model=ir.attachment&id=' + str(attach_id.id) + '&field=datas'

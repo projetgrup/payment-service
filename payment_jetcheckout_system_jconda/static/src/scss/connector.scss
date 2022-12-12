@@ -3,3 +3,8 @@
         background-color: #fff;
     }
 }
+
+div.dropdown-menu.bootstrap-datetimepicker-widget {
+    position: static !important;
+    width: 100% !important;
+}

@@ -51,15 +51,19 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
         });
     },
 
-    format_currency: function(value) {
+    formatCurrency: function(value, position=false, symbol=false, precision=false) {
+        precision = precision || this.precision;
+        position = position || this.$currency.data('position');
+        symbol = symbol || this.$currency.data('symbol');
+
         const l10n = core._t.database.parameters;
-        const formatted = _.str.sprintf('%.' + this.precision + 'f', round_di(value, this.precision) || 0).split('.');
+        const formatted = _.str.sprintf('%.' + precision + 'f', round_di(value, precision) || 0).split('.');
         formatted[0] = utils.insert_thousand_seps(formatted[0]);
         const amount = formatted.join(l10n.decimal_point);
-        if (this.$currency.data('position') === 'after') {
-            return amount + ' ' + this.$currency.data('symbol');
+        if (position === 'after') {
+            return amount + ' ' + symbol;
         } else {
-            return this.$currency.data('symbol') + ' ' + amount;
+            return symbol + ' ' + amount;
         }
     },
 

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="payment_jetcheckout_system_jconda.partner_list">
         <main style="padding: 0 !important;">
-            <div t-if="partners" class="bg-light d-flex justify-content-center py-3 text-center">
+            <div class="bg-light d-flex justify-content-center py-3 text-center">
                 <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_partner_query" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
                 <button class="btn btn-warning shadow-sm o_connector_partner_search" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
             </div>
@@ -26,28 +26,55 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <t t-call="payment_jetcheckout_system_jconda.partner_list_line"/>
-                    </tbody>
+                    <tbody/>
                 </table>
             </div>
-            <div t-if="partners.length" class="bg-light d-flex flex-row justify-content-center p-2 o_connector_partner_pages">
-                <t t-call="payment_jetcheckout_system_jconda.partner_list_page"/>
-            </div>
+            <div class="bg-light h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
         </main>
     </t>
 
+    <t t-name="payment_jetcheckout_system_jconda.partner_ledger_line">
+        <t t-if="rows.length">
+            <t t-set="tools.currency" t-value=""/>
+            <t t-foreach="rows" t-as="row">
+                <tr t-if="tools.currency !== row.currency.name" class="border">
+                    <t t-set="tools.currency" t-value="row.currency.name"/>
+                    <td class="bg-primary-light font-italic pl-2 py-2" colspan="7">
+                        <span t-esc="tools.currency"/>
+                    </td>
+                </tr>
+                <tr t-else="" class="border">
+                    <td class="py-2 pl-2"><span t-esc="tools.formatDate(row.date)"/></td>
+                    <td><span t-esc="tools.formatDate(row.due_date)"/></td>
+                    <td><span t-esc="row.name"/></td>
+                    <td><span t-esc="row.type"/></td>
+                    <td><span t-esc="row.description"/></td>
+                    <td class="text-right"><span t-esc="tools.formatCurrency(row.amount, row.currency)"/></td>
+                    <td class="border-right text-right pr-2"><span t-esc="tools.formatCurrency(row.balance, row.currency)"/></td>
+                </tr>
+            </t>
+        </t>
+        <t t-else="">
+            <tr>
+                <td colspan="7" class="p-5 text-center">
+                    <i class="fa fa-search-minus h1 text-muted" style="font-size: 3rem;"/>
+                    <span class="d-block h4 mt-4 text-muted">No records found. If you think that it is an error, please try again.</span>
+                </td>
+            </tr>
+        </t>
+    </t>
+
     <t t-name="payment_jetcheckout_system_jconda.partner_list_line">
-        <t t-if="partners.length">
-            <t t-foreach="partners" t-as="partner">
+        <t t-if="rows.length">
+            <t t-foreach="rows" t-as="partner">
                 <tr class="border">
                     <td class="pl-3"><span t-esc="partner['vat']"/></td>
                     <td><span t-esc="partner['company_name']"/></td>
                     <td><span t-esc="partner['mobile']"/></td>
                     <td><span t-esc="partner['email']"/></td>
                     <td><span t-esc="partner['city']"/></td>
-                    <td class="text-center pr-2 py-1">
-                        <button class="bg-primary border-primary btn btn-primary rounded o_connector_partner_select" t-att-data-vat="partner['vat']" t-att-data-company="partner['company_name']">
+                    <td class="text-center pr-2 pb-1 pt-2">
+                        <button class="bg-primary border-primary btn btn-primary rounded o_connector_partner_select" t-att-data-vat="partner['vat']" t-att-data-ref="partner['ref']" t-att-data-company="partner['company_name']">
                             Select
                         </button>
                     </td>
@@ -64,15 +91,15 @@
         </t>
     </t>
 
-    <t t-name="payment_jetcheckout_system_jconda.partner_list_page">
+    <t t-name="payment_jetcheckout_system_jconda.pages">
         <t t-foreach="pages" t-as="p">
             <t t-if="p === 0">
-                <button class="border border-primary btn btn-fill-primary disabled shadow-sm" disabled="disabled">
+                <button class="border border-primary btn btn-fill-primary disabled shadow-sm rounded-0" disabled="disabled">
                     ...
                 </button>
             </t>
             <t t-else="">
-                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page' || 'btn-outline-primary btn shadow-sm o_connector_button_page'" t-att-data-page="p">
+                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page rounded-0' || 'btn-outline-primary btn shadow-sm o_connector_button_page rounded-0'" t-att-data-page="p" t-att-data-type="type">
                     <t t-esc="p"/>
                 </button>
             </t>
