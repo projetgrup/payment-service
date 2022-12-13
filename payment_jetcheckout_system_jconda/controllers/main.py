@@ -10,10 +10,11 @@ class JetcheckoutSystemJcondaController(JetController):
 
     def _jetcheckout_connector_get_partner_info(self):
         if '__jetcheckout_partner_connector' in request.session:
+            partner = request.session['__jetcheckout_partner_connector']
             return {
-                'name': request.session['__jetcheckout_partner_connector']['name'],
-                'vat': request.session['__jetcheckout_partner_connector']['vat'],
-                'ref': request.session['__jetcheckout_partner_connector']['ref'],
+                'name': partner['name'],
+                'vat': partner['vat'],
+                'ref': partner['ref'],
                 'connector': True,
             }
         else:
@@ -113,9 +114,10 @@ class JetcheckoutSystemJcondaController(JetController):
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)
         if '__jetcheckout_partner_connector' in request.session:
+            partner = request.session['__jetcheckout_partner_connector']
             vals.update({
-                'jetcheckout_connector_partner_name': request.session['__jetcheckout_partner_connector']['name'],
-                'jetcheckout_connector_partner_vat': request.session['__jetcheckout_partner_connector']['vat'],
+                'jetcheckout_connector_partner_name': partner['name'],
+                'jetcheckout_connector_partner_vat': partner['vat'],
             })
         return vals
 
