@@ -18,10 +18,9 @@ class JetcheckoutSystemJcondaController(JetController):
                 'connector': True,
             }
         else:
-            company = request.env.company.sudo()
             partner = request.env.user.sudo().partner_id
             return {
-                'name': company.name,
+                'name': partner.name,
                 'vat': partner.vat,
                 'ref': partner.ref,
                 'connector': False,

@@ -11,9 +11,9 @@
             <t t-set="payments" t-value="partner.payable_ids"/>
             <t t-set="payment_types" t-value="payments.mapped('payment_type_id')"/>
             <div class="px-4">
-                <div class="row mx-0 my-4">
+                <div class="header row mx-0 my-4">
                     <div class="col-md-6">
-                        <img t-att-src="'/web/image/website/%s/logo/' % website.id" t-att-alt="website.name" height="80"/>
+                        <img t-att-src="'/web/image/website/%s/logo/' % website.id" t-att-alt="website.name" class="o_company_logo"/>
                     </div>
                     <div class="col-md-6 text-right align-self-center">
                         <span class="font-weight-bold text-secondary">Welcome <t t-esc="partner.name"/></span>
