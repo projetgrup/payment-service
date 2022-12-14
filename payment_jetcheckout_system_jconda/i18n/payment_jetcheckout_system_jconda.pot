@@ -1,0 +1,248 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_jetcheckout_system_jconda
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-14 07:37+0000\n"
+"PO-Revision-Date: 2022-12-14 07:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Amount"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "An error occured."
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Apply"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_partner_balance
+msgid "Balance"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "City"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Company"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_partner_name
+msgid "Connector Partner Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_partner_vat
+msgid "Connector Partner VAT"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_state
+msgid "Connector State"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Date format cannot be empty"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Description"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Due Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Email"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "End Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "End date cannot be empty"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model,name:payment_jetcheckout_system_jconda.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Mobile"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "No partners found. If you think that it is an error, please try again."
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "No records found. If you think that it is an error, please try again."
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_sidebar
+msgid "Partners"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Payment"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model,name:payment_jetcheckout_system_jconda.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Process Connector"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Related Partner Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Related Partner VAT"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_sidebar
+msgid "Reset"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Search"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Search partner..."
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_partner_balance
+msgid "See Ledger"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Select"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "Select a partner"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Start Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Start date cannot be empty"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Start date cannot be later than end date"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Type"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "VAT"
+msgstr ""
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.company_hierarchy_line
+msgid "jConda Integration"
+msgstr ""
