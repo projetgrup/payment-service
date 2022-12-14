@@ -199,7 +199,7 @@ paymentSystemPage.include({
         const lastPages = [];
 
         let total = Math.ceil(connector.getRows().length / connector.pageSize) || 1;
-        let limit = total;
+        let lastLimit = total;
         let iterator = 0;
 
         for(let i=1; i<=3; i++) {
@@ -207,21 +207,22 @@ paymentSystemPage.include({
             if (total === i) break;
         }
 
+        let firstLimit = firstPages.at(-1);
         for(let i=1; i<=3; i++) {
-            if (limit === 1) break;
-            lastPages.unshift(limit);
-            limit--;
+            if (lastLimit === firstLimit) break;
+            lastPages.unshift(lastLimit);
+            lastLimit--;
         }
 
         if (total > 6) {
             if (page < 4) {
-                for(let i=4; i<=limit; i++) {
+                for(let i=4; i<=lastLimit; i++) {
                     middlePages.push(i);
                     iterator++;
                     if (iterator === 3) break;
                 }
-            } else if (page > limit){
-                for(let i=limit; i>=4; i--) {
+            } else if (page > lastLimit){
+                for(let i=lastLimit; i>=4; i--) {
                     middlePages.unshift(i);
                     iterator++;
                     if (iterator === 3) break;
@@ -238,13 +239,12 @@ paymentSystemPage.include({
             }
             if (middlePages.at(-1) === lastPages[0]) {
                 middlePages.pop();
-                if (!firstPages.includes(limit - 2)) middlePages.unshift(limit - 2);
+                if (!firstPages.includes(lastLimit - 2)) middlePages.unshift(lastLimit - 2);
             }
 
             if (middlePages[0] > 4) middlePages.unshift(0);
-            if (middlePages.at(-1) < limit) middlePages.push(0);
+            if (middlePages.at(-1) < lastLimit) middlePages.push(0);
         }
-
         return firstPages.concat(middlePages.concat(lastPages));
     },
 

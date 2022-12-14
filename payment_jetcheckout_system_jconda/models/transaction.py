@@ -13,9 +13,9 @@ class PaymentTransaction(models.Model):
         if not self.jetcheckout_connector_state:
             return
 
-        line = self.acquirer_id._get_journal_line(name=self.jetcheckout_vpos_name, user=self.env.user)
+        line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.env.user)
         result = self.env['jconda.connector'].sudo()._execute('payment_post_partner_payment', params={
-            'account_name': line and line.journal_id.default_account_id.code or '',
+            'account_code': line and line.account_code or '',
             'transaction_id': self.jetcheckout_transaction_id,
             'pos_name': self.jetcheckout_vpos_name,
             'date': self.last_state_change.strftime('%Y-%m-%d'),

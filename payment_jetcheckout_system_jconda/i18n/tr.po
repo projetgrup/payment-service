@@ -1,0 +1,249 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_jetcheckout_system_jconda
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-14 07:37+0000\n"
+"PO-Revision-Date: 2022-12-14 10:50+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "An error occured."
+msgstr "Bir hata meydana geldi."
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Apply"
+msgstr "Uygula"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_partner_balance
+msgid "Balance"
+msgstr "Bakiye"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "City"
+msgstr "Şehir"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Company"
+msgstr "Şirket"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_partner_name
+msgid "Connector Partner Name"
+msgstr "Bağlayıcı İş Ortağı Adı"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_partner_vat
+msgid "Connector Partner VAT"
+msgstr "Bağlayıcı İş Ortağı Vergi No"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_state
+msgid "Connector State"
+msgstr "Bağlayıcı Durumu"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Date"
+msgstr "Tarih"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Date format cannot be empty"
+msgstr "Tarih biçimi boş olamaz"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Due Date"
+msgstr "Vade Tarihi"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Email"
+msgstr "Eposta"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "End Date"
+msgstr "Bitiş Tarihi"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "End date cannot be empty"
+msgstr "Bitiş tarihi boş olamaz"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "Error"
+msgstr "Hata"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model,name:payment_jetcheckout_system_jconda.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Yönlendirme"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Mobile"
+msgstr "Cep Telefonu"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Name"
+msgstr "Ad"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "No partners found. If you think that it is an error, please try again."
+msgstr "İş ortağı bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar deneyiniz."
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "No records found. If you think that it is an error, please try again."
+msgstr "Kayıt bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar deneyiniz."
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_sidebar
+msgid "Partners"
+msgstr "İş Ortakları"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Payment"
+msgstr "Ödeme"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model,name:payment_jetcheckout_system_jconda.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemi"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Process Connector"
+msgstr "Bağlayıcıyı Çalıştır"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Related Partner Name"
+msgstr "İlişkili İş Ortağı Adı"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid "Related Partner VAT"
+msgstr "İlişkili İş Ortağı Vergi No"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_sidebar
+msgid "Reset"
+msgstr "Sıfırla"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Search"
+msgstr "Ara"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Search partner..."
+msgstr "İş Ortağı Ara..."
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_partner_balance
+msgid "See Ledger"
+msgstr "Ekstreye Gözat"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "Select"
+msgstr "Seç"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/js/connector.js:0
+#, python-format
+msgid "Select a partner"
+msgstr "İş ortağı seçin"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Start date cannot be empty"
+msgstr "Başlangıç tarihi boş olamaz"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/controllers/main.py:0
+#, python-format
+msgid "Start date cannot be later than end date"
+msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
+msgid "Type"
+msgstr "Tür"
+
+#. module: payment_jetcheckout_system_jconda
+#. openerp-web
+#: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
+#, python-format
+msgid "VAT"
+msgstr "Vergi No"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.company_hierarchy_line
+msgid "jConda Integration"
+msgstr "jConda Entegrasyonu"
