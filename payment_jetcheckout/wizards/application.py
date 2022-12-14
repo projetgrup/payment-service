@@ -43,13 +43,25 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
             'jetcheckout_secret_key': self.secret_key
         })
 
-        self.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)] + [(0, 0, {
-            'name': pos.name,
-            'company_id': self.acquirer_id.company_id.id,
-            'website_id': self.acquirer_id.website_id.id
-        }) for pos in self.virtual_pos_ids.filtered(lambda x: x.is_active)]
+        ids, journals = [], []
+        journal_ids = self.acquirer_id.jetcheckout_journal_ids
+        pos_ids = self.virtual_pos_ids
+        for pos in pos_ids.filtered(lambda x: x.is_active):
+            ids.append(pos.id)
+            line = journal_ids.filtered(lambda x: x.res_id == pos.id)
+            if line:
+                journals.append((1, line.id, {'name': pos.name}))
+            else:
+                journals.append((0, 0, {
+                    'res_id': pos.id,
+                    'name': pos.name,
+                    'company_id': self.acquirer_id.company_id.id,
+                    'website_id': self.acquirer_id.website_id.id
+                }))
 
-        self.acquirer_id._jetcheckout_api_sync_campaign(self.virtual_pos_ids)
+        journal_ids.filtered(lambda x: x.res_id not in ids).unlink()
+        journal_ids = journals
+        self.acquirer_id._jetcheckout_api_sync_campaign(pos_ids)
 
     def write(self, vals):
         if 'name' in vals:

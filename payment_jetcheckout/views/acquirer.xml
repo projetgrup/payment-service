@@ -48,16 +48,15 @@
             <field name="jetcheckout_payment_page" widget="boolean_toggle" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}"/>
         </xpath>
         <xpath expr='//page[@name="acquirer_credentials"]' position="after">
-            <page string="Journals" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
+            <page name="methods" string="Methods" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
                 <field name="jetcheckout_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree editable="bottom" create="0" delete="0">
                         <field name="name"/>
                         <field name="currency_id"/>
                         <field name="journal_id" required="1" domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}"/>
                         <field name="partner_id" required="1" domain="['|', ('company_id', '=', False),('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="user_id" domain="[('company_ids', 'in', [company_id])]" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="company_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="website_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="company_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                        <field name="website_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>
                     </tree>
                 </field>
             </page>

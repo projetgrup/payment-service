@@ -11,9 +11,9 @@
             <t t-set="payments" t-value="partner.payable_ids"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
             <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
-            <div class="header row mx-0 card border p-2 px-lg-5">
-                <div class="px-xl-3 mx-xl-auto mw-xl-128">
-                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name"/>
+            <div class="header row mx-0 card border p-2 px-lg-2">
+                <div>
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
             </div>
             <div class="px-lg-5 mx-xl-auto mw-xl-128">

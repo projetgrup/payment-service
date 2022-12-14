@@ -81,9 +81,9 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     journal_id = fields.Many2one('account.journal')
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
     currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id, readonly=True)
-    company_id = fields.Many2one('res.company', ondelete='cascade')
-    user_id = fields.Many2one('res.users', ondelete='cascade')
-    website_id = fields.Many2one('website', ondelete='cascade')
+    company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True)
+    website_id = fields.Many2one('website', ondelete='cascade', readonly=True)
+    res_id = fields.Integer(readonly=True)
 
 
 class PaymentAcquirerJetcheckout(models.Model):
@@ -150,11 +150,11 @@ class PaymentAcquirerJetcheckout(models.Model):
                 raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
         return acquirer
 
-    def _get_journal_line(self, name, user=None):
-        domain = [('acquirer_id', '=', self.id), ('name', '=', name)]
-        if user and not user.share:
-            domain.append(('user', '=', user.id))
-        return self.env['payment.acquirer.jetcheckout.journal'].search(domain, limit=1, order='user_id')
+    def _get_journal_line(self, name):
+        return self.env['payment.acquirer.jetcheckout.journal'].search([
+            ('acquirer_id', '=', self.id),
+            ('name', '=', name)
+        ], limit=1)
 
     def _get_default_payment_method_id(self):
         self.ensure_one()

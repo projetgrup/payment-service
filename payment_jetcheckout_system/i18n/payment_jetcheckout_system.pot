@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-22 13:28+0000\n"
-"PO-Revision-Date: 2022-10-22 13:28+0000\n"
+"POT-Creation-Date: 2022-12-14 07:27+0000\n"
+"PO-Revision-Date: 2022-12-14 07:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,68 @@ msgid "<strong>The contact linked to this user is still active</strong>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.otp_mail_template
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"box-sizing:border-box;padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\" width=\"100%\"><tbody><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"box-sizing:border-box;padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"box-sizing:border-box;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tbody><tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Sayın</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.partner_id.name or ''\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"border-style:none;box-sizing:border-box;vertical-align:middle;padding: 0px; margin: 0px; height: 0px; width: 80px;\" t-att-alt=\"object.company_id.name\" width=\"80px\" height=\"0\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"border-style:none;border-top-width:medium;border-left-width:medium;border-bottom-width:medium;border-right-width:medium;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:#cccccc;border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"box-sizing:border-box;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tbody><tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div style=\"box-sizing:border-box;font-size:13px;text-align: center\">\n"
+"                        Your specially generated authentication code is<br>\n"
+"                        <h1 style=\"margin:0px 0 6px 0;box-sizing:border-box;font-size:31.2px;color:#091124;line-height:1.2;font-weight:500;\"><strong style=\"box-sizing:border-box;font-weight:500;\"><t t-out=\"object.code\" data-oe-t-inline=\"true\">123456</t></strong></h1>\n"
+"                        Have a nice day!\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"border-style:none;border-top-width:medium;border-left-width:medium;border-bottom-width:medium;border-right-width:medium;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:#cccccc;border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"box-sizing:border-box;min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tbody><tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\" data-oe-t-inline=\"true\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\" data-oe-t-inline=\"true\">+90 530-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\" data-oe-t-group-active=\"true\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"box-sizing:border-box;background-color:transparent;text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\" data-oe-t-group-active=\"true\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"box-sizing:border-box;background-color:transparent;text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"            "
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:mail.template,body_html:payment_jetcheckout_system.portal_mail_template
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
@@ -183,6 +245,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_warning
 msgid "Access warning"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__account_code
+msgid "Account Code"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__acquirer_id
+msgid "Acquirer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -272,6 +344,16 @@ msgid "Base"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__name
+msgid "Branch Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
+msgid "Branches"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__campaign_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Campaign"
@@ -321,6 +403,13 @@ msgid "Code"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
+#, python-format
+msgid "Code must be 6 digits"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
 msgid "Commission Amount"
 msgstr ""
@@ -345,6 +434,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_mail_template__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__company_id
@@ -401,6 +491,7 @@ msgid "Create"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__create_uid
@@ -410,6 +501,7 @@ msgid "Created by"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__create_date
@@ -466,6 +558,11 @@ msgid "Default Company"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__email
+msgid "Default Email Address"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Details"
 msgstr ""
@@ -476,6 +573,7 @@ msgid "Discard"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__display_name
@@ -552,6 +650,11 @@ msgid "Footer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__email_formatted
+msgid "Formatted Default Email Address"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Friday"
@@ -600,6 +703,7 @@ msgid "Hour"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__id
@@ -684,8 +788,13 @@ msgid "January"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
-msgid "Jconda Integration"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__jetcheckout_branch_ids
+msgid "Jetcheckout Branch"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_branch
+msgid "Jetcheckout Company Branches"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -721,6 +830,7 @@ msgid "Language"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard____last_update
@@ -736,6 +846,7 @@ msgid "Last Month"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__write_uid
@@ -745,6 +856,7 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__write_date
@@ -864,6 +976,11 @@ msgid "Message"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__journal_id
+msgid "Method"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Monday"
@@ -925,6 +1042,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "November"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.otp_mail_template
+msgid "OTP: Partner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1013,6 +1135,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
 msgid "Payment"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer
+msgid "Payment Acquirer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1158,6 +1285,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
 msgid "Receipt"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/dashboard.xml:0
+#, python-format
+msgid "Receive Payment"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1537,6 +1671,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_user
 #: model:ir.model,name:payment_jetcheckout_system.model_res_users
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__user_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__users_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__users_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
@@ -1565,6 +1700,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_website
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__website_id
 msgid "Website"
 msgstr ""
 
@@ -1655,6 +1791,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.otp_mail_template
+msgid "Your Authentication Code"
 msgstr ""
 
 #. module: payment_jetcheckout_system
