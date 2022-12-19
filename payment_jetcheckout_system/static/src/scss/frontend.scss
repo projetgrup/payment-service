@@ -1,7 +1,9 @@
 .payment-page {
     .header {
         .o_company_logo {
-            height: 75px;
+            max-height: 75px;
+            max-width: 225px;
+            margin: 10px;
         }
     }
 }
