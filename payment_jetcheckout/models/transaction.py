@@ -59,6 +59,15 @@ class PaymentTransaction(models.Model):
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True)
 
+    @api.model_create_multi
+    def create(self, values_list):
+        txs = super().create(values_list)
+        for tx in txs:
+            partner_phone = tx.partner_id.mobile or tx.partner_id.phone
+            if partner_phone:
+                tx.write({'partner_phone': partner_phone})
+        return txs
+
     def _jetcheckout_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
