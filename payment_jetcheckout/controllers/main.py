@@ -326,67 +326,46 @@ class JetcheckoutController(http.Controller):
 
 
         tx = self._jetcheckout_get_transaction()
+        vals = {
+            'acquirer_id': acquirer.id,
+            'jetcheckout_website_id': request.website.id,
+            'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+            'jetcheckout_card_name': kwargs['card_holder_name'],
+            'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
+            'jetcheckout_card_type': kwargs['card_type'].capitalize(),
+            'jetcheckout_card_family': kwargs['card_family'].capitalize(),
+            'jetcheckout_vpos_name': vpos,
+            'jetcheckout_order_id': order_id,
+            'jetcheckout_payment_amount': amount,
+            'jetcheckout_installment_count': installment,
+            'jetcheckout_installment_description': installment_desc,
+            'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
+            'jetcheckout_commission_rate': rate,
+            'jetcheckout_commission_amount': amount * rate / 100,
+            'jetcheckout_customer_rate': customer_rate,
+            'jetcheckout_customer_amount': customer_amount,
+        }
+
         if tx:
-            tx_vals = {
-                'acquirer_id': acquirer.id,
-                'jetcheckout_ip_address': tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-                'jetcheckout_card_name': kwargs['card_holder_name'],
-                'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
-                'jetcheckout_card_type': kwargs['card_type'].capitalize(),
-                'jetcheckout_card_family': kwargs['card_family'].capitalize(),
-                'jetcheckout_vpos_name': vpos,
-                'jetcheckout_order_id': order_id,
-                'jetcheckout_payment_amount': amount,
-                'jetcheckout_installment_count': installment,
-                'jetcheckout_installment_description': installment_desc,
-                'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
-                'jetcheckout_commission_rate': rate,
-                'jetcheckout_commission_amount': amount * rate / 100,
-                'jetcheckout_customer_rate': customer_rate,
-                'jetcheckout_customer_amount': customer_amount,
-            }
-            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
-            tx.write(tx_vals)
+            vals.update(self._jetcheckout_tx_vals(**kwargs))
+            tx.write(vals)
         else:
             sequence_code = 'payment.jetcheckout.transaction'
             name = request.env['ir.sequence'].sudo().next_by_code(sequence_code)
             if not name:
-                raise ValidationError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
-            tx_vals = {
+                raise ValidationError(_('You have to define a sequence for %s in your company.') % (sequence_code,))
+
+            vals.update({
                 'reference': name,
                 'amount': amount,
                 'fees': customer_amount,
-                'operation': 'online_direct',
                 'currency_id': currency.id,
                 'acquirer_id': acquirer.id,
                 'partner_id': partner.id,
-                'partner_name': partner.name,
-                'partner_email': partner.email,
-                'partner_phone': partner.mobile or partner.phone,
-                'partner_zip': partner.zip,
-                'partner_address': partner.street,
-                'partner_city': partner.city,
-                'partner_state_id': partner.state_id.id,
-                'partner_country_id': partner.country_id.id,
-                'jetcheckout_ip_address': request.httprequest.remote_addr,
-                'jetcheckout_website_id': request.website.id,
-                'jetcheckout_card_name': kwargs['card_holder_name'],
-                'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
-                'jetcheckout_card_type': kwargs['card_type'].capitalize(),
-                'jetcheckout_card_family': kwargs['card_family'].capitalize(),
-                'jetcheckout_vpos_name': vpos,
-                'jetcheckout_order_id': order_id,
-                'jetcheckout_payment_amount': amount,
-                'jetcheckout_installment_count': installment,
-                'jetcheckout_installment_description': installment_desc,
-                'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
-                'jetcheckout_commission_rate': rate,
-                'jetcheckout_commission_amount': amount * rate / 100,
-                'jetcheckout_customer_rate': customer_rate,
-                'jetcheckout_customer_amount': customer_amount,
-            }
-            tx_vals.update(self._jetcheckout_tx_vals(**kwargs))
-            tx = request.env['payment.transaction'].sudo().create(tx_vals)
+                'operation': 'online_direct',
+            })
+            vals.update(self._jetcheckout_tx_vals(**kwargs))
+            tx = request.env['payment.transaction'].sudo().create(vals)
 
         if sale_id:
             tx.sale_order_ids = [(4, sale_id)]
