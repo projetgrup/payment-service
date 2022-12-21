@@ -44,11 +44,12 @@ class JetcheckoutSystemJcondaController(JetController):
                 if currency_name == 'TRL':
                     currency_name = 'TRY'
 
+                amount = isinstance(res['amount'], float) and res['amount'] or 0
                 currency = request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', currency_name)], limit=1)
                 if not currency:
                     continue
 
-                balances.append({'amount': res['amount'], 'currency': currency})
+                balances.append({'amount': amount, 'currency': currency})
         return balances
 
     def _jetcheckout_connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
