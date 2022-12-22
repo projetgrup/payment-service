@@ -116,6 +116,7 @@ class JetcheckoutSystemJcondaController(JetController):
         if '__jetcheckout_partner_connector' in request.session:
             partner = request.session['__jetcheckout_partner_connector']
             vals.update({
+                'jetcheckout_connector_ok': True,
                 'jetcheckout_connector_partner_name': partner['name'],
                 'jetcheckout_connector_partner_vat': partner['vat'],
             })

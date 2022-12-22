@@ -47,13 +47,13 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
         ids, journals = [], []
         pos_ids = self.virtual_pos_ids
         for pos in pos_ids.filtered(lambda x: x.is_active):
-            ids.append(pos.id)
-            line = acquirer.jetcheckout_journal_ids.filtered(lambda x: x.res_id == pos.id)
+            ids.append(pos.res_id)
+            line = acquirer.jetcheckout_journal_ids.filtered(lambda x: x.res_id == pos.res_id)
             if line:
                 journals.append((1, line.id, {'name': pos.name}))
             else:
                 journals.append((0, 0, {
-                    'res_id': pos.id,
+                    'res_id': pos.res_id,
                     'name': pos.name,
                     'company_id': self.acquirer_id.company_id.id,
                     'website_id': self.acquirer_id.website_id.id
