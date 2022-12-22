@@ -51,6 +51,7 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
 class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.family'
     _description = 'Jetcheckout API Family'
+    _order = 'name'
     _remote_name = 'jet.card.family'
 
     res_id = fields.Integer(readonly=True)
@@ -71,8 +72,8 @@ class PaymentAcquirerJetcheckoutApiExcluded(models.TransientModel):
     _remote_name = 'jet.bin'
 
     res_id = fields.Integer(readonly=True)
-    name = fields.Char(readonly=True)
     code = fields.Char(readonly=True)
+    card_family_id = fields.Many2one('payment.acquirer.jetcheckout.api.family', string='Card Family', readonly=True)
     bank_code = fields.Many2one('payment.acquirer.jetcheckout.api.bank', string='Bank Name', readonly=True)
     card_type = fields.Selection([
         ('Credit', 'Credit'),
