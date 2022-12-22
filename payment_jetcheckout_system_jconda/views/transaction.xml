@@ -4,15 +4,53 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.transaction_form"/>
     <field name="arch" type="xml">
+        <xpath expr="//button[@name='jetcheckout_payment']" position="before">
+            <field name="jetcheckout_connector_ok" invisible="1"/>
+            <button
+                style="pointer-events: none"
+                class="oe_stat_button"
+                icon="fa-chain"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '!=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Succeeded</span>
+                </div>
+            </button>
+            <button
+                style="pointer-events: none"
+                class="oe_stat_button"
+                icon="fa-unlink"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Failed</span>
+                </div>
+            </button>
+        </xpath>
         <xpath expr="//button[@name='action_void']" position="after">
             <field name="jetcheckout_connector_state" invisible="1"/>
-            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': [('jetcheckout_connector_state', '=', False)]}"/>
+            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='partner_id']" position="after">
-            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
-            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
-            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
-            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_partner_name', '=', False)]}"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+        </xpath>
+        <xpath expr="//field[@name='state_message']" position="after">
+            <field name="jetcheckout_connector_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="transaction_search" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='partner_name']" position="after">
+            <filter string="Connector Transactions" name="connector_ok" domain="[('jetcheckout_connector_ok', '=', True)]"/>
+            <separator/>
+            <filter string="Failed Connector Transactions" name="connector_state" domain="[('jetcheckout_connector_ok', '=', True), ('jetcheckout_connector_state', '=', True)]"/>
         </xpath>
     </field>
     </record>

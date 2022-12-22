@@ -11,7 +11,7 @@
                 class="oe_stat_button"
                 icon="fa-money"
                 groups="base.group_user"
-                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False)]}">
+                attrs="{'invisible': ['|', '|', '|', ('is_jetcheckout', '=', False), ('state', '!=', 'done'), ('payment_id', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
                 </div>
@@ -47,6 +47,9 @@
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
+        </xpath>
+        <xpath expr="//field[@name='state_message']" position="attributes">
+            <attribute name="colspan">2</attribute>
         </xpath>
         <xpath expr="//field[@name='acquirer_id']" position="after">
             <field name="jetcheckout_website_id" attrs="{'invisible': [('jetcheckout_website_id', '=', False)]}"/>

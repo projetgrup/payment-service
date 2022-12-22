@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from odoo import fields, models
+from odoo import fields, models, _
+
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
@@ -28,3 +29,10 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
         self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
+
+    def jetcheckout_payment(self):
+        self.ensure_one()
+        if self.company_id.system:
+            self.write({'state_message': _('Transaction is succesful.')})
+        else:
+            super().jetcheckout_payment()
