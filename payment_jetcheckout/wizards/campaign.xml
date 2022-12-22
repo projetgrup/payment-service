@@ -54,15 +54,20 @@
                     <page string="Excluded Bins">
                         <field name="excluded_bins" readonly="context.get('no_edit')"> 
                             <tree create="0" edit="0" delete="0">
-                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="bank_code"/>
+                                <field name="card_type"/>
+                                <field name="card_family_id"/>
+                                <field name="mandatory_3d"/>
+                                <field name="program"/>
                             </tree>
                             <form create="0" edit="0" delete="0">
                                 <sheet>
                                     <group>
                                         <group>
-                                            <field name="name"/>
                                             <field name="code"/>
                                             <field name="bank_code"/>
+                                            <field name="card_family_id"/>
                                         </group>
                                         <group>
                                             <field name="card_type"/>
@@ -77,6 +82,31 @@
                 </notebook> 
             </sheet>
         </form>
+    </field>
+    </record>
+
+    <record id="api_family_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.family.tree</field>
+    <field name="model">payment.acquirer.jetcheckout.api.family</field>
+    <field name="arch" type="xml">
+        <tree create="0" edit="0" delete="0">
+            <field name="name"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="api_excluded_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.excluded.tree</field>
+    <field name="model">payment.acquirer.jetcheckout.api.excluded</field>
+    <field name="arch" type="xml">
+        <tree create="0" edit="0" delete="0">
+            <field name="code"/>
+            <field name="bank_code"/>
+            <field name="card_type"/>
+            <field name="card_family_id"/>
+            <field name="mandatory_3d"/>
+            <field name="program"/>
+        </tree>
     </field>
     </record>
 </odoo>

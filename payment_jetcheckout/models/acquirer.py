@@ -371,18 +371,38 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_create_pos(self, poses, apps, providers, currencies, record):
         pos_ids = [pos['id'] for pos in poses]
-        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)])
+        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_families', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id'])
         pos_price_ids = [price['id'] for price in pos_prices]
-        pos_lines = self._rpc('jet.pos.price.line', 'search_read', [('pos_price_id', 'in', pos_price_ids)])
-        families = self._rpc('jet.card.family', 'search_read', [])
-        bins = self._rpc('jet.bin', 'search_read', [])
+        pos_lines = self._rpc('jet.pos.price.line', 'search_read', [('pos_price_id', 'in', pos_price_ids)], ['id', 'pos_price_id', 'installment_type', 'customer_rate', 'cost_rate', 'is_active', 'plus_installment', 'plus_installment_description'])
+
+        bank_model = self.env['payment.acquirer.jetcheckout.api.bank']
+        banks = self._rpc('jet.bank', 'search_read', [], ['id', 'name'])
+        bank_model.create([{
+            'res_id': bank['id'],
+            'name': bank['name'],
+        } for bank in banks])
+
+        family_model = self.env['payment.acquirer.jetcheckout.api.family']
+        families = self._rpc('jet.card.family', 'search_read', [], ['id', 'name', 'logo_path'])
+        family_model.create([{
+            'res_id': family['id'],
+            'name': family['name'],
+            'logo': family['logo_path']
+        } for family in families])
+
+        bin_model = self.env['payment.acquirer.jetcheckout.api.excluded']
+        bins = self._rpc('jet.bin', 'search_read', [], ['id', 'code', 'bank_code', 'card_type', 'card_family_id', 'mandatory_3d', 'program'])
+        bin_model.create([{
+            'res_id': bin['id'],
+            'code': bin['code'],
+            'bank_code': bank_model.search([('res_id', '=', bin['bank_code'][0])], limit=1).id,
+            'card_family_id': family_model.search([('res_id', '=', bin['card_family_id'][0])], limit=1).id,
+            'card_type': bin['card_type'],
+            'mandatory_3d': bin['mandatory_3d'],
+            'program': bin['program'],
+        } for bin in bins])
 
         for pos in poses:
-            ids = []
-            for key, val in apps.items():
-                if key in pos['applications']:
-                    ids.append(val)
-
             self.env['payment.acquirer.jetcheckout.api.pos'].create({
                 'res_id': pos['id'],
                 'acquirer_id': self.id,
@@ -436,7 +456,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'shipping_address': pos['shipping_address'],
                 'shipping_address_city': pos['shipping_address_city'],
                 'shipping_address_country': pos['shipping_address_country'],
-                'applications': [(6, 0, ids)],
+                'applications': [(6, 0, [val for key, val in apps.items() if key in pos['applications']])],
                 'pos_price': [(0, 0, {
                     'res_id': price['id'],
                     'offer_name': price['offer_name'],
@@ -455,15 +475,8 @@ class PaymentAcquirerJetcheckout(models.Model):
                         'plus_installment': line['plus_installment'],
                         'plus_installment_description': line['plus_installment_description'],
                     }) for line in pos_lines if line['pos_price_id'][0] == price['id']],
-                    'card_families': [(0, 0, {
-                        'res_id': family['id'],
-                        'name': family['name'],
-                        'logo': family['logo_path'],
-                    }) for family in families if family['id'] in price['card_families']],
-                    'excluded_bins': [(0, 0, {
-                        'res_id': bin['id'],
-                        'name': bin['code'],
-                    }) for bin in bins if bin['id'] in price['excluded_bins']],
+                    'card_families': [(6, 0, family_model.search([('res_id', 'in', price['card_families'])]).ids)],
+                    'excluded_bins': [(6, 0, bin_model.search([('res_id', 'in', price['excluded_bins'])]).ids)]
                 }) for price in pos_prices if price['virtual_pos_id'][0] == pos['id']],
             })
 
