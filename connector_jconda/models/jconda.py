@@ -43,7 +43,7 @@ class JCondaConnector(models.Model):
         ], limit=1)
 
     @api.model
-    def _execute(self, method, params={}, company=None):
+    def _execute(self, method, params={}, company=None, message=None):
         result = []
         try:
             url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
@@ -68,16 +68,16 @@ class JCondaConnector(models.Model):
                 results = response.json()
                 if not results['response_code'] == 0:
                     _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['response_message']))
-                    return None
+                    return (None, results['response_message']) if message else None
                 result = results.get('result', [])
             else:
                 _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.reason))
-                return None
+                return (None, response.reason) if message else None
         except Exception as e:
             _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', e))
-            return None
+            return (None, str(e)) if message else None
 
-        return result
+        return (result, None) if message else result
 
     def _connect(self):
         url = self.env['ir.config_parameter'].sudo().get_param('jconda.url')
