@@ -2095,10 +2095,10 @@ msgstr "İşlem başarıyla tamamlandı ve ödeme onaylandı."
 #, python-format
 msgid ""
 "Transaction is succesful, but payment could not be validated. Probably one "
-"of partner or journal accounts are missing"
+"of partner or journal accounts are missing."
 msgstr ""
 "İşlem başarıyla tamamlandı, fakat ödeme onaylanmadı. Muhtemelen bir iş "
-"ortağı veya yevmiye hesabı eksik"
+"ortağı veya yevmiye hesabı eksik."
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.status_form

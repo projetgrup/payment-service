@@ -33,13 +33,13 @@ class PaymentTransaction(models.Model):
         state = result[0] == None
         self.write({
             'jetcheckout_connector_state': state,
-            'jetcheckout_connector_state_message': _('This transaction cannot be posted to connector\n%s') % result[1] if state else _('This transaction is successfully posted to connector') 
+            'jetcheckout_connector_state_message': _('This transaction cannot be posted to connector.\n%s') % result[1] if state else _('This transaction is successfully posted to connector.') 
         })
 
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
         self.write({
             'jetcheckout_connector_state': True,
-            'jetcheckout_connector_state_message': _('This transaction cannot be posted to connector yet')
+            'jetcheckout_connector_state_message': _('This transaction cannot be posted to connector yet.')
         })
         self.action_process_connector()
