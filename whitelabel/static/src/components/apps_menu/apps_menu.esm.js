@@ -45,7 +45,11 @@ patch(WebClient.prototype, "whitelabel.DefaultAppsMenu", {
             shadow: true
         }).then(function(debranding_settings) {
             odoo.debranding_settings = debranding_settings;
-            self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
+
+            if (self.hasOwnProperty('title')){
+                self.title.setParts({ zopenerp: debranding_settings && debranding_settings.title_brand });
+            }
+
             localStorage.setItem('odoo_value', odoo.debranding_settings['odoo_text_replacement'],1);
             Dialog.title = localStorage.getItem("odoo_value");
         });
