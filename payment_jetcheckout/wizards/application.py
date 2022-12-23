@@ -37,31 +37,33 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
         if not self.is_active:
             raise UserError(_('Please activate this record before selecting it'))
 
-        self.acquirer_id.write({
+        acquirer = self.acquirer_id
+        acquirer.write({
             'jetcheckout_api_name': self.name,
             'jetcheckout_api_key': self.application_id,
             'jetcheckout_secret_key': self.secret_key
         })
 
         ids, journals = [], []
-        journal_ids = self.acquirer_id.jetcheckout_journal_ids
         pos_ids = self.virtual_pos_ids
         for pos in pos_ids.filtered(lambda x: x.is_active):
-            ids.append(pos.id)
-            line = journal_ids.filtered(lambda x: x.res_id == pos.id)
+            ids.append(pos.res_id)
+            line = acquirer.jetcheckout_journal_ids.filtered(lambda x: x.res_id == pos.res_id)
             if line:
                 journals.append((1, line.id, {'name': pos.name}))
             else:
                 journals.append((0, 0, {
-                    'res_id': pos.id,
+                    'res_id': pos.res_id,
                     'name': pos.name,
                     'company_id': self.acquirer_id.company_id.id,
                     'website_id': self.acquirer_id.website_id.id
                 }))
 
-        journal_ids.filtered(lambda x: x.res_id not in ids).unlink()
-        journal_ids = journals
-        self.acquirer_id._jetcheckout_api_sync_campaign(pos_ids)
+        for line in acquirer.jetcheckout_journal_ids.filtered(lambda x: x.res_id not in ids):
+            journals.append((2, line.id, 0))
+
+        acquirer.jetcheckout_journal_ids = journals
+        acquirer._jetcheckout_api_sync_campaign(pos_ids)
 
     def write(self, vals):
         if 'name' in vals:

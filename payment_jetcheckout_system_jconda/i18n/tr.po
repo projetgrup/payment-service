@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-14 07:37+0000\n"
-"PO-Revision-Date: 2022-12-14 10:50+0300\n"
+"POT-Creation-Date: 2022-12-22 12:14+0000\n"
+"PO-Revision-Date: 2022-12-22 15:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid ""
+"<span class=\"o_stat_value\">Connector</span><span class=\"o_stat_text"
+"\">Failed</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Bağlayıcı</span><span class=\"o_stat_value"
+"\">Başarısız</span>"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_form
+msgid ""
+"<span class=\"o_stat_value\">Connector</span><span class=\"o_stat_text"
+"\">Succeeded</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Bağlayıcı</span><span class=\"o_stat_value"
+"\">Başarılı</span>"
 
 #. module: payment_jetcheckout_system_jconda
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
@@ -70,6 +88,21 @@ msgid "Connector State"
 msgstr "Bağlayıcı Durumu"
 
 #. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_state_message
+msgid "Connector State Message"
+msgstr "Bağlayıcı Durum Mesajı"
+
+#. module: payment_jetcheckout_system_jconda
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_jconda.field_payment_transaction__jetcheckout_connector_ok
+msgid "Connector Transaction"
+msgstr "Bağlayıcı İşlemi"
+
+#. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_search
+msgid "Connector Transactions"
+msgstr "Bağlayıcı İşlemleri"
+
+#. module: payment_jetcheckout_system_jconda
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
 msgid "Date"
 msgstr "Tarih"
@@ -116,6 +149,11 @@ msgid "Error"
 msgstr "Hata"
 
 #. module: payment_jetcheckout_system_jconda
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.transaction_search
+msgid "Failed Connector Transactions"
+msgstr "Başarısız Bağlayıcı İşlemleri"
+
+#. module: payment_jetcheckout_system_jconda
 #: model:ir.model,name:payment_jetcheckout_system_jconda.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
@@ -137,14 +175,18 @@ msgstr "Ad"
 #: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
 #, python-format
 msgid "No partners found. If you think that it is an error, please try again."
-msgstr "İş ortağı bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar deneyiniz."
+msgstr ""
+"İş ortağı bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar "
+"deneyiniz."
 
 #. module: payment_jetcheckout_system_jconda
 #. openerp-web
 #: code:addons/payment_jetcheckout_system_jconda/static/src/xml/connector.xml:0
 #, python-format
 msgid "No records found. If you think that it is an error, please try again."
-msgstr "Kayıt bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar deneyiniz."
+msgstr ""
+"Kayıt bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar "
+"deneyiniz."
 
 #. module: payment_jetcheckout_system_jconda
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_sidebar
@@ -230,6 +272,28 @@ msgstr "Başlangıç tarihi boş olamaz"
 #, python-format
 msgid "Start date cannot be later than end date"
 msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
+#, python-format
+msgid ""
+"This transaction cannot be posted to connector\n"
+"%s"
+msgstr ""
+"İşlem bağlayıcıya gönderilemedi\n"
+"%s"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
+#, python-format
+msgid "This transaction cannot be posted to connector yet"
+msgstr "İşlem henüz bağlayıcıya gönderilemedi"
+
+#. module: payment_jetcheckout_system_jconda
+#: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
+#, python-format
+msgid "This transaction is successfully posted to connector"
+msgstr "İşlem başarıyla bağlayıcıya gönderildi"
 
 #. module: payment_jetcheckout_system_jconda
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger
