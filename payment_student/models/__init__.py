@@ -6,3 +6,4 @@ from . import item
 from . import company
 from . import menu
 from . import settings
+from . import transaction

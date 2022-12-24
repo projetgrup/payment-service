@@ -24,6 +24,10 @@
             <field name="bursary_id" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="payment_type_id" required="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
         </xpath>
+        <xpath expr='//field[@name="paid_amount"]' position="before">
+            <field name="bursary_amount" attrs="{'invisible': [('paid', '=', False)]}" optional="hide"/>
+            <field name="prepayment_amount" attrs="{'invisible': [('paid', '=', False)]}" optional="hide"/>
+        </xpath>
     </field>
     </record>
 

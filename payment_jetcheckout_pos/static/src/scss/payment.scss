@@ -15,37 +15,50 @@
             margin-left: 0 !important;
             font-size: 12px;
             padding: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-height: 75vh;
+            overflow-y: auto;
+
+            td {
+                position: relative;
+            }
 
             img {
                 max-height: 50px;
             }
+
             table {
                 table-layout: fixed;
             }
+
             tr {
                 height: 25px;
             }
+
             th {
                 height: 40px;
             }
+
             tr:nth-child(odd) {
                 background-color: #f7fafc;
             }
+
             thead tr:first-child, tr:last-child {
                 background-color: initial !important;
             }
+
             .side-border {
                 border-right: 1px solid #eee;
                 border-left: 1px solid #eee;
             }
+
             .bottom-border {
                 border-bottom: 1px solid #eee;
             }
+
             > div {
-                width: 33%;
                 > div {
                     margin: 15px;
                     border: 1px solid #ddd;
@@ -244,7 +257,6 @@
             margin: 20px 40px;
             color: #707070;
             border: 3px solid #43996E;
-            overflow: hidden;
             border-radius: 10px;
             background-color: #ffffff;
             box-shadow: inset 0px 0px 5px 5px rgb(240, 240, 240);
@@ -258,6 +270,7 @@
                 grid-template-areas: "name name""number number""expiration security";
                 padding: 20px 10px;
                 border-radius: 10px;
+                overflow: hidden;
 
                 .field-container:first-of-type {
                     grid-area: name;
@@ -606,5 +619,17 @@
                 }
             }
         }
+    }
+}
+
+@media (max-width: 768px) {
+    .installment-dialog .installment-popup .installment-table {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 428px) {
+    .installment-dialog .installment-popup .installment-table {
+        grid-template-columns: repeat(1, 1fr);
     }
 }

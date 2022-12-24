@@ -209,7 +209,7 @@ class PaymentTransaction(models.Model):
         except Exception as e:
             self.env.cr.rollback()
             self.write({
-                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing') + '\n' + str(e),
+                'state_message': _('Transaction is succesful, but payment could not be validated. Probably one of partner or journal accounts are missing.') + '\n' + str(e),
             })
             _logger.warning('Creating payment for transaction %s is failed\n%s' % (self.reference, e))
 
