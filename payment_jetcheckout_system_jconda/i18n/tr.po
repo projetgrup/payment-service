@@ -277,23 +277,23 @@ msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
 msgid ""
-"This transaction cannot be posted to connector\n"
+"This transaction cannot be posted to connector.\n"
 "%s"
 msgstr ""
-"İşlem bağlayıcıya gönderilemedi\n"
+"İşlem bağlayıcıya gönderilemedi.\n"
 "%s"
 
 #. module: payment_jetcheckout_system_jconda
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
-msgid "This transaction cannot be posted to connector yet"
-msgstr "İşlem henüz bağlayıcıya gönderilemedi"
+msgid "This transaction cannot be posted to connector yet."
+msgstr "İşlem henüz bağlayıcıya gönderilemedi."
 
 #. module: payment_jetcheckout_system_jconda
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
-msgid "This transaction is successfully posted to connector"
-msgstr "İşlem başarıyla bağlayıcıya gönderildi"
+msgid "This transaction is successfully posted to connector."
+msgstr "İşlem başarıyla bağlayıcıya gönderildi."
 
 #. module: payment_jetcheckout_system_jconda
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_jconda.payment_page_ledger

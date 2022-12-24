@@ -16,6 +16,7 @@ class Company(models.Model):
     system = fields.Selection([])
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
+    notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')
 
     def write(self, vals):
         if 'system' in vals and not self.env.user.has_group('base.group_system'):

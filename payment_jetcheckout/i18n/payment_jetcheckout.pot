@@ -2044,7 +2044,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Transaction is succesful, but payment could not be validated. Probably one "
-"of partner or journal accounts are missing"
+"of partner or journal accounts are missing."
 msgstr ""
 
 #. module: payment_jetcheckout

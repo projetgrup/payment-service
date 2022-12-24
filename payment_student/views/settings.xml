@@ -60,6 +60,29 @@
                     </div>
                 </div>
             </div>
+            <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail" invisible="context.get('active_system') != 'student'">
+                <h2>Notifications</h2>
+                <div class="row mt16 o_settings_container" id="student_notification">
+                    <div class="col-12 col-lg-6 o_setting_box" id="student_notification_webhook">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="notif_webhook_ids"/>
+                            <div class="text-muted">
+                                Specify Webhook URL Addresses to notify when a successful payment transaction occurs
+                            </div>
+                        </div>
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <field name="notif_webhook_ids" nolabel="1" colspan="2" class="w-100" context="{'default_company_id': company_id}">
+                                <tree editable="bottom" limit="5">
+                                    <field name="url"/>
+                                    <field name="company_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </xpath>
     </field>
     </record>

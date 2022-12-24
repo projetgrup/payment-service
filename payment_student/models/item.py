@@ -11,6 +11,8 @@ class PaymentItem(models.Model):
     bursary_id = fields.Many2one('res.student.bursary', related='child_id.bursary_id', store=True, readonly=True, ondelete='restrict')
     term_id = fields.Many2one('res.student.term', ondelete='restrict')
     payment_type_id = fields.Many2one('res.student.payment.type', ondelete='restrict')
+    bursary_amount = fields.Monetary(string='Bursary Discount', readonly=True)
+    prepayment_amount = fields.Monetary(string='Prepayment Discount', readonly=True)
 
     @api.onchange('child_id','term_id','payment_type_id')
     def _onchange_student_id(self):

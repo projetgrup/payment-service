@@ -268,20 +268,20 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
 msgid ""
-"This transaction cannot be posted to connector\n"
+"This transaction cannot be posted to connector.\n"
 "%s"
 msgstr ""
 
 #. module: payment_jetcheckout_system_jconda
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
-msgid "This transaction cannot be posted to connector yet"
+msgid "This transaction cannot be posted to connector yet."
 msgstr ""
 
 #. module: payment_jetcheckout_system_jconda
 #: code:addons/payment_jetcheckout_system_jconda/models/transaction.py:0
 #, python-format
-msgid "This transaction is successfully posted to connector"
+msgid "This transaction is successfully posted to connector."
 msgstr ""
 
 #. module: payment_jetcheckout_system_jconda
