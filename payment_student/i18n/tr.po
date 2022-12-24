@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-03 15:36+0000\n"
-"PO-Revision-Date: 2022-11-03 18:41+0300\n"
+"POT-Creation-Date: 2022-12-24 14:57+0000\n"
+"PO-Revision-Date: 2022-12-24 17:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -140,6 +140,11 @@ msgstr "Burslar"
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Bursary"
 msgstr "Burs"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__bursary_amount
+msgid "Bursary Discount"
+msgstr "Burs İndirimi"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.parent_form
@@ -439,6 +444,11 @@ msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
+msgid "Notifications"
+msgstr "Bildirimler"
+
+#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Parent"
@@ -509,6 +519,11 @@ msgid "Payment Templates"
 msgstr "Ödeme Şablonları"
 
 #. module: payment_student
+#: model:ir.model,name:payment_student.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemi"
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__payment_type_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__payment_type_id
 msgid "Payment Type"
@@ -541,6 +556,11 @@ msgstr "Bir ödeme satırı seçtiğinizde ödeme tablosu burada görünecektir"
 #: model:ir.ui.menu,name:payment_student.menu_payment
 msgid "Payments"
 msgstr "Ödemeler"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__prepayment_amount
+msgid "Prepayment Discount"
+msgstr "Peşin Ödeme İndirimi"
 
 #. module: payment_student
 #: model:ir.ui.menu,name:payment_student.menu_sms_provider
@@ -629,6 +649,15 @@ msgid "Sibling Discount Rate"
 msgstr "Kardeş İndirimi Oranı"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
+msgid ""
+"Specify Webhook URL Addresses to notify when a successful payment "
+"transaction occurs"
+msgstr ""
+"Başarılı bir ödeme işlemi gerçekleştiğinde bildirim yapılacak Webhook URL "
+"adreslerini belirtin"
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
@@ -640,7 +669,6 @@ msgid "Start date cannot be higher than end date"
 msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_item__student_id
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
 msgid "Student"
@@ -875,9 +903,6 @@ msgstr ""
 
 #~ msgid "Payment System Member"
 #~ msgstr "Ödeme Sistemi Kullanıcısı"
-
-#~ msgid "Payment Transaction"
-#~ msgstr "Ödeme İşlemi"
 
 #, python-format
 #~ msgid "Payment table cannot be related to more than one company"

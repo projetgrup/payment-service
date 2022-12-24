@@ -27,7 +27,11 @@ class PaymentTransaction(models.Model):
             'currency_name': self.currency_id.name,
             'amount': self.jetcheckout_payment_amount,
             'amount_commission_cost': self.jetcheckout_commission_amount,
-            'amount_customer_cost': self.jetcheckout_customer_amount
+            'amount_customer_cost': self.jetcheckout_customer_amount,
+            'amount_commission_cost_rate': self.jetcheckout_commission_rate,
+            'amount_customer_cost_rate': self.jetcheckout_customer_rate,
+            'card_name': self.jetcheckout_card_name,
+            'description': self.state_message
         }, company=self.company_id, message=True)
 
         state = result[0] == None

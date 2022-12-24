@@ -26,6 +26,8 @@ class StudentPaymentController(JetSystemController):
                     last_amount = list(filter(lambda x: x['id'] == sid, amounts))[0]['amount']
                     rate = last_amount / first_amount if first_amount != 0 else 1
                     payment.paid_amount = payment.amount * rate
+                    payment.bursary_amount = payment.amount * payment.bursary_id.percentage / 100 if payment.bursary_id else 0
+                    payment.prepayment_amount = payment.amount - payment.paid_amount - payment.bursary_amount
         return res
 
     def _jetcheckout_system_page_values(self, company, system, partner, transaction):

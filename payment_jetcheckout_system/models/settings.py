@@ -8,6 +8,7 @@ class PaymentSettings(models.TransientModel):
     _description = 'Payment Settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    notif_webhook_ids = fields.One2many(related='company_id.notif_webhook_ids', readonly=False)
 
     def start(self):
         return self.next()
@@ -37,3 +38,11 @@ class PaymentSettings(models.TransientModel):
         action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
         name = action.name or self._name
         return [(record.id, name) for record in self]
+
+
+class PaymentSettingsNotificationWebhook(models.Model):
+    _name = 'payment.settings.notification.webhook'
+    _description = 'Payment Settings Notification Webhook'
+
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    url = fields.Char('Url', required=True)
