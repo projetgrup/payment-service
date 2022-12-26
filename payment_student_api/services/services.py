@@ -300,6 +300,18 @@ class StudentAPIService(Component):
             student.parent_id.message_post(body=_('Student has been archieved from API'))
         return Response("Deleted", status=204, mimetype="application/json")
 
+    @restapi.method(
+        [(["/"], "POST")],
+        input_param=Datamodel("student.webhook"),
+        auth="public",
+    )
+    def webhook_student_successful_payment(self, params):
+        """
+        Notify Successful Payment
+        tags: ['Webhook Methods']
+        """
+        return Response("Bad Request", status=400, mimetype="application/json")
+
     # PRIVATE METHODS
     def _auth(self, _company, _apikey, _secretkey=False):
         domain = [('company_id', '=', _company), ('api_key', '=', _apikey)]
