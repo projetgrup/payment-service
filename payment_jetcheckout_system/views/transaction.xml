@@ -22,6 +22,27 @@
         <xpath expr='//field[@name="payment_id"]' position="attributes">
             <attribute name="attrs">{'invisible': [('system', '!=', False)]}</attribute>
         </xpath>
+        <xpath expr="//button[@name='action_void']" position="after">
+            <field name="jetcheckout_webhook_ok" invisible="1"/>
+            <field name="jetcheckout_webhook_state" invisible="1"/>
+            <button type="object" name="action_process_notification_webhook" string="Process Notifications" attrs="{'invisible': ['|', ('jetcheckout_webhook_ok', '=', False), ('jetcheckout_webhook_state', '=', False)]}"/>
+        </xpath>
+        <xpath expr="//field[@name='state_message']" position="after">
+            <field name="jetcheckout_webhook_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('jetcheckout_webhook_ok', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="transaction_search" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='partner_name']" position="after">
+            <separator/>
+            <filter string="Webhook Notifications" name="notif_webhook_ok" domain="[('jetcheckout_webhook_ok', '=', True)]"/>
+            <separator/>
+            <filter string="Failed Webhook Notifications" name="notif_webhook_state" domain="[('jetcheckout_webhook_ok', '=', True), ('jetcheckout_webhook_state', '=', True)]"/>
+        </xpath>
     </field>
     </record>
 </odoo>
