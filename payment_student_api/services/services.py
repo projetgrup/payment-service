@@ -20,11 +20,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("school.search"),
         output_param=Datamodel("school.response"),
         auth="public",
+        tags=['List Methods']
     )
     def list_school(self, params):
         """
         List Schools
-        tags: ['List Methods']
         """
         SchoolResponse = self.env.datamodels["school.response"]
         company = self.env.company.id
@@ -54,11 +54,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("class.search"),
         output_param=Datamodel("class.response"),
         auth="public",
+        tags=['List Methods']
     )
     def list_class(self, params):
         """
         List Classes
-        tags: ['List Methods']
         """
         ClassResponse = self.env.datamodels["class.response"]
         company = self.env.company.id
@@ -88,11 +88,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("bursary.search"),
         output_param=Datamodel("bursary.response"),
         auth="public",
+        tags=['List Methods']
     )
     def list_bursary(self, params):
         """
         List Bursaries
-        tags: ['List Methods']
         """
         BursaryResponse = self.env.datamodels["bursary.response"]
         company = self.env.company.id
@@ -122,11 +122,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("student.search"),
         output_param=Datamodel("student.response"),
         auth="public",
+        tags=['List Methods']
     )
     def list_student(self, params):
         """
         List Students And Parents
-        tags: ['List Methods']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company.id
@@ -157,11 +157,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("payment.search"),
         output_param=Datamodel("payment.response"),
         auth="public",
+        tags=['List Methods']
     )
     def list_payment(self, params):
         """
         List Payments
-        tags: ['List Methods']
         """
         PaymentResponse = self.env.datamodels["payment.response"]
         company = self.env.company.id
@@ -186,11 +186,11 @@ class StudentAPIService(Component):
         input_param=Datamodel("student.create"),
         output_param=Datamodel("student.response"),
         auth="public",
+        tags=['Create Methods']
     )
     def create_student(self, params):
         """
         Create Student
-        tags: ['Create Methods']
         """
         StudentResponse = self.env.datamodels["student.response"]
         company = self.env.company
@@ -208,7 +208,7 @@ class StudentAPIService(Component):
 
         classroom = self.env['res.student.class'].sudo().search([('company_id', '=', company.id), ('code', '=', params.class_code)], limit=1)
         if not classroom:
-            return Response("No classroom found with given code", status=404, mimetype="application/json")
+            return Response("No classrocreate_stom found with given code", status=404, mimetype="application/json")
 
         categ_api = self.env.ref('payment_jetcheckout_api.categ_api')
         parent = self.env['res.partner'].sudo().search([('company_id', '=', company.id), ('email', '=', params.parent_email)], limit=1)
@@ -270,11 +270,11 @@ class StudentAPIService(Component):
         [(["/delete"], "DELETE")],
         input_param=Datamodel("student.delete"),
         auth="public",
+        tags=['Delete Methods']
     )
     def delete_student(self, params):
         """
         Delete Student
-        tags: ['Delete Methods']
         """
         company = self.env.company.id
         key = self._auth(company, params.application_key, params.secret_key)
@@ -300,15 +300,19 @@ class StudentAPIService(Component):
             student.parent_id.message_post(body=_('Student has been archieved from API'))
         return Response("Deleted", status=204, mimetype="application/json")
 
+    @restapi.webhook(
+        input_param=Datamodel("student.webhook"),
+        tags=['Webhook Methods']
+    )
+    def webhook_student_successful_payment(self):
+        """
+        Notify Successful Payment
+        """
+        pass
+
     # PRIVATE METHODS
     def _auth(self, _company, _apikey, _secretkey=False):
         domain = [('company_id', '=', _company), ('api_key', '=', _apikey)]
         if _secretkey:
             domain.append(('secret_key', '=', _secretkey))
         return self.env["payment.acquirer.jetcheckout.api"].sudo().search(domain, limit=1)
-
-    def _create(self, _name):
-        return self.env["res.partner"].sudo().create()
-
-    def _get(self, _id):
-        return self.env["res.partner"].browse(_id)

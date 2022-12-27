@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from apispec import BasePlugin
-
 from ..restapi import RestMethodParam
 
 
@@ -26,6 +25,8 @@ class RestMethodParamPlugin(BasePlugin):
 
     def operation_helper(self, path=None, operations=None, **kwargs):
         routing = kwargs.get("routing")
+        #_logger.error(path)
+        #_logger.error(routing)
         if not routing:
             super(RestMethodParamPlugin, self).operation_helper(
                 path, operations, **kwargs

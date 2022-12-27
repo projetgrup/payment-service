@@ -67,18 +67,23 @@
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
                             <label for="notif_webhook_ids"/>
+                            <a href="/api#tag/Webhook-Methods" title="Documentation" class="o_doc_link" target="_blank"/>
                             <div class="text-muted">
                                 Specify Webhook URL Addresses to notify when a successful payment transaction occurs
                             </div>
-                        </div>
-                        <div class="o_setting_left_pane"/>
-                        <div class="o_setting_right_pane">
                             <field name="notif_webhook_ids" nolabel="1" colspan="2" class="w-100" context="{'default_company_id': company_id}">
                                 <tree editable="bottom" limit="5">
                                     <field name="url"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
                             </field>
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <a role="button" class="btn btn-link" href="/api#tag/Webhook-Methods" target="_blank">
+                                        <i class="fa fa-arrow-right mr-2"/>Webhook API Documentation
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
