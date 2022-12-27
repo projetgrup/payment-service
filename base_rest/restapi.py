@@ -90,21 +90,40 @@ def method(routes, input_param=None, output_param=None, **kw):
                 http_methods.append("OPTIONS")
             for m in http_methods:
                 _routes.append(([p for p in paths], m))
+
         routing = {
             "routes": _routes,
             "input_param": input_param,
             "output_param": output_param,
+            **kw
         }
-        routing.update(kw)
 
         @functools.wraps(f)
-        def response_wrap(*args, **kw):
-            response = f(*args, **kw)
-            return response
+        def wrap(*args, **kw):
+            return f(*args, **kw)
 
-        response_wrap.routing = routing
-        response_wrap.original_func = f
-        return response_wrap
+        wrap.routing = routing
+        wrap.original_func = f
+        return wrap
+
+    return decorator
+
+def webhook(input_param=None, **kw):
+    def decorator(f):
+        routing = {
+            "routes": [],
+            "webhook": True,
+            "input_param": input_param,
+            **kw
+        }
+
+        @functools.wraps(f)
+        def wrap(*args, **kw):
+            return f(*args, **kw)
+
+        wrap.routing = routing
+        wrap.original_func = f
+        return wrap
 
     return decorator
 

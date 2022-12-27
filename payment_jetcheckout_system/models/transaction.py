@@ -42,38 +42,10 @@ class PaymentTransaction(models.Model):
             return
 
         message = []
+        json = self._get_notification_webhook_data()
         for webhook in webhooks:
             try:
-                response = requests.post(webhook.url, json={
-                    'parent': {
-                        'name': self.partner_id.name,
-                        'vat': self.partner_id.vat,
-                    },
-                    'items': [{
-                        'student': {
-                            'name': item.child_id.name,
-                            'vat': item.child_id.vat,
-                            'ref': item.child_id.ref,
-                        },
-                        'bursary': {
-                            'name': item.bursary_id.name,
-                            'code': item.bursary_id.code,
-                            'discount': item.bursary_id.percentage,
-                        },
-                        'amount': {
-                            'total': item.amount,
-                            'discount': {
-                                'bursary': item.bursary_amount,
-                                'prepayment': item.prepayment_amount,
-                            },
-                            'paid': item.paid_amount,
-                        }
-                    } for item in self.jetcheckout_item_ids],
-                    'card': {
-                        'family': self.jetcheckout_card_family,
-                        'vpos': self.jetcheckout_vpos_name,
-                    }
-                })
+                response = requests.post(webhook.url, json=json)
                 if response.ok:
                     self.write({'jetcheckout_webhook_failed_ids': [(3, webhook.id, 0)]})
                 else:
@@ -92,6 +64,29 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state': False,
                 'jetcheckout_connector_state_message': _('This transaction has been successfully notified.')
             })
+
+    def _get_notification_webhook_data(self):
+        return {
+            'parent': {
+                'name': self.partner_id.name,
+                'vat': self.partner_id.vat,
+            },
+            'items': [{
+                'child': {
+                    'name': item.child_id.name,
+                    'vat': item.child_id.vat,
+                    'ref': item.child_id.ref,
+                },
+                'amount': {
+                    'total': item.amount,
+                    'paid': item.paid_amount,
+                }
+            } for item in self.jetcheckout_item_ids],
+            'card': {
+                'family': self.jetcheckout_card_family,
+                'vpos': self.jetcheckout_vpos_name,
+            }
+        }
 
     def _jetcheckout_cancel_postprocess(self):
         super()._jetcheckout_cancel_postprocess()

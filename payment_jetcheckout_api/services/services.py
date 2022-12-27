@@ -54,11 +54,11 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.prepare.input"),
         output_param=Datamodel("payment.prepare.output"),
         auth="public",
+        tags=['Payment Preparation']
     )
     def payment_prepare(self, params):
         """
         Prepare Payment
-        tags: ['Payment Preparation']
         """
         Response = self.env.datamodels["payment.prepare.output"]
         try:
@@ -84,11 +84,11 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.hash.input"),
         output_param=Datamodel("payment.result.output"),
         auth="public",
+        tags=['Payment Operations']
     )
     def payment_result(self, params):
         """
         Payment Result
-        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.result.output"]
         try:
@@ -114,11 +114,11 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.hash.input"),
         output_param=Datamodel("payment.status.output"),
         auth="public",
+        tags=['Payment Operations']
     )
     def payment_status(self, params):
         """
         Payment Status
-        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.status.output"]
         try:
@@ -146,11 +146,11 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.token.input"),
         output_param=Datamodel("payment.response"),
         auth="public",
+        tags=['Payment Operations']
     )
     def payment_cancel(self, params):
         """
         Cancel Payment
-        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.response"]
         try:
@@ -175,11 +175,11 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.refund.input"),
         output_param=Datamodel("payment.response"),
         auth="public",
+        tags=['Payment Operations']
     )
     def payment_refund(self, params):
         """
         Refund Payment
-        tags: ['Payment Operations']
         """
         Response = self.env.datamodels["payment.response"]
         try:

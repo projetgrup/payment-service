@@ -184,7 +184,7 @@ class BaseRestService(AbstractComponent):
         :return: json document
         """
         api_spec = self._get_api_spec(**params)
-        api_spec.generate_paths()
+        api_spec.generate_methods()
         return api_spec.to_dict()
 
     def _get_openapi_default_parameters(self):

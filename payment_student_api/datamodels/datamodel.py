@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from marshmallow import fields
 from odoo.addons.datamodel.core import Datamodel
-#from odoo.addons.datamodel.fields import NestedModel
+from odoo.addons.datamodel.fields import NestedModel
 
 class Response(Datamodel):
     class Meta:
@@ -156,3 +156,88 @@ class StudentDelete(Datamodel):
 
     vat = fields.String(required=False, allow_none=False, title="Student Citizen Number", description="Citizen number on student form", example="12345678912")
     ref = fields.String(required=False, allow_none=False, title="Student Reference Number", description="Reference on student form", example="123456789")
+
+
+class StudentWebhookParent(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.parent"
+
+    name = fields.String(title="Parent Name", description="Parent name", example="Jane Doe", required=True)
+    vat = fields.String(title="Parent VAT", description="Parent citizen number", example="12345678912", required=True)
+
+
+class StudentWebhookItemChild(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.item.child"
+
+    name = fields.String(title="Student Name", description="Student name", example="John Doe", required=True)
+    vat = fields.String(title="Student VAT", description="Student citizen number", example="12345678912", required=True)
+    ref = fields.String(title="Student Reference", description="Student reference", example="CODE12", required=True)
+
+
+class StudentWebhookItemBursary(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.item.bursary"
+
+    name = fields.String(title="Bursary Name", description="Bursary name", example="Management Bursary", required=True)
+    code = fields.String(title="Bursary Code", description="Bursary code", example="BURSARY50", required=True)
+    discount = fields.Integer(title="Bursary Discount Percentage", description="Bursary discount percentage", example=10, required=True)
+
+
+class StudentWebhookItemAmountDiscount(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.item.amount.discount"
+
+    bursary = fields.Float(title="Bursary Discount Amount", description="Bursary discount amount", example=120.0, required=True)
+    prepayment = fields.Float(title="Prepayment Discount Amount", description="Prepayment discount amount", example=80.0, required=True)
+
+
+class StudentWebhookItemAmount(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.item.amount"
+
+    total = fields.Float(title="Total Amount", description="Total amount", example=2200.0, required=True)
+    discount = NestedModel("student.webhook.item.amount.discount", title="Discount Information", description="Discount information", required=True)
+    paid = fields.Float(title="Payment Amount", description="Payment amount", example=2000.0, required=True)
+
+
+class StudentWebhookItems(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.item"
+
+    student = NestedModel("student.webhook.item.child", title="Student Information", description="Student information", required=True)
+    bursary = NestedModel("student.webhook.item.bursary", title="Bursary Information", description="Bursary information", required=True)
+    amount = NestedModel("student.webhook.item.amount", title="Amount Information", description="Amount information", required=True)
+
+
+class StudentWebhookCard(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook.card"
+
+    family = fields.String(title="Credit Card Family", description="Credit card family", example="Paraf", required=True)
+    vpos = fields.String(title="Virtual PoS Name", description="Virtual pos name", example="General", required=True)
+
+
+class StudentWebhook(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "student.webhook"
+
+    parent = NestedModel("student.webhook.parent", title="Parent Information", description="Parent information", required=True)
+    items = fields.List(NestedModel("student.webhook.item"), title="Student Name", description="Student name", required=True)
+    card = NestedModel("student.webhook.card", title="Card Information", description="Card information", required=True)
