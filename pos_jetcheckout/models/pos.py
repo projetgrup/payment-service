@@ -5,7 +5,19 @@ from odoo import models, fields, api
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    is_vpos = fields.Boolean(string='Virtual PoS', copy=False)
+    def _get_payment_terminal_selection(self):
+        return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('jetcheckout_virtual', 'Jetcheckout Virtual PoS'), ('jetcheckout_physical', 'Jetcheckout Physical PoS')]
+
+    def action_acquirer_jetcheckout(self):
+        self.ensure_one()
+        acquirer = self.env['payment.acquirer']._get_acquirer(providers=['jetcheckout'], limit=1)
+        action = self.env.ref('payment.action_payment_acquirer').read()[0]
+        action['views'] = [(False, 'form')]
+        if not acquirer:
+            action['context'] = {'default_provider': 'jetcheckout'}
+        else:
+            action['res_id'] = acquirer.id
+        return action
 
 
 class PosOrder(models.Model):

@@ -4,8 +4,12 @@
     <field name="model">pos.payment.method</field>
     <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='split_transactions']" position="before">
-            <field name="is_vpos"/>
+        <xpath expr="//field[@name='use_payment_terminal']" position="attributes">
+            <attribute name="string">Payment Terminal</attribute>
+        </xpath>
+        <xpath expr="//field[@name='use_payment_terminal']" position="after">
+            <label for="use_payment_terminal" string=""/>
+            <button name="action_acquirer_jetcheckout" type="object" class="btn-link p-0" icon="fa-arrow-right" string="Configure Payment Acquirer" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_virtual')]}"/>
         </xpath>
     </field>
     </record>

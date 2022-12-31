@@ -109,7 +109,7 @@
     .main-content {
         flex-wrap: nowrap !important;
         
-        .payment-vpos-loading {
+        .payment-jetcheckout-loading {
             visibility: hidden;
             opacity: 0;
             transition: 0.2s ease all;
@@ -128,7 +128,7 @@
             align-items: center;
         }
         
-        .payment-vpos-threed {
+        .payment-jetcheckout-threed {
             visibility: hidden;
             background-color: #ffffff;
             opacity: 0;
@@ -175,7 +175,7 @@
         flex-direction: column;
         justify-content: space-between;
 
-        .paymentmethods-vpos {
+        .paymentmethods-jetcheckout {
 
             .payment-buttons {
                 margin: 0;
@@ -251,7 +251,7 @@
     }
 
     .right-content {
-        .payment-vpos {
+        .payment-jetcheckout {
             display: flex;
             justify-content: center;
             margin: 20px 40px;

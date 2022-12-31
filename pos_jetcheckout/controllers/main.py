@@ -4,16 +4,13 @@
 
 import json
 import werkzeug
-import logging
 
 from odoo.tools.translate import _
 from odoo.http import Controller, request, route
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as Jetcontroller
 
-_logger = logging.getLogger(__name__)
 
-
-class PointOfSaleVpos(Controller):
+class JetcontrollerPos(Controller):
 
     @route(['/pos/card/success', '/pos/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def pos_card_preresult(self, **kwargs):

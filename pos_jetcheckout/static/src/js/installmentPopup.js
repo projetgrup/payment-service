@@ -1,4 +1,4 @@
-odoo.define('payment_jetcheckout_pos.InstallmentPopup', function(require) {
+odoo.define('pos_jetcheckout.InstallmentPopup', function(require) {
 'use strict';
 
 const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');

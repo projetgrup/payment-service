@@ -8,33 +8,43 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
     class JetcheckoutPaymentScreen extends PaymentScreen {
         constructor() {
             super(...arguments);
-            this.vpos_acquirer = this.env.pos.vpos_acquirer;
-            this.vpos_card_types = this.env.pos.vpos_card_types;
-            this.vpos_card_families = this.env.pos.vpos_card_families;
-            this.vpos_paid = false;
-            this.vpos_card_bin = 0;
-            this.vpos_amount = 0;
-            this.vpos_partner = 0;
+            this.jetcheckout = this.env.pos.jetcheckout;
+            this.$jetcheckout = {}
+            this.$$jetcheckout = {}
+
+            this.jetcheckout_payments = {}
+            this.jetcheckout_paid = false;
+            this.jetcheckout_card_bin = 0;
+            this.jetcheckout_amount = 0;
+            this.jetcheckout_partner = 0;
         }
 
         mounted() {
-            this.$vpos_card_type = '';
-            this.$vpos_card_family = '';
-            this.$vpos_card_name = document.getElementById('vpos_card_name');
-            this.$vpos_card_number = document.getElementById('vpos_card_number');
-            this.$vpos_card_expiry = document.getElementById('vpos_card_expiry');
-            this.$vpos_card_security = document.getElementById('vpos_card_security');
-            this.$vpos_card_icon = document.getElementById('vpos_card_icon');
-            this.$vpos_card_logo = document.getElementById('vpos_card_logo');
-            this.$vpos_card_threed = document.getElementById('vpos_card_threed');
-            this.$vpos_card_result = document.getElementById('vpos_card_result');
-            this.$vpos_installment_rows = document.getElementById('vpos_installment_rows');
-            this.$vpos_installment_empty = document.getElementById('vpos_installment_empty');
-            this.$vpos_installment_loading = document.getElementById('vpos_installment_loading');
-            this.$vpos_payment_loading = document.getElementById('vpos_payment_loading');
-            this.$vpos_payment_threed = document.getElementById('vpos_payment_threed');
-            
-            this.vpos_card_number = new IMask(this.$vpos_card_number, {
+            this.$jetcheckout = {
+                card: {
+                    type: '',
+                    family: '',
+                    holder: document.getElementById('jetcheckout_card_holder'),
+                    number: document.getElementById('jetcheckout_card_number'),
+                    security: document.getElementById('jetcheckout_card_security'),
+                    expiry: document.getElementById('jetcheckout_card_expiry'),
+                    icon: document.getElementById('jetcheckout_card_icon'),
+                    logo: document.getElementById('jetcheckout_card_logo'),
+                    threed: document.getElementById('jetcheckout_card_threed'),
+                    result: document.getElementById('jetcheckout_card_result'),
+                },
+                installment: {
+                    rows: document.getElementById('jetcheckout_installment_rows'),
+                    empty: document.getElementById('jetcheckout_installment_empty'),
+                    loading: document.getElementById('jetcheckout_installment_loading'),
+                },
+                payment: {
+                    loading: document.getElementById('jetcheckout_payment_loading'),
+                    threed: document.getElementById('jetcheckout_payment_threed'),
+                }
+            }
+
+            this.$$jetcheckout.number = new IMask(this.$jetcheckout.card.number, {
                 mask: [
                     {
                         mask: '0000 000000 00000',
@@ -102,7 +112,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                 }
             });
 
-            this.vpos_card_expiry = new IMask(this.$vpos_card_expiry, {
+            this.$$jetcheckout.expiry = new IMask(this.$jetcheckout.card.expiry, {
                 mask: 'MM{/}YY',
                 groups: {
                     YY: new IMask.MaskedPattern.Group.Range([0, 99]),
@@ -110,16 +120,16 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                 }
             });
 
-            this.vpos_card_security = new IMask(this.$vpos_card_security, {
+            this.$$jetcheckout.security = new IMask(this.$jetcheckout.card.security, {
                 mask: '000[0]',
             });
 
-            this.vpos_card_number.on('accept', this.onAcceptCardNumber.bind(this));
-            this.$vpos_installment_rows.addEventListener('click', this.onClickCardInstallment.bind(this));
-            this.$vpos_card_result.addEventListener('change', this._onChangeResult.bind(this));
+            this.$$jetcheckout.number.on('accept', this.onAcceptCardNumber.bind(this));
+            this.$jetcheckout.installment.rows.addEventListener('click', this.onClickCardInstallment.bind(this));
+            this.$jetcheckout.card.number.addEventListener('change', this._onChangeResult.bind(this));
             this.env.pos.on('change:selectedClient', () => this.getCardInstallment(), this);
             this.currentOrder.paymentlines.on('add remove change', () => this.getCardInstallment(), this);
-            this.getCardInstallment();
+            //this.getCardInstallment();
         }
 
         _enablePayButton() {
@@ -134,7 +144,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             const value = ev.target.value.replaceAll('&#34;','"');
             const result = JSON.parse(value);
             if (result.state === 'done') {
-                this.vpos_paid = true;
+                this.jetcheckout_paid = true;
                 this._finalizeValidation();
             } else {
                 this.showPopup('ErrorPopup', {
@@ -144,13 +154,13 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             }
 
             this.currentOrder.transaction_ids.push(result.id)
-            this.$vpos_payment_loading.classList.remove('visible-half');
-            this.$vpos_payment_threed.classList.remove('visible');
+            this.$jetcheckout.payment.loading.classList.remove('visible-half');
+            this.$jetcheckout.payment.threed.classList.remove('visible');
             this._enablePayButton();
         }
 
         async _finalizeValidation() {
-            if (!this.vpos_paid && this.vpos_amount > 0) {
+            if (!this.jetcheckout_paid && this.jetcheckout_amount > 0) {
                 this._disablePayButton();
                 this._onCardPay();
                 return;
@@ -161,67 +171,68 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
         async showCardInstallments() {
             await this.showPopup('InstallmentPopup', {
                 title: this.env._t('Installment Table'),
-                acquirer: this.vpos_acquirer,
-                amount: this.vpos_amount,
+                acquirer: this.jetcheckout_acquirer,
+                amount: this.jetcheckout_amount,
             });
         }
 
         getCardInstallment() {
             const order = this.currentOrder;
             const client = order.get_client();
-            const cardnumber = this.vpos_card_number.typedValue;
+            const cardnumber = this.$$jetcheckout.number.typedValue;
+            console.log(this.paymentLines);
             const paymentLine = _.find(this.paymentLines, function(line) {
-                return line.payment_method.is_vpos;
+                return line.payment_method.is_jetcheckout;
             });
 
             const amount = paymentLine && paymentLine.amount || 0;
             const partner = client && client.id || 0;
             const cardBin = cardnumber.length  && parseInt(cardnumber.toString().substring(0,6)) || 0;
-            if (this.vpos_card_bin === cardBin && this.vpos_amount === amount && this.vpos_partner === partner) return;
-            this.vpos_amount = amount;
-            this.vpos_partner = partner;
-            this.vpos_card_bin = cardBin;
-            if (this.vpos_amount <= 0) return;
+            if (this.jetcheckout_card_bin === cardBin && this.jetcheckout_amount === amount && this.jetcheckout_partner === partner) return;
+            this.jetcheckout_amount = amount;
+            this.jetcheckout_partner = partner;
+            this.jetcheckout_card_bin = cardBin;
+            if (this.jetcheckout_amount <= 0) return;
 
             if (cardnumber.length < 6) {
-                this.$vpos_installment_empty.classList.remove('d-none');
-                this.$vpos_installment_rows.classList.add('d-none');
-                this.$vpos_installment_rows.innerHTML = '';
-                this.$vpos_card_logo.innerHTML = '';
-                this.$vpos_card_logo.classList.remove('show');
-                this.$vpos_card_family = '';
+                this.$jetcheckout.installment.empty.classList.remove('d-none');
+                this.$jetcheckout.installment.rows.classList.add('d-none');
+                this.$jetcheckout.installment.rows.innerHTML = '';
+                this.$jetcheckout.card.logo.innerHTML = '';
+                this.$jetcheckout.card.logo.classList.remove('show');
+                this.$jetcheckout.card.family = '';
             } else {
                 try {
                     const self = this;
-                    $(this.$vpos_installment_loading).addClass('visible');
+                    $(this.$jetcheckout.installment.loading).addClass('visible');
                     this.env.session.rpc('/payment/card/installment', {
                         amount: amount,
                         amount_installment: 0,
                         partner: partner,
-                        cardnumber: this.vpos_card_number.typedValue,
+                        cardnumber: this.$$jetcheckout.number.typedValue,
                         prefix: 'bin_',
                         render: true,
                         s2s: true,
                     }).then(function (result) {
                         if ('error' in result) {
-                            self.$vpos_installment_empty.classList.remove('d-none');
-                            self.$vpos_installment_rows.classList.add('d-none');
-                            self.$vpos_installment_rows.innerHTML = '';
+                            self.$jetcheckout.installment.empty.classList.remove('d-none');
+                            self.$jetcheckout.installment.rows.classList.add('d-none');
+                            self.$jetcheckout.installment.rows.innerHTML = '';
                             self.showPopup('ErrorPopup', {
                                 title: self.env._t('Error'),
                                 body: self.env._t('An error occured.') + ' ' + result.error,
                             });
                         } else {
-                            self.$vpos_installment_empty.classList.add('d-none');
-                            self.$vpos_installment_rows.classList.remove('d-none');
-                            self.$vpos_installment_rows.innerHTML = result.render;
+                            self.$jetcheckout.installment_empty.classList.add('d-none');
+                            self.$jetcheckout.installment.rows.classList.remove('d-none');
+                            self.$jetcheckout.installment.rows.innerHTML = result.render;
                             if (result.card) {
-                                self.$vpos_card_logo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
-                                self.$vpos_card_logo.classList.add('show');
-                                self.$vpos_card_family = result.card;
+                                self.$jetcheckout.card.logo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
+                                self.$jetcheckout.card.logo.classList.add('show');
+                                self.$jetcheckout.card.family = result.card;
                             }
                         }
-                        $(self.$vpos_installment_loading).removeClass('visible');
+                        $(self.$jetcheckout.installment.loading).removeClass('visible');
                     });
                 } catch(error) {
                     this.showPopup('ErrorPopup', {
@@ -229,7 +240,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                         body: this.env._t('An error occured. Please contact with your system administrator.'),
                     });
                     console.error(error);
-                    $(this.$vpos_installment_loading).removeClass('visible');
+                    $(this.$jetcheckout.installment.loading).removeClass('visible');
                 }
             }
         }
@@ -238,7 +249,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             this.getCardInstallment();
             let type = '';
             let code = '';
-            switch (this.vpos_card_number.masked.currentMask.cardtype) {
+            switch (this.$$jetcheckout.number.masked.currentMask.cardtype) {
                 case 'american express':
                     type = 'American Express';
                     code = 'amex';
@@ -281,18 +292,18 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                     break;
             }
 
-            this.$vpos_card_type = type;
+            this.$jetcheckout.card.type = type;
             if (code) {
-                this.$vpos_card_icon.innerHTML = Cards[code];
-                this.$vpos_card_icon.classList.add('show');
+                this.$jetcheckout.card.icon.innerHTML = Cards[code];
+                this.$jetcheckout.card.icon.classList.add('show');
             } else {
-                this.$vpos_card_icon.innerHTML = '';
-                this.$vpos_card_icon.classList.remove('show');
+                this.$jetcheckout.card.icon.innerHTML = '';
+                this.$jetcheckout.card.icon.classList.remove('show');
             }
         }
 
         onClickCardInstallment(ev) {
-            let $rows = $(this.$vpos_installment_rows).find('div');
+            let $rows = $(this.$jetcheckout.installment.rows).find('div');
             $rows.removeClass('installment-selected');
             $rows.find('input').attr({'checked': false});
             let $el = $(ev.target).closest('div.installment-row');
@@ -301,43 +312,43 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
         }
 
         closeCardThreed() {
-            this.$vpos_payment_threed.classList.remove('visible');
-            this.$vpos_payment_loading.classList.remove('visible-half');
+            this.$jetcheckout.payment.threed.classList.remove('visible');
+            this.$jetcheckout.payment.loading.classList.remove('visible-half');
             this._enablePayButton();
         }
 
         _checkCardData() {
-            if (!(this.vpos_partner > 0)) {
+            if (!(this.jetcheckout_partner > 0)) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please select a customer'),
                 });
                 return false;
-            } else if (!(this.vpos_amount > 0)) {
+            } else if (!(this.jetcheckout_amount > 0)) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please enter an amount'),
                 });
                 return false;
-            } else if (this.$vpos_card_name.value === '') {
+            } else if (this.$jetcheckout.card.name.value === '') {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please fill card holder name'),
                 });
                 return false;
-            } else if (this.vpos_card_number.typedValue === '') {
+            } else if (this.$$jetcheckout.number.typedValue === '') {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please fill card number'),
                 });
                 return false;
-            } else if (this.vpos_card_expiry.typedValue === '') {
+            } else if (this.$$jetcheckout.typedValue === '') {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please fill card expiration date'),
                 });
                 return false;
-            } else if (this.vpos_card_security.typedValue === '') {
+            } else if (this.$$jetcheckout.security.typedValue === '') {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('Please fill card security code'),
@@ -358,16 +369,16 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             return {
                 installment: document.querySelector('input[name="installment_radio"]:checked').value,
                 installment_desc: document.querySelector('input[name="installment_radio"]:checked').dataset.value,
-                amount: this.vpos_amount,
+                amount: this.jetcheckout_amount,
                 amount_installment: 0,
-                partner: this.vpos_partner,
-                cardnumber: this.vpos_card_number.typedValue,
-                card_holder_name: this.$vpos_card_name.value,
-                expire_month: this.vpos_card_expiry.typedValue.substring(0,2),
-                expire_year: this.vpos_card_expiry.typedValue.substring(3),
-                cvc: this.vpos_card_security.typedValue,
-                card_type: this.$vpos_card_type,
-                card_family: this.$vpos_card_family,
+                partner: this.jetcheckout_partner,
+                cardnumber: this.$$jetcheckout.number.typedValue,
+                card_holder_name: this.$jetcheckout.card.name.value,
+                expire_month: this.$$jetcheckout.expiry.typedValue.substring(0,2),
+                expire_year: this.$$jetcheckout.expiry.typedValue.substring(3),
+                cvc: this.$$jetcheckout.security.typedValue,
+                card_type: this.$jetcheckout.card.type,
+                card_family: this.$jetcheckout.card.family,
                 success_url: '/pos/card/success',
                 fail_url: '/pos/card/fail',
             }
@@ -377,11 +388,11 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             const self = this;
             if (this._checkCardData()) {
                 try {
-                    this.$vpos_payment_loading.classList.add('visible-half');
+                    this.$jetcheckout.payment.loading.classList.add('visible-half');
                     this.env.session.rpc('/payment/card/payment', this._getCardParams()).then(function (result) {
                         if ('url' in result) {
-                            self.$vpos_card_threed.src = result.url;
-                            self.$vpos_payment_threed.classList.add('visible');
+                            self.$jetcheckout.card.threed.src = result.url;
+                            self.$jetcheckout.payment.threed.classList.add('visible');
                         } else {
                             self.showPopup('ErrorPopup', {
                                 title: self.env._t('Error'),
@@ -396,7 +407,7 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
                     });
                     this._enablePayButton();
                     console.error(error);
-                    this.$vpos_payment_loading.classList.remove('visible-half');
+                    this.$jetcheckout.payment.loading.classList.remove('visible-half');
                 }
             } else {
                 this._enablePayButton();
