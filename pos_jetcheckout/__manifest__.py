@@ -23,6 +23,7 @@
             'pos_jetcheckout/static/src/js/models.js',
             'pos_jetcheckout/static/src/js/pos_jetcheckout.js',
             'pos_jetcheckout/static/src/js/paymentScreen.js',
+            'pos_jetcheckout/static/src/js/cardPopup.js',
             'pos_jetcheckout/static/src/js/installmentPopup.js',
             'pos_jetcheckout/static/src/scss/payment.scss',
         ],

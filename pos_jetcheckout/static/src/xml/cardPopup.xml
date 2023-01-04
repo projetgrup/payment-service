@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CardPopup" owl="1">
+        <div role="dialog" class="modal-dialog card-dialog">
+            <div class="popup card-popup">
+                <!--<header class="title">
+                    <t t-esc="props.title"/>
+                </header>-->
+                <main>
+                    <!--<div id="jetcheckout_payment_loading" class="payment-jetcheckout-loading">
+                        <i class="fa fa-5x fa-circle-o-notch fa-spin"/>
+                    </div>-->
+                    <div id="jetcheckout_payment_threed" class="payment-jetcheckout-threed">
+                        <iframe id="jetcheckout_payment_url"/>
+                        <input id="jetcheckout_payment_result" type="hidden"/>
+                    </div>
+                    <div class="payment-jetcheckout">
+                        <div class="payment-table">
+                            <div class="field-container">
+                                <input id="jetcheckout_card_holder" type="text" required="required"/>
+                                <span class="bar-container"/>
+                                <label for="jetcheckout_card_holder"><span>Name</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="jetcheckout_card_number" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                                <span class="bar-container"/>
+                                <div id="jetcheckout_card_logo" class="card-logo"/>
+                                <svg id="jetcheckout_card_icon" class="card-icon" width="750" height="471" viewBox="0 0 750 471"/>
+                                <label for="jetcheckout_card_number"><span>Card Number</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="jetcheckout_card_expiry" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
+                                <span class="bar-container"/>
+                                <label for="jetcheckout_card_expiry"><span>Expiration</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="jetcheckout_card_security" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                                <span class="bar-container"/>
+                                <label for="jetcheckout_card_security"><span>Security Code</span></label>
+                            </div>
+                        </div>
+                        <div class="installment-table">
+                            <div class="installment-header">
+                                <div>INSTALLMENT</div>
+                                <div>MONTHLY</div>
+                                <div>TOTAL</div>
+                            </div>
+                            <div id="jetcheckout_installment_loading" class="installment-loading">
+                                <i class="fa fa-3x fa-circle-o-notch fa-spin"/>
+                            </div>
+                            <div id="jetcheckout_installment_rows" class="installment-rows"/>
+                            <div id="jetcheckout_installment_empty" class="installment-empty">
+                                <i class="fa fa-info-circle mb-3" t-translation="off"/>
+                                <span>Appliable installment options will be displayed here after you enter your credit card number</span>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button pay altlight" t-on-click="pay">Pay</div>
+                    <div class="button cancel" t-on-click="cancel">Close</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

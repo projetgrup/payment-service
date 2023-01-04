@@ -3,18 +3,22 @@ odoo.define('pos_jetcheckout.InstallmentPopup', function(require) {
 
 const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
 const Registries = require('point_of_sale.Registries');
+var core = require('web.core');
+
+var _t = core._t;
 
 class InstallmentPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
+        this.amount = this.props.amount;
     }
 
     async willStart() {
         try {
             this.installments = await this.env.session.rpc('/payment/card/installments', {
                 list: true,
-                acquirer: this.props.acquirer.id,
-                amount: this.props.amount,
+                acquirer: this.env.pos.jetcheckout.acquirer.id,
+                amount: this.amount,
             });
             if ('error' in this.installments) {
                 this.error = this.installments.error;
@@ -38,9 +42,7 @@ class InstallmentPopup extends AbstractAwaitablePopup {
 
 InstallmentPopup.template = 'InstallmentPopup';
 InstallmentPopup.defaultProps = {
-    title: '',
-    acquirer: 0,
-    amount: 0,
+    title: _t('Installment Table'),
 };
 
 Registries.Component.add(InstallmentPopup);

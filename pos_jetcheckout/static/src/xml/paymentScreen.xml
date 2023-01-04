@@ -4,8 +4,8 @@
         <xpath expr="//div[@class='paymentmethods-container']" position="after">
             <div class="paymentmethods-jetcheckout">
                 <div class="payment-buttons">
-                    <div class="button altlight" t-on-click="showCardInstallments">
-                        <i role="img" aria-label="Installment Table" title="Installment Table" class="fa fa-list"></i>
+                    <div class="button altlight installment-button" t-on-click="showCardInstallments">
+                        <i role="img" aria-label="Installment Table" title="Installment Table" class="fa fa-list"/>
                         <span class="js_installment_table">Installment Table</span>
                     </div>
                 </div>
@@ -23,57 +23,6 @@
                         </li>
                     </t>
                 </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@class='payment-buttons-container']" position="after">
-            <div id="jetcheckout_payment_loading" class="payment-jetcheckout-loading">
-                <i class="fa fa-5x fa-circle-o-notch fa-spin"/>
-            </div>
-            <div id="jetcheckout_payment_threed" class="payment-jetcheckout-threed">
-                <iframe id="jetcheckout_card_threed"/>
-                <input id="jetcheckout_card_result" type="hidden"/>
-                <button t-on-click="closeCardThreed"><i class="fa fa-times"/></button>
-            </div>
-            <div class="payment-jetcheckout" t-att-class="{'d-none': jetcheckout_amount &lt;= 0}">
-                <div class="payment-table">
-                    <div class="field-container">
-                        <input id="jetcheckout_card_holder" type="text" required="required"/>
-                        <span class="bar-container"/>
-                        <label for="jetcheckout_card_holder"><span>Name</span></label>
-                    </div>
-                    <div class="field-container">
-                        <input id="jetcheckout_card_number" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
-                        <span class="bar-container"/>
-                        <div id="jetcheckout_card_logo" class="card-logo"/>
-                        <svg id="jetcheckout_card_icon" class="card-icon" width="750" height="471" viewBox="0 0 750 471"/>
-                        <label for="jetcheckout_card_number"><span>Card Number</span></label>
-                    </div>
-                    <div class="field-container">
-                        <input id="jetcheckout_card_expiry" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
-                        <span class="bar-container"/>
-                        <label for="jetcheckout_card_expiry"><span>Expiration</span></label>
-                    </div>
-                    <div class="field-container">
-                        <input id="jetcheckout_card_security" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
-                        <span class="bar-container"/>
-                        <label for="jetcheckout_card_security"><span>Security Code</span></label>
-                    </div>
-                </div>
-                <div class="installment-table">
-                    <div class="installment-header">
-                        <div>INSTALLMENT</div>
-                        <div>MONTHLY</div>
-                        <div>TOTAL</div>
-                    </div>
-                    <div id="jetcheckout_installment_loading" class="installment-loading">
-                        <i class="fa fa-3x fa-circle-o-notch fa-spin"/>
-                    </div>
-                    <div id="jetcheckout_installment_rows" class="installment-rows"/>
-                    <div id="jetcheckout_installment_empty" class="installment-empty">
-                        <i class="fa fa-info-circle mb-3" t-translation="off"/>
-                        <span>Appliable installment options will be displayed here after you enter your credit card number</span>
-                    </div>
-                </div>
             </div>
         </xpath>
     </t>

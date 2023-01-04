@@ -24,7 +24,7 @@ class JetcontrollerPos(Controller):
             del request.session['__jetcheckout_last_tx_id']
 
         tx = request.env['payment.transaction'].sudo().browse(int(kwargs['']))
-        return request.render('payment_jetcheckout_pos.payment_result', {
+        return request.render('pos_jetcheckout.payment_result', {
             'result': json.dumps({
                 'id': tx.id,
                 'state': tx.state,

@@ -3,7 +3,7 @@
     <template id="payment_result" name="PoS Payment Result">
         <t t-call="web.layout">
             <script>
-                const result = window.parent.document.getElementById('vpos_card_result');
+                const result = window.parent.document.getElementById('jetcheckout_payment_result');
                 result.value = '<t t-esc="result"/>';
                 result.dispatchEvent(new Event('change'));
             </script>

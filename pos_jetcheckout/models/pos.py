@@ -36,7 +36,7 @@ class PosOrder(models.Model):
         pos_order = self.browse(res)
         transaction_ids =  order['data']['transaction_ids']
         if transaction_ids:
-            pos_order.transaction_ids = [(6, 0, transaction_ids)]
+            pos_order.transaction_ids = [(4, id) for id in transaction_ids]
         return res
 
     def action_view_transactions(self):
