@@ -22,10 +22,6 @@ var PaymentJetcheckout = PaymentInterface.extend({
         this._super.apply(this, arguments);
     },
 
-    _pending_jetcheckout_virtual_line() {
-      return this.pos.get_order().paymentlines.find(paymentLine => paymentLine.payment_method.use_payment_terminal === 'jetcheckout_virtual' && (!paymentLine.is_done()));
-    },
-
     _jetcheckout_pay: async function (cid) {
         const order = this.pos.get_order();
         const line = order.paymentlines.find(line => line.cid === cid);
@@ -42,13 +38,29 @@ var PaymentJetcheckout = PaymentInterface.extend({
 
         const client = order.get_client();
         const partner = client && client.id || 0;
+        if (!(partner > 0)) {
+            Gui.showPopup('ErrorPopup', {
+                title: _t('Error'),
+                body: _t('Please select a customer'),
+            });
+            return;
+        };
 
-        await Gui.showPopup('CardPopup', {
-            order: order,
-            line: line,
-            amount: amount,
-            partner: partner,
-        });
+        if (line.payment_method.use_payment_terminal === 'jetcheckout_virtual') {
+            await Gui.showPopup('JetcheckoutCardPopup', {
+                order: order,
+                line: line,
+                amount: amount,
+                partner: partner,
+            });
+        } else if (line.payment_method.use_payment_terminal === 'jetcheckout_link') {
+            await Gui.showPopup('JetcheckoutLinkPopup', {
+                order: order,
+                line: line,
+                amount: amount,
+                partner: partner,
+            });
+        }
     },
 });
 

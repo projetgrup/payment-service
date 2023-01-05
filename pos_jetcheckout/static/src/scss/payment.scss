@@ -82,9 +82,9 @@
     }
 }
 
-.card-dialog {
+.jetcheckout-dialog {
 
-    .card-popup {
+    .jetcheckout-popup {
         border-radius: 10px !important;
         max-width: 750px !important;
         font-size: 1em !important;
@@ -98,6 +98,12 @@
             box-shadow: inset 0px 0px 5px 5px rgb(240, 240, 240);
             transition: 0.2s ease all;
             overflow-y: auto;
+        }
+
+        footer {
+            .fa {
+                margin: 0 5px;
+            }
         }
     }
 
@@ -353,10 +359,36 @@
             }
         }
 
+        .send-table {
+            width: 50%;
+            margin: 10px 5px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .link-table {
+            width: 50%;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            border-radius: 10px;
+            border: 2px solid #cccccc;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+        }
+
+        .field-info {
+            margin: 5px 10px 25px 10px;
+        }
+
         .field-container {
             position: relative;
 
-            > input {
+            > input, textarea {
                 -webkit-box-sizing: border-box;
                 min-height: 50px;
                 box-sizing: border-box;
@@ -367,6 +399,7 @@
                 color: #999;
                 border: 2px solid #ddd;
                 border-radius: 5px;
+                resize: none;
                 box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
             }
 
@@ -476,6 +509,25 @@
 
             .symbol-after {
                 right: 0;
+            }
+
+            .button {
+                position: absolute;
+                right: 0;
+                top: 1px;
+                margin: 0;
+                height: calc(100% - 4px);
+                width: 50px;
+                border-radius: 2px;
+                border: none;
+                border-left: 2px solid #ddd;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .fa {
+                    font-size: 1.5em;
+                }
             }
 
             .installment-container {
@@ -636,7 +688,7 @@
     .installment-dialog .installment-popup .installment-table {
         grid-template-columns: repeat(1, 1fr);
     }
-    .card-dialog .card-popup{
+    .jetcheckout-dialog .jetcheckout-popup{
 
         main {
             min-height: 500px;

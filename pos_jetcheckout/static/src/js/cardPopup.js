@@ -8,7 +8,7 @@ var core = require('web.core');
 
 var _t = core._t;
 
-class CardPopup extends AbstractAwaitablePopup {
+class JetcheckoutCardPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
         this.order = this.props.order;
@@ -323,7 +323,7 @@ class CardPopup extends AbstractAwaitablePopup {
                 this.inPayment = true;
                 $('div.button.pay').addClass('d-none');
                 $('.payment-jetcheckout').fadeOut(function () {
-                    $('div.card-popup main').css('height', '400px');
+                    $('div.jetcheckout-popup main').css('height', '400px');
                     self.$jetcheckout.payment.threed.classList.add('d-block');
                 });
                 this.env.session.rpc('/payment/card/payment', this._getCardParams()).then(function (result) {
@@ -350,12 +350,12 @@ class CardPopup extends AbstractAwaitablePopup {
     }
 }
 
-CardPopup.template = 'CardPopup';
-CardPopup.defaultProps = {
+JetcheckoutCardPopup.template = 'JetcheckoutCardPopup';
+JetcheckoutCardPopup.defaultProps = {
     title: _t('Card Information'),
 };
 
-Registries.Component.add(CardPopup);
+Registries.Component.add(JetcheckoutCardPopup);
 
-return CardPopup;
+return JetcheckoutCardPopup;
 });

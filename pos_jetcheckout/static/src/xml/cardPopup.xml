@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="CardPopup" owl="1">
-        <div role="dialog" class="modal-dialog card-dialog">
-            <div class="popup card-popup">
-                <!--<header class="title">
-                    <t t-esc="props.title"/>
-                </header>-->
+    <t t-name="JetcheckoutCardPopup" owl="1">
+        <div role="dialog" class="modal-dialog jetcheckout-dialog">
+            <div class="popup jetcheckout-popup">
                 <main>
-                    <!--<div id="jetcheckout_payment_loading" class="payment-jetcheckout-loading">
-                        <i class="fa fa-5x fa-circle-o-notch fa-spin"/>
-                    </div>-->
                     <div id="jetcheckout_payment_threed" class="payment-jetcheckout-threed">
                         <iframe id="jetcheckout_payment_url"/>
                         <input id="jetcheckout_payment_result" type="hidden"/>

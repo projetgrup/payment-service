@@ -9,7 +9,10 @@
         </xpath>
         <xpath expr="//field[@name='use_payment_terminal']" position="after">
             <label for="use_payment_terminal" string=""/>
-            <button name="action_acquirer_jetcheckout" type="object" class="btn-link p-0" icon="fa-arrow-right" string="Configure Payment Acquirer" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_virtual')]}"/>
+            <button name="action_acquirer_jetcheckout" type="object" class="btn-link p-0" icon="fa-arrow-right" string="Configure Payment Acquirer" attrs="{'invisible': [('use_payment_terminal', 'not in', ('jetcheckout_virtual', 'jetcheckout_physical'))]}"/>
+            <field name="jetcheckout_link_url" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
+            <field name="jetcheckout_link_apikey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
+            <field name="jetcheckout_link_secretkey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
         </xpath>
     </field>
     </record>

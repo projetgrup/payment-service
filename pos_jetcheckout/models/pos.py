@@ -5,8 +5,27 @@ from odoo import models, fields, api
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
+    jetcheckout_link_url = fields.Char(string='Server Address', copy=False)
+    jetcheckout_link_apikey = fields.Char(string='API Key', copy=False)
+    jetcheckout_link_secretkey = fields.Char(string='Secret Key', copy=False)
+
     def _get_payment_terminal_selection(self):
-        return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('jetcheckout_virtual', 'Jetcheckout Virtual PoS'), ('jetcheckout_physical', 'Jetcheckout Physical PoS')]
+        return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [
+            ('jetcheckout_virtual', 'Jetcheckout Virtual PoS'),
+            ('jetcheckout_physical', 'Jetcheckout Physical PoS'),
+            ('jetcheckout_link', 'Jetcheckout Payment Link'),
+        ]
+
+    @api.model
+    def create(self, vals):
+        if 'jetcheckout_link_url' in vals and not vals['jetcheckout_link_url'][-1:] == '/':
+            vals['jetcheckout_link_url'] += '/'
+        return super().create(vals)
+
+    def write(self, vals):
+        if 'jetcheckout_link_url' in vals and not vals['jetcheckout_link_url'][-1:] == '/':
+            vals['jetcheckout_link_url'] += '/'
+        return super().write(vals)
 
     def action_acquirer_jetcheckout(self):
         self.ensure_one()

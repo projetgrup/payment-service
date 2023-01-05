@@ -21,21 +21,14 @@ class InstallmentPopup extends AbstractAwaitablePopup {
                 amount: this.amount,
             });
             if ('error' in this.installments) {
-                this.error = this.installments.error;
+                throw this.installments.error;
             }
         } catch (error) {
-            this.error = error;
-        }
-    }
-
-    mounted() {
-        if (this.error) {
-            this.cancel();
+            console.error(error);
             this.showPopup('ErrorPopup', {
-                title: this.env._t('Network Error'),
-                body: this.env._t('Cannot access installment table. Please check your connection.'),
+                title: _t('Network Error'),
+                body: _t('Cannot access installment table. Please check your connection.'),
             });
-            throw this.error;
         }
     }
 }

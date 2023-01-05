@@ -6,7 +6,10 @@ var PaymentJetcheckout = require('pos_jetcheckout.payment');
 
 PosModel.register_payment_method('jetcheckout_virtual', PaymentJetcheckout);
 PosModel.register_payment_method('jetcheckout_physical', PaymentJetcheckout);
-//PosModel.load_fields('pos.payment.method', 'jetcheckout_field');
+PosModel.register_payment_method('jetcheckout_link', PaymentJetcheckout);
+PosModel.load_fields('pos.payment.method', 'jetcheckout_link_url');
+PosModel.load_fields('pos.payment.method', 'jetcheckout_link_apikey');
+PosModel.load_fields('pos.payment.method', 'jetcheckout_link_secretkey');
 
 const PosModelSuper = PosModel.PosModel.prototype;
 PosModel.PosModel = PosModel.PosModel.extend({
