@@ -35,7 +35,6 @@ class JetcontrollerPos(Controller):
 
     @route(['/pos/link/prepare'], type='json', auth='user')
     def pos_link_prepare(self, **kwargs):
-        raise Exception(request.httprequest.host_url)
         method = request.env['pos.payment.method'].sudo().browse(kwargs.get('method', 0))
         if not method:
             return {'error': _('Method not found')}
@@ -44,16 +43,21 @@ class JetcontrollerPos(Controller):
         if not partner:
             return {'error': _('Partner not found')}
 
+        tx = self._jetcheckout_create_transaction({
+            'api': True,
+            'partner': partner.id,
+            'amount': kwargs.get('amount', 0),
+        })
         try:
-            response = requests.post('%sapi/v1/payment/create/link' % method.jetcheckout_link_url, json={
+            response = requests.post('%sapi/v1/payment/prepare' % method.jetcheckout_link_url, json={
                 'application_key': method.jetcheckout_link_apikey,
                 'hash': method.jetcheckout_link_secretkey,
-                'id': partner.id,
+                'id': tx.id,
+                'partner': partner.name,
                 'amount': kwargs.get('amount', 0),
                 'order': kwargs.get('order', 0),
                 'product': kwargs.get('product', 0),
-                'product': kwargs.get('product', 0),
-                'card_return_url': request.httprequest.host_url,
+                'card_return_url': '%spos/link/result' % request.httprequest.host_url,
             })
             if response.status_code == 200:
                 result = response.json()

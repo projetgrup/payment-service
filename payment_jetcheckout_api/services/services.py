@@ -80,36 +80,6 @@ class PaymentAPIService(Component):
             return Response(**exception)
 
     @restapi.method(
-        [(["/create/link"], "POST")],
-        input_param=Datamodel("payment.prepare.input"),
-        output_param=Datamodel("payment.prepare.output"),
-        auth="public",
-        tags=['Payment Initialization']
-    )
-    def payment_create_link(self, params):
-        """
-        Create Payment Link
-        """
-        Response = self.env.datamodels["payment.prepare.output"]
-        try:
-            company = self.env.company.id
-
-            api = self._check_auth(company, params.application_key)
-            if not api:
-                return Response(**RESPONSE['no_api_key'])
-
-            hash = self._check_hash(api, params.hash, params.id)
-            if not hash:
-                return Response(**RESPONSE['no_hash_match'])
-
-            self._create_transaction(api, hash, params)
-            return Response(hash=params.hash, **RESPONSE['success'])
-        except Exception as e:
-            exception = {**RESPONSE['exception']}
-            exception['response_message'] = str(e)
-            return Response(**exception)
-
-    @restapi.method(
         [(["/result"], "POST")],
         input_param=Datamodel("payment.hash.input"),
         output_param=Datamodel("payment.result.output"),
