@@ -50,14 +50,23 @@ class JetcontrollerPos(Controller):
         })
         try:
             response = requests.post('%sapi/v1/payment/prepare' % method.jetcheckout_link_url, json={
-                'application_key': method.jetcheckout_link_apikey,
-                'hash': method.jetcheckout_link_secretkey,
                 'id': tx.id,
-                'partner': partner.name,
+                'credential': {
+                    'key': method.jetcheckout_link_apikey,
+                    'hash': method.jetcheckout_link_secretkey,
+                },
+                'partner': {
+                    'name': partner.name,
+                },
+                'order': {
+                    'name': kwargs.get('order', ''),
+                },
+                'url': {
+                    'card': {
+                        'result': '%spos/link/result' % request.httprequest.host_url,
+                    }
+                },
                 'amount': kwargs.get('amount', 0),
-                'order': kwargs.get('order', 0),
-                'product': kwargs.get('product', 0),
-                'card_return_url': '%spos/link/result' % request.httprequest.host_url,
             })
             if response.status_code == 200:
                 result = response.json()
