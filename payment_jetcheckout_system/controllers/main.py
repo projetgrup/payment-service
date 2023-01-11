@@ -39,9 +39,8 @@ class JetcheckoutSystemController(JetController):
             vals.update({'jetcheckout_item_ids': [(6, 0, ids)]})
         return vals
 
-    @staticmethod
-    def _jetcheckout_process(**kwargs):
-        url, tx = JetController._jetcheckout_process(**kwargs)
+    def _jetcheckout_process(self, **kwargs):
+        url, tx = super()._jetcheckout_process(**kwargs)
         if tx.company_id.system:
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx
@@ -124,8 +123,8 @@ class JetcheckoutSystemController(JetController):
 
         # remove hash if exists
         # it could be there because of api module
-        if 'hash' in request.session:
-            del request.session['hash']
+        if '__tx_hash' in request.session:
+            del request.session['__tx_hash']
 
         return request.render('payment_jetcheckout_system.payment_page', values)
 
@@ -138,10 +137,10 @@ class JetcheckoutSystemController(JetController):
     @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page_result(self, **kwargs):
         values = self._jetcheckout_get_data()
-        last_tx_id = request.session.get('__jetcheckout_last_tx_id')
+        last_tx_id = request.session.get('__tx_id')
         values['tx'] = request.env['payment.transaction'].sudo().browse(last_tx_id)
         if last_tx_id:
-            del request.session['__jetcheckout_last_tx_id']
+            del request.session['__tx_id']
         return request.render('payment_jetcheckout_system.payment_page_result', values)
 
     @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', website=True)

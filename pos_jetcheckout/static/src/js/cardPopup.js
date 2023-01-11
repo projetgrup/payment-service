@@ -149,7 +149,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
         } else {
             this.showPopup('ErrorPopup', {
                 title: this.env._t('Error'),
-                body: result.message || this.env._t('An error occured. Please try again.') ,
+                body: result.message || this.env._t('An error occured. Please try again.'),
             });
         }
     }

@@ -1,9 +1,10 @@
 odoo.define('pos_jetcheckout.payment', function (require) {
 "use strict";
 
+const { Gui } = require('point_of_sale.Gui');
+var rpc = require('web.rpc');
 var core = require('web.core');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
-const { Gui } = require('point_of_sale.Gui');
 
 var _t = core._t;
 
@@ -15,7 +16,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
 
     send_payment_cancel: function (order, cid) {
         this._super.apply(this, arguments);
-        return Promise.resolve(true);
+        return this._jetcheckout_cancel();
     },
 
     close: function () {
@@ -60,6 +61,26 @@ var PaymentJetcheckout = PaymentInterface.extend({
                 amount: amount,
                 partner: partner,
             });
+        }
+    },
+
+    _jetcheckout_cancel: function () {
+        const order = this.pos.get_order();
+        if (order.transaction_id > 0) {
+            return rpc.query({
+                route: '/pos/link/cancel',
+                params: {tx: order.transaction_id}
+            }).then(function () {
+                order.transaction_id = 0;
+                return Promise.resolve(true);
+            }).catch(function(error) {
+                console.log(error);
+                order.transaction_id = 0;
+                return Promise.resolve(true);
+            });
+        } else {
+            order.transaction_id = 0;
+            return Promise.resolve(true);
         }
     },
 });

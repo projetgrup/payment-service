@@ -39,29 +39,38 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Please define a country for this company'))
         return country.id
 
+    partner_vat = fields.Char(string="VAT")
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
-    jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True)
-    jetcheckout_card_number = fields.Char('Card Number', readonly=True)
-    jetcheckout_card_type = fields.Char('Card Type', readonly=True)
-    jetcheckout_card_family = fields.Char('Card Family', readonly=True)
-    jetcheckout_vpos_name = fields.Char('Virtual Pos', readonly=True)
-    jetcheckout_order_id = fields.Char('Order', readonly=True)
-    jetcheckout_ip_address = fields.Char('IP Address', readonly=True)
-    jetcheckout_transaction_id = fields.Char('Transaction', readonly=True)
-    jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True)
-    jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True)
-    jetcheckout_installment_description = fields.Char('Installment Description', readonly=True)
+    jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
+    jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
+    jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
+    jetcheckout_card_type = fields.Char('Card Type', readonly=True, copy=False)
+    jetcheckout_card_family = fields.Char('Card Family', readonly=True, copy=False)
+    jetcheckout_vpos_name = fields.Char('Virtual Pos', readonly=True, copy=False)
+    jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
+    jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+    jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True, copy=False)
+    jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
+    jetcheckout_installment_description = fields.Char('Installment Description', readonly=True, copy=False)
     jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
-    jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True)
-    jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True)
-    jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True)
-    jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True)
-    jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True)
-    jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True)
+    jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True, copy=False)
+    jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True, copy=False)
+    jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True, copy=False)
+    jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True, copy=False)
+    jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True, copy=False)
+    jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
+    jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
 
     @api.model_create_multi
     def create(self, values_list):
+        for values in values_list:
+            if 'partner_vat' not in values:
+                partner = self.env['res.partner'].browse(values['partner_id'])
+                values.update({'partner_vat': partner.vat})
+
         txs = super().create(values_list)
+
         for tx in txs:
             partner_phone = tx.partner_id.mobile or tx.partner_id.phone
             if partner_phone:
@@ -305,3 +314,14 @@ class PaymentTransaction(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
+
+    def _jetcheckout_expire(self):
+        self.write({
+            'state': 'cancel',
+            'state_message': _('Transaction has expired')
+        })
+
+    @api.model
+    def jetcheckout_expire(self):
+        txs = self.search([])
+        txs._jetcheckout_expire()

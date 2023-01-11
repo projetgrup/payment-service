@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_api" action="payment_jetcheckout_api.action_api" name="API Keys" parent="payment_vendor.menu_companies" sequence="98"/>
+</odoo>

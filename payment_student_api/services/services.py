@@ -17,8 +17,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/schools"], "GET")],
-        input_param=Datamodel("school.search"),
-        output_param=Datamodel("school.response"),
+        input_param=Datamodel("student.school.input"),
+        output_param=Datamodel("student.school.output"),
         auth="public",
         tags=['List Methods']
     )
@@ -26,7 +26,7 @@ class StudentAPIService(Component):
         """
         List Schools
         """
-        SchoolResponse = self.env.datamodels["school.response"]
+        SchoolResponse = self.env.datamodels["student.school.output"]
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
@@ -51,8 +51,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/classes"], "GET")],
-        input_param=Datamodel("class.search"),
-        output_param=Datamodel("class.response"),
+        input_param=Datamodel("student.class.input"),
+        output_param=Datamodel("student.class.output"),
         auth="public",
         tags=['List Methods']
     )
@@ -60,7 +60,7 @@ class StudentAPIService(Component):
         """
         List Classes
         """
-        ClassResponse = self.env.datamodels["class.response"]
+        ClassResponse = self.env.datamodels["student.class.output"]
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
@@ -85,8 +85,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/bursaries"], "GET")],
-        input_param=Datamodel("bursary.search"),
-        output_param=Datamodel("bursary.response"),
+        input_param=Datamodel("student.bursary.input"),
+        output_param=Datamodel("student.bursary.output"),
         auth="public",
         tags=['List Methods']
     )
@@ -94,7 +94,7 @@ class StudentAPIService(Component):
         """
         List Bursaries
         """
-        BursaryResponse = self.env.datamodels["bursary.response"]
+        BursaryResponse = self.env.datamodels["student.bursary.output"]
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
@@ -119,8 +119,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/students"], "GET")],
-        input_param=Datamodel("student.search"),
-        output_param=Datamodel("student.response"),
+        input_param=Datamodel("student.child.input"),
+        output_param=Datamodel("student.child.output"),
         auth="public",
         tags=['List Methods']
     )
@@ -128,7 +128,7 @@ class StudentAPIService(Component):
         """
         List Students And Parents
         """
-        StudentResponse = self.env.datamodels["student.response"]
+        StudentResponse = self.env.datamodels["student.child.output"]
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
@@ -154,8 +154,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/payments"], "GET")],
-        input_param=Datamodel("payment.search"),
-        output_param=Datamodel("payment.response"),
+        input_param=Datamodel("student.payment.input"),
+        output_param=Datamodel("student.payment.output"),
         auth="public",
         tags=['List Methods']
     )
@@ -163,7 +163,7 @@ class StudentAPIService(Component):
         """
         List Payments
         """
-        PaymentResponse = self.env.datamodels["payment.response"]
+        PaymentResponse = self.env.datamodels["student.payment.output"]
         company = self.env.company.id
         key = self._auth(company, params.application_key)
         if not key:
@@ -183,8 +183,8 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/create"], "POST")],
-        input_param=Datamodel("student.create"),
-        output_param=Datamodel("student.response"),
+        input_param=Datamodel("student.child.create"),
+        output_param=Datamodel("student.child.output"),
         auth="public",
         tags=['Create Methods']
     )
@@ -192,7 +192,7 @@ class StudentAPIService(Component):
         """
         Create Student
         """
-        StudentResponse = self.env.datamodels["student.response"]
+        StudentResponse = self.env.datamodels["student.child.output"]
         company = self.env.company
         key = self._auth(company.id, params.application_key, params.secret_key)
         if not key:
@@ -268,7 +268,7 @@ class StudentAPIService(Component):
 
     @restapi.method(
         [(["/delete"], "DELETE")],
-        input_param=Datamodel("student.delete"),
+        input_param=Datamodel("student.child.delete"),
         auth="public",
         tags=['Delete Methods']
     )
@@ -304,7 +304,7 @@ class StudentAPIService(Component):
         input_param=Datamodel("student.webhook"),
         tags=['Webhook Methods']
     )
-    def webhook_student_successful_payment(self):
+    def webhook_successful_payment(self):
         """
         Notify Successful Payment
         """

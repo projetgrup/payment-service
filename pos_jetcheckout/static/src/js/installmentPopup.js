@@ -3,6 +3,7 @@ odoo.define('pos_jetcheckout.InstallmentPopup', function(require) {
 
 const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
 const Registries = require('point_of_sale.Registries');
+const { Gui } = require('point_of_sale.Gui');
 var core = require('web.core');
 
 var _t = core._t;
@@ -25,9 +26,9 @@ class InstallmentPopup extends AbstractAwaitablePopup {
             }
         } catch (error) {
             console.error(error);
-            this.showPopup('ErrorPopup', {
+            Gui.showPopup('ErrorPopup', {
                 title: _t('Network Error'),
-                body: _t('Cannot access installment table. Please check your connection.'),
+                body: _t('Installment table could not be accessable. Please check your connection.'),
             });
         }
     }

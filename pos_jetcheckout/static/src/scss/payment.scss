@@ -379,6 +379,14 @@
             border: 2px solid #cccccc;
             box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
             overflow: hidden;
+
+            textarea {
+                padding-right: 55px !important;
+            }
+
+            .jetcheckout-link-countdown {
+                margin-top: 5px;
+            }
         }
 
         .field-info {
@@ -595,6 +603,10 @@
         background: rgba(178, 34, 34, 0.75);
         transform: translate(-50%, -50%);
         border-radius: 10px;
+
+        &.success {
+            background: rgba(34, 178, 53, 0.75) !important;
+        }
     }
 
     .left-content {

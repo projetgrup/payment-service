@@ -10,11 +10,12 @@
     'license': 'LGPL-3',
     'sequence': 1456,
     'category': 'Sales/Point of Sale',
-    'depends': ['payment_jetcheckout_pos'],
+    'depends': ['payment_jetcheckout_pos', 'sms_api'],
     'data': [
+        'data/data.xml',
         'views/pos.xml',
         'views/transaction.xml',
-        'views/template.xml',
+        'views/templates.xml',
     ],
     'assets': {
         'point_of_sale.assets': [

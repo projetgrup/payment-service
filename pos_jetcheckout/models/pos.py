@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from urllib.parse import urlparse
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class PosPaymentMethod(models.Model):
@@ -17,14 +19,22 @@ class PosPaymentMethod(models.Model):
         ]
 
     @api.model
+    def _set_link_url(self, url):
+        try:
+            url = urlparse(url)
+            return '%s://%s' % (url.scheme, url.netloc)
+        except:
+            raise ValidationError(_('URL you entered seems mistyped'))
+
+    @api.model
     def create(self, vals):
-        if 'jetcheckout_link_url' in vals and not vals['jetcheckout_link_url'][-1:] == '/':
-            vals['jetcheckout_link_url'] += '/'
+        if 'jetcheckout_link_url' in vals:
+            vals['jetcheckout_link_url'] = self._set_link_url(vals['jetcheckout_link_url'])
         return super().create(vals)
 
     def write(self, vals):
-        if 'jetcheckout_link_url' in vals and not vals['jetcheckout_link_url'][-1:] == '/':
-            vals['jetcheckout_link_url'] += '/'
+        if 'jetcheckout_link_url' in vals:
+            vals['jetcheckout_link_url'] = self._set_link_url(vals['jetcheckout_link_url'])
         return super().write(vals)
 
     def action_acquirer_jetcheckout(self):
