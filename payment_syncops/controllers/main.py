@@ -116,10 +116,19 @@ class PaymentSyncopsController(JetController):
         if '__jetcheckout_partner_connector' in request.session:
             partner = request.session['__jetcheckout_partner_connector']
             vals.update({
-                'jetcheckout_connector_ok': True,
                 'jetcheckout_connector_partner_name': partner['name'],
                 'jetcheckout_connector_partner_vat': partner['vat'],
             })
+
+        connector = request.env['syncops.connector'].sudo().search_count([
+            ('company_id', '=', request.env.company.id),
+            ('active', '=', True),
+        ])
+        if connector:
+            vals.update({
+                'jetcheckout_connector_ok': True,
+            })
+
         return vals
 
     def _jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
