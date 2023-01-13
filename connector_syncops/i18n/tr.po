@@ -1,0 +1,249 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* connector_syncops
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-14 07:50+0000\n"
+"PO-Revision-Date: 2022-12-14 10:58+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('connected','!=',"
+"False)]}\">Methods will be available after connection is successful</span>"
+msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('connected','!=',"
+"False)]}\">Metotlar bağlantı başarılı olduktan sonra görünür olacaktır</"
+"span>"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__active
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Active"
+msgstr "Aktif"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "An error occured when connecting: %s"
+msgstr "Bağlantı sırasında bir hata meydana geldi: %s"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "An error occured when connecting: %sresponse_message"
+msgstr "Bağlantı sırasında bir hata meydana geldi: %sresponse_message"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__company_id
+msgid "Company"
+msgstr "Şirket"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_res_config_settings
+msgid "Config Settings"
+msgstr "Yapılandırma"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__connected
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Connected"
+msgstr "Bağlandı"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Connection"
+msgstr "Bağlantı"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Connection error is occured. Please contact with system administrator."
+msgstr ""
+"Bağlantı hatası gerçekleşti. Lütfen sistem yöneticisi ile iletişime geçiniz."
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Connection is succesful"
+msgstr "Bağlantı başarılı"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__connector_id
+msgid "Connector"
+msgstr "Bağlayıcı"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_date
+msgid "Created on"
+msgstr "Oluşturma Tarihi"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__display_name
+msgid "Display Name"
+msgstr "Görünen Ad"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Endpoint URL"
+msgstr "Uç Noktası Adresi"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Enter url address of syncOPS server"
+msgstr "syncOPS sunucusu adresini giriniz"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Error"
+msgstr "Hata"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Go to settings"
+msgstr "Ayarlara git"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__method_ids
+msgid "Methods"
+msgstr "Metotlar"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__name
+msgid "Name"
+msgstr "Ad"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "No connector found"
+msgstr "Bağlantı bulunamadı"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "No syncOPS endpoint URL found"
+msgstr "syncOPS uç nokta adresi bulunamadı"
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
+msgid "No syncOPS integrations yet"
+msgstr "syncOPS entegrasyonu mevcut değil"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Not Connected"
+msgstr "Bağlı Değil"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Passive"
+msgstr "Pasif"
+
+#. module: connector_syncops
+#: model:ir.actions.act_window,name:connector_syncops.action_syncops_config_settings
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Success"
+msgstr "Başarılı"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__token
+msgid "Token"
+msgstr "Jeton"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__username
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "You must specify a syncOPS endpoint URL address in settings"
+msgstr "Ayarlarda syncOPS uç nokta adresi belirtmelisiniz"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "syncOPS"
+msgstr "syncOPS"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector
+msgid "syncOPS Connectors"
+msgstr "syncOPS Bağlayıcıları"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_res_config_settings__syncops_url
+msgid "syncOPS Endpoint URL"
+msgstr "syncOPS Uç Nokta Adresi"
+
+#. module: connector_syncops
+#: model:ir.actions.act_window,name:connector_syncops.action_connector
+msgid "syncOPS Integrations"
+msgstr "syncOPS Entegrasyonları"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_method
+msgid "syncOPS Methods"
+msgstr "syncOPS Metotları"
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
+msgid "syncOPS integrations are listed here"
+msgstr "syncOPS entegrasyonları burada listelenir"
