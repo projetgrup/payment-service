@@ -301,7 +301,7 @@ class StudentAPIService(Component):
         return Response("Deleted", status=204, mimetype="application/json")
 
     @restapi.webhook(
-        input_param=Datamodel("student.webhook"),
+        input_param=Datamodel("student.payment.item.webhook"),
         tags=['Webhook Methods']
     )
     def webhook_successful_payment(self):

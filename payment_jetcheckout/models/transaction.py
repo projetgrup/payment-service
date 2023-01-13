@@ -323,5 +323,8 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def jetcheckout_expire(self):
-        txs = self.search([])
-        txs._jetcheckout_expire()
+        self.sudo().search([
+            ('state', 'in', ('draft', 'pending')),
+            ('jetcheckout_date_expiration', '!=', False),
+            ('jetcheckout_date_expiration', '<', fields.Datetime.now()),
+        ])._jetcheckout_expire()
