@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="InstallmentPopup" owl="1">
+        <div role="dialog" class="modal-dialog installment-dialog">
+            <div class="popup installment-popup">
+                <header class="title">
+                    <t t-esc="props.title"/>
+                </header>
+                <main class="installment-table">
+                    <t t-foreach="installments.installments || []" t-as="installment" t-key="installment">
+                        <div>
+                            <div>
+                                <table>
+                                    <colgroup>
+                                        <col width="20%"/>
+                                        <col width="40%"/>
+                                        <col width="40%"/>
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4">
+                                                <img t-att-src="installment.card_family_logo" t-att-alt="installment.card_family"/>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>Monthly Payment</td>
+                                            <td>Total Payment</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="installment.installments || []" t-as="row" t-key="row">
+                                            <t t-set="customer_rate" t-value="row.customer_rate"/>
+                                            <t t-set="installment_rate" t-value="row.installment_rate"/>
+                                            <t t-set="installment_count" t-value="row.total_installment"/>
+                                            <tr t-if="installment_count > 0">
+                                                <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                                                <td>
+                                                    <span t-esc="row.installment_count"/>
+                                                    <span t-if="row.plus_installment" t-esc="'+' + row.plus_installment" class="badge" t-att-title="row.plus_installment_description"/>
+                                                </td>
+                                                <td class="side-border">
+                                                    <span t-esc="env.pos.format_currency(installment_amount/installment_count)"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="env.pos.format_currency(installment_amount)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </main>
+                <footer class="footer">
+                    <div class="button cancel" t-on-click="cancel">Close</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

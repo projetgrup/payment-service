@@ -85,7 +85,8 @@
             <div>
                 <div class="px-3 py-4 bg-white card my-4">
                     <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
-                    <span t-esc="partner.name" class="text-600"/>
+                    <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
+                    <span t-else="" t-esc="partner.name" class="text-600"/>
                     <t t-if="contact">
                         <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
                         <span t-esc="contact.name" class="text-600"/>
@@ -104,7 +105,7 @@
                         <input id="commission" type="hidden" value="0"/>
                     </t>
                     <t t-elif="page == 'result'">
-                        <button t-if="tx != False and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
+                        <button t-if="tx and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
                         <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
                     </t>
                     <t t-if="buttons" t-raw="buttons"/>
@@ -365,6 +366,7 @@
 
     <template id="payment_page_result" name="Payment Result">
         <t t-call="web.frontend_layout">
+            <t t-if="tx.jetcheckout_api_ok" t-set="no_footer" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="payment-result row justify-content-center mx-0 h-100">
@@ -373,7 +375,7 @@
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                     <div class="border shadow w-100 bg-white text-center mr-4 my-4 pb-4 h-fit">
-                        <t t-call="payment_jetcheckout.payment_smart_button">
+                        <t t-if="not tx.jetcheckout_api_ok" t-call="payment_jetcheckout.payment_smart_button">
                             <t t-set="page" t-value="'result'"/>
                         </t>
                         <h4 t-if="tx != False and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">

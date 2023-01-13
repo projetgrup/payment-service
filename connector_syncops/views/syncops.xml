@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="connector_tree" model="ir.ui.view">
+    <field name="name">syncops.connector.tree</field>
+    <field name="model">syncops.connector</field>
+    <field name="arch" type="xml">
+        <tree decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="username"/>
+            <field name="token"/>
+            <field name="method_ids" widget="many2many_tags"/>
+            <field name="connected"/>
+            <field name="active" widget="boolean_toggle"/>
+            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="connector_form" model="ir.ui.view">
+    <field name="name">syncops.connector.form</field>
+    <field name="model">syncops.connector</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_connect" type="object" class="oe_stat_button text-danger" icon="fa-unlink" attrs="{'invisible': [('connected','!=',False)]}" string="Not Connected"/>
+                    <button name="action_connect" type="object" class="oe_stat_button text-success" icon="fa-chain" attrs="{'invisible': [('connected','=',False)]}" string="Connected"/>
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-muted" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}" string="Passive"/>
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-success" icon="fa-toggle-on" attrs="{'invisible': [('active','=',False)]}" string="Active"/>
+                </div>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="username"/>
+                        <field name="token"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1" force_save="1"/>
+                    </group>
+                    <group>
+                        <label for="method_ids"/>
+                        <div>
+                            <field name="method_ids" widget="many2many_tags" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>
+                            <span class="text-muted" attrs="{'invisible': [('connected','!=',False)]}">Methods will be available after connection is successful</span>
+                        </div>
+                        <field name="active" invisible="1"/>
+                        <field name="connected" invisible="1" force_save="1"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_connector" model="ir.actions.act_window">
+    <field name="name">syncOPS Integrations</field>
+    <field name="res_model">syncops.connector</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No syncOPS integrations yet
+        </p>
+        <p>
+            syncOPS integrations are listed here
+        </p>
+    </field>
+    </record>
+</odoo>

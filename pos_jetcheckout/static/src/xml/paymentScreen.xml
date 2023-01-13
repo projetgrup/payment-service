@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='paymentmethods-container']" position="after">
+            <div class="paymentmethods-jetcheckout">
+                <div class="payment-buttons">
+                    <div class="button altlight installment-button" t-on-click="showCardInstallments">
+                        <i role="img" aria-label="Installment Table" title="Installment Table" class="fa fa-list"/>
+                        <span class="js_installment_table">Installment Table</span>
+                    </div>
+                </div>
+                <ul class="card_families">
+                    <t t-foreach="jetcheckout.card.family" t-as="family" t-key="family">
+                        <li>
+                            <img t-att-src="family" alt=""/>
+                        </li>
+                    </t>
+                </ul>
+                <ul class="card_types">
+                    <t t-foreach="jetcheckout.card.type" t-as="type" t-key="type.id">
+                        <li>
+                            <img t-att-src="'data:image/png;base64,' + type.src" t-att-title="type.name" t-att-alt="type.name"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </xpath>
+    </t>
+</templates>

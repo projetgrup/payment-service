@@ -10,10 +10,9 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_student',
-        'payment_jetcheckout_api'
+        'payment_jetcheckout_system_api'
     ],
     'data': [
         'views/views.xml',
     ],
-    'external_dependencies': {'python': ['jsondiff']},
 }

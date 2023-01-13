@@ -3,138 +3,138 @@ from marshmallow import fields
 from odoo.addons.datamodel.core import Datamodel
 from odoo.addons.datamodel.fields import NestedModel
 
-class Response(Datamodel):
+class StudentOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "response"
+    _name = "student.output"
 
     response_code = fields.Integer(required=True, allow_none=False, title="Response Code", description="Integer which is returned to represent response", example=0)
     response_message = fields.String(required=True, allow_none=False, title="Response Message", description="Description which is returned to represent response", example="Success")
 
-class ApiKeys(Datamodel):
+class StudentCredentialApikey(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "api.keys"
+    _name = "student.credential.apikey"
 
     application_key = fields.String(required=True, allow_none=False, title="Application Key", description="API Key which is acquired by your service provider", example="1x2cdaa3-35df-2eff-aeq2-5d74387701xd")
 
-class ApiSecretKeys(Datamodel):
+class StudentCredentialSecretkey(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "api.secret.keys"
-    _inherit = "api.keys"
+    _name = "student.credential.secretkey"
+    _inherit = "student.credential.apikey"
 
     secret_key = fields.String(required=True, allow_none=False, title="Secret Key", description="Secret Key which is given to you by your service provider", example="xa18a2325z80c73ay871au54ba169c76")
 
-class SchoolSearch(Datamodel):
+class StudentSchoolInput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "school.search"
-    _inherit = "api.keys"
+    _name = "student.school.input"
+    _inherit = "student.credential.apikey"
 
     page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     code = fields.String(required=False, allow_none=False, title="School Code", description="A part of school code can be entered. For example, when you enter 'JOH', the codes which contain this word will be listed. It is not a required field.", example="JOHNDC")
     name = fields.String(required=False, allow_none=False, title="School Name", description="A part of school name can be entered. For example, when you enter 'College', the names which contain this word will be listed. It is not a required field.", example="John Doe College")
 
-class ClassSearch(Datamodel):
+class StudentClassInput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "class.search"
-    _inherit = "api.keys"
+    _name = "student.class.input"
+    _inherit = "student.credential.apikey"
 
     page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     code = fields.String(required=False, allow_none=False, title="Class Code", description="A part of class code can be entered. For example, when you enter 'CLA', the codes which contain this word will be listed. It is not a required field.", example="CLASS1")
     name = fields.String(required=False, allow_none=False, title="Class Name", description="A part of class name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Class 1")
 
-class BursarySearch(Datamodel):
+class StudentBursaryInput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "bursary.search"
-    _inherit = "api.keys"
+    _name = "student.bursary.input"
+    _inherit = "student.credential.apikey"
 
     page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     code = fields.String(required=False, allow_none=False, title="Bursary Code", description="A part of bursary code can be entered. For example, when you enter 'BUR', the codes which contain this word will be listed. It is not a required field.", example="BURSARY50")
     name = fields.String(required=False, allow_none=False, title="Bursary Name", description="A part of bursary name can be entered. For example, when you enter 'Clas', the names which contain this word will be listed. It is not a required field.", example="Bursary 50%")
 
-class StudentSearch(Datamodel):
+class StudentChildInput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.search"
-    _inherit = "api.keys"
+    _name = "student.child.input"
+    _inherit = "student.credential.apikey"
 
     page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     name = fields.String(required=False, allow_none=False, title="Student Name", description="Student name", example="Jane Doe")
     vat = fields.String(required=False, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
 
-class PaymentSearch(Datamodel):
+class StudentPaymentInput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "payment.search"
-    _inherit = "api.keys"
+    _name = "student.payment.input"
+    _inherit = "student.credential.apikey"
 
     page = fields.Integer(required=True, allow_none=False, title="Page Number", description="Records are paged hundred by hundred. Given page number will be used when getting desired records. First page starts with 1.", example="1")
     email = fields.String(required=True, allow_none=False, title="Email", description="Email address", example="test@example.com")
 
-class SchoolResponse(Datamodel):
+class StudentSchoolOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "school.response"
-    _inherit = "response"
+    _name = "student.school.output"
+    _inherit = "student.output"
 
     schools = fields.List(fields.Dict, title="Schools", description="List of schools", example=[{"id": 26, "name": "John Doe College", "code": "JOHNDC"}])
 
-class ClassResponse(Datamodel):
+class StudentClassOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "class.response"
-    _inherit = "response"
+    _name = "student.class.output"
+    _inherit = "student.output"
 
     classes = fields.List(fields.Dict, title="Classes", description="List of classes", example=[{"id": 34, "name": "Class 1", "code": "CLASS1"}])
 
-class BursaryResponse(Datamodel):
+class StudentBursaryOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "bursary.response"
-    _inherit = "response"
+    _name = "student.bursary.output"
+    _inherit = "student.output"
 
     bursaries = fields.List(fields.Dict, title="Bursaries", description="List of bursaries", example=[{"id": 12, "name": "Bursary 50%", "code": "BURSARY50"}])
 
-class StudentResponse(Datamodel):
+class StudentChildOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.response"
-    _inherit = "response"
+    _name = "student.child.output"
+    _inherit = "student.output"
 
     students = fields.List(fields.Dict, title="Students", description="List of students", example=[{"id": 52, "name": "Jane Doe", "vat": "12345678912", "parent": "John Doe"}])
 
-class PaymentResponse(Datamodel):
+class StudentPaymentOutput(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "payment.response"
-    _inherit = "response"
+    _name = "student.payment.output"
+    _inherit = "student.output"
 
     payments = fields.List(fields.Dict, title="Payments", description="List of payments", example=[{"id": 76, "date": "25-01-2021", "amount": 145.30, "state": "done"}])
 
 
-class StudentCreate(Datamodel):
+class StudentChildCreate(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.create"
-    _inherit = "api.secret.keys"
+    _name = "student.child.create"
+    _inherit = "student.credential.secretkey"
 
     name = fields.String(required=True, allow_none=False, title="Student Name", description="Student name", example="Jane Doe")
     vat = fields.String(required=True, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
@@ -147,25 +147,15 @@ class StudentCreate(Datamodel):
     ref = fields.String(required=True, allow_none=False, title="Ref", description="Student your REF number", example="ABC01")
 
 
-class StudentDelete(Datamodel):
+class StudentChildDelete(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.delete"
-    _inherit = "api.secret.keys"
+    _name = "student.child.delete"
+    _inherit = "student.credential.secretkey"
 
     vat = fields.String(required=False, allow_none=False, title="Student Citizen Number", description="Citizen number on student form", example="12345678912")
     ref = fields.String(required=False, allow_none=False, title="Student Reference Number", description="Reference on student form", example="123456789")
-
-
-class StudentWebhookParent(Datamodel):
-    class Meta:
-        ordered = True
-
-    _name = "student.webhook.parent"
-
-    name = fields.String(title="Parent Name", description="Parent name and surname", example="Jane Doe", required=True)
-    vat = fields.String(title="Parent VAT", description="Parent citizen number", example="12345678912", required=True)
 
 
 class StudentWebhookItemChild(Datamodel):
@@ -173,6 +163,7 @@ class StudentWebhookItemChild(Datamodel):
         ordered = True
 
     _name = "student.webhook.item.child"
+    _inherit = "system.webhook.item.child"
 
     name = fields.String(title="Student Name", description="Student name and surname", example="John Doe", required=True)
     vat = fields.String(title="Student VAT", description="Student citizen number", example="12345678912", required=True)
@@ -195,9 +186,9 @@ class StudentWebhookItemAmountDiscount(Datamodel):
         ordered = True
 
     _name = "student.webhook.item.amount.discount"
+    _inherit = "system.webhook.item.amount.discount"
 
     bursary = fields.Float(title="Bursary Discount Amount", description="Bursary discount amount of payment item", example=120.0, required=True)
-    prepayment = fields.Float(title="Prepayment Discount Amount", description="Prepayment discount amount of payment item", example=80.0, required=True)
 
 
 class StudentWebhookItemAmount(Datamodel):
@@ -205,10 +196,9 @@ class StudentWebhookItemAmount(Datamodel):
         ordered = True
 
     _name = "student.webhook.item.amount"
+    _inherit = "system.webhook.item.amount"
 
-    total = fields.Float(title="Total Amount", description="Total amount to be paid", example=2200.0, required=True)
     discount = NestedModel("student.webhook.item.amount.discount", title="Discount details of payment transaction", description="Discount information", required=True)
-    paid = fields.Float(title="Payment Amount", description="Paid amount for current payment transaction", example=2000.0, required=True)
 
 
 class StudentWebhookItems(Datamodel):
@@ -216,20 +206,11 @@ class StudentWebhookItems(Datamodel):
         ordered = True
 
     _name = "student.webhook.item"
+    _inherit = "system.webhook.item"
 
     student = NestedModel("student.webhook.item.child", title="Student Information", description="Student details related to parent", required=True)
     bursary = NestedModel("student.webhook.item.bursary", title="Bursary Information", description="Bursary details of related student", required=True)
     amount = NestedModel("student.webhook.item.amount", title="Amount Information", description="Amount details of payment transaction", required=True)
-
-
-class StudentWebhookCard(Datamodel):
-    class Meta:
-        ordered = True
-
-    _name = "student.webhook.card"
-
-    family = fields.String(title="Credit Card Family", description="Card family name of credit card related to transaction", example="Paraf", required=True)
-    vpos = fields.String(title="Virtual PoS Name", description="Virtual pos name which is registered to payment system", example="General", required=True)
 
 
 class StudentWebhook(Datamodel):
@@ -237,7 +218,6 @@ class StudentWebhook(Datamodel):
         ordered = True
 
     _name = "student.webhook"
+    _inherit = "system.webhook"
 
-    parent = NestedModel("student.webhook.parent", title="Parent Information", description="Parent information of student", required=True)
     items = fields.List(NestedModel("student.webhook.item"), title="Payment Information", description="Payment item details which contains amounts and other informations", required=True)
-    card = NestedModel("student.webhook.card", title="Card Information", description="Credit card information which are used in payment", required=True)

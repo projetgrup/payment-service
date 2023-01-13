@@ -203,12 +203,11 @@ class JetcheckoutController(http.Controller):
     def _jetcheckout_get_transaction(self):
         return False
 
-    @staticmethod
-    def _jetcheckout_process(**kwargs):
+    def _jetcheckout_process(self, **kwargs):
         if 'order_id' not in kwargs:
             return '/404', None
 
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs.get('order_id'))], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs.get('order_id'))], limit=1)
         if not tx:
             return '/404', None
 
@@ -397,7 +396,7 @@ class JetcheckoutController(http.Controller):
             })
         elif invoice_id:
             tx.invoice_ids = [(4, invoice_id)]
-        request.session['__jetcheckout_last_tx_id'] = tx.id
+        request.session['__tx_id'] = tx.id
 
         url = '%s/api/v1/payment' % acquirer._get_jetcheckout_api_url()
         fullname = tx.partner_name.split(' ', 1)
@@ -473,32 +472,32 @@ class JetcheckoutController(http.Controller):
     def jetcheckout_shop(self, **kwargs):
         kwargs['result_url'] = '/shop/confirmation'
         url, tx = self._jetcheckout_process(**kwargs)
-        if request.session.get('__jetcheckout_last_tx_id'):
-            del request.session['__jetcheckout_last_tx_id']
+        if request.session.get('__tx_id'):
+            del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/order/<int:order>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_order(self, order, access_token, **kwargs):
         kwargs['result_url'] = '/my/orders/%s?access_token=%s' % (order, access_token)
         url, tx = self._jetcheckout_process(**kwargs)
-        if request.session.get('__jetcheckout_last_tx_id'):
-            del request.session['__jetcheckout_last_tx_id']
+        if request.session.get('__tx_id'):
+            del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/invoice/<int:invoice>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_invoice(self, invoice, access_token, **kwargs):
         kwargs['result_url'] = '/my/invoices/%s?access_token=%s' % (invoice, access_token)
         url, tx = self._jetcheckout_process(**kwargs)
-        if request.session.get('__jetcheckout_last_tx_id'):
-            del request.session['__jetcheckout_last_tx_id']
+        if request.session.get('__tx_id'):
+            del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/subscription/<int:subscription>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_subscription(self, subscription, access_token, **kwargs):
         kwargs['result_url'] = '/my/subscription/%s/%s' % (subscription, access_token)
         url, tx = self._jetcheckout_process(**kwargs)
-        if request.session.get('__jetcheckout_last_tx_id'):
-            del request.session['__jetcheckout_last_tx_id']
+        if request.session.get('__tx_id'):
+            del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
@@ -506,17 +505,17 @@ class JetcheckoutController(http.Controller):
         kwargs['result_url'] = '/payment/confirmation'
         url, tx = self._jetcheckout_process(**kwargs)
         url += '?tx_id=%s&access_token=%s' % (tx.id, access_token)
-        if request.session.get('__jetcheckout_last_tx_id'):
-            del request.session['__jetcheckout_last_tx_id']
+        if request.session.get('__tx_id'):
+            del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
 
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], csrf=False, website=True, sitemap=False)
     def jetcheckout_result(self, **kwargs):
         values = self._jetcheckout_get_data()
-        last_tx_id = request.session.get('__jetcheckout_last_tx_id')
+        last_tx_id = request.session.get('__tx_id')
         values['tx'] = request.env['payment.transaction'].sudo().browse(last_tx_id)
         if last_tx_id:
-            del request.session['__jetcheckout_last_tx_id']
+            del request.session['__tx_id']
         return request.render('payment_jetcheckout.payment_page_result', values)
 
     @http.route(['/payment/card/terms'], type='json', auth='public', csrf=False, website=True)
@@ -529,7 +528,7 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def jetcheckout_report(self, name, order_id, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',order_id)])
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',order_id)], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
