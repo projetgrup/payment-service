@@ -48,8 +48,9 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
-        self.write({
-            'jetcheckout_connector_state': True,
-            'jetcheckout_connector_state_message': _('This transaction has not been posted to connector yet.')
-        })
-        self.action_process_connector()
+        if self.jetcheckout_connector_ok:
+            self.write({
+                'jetcheckout_connector_state': True,
+                'jetcheckout_connector_state_message': _('This transaction has not been posted to connector yet.')
+            })
+            self.action_process_connector()

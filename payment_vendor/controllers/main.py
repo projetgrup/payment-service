@@ -3,6 +3,7 @@ from odoo.http import route, request
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetSystemController
 from odoo.addons.portal.controllers import portal
 
+
 class CustomerPortal(portal.CustomerPortal):
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kwargs):
@@ -10,6 +11,7 @@ class CustomerPortal(portal.CustomerPortal):
         if system == 'vendor':
             return request.redirect('/my/payment')
         return super().home(**kwargs)
+
 
 class VendorPaymentController(JetSystemController):
 
