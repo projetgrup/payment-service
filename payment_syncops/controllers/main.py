@@ -123,6 +123,7 @@ class PaymentSyncopsController(JetController):
         connector = request.env['syncops.connector'].sudo().search_count([
             ('company_id', '=', request.env.company.id),
             ('active', '=', True),
+            ('connected', '=', True),
         ])
         if connector:
             vals.update({
