@@ -39,9 +39,6 @@ class SmsApi(models.AbstractModel):
         password = provider.password
         originator = provider.originator
 
-        numbers = [message['number'] for message in messages]
-        message = messages[0] if messages else ''
-
         blocks = [f"<mesaj><metin>{message['content']}</metin><nums>{message['number']}</nums></mesaj>" for message in messages]
 
         data = f"""<?xml version="1.0" encoding="UTF-8"?>

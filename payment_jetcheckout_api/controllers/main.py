@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound
 from datetime import datetime
 from urllib.parse import unquote
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.exceptions import ValidationError
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
@@ -19,7 +19,10 @@ class JetcheckoutApiController(JetController):
             data = {'id': tx.jetcheckout_api_id}
             response = requests.post(url, data=data)
             if response.status_code == 200:
-                tx.write({'state': 'pending'})
+                tx.write({
+                    'state': 'pending',
+                    'last_state_change': fields.Datetime.now(),
+                })
             else:
                 raise ValidationError('%s (Error Code: %s)' % (response.reason, response.status_code))
         except Exception as e:
