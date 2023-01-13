@@ -28,6 +28,7 @@ class PaymentItem(models.Model):
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
     amount = fields.Monetary()
     paid = fields.Boolean()
+    description = fields.Char()
     is_admin = fields.Boolean(compute='_compute_is_admin')
     paid_amount = fields.Monetary(readonly=True)
     installment_count = fields.Integer(readonly=True)

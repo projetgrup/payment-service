@@ -68,7 +68,7 @@ class SmsApi(models.AbstractModel):
                 </mainbody>"""
         else:
             url = SENDURL
-            blocks = [f"<mp><msg>{message['content']}</msg><no>{message['number']}</no></mp>" for message in messages]
+            blocks = [f"<mp><msg><![CDATA[{message['content']}]]></msg><no>{message['number']}</no></mp>" for message in messages]
             data = f"""<?xml version="1.0" encoding="UTF-8"?>
                 <mainbody>
                     <header>

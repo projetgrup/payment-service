@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="company_hierarchy_line" inherit_id="payment_jetcheckout_system.company_hierarchy_line">
+        <xpath expr="//button[@data-model='payment.acquirer']" position="after">
+            <button class="btn btn-secondary o_company_action" data-model="syncops.connector">syncOPS Integration</button>
+        </xpath>
+    </template>
+</odoo>

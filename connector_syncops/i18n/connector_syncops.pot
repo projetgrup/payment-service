@@ -1,0 +1,247 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* connector_syncops
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-14 07:50+0000\n"
+"PO-Revision-Date: 2022-12-14 07:50+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid ""
+"<span class=\"text-muted\" attrs=\"{'invisible': "
+"[('connected','!=',False)]}\">Methods will be available after connection is "
+"successful</span>"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__active
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Active"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "An error occured when connecting: %s"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "An error occured when connecting: %sresponse_message"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__code
+msgid "Code"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__company_id
+msgid "Company"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__connected
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Connected"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Connection"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Connection error is occured. Please contact with system administrator."
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Connection is succesful"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__connector_id
+msgid "Connector"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Endpoint URL"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "Enter url address of syncOPS server"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#: code:addons/connector_syncops/models/syncops.py:0
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Go to settings"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__id
+msgid "ID"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__method_ids
+msgid "Methods"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__name
+msgid "Name"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "No connector found"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "No syncOPS endpoint URL found"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
+msgid "No syncOPS integrations yet"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Not Connected"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Passive"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.actions.act_window,name:connector_syncops.action_syncops_config_settings
+msgid "Settings"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Success"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__token
+msgid "Token"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__username
+msgid "Username"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "You must specify a syncOPS endpoint URL address in settings"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
+msgid "syncOPS"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector
+msgid "syncOPS Connectors"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_res_config_settings__syncops_url
+msgid "syncOPS Endpoint URL"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.actions.act_window,name:connector_syncops.action_connector
+msgid "syncOPS Integrations"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_method
+msgid "syncOPS Methods"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
+msgid "syncOPS integrations are listed here"
+msgstr ""

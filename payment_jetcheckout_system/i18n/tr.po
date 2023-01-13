@@ -2039,8 +2039,8 @@ msgstr "kayıt seçildi"
 msgid "Ödeme - Test 2022-06-08 12:38:17"
 msgstr ""
 
-#~ msgid "Jconda Integration"
-#~ msgstr "Jconda Entegrasyonu"
+#~ msgid "syncOPS Integration"
+#~ msgstr "syncOPS Entegrasyonu"
 
 #~ msgid "Share Payment Form"
 #~ msgstr "Ödeme Formunu Paylaş"

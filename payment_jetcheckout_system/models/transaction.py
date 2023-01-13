@@ -17,7 +17,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_webhook_ok = fields.Boolean('Webhook Notification', readonly=True)
     jetcheckout_webhook_state = fields.Boolean('Webhook Notification State', readonly=True)
     jetcheckout_webhook_state_message = fields.Text('Webhook Notification State Message', readonly=True)
-    jetcheckout_webhook_failed_ids = fields.Many2many('payment.settings.notification.webhook', 'transaction_webhook_rel', 'transaction_id,' 'webhook_id', string='Failed Webhook Notifications', readonly=True)
+    jetcheckout_webhook_failed_ids = fields.Many2many('payment.settings.notification.webhook', 'transaction_webhook_rel', 'transaction_id', 'webhook_id', string='Failed Webhook Notifications', readonly=True)
 
     def action_items(self):
         self.ensure_one()
@@ -45,7 +45,7 @@ class PaymentTransaction(models.Model):
         json = self._get_notification_webhook_data()
         for webhook in webhooks:
             try:
-                response = requests.post(webhook.url, json=json)
+                response = requests.post(webhook.url, json=json, timeout=10)
                 if response.ok:
                     self.write({'jetcheckout_webhook_failed_ids': [(3, webhook.id, 0)]})
                 else:
@@ -100,7 +100,7 @@ class PaymentTransaction(models.Model):
         if webhooks:
             self.write({
                 'jetcheckout_webhook_ok': True,
-                'jetcheckout_webhook_ids': [(6, 0, webhooks.ids)],
+                'jetcheckout_webhook_failed_ids': [(6, 0, webhooks.ids)],
                 'jetcheckout_webhook_state': True,
                 'jetcheckout_webhook_state_message': _('This transaction has not been notified yet.')
             })

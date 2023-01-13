@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-jconda_connector_user,jconda_connector_user,model_jconda_connector,base.group_user,1,0,0,0
-jconda_connector_manager,jconda_connector_manager,model_jconda_connector,base.group_system,1,1,1,1
-jconda_connector_method_user,jconda_connector_method_user,model_jconda_method,base.group_user,1,0,0,0
-jconda_connector_method_manager,jconda_connector_method_manager,model_jconda_method,base.group_system,1,1,1,1

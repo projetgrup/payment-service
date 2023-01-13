@@ -50,11 +50,12 @@
     <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr='//group[@name="transaction_partner"]' position="attributes">
-            <attribute name="attrs">{'invisible': [('jetcheckout_api_hash', '!=', False)]}</attribute>
+            <attribute name="attrs">{'invisible': [('jetcheckout_api_ok', '!=', False)]}</attribute>
         </xpath>
         <xpath expr='//group[@name="transaction_partner"]' position="after">
-            <group name="transaction_api_partner" attrs="{'invisible': [('jetcheckout_api_hash', '=', False)]}">
+            <group name="transaction_api_partner" attrs="{'invisible': [('jetcheckout_api_ok', '=', False)]}">
                 <field name="partner_name" string="Partner"/>
+                <field name="partner_vat" string="VAT"/>
                 <label for="partner_address" string="Address"/>
                 <div class="o_address_format">
                     <field name="partner_address" placeholder="Address" class="o_address_street"/>
@@ -72,10 +73,10 @@
             </group>
         </xpath>
         <xpath expr='//field[@name="jetcheckout_ip_address"]' position="attributes">
-            <attribute name="attrs">{'invisible': ['|', ('source_transaction_id', '!=', False), ('jetcheckout_api_hash', '!=', False)]}</attribute>
+            <attribute name="attrs">{'invisible': ['|', ('source_transaction_id', '!=', False), ('jetcheckout_api_ok', '!=', False)]}</attribute>
         </xpath>
         <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">
-            <group name="transaction_api" attrs="{'invisible': [('jetcheckout_api_hash', '=', False)]}">
+            <group name="transaction_api" attrs="{'invisible': [('jetcheckout_api_ok', '=', False)]}">
                 <group>
                     <field name="jetcheckout_api_id"/>
                     <field name="jetcheckout_api_hash"/>

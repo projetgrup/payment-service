@@ -9,28 +9,9 @@
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
     'sequence': 1455,
-    'category': 'Accounting/Payment Acquirers',
-    'depends': [
-        'point_of_sale',
-        'payment_jetcheckout',
-    ],
-    'data': [
-        'views/pos.xml',
-        'views/transaction.xml',
-        'views/template.xml',
-    ],
-    'assets': {
-        'point_of_sale.assets': [
-            'payment_jetcheckout/static/src/js/imask.js',
-            'payment_jetcheckout/static/src/js/cards.js',
-            'payment_jetcheckout_pos/static/src/js/models.js',
-            'payment_jetcheckout_pos/static/src/js/paymentScreen.js',
-            'payment_jetcheckout_pos/static/src/js/installmentPopup.js',
-            'payment_jetcheckout_pos/static/src/scss/payment.scss',
-        ],
-        'web.assets_qweb': [
-            'payment_jetcheckout_pos/static/src/xml/**/*',
-        ],
-    },
+    'category': 'Sales/Point of Sale',
+    'depends': ['point_of_sale', 'payment_jetcheckout'],
+    'data': ['views/config.xml', 'views/transaction.xml'],
     'application': False,
+    'auto_install': True,
 }
