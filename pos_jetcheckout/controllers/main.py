@@ -12,6 +12,7 @@ from urllib.parse import quote, unquote
 from werkzeug.exceptions import NotFound
 from werkzeug.utils import redirect
 
+from odoo import fields
 from odoo.tools.translate import _
 from odoo.http import request, route
 from odoo.exceptions import ValidationError
@@ -148,7 +149,11 @@ class JetControllerPos(JetController):
             if response.status_code == 200:
                 result = response.json()
                 if result['status'] == 0:
-                    tx.update({'state': 'pending', 'callback_hash': result['hash']})
+                    tx.update({
+                        'state': 'pending', 
+                        'last_state_change': fields.Datetime.now(),
+                        'callback_hash': result['hash']
+                    })
                     link = request.env['link.tracker'].sudo().search_or_create({
                         'url': '%s/pos/link/redirect?=%s' % (base_url, quote(hash, safe='')),
                         'title': partner.name
@@ -162,15 +167,27 @@ class JetControllerPos(JetController):
                     }
                 else:
                     message = _('%s - (Error Code: %s)') % (result['message'], result['status'])
-                    tx.update({'state': 'error', 'state_message': message})
+                    tx.update({
+                        'state': 'error',
+                        'state_message': message,
+                        'last_state_change': fields.Datetime.now(),
+                    })
                     return {'error': message}
             else:
                 message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
-                tx.update({'state': 'error', 'state_message': message})
+                tx.update({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
                 return {'error': message}
         except Exception as e:
             message = _('%s - (Error Code: -2)') % e
-            tx.update({'state': 'error', 'state_message': message})
+            tx.update({
+                'state': 'error',
+                'state_message': message,
+                'last_state_change': fields.Datetime.now(),
+            })
             return {'error': message}
 
     @route(['/pos/link/cancel'], type='json', auth='user')
@@ -179,7 +196,8 @@ class JetControllerPos(JetController):
         if tx:
             tx.write({
                 'state': 'cancel',
-                'state_message': _('Transaction has been cancelled')
+                'state_message': _('Transaction has been cancelled'),
+                'last_state_change': fields.Datetime.now(),
             })
         return {'status': 0}
 
@@ -266,6 +284,7 @@ class JetControllerPos(JetController):
                     tx.write({
                         'state': res['state'],
                         'state_message': res['message'],
+                        'last_state_change': fields.Datetime.now(),
                         'fees': res['amounts']['fees'],
                         'jetcheckout_vpos_name': res['virtual_pos_name'],
                         'jetcheckout_order_id': res['order_id'],
@@ -291,7 +310,10 @@ class JetControllerPos(JetController):
                             ('pos_order_name', '=', tx.pos_order_name),
                             ('state', 'in', ('draft', 'pending'))
                         ])
-                        txs.write({'state': 'cancel'})
+                        txs.write({
+                            'state': 'cancel',
+                            'last_state_change': fields.Datetime.now(),
+                        })
                         tx._jetcheckout_done_postprocess()
                 else:
                     tx.write({

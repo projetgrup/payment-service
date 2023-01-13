@@ -15,7 +15,7 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_done_postprocess(self):
         super()._jetcheckout_done_postprocess()
-        #self.jetcheckout_send_done_email()
+        self.jetcheckout_send_done_email()
 
     def jetcheckout_send_done_email(self):
         self.ensure_one()
