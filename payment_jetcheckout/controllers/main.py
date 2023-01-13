@@ -7,7 +7,7 @@ import base64
 import hashlib
 import logging
 
-from odoo import http, SUPERUSER_ID, _
+from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
 from odoo.tools.float_utils import float_compare
@@ -219,6 +219,7 @@ class JetcheckoutController(http.Controller):
             tx.write({
                 'state': 'error',
                 'state_message': _('%s (Error Code: %s)') % (kwargs.get('response_message', '-'), kwargs.get('response_code','')),
+                'last_state_change': fields.Datetime.now(),
             })
 
         return url, tx
@@ -441,7 +442,7 @@ class JetcheckoutController(http.Controller):
                     'state': 'pending',
                     'acquirer_reference': txid,
                     'jetcheckout_transaction_id': txid,
-
+                    'last_state_change': fields.Datetime.now(),
                 })
                 return {'url': '%s/%s' % (rurl, txid)}
             else:
@@ -450,6 +451,7 @@ class JetcheckoutController(http.Controller):
                 tx.write({
                     'state': 'error',
                     'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
                 })
                 values = {'error': message}
         else:
@@ -458,6 +460,7 @@ class JetcheckoutController(http.Controller):
             tx.write({
                 'state': 'error',
                 'state_message': message,
+                'last_state_change': fields.Datetime.now(),
             })
             values = {'error': message}
         return values

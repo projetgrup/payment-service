@@ -136,7 +136,8 @@ class PaymentTransaction(models.Model):
             'jetcheckout_vpos_name': self.jetcheckout_vpos_name,
             'is_post_processed': True,
             'state': 'done',
-            'state_message': _('Transaction has been refunded successfully.')
+            'state_message': _('Transaction has been refunded successfully.'),
+            'last_state_change': fields.Datetime.now(),
         }
         transaction = self._create_refund_transaction(amount_to_refund=amount, **values)
         transaction._log_sent_message()
@@ -190,7 +191,10 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_done_postprocess(self):
         if not self.state == 'done':
-            self.write({'state': 'done'})
+            self.write({
+                'state': 'done',
+                'last_state_change': fields.Datetime.now(),
+            })
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()
             self.is_post_processed = True
@@ -226,7 +230,8 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             self.write({
                 'state': 'cancel',
-                'state_message': _('Transaction has been cancelled successfully.')
+                'state_message': _('Transaction has been cancelled successfully.'),
+                'last_state_change': fields.Datetime.now(),
             })
 
     def _jetcheckout_cancel(self):
@@ -274,6 +279,7 @@ class PaymentTransaction(models.Model):
                 self.write({
                     'state': 'error',
                     'state_message': 'Ödeme başarısız.',
+                    'last_state_change': fields.Datetime.now(),
                 })
 
     def _jetcheckout_query(self):
@@ -318,7 +324,8 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_expire(self):
         self.write({
             'state': 'cancel',
-            'state_message': _('Transaction has expired')
+            'state_message': _('Transaction has expired'),
+            'last_state_change': fields.Datetime.now(),
         })
 
     @api.model
@@ -328,3 +335,20 @@ class PaymentTransaction(models.Model):
             ('jetcheckout_date_expiration', '!=', False),
             ('jetcheckout_date_expiration', '<', fields.Datetime.now()),
         ])._jetcheckout_expire()
+
+    @api.model
+    def jetcheckout_fix(self, companies=None, states=None):
+        """
+        Use this function in case of emergency when transaction records are corrupted.
+        It requests data from payment service and resync related transactions.
+        """
+        if not companies or not states:
+            return
+
+        txs = self.sudo().search([('company_id', 'in', companies), ('state', 'in', states)])
+        for tx in txs:
+            try:
+                tx._jetcheckout_query()
+                self.env.cr.commit()
+            except:
+                self.cr.rollback()
