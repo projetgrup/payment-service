@@ -158,66 +158,66 @@ class StudentChildDelete(Datamodel):
     ref = fields.String(required=False, allow_none=False, title="Student Reference Number", description="Reference on student form", example="123456789")
 
 
-class StudentWebhookItemChild(Datamodel):
+class StudentPaymentItemChild(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook.item.child"
-    _inherit = "system.webhook.item.child"
+    _name = "student.payment.item.child"
+    _inherit = "system.payment.item.child"
 
     name = fields.String(title="Student Name", description="Student name and surname", example="John Doe", required=True)
     vat = fields.String(title="Student VAT", description="Student citizen number", example="12345678912", required=True)
     ref = fields.String(title="Student Reference", description="Student reference details", example="CODE12", required=True)
 
 
-class StudentWebhookItemBursary(Datamodel):
+class StudentPaymentItemBursary(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook.item.bursary"
+    _name = "student.payment.item.bursary"
 
     name = fields.String(title="Bursary Name", description="Student bursary name", example="Management Bursary", required=True)
     code = fields.String(title="Bursary Code", description="Student bursary code", example="BURSARY50", required=True)
     discount = fields.Integer(title="Bursary Discount Percentage", description="Student bursary discount percentage", example=10, required=True)
 
 
-class StudentWebhookItemAmountDiscount(Datamodel):
+class StudentPaymentItemAmountDiscount(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook.item.amount.discount"
-    _inherit = "system.webhook.item.amount.discount"
+    _name = "student.payment.item.amount.discount"
+    _inherit = "system.payment.item.amount.discount"
 
     bursary = fields.Float(title="Bursary Discount Amount", description="Bursary discount amount of payment item", example=120.0, required=True)
 
 
-class StudentWebhookItemAmount(Datamodel):
+class StudentPaymentItemAmount(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook.item.amount"
-    _inherit = "system.webhook.item.amount"
+    _name = "student.payment.item.amount"
+    _inherit = "system.payment.item.amount"
 
-    discount = NestedModel("student.webhook.item.amount.discount", title="Discount details of payment transaction", description="Discount information", required=True)
+    discount = NestedModel("student.payment.item.amount.discount", title="Discount details of payment transaction", description="Discount information", required=True)
 
 
-class StudentWebhookItems(Datamodel):
+class StudentPaymentItem(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook.item"
-    _inherit = "system.webhook.item"
+    _name = "student.payment.item"
+    _inherit = "system.payment.item"
 
-    student = NestedModel("student.webhook.item.child", title="Student Information", description="Student details related to parent", required=True)
-    bursary = NestedModel("student.webhook.item.bursary", title="Bursary Information", description="Bursary details of related student", required=True)
-    amount = NestedModel("student.webhook.item.amount", title="Amount Information", description="Amount details of payment transaction", required=True)
+    student = NestedModel("student.payment.item.child", title="Student Information", description="Student details related to parent", required=True)
+    bursary = NestedModel("student.payment.item.bursary", title="Bursary Information", description="Bursary details of related student", required=True)
+    amount = NestedModel("student.payment.item.amount", title="Amount Information", description="Amount details of payment transaction", required=True)
 
 
-class StudentWebhook(Datamodel):
+class StudentPaymentItemWebhook(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "student.webhook"
-    _inherit = "system.webhook"
+    _name = "student.payment.item.webhook"
+    _inherit = "system.payment.item.webhook"
 
-    items = fields.List(NestedModel("student.webhook.item"), title="Payment Information", description="Payment item details which contains amounts and other informations", required=True)
+    items = fields.List(NestedModel("student.payment.item"), title="Payment Information", description="Payment item details which contains amounts and other informations", required=True)

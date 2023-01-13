@@ -23,15 +23,15 @@ class VendorAPIService(Component):
     _description = """This API helps you connect vendor payment system with your specially generated key"""
 
     @restapi.method(
-        [(["/item/create"], "POST")],
-        input_param=Datamodel("vendor.item.input"),
-        output_param=Datamodel("vendor.item.output"),
+        [(["/payment/create"], "POST")],
+        input_param=Datamodel("vendor.payment.create"),
+        output_param=Datamodel("vendor.payment.output"),
         auth="public",
         tags=['Create Methods']
     )
-    def create_item(self, params):
+    def create_payments(self, params):
         """
-        Create Payment Item
+        Create Payments
         """
         try:
             company = self.env.company
@@ -104,14 +104,14 @@ class VendorAPIService(Component):
             })
             sending.with_user(user).send()
 
-            ResponseOk = self.env.datamodels["vendor.item.output"]
+            ResponseOk = self.env.datamodels["vendor.payment.output"]
             return ResponseOk(**RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
 
     @restapi.webhook(
-        input_param=Datamodel("vendor.webhook"),
+        input_param=Datamodel("vendor.payment.item.webhook"),
         tags=['Webhook Methods']
     )
     def webhook_successful_payment(self):
