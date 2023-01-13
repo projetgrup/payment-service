@@ -16,21 +16,22 @@ class PaymentTransaction(models.Model):
             return
 
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
+        vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         result = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', params={
-            'account_code': line and line.account_code or '',
+            'account_code': vat,
             'transaction_id': self.jetcheckout_transaction_id,
-            'pos_name': self.jetcheckout_vpos_name,
-            'date': self.last_state_change.strftime('%Y-%m-%d'),
-            'vat': self.jetcheckout_connector_partner_vat or self.partner_id.vat,
+            'pos_name': line and line.account_code or '',
+            'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
+            'vat': vat,
             'card_number': self.jetcheckout_card_number,
+            'card_name': self.jetcheckout_card_name,
             'installments': self.jetcheckout_installment_description,
             'currency_name': self.currency_id.name,
             'amount': self.jetcheckout_payment_amount,
             'amount_commission_cost': self.jetcheckout_commission_amount,
             'amount_customer_cost': self.jetcheckout_customer_amount,
-            'amount_commission_cost_rate': self.jetcheckout_commission_rate,
-            'amount_customer_cost_rate': self.jetcheckout_customer_rate,
-            'card_name': self.jetcheckout_card_name,
+            'amount_commission_rate': self.jetcheckout_commission_rate,
+            'amount_customer_rate': self.jetcheckout_customer_rate,
             'description': self.state_message
         }, company=self.company_id, message=True)
 
