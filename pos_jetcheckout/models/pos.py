@@ -8,8 +8,6 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     jetcheckout_link_duration = fields.Integer(string='Payment Link Lifetime', default=300)
-    jetcheckout_cash_payment_limit_ok = fields.Boolean(string='Limit Cash Payment Amount')
-    jetcheckout_cash_payment_limit_amount = fields.Monetary(string='Cash Payment Amount Limit')
 
     @api.constrains('jetcheckout_link_duration')
     def _check_link_duration(self):

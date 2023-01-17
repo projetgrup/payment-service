@@ -1,4 +1,4 @@
-odoo.define('pos_jetcheckout.LinkPopup', function(require) {
+odoo.define('pos_advanced.BankPopup', function(require) {
 'use strict';
 
 const { useState } = owl.hooks;
@@ -9,7 +9,7 @@ var core = require('web.core');
 
 var _t = core._t;
 
-class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
+class PaymentBankPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
         this.line = this.props.line;
@@ -144,12 +144,12 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
 
 }
 
-JetcheckoutLinkPopup.template = 'JetcheckoutLinkPopup';
-JetcheckoutLinkPopup.defaultProps = {
-    title: _t('Link Information'),
+PaymentBankPopup.template = 'PaymentBankPopup';
+PaymentBankPopup.defaultProps = {
+    title: _t('Bank Information'),
 };
 
-Registries.Component.add(JetcheckoutLinkPopup);
+Registries.Component.add(PaymentBankPopup);
 
-return JetcheckoutLinkPopup;
+return PaymentBankPopup;
 });

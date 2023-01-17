@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentBankPopup" owl="1">
+        <div role="dialog" class="modal-dialog bank-dialog">
+            <div class="popup bank-popup">
+                <main>
+                    <div class="payment-bank">
+                        <div class="input-link d-none">
+                            <input type="email" placeholder="Email Receipt"/>
+                            <button type="submit"><i class="fa fa-paper-plane"/></button>
+                        </div>
+                        <div class="send-table">
+                            <div class="field-info">You can send this link to an email address of your customer</div>
+                            <div class="field-container">
+                                <input id="bank_link_email" type="text" required="required" t-att-value="transaction.email"/>
+                                <span class="bar-container"/>
+                                <label for="bank_link_email"><span>Email Address</span></label>
+                                <div class="button altlight" t-on-click="email"><i class="fa fa-envelope-o"/></div>
+                            </div>
+                            <div class="field-info" style="margin-top: 25px;">You can send an SMS message to mobile phone of your customer which refers this link</div>
+                            <div class="field-container">
+                                <input id="bank_link_phone" type="text" required="required" t-att-value="transaction.phone"/>
+                                <span class="bar-container"/>
+                                <label for="bank_link_phone"><span>Phone Number</span></label>
+                                <div class="button altlight" t-on-click="sms"><i class="fa fa-commenting-o"/></div>
+                            </div>
+                        </div>
+                        <div class="bank-table">
+                            <h3 class="field-info">You can copy the link below and send it to your customer</h3>
+                            <div class="field-container">
+                                <textarea id="bank_link_url" disabled="disabled" rows="6" t-att-value="transaction.url"/>
+                                <label for="bank_link_url"><span>Payment Link</span></label>
+                                <div class="button" t-on-click="copy"><i class="fa fa-copy"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button pay altlight disabled"><i class="fa fa-circle-o-notch fa-spin"/>Waiting</div>
+                    <div class="button cancel altlight danger" t-on-click="cancel"><i class="fa fa-times"/>Cancel</div>
+                    <div class="button close" t-on-click="close"><i class="fa fa-minus"/>Close</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>
