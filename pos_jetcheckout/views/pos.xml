@@ -17,6 +17,42 @@
     </field>
     </record>
 
+    <record id="pos_config_form" model="ir.ui.view">
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='payment_methods_new']" position="after">
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Payment Link Lifetime</span>
+                    <div class="text-muted">
+                        Set a payment link validity duration in seconds
+                    </div>
+                    <div class="content-group mt16 row">
+                        <label for="jetcheckout_link_duration" string="Duration" class="col-lg-3 o_light_label"/>
+                        <field name="jetcheckout_link_duration" class="w-auto mr-1"/>seconds
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane">
+                    <field name="jetcheckout_cash_payment_limit_ok"/>
+                </div>
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Maximum Cash Payment Amount</span>
+                    <div class="text-muted">
+                        Limit maximum payable amount in cash per order
+                    </div>
+                    <div class="content-group mt16 row" attrs="{'invisible': [('jetcheckout_cash_payment_limit_ok', '=', False)]}">
+                        <label for="jetcheckout_cash_payment_limit_amount" string="Amount" class="col-lg-3 o_light_label"/>
+                        <field name="jetcheckout_cash_payment_limit_amount" attrs="{'required': [('jetcheckout_cash_payment_limit_ok', '!=', False)]}"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+
     <record id="pos_order_form" model="ir.ui.view">
     <field name="model">pos.order</field>
     <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>

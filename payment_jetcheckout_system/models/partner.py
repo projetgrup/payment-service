@@ -82,6 +82,7 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     is_portal = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
+    acquirer_branch_id = fields.Many2one('payment.acquirer.jetcheckout.branch', string='Payment Acquirer Branch')
     users_id = fields.Many2one('res.users', compute='_compute_user_details', compute_sudo=True, readonly=True)
 
     @api.model

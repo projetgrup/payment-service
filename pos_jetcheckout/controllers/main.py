@@ -22,6 +22,42 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 
 class JetControllerPos(JetController):
 
+    def _pos_link_cancel(self, tx):
+        if not tx:
+            return
+
+        tx._jetcheckout_cancel()
+
+        try:
+            url = tx.pos_method_id.jetcheckout_link_url
+            requests.put('%s/api/v1/payment/cancel' % url, json={
+                'apikey': tx.pos_method_id.jetcheckout_link_apikey,
+                'hash': tx.callback_hash
+            }, timeout=10)
+        except:
+            pass
+
+    def _pos_link_expire(self, tx, force=False):
+        if not tx:
+            return
+
+        if not force and not tx.jetcheckout_date_expiration < datetime.now():
+            return
+
+        tx._jetcheckout_expire()
+
+        try:
+            url = tx.pos_method_id.jetcheckout_link_url
+            requests.put('%s/api/v1/payment/expire' % url, json={
+                'apikey': tx.pos_method_id.jetcheckout_link_apikey,
+                'hash': tx.callback_hash
+            }, timeout=10)
+        except:
+            pass
+        finally:
+            if not force:
+                raise NotFound()
+
     @route(['/pos/card/success', '/pos/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def pos_card_preresult(self, **kwargs):
         self._jetcheckout_process(**kwargs)
@@ -60,19 +96,8 @@ class JetControllerPos(JetController):
         if not tx:
             raise NotFound()
 
+        self._pos_link_expire(tx)
         url = tx.pos_method_id.jetcheckout_link_url
-        if tx.jetcheckout_date_expiration < datetime.now():
-            tx._jetcheckout_expire()
-            try:
-                requests.delete('%s/api/v1/payment/delete' % url, json={
-                    'apikey': tx.pos_method_id.jetcheckout_link_apikey,
-                    'hash': hash
-                })
-            except:
-                pass
-            finally:
-                raise NotFound()
-
         return redirect('%s/payment/card?=%s' % (url, quote(hash, safe='')))
 
     @route(['/pos/link/prepare'], type='json', auth='user')
@@ -93,10 +118,10 @@ class JetControllerPos(JetController):
         if not name:
             return {'error': _('You have to define a sequence for %s') % (sequence,)}
 
-        order = kwargs.get('order', {})
         company = request.env.company
-        minutes = 5
-        date_expiration = datetime.now() + relativedelta(minutes=minutes)
+        order = kwargs.get('order', {})
+        duration = kwargs.get('duration', 0)
+        date_expiration = datetime.now() + relativedelta(seconds=duration)
         tx = request.env['payment.transaction'].sudo().create({
             'reference': name,
             'acquirer_id': kwargs['acquirer'],
@@ -159,11 +184,11 @@ class JetControllerPos(JetController):
                         'title': partner.name
                     })
                     return {
-                        'tx': tx.id,
+                        'id': tx.id,
                         'url': link.short_url,
                         'email': partner.email or '',
                         'phone': partner.mobile or '',
-                        'duration': minutes * 60,
+                        'duration': duration,
                     }
                 else:
                     message = _('%s - (Error Code: %s)') % (result['message'], result['status'])
@@ -192,21 +217,22 @@ class JetControllerPos(JetController):
 
     @route(['/pos/link/cancel'], type='json', auth='user')
     def pos_link_cancel(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().browse(kwargs['tx'])
-        if tx:
-            tx.write({
-                'state': 'cancel',
-                'state_message': _('Transaction has been cancelled'),
-                'last_state_change': fields.Datetime.now(),
-            })
+        tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
+        self._pos_link_cancel(tx)
+        return {'status': 0}
+
+    @route(['/pos/link/expire'], type='json', auth='user')
+    def pos_link_expire(self, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
+        self._pos_link_expire(tx, force=True)
         return {'status': 0}
 
     @route(['/pos/link/query'], type='json', auth='user')
     def pos_link_query(self, **kwargs):
-        tx = request.env['payment.transaction'].sudo().browse(kwargs['tx'])
+        tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
         if tx:
             if tx.state == 'done':
-                return {'status': 0}
+                return {'status': 0, 'id': tx.id}
             elif tx.state != 'pending':
                 return {'status': -1, 'message': tx.state_message}
             return {'status': 1}
@@ -304,7 +330,7 @@ class JetControllerPos(JetController):
                         'jetcheckout_customer_amount': res['amounts']['commission']['customer']['amount'],
                     })
 
-                    if result['state'] == 'done':
+                    if res['state'] == 'done':
                         txs = request.env['payment.transaction'].sudo().search([
                             ('id', '!=', tx.id),
                             ('pos_order_name', '=', tx.pos_order_name),

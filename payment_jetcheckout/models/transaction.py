@@ -77,6 +77,12 @@ class PaymentTransaction(models.Model):
                 tx.write({'partner_phone': partner_phone})
         return txs
 
+    def unlink(self):
+        for tx in self:
+            if tx.state not in ('draft', 'pending'):
+                raise ValidationError(_('Only "Draft" or "Pending" payment transactions can be removed'))
+        return super().unlink()
+
     def _jetcheckout_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
@@ -170,6 +176,9 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_api_cancel(self, **kwargs):
         self.ensure_one()
+        if self.state == 'cancel':
+            return {}
+
         url = '%s/api/v1/payment/cancel' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
@@ -236,10 +245,12 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_cancel(self):
         self.ensure_one()
-        values = self._jetcheckout_api_cancel()
-        if 'error' in values:
-            raise UserError(values['error'])
-        self._jetcheckout_cancel_postprocess()
+        if not self.state == 'cancel':
+            if not self.state in ('draft', 'pending'):
+                values = self._jetcheckout_api_cancel()
+                if 'error' in values:
+                    raise UserError(values['error'])
+            self._jetcheckout_cancel_postprocess()
 
     def jetcheckout_cancel(self):
         self.ensure_one()

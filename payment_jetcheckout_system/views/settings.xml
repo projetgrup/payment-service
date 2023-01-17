@@ -28,10 +28,50 @@
                             <div class="o_nocontent_help">
                                 <p class="o_view_nocontent_empty_folder">
                                     No setting found
-                                </p><p>
+                                </p>
+                                <p>
                                     Try searching for another keyword
                                     <field name="company_id" invisible="1"/>
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">
+                        <h2>Notifications</h2>
+                        <div class="row mt16 o_settings_container" id="system_notification">
+                            <div class="col-12 col-lg-6 o_setting_box" id="system_notification_webhook">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="notif_webhook_ids"/>
+                                    <a href="/api#tag/Webhook-Methods" title="Documentation" class="o_doc_link" target="_blank"/>
+                                    <div class="text-muted">
+                                        Specify Webhook URL Addresses to notify when a successful payment transaction occurs
+                                    </div>
+                                    <field name="notif_webhook_ids" nolabel="1" colspan="2" class="w-100" context="{'default_company_id': company_id}">
+                                        <tree editable="bottom" limit="5">
+                                            <field name="url"/>
+                                            <field name="company_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                    <div class="content-group">
+                                        <div class="mt8 text-muted">
+                                            <p style="text-indent: 20px">
+                                                If you want to keep informed about successful payment transactions without signin in, you can use this service in your information systems. When you enter an URL addresses in the list above, we send a detailed information of successful payment transaction for each.
+                                            </p>
+                                            <p style="text-indent: 20px">
+                                                Data is sent by HTTP POST method in JSON format. If you set listeners for specified addresses, you can get the data immediately and use it for whatever you want.
+                                            </p>
+                                            <p style="text-indent: 20px">
+                                                To view structure of the data to be sent, please use the following link to get the necessary information.
+                                            </p>
+                                        </div>
+                                        <div class="mt8">
+                                            <a role="button" class="btn btn-link" href="/api#tag/Webhook-Methods" target="_blank">
+                                                <i class="fa fa-arrow-right mr-2"/>Webhook API Documentation
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

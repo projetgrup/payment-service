@@ -5,7 +5,10 @@ from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.addons.component.core import Component
 from odoo import _
 
-PAGE_SIZE = 100
+PAGESIZE = 100
+RESPONSE = {
+    200: {"response_code": 0, "response_message": "Success"}
+}
 
 
 class StudentAPIService(Component):
@@ -43,11 +46,11 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         schools = []
-        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
+        for i in self.env["res.student.school"].sudo().search(domain, offset=PAGESIZE * page, limit=100):
             schools.append(dict(id=i.id, name=i.name, code=i.code))
         if not schools:
             return Response("No records found", status=404, mimetype="application/json")
-        return SchoolResponse(schools=schools, response_code=0, response_message='Success')
+        return SchoolResponse(schools=schools, **RESPONSE[200])
 
     @restapi.method(
         [(["/classes"], "GET")],
@@ -77,11 +80,11 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         classes = []
-        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
+        for i in self.env["res.student.class"].sudo().search(domain, offset=PAGESIZE * page, limit=100):
             classes.append(dict(id=i.id, name=i.name, code=i.code))
         if not classes:
             return Response("No records found", status=404, mimetype="application/json")
-        return ClassResponse(classes=classes, response_code=0, response_message='Success')
+        return ClassResponse(classes=classes, **RESPONSE[200])
 
     @restapi.method(
         [(["/bursaries"], "GET")],
@@ -111,11 +114,11 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.code))
 
         bursaries = []
-        for i in self.env["res.student.bursary"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
+        for i in self.env["res.student.bursary"].sudo().search(domain, offset=PAGESIZE * page, limit=100):
             bursaries.append(dict(id=i.id, name=i.name, code=i.code))
         if not bursaries:
             return Response("No records found", status=404, mimetype="application/json")
-        return BursaryResponse(bursaries=bursaries, response_code=0, response_message='Success')
+        return BursaryResponse(bursaries=bursaries, **RESPONSE[200])
 
     @restapi.method(
         [(["/students"], "GET")],
@@ -146,11 +149,11 @@ class StudentAPIService(Component):
             domain.append(("code", "ilike", params.vat))
 
         students = []
-        for i in self.env["res.partner"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
+        for i in self.env["res.partner"].sudo().search(domain, offset=PAGESIZE * page, limit=100):
             students.append(dict(id=i.id, name=i.name, vat=i.vat, parent=i.parent_id.name))
         if not students:
             return Response("No records found", status=404, mimetype="application/json")
-        return StudentResponse(students=students, response_code=0, response_message='Success')
+        return StudentResponse(students=students, **RESPONSE[200])
 
     @restapi.method(
         [(["/payments"], "GET")],
@@ -175,11 +178,11 @@ class StudentAPIService(Component):
 
         payments = []
         domain = [("company_id", "=", company), ("partner_id.email", "=", params.email)]
-        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGE_SIZE * page, limit=100):
+        for i in self.env["payment.transaction"].sudo().search(domain, offset=PAGESIZE * page, limit=100):
             payments.append(dict(id=i.id, date=i.create_date.strftime("%d-%m-%Y"), amount=i.amount, state=i.state))
         if not payments:
             return Response("No records found", status=404, mimetype="application/json")
-        return PaymentResponse(payments=payments, response_code=0, response_message='Success')
+        return PaymentResponse(payments=payments, **RESPONSE[200])
 
     @restapi.method(
         [(["/create"], "POST")],
@@ -231,7 +234,7 @@ class StudentAPIService(Component):
         if len(student) > 1:
             return Response("There is more than one student with the same characteristics in the records. Please contact the system administrator.", status=400, mimetype="application/json")
 
-        vals = {
+        values = {
             'name': params.name,
             'vat': params.vat,
             'school_id': school.id,
@@ -244,27 +247,39 @@ class StudentAPIService(Component):
             'category_id': [(6, 0, categ_api.ids)],
         }
         if student:
-            student.write(vals)
+            student.write(values)
         else:
-            student = students.create(vals)
+            student = students.create(values)
 
-        authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
-        user = self.env['res.users'].sudo().search([('company_id', '=', company.id), ('partner_id.category_id', 'in', [authorized.id])], limit=1) or self.env.user
-        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
-        type_sms = self.env.ref('payment_jetcheckout_system.send_type_sms')
-        mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
-        sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
-        sending = self.env['payment.acquirer.jetcheckout.send'].sudo().with_context(partners=parent).create({
-            'selection': [(6, 0, type_email.ids + type_sms.ids)],
-            'type_ids': [(6, 0, type_email.ids + type_sms.ids)],
-            'mail_template_id': mail_template.id,
-            'sms_template_id': sms_template.id,
-            'company_id': company.id,
-        })
-        sending.with_user(user).send()
+        types = []
+        vals = {}
+        if company.api_item_notif_mail_create_ok:
+            template = company.api_item_notif_mail_create_template
+            if template:
+                types.append(self.env.ref('payment_jetcheckout_system.send_type_email').id)
+                vals.update({'mail_template_id': template.id})
+        if company.api_item_notif_sms_create_ok:
+            template = company.api_item_notif_sms_create_template
+            if template:
+                types.append(self.env.ref('payment_jetcheckout_system.send_type_sms').id)
+                vals.update({'sms_template_id': template.id})
+
+        if types:
+            authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
+            user = self.env['res.users'].sudo().search([
+                ('company_id', '=', company.id),
+                ('partner_id.category_id', 'in', [authorized.id])
+            ], limit=1) or self.env.user
+            sending = self.env['payment.acquirer.jetcheckout.send'].sudo().with_context(partners=parent).create({
+                'selection': [(6, 0, types)],
+                'type_ids': [(6, 0, types)],
+                'company_id': company.id,
+                **vals
+            })
+            sending.with_user(user).send()
 
         students = [dict(id=student.id, name=student.name, vat=student.vat, parent=student.parent_id.name)]
-        return StudentResponse(students=students, response_code=0, response_message='Success')
+        return StudentResponse(students=students, **RESPONSE[200])
 
     @restapi.method(
         [(["/delete"], "DELETE")],

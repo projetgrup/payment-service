@@ -40,7 +40,7 @@ class PaymentCredentialHash(Datamodel):
     _name = "payment.credential.hash"
     _inherit = "payment.credential.apikey"
 
-    hash = fields.String(required=True, allow_none=False, title="Hash Data", description="Calculated as the following: \"BASE64_ENCODE(SHA_256(APPLICATION_KEY + SECRET_KEY + ID))\" ID must be unique, but if you don't know what to do, just use 1 for it", example="LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto=")
+    hash = fields.String(required=True, allow_none=False, title="Hash Data", description="Calculated as the following: \"BASE64_ENCODE(SHA_256(APPLICATION_KEY + SECRET_KEY + ID))\" ID must be unique, but if you don't know what to do, just use 0 for it", example="LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto=")
 
 
 class PaymentCredentialToken(Datamodel):
@@ -58,7 +58,7 @@ class PaymentRefundInput(Datamodel):
         ordered = True
 
     _name = "payment.refund.input"
-    _inherit = "payment.credential.token"
+    _inherit = "payment.credential.hash"
 
     amount = fields.Float(required=True, allow_none=False, title="Refund Amount", description="Amount to refund", example=10.71)
 
