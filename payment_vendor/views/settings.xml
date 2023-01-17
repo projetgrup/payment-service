@@ -8,6 +8,19 @@
         <xpath expr="//div[hasclass('notFound')]" position="after">
             <div class="app_settings_block" data-string="Vendors" string="Vendors" data-key="payment_vendor" invisible="context.get('active_system') != 'vendor'">
                 <h2>Settings</h2>
+                <div class="notFound">
+                    <div class="o_view_nocontent">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_empty_folder">
+                                No setting found
+                            </p>
+                            <p>
+                                Try searching for another keyword
+                                <field name="company_id" invisible="1"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </xpath>
     </field>

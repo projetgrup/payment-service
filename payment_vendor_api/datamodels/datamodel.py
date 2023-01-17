@@ -8,7 +8,7 @@ class VendorPaymentItemParent(Datamodel):
     _name = "vendor.payment.item.parent"
 
     name = fields.String(title="Vendor Name", description="Vendor company name", example="Jane Doe Inc.", required=True, allow_none=False)
-    vat = fields.String(title="Vendor VAT", description="Vendor VAT number", example="12345678912", required=True, allow_none=False)
+    vat = fields.String(title="Vendor VAT", description="VAT number of related vendor. The value of this field must be identical to its corresponding record in payment system. Otherwise, new vendor will be created with given parameters.", example="12345678912", required=True, allow_none=False)
     email = fields.String(title="Vendor Email", description="Email address of related vendor", example="test@example.com", required=True, allow_none=False)
     mobile = fields.String(title="Vendor Mobile", description="Mobile phone number of related vendor", example="+905001234567", required=True, allow_none=False)
     ref = fields.String(required=False, title="Vendor Reference Number", description="Vendor Reference", example="ABC01", allow_none=False)
@@ -30,7 +30,7 @@ class VendorPaymentItem(Datamodel):
     _name = "vendor.payment.item"
 
     vendor = NestedModel("vendor.payment.item.parent", title="Vendor Information", description="Vendor information of payment item", required=True)
-    items = fields.List(NestedModel("vendor.payment.item.line"), title="Payment Information", description="Payment item details which contains amounts and other informations", required=True)
+    payments = fields.List(NestedModel("vendor.payment.item.line"), title="Payment Information", description="Payment item details which contains amounts and other informations", required=True)
 
 
 class VendorPaymentCreate(Datamodel):
@@ -40,7 +40,7 @@ class VendorPaymentCreate(Datamodel):
     _name = "vendor.payment.create"
     _inherit = "payment.credential.hash"
 
-    payments = fields.List(NestedModel("vendor.payment.item"), title="Payment List", description="List of payment items", required=True, allow_none=False)
+    items = fields.List(NestedModel("vendor.payment.item"), title="Payment List", description="List of payment items", required=True, allow_none=False)
 
 
 class VendorPaymentOutput(Datamodel):

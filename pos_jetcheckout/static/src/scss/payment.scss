@@ -112,6 +112,11 @@
         border-color: #43996E !important;
     }
 
+    .button.altlight.danger {
+        background: #cb4848 !important;
+        border-color: #cb4848 !important;
+    }
+
     /*.payment-jetcheckout-loading {
         visibility: hidden;
         opacity: 0;
@@ -600,12 +605,16 @@
 
     .notification {
         z-index: 9999;
-        background: rgba(178, 34, 34, 0.75);
+        background: rgba(75, 75, 75, 0.75);
         transform: translate(-50%, -50%);
         border-radius: 10px;
 
         &.success {
-            background: rgba(34, 178, 53, 0.75) !important;
+            background: rgba(67, 153, 110, 0.75) !important;
+        }
+
+        &.danger {
+            background: rgba(178, 34, 34, 0.75) !important;
         }
     }
 
@@ -686,6 +695,12 @@
                     }
                 }
             }
+        }
+
+        .jetcheckout-line-countdown {
+            margin-right: 5px;
+            font-weight: bold;
+            font-size: 0.8em;
         }
     }
 }

@@ -3,7 +3,7 @@ import requests
 import logging
 
 from odoo import models, api, fields, _
-from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.exceptions import RedirectWarning, ValidationError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +19,13 @@ class SyncopsConnector(models.Model):
     method_ids = fields.One2many('syncops.method', 'connector_id', string='Methods', readonly=True)
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
+
+    @api.constrains('token')
+    def _check_token(self):
+        for connector in self:
+            same_connector = self.sudo().with_context({'active_test': False}).search_count([('id', '!=', connector.id), ('token', '=', connector.token)])
+            if same_connector:
+                raise UserError(_('This token is already exist. Please ensure that it is correct.'))
 
     @api.model
     def _count(self, method, company=None):
@@ -66,9 +73,9 @@ class SyncopsConnector(models.Model):
             })
             if response.status_code == 200:
                 results = response.json()
-                if not results['response_code'] == 0:
-                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['response_message']))
-                    return (None, results['response_message']) if message else None
+                if not results['status'] == 0:
+                    _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
+                    return (None, results['message']) if message else None
                 result = results.get('result', [])
             else:
                 _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.reason))
@@ -79,14 +86,16 @@ class SyncopsConnector(models.Model):
 
         return (result, None) if message else result
 
-    def _connect(self):
+    def _connect(self, no_commit=False):
         url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
         if not url:
             self.write({
                 'connected': False,
                 'method_ids': [(5, 0, 0)],
             })
-            self.env.cr.commit()
+            if not no_commit:
+                self.env.cr.commit()
+
             if self.env.user.has_group('base.group_system'):
                 action = self.env.ref('connector_syncops.action_syncops_config_settings')
                 message = _('You must specify a syncOPS endpoint URL address in settings')
@@ -101,7 +110,7 @@ class SyncopsConnector(models.Model):
                 response = requests.post(url, json={'username': connector.username, 'token': connector.token})
                 if response.status_code == 200:
                     result = response.json()
-                    if result['response_code'] == 0:
+                    if result['status'] == 0:
                         connector.write({
                             'connected': True,
                             'method_ids': [(5, 0, 0)] + [(0, 0, {
@@ -122,7 +131,7 @@ class SyncopsConnector(models.Model):
                         result[connector.id] = {
                             'type': 'danger',
                             'title': _('Error'),
-                            'message': _('An error occured when connecting: %s' % result['response_message'])
+                            'message': _('An error occured when connecting: %s' % result['message'])
                         }
                 else:
                     connector.write({
@@ -149,7 +158,7 @@ class SyncopsConnector(models.Model):
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        res._connect()
+        res._connect(no_commit=True)
         return res
 
     def write(self, vals):

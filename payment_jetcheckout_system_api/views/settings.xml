@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.student.form</field>
+    <field name="model">payment.settings</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="API Settings" string="API Settings" data-key="website_partner">
+                <h2>Ödeme Kalemleri</h2>
+                <div class="row mt16 o_settings_container" id="api_item_notif">
+                    <div class="col-12 col-lg-6 o_setting_box" id="api_item_notif_mail">
+                        <div class="o_setting_left_pane">
+                            <field name="api_item_notif_mail_create_ok"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="api_item_notif_mail_create_ok" string="Send Email Notification"/>
+                            <div class="text-muted">
+                                Send email notifications to partners related to created payment items
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('api_item_notif_mail_create_ok','=',False)]}">
+                                <div class="row mt16">
+                                    <label for="api_item_notif_mail_create_template" class="col-lg-4 o_light_label" string="Email Template"/>
+                                    <field name="api_item_notif_mail_create_template" class="mx-2" attrs="{'required': [('api_item_notif_mail_create_ok','!=',False)]}" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('model_id.model', '=', 'res.partner')]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="api_item_notif_sms">
+                        <div class="o_setting_left_pane">
+                            <field name="api_item_notif_sms_create_ok"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="api_item_notif_sms_create_ok" string="Send SMS Notification"/>
+                            <div class="text-muted">
+                                Send SMS notifications to partners related to created payment items
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('api_item_notif_sms_create_ok','=',False)]}">
+                                <div class="row mt16">
+                                    <label for="api_item_notif_sms_create_template" class="col-lg-4 o_light_label" string="SMS Template"/>
+                                    <field name="api_item_notif_sms_create_template" class="mx-2" attrs="{'required': [('api_item_notif_sms_create_ok','!=',False)]}" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('model_id.model', '=', 'res.partner')]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

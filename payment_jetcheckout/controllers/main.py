@@ -301,6 +301,7 @@ class JetcheckoutController(http.Controller):
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
         partner = self._jetcheckout_get_partner(pid)
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['cardnumber']), str(amount_int), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
@@ -312,7 +313,7 @@ class JetcheckoutController(http.Controller):
             "expire_month": kwargs['expire_month'],
             "expire_year": "20" + kwargs['expire_year'],
             "is_3d": True,
-            "hash_data": base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['cardnumber']), str(amount_int), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8'),
+            "hash_data": hash,
             "language": "tr",
         }
 
@@ -328,6 +329,7 @@ class JetcheckoutController(http.Controller):
         tx = self._jetcheckout_get_transaction()
         vals = {
             'acquirer_id': acquirer.id,
+            'callback_hash': hash,
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
             'jetcheckout_card_name': kwargs['card_holder_name'],

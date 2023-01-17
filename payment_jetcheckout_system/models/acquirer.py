@@ -6,7 +6,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerJetcheckoutBranch(models.Model):
     _name = 'payment.acquirer.jetcheckout.branch'
     _description = 'Jetcheckout Company Branches'
+    _order = 'sequence, id'
 
+    sequence = fields.Integer('Sequence', default=10)
     acquirer_id = fields.Many2one('payment.acquirer')
     name = fields.Char(string='Branch Name', required=True)
     journal_id = fields.Many2one('payment.acquirer.jetcheckout.journal', string='Method')
@@ -24,19 +26,18 @@ class PaymentAcquirerJetcheckout(models.Model):
     def _get_branch_line(self, name, user):
         line = self._get_journal_line(name)
         if line:
-            branch = self.env['payment.acquirer.jetcheckout.branch'].search([
-                ('acquirer_id', '=', self.id),
-                ('journal_id', '=', line.id),
-                ('user_ids', 'in', [user.id]),
-            ], limit=1)
+            domain = [('acquirer_id', '=', self.id), ('journal_id', '=', line.id)]
+
+            branch = self.env['payment.acquirer.jetcheckout.branch'].search(domain + [('user_ids', 'in', [user.id])], limit=1)
             if branch:
                 return branch
 
-            branch = self.env['payment.acquirer.jetcheckout.branch'].search([
-                ('acquirer_id', '=', self.id),
-                ('journal_id', '=', line.id),
-                ('user_ids', '=', False),
-            ], limit=1)
+            branch = self.env['payment.acquirer.jetcheckout.branch'].search(domain + [('id', '=', user.acquirer_branch_id.id), ('user_ids', '=', False)], limit=1)
             if branch:
                 return branch
+
+            branch = self.env['payment.acquirer.jetcheckout.branch'].search(domain + [('user_ids', '=', False)], limit=1)
+            if branch:
+                return branch
+
         return None

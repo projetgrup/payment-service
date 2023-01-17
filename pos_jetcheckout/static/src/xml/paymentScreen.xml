@@ -26,4 +26,29 @@
             </div>
         </xpath>
     </t>
+
+    <t t-inherit="point_of_sale.Notification" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='notification']" position="attributes">
+            <attribute name="t-att-class">{'success': props.duration === 2001, 'danger': props.duration === 2002}</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="point_of_sale.PaymentScreenElectronicPayment" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='paymentline electronic_payment']" position="attributes">
+            <attribute name="t-on-click">trigger('select-electronic-payment-line', { cid: props.line.cid })</attribute>
+        </xpath>
+        <xpath expr="//div[@class='paymentline electronic_payment']" position="inside">
+            <t t-elif="props.line.payment_status == 'timeout'">
+                <div>
+                    Transaction expired
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                    Retry
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//i" position="before">
+            <span class="jetcheckout-line-countdown"><t t-esc="props.line.duration"/> seconds left</span>
+        </xpath>
+    </t>
 </templates>

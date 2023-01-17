@@ -1,10 +1,10 @@
 odoo.define('pos_jetcheckout.LinkPopup', function(require) {
 'use strict';
 
+const { useState } = owl.hooks;
 const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
 const Registries = require('point_of_sale.Registries');
 const { Gui } = require('point_of_sale.Gui');
-var rpc = require('web.rpc');
 var core = require('web.core');
 
 var _t = core._t;
@@ -14,91 +14,72 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         super(...arguments);
         this.line = this.props.line;
         this.order = this.props.order;
-        this.partner = undefined;
-        this.duration = undefined;
-        this.interval = undefined;
+        this.transaction = undefined;
+        this.state = useState({
+            duration: this.line.duration,
+        });
     }
 
     async willStart() {
-        try {
-            this.partner = await this.env.session.rpc('/pos/link/prepare', {
-                partner: this.props.partner,
-                acquirer: this.env.pos.jetcheckout.acquirer.id,
-                method: this.line.payment_method.id,
-                amount: this.line.amount,
-                order: {
-                    id: this.order.uid,
-                    name: this.order.name,
-                }
-            });
-            if ('error' in this.partner) {
-                throw this.partner.error;
-            }
-            this.duration = this.partner.duration;
-            this.order.transaction_id = this.partner.tx;
-        } catch (error) {
-            clearInterval(this.interval);
-            this.line.set_payment_status('retry');
-            console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('Network Error'),
-                body: _t('Payment link could not be created. Please check your connection or contact with your system administrator.'),
-            });
-        }
-    }
-
-    mounted() {
-        const self = this;
-        const order = this.order;
-        this.$countdown = document.getElementById('jetcheckout_link_countdown');
-        this.interval = setInterval(function() {
-            if (self.duration === 0) {
-                clearInterval(self.interval);
-                order.transaction_id = 0;
-                self.line.set_payment_status('timeout');
-                self.trigger('close-popup');
-                return;
-            }
-
-            if (self.duration % 5 === 0) {
-                rpc.query({
-                    route: '/pos/link/query',
-                    params: {tx: order.transaction_id}
-                }, {timeout: 1000}).then(function (result) {
-                    if (result.status === 0) {
-                        clearInterval(self.interval);
-                        order.transaction_id = 0;
-                        self.line.set_payment_status('done');
-                        self.trigger('close-popup');
-                        return;
-                    } else if (result.status === -1) {
-                        clearInterval(self.interval);
-                        order.transaction_id = 0;
-                        self.showPopup('ErrorPopup', {
-                            title: _t('Error'),
-                            body: result.message || _t('An error occured. Please try again.'),
-                        });
-                        return;
+        this.line.popup = this;
+        if (!this.line.transaction) {
+            try {
+                const transaction = await this.env.session.rpc('/pos/link/prepare', {
+                    partner: this.props.partner,
+                    acquirer: this.env.pos.jetcheckout.acquirer.id,
+                    method: this.line.payment_method.id,
+                    amount: this.line.amount,
+                    duration: this.props.duration || 0,
+                    order: {
+                        id: this.order.uid,
+                        name: this.order.name,
                     }
-                }).catch(function(error) {
-                    console.error(error);
+                });
+                if ('error' in transaction) {
+                    throw transaction.error;
+                }
+                this.line.transaction = transaction;
+            } catch (error) {
+                this.line.set_payment_status('retry');
+                console.error(error);
+                Gui.showPopup('ErrorPopup', {
+                    title: _t('Network Error'),
+                    body: _t('Payment link could not be created. Please check your connection or contact with your system administrator.'),
                 });
             }
-            self.duration -= 1;
-            self.$countdown.innerHTML = self.duration;
-        }, 1000);
+        }
+        this.transaction = this.line.transaction;
     }
 
     showPopup(name, props) {
         if (name === 'ErrorPopup') {
-            clearInterval(this.interval);
+            this.line.remove_transaction();
             this.line.set_payment_status('retry');
         }
         return super.showPopup(...arguments);
     }
 
+    showNotificationSuccess(message) {
+        const duration = 2001;
+        this.trigger('show-notification', { message, duration });
+    }
+
+    showNotificationDanger(message) {
+        const duration = 2002;
+        this.trigger('show-notification', { message, duration });
+    }
+
+    close() {
+        this.trigger('close-popup');
+    }
+
+    cancel() {
+        this.line.payment_method.payment_terminal.send_payment_cancel(this.order, this.line.cid);
+        super.cancel(...arguments);
+    }
+
     copy() {
-        navigator.clipboard.writeText(this.partner.url);
+        navigator.clipboard.writeText(this.transaction.url);
     }
 
     async sms(ev) {
@@ -109,17 +90,17 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         try {
             const $phone = document.getElementById('jetcheckout_link_phone');
             if ($phone.value == '') {
-                this.showNotification(_t('Please fill phone number'));
+                this.showNotificationDanger(_t('Please fill phone number'));
                 return;
             }
             const result = await this.env.session.rpc('/pos/link/sms', {
                 partner: this.props.partner,
-                url: this.partner.url,
+                url: this.transaction.url,
                 amount: this.line.amount,
                 currency: this.env.pos.currency.id,
                 phone: $phone.value,
             });
-            this.showNotification(result);
+            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
             Gui.showPopup('ErrorPopup', {
@@ -139,17 +120,17 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         try {
             const $email = document.getElementById('jetcheckout_link_email');
             if ($email.value == '') {
-                this.showNotification(_t('Please fill email address'));
+                this.showNotificationDanger(_t('Please fill email address'));
                 return;
             }
             const result = await this.env.session.rpc('/pos/link/email', {
                 partner: this.props.partner,
-                url: this.partner.url,
+                url: this.transaction.url,
                 amount: this.line.amount,
                 currency: this.env.pos.currency.id,
                 email: $email.value,
             });
-            this.showNotification(result);
+            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
             Gui.showPopup('ErrorPopup', {

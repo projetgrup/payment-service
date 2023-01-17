@@ -4,6 +4,18 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
+
+    jetcheckout_link_duration = fields.Integer(string='Payment Link Lifetime', default=300)
+
+    @api.constrains('jetcheckout_link_duration')
+    def _check_link_duration(self):
+        for config in self:
+            if not config.jetcheckout_link_duration > 0:
+                raise ValidationError(_('Payment link lifetime cannot be lower than zero'))
+
+
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
