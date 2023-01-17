@@ -38,7 +38,7 @@
                             </div>
                             <div class="content-group" attrs="{'invisible': [('api_item_notif_sms_create_ok','=',False)]}">
                                 <div class="row mt16">
-                                    <label for="api_item_notif_sms_create_template" class="col-lg-4 o_light_label" string="Email Template"/>
+                                    <label for="api_item_notif_sms_create_template" class="col-lg-4 o_light_label" string="SMS Template"/>
                                     <field name="api_item_notif_sms_create_template" class="mx-2" attrs="{'required': [('api_item_notif_sms_create_ok','!=',False)]}" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('model_id.model', '=', 'res.partner')]"/>
                                 </div>
                             </div>
