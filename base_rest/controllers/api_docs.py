@@ -30,13 +30,8 @@ class ApiDocsController(Controller):
         urls = self._get_api_urls()
         system = getattr(request.env.company, 'system', False)
         if system:
-            service = 'api/v1: %s' % system
-            service_url = []
-            for url in urls:
-                if url['name'] == service:
-                    service_url.append(url)
-                    urls = service_url
-                    break
+            urls = [url for url in urls if system in url['name']]
+
         settings = {"urls": urls}
         return request.render("base_rest.openapi_redoc", {"settings": settings})
 

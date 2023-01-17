@@ -17,8 +17,8 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
         this.partner = this.props.partner;
         this.inPayment = false;
         this.jetcheckout = this.env.pos.jetcheckout;
-        this.$jetcheckout = {}
-        this.$$jetcheckout = {}
+        this.$jetcheckout = {};
+        this.$$jetcheckout = {};
     }
 
     showPopup(name, props) {
@@ -26,6 +26,16 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
             this.line.set_payment_status('retry');
         }
         return super.showPopup(...arguments);
+    }
+
+    showNotificationSuccess(message) {
+        const duration = 2001;
+        this.trigger('show-notification', { message, duration });
+    }
+
+    showNotificationDanger(message) {
+        const duration = 2002;
+        this.trigger('show-notification', { message, duration });
     }
 
     mounted() {
@@ -184,7 +194,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
                         self.$jetcheckout.installment.empty.classList.remove('d-none');
                         self.$jetcheckout.installment.rows.classList.add('d-none');
                         self.$jetcheckout.installment.rows.innerHTML = '';
-                        self.showNotification(self.env._t('An error occured.') + ' ' + result.error);
+                        self.showNotificationDanger(self.env._t('An error occured.') + ' ' + result.error);
                     } else {
                         self.$jetcheckout.installment.empty.classList.add('d-none');
                         self.$jetcheckout.installment.rows.classList.remove('d-none');
@@ -199,7 +209,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
                 });
             } catch(error) {
                 console.error(error);
-                this.showNotification(this.env._t('An error occured. Please contact with your system administrator.'));
+                this.showNotificationDanger(this.env._t('An error occured. Please contact with your system administrator.'));
                 $(this.$jetcheckout.installment.loading).removeClass('visible');
             }
         }
@@ -274,22 +284,22 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
 
     _checkCardData() {
         if (!(this.partner > 0)) {
-            this.showNotification(this.env._t('Please select a customer'));
+            this.showNotificationDanger(this.env._t('Please select a customer'));
             return false;
         } else if (this.$jetcheckout.card.holder.value === '') {
-            this.showNotification(this.env._t('Please fill card holder name'));
+            this.showNotificationDanger(this.env._t('Please fill card holder name'));
             return false;
         } else if (this.$$jetcheckout.number.typedValue === '') {
-            this.showNotification(this.env._t('Please fill card number'));
+            this.showNotificationDanger(this.env._t('Please fill card number'));
             return false;
         } else if (this.$$jetcheckout.typedValue === '') {
-            this.showNotification(this.env._t('Please fill card expiration date'));
+            this.showNotificationDanger(this.env._t('Please fill card expiration date'));
             return false;
         } else if (this.$$jetcheckout.security.typedValue === '') {
-            this.showNotification(this.env._t('Please fill card security code'));
+            this.showNotificationDanger(this.env._t('Please fill card security code'));
             return false;
         } else if (!document.querySelector('input[name="installment_radio"]:checked')) {
-            this.showNotification(this.env._t('Please select whether payment is straight or installment'));
+            this.showNotificationDanger(this.env._t('Please select whether payment is straight or installment'));
             return false;
         } else {
             return true;

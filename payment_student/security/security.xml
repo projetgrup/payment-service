@@ -74,5 +74,14 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+        <record id="payment_template_company_rule" model="ir.rule">
+            <field name="name">Access only related companies for payment templates</field>
+            <field name="model_id" ref="payment_student.model_res_student_payment_template"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
     </data>
 </odoo>

@@ -37,6 +37,7 @@
         <xpath expr='//header' position="replace"/>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="ref"/>
+            <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
         </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
         <xpath expr='//group[@name="payment"]' position="replace"/>

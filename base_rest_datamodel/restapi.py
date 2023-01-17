@@ -40,17 +40,20 @@ class Datamodel(restapi.RestMethodParam):
             raise UserError(_("BadRequest %s") % ve.messages) from ve
 
     def to_response(self, service, result):
-        ModelClass = service.env.datamodels[self._name]
-        if self._is_list:
-            json = [i.dump() for i in result]
-        else:
-            json = result.dump()
-        errors = ModelClass.validate(
-            json, many=self._is_list, unknown=marshmallow.EXCLUDE
-        )
-        if errors:
-            raise SystemError(_("Invalid Response %s") % errors)
-        return json
+        try:
+            ModelClass = service.env.datamodels[self._name]
+            if self._is_list:
+                json = [i.dump() for i in result]
+            else:
+                json = result.dump()
+            errors = ModelClass.validate(
+                json, many=self._is_list, unknown=marshmallow.EXCLUDE
+            )
+            if errors:
+                raise SystemError(_("Invalid Response %s") % errors)
+            return json
+        except:
+            return result
 
     def to_openapi_query_parameters(self, service):
         converter = self._get_converter()

@@ -79,14 +79,14 @@ class PaymentAPIService(Component):
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            tx = self._get_transaction_from_hash(params.hash)
+            tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
 
             result = self._get_transaction_result(tx)
 
-            Response = self.env.datamodels["payment.result.output"]
-            return Response(**result, **RESPONSE[200])
+            ResponseOk = self.env.datamodels["payment.result.output"]
+            return ResponseOk(**result, **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
@@ -108,23 +108,23 @@ class PaymentAPIService(Component):
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            tx = self._get_transaction_from_hash(params.hash)
+            tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
             elif not tx.jetcheckout_order_id:
                 return Response("Transaction is being processed, but it has not been done yet.", status=202, mimetype="application/json")
 
-            result = self._query_payment(tx)
+            result = self._query_transaction(tx)
 
-            Response = self.env.datamodels["payment.status.output"]
-            return Response(**result, **RESPONSE[200])
+            ResponseOk = self.env.datamodels["payment.status.output"]
+            return ResponseOk(**result, **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
 
     @restapi.method(
         [(["/cancel"], "PUT")],
-        input_param=Datamodel("payment.credential.token"),
+        input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
         tags=['Payment Operation']
@@ -135,18 +135,18 @@ class PaymentAPIService(Component):
         """
         try:
             company = self.env.company.id
-            api = self._check_auth(company, params.application_key)
+            api = self._get_api(company, params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            tx = self._get_transaction_from_token(params.token)
+            tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
 
-            self._cancel_payment(tx)
+            self._cancel_transaction(tx)
 
-            Response = self.env.datamodels["payment.output"]
-            return Response(**RESPONSE[200])
+            ResponseOk = self.env.datamodels["payment.output"]
+            return ResponseOk(**RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
@@ -164,18 +164,48 @@ class PaymentAPIService(Component):
         """
         try:
             company = self.env.company.id
-            api = self._check_auth(company, params.application_key)
+            api = self._get_api(company, params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            tx = self._get_transaction_from_token(params.token)
+            tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
 
-            self._refund_payment(tx, params.amount)
+            self._refund_transaction(tx, params.amount)
 
-            Response = self.env.datamodels["payment.output"]
-            return Response(**RESPONSE[200])
+            ResponseOk = self.env.datamodels["payment.output"]
+            return ResponseOk(**RESPONSE[200])
+        except Exception as e:
+            _logger.error(e)
+            return Response("Server Error", status=500, mimetype="application/json")
+
+    @restapi.method(
+        [(["/expire"], "PUT")],
+        input_param=Datamodel("payment.credential.hash"),
+        output_param=Datamodel("payment.output"),
+        auth="public",
+        tags=['Payment Operation']
+    )
+    def payment_expire(self, params):
+        """
+        Expire Payment
+        """
+        try:
+            company = self.env.company.id
+
+            api = self._get_api(company, params.apikey)
+            if not api:
+                return Response("Application key is not matched", status=401, mimetype="application/json")
+
+            tx = self._get_transaction_from_hash(company, params.hash)
+            if not tx:
+                return Response("Transaction not found", status=404, mimetype="application/json")
+
+            self._expire_transaction(tx)
+
+            ResponseOk = self.env.datamodels["payment.output"]
+            return ResponseOk(**RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
@@ -183,6 +213,7 @@ class PaymentAPIService(Component):
     @restapi.method(
         [(["/delete"], "DELETE")],
         input_param=Datamodel("payment.credential.hash"),
+        output_param=Datamodel("payment.output"),
         auth="public",
         tags=['Payment Operation']
     )
@@ -197,7 +228,7 @@ class PaymentAPIService(Component):
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            tx = self._get_transaction_from_hash(params.hash)
+            tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
 
@@ -207,12 +238,15 @@ class PaymentAPIService(Component):
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
 
+    #
     # PRIVATE METHODS
+    #
+
     def _get_api(self, company, apikey, secretkey=False):
-        domain = [('company_id','=',company),('api_key','=',apikey)]
+        domain = [('company_id', '=', company), ('api_key', '=', apikey)]
         if secretkey:
-            domain.append(('secret_key','=',secretkey))
-        return self.env["payment.acquirer.jetcheckout.api"].sudo().search(domain, limit=1)
+            domain.append(('secret_key', '=', secretkey))
+        return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
 
     def _get_hash(self, key, hash, id):
         hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(id)]).encode('utf-8')).digest()).decode('utf-8')
@@ -278,14 +312,11 @@ class PaymentAPIService(Component):
             'partner_state_id': state and state.id or False,
         })
 
-    def _get_transaction_from_hash(self, hash):
-        return self.env['payment.transaction'].sudo().search([('jetcheckout_api_hash', '=', hash)], limit=1)
+    def _get_transaction_from_hash(self, company, hash):
+        return self.env['payment.transaction'].sudo().search([('company_id', '=', company), ('jetcheckout_api_hash', '=', hash)], limit=1)
 
     def _get_transaction_from_token(self, token):
         return self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', token)], limit=1)
-
-    def _delete_transaction(self, tx):
-        tx.unlink()
 
     def _get_transaction_result(self, tx):
         return {
@@ -329,10 +360,18 @@ class PaymentAPIService(Component):
         }
 
     def _cancel_transaction(self, tx):
-        tx._jetcheckout_cancel()
+        if not tx.state == 'cancel':
+            tx._jetcheckout_cancel()
 
     def _refund_transaction(self, tx, amount):
         tx._jetcheckout_refund(amount)
+
+    def _expire_transaction(self, tx):
+        if not tx.state == 'cancel':
+            tx._jetcheckout_expire()
+
+    def _delete_transaction(self, tx):
+        tx.unlink()
 
     def _query_transaction(self, tx):
         vals = tx._jetcheckout_query()

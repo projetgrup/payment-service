@@ -8,9 +8,10 @@
             <page name="branches" string="Branches" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
                 <field name="jetcheckout_branch_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree editable="bottom">
+                        <field name="sequence" widget="handle"/>
                         <field name="name"/>
                         <field name="journal_id" domain="[('acquirer_id', '=', parent.id)]" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="user_ids" domain="[('company_ids', 'in', [company_id])]" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="user_ids" domain="[('company_ids', 'in', [company_id]), ('share', '=', False)]" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
                         <field name="account_code"/>
                         <field name="company_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>
                         <field name="website_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>
