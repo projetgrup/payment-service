@@ -14,7 +14,6 @@
     'data': [
         'data/data.xml',
         'views/pos.xml',
-        'views/transaction.xml',
         'views/templates.xml',
     ],
     'assets': {

@@ -7,13 +7,13 @@
         <xpath expr="//field[@name='use_payment_terminal']" position="attributes">
             <attribute name="string">Payment Terminal</attribute>
         </xpath>
-        <xpath expr="//field[@name='use_payment_terminal']" position="after">
+        <!--<xpath expr="//field[@name='use_payment_terminal']" position="after">
             <label for="use_payment_terminal" string=""/>
             <button name="action_acquirer_jetcheckout" type="object" class="btn-link p-0" icon="fa-arrow-right" string="Configure Payment Acquirer" attrs="{'invisible': [('use_payment_terminal', 'not in', ('jetcheckout_virtual', 'jetcheckout_physical'))]}"/>
             <field name="jetcheckout_link_url" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
             <field name="jetcheckout_link_apikey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
             <field name="jetcheckout_link_secretkey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
-        </xpath>
+        </xpath>-->
     </field>
     </record>
 
@@ -23,49 +23,20 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@id='payment_methods_new']" position="after">
             <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane">
+                    <field name="jetcheckout_cash_payment_limit_ok"/>
+                </div>
                 <div class="o_setting_right_pane">
-                    <span class="o_form_label">Payment Link Lifetime</span>
+                    <span class="o_form_label">Maximum Cash Payment Amount</span>
                     <div class="text-muted">
-                        Set a payment link validity duration in seconds
+                        Limit maximum payable amount in cash per order
                     </div>
-                    <div class="content-group mt16 row">
-                        <label for="jetcheckout_link_duration" string="Duration" class="col-lg-3 o_light_label"/>
-                        <field name="jetcheckout_link_duration" class="w-auto mr-1"/>seconds
+                    <div class="content-group mt16 row" attrs="{'invisible': [('jetcheckout_cash_payment_limit_ok', '=', False)]}">
+                        <label for="jetcheckout_cash_payment_limit_amount" string="Amount" class="col-lg-3 o_light_label"/>
+                        <field name="jetcheckout_cash_payment_limit_amount" attrs="{'required': [('jetcheckout_cash_payment_limit_ok', '!=', False)]}"/>
                     </div>
                 </div>
             </div>
-        </xpath>
-    </field>
-    </record>
-
-    <record id="pos_order_form" model="ir.ui.view">
-    <field name="model">pos.order</field>
-    <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="//div[@name='button_box']" position="inside">
-            <button type="object"
-                name="action_view_transactions"
-                class="oe_stat_button"
-                icon="fa-credit-card"
-                attrs="{'invisible': [('transaction_count', '=', 0)]}">
-                    <field name="transaction_count" widget="statinfo" string="Transactions"/>
-            </button>
-        </xpath>
-    </field>
-    </record>
-
-    <record id="pos_payment_form" model="ir.ui.view">
-    <field name="model">pos.payment</field>
-    <field name="inherit_id" ref="point_of_sale.view_pos_payment_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="//field[@name='card_type']" position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
-        <xpath expr="//field[@name='cardholder_name']" position="attributes">
-            <attribute name="invisible">1</attribute>
-        </xpath>
-        <xpath expr="//field[@name='transaction_id']" position="attributes">
-            <attribute name="invisible">1</attribute>
         </xpath>
     </field>
     </record>

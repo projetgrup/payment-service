@@ -1,0 +1,305 @@
+.bank-dialog {
+
+    .bank-popup {
+        border-radius: 10px !important;
+        max-width: 750px !important;
+        font-size: 1em !important;
+        overflow: hidden !important;
+        width: 90% !important;
+        border: 4px solid #43996E;
+
+        main {
+            height: 300px;
+            background-color: #ffffff;
+            box-shadow: inset 0px 0px 5px 5px rgb(240, 240, 240);
+            transition: 0.2s ease all;
+            overflow-y: auto;
+        }
+
+        footer {
+            .fa {
+                margin: 0 5px;
+            }
+        }
+    }
+
+    .button.altlight {
+        background: #43996E !important;
+        border-color: #43996E !important;
+    }
+
+    .button.altlight.danger {
+        background: #cb4848 !important;
+        border-color: #cb4848 !important;
+    }
+
+    .payment-bank {
+        display: flex;
+        justify-content: center;
+        color: #707070;
+        border-radius: 10px;
+        height: 100%;
+
+        .send-table {
+            width: 50%;
+            margin: 10px 5px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bank-table {
+            width: 50%;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            border-radius: 10px;
+            border: 2px solid #cccccc;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+
+            textarea {
+                padding-right: 55px !important;
+            }
+        }
+
+        .field-info {
+            margin: 5px 10px 25px 10px;
+        }
+
+        .field-container {
+            position: relative;
+
+            > input, textarea {
+                -webkit-box-sizing: border-box;
+                min-height: 50px;
+                box-sizing: border-box;
+                font-size: 18px;
+                padding: 10px 5px 10px 10px;
+                display: block;
+                width: 100%;
+                color: #999;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                resize: none;
+                box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+            }
+
+            > input:focus {
+                outline: none;
+                border-color: #43996E;
+            }
+
+            > input::placeholder {
+                color: #ccc;
+            }
+
+            > label {
+                font-weight: normal;
+                position: absolute;
+                pointer-events: none;
+                left: 10px;
+                top: -8px;
+                height:20px;
+                overflow: hidden;
+                font-size: 14px;
+                font-weight: bold;
+                color: #43996E;
+                transition: 0.2s ease all;
+                -moz-transition: 0.2s ease all;
+                -webkit-transition: 0.2s ease all;
+                span {
+                    background: #fff;
+                    padding: 0 5px;
+                }
+            }
+
+            > .bar-container {
+                position: relative;
+                display: block;
+                width: 100%;
+                width: calc(100% - 2.5px);
+                margin: 0 auto;
+            }
+
+            > .bar-container:before, > .bar-container:after {
+                content: '';
+                height: 2px; 
+                width: 0;
+                bottom: 1px; 
+                position: absolute;
+                background: #43996E;
+                transition: 0.2s ease all;
+                -moz-transition: 0.2s ease all;
+                -webkit-transition: 0.2s ease all;
+            }
+
+            > .bar-container:before {
+            left: 50%;
+            }
+
+            > .bar-container:after {
+                right: 50%; 
+            }
+
+            > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after {
+                width: 50%;
+            }
+
+            > .highlight-container {
+                position: absolute;
+                height: 50%; 
+                width: 100px; 
+                top: 0; 
+                left: 0;
+                pointer-events: none;
+                opacity: 0.5;
+            }
+
+            > input:focus ~ .highlight-container {
+                -webkit-animation: inputHighlighter 0.3s ease;
+                -moz-animation: inputHighlighter 0.3s ease;
+                animation: inputHighlighter 0.3s ease;
+            }
+
+            @-webkit-keyframes inputHighlighter {
+                from { background: #43996E; }
+                to { width: 0; background: transparent; }
+            }
+
+            @-moz-keyframes inputHighlighter {
+                from { background: #43996E; }
+                to { width: 0; background: transparent; }
+            }
+
+            @keyframes inputHighlighter {
+                from { background: #43996E; }
+                to { width: 0; background: transparent; }
+            }
+
+            .symbol {
+                position: absolute;
+                top: 3px;
+                padding: 10px 10px 10px 5px;
+                font-size: 18px;
+                color: #ccc;
+            }
+
+            .symbol-before {
+                left: 0;
+            }
+
+            .symbol-after {
+                right: 0;
+            }
+
+            .button {
+                position: absolute;
+                right: 0;
+                top: 1px;
+                margin: 0;
+                height: calc(100% - 4px);
+                width: 50px;
+                border-radius: 2px;
+                border: none;
+                border-left: 2px solid #ddd;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .fa {
+                    font-size: 1.5em;
+                }
+            }
+
+            .installment-container {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                align-items: center;
+                gap: 5px;
+            }
+        }
+
+        .field-container.is-invalid {
+            > input {
+                border-color: #cd5c5c;
+            }
+
+            > input:focus {
+                outline: none;
+                border-color: #cd5c5c;
+            }
+
+            > label {
+                border-color: #cd5c5c;
+            }
+
+            > .bar-container:before, > .bar-container:after {
+                background: #cd5c5c;
+            }
+        }
+    }
+}
+
+.pos {
+
+    .d-none {
+        display: none !important;
+    }
+
+    .d-block {
+        display: block !important;
+    }
+
+    .visible {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .visible-half {
+        visibility: visible !important;
+        opacity: 0.75 !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .button.disabled {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .notification {
+        z-index: 9999;
+        background: rgba(75, 75, 75, 0.75);
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+
+        &.success {
+            background: rgba(67, 153, 110, 0.75) !important;
+        }
+
+        &.danger {
+            background: rgba(178, 34, 34, 0.75) !important;
+        }
+    }
+}
+
+@media (max-width: 428px) {
+    .bank-dialog .bank-popup{
+
+        main {
+            min-height: 500px;
+        }
+
+        .payment-bank {
+            flex-wrap: wrap;
+        }
+    }
+}

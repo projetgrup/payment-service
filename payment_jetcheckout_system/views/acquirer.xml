@@ -4,7 +4,7 @@
     <field name="model">payment.acquirer</field>
     <field name="inherit_id" ref="payment_jetcheckout.acquirer_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//page[@name="methods"]' position="after">
+        <xpath expr="//page[@name='methods']" position="after">
             <page name="branches" string="Branches" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
                 <field name="jetcheckout_branch_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree editable="bottom">
