@@ -9,54 +9,36 @@ var core = require('web.core');
 
 var _t = core._t;
 
-class PaymentBankPopup extends AbstractAwaitablePopup {
+class BankPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
-        this.line = this.props.line;
-        this.order = this.props.order;
-        this.transaction = undefined;
+        this.partner = undefined;
+        this.banks = undefined;
         this.state = useState({
-            duration: this.line.duration,
+            banks: []
         });
     }
 
     async willStart() {
-        this.line.popup = this;
-        if (!this.line.transaction) {
-            try {
-                const transaction = await this.env.session.rpc('/pos/link/prepare', {
-                    partner: this.props.partner,
-                    acquirer: this.env.pos.jetcheckout.acquirer.id,
-                    method: this.line.payment_method.id,
-                    amount: this.line.amount,
-                    duration: this.props.duration || 0,
-                    order: {
-                        id: this.order.uid,
-                        name: this.order.name,
-                    }
-                });
-                if ('error' in transaction) {
-                    throw transaction.error;
-                }
-                this.line.transaction = transaction;
-            } catch (error) {
-                this.line.set_payment_status('retry');
-                console.error(error);
-                Gui.showPopup('ErrorPopup', {
-                    title: _t('Network Error'),
-                    body: _t('Payment link could not be created. Please check your connection or contact with your system administrator.'),
-                });
+        try {
+            const result = await this.env.session.rpc('/pos/bank/prepare', {
+                partner: this.props.partner,
+                banks: this.props.banks,
+            });
+            this.partner = result.partner;
+            this.banks = result.banks;
+            this.state.banks = _.pluck(result.banks, 'id');
+            console.log(result);
+            if ('error' in result) {
+                throw result.error;
             }
+        } catch (error) {
+            console.error(error);
+            Gui.showPopup('ErrorPopup', {
+                title: _t('Network Error'),
+                body: _t('Bank information cannot be retrieved. Please check your connection or contact with your system administrator.'),
+            });
         }
-        this.transaction = this.line.transaction;
-    }
-
-    showPopup(name, props) {
-        if (name === 'ErrorPopup') {
-            this.line.remove_transaction();
-            this.line.set_payment_status('retry');
-        }
-        return super.showPopup(...arguments);
     }
 
     showNotificationSuccess(message) {
@@ -67,19 +49,6 @@ class PaymentBankPopup extends AbstractAwaitablePopup {
     showNotificationDanger(message) {
         const duration = 2002;
         this.trigger('show-notification', { message, duration });
-    }
-
-    close() {
-        this.trigger('close-popup');
-    }
-
-    cancel() {
-        this.line.payment_method.payment_terminal.send_payment_cancel(this.order, this.line.cid);
-        super.cancel(...arguments);
-    }
-
-    copy() {
-        navigator.clipboard.writeText(this.transaction.url);
     }
 
     async sms(ev) {
@@ -144,12 +113,12 @@ class PaymentBankPopup extends AbstractAwaitablePopup {
 
 }
 
-PaymentBankPopup.template = 'PaymentBankPopup';
-PaymentBankPopup.defaultProps = {
+BankPopup.template = 'BankPopup';
+BankPopup.defaultProps = {
     title: _t('Bank Information'),
 };
 
-Registries.Component.add(PaymentBankPopup);
+Registries.Component.add(BankPopup);
 
-return PaymentBankPopup;
+return BankPopup;
 });

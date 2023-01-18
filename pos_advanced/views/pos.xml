@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="pos_payment_method_form" model="ir.ui.view">
-    <field name="model">pos.payment.method</field>
-    <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="//field[@name='use_payment_terminal']" position="attributes">
-            <attribute name="string">Payment Terminal</attribute>
-        </xpath>
-        <!--<xpath expr="//field[@name='use_payment_terminal']" position="after">
-            <label for="use_payment_terminal" string=""/>
-            <button name="action_acquirer_jetcheckout" type="object" class="btn-link p-0" icon="fa-arrow-right" string="Configure Payment Acquirer" attrs="{'invisible': [('use_payment_terminal', 'not in', ('jetcheckout_virtual', 'jetcheckout_physical'))]}"/>
-            <field name="jetcheckout_link_url" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
-            <field name="jetcheckout_link_apikey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
-            <field name="jetcheckout_link_secretkey" attrs="{'invisible': [('use_payment_terminal', '!=', 'jetcheckout_link')], 'required': [('use_payment_terminal', '=', 'jetcheckout_link')]}"/>
-        </xpath>-->
-    </field>
-    </record>
-
     <record id="pos_config_form" model="ir.ui.view">
     <field name="model">pos.config</field>
     <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
@@ -24,16 +7,96 @@
         <xpath expr="//div[@id='payment_methods_new']" position="after">
             <div class="col-12 col-lg-6 o_setting_box">
                 <div class="o_setting_left_pane">
-                    <field name="jetcheckout_cash_payment_limit_ok"/>
+                    <field name="cash_payment_limit_ok"/>
                 </div>
                 <div class="o_setting_right_pane">
                     <span class="o_form_label">Maximum Cash Payment Amount</span>
                     <div class="text-muted">
                         Limit maximum payable amount in cash per order
                     </div>
-                    <div class="content-group mt16 row" attrs="{'invisible': [('jetcheckout_cash_payment_limit_ok', '=', False)]}">
-                        <label for="jetcheckout_cash_payment_limit_amount" string="Amount" class="col-lg-3 o_light_label"/>
-                        <field name="jetcheckout_cash_payment_limit_amount" attrs="{'required': [('jetcheckout_cash_payment_limit_ok', '!=', False)]}"/>
+                    <div class="content-group mt16 row" attrs="{'invisible': [('cash_payment_limit_ok', '=', False)]}">
+                        <label for="cash_payment_limit_amount" string="Amount" class="col-lg-3 o_light_label"/>
+                        <field name="cash_payment_limit_amount" attrs="{'required': [('cash_payment_limit_ok', '!=', False)]}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane">
+                    <field name="bank_ok"/>
+                </div>
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Bank Accounts</span>
+                    <div class="text-muted">
+                        Send your bank account information to your customers
+                    </div>
+                    <div class="content-group mt16" attrs="{'invisible': [('bank_ok', '=', False)]}">
+                        <field name="bank_ids" nolabel="1" class="w-100" mode="kanban">
+                            <kanban>
+                                <field name="id"/>
+                                <field name="sequence"/>
+                                <field name="logo"/>
+                                <field name="name"/>
+                                <field name="iban"/>
+                                <field name="account"/>
+                                <field name="branch"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban p-0 shadow">
+                                            <div class="o_kanban_image_fill_left m-0" t-attf-style="background-image: url(#{kanban_image('pos.bank', 'logo', record.id.raw_value)})" role="img"/>
+                                            <div class="oe_kanban_details d-flex flex-column border-left shadow-sm">
+                                                <strong class="border-bottom h4 oe_partner_heading py-2 text-center shadow-sm text-700">
+                                                    <field name="name"/>
+                                                </strong>
+                                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                                <table class="text-muted">
+                                                    <tr>
+                                                        <td class="font-weight-bold px-2 text-right">IBAN</td>
+                                                        <td><field name="iban"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-bold px-2 text-right">Account Number</td>
+                                                        <td><field name="account"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-bold px-2 text-right">Branch</td>
+                                                        <td><field name="branch"/></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="logo" widget="image" class="oe_avatar text-center"/>
+                                <field name="name"/>
+                                <field name="iban"/>
+                                <field name="account"/>
+                                <field name="branch"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <field name="logo" widget="image" class="oe_avatar text-center"/>
+                                    <div class="oe_title mb24">
+                                        <label for="name"/>
+                                        <h1>
+                                            <field name="name"/>
+                                        </h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="iban"/>
+                                            <field name="sequence"/>
+                                        </group>
+                                        <group>
+                                            <field name="account"/>
+                                            <field name="branch"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
                     </div>
                 </div>
             </div>

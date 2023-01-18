@@ -61,8 +61,36 @@
             box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
             overflow: hidden;
 
-            textarea {
-                padding-right: 55px !important;
+            .bank-item {
+                display: flex;
+                flex-direction: row;
+                box-shadow: 0px 2px 2px 1px rgb(240, 240, 240);
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                overflow: hidden;
+
+                .bank-info {
+                    width: 100%;
+                    padding: 5px;
+
+                    .bank-title {
+                        font-size: 1.5em;
+                        margin-bottom: 5px;
+                    }
+
+                    .bank-detail {
+                        font-size: 0.9em;
+                        color: #888888;
+
+                        td {
+                            padding: 0 5px;
+                        }
+                    }
+                }
+
+                img {
+                    width: 75px;
+                }
             }
         }
 
@@ -256,6 +284,14 @@
         display: block !important;
     }
 
+    .text-right {
+        text-align: right !important;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
     .visible {
         visibility: visible !important;
         opacity: 1 !important;
@@ -289,7 +325,30 @@
             background: rgba(178, 34, 34, 0.75) !important;
         }
     }
+
+    .left-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .paymentmethods-bank {
+
+            .payment-buttons {
+                margin: 0;
+
+                .button {
+                    border-radius: 0;
+                }
+
+                .button.altlight {
+                    background: #916984 !important;
+                    border-color: #916984 !important;
+                }
+            }
+        }
+    }
 }
+
 
 @media (max-width: 428px) {
     .bank-dialog .bank-popup{

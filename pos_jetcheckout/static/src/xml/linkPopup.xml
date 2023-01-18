@@ -5,10 +5,6 @@
             <div class="popup jetcheckout-popup">
                 <main>
                     <div class="payment-jetcheckout">
-                        <div class="input-link d-none">
-                            <input type="email" placeholder="Email Receipt"/>
-                            <button type="submit"><i class="fa fa-paper-plane"/></button>
-                        </div>
                         <div class="send-table">
                             <div class="field-info">You can send this link to an email address of your customer</div>
                             <div class="field-container">
