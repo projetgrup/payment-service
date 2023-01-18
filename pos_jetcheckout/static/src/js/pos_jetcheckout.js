@@ -115,6 +115,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                         order.transaction_ids.push(result.id);
                         return;
                     } else if (result.status === -1) {
+                        line.close_popup();
                         line.remove_transaction();
                         line.set_payment_status('retry');
                         Gui.showPopup('ErrorPopup', {
@@ -127,10 +128,18 @@ var PaymentJetcheckout = PaymentInterface.extend({
                     console.error(error);
                 });
             }
+
             line.set_duration(-1);
-            try {
+            if (line.popup) {
                 line.popup.state.duration = line.duration;
-            } catch {
+            } else {
+                line.close_popup();
+                line.remove_transaction();
+                line.set_payment_status('retry');
+                Gui.showPopup('ErrorPopup', {
+                    title: _t('Error'),
+                    body: _t('An error occured. Please try again.'),
+                });
                 return;
             }
         }, 1000);

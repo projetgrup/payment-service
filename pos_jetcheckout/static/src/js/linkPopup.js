@@ -43,14 +43,17 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
                 }
                 this.line.transaction = transaction;
             } catch (error) {
-                this.line.set_payment_status('retry');
                 console.error(error);
+                this.line.popup = undefined;
+                this.line.set_payment_status('retry');
+                this.close();
                 Gui.showPopup('ErrorPopup', {
                     title: _t('Network Error'),
                     body: _t('Payment link could not be created. Please check your connection or contact with your system administrator.'),
                 });
             }
         }
+
         this.transaction = this.line.transaction;
     }
 
