@@ -82,6 +82,11 @@
                     <field name="jetcheckout_api_hash"/>
                     <field name="jetcheckout_ip_address"/>
                 </group>
+                <group>
+                    <field name="jetcheckout_api_bank_return_url" attrs="{'invisible': [('jetcheckout_api_bank_return_url', '=', False)]}"/>
+                    <field name="jetcheckout_api_bank_webhook_url" attrs="{'invisible': [('jetcheckout_api_bank_webhook_url', '=', False)]}"/>
+                    <field name="jetcheckout_api_card_return_url" attrs="{'invisible': [('jetcheckout_api_card_return_url', '=', False)]}"/>
+                </group>
             </group>
         </xpath>
     </field>

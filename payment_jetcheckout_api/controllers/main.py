@@ -57,12 +57,13 @@ class JetcheckoutApiController(JetController):
         return tx
 
     def _jetcheckout_process(self, **kwargs):
-        url, tx = super()._jetcheckout_process(**kwargs)
-        if tx.jetcheckout_api_hash:
+        url, tx, status = super()._jetcheckout_process(**kwargs)
+        if not status and tx.jetcheckout_api_hash:
+            status = True
             if '__tx_hash' in request.session:
                 del request.session['__tx_hash']
             url = tx.jetcheckout_api_card_return_url
-        return url, tx
+        return url, tx, status
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment_api_page(self, **kwargs):
