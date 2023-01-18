@@ -375,6 +375,10 @@
         text-align: center !important;
     }
 
+    .product-name {
+        white-space: nowrap;
+    }
+
     .overflow-y {
         overflow-y: auto !important;
         padding-right: 5px !important;
@@ -415,8 +419,10 @@
                 }
 
                 .button.altlight {
-                    background: #916984 !important;
-                    border-color: #916984 !important;
+                    //background: #916984 !important;
+                    //border-color: #916984 !important;
+                    background: #999999 !important;
+                    border-color: #999999 !important;
                 }
             }
         }
