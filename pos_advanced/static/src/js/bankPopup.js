@@ -15,7 +15,9 @@ class BankPopup extends AbstractAwaitablePopup {
         this.partner = undefined;
         this.banks = undefined;
         this.state = useState({
-            banks: []
+            email: '',
+            phone: '',
+            banks: [],
         });
     }
 
@@ -28,7 +30,8 @@ class BankPopup extends AbstractAwaitablePopup {
             this.partner = result.partner;
             this.banks = result.banks;
             this.state.banks = _.pluck(result.banks, 'id');
-            console.log(result);
+            this.state.email = this.partner.email;
+            this.state.phone = this.partner.phone;
             if ('error' in result) {
                 throw result.error;
             }
@@ -51,61 +54,59 @@ class BankPopup extends AbstractAwaitablePopup {
         this.trigger('show-notification', { message, duration });
     }
 
-    async sms(ev) {
+    toggleBank(id) {
+        if (this.state.banks.includes(id)) {
+            this.state.banks = this.state.banks.filter(bid => bid !== id);
+        } else {
+            this.state.banks.push(id);
+        }
+    }
+
+    async sendSms(ev) {
         const $button = $(ev.target).closest('div.button');
         const $icon = $button.find('i');
         $button.addClass('disabled');
         $icon.toggleClass(['fa-commenting-o', 'fa-circle-o-notch', 'fa-spin']);
         try {
-            const $phone = document.getElementById('jetcheckout_link_phone');
-            if ($phone.value == '') {
+            if (this.state.phone == '') {
                 this.showNotificationDanger(_t('Please fill phone number'));
-                return;
+            } else {
+                const result = await this.env.session.rpc('/pos/bank/sms', {
+                    partner: this.partner.id,
+                    banks: this.state.banks,
+                    phone: this.state.phone,
+                });
+                this.showNotificationSuccess(result);
             }
-            const result = await this.env.session.rpc('/pos/link/sms', {
-                partner: this.props.partner,
-                url: this.transaction.url,
-                amount: this.line.amount,
-                currency: this.env.pos.currency.id,
-                phone: $phone.value,
-            });
-            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('SMS Sending Error'),
-                body: _t('SMS could not be sent. Please try again.'),
-            });
+            this.showNotificationDanger(_t('SMS has not been sent'));
         }
         $button.removeClass('disabled');
         $icon.toggleClass(['fa-commenting-o', 'fa-circle-o-notch', 'fa-spin']);
     }
 
-    async email(ev) {
+    async sendEmail(ev) {
         const $button = $(ev.target).closest('div.button');
         const $icon = $button.find('i');
         $button.addClass('disabled');
         $icon.toggleClass(['fa-envelope-o', 'fa-circle-o-notch', 'fa-spin']);
         try {
-            const $email = document.getElementById('jetcheckout_link_email');
-            if ($email.value == '') {
+            if (this.state.email == '') {
                 this.showNotificationDanger(_t('Please fill email address'));
-                return;
+            } else if (!this.state.banks.length) {
+                this.showNotificationDanger(_t('Please select at least one bank'));
+            } else {
+                const result = await this.env.session.rpc('/pos/bank/email', {
+                    partner: this.partner.id,
+                    banks: this.state.banks,
+                    email: this.state.email,
+                });
+                this.showNotificationSuccess(result);
             }
-            const result = await this.env.session.rpc('/pos/link/email', {
-                partner: this.props.partner,
-                url: this.transaction.url,
-                amount: this.line.amount,
-                currency: this.env.pos.currency.id,
-                email: $email.value,
-            });
-            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('Email Sending Error'),
-                body: _t('Email could not be sent. Please try again.'),
-            });
+            this.showNotificationDanger(_t('Email has not been sent'));
         }
         $button.removeClass('disabled');
         $icon.toggleClass(['fa-envelope-o', 'fa-circle-o-notch', 'fa-spin']);
