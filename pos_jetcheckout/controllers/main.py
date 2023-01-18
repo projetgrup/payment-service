@@ -169,7 +169,7 @@ class JetControllerPos(JetController):
                     }
                 },
                 'amount': kwargs.get('amount', 0),
-                'method': 'card'
+                'methods': ['card'],
             })
             if response.status_code == 200:
                 result = response.json()

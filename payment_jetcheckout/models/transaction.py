@@ -333,7 +333,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _jetcheckout_expire(self):
-        self.write({
+        self.filtered(lambda x: x.state in ('draft', 'pending')).write({
             'state': 'cancel',
             'state_message': _('Transaction has expired'),
             'last_state_change': fields.Datetime.now(),
