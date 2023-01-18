@@ -725,10 +725,19 @@
             flex-wrap: wrap;
 
             .payment-table {
-                width: 100%;
+                width: 100% !important;
             }
+
             .installment-table {
-                width: 100%;
+                width: 100% !important;
+            }
+
+            .send-table {
+                width: 100% !important;
+            }
+
+            .link-table {
+                width: 100% !important;
             }
         }
     }

@@ -32,10 +32,38 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 13px;">
                     <div style="text-align: center">
-                        Bank information which you have requested as follows:
-                        <t t-out="ctx['bank'] or ''"/>
+                        <span>Bank information of <strong t-out="ctx['company'].name"/> as follows:</span>
                         <br/><br/>
-                        Have a nice day!
+                        <t t-foreach="ctx['banks']" t-as="bank">
+                            <div>
+                                <table style="width: 400px; border: 2px solid #ccc; margin: 10px auto; border-radius: 10px; overflow: hidden; color: #666;font-size: 12px;">
+                                    <tr>
+                                        <td rowspan="2" style="width: 25%; text-align: center; border-right: 1px solid #ddd; background-color: #fafafa;"><img t-attf-src="/pos/bank/logo/{{ bank.id }}/{{ bank.token }}" style="max-width: 75px; max-height: 75px; object-fit: contain;border-radius: 10px;" alt="Bank Logo"/></td>
+                                        <td style="border-bottom: 1px solid #eee; padding: 5px;"><strong t-esc="bank.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 25%; text-align: right; padding: 0 5px;">IBAN :</td>
+                                                    <td style="text-align: left;"><span t-esc="bank.iban"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: right;">Account :</td>
+                                                    <td style="text-align: left;"><span t-esc="bank.account"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: right;">Branch :</td>
+                                                    <td style="text-align: left;"><span t-esc="bank.branch"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                        <br/><br/>
+                        <span>Have a nice day!</span>
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -74,7 +102,7 @@
         <record id="sms_template_banks" model="sms.template">
             <field name="name">Point of Sale: Banks</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">{{ ctx['bank'] }}</field>
+            <field name="body">{{ ctx['company'].name }}\n\n{{ ctx['banks'] }}</field>
             <field name="lang">{{ object.lang }}</field>
         </record>
     </data>

@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projetgrup (https://www.bulutkobi.io)
 # Part of Projetgrup BulutKOBI. See LICENSE file for full copyright and licensing details.
+import werkzeug
+import base64
 from odoo.tools.translate import _
 from odoo.http import request, route
 from odoo.exceptions import ValidationError
-from odoo.tools.misc import formatLang
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 
 
 class JetControllerPos(JetController):
+
+
+    @route(['/pos/bank/logo/<int:id>/<string:token>'], type='http', methods=['GET'], auth='public')
+    def pos_bank_logo(self, id, token, **kwargs):
+        bank = request.env['pos.bank'].sudo().search([('id', '=', id), ('token', '=', token)], limit=1)
+        if not bank:
+            return werkzeug.exceptions.NotFound()
+        
+        content = base64.b64decode(bank.logo)
+        status, headers, content = request.env['ir.http']._binary_set_headers(200, content, '%s.png' % bank.name, 'image/png', True)
+        headers.append(('Content-Length', len(content)))
+        response = request.make_response(content, headers)
+        return response
 
     @route(['/pos/bank/prepare'], type='json', auth='user')
     def pos_bank_prepare(self, **kwargs):
@@ -21,12 +35,13 @@ class JetControllerPos(JetController):
         partner = request.env['res.partner'].sudo().browse(pids)
         if partner:
             vals['partner'] = {
+                'id': partner.id,
                 'email': partner.email or '',
                 'phone': partner.mobile or '',
             }
 
         bids = kwargs.get('banks', [])
-        banks = request.env['pos.bank'].sudo().browse(*bids)
+        banks = request.env['pos.bank'].sudo().browse(bids)
         if banks:
             vals['banks'] = [{
                 'id': bank.id,
@@ -44,43 +59,40 @@ class JetControllerPos(JetController):
         if not kwargs['phone']:
             raise ValidationError(_('Please fill phone number'))
 
-        method = request.env['pos.payment.method'].sudo().browse(kwargs.get('method', 0))
-        if not method:
-            return {'error': _('Method not found')}
+        if not kwargs['banks']:
+            raise ValidationError(_('Please select at least one bank'))
 
-        try:
-            partner = request.env['res.partner'].sudo().browse(kwargs['partner'])
-            template = request.env.ref('pos_advanced.sms_template_banks')
-            amount = formatLang(request.env, kwargs['amount'])
-            context = {
-                'amount': amount,
-                'phone': kwargs['phone'],
-                'bank': kwargs['bank'],
-            }
-            template.with_context(context).send_sms(partner, {'phone': kwargs['phone']})
-            return _('SMS has been sent successfully')
-        except Exception as e:
-            return _('SMS has not been sent (%s)' % e)
+        banks = request.env['pos.bank'].sudo().browse(kwargs['banks'])
+        if not banks:
+            raise ValidationError(_('Please select at least one bank'))
+
+        template = request.env.ref('pos_advanced.sms_template_banks')
+        context = {
+            'company': request.env.company,
+            'phone': kwargs['phone'],
+            'banks': '\\n'.join(['%s\\n%s\\n' % (bank.name, bank.iban) for bank in banks]),
+        }
+        template.with_context(context).send_sms(kwargs['partner'], {'phone': kwargs['phone']})
+        return _('SMS has been sent successfully')
 
     @route(['/pos/bank/email'], type='json', auth='user')
     def pos_bank_email(self, **kwargs):
         if not kwargs['email']:
             raise ValidationError(_('Please fill email address'))
 
-        method = request.env['pos.payment.method'].sudo().browse(kwargs.get('method', 0))
-        if not method:
-            return {'error': _('Method not found')}
+        if not kwargs['banks']:
+            raise ValidationError(_('Please select at least one bank'))
 
-        try:
-            template = request.env.ref('pos_jetcheckout.mail_template_banks')
-            context = {
-                'amount': kwargs['amount'],
-                'email': kwargs['email'],
-                'bank': kwargs['bank'],
-                'company': request.env.company,
-                'user': request.env.user.partner_id
-            }
-            template.with_context(context).send_mail(kwargs['partner'], force_send=True, email_values={'is_notification': True})
-            return _('Email has been sent successfully')
-        except Exception as e:
-            return _('Email has not been sent (%s)' % e)
+        banks = request.env['pos.bank'].sudo().browse(kwargs['banks'])
+        if not banks:
+            raise ValidationError(_('Please select at least one bank'))
+
+        template = request.env.ref('pos_advanced.mail_template_banks')
+        context = {
+            'email': kwargs['email'],
+            'banks': banks,
+            'company': request.env.company,
+            'user': request.env.user.partner_id
+        }
+        template.with_context(context).send_mail(kwargs['partner'], force_send=True, email_values={'is_notification': True})
+        return _('Email has been sent successfully')
