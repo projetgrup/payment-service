@@ -12,5 +12,8 @@ class Base(models.AbstractModel):
     def search(self, domain, offset=0, limit=None, order=None, count=False):
         res = super().search(domain, offset, limit, order, count)
         if self._name == "payment.acquirer":
-            res = res.filtered(lambda a: not a.module_to_buy)
+            try:
+                res = res.filtered(lambda a: not a.module_to_buy)
+            except:
+                pass
         return res
