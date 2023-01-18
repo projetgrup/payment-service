@@ -12,20 +12,32 @@ class JetControllerPos(JetController):
 
     @route(['/pos/bank/prepare'], type='json', auth='user')
     def pos_bank_prepare(self, **kwargs):
-        method = request.env['pos.payment.method'].sudo().browse(kwargs.get('method', 0))
-        if not method:
-            return {'error': _('Method not found')}
-
-        partner = request.env['res.partner'].sudo().browse(kwargs.get('partner', 0))
-        if not partner:
-            return {'error': _('Partner not found')}
-
-        return {
-            'id': partner.id,
-            'email': partner.email or '',
-            'phone': partner.mobile or '',
-            'bank': method.bank or '',
+        vals = {
+            'partner': {},
+            'banks': {},
         }
+
+        pids = kwargs.get('partner', 0)
+        partner = request.env['res.partner'].sudo().browse(pids)
+        if partner:
+            vals['partner'] = {
+                'email': partner.email or '',
+                'phone': partner.mobile or '',
+            }
+
+        bids = kwargs.get('banks', [])
+        banks = request.env['pos.bank'].sudo().browse(*bids)
+        if banks:
+            vals['banks'] = [{
+                'id': bank.id,
+                'name': bank.name or '',
+                'logo': bank.logo or '',
+                'iban': bank.iban or '',
+                'account': bank.account or '',
+                'branch': bank.branch or '',
+            } for bank in banks]
+
+        return vals
 
     @route(['/pos/bank/sms'], type='json', auth='user')
     def pos_bank_sms(self, **kwargs):

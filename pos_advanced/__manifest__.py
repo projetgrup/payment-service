@@ -14,11 +14,11 @@
     'data': [
         'data/data.xml',
         'views/pos.xml',
+        'security/ir.model.access.csv',
     ],
     'assets': {
         'point_of_sale.assets': [
             'pos_advanced/static/src/js/models.js',
-            'pos_advanced/static/src/js/pos_bank.js',
             'pos_advanced/static/src/js/paymentScreen.js',
             'pos_advanced/static/src/js/bankPopup.js',
             'pos_advanced/static/src/scss/pos.scss',
