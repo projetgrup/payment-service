@@ -40,10 +40,11 @@ class JetcheckoutSystemController(JetController):
         return vals
 
     def _jetcheckout_process(self, **kwargs):
-        url, tx = super()._jetcheckout_process(**kwargs)
-        if tx.company_id.system:
+        url, tx, status = super()._jetcheckout_process(**kwargs)
+        if not status and tx.company_id.system:
+            status = True
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
-        return url, tx
+        return url, tx, status
 
     def _jetcheckout_system_page_values(self, company, system, partner, transaction):
         currency = company.currency_id
