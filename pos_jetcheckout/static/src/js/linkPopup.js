@@ -22,9 +22,6 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
 
     async willStart() {
         this.line.popup = this;
-        console.log(this);
-        console.log(this.line.transaction);
-        console.log(this.transaction);
         if (!this.line.transaction) {
             try {
                 const transaction = await this.env.session.rpc('/pos/link/prepare', {
