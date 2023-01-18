@@ -55,6 +55,9 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         }
 
         this.transaction = this.line.transaction;
+        if (!this.transaction) {
+            this.transaction = {};
+        }
     }
 
     showPopup(name, props) {
