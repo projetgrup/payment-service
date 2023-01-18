@@ -243,42 +243,35 @@ class JetControllerPos(JetController):
         if not kwargs['phone']:
             raise ValidationError(_('Please fill phone number'))
 
-        try:
-            partner = request.env['res.partner'].sudo().browse(kwargs['partner'])
-            currency = request.env['res.currency'].sudo().browse(kwargs['currency'])
-            template = request.env.ref('pos_jetcheckout.sms_template_payment')
-            amount = formatLang(request.env, kwargs['amount'])
-            context = {
-                'amount': amount,
-                'currency': currency.name,
-                'phone': kwargs['phone'],
-                'url': kwargs['url'],
-            }
-            template.with_context(context).send_sms(partner, {'phone': kwargs['phone']})
-            return _('SMS has been sent successfully')
-        except Exception as e:
-            return _('SMS has not been sent (%s)' % e)
+        currency = request.env['res.currency'].sudo().browse(kwargs['currency'])
+        template = request.env.ref('pos_jetcheckout.sms_template_payment')
+        amount = formatLang(request.env, kwargs['amount'])
+        context = {
+            'amount': amount,
+            'currency': currency.name,
+            'phone': kwargs['phone'],
+            'url': kwargs['url'],
+        }
+        template.with_context(context).send_sms(kwargs['partner'], {'phone': kwargs['phone']})
+        return _('SMS has been sent successfully')
 
     @route(['/pos/link/email'], type='json', auth='user')
     def pos_link_email(self, **kwargs):
         if not kwargs['email']:
             raise ValidationError(_('Please fill email address'))
 
-        try:
-            currency = request.env['res.currency'].sudo().browse(kwargs['currency'])
-            template = request.env.ref('pos_jetcheckout.mail_template_payment')
-            context = {
-                'amount': kwargs['amount'],
-                'currency': currency,
-                'email': kwargs['email'],
-                'url': kwargs['url'],
-                'company': request.env.company,
-                'user': request.env.user.partner_id
-            }
-            template.with_context(context).send_mail(kwargs['partner'], force_send=True, email_values={'is_notification': True})
-            return _('Email has been sent successfully')
-        except Exception as e:
-            return _('Email has not been sent (%s)' % e)
+        currency = request.env['res.currency'].sudo().browse(kwargs['currency'])
+        template = request.env.ref('pos_jetcheckout.mail_template_payment')
+        context = {
+            'amount': kwargs['amount'],
+            'currency': currency,
+            'email': kwargs['email'],
+            'url': kwargs['url'],
+            'company': request.env.company,
+            'user': request.env.user.partner_id
+        }
+        template.with_context(context).send_mail(kwargs['partner'], force_send=True, email_values={'is_notification': True})
+        return _('Email has been sent successfully')
 
     @route(['/pos/link/result'], type='http', auth='public', methods=['GET'], csrf=False, website=True, sitemap=False)
     def pos_link_result(self, **kwargs):

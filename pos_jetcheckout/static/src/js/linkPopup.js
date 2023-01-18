@@ -22,6 +22,9 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
 
     async willStart() {
         this.line.popup = this;
+        console.log(this);
+        console.log(this.line.transaction);
+        console.log(this.transaction);
         if (!this.line.transaction) {
             try {
                 const transaction = await this.env.session.rpc('/pos/link/prepare', {
@@ -78,11 +81,11 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         super.cancel(...arguments);
     }
 
-    copy() {
+    copyLink() {
         navigator.clipboard.writeText(this.transaction.url);
     }
 
-    async sms(ev) {
+    async sendSms(ev) {
         const $button = $(ev.target).closest('div.button');
         const $icon = $button.find('i');
         $button.addClass('disabled');
@@ -91,28 +94,25 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
             const $phone = document.getElementById('jetcheckout_link_phone');
             if ($phone.value == '') {
                 this.showNotificationDanger(_t('Please fill phone number'));
-                return;
+            } else {
+                const result = await this.env.session.rpc('/pos/link/sms', {
+                    partner: this.props.partner,
+                    url: this.transaction.url,
+                    amount: this.line.amount,
+                    currency: this.env.pos.currency.id,
+                    phone: $phone.value,
+                });
+                this.showNotificationSuccess(result);
             }
-            const result = await this.env.session.rpc('/pos/link/sms', {
-                partner: this.props.partner,
-                url: this.transaction.url,
-                amount: this.line.amount,
-                currency: this.env.pos.currency.id,
-                phone: $phone.value,
-            });
-            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('SMS Sending Error'),
-                body: _t('SMS could not be sent. Please try again.'),
-            });
+            this.showNotificationDanger(_t('SMS has not been sent'));
         }
         $button.removeClass('disabled');
         $icon.toggleClass(['fa-commenting-o', 'fa-circle-o-notch', 'fa-spin']);
     }
 
-    async email(ev) {
+    async sendEmail(ev) {
         const $button = $(ev.target).closest('div.button');
         const $icon = $button.find('i');
         $button.addClass('disabled');
@@ -121,22 +121,19 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
             const $email = document.getElementById('jetcheckout_link_email');
             if ($email.value == '') {
                 this.showNotificationDanger(_t('Please fill email address'));
-                return;
+            } else {
+                const result = await this.env.session.rpc('/pos/link/email', {
+                    partner: this.props.partner,
+                    url: this.transaction.url,
+                    amount: this.line.amount,
+                    currency: this.env.pos.currency.id,
+                    email: $email.value,
+                });
+                this.showNotificationSuccess(result);
             }
-            const result = await this.env.session.rpc('/pos/link/email', {
-                partner: this.props.partner,
-                url: this.transaction.url,
-                amount: this.line.amount,
-                currency: this.env.pos.currency.id,
-                email: $email.value,
-            });
-            this.showNotificationSuccess(result);
         } catch (error) {
             console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('Email Sending Error'),
-                body: _t('Email could not be sent. Please try again.'),
-            });
+            this.showNotificationDanger(_t('Email has not been sent'));
         }
         $button.removeClass('disabled');
         $icon.toggleClass(['fa-envelope-o', 'fa-circle-o-notch', 'fa-spin']);

@@ -11,14 +11,14 @@
                                 <input id="jetcheckout_link_email" type="text" required="required" t-att-value="transaction.email"/>
                                 <span class="bar-container"/>
                                 <label for="jetcheckout_link_email"><span>Email Address</span></label>
-                                <div class="button altlight" t-on-click="email"><i class="fa fa-envelope-o"/></div>
+                                <div class="button altlight" t-on-click="sendEmail"><i class="fa fa-envelope-o"/></div>
                             </div>
                             <div class="field-info" style="margin-top: 25px;">You can send an SMS message to mobile phone of your customer which refers this link</div>
                             <div class="field-container">
                                 <input id="jetcheckout_link_phone" type="text" required="required" t-att-value="transaction.phone"/>
                                 <span class="bar-container"/>
                                 <label for="jetcheckout_link_phone"><span>Phone Number</span></label>
-                                <div class="button altlight" t-on-click="sms"><i class="fa fa-commenting-o"/></div>
+                                <div class="button altlight" t-on-click="sendSms"><i class="fa fa-commenting-o"/></div>
                             </div>
                         </div>
                         <div class="link-table">
@@ -26,7 +26,7 @@
                             <div class="field-container">
                                 <textarea id="jetcheckout_link_url" disabled="disabled" rows="6" t-att-value="transaction.url"/>
                                 <label for="jetcheckout_link_url"><span>Payment Link</span></label>
-                                <div class="button" t-on-click="copy"><i class="fa fa-copy"/></div>
+                                <div class="button" t-on-click="copyLink"><i class="fa fa-copy"/></div>
                             </div>
                             <div class="jetcheckout-link-countdown"><span t-esc="state.duration"/> seconds left</div>
                         </div>

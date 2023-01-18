@@ -41,8 +41,8 @@
                                 <field name="branch"/>
                                 <templates>
                                     <t t-name="kanban-box">
-                                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban p-0 shadow">
-                                            <div class="o_kanban_image_fill_left m-0" t-attf-style="background-image: url(#{kanban_image('pos.bank', 'logo', record.id.raw_value)})" role="img"/>
+                                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban p-0 shadow overflow-hidden rounded">
+                                            <div class="o_kanban_image_fill_left m-2 rounded" t-attf-style="background-image: url(#{kanban_image('pos.bank', 'logo', record.id.raw_value)})" role="img"/>
                                             <div class="oe_kanban_details d-flex flex-column border-left shadow-sm">
                                                 <strong class="border-bottom h4 oe_partner_heading py-2 text-center shadow-sm text-700">
                                                     <field name="name"/>
@@ -50,7 +50,7 @@
                                                 <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                                 <table class="text-muted">
                                                     <tr>
-                                                        <td class="font-weight-bold px-2 text-right">IBAN</td>
+                                                        <td class="font-weight-bold px-2 text-right" style="width: 40%">IBAN</td>
                                                         <td><field name="iban"/></td>
                                                     </tr>
                                                     <tr>

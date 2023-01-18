@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import uuid
 from odoo import models, fields
 
 
@@ -14,6 +15,7 @@ class PosBank(models.Model):
     iban = fields.Char(string='IBAN')
     account = fields.Char(string='Account Number')
     branch = fields.Char()
+    token = fields.Char(default=lambda self: str(uuid.uuid4()), readonly=True)
 
 
 class PosConfig(models.Model):
