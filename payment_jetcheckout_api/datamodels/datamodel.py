@@ -158,7 +158,7 @@ class PaymentPrepareInput(Datamodel):
     order = NestedModel("payment.order", title="Order information related to request", description="Order details", required=True)
     url = NestedModel("payment.url", title="Return URLs by payment method", description="URL addresses", required=True)
     amount = fields.Float(required=True, allow_none=False, title="Amount", description="Amount to pay", example=145.30)
-    method = fields.String(required=False, allow_none=False, title="Payment Method", description="Specific method for payment transaction. Possible values are 'card' and 'bank'.", example='card')
+    methods = fields.List(fields.String(), title="Method List", description="List of codes of methods. Possible values are 'card' and 'bank'.", required=False, allow_none=False, example=['bank', 'card'])
 
 
 class PaymentPrepareOutput(Datamodel):

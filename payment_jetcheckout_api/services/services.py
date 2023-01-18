@@ -270,7 +270,18 @@ class PaymentAPIService(Component):
         if not name:
             raise ValidationError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=['transfer'], limit=1)
+        codes = hasattr(params, 'methods') and params.methods or []
+        method = ''
+        providers = []
+        for code in codes:
+            if code == 'bank':
+                providers.append('transfer')
+            elif code == 'card':
+                providers.append('jetcheckout')
+        if len(codes) == 1:
+            method = codes[0]
+
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=providers, limit=1)
         products = getattr(params.order, 'products', [])
         values = {
             'reference': name,
@@ -284,7 +295,7 @@ class PaymentAPIService(Component):
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_api_method': getattr(params, 'method', '') or '',
+            'jetcheckout_api_method': method,
             'jetcheckout_api_contact': getattr(params.partner, 'contact', '') or '',
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_card_return_url': params.url.card.result,
@@ -367,8 +378,7 @@ class PaymentAPIService(Component):
         tx._jetcheckout_refund(amount)
 
     def _expire_transaction(self, tx):
-        if not tx.state == 'cancel':
-            tx._jetcheckout_expire()
+        tx._jetcheckout_expire()
 
     def _delete_transaction(self, tx):
         tx.unlink()
