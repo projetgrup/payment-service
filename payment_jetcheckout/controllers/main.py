@@ -205,11 +205,11 @@ class JetcheckoutController(http.Controller):
 
     def _jetcheckout_process(self, **kwargs):
         if 'order_id' not in kwargs:
-            return '/404', None
+            return '/404', None, True
 
         tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs.get('order_id'))], limit=1)
         if not tx:
-            return '/404', None
+            return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
         if kwargs.get('response_code') == "00":
@@ -222,7 +222,7 @@ class JetcheckoutController(http.Controller):
                 'last_state_change': fields.Datetime.now(),
             })
 
-        return url, tx
+        return url, tx, False
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def jetcheckout_payment_acquirer(self):
@@ -470,13 +470,13 @@ class JetcheckoutController(http.Controller):
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/shop', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_shop(self, **kwargs):
         kwargs['result_url'] = '/shop/confirmation'
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         if request.session.get('__tx_id'):
             del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
@@ -484,7 +484,7 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/order/<int:order>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_order(self, order, access_token, **kwargs):
         kwargs['result_url'] = '/my/orders/%s?access_token=%s' % (order, access_token)
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         if request.session.get('__tx_id'):
             del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
@@ -492,7 +492,7 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/invoice/<int:invoice>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_invoice(self, invoice, access_token, **kwargs):
         kwargs['result_url'] = '/my/invoices/%s?access_token=%s' % (invoice, access_token)
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         if request.session.get('__tx_id'):
             del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
@@ -500,7 +500,7 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/subscription/<int:subscription>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_subscription(self, subscription, access_token, **kwargs):
         kwargs['result_url'] = '/my/subscription/%s/%s' % (subscription, access_token)
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         if request.session.get('__tx_id'):
             del request.session['__tx_id']
         return werkzeug.utils.redirect(url)
@@ -508,7 +508,7 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_custom(self, record, access_token, **kwargs):
         kwargs['result_url'] = '/payment/confirmation'
-        url, tx = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._jetcheckout_process(**kwargs)
         url += '?tx_id=%s&access_token=%s' % (tx.id, access_token)
         if request.session.get('__tx_id'):
             del request.session['__tx_id']
