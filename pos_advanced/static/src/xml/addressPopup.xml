@@ -60,7 +60,7 @@
                             </div>
                             <div class="client-detail">
                                 <span class="label">Notes</span>
-                                <input class="detail client-address-comment" name="comment" t-on-change="captureChange" t-att-value="partner.comment || ''" placeholder="Notes"/>
+                                <input class="detail client-address-comment" name="comment" t-on-change="captureChange" t-att-value="partner.comment || ''"/>
                             </div>
                         </div>
                     </div>
