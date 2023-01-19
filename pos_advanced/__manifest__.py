@@ -20,7 +20,9 @@
         'point_of_sale.assets': [
             'pos_advanced/static/src/js/models.js',
             'pos_advanced/static/src/js/paymentScreen.js',
+            'pos_advanced/static/src/js/ClientDetailsEdit.js',
             'pos_advanced/static/src/js/bankPopup.js',
+            'pos_advanced/static/src/js/addressPopup.js',
             'pos_advanced/static/src/scss/pos.scss',
         ],
         'web.assets_qweb': [

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ClientDetailsEdit" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='client-details-left']/.." position="after">
+            <div class="client-details-box clearfix">
+                <div class="client-details-tabs">
+                    <div class="client-tabs">
+                        <div class="client-tabs-tab"><div>Addresses</div></div>
+                    </div>
+                    <div class="client-tabs-content client-address">
+                        <t t-foreach="getChild()" t-as="child" t-key="child">
+                            <t t-if="['delivery', 'invoice'].includes(child.type)">
+                                <button class="client-tabs-content-item">
+                                    <div class="client-tabs-content-icon">
+                                        <i class="fa" t-att-class="{'fa-truck': child.type === 'delivery', 'fa-file-text-o': child.type === 'invoice'}"/>
+                                    </div>
+                                    <div class="client-tabs-content-name">
+                                        <div class="client-tabs-content-title">
+                                            <span t-if="child.name" t-esc="child.name"/>
+                                            <span t-else="">Address</span>
+                                        </div>
+                                        <div class="client-tabs-content-detail">
+                                            <span t-esc="child.address"/>
+                                        </div>
+                                    </div>
+                                </button>
+                            </t>
+                        </t>
+                        <button class="client-tabs-content-item client-tabs-content-add" t-on-click="addChild">
+                            <div class="client-tabs-content-icon">
+                                <i class="fa fa-plus"/>
+                            </div>
+                            <div class="client-tabs-content-name">
+                                Add
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="AddressPopup" owl="1">
+        <div role="dialog" class="modal-dialog address-dialog">
+            <div class="popup address-popup">
+                <main>
+                    <input type="radio" id="partner_address_delivery" name="type" value="delivery" selected="selected"/>
+                    <label for="partner_address_delivery">Delivery</label>
+                    <input type="radio" id="partner_address_invoice" name="type" value="invoice"/>
+                    <label for="partner_address_invoice">Invoice</label>
+                    <input class="detail client-name" name="name" t-att-value="partner.name or ''" placeholder="Name" t-on-change="captureChange"/>
+                    <div class="client-details-box clearfix">
+                        <div class="client-details-left">
+                            <div class="client-detail">
+                                <span class="label">Street</span>
+                                <input class="detail client-address-street" name="street" t-on-change="captureChange" t-att-value="partner.street || ''" placeholder="Street"/>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">City</span>
+                                <input class="detail client-address-city" name="city" t-on-change="captureChange" t-att-value="partner.city || ''" placeholder="City"/>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">Postcode</span>
+                                <input class="detail client-address-zip" name="zip" t-on-change="captureChange" t-att-value="partner.zip || ''" placeholder="ZIP"/>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">State</span>
+                                <select class="detail client-address-states needsclick" name="state_id" t-on-change="captureChange">
+                                    <option value="">None</option>
+                                    <t t-foreach="env.pos.states" t-as="state" t-key="state.id">
+                                        <option t-if="partner.country_id[0] == state.country_id[0]"
+                                            t-att-value="state.id"
+                                            t-att-selected="partner.state_id ? ((state.id === partner.state_id[0]) ? true : undefined) : undefined">
+                                            <t t-esc="state.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">Country</span>
+                                <select class="detail client-address-country needsclick" name="country_id" t-on-change="captureChange">
+                                    <option value="">None</option>
+                                    <t t-foreach="env.pos.countries" t-as="country" t-key="country.id">
+                                        <option t-att-value="country.id"
+                                            t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined">
+                                            <t t-esc="country.name" />
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="client-details-right">
+                            <div class="client-detail">
+                                <span class="label">Email</span>
+                                <input class="detail client-email" name="email" type="email" t-on-change="captureChange" t-att-value="partner.email || ''"/>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">Phone</span>
+                                <input class="detail client-phone" name="phone" type="tel" t-on-change="captureChange" t-att-value="partner.phone || ''"/>
+                            </div>
+                            <div class="client-detail">
+                                <span class="label">Notes</span>
+                                <input class="detail client-address-comment" name="comment" t-on-change="captureChange" t-att-value="partner.comment || ''" placeholder="Notes"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-bank">
+                        <div class="send-table">
+                            <div class="field-info">You can send selected bank information to an email address of your customer</div>
+                            <div class="field-container">
+                                <input id="bank_email" type="text" required="required" t-model="state.email"/>
+                                <span class="bar-container"/>
+                                <label for="bank_email"><span>Email Address</span></label>
+                                <div class="button altlight"><i class="fa fa-envelope-o"/></div>
+                            </div>
+                        </div>
+                        <div class="bank-table">
+                            <h3 class="field-info">You can select any record you wish and send it to your customer</h3>
+                            <div class="field-container overflow-y">
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button cancel" t-on-click="cancel">Close</div>
+                    <div class="button create altlight" t-on-click="create">Create</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>
