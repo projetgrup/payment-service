@@ -8,9 +8,9 @@
                         <div class="client-tabs-tab"><div>Addresses</div></div>
                     </div>
                     <div class="client-tabs-content client-address">
-                        <t t-foreach="getChild()" t-as="child" t-key="child">
+                        <t t-foreach="getChild()" t-as="child" t-key="child.id">
                             <t t-if="['delivery', 'invoice'].includes(child.type)">
-                                <button class="client-tabs-content-item">
+                                <button class="client-tabs-content-item" t-on-click="setChild(child.id)">
                                     <div class="client-tabs-content-icon">
                                         <i class="fa" t-att-class="{'fa-truck': child.type === 'delivery', 'fa-file-text-o': child.type === 'invoice'}"/>
                                     </div>
@@ -26,7 +26,7 @@
                                 </button>
                             </t>
                         </t>
-                        <button class="client-tabs-content-item client-tabs-content-add" t-on-click="addChild">
+                        <button class="client-tabs-content-item client-tabs-content-add" t-on-click="setChild(0)">
                             <div class="client-tabs-content-icon">
                                 <i class="fa fa-plus"/>
                             </div>

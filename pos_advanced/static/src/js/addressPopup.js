@@ -12,14 +12,19 @@ class AddressPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
         this.partner = this.props.partner;
-        this.intFields = ['country_id', 'state_id'];
-        this.changes = {
-            'country_id': this.partner.country_id && this.partner.country_id[0],
-            'state_id': this.partner.state_id && this.partner.state_id[0],
-        };
+        this.child = this.props.child;
         this.state = useState({
-            email: '',
-            phone: '',
+            type: this.child && this.child.type || 'delivery',
+            name: this.child && this.child.name || '',
+            street: this.child && this.child.street || '',
+            city: this.child && this.child.city || '',
+            zip: this.child && this.child.zip || '',
+            state: this.child && this.child.state || '',
+            country: this.child && this.child.country || '',
+            email: this.child && this.child.email || '',
+            phone: this.child && this.child.phone || '',
+            mobile: this.child && this.child.mobile || '',
+            comment: this.child && this.child.comment && $('<div>' + this.child.comment + '</div>').text() || '',
         });
     }
 
@@ -33,8 +38,12 @@ class AddressPopup extends AbstractAwaitablePopup {
         this.trigger('show-notification', { message, duration });
     }
 
-    captureChange(event) {
-        this.changes[event.target.name] = event.target.value;
+    selectType(ev) {
+        const $radio = $(ev.target).closest('div.address-radio');
+        const $input = $radio.find('input');
+        $input.prop('checked', true);
+        this.state.delivery = $radio.prop('name');
+        console.log(this.state);
     }
 
     async create(ev) {

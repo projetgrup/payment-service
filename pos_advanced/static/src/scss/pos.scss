@@ -349,6 +349,170 @@ $pos-color-tabs: #6EC89B;
     }
 }
 
+.address-dialog {
+
+    .address-popup {
+        border-radius: 10px !important;
+        max-width: 750px !important;
+        font-size: 1em !important;
+        overflow: hidden !important;
+        width: 90% !important;
+        border: 4px solid #43996E;
+
+        main {
+            height: 300px;
+            background-color: #ffffff;
+            box-shadow: inset 0px 0px 5px 5px rgb(240, 240, 240);
+            transition: 0.2s ease all;
+            overflow-y: auto;
+        }
+
+        footer {
+            .fa {
+                margin: 0 5px;
+            }
+        }
+    }
+
+    .button.altlight {
+        background: #43996E !important;
+        border-color: #43996E !important;
+    }
+
+    .button.altlight.danger {
+        background: #cb4848 !important;
+        border-color: #cb4848 !important;
+    }
+
+    .address-type {
+        display: flex;
+        justify-content: space-evenly;
+        align-self: end;
+        width: 80%;
+        margin: 10px;
+
+        .address-radio {
+            display: flex;
+            width: 75px;
+            cursor: pointer;
+
+            label {
+                cursor: pointer;
+            }
+
+            input[type=radio] {
+                cursor: pointer;
+            }
+        }
+
+        .address-radio > div {
+            position: relative;
+            flex: 1;
+        }
+
+        .address-radio input {
+            margin: auto;
+            display: block;
+            appearance: none;
+            border-radius: 50%;
+            border: 6px solid #cccccc;
+            width: 0 !important;
+            box-shadow: none !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+        }
+
+        .address-radio input:checked {
+            border: 6px solid #ffffff;
+        }
+
+        .address-radio input ~ span:after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+       }
+
+        .address-radio input:checked ~ span:after {
+            background: #43996E !important;
+       }
+    }
+
+    .address-details {
+        display: flex;
+        justify-content: center;
+        color: #707070;
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+
+        .address-detail {
+            display: flex;
+            align-items: center;
+
+            .label {
+                margin: 5px;
+                width: 20% !important;
+            }
+
+            input {
+                min-height: 30px !important;
+                margin: 5px;
+                height: 30px !important;
+                width: 80% !important;
+                font-size: 15px;
+            }
+
+            input[name=street] {
+                height: 70px !important;
+            }
+
+            input[name=city], input[name=zip] {
+                width: 40% !important;
+            }
+
+            select {
+                width: 40% !important;
+                height: 30px;
+                margin: 5px;
+                color: #444;
+                border-color: #ccc;
+            }
+        }
+
+        .table-left {
+            width: 50%;
+            margin: 10px 5px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #eeeeee;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+        }
+
+        .table-right {
+            width: 50%;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #eeeeee;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+        }
+    }
+}
+
 .pos {
 
     .d-none {
@@ -587,6 +751,25 @@ $pos-color-tabs: #6EC89B;
             }
 
             .bank-table {
+                width: 100% !important;
+            }
+        }
+    }
+
+    .address-dialog .address-popup{
+
+        main {
+            min-height: 500px;
+        }
+
+        .address-details {
+            flex-wrap: wrap;
+
+            .table-left {
+                width: 100% !important;
+            }
+
+            .table-right {
                 width: 100% !important;
             }
         }
