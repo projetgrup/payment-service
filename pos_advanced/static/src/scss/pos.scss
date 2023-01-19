@@ -1,8 +1,8 @@
 $pos-color-green-light: #6EC89B;
 $pos-color-green-dark: #43996E;
 $pos-color-damson: #875A7B;
-$pos-color-light: #EEE9E1;
-$pos-color-tabs: #6EC89B;
+$pos-color-light: #f0eeee;
+$pos-color-tabs: #a886a0;
 
 .bank-dialog {
 
@@ -357,7 +357,7 @@ $pos-color-tabs: #6EC89B;
         font-size: 1em !important;
         overflow: hidden !important;
         width: 90% !important;
-        border: 4px solid #43996E;
+        border: 4px solid $pos-color-tabs;
 
         main {
             height: 300px;
@@ -375,8 +375,8 @@ $pos-color-tabs: #6EC89B;
     }
 
     .button.altlight {
-        background: #43996E !important;
-        border-color: #43996E !important;
+        background: $pos-color-tabs !important;
+        border-color: $pos-color-tabs !important;
     }
 
     .button.altlight.danger {
@@ -439,7 +439,7 @@ $pos-color-tabs: #6EC89B;
        }
 
         .address-radio input:checked ~ span:after {
-            background: #43996E !important;
+            background: $pos-color-tabs !important;
        }
     }
 
@@ -468,6 +468,10 @@ $pos-color-tabs: #6EC89B;
                 font-size: 15px;
             }
 
+            input:focus {
+                box-shadow: 0px 0px 0px 3px $pos-color-tabs;
+            }
+
             input[name=street] {
                 height: 70px !important;
             }
@@ -480,8 +484,8 @@ $pos-color-tabs: #6EC89B;
                 width: 40% !important;
                 height: 30px;
                 margin: 5px;
-                color: #444;
-                border-color: #ccc;
+                color: #444444;
+                border-color: #cccccc;
             }
         }
 
@@ -618,7 +622,7 @@ $pos-color-tabs: #6EC89B;
 
                     &::before, &::after {
                         content: "";
-                        background-color: #EEE9E1;
+                        background-color: $pos-color-light;
                         position: absolute;
                         width: 10px;
                         height: 10px;
