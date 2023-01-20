@@ -8,30 +8,31 @@
                         <div class="client-tabs-tab"><div>Addresses</div></div>
                     </div>
                     <div class="client-tabs-content client-address">
-                        <t t-foreach="getChild()" t-as="child" t-key="child.id">
-                            <t t-if="['delivery', 'invoice'].includes(child.type)">
-                                <button class="client-tabs-content-item" t-on-click="setChild(child.id)">
-                                    <div class="client-tabs-content-icon">
-                                        <i class="fa" t-att-class="{'fa-truck': child.type === 'delivery', 'fa-file-text-o': child.type === 'invoice'}"/>
+                        <t t-foreach="getContacts()" t-as="contact" t-key="contact.id">
+                            <t t-if="['delivery', 'invoice'].includes(contact.type)">
+                                <button class="client-tabs-content-item">
+                                    <div class="client-tabs-content-item-selection" t-att-class="{'client-tabs-content-item-selected': state.contacts.includes(contact.id)}" t-on-click="selectContact(contact.id)"><i class="fa fa-check"/></div>
+                                    <div class="client-tabs-content-icon" t-on-click="setContact(contact.id)">
+                                        <i class="fa" t-att-class="{'fa-truck': contact.type === 'delivery', 'fa-file-text-o': contact.type === 'invoice'}"/>
                                     </div>
-                                    <div class="client-tabs-content-name">
+                                    <div class="client-tabs-content-name" t-on-click="setContact(contact.id)">
                                         <div class="client-tabs-content-title">
-                                            <span t-if="child.name" t-esc="child.name"/>
+                                            <span t-if="contact.name" t-esc="contact.name"/>
                                             <span t-else="">Address</span>
                                         </div>
                                         <div class="client-tabs-content-detail">
-                                            <span t-esc="child.address"/>
+                                            <span t-esc="contact.address"/>
                                         </div>
                                     </div>
                                 </button>
                             </t>
                         </t>
-                        <button class="client-tabs-content-item client-tabs-content-add" t-on-click="setChild(0)">
+                        <button class="client-tabs-content-item client-tabs-content-add" t-on-click="setContact(0)">
                             <div class="client-tabs-content-icon">
                                 <i class="fa fa-plus"/>
                             </div>
                             <div class="client-tabs-content-name">
-                                Add
+                                Add Address
                             </div>
                         </button>
                     </div>

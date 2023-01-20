@@ -41,22 +41,22 @@
                             </div>
                             <div class="address-detail">
                                 <span class="label"></span>
-                                <select class="needsclick" name="state_id" t-model="state.state">
-                                    <option value="">State</option>
-                                    <t t-foreach="env.pos.states" t-as="state" t-key="state.id">
-                                        <option t-if="partner.country_id[0] == state.country_id[0]"
-                                            t-att-value="state.id"
-                                            t-att-selected="partner.state_id ? ((state.id === partner.state_id[0]) ? true : undefined) : undefined">
-                                            <t t-esc="state.name"/>
+                                <select class="needsclick" name="state_id" t-model="state.state_id">
+                                    <option t-att-value="0" t-att-selected="!state.state_id">State</option>
+                                    <t t-foreach="env.pos.states" t-as="s" t-key="s.id">
+                                        <option t-if="state.country_id == s.country_id[0]"
+                                            t-att-value="s.id"
+                                            t-att-selected="state.state_id ? ((s.id === state.state_id) ? true : undefined) : undefined">
+                                            <t t-esc="s.name"/>
                                         </option>
                                     </t>
                                 </select>
-                                <select class="needsclick" name="country_id" t-model="state.country">
-                                    <option value="">Country</option>
-                                    <t t-foreach="env.pos.countries" t-as="country" t-key="country.id">
-                                        <option t-att-value="country.id"
-                                            t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined">
-                                            <t t-esc="country.name" />
+                                <select class="needsclick" name="country_id" t-model="state.country_id">
+                                    <option t-att-value="0" t-att-selected="!state.country_id">Country</option>
+                                    <t t-foreach="env.pos.countries" t-as="c" t-key="c.id">
+                                        <option t-att-value="c.id"
+                                            t-att-selected="state.country_id ? ((c.id === state.country_id) ? true : undefined) : undefined">
+                                            <t t-esc="c.name"/>
                                         </option>
                                     </t>
                                 </select>
@@ -83,9 +83,9 @@
                     </div>
                 </main>
                 <footer class="footer">
-                    <div t-if="child" class="button create altlight" t-on-click="edit">Edit</div>
-                    <div t-else="" class="button create altlight" t-on-click="create">Create</div>
-                    <div class="button cancel" t-on-click="cancel">Close</div>
+                    <div t-if="state.id" class="button create altlight" t-on-click="setAddress"><i class="fa fa-edit"/>Edit</div>
+                    <div t-else="" class="button create altlight" t-on-click="setAddress"><i class="fa fa-edit"/>Create</div>
+                    <div class="button cancel" t-on-click="cancel"><i class="fa fa-minus"/>Close</div>
                 </footer>
             </div>
         </div>

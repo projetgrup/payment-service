@@ -2,6 +2,8 @@ odoo.define('pos_advanced.AddressPopup', function(require) {
 'use strict';
 
 const { useState } = owl.hooks;
+const { isConnectionError } = require('point_of_sale.utils');
+const { Gui } = require('point_of_sale.Gui');
 const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
 const Registries = require('point_of_sale.Registries');
 var core = require('web.core');
@@ -12,64 +14,66 @@ class AddressPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
         this.partner = this.props.partner;
-        this.child = this.props.child;
+        this.contact = this.props.contact;
         this.state = useState({
-            type: this.child && this.child.type || 'delivery',
-            name: this.child && this.child.name || '',
-            street: this.child && this.child.street || '',
-            city: this.child && this.child.city || '',
-            zip: this.child && this.child.zip || '',
-            state: this.child && this.child.state || '',
-            country: this.child && this.child.country || '',
-            email: this.child && this.child.email || '',
-            phone: this.child && this.child.phone || '',
-            mobile: this.child && this.child.mobile || '',
-            comment: this.child && this.child.comment && $('<div>' + this.child.comment + '</div>').text() || '',
+            id: this.contact && this.contact.id || false,
+            parent_id: this.partner && this.partner.id || false,
+            type: this.contact && this.contact.type || 'delivery',
+            name: this.contact && this.contact.name || '',
+            street: this.contact && this.contact.street || '',
+            city: this.contact && this.contact.city || '',
+            zip: this.contact && this.contact.zip || '',
+            state_id: this.contact && this.contact.state_id && this.contact.state_id[0] || 0,
+            country_id: this.contact && this.contact.country_id && this.contact.country_id[0] || 0,
+            email: this.contact && this.contact.email || '',
+            phone: this.contact && this.contact.phone || '',
+            mobile: this.contact && this.contact.mobile || '',
+            comment: this.contact && this.contact.comment && $('<div>' + this.contact.comment + '</div>').text() || '',
         });
-    }
-
-    showNotificationSuccess(message) {
-        const duration = 2001;
-        this.trigger('show-notification', { message, duration });
-    }
-
-    showNotificationDanger(message) {
-        const duration = 2002;
-        this.trigger('show-notification', { message, duration });
     }
 
     selectType(ev) {
         const $radio = $(ev.target).closest('div.address-radio');
         const $input = $radio.find('input');
         $input.prop('checked', true);
-        this.state.delivery = $radio.prop('name');
-        console.log(this.state);
+        this.state.type = $input.val();
     }
 
-    async create(ev) {
+    async setAddress(ev) {
         const $button = $(ev.target).closest('div.button');
         const $icon = $button.find('i');
         $button.addClass('disabled');
-        $icon.toggleClass(['fa-commenting-o', 'fa-circle-o-notch', 'fa-spin']);
+        $icon.toggleClass(['fa-edit', 'fa-circle-o-notch', 'fa-spin']);
+
         try {
-            if (this.state.phone == '') {
-                this.showNotificationDanger(_t('Please fill phone number'));
-            } else {
-                const result = await this.env.session.rpc('/pos/bank/sms', {
-                    partner: this.partner.id,
-                    banks: this.state.banks,
-                    phone: this.state.phone,
-                });
-                this.showNotificationSuccess(result);
-            }
+            const values = {...this.state}
+            values.state_id = values.state_id && parseInt(values.state_id) || false;
+            values.country_id = values.country_id && parseInt(values.country_id) || false;
+            await this.rpc({
+                model: 'res.partner',
+                method: 'create_from_ui',
+                args: [values],
+            });
+            await this.rpc({
+                model: 'res.partner',
+                method: 'create_from_ui',
+                args: [{id: values.parent_id}],
+            });
+            await this.env.pos.load_new_partners();
+            this.trigger('close-popup');
         } catch (error) {
-            console.error(error);
-            this.showNotificationDanger(_t('SMS has not been sent'));
+            if (isConnectionError(error)) {
+                await Gui.showPopup('OfflineErrorPopup', {
+                    title: this.env._t('Offline'),
+                    body: this.env._t('Unable to save changes.'),
+                });
+            } else {
+                throw error;
+            }
         }
         $button.removeClass('disabled');
-        $icon.toggleClass(['fa-commenting-o', 'fa-circle-o-notch', 'fa-spin']);
+        $icon.toggleClass(['fa-edit', 'fa-circle-o-notch', 'fa-spin']);
     }
-
 }
 
 AddressPopup.template = 'AddressPopup';

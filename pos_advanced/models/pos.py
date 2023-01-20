@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class PosBank(models.Model):
