@@ -14,21 +14,21 @@ class AddressPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
         this.partner = this.props.partner;
-        this.contact = this.props.contact;
+        this.address = this.props.address;
         this.state = useState({
-            id: this.contact && this.contact.id || false,
+            id: this.address && this.address.id || false,
             parent_id: this.partner && this.partner.id || false,
-            type: this.contact && this.contact.type || 'delivery',
-            name: this.contact && this.contact.name || '',
-            street: this.contact && this.contact.street || '',
-            city: this.contact && this.contact.city || '',
-            zip: this.contact && this.contact.zip || '',
-            state_id: this.contact && this.contact.state_id && this.contact.state_id[0] || 0,
-            country_id: this.contact && this.contact.country_id && this.contact.country_id[0] || 0,
-            email: this.contact && this.contact.email || '',
-            phone: this.contact && this.contact.phone || '',
-            mobile: this.contact && this.contact.mobile || '',
-            comment: this.contact && this.contact.comment && $('<div>' + this.contact.comment + '</div>').text() || '',
+            type: this.address && this.address.type || 'delivery',
+            name: this.address && this.address.name || '',
+            street: this.address && this.address.street || '',
+            city: this.address && this.address.city || '',
+            zip: this.address && this.address.zip || '',
+            state_id: this.address && this.address.state_id && this.address.state_id[0] || 0,
+            country_id: this.address && this.address.country_id && this.address.country_id[0] || 0,
+            email: this.address && this.address.email || '',
+            phone: this.address && this.address.phone || '',
+            mobile: this.address && this.address.mobile || '',
+            comment: this.address && this.address.comment && $('<div>' + this.address.comment + '</div>').text() || '',
         });
     }
 
