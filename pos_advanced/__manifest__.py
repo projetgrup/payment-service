@@ -19,7 +19,10 @@
     'assets': {
         'point_of_sale.assets': [
             'pos_advanced/static/src/js/models.js',
+            'pos_advanced/static/src/js/addressScreen.js',
             'pos_advanced/static/src/js/paymentScreen.js',
+            'pos_advanced/static/src/js/ActionpadWidget.js',
+            'pos_advanced/static/src/js/ProductScreen.js',
             'pos_advanced/static/src/js/ClientDetailsEdit.js',
             'pos_advanced/static/src/js/bankPopup.js',
             'pos_advanced/static/src/js/addressPopup.js',

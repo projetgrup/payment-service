@@ -11,22 +11,25 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
             super(...arguments);
             this.partner = this.props.partner;
             this.address = this.props.address;
+            this.addresses = this.address ? [this.address] : ['delivery', 'invoice'];
+            console.log(this.address);
+            this.order = this.env.pos.get_order();
             this.state = useState({
-                address_id: undefined,
-                invoice_id: undefined,
+                delivery: undefined,
+                invoice: undefined,
             });
         }
 
         async willStart() {
-            this.state.address_id = this.partner.address_id;
-            this.state.invoice_id = this.partner.invoice_id;
+            this.state.delivery = this.order.address.delivery;
+            this.state.invoice = this.order.address.invoice;
         }
 
         getAddresses() {
             const addresses = [];
             const db = this.env.pos.db;
             const partner = db.get_partner_by_id(this.props.partner.id);
-            const ids = partner.child_ids;
+            const ids = partner && partner.child_ids || [];
             ids.forEach(function(id) {
                 addresses.push(db.get_partner_by_id(id));
             });
@@ -35,13 +38,10 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
 
         selectAddress(address)  {
             if (address.type === 'delivery') {
-                this.state.address_id = this.state.address_id === address.id ? undefined : address.id;
+                this.state.delivery = this.state.delivery === address.id ? undefined : address.id;
             } else if (address.type === 'invoice') {
-                this.state.invoice_id = this.state.invoice_id === address.id ? undefined : address.id;
+                this.state.invoice = this.state.invoice === address.id ? undefined : address.id;
             }
-
-            this.partner.address_id = this.state.address_id;
-            this.partner.invoice_id = this.state.invoice_id;
         }
 
         async setAddress(id=0) {
@@ -51,6 +51,7 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
             await Gui.showPopup('AddressPopup', {
                 partner: partner,
                 address: address,
+                type: this.address,
             });
         }
 

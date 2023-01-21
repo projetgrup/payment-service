@@ -15,10 +15,11 @@ class AddressPopup extends AbstractAwaitablePopup {
         super(...arguments);
         this.partner = this.props.partner;
         this.address = this.props.address;
+        this.type = this.props.type;
         this.state = useState({
             id: this.address && this.address.id || false,
             parent_id: this.partner && this.partner.id || false,
-            type: this.address && this.address.type || 'delivery',
+            type: this.address && this.address.type || this.type || 'delivery',
             name: this.address && this.address.name || '',
             street: this.address && this.address.street || '',
             city: this.address && this.address.city || '',

@@ -7,7 +7,7 @@
                     <div class="address-details">
                         <div class="table-left">
                             <div class="address-type">
-                                <div class="address-radio" t-on-click="selectType" name="delivery">
+                                <div t-if="!type || type === 'delivery'" class="address-radio" t-on-click="selectType" name="delivery">
                                     <div>
                                         <input id="partner_address_delivery" name="type" type="radio" t-att-checked="state.type === 'delivery'" value="delivery"/>
                                         <span/>
@@ -16,7 +16,7 @@
                                         <label for="partner_address_delivery">Delivery</label>
                                     </div>
                                 </div>
-                                <div class="address-radio" t-on-click="selectType" name="invoice">
+                                <div t-if="!type || type === 'invoice'" class="address-radio" t-on-click="selectType" name="invoice">
                                     <div>
                                         <input id="partner_address_invoice" name="type" type="radio" t-att-checked="state.type === 'invoice'" value="invoice"/>
                                         <span/>
