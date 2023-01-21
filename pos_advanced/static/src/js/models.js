@@ -9,17 +9,17 @@ const Order = PosModel.Order.prototype;
 PosModel.Order = PosModel.Order.extend({
     initialize: function() {
         Order.initialize.apply(this, arguments);
-        this.address = {};
+        this.address = { id: null, delivery: null, invoice: null };
     },
 
     init_from_JSON: function (json) {
         Order.init_from_JSON.apply(this, arguments);
-        this.address = json.address;
+        this.set('address', json.address);
     },
 
     export_as_JSON: function () {
         var res = Order.export_as_JSON.apply(this, arguments);
-        res.address = this.address;
+        res.address = this.get('address');
         return res;
     },
 
@@ -29,12 +29,15 @@ PosModel.Order = PosModel.Order.extend({
 
     set_address: function(address) {
         this.assert_editable();
-        this.set('address', address);
+        this.set('address', {...this.get('address'), ...address});
     },
 
     set_client: function(client) {
         Order.set_client.apply(this, arguments);
-        this.set_address(client);
+        const address = this.get_address();
+        if (address && address.id !== client.id) {
+            this.set_address({ id: client.id, delivery: client, invoice: client });
+        };
     },
 
 });

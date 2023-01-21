@@ -10,9 +10,8 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
         constructor() {
             super(...arguments);
             this.partner = this.props.partner;
-            this.address = this.props.address;
-            this.addresses = this.address ? [this.address] : ['delivery', 'invoice'];
-            console.log(this.address);
+            this.type = this.props.addressType;
+            this.types = this.type ? [this.type] : ['delivery', 'invoice'];
             this.order = this.env.pos.get_order();
             this.state = useState({
                 delivery: undefined,
@@ -21,14 +20,15 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
         }
 
         async willStart() {
-            this.state.delivery = this.order.address.delivery;
-            this.state.invoice = this.order.address.invoice;
+            const self = this;
+            const address = this.order.get_address();
+            this.types.forEach(function(type) { self.state[type] = address[type] && address[type].id });
         }
 
         getAddresses() {
             const addresses = [];
             const db = this.env.pos.db;
-            const partner = db.get_partner_by_id(this.props.partner.id);
+            const partner = db.get_partner_by_id(this.partner.id);
             const ids = partner && partner.child_ids || [];
             ids.forEach(function(id) {
                 addresses.push(db.get_partner_by_id(id));
@@ -37,21 +37,21 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
         }
 
         selectAddress(address)  {
-            if (address.type === 'delivery') {
-                this.state.delivery = this.state.delivery === address.id ? undefined : address.id;
-            } else if (address.type === 'invoice') {
-                this.state.invoice = this.state.invoice === address.id ? undefined : address.id;
-            }
+            const type = this.type;
+            const id = this.state[type] === address.id ? undefined : address.id;
+            this.state[type] = id;
+
+            const result = {};
+            result[type] = id ? address : this.partner;
+            this.order.set_address({ ...result });
         }
 
-        async setAddress(id=0) {
-            const db = this.env.pos.db;
-            const partner = this.props.partner;
-            const address = id ? db.get_partner_by_id(id) : undefined;
+        async saveAddress(address) {
             await Gui.showPopup('AddressPopup', {
-                partner: partner,
+                partner: this.partner,
+                type: this.type,
+                order: this.order,
                 address: address,
-                type: this.address,
             });
         }
 

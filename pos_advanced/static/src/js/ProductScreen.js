@@ -12,13 +12,12 @@ export const PosProductScreen = (ProductScreen) =>
         }
 
         async _onClickAddress() {
-            const currentClient = this.currentOrder.get_client();
-            const { confirmed, payload: address } = await this.showTempScreen('ClientListScreen', {
-                client: currentClient,
-                address: 'delivery',
+            const { confirmed, payload: client } = await this.showTempScreen('AddressScreen', {
+                client: this.currentOrder.get_client(),
+                addressType: 'delivery',
             });
             if (confirmed) {
-                this.currentOrder.set_address(address);
+                this.currentOrder.set_client(client);
             }
         }
     };

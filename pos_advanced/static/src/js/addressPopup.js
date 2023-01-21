@@ -13,6 +13,7 @@ var _t = core._t;
 class AddressPopup extends AbstractAwaitablePopup {
     constructor() {
         super(...arguments);
+        this.order = this.props.order;
         this.partner = this.props.partner;
         this.address = this.props.address;
         this.type = this.props.type;
@@ -50,7 +51,7 @@ class AddressPopup extends AbstractAwaitablePopup {
             const values = {...this.state}
             values.state_id = values.state_id && parseInt(values.state_id) || false;
             values.country_id = values.country_id && parseInt(values.country_id) || false;
-            await this.rpc({
+            const pid = await this.rpc({
                 model: 'res.partner',
                 method: 'create_from_ui',
                 args: [values],
@@ -61,6 +62,15 @@ class AddressPopup extends AbstractAwaitablePopup {
                 args: [{id: values.parent_id}],
             });
             await this.env.pos.load_new_partners();
+
+            const type = this.address.type;
+            const address = this.order.get_address();
+            if (address[type] && address[type].id === pid) {
+                const result = {};
+                result[type] =  this.env.pos.db.get_partner_by_id(pid);
+                this.order.set_address({ ...result });
+            }
+
             this.trigger('close-popup');
         } catch (error) {
             if (isConnectionError(error)) {
