@@ -8,18 +8,20 @@ PosModel.load_fields('res.partner', ['type', 'child_ids', 'comment']);
 const Order = PosModel.Order.prototype;
 PosModel.Order = PosModel.Order.extend({
     initialize: function() {
+        this.partner_address = { id: null, delivery: null, invoice: null };
+        this.set({ address: this.partner_address });
         Order.initialize.apply(this, arguments);
-        this.address = { id: null, delivery: null, invoice: null };
     },
 
     init_from_JSON: function (json) {
         Order.init_from_JSON.apply(this, arguments);
-        this.set('address', json.address);
+        this.partner_address = json.partner_address;
+        this.set({ address: this.partner_address });
     },
 
     export_as_JSON: function () {
         var res = Order.export_as_JSON.apply(this, arguments);
-        res.address = this.get('address');
+        res.partner_address = this.get_address();
         return res;
     },
 
@@ -34,10 +36,13 @@ PosModel.Order = PosModel.Order.extend({
 
     set_client: function(client) {
         Order.set_client.apply(this, arguments);
-        const address = this.get_address();
-        if (address && address.id !== client.id) {
-            this.set_address({ id: client.id, delivery: client, invoice: client });
-        };
+        if (client) {
+            if (this.get_address().id !== client.id) {
+                this.set_address({ id: client.id, delivery: client, invoice: client });
+            }
+        } else {
+            this.set_address({ id: null, delivery: null, invoice: null });
+        }
     },
 
 });
