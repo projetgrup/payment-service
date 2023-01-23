@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-24 14:57+0000\n"
-"PO-Revision-Date: 2022-12-24 14:57+0000\n"
+"POT-Creation-Date: 2023-01-23 06:10+0000\n"
+"PO-Revision-Date: 2023-01-23 06:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -413,11 +413,6 @@ msgid "No payments yet"
 msgstr ""
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
-msgid "Notifications"
-msgstr ""
-
-#. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Parent"
@@ -613,13 +608,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_sibling_rate
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_rate
 msgid "Sibling Discount Rate"
-msgstr ""
-
-#. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
-msgid ""
-"Specify Webhook URL Addresses to notify when a successful payment "
-"transaction occurs"
 msgstr ""
 
 #. module: payment_student

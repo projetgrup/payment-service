@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="AddressPopup" owl="1">
+        <div role="dialog" class="modal-dialog address-dialog">
+            <div class="popup address-popup">
+                <main>
+                    <div class="address-details">
+                        <div class="table-left">
+                            <div class="address-type">
+                                <div t-if="!type || type === 'delivery'" class="address-radio" t-on-click="selectType" name="delivery">
+                                    <div>
+                                        <input id="partner_address_delivery" name="type" type="radio" t-att-checked="state.type === 'delivery'" value="delivery"/>
+                                        <span/>
+                                    </div>
+                                    <div>
+                                        <label for="partner_address_delivery">Delivery</label>
+                                    </div>
+                                </div>
+                                <div t-if="!type || type === 'invoice'" class="address-radio" t-on-click="selectType" name="invoice">
+                                    <div>
+                                        <input id="partner_address_invoice" name="type" type="radio" t-att-checked="state.type === 'invoice'" value="invoice"/>
+                                        <span/>
+                                    </div>
+                                    <div>
+                                        <label for="partner_address_invoice">Invoice</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label">Name</span>
+                                <input name="name" t-model="state.name" placeholder="Name"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label">Address</span>
+                                <input name="street" t-model="state.street" placeholder="Street"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label"></span>
+                                <input name="city" t-model="state.city" placeholder="City"/>
+                                <input name="zip" t-model="state.zip" placeholder="ZIP"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label"></span>
+                                <select class="needsclick" name="state_id" t-model="state.state_id">
+                                    <option t-att-value="0" t-att-selected="!state.state_id">State</option>
+                                    <t t-foreach="env.pos.states" t-as="s" t-key="s.id">
+                                        <option t-if="state.country_id == s.country_id[0]"
+                                            t-att-value="s.id"
+                                            t-att-selected="state.state_id ? ((s.id === state.state_id) ? true : undefined) : undefined">
+                                            <t t-esc="s.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <select class="needsclick" name="country_id" t-model="state.country_id">
+                                    <option t-att-value="0" t-att-selected="!state.country_id">Country</option>
+                                    <t t-foreach="env.pos.countries" t-as="c" t-key="c.id">
+                                        <option t-att-value="c.id"
+                                            t-att-selected="state.country_id ? ((c.id === state.country_id) ? true : undefined) : undefined">
+                                            <t t-esc="c.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-right">
+                            <div class="address-detail">
+                                <span class="label">Email</span>
+                                <input name="email" type="email" t-model="state.email"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label">Phone</span>
+                                <input name="phone" type="tel" t-model="state.phone"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label">Mobile</span>
+                                <input name="mobile" type="tel" t-model="state.mobile"/>
+                            </div>
+                            <div class="address-detail">
+                                <span class="label">Notes</span>
+                                <input name="comment" t-model="state.comment"/>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div t-if="state.id" class="button create altlight" t-on-click="setAddress"><i class="fa fa-edit"/>Edit</div>
+                    <div t-else="" class="button create altlight" t-on-click="setAddress"><i class="fa fa-edit"/>Create</div>
+                    <div class="button cancel" t-on-click="cancel"><i class="fa fa-minus"/>Close</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>
