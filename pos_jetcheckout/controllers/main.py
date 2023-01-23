@@ -20,6 +20,10 @@ from odoo.tools.misc import formatLang
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 
 
+import logging
+_logger = logging.getLogger(__name__)
+
+
 class JetControllerPos(JetController):
 
     def _pos_link_cancel(self, tx):
@@ -353,3 +357,8 @@ class JetControllerPos(JetController):
 
         request.session['__tx_id'] = tx.id
         return redirect('/payment/card/result')
+
+
+    @route(['/pos/physical/result'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
+    def pos_physical_result(self, **kwargs):
+        _logger.error(kwargs)
