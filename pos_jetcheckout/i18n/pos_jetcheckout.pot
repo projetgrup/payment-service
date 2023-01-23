@@ -1,0 +1,633 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_jetcheckout
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-23 06:11+0000\n"
+"PO-Revision-Date: 2023-01-23 06:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "%s (Error Code: %s)"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "%s - (Error Code: %s)"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "%s - (Error Code: -2)"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_config_form
+msgid "<span class=\"o_form_label\">Payment Link Lifetime</span>"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:mail.template,body_html:pos_jetcheckout.mail_template_payment
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Dear</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div style=\"text-align: center\">\n"
+"                        To pay <strong><t t-out=\"format_amount(ctx['amount'], ctx['currency']) or ''\"/></strong> for your order, please <strong><a t-att-href=\"ctx['url']\">click here</a></strong>.<br/><br/>\n"
+"                        Have a nice day!\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+90 530-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_payment_method__jetcheckout_link_apikey
+msgid "API Key"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#, python-format
+msgid "Amount cannot be higher than residual amount"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#, python-format
+msgid "Amount cannot be lower than zero"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Amount must be greater than zero"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "An error occured."
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#, python-format
+msgid "An error occured. Please try again."
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid ""
+"Appliable installment options will be displayed here after you enter your "
+"credit card number"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Card Information"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "Card Number"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/paymentScreen.js:0
+#, python-format
+msgid "Cash Payment Amount Exceeded"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/paymentScreen.js:0
+#, python-format
+msgid "Cash payment amount cannot be higher than %s for this shop."
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#: code:addons/pos_jetcheckout/static/src/xml/installmentPopup.xml:0
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Close"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_payment_method_form
+msgid "Configure Payment Acquirer"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_config_form
+msgid "Duration"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Email Address"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Email has been sent successfully"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "Email has not been sent"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "Expiration"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "INSTALLMENT"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/installmentPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "Installment Table"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/installmentPopup.js:0
+#, python-format
+msgid ""
+"Installment table could not be accessable. Please check your connection."
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "Link Information"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "MM/YY"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "MONTHLY"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Method not found"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/installmentPopup.xml:0
+#, python-format
+msgid "Monthly Payment"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "Name"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/installmentPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "Network Error"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Partner not found"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "Pay"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Payment Link"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_config__jetcheckout_link_duration
+msgid "Payment Link Lifetime"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_payment_method_form
+msgid "Payment Terminal"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid ""
+"Payment link could not be created. Please check your connection or contact "
+"with your system administrator."
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/models/pos.py:0
+#, python-format
+msgid "Payment link lifetime cannot be lower than zero"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Phone Number"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Please fill card expiration date"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Please fill card holder name"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Please fill card number"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Please fill card security code"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "Please fill email address"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "Please fill phone number"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#: code:addons/pos_jetcheckout/static/src/js/pos_jetcheckout.js:0
+#, python-format
+msgid "Please select a customer"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/cardPopup.js:0
+#, python-format
+msgid "Please select whether payment is straight or installment"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model,name:pos_jetcheckout.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model,name:pos_jetcheckout.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model,name:pos_jetcheckout.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:mail.template,name:pos_jetcheckout.mail_template_payment
+#: model:sms.template,name:pos_jetcheckout.sms_template_payment
+msgid "Point of Sale: Payment"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "Retry"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "SMS has been sent successfully"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/js/linkPopup.js:0
+#, python-format
+msgid "SMS has not been sent"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_payment_method__jetcheckout_link_secretkey
+msgid "Secret Key"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "Security Code"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "Send Payment Request"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_payment_method__jetcheckout_link_url
+msgid "Server Address"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_config_form
+msgid "Set a payment link validity duration in seconds"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/cardPopup.xml:0
+#, python-format
+msgid "TOTAL"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:sms.template,body:pos_jetcheckout.sms_template_payment
+msgid ""
+"To pay {{ ctx['amount'] }} {{ ctx['currency'] }} for your order, please "
+"click {{ ctx['url'] }}"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/installmentPopup.xml:0
+#, python-format
+msgid "Total Payment"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_order__transaction_count
+msgid "Transaction Count"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "Transaction expired"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Transaction not found"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:ir.model.fields,field_description:pos_jetcheckout.field_pos_order__transaction_ids
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_order_form
+msgid "Transactions"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/models/pos.py:0
+#, python-format
+msgid "URL you entered seems mistyped"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "Waiting"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "You can copy the link below and send it to your customer"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid ""
+"You can send an SMS message to mobile phone of your customer which refers "
+"this link"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#, python-format
+msgid "You can send this link to an email address of your customer"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: code:addons/pos_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "You have to define a sequence for %s"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model:mail.template,subject:pos_jetcheckout.mail_template_payment
+msgid "Your Payment Information"
+msgstr ""
+
+#. module: pos_jetcheckout
+#: model_terms:ir.ui.view,arch_db:pos_jetcheckout.pos_config_form
+msgid "seconds"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/linkPopup.xml:0
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "seconds left"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid "trigger('select-electronic-payment-line', { cid: props.line.cid })"
+msgstr ""
+
+#. module: pos_jetcheckout
+#. openerp-web
+#: code:addons/pos_jetcheckout/static/src/xml/paymentScreen.xml:0
+#, python-format
+msgid ""
+"{'success': props.duration === 2001, 'danger': props.duration === 2002}"
+msgstr ""

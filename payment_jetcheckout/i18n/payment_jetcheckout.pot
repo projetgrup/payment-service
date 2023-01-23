@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-14 07:08+0000\n"
-"PO-Revision-Date: 2022-12-14 07:08+0000\n"
+"POT-Creation-Date: 2023-01-23 06:09+0000\n"
+"PO-Revision-Date: 2023-01-23 06:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -317,6 +317,11 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_api_ok
+msgid "API Active"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__api_key
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "API Key"
@@ -544,6 +549,7 @@ msgid "Card Families"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_family_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_family
 msgid "Card Family"
 msgstr ""
@@ -993,6 +999,11 @@ msgid "Excluded Bins"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_date_expiration
+msgid "Expiration Date"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Fail"
 msgstr ""
@@ -1427,7 +1438,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__name
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__name
@@ -1460,6 +1470,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__notes
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Notes"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Only \"Draft\" or \"Pending\" payment transactions can be removed"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1569,6 +1585,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_graph
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_pivot
 msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.actions.server,name:payment_jetcheckout.cron_expire_transaction_ir_actions_server
+#: model:ir.cron,cron_name:payment_jetcheckout.cron_expire_transaction
+#: model:ir.cron,name:payment_jetcheckout.cron_expire_transaction
+msgid "Payment Transaction: Expire outdated transactions"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2024,6 +2047,12 @@ msgid "Transaction has been refunded successfully."
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Transaction has expired"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.status_form
 msgid "Transaction is cancelled"
 msgstr ""
@@ -2074,6 +2103,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_username_active
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__username_active
 msgid "Username Active"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__partner_vat
+msgid "VAT"
 msgstr ""
 
 #. module: payment_jetcheckout

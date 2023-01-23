@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-03 15:35+0000\n"
-"PO-Revision-Date: 2022-11-03 15:35+0000\n"
+"POT-Creation-Date: 2023-01-23 06:10+0000\n"
+"PO-Revision-Date: 2023-01-23 06:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -144,9 +144,9 @@ msgid ""
 "                                <tbody>\n"
 "                                    <t t-foreach=\"ctx['transactions']\" t-as=\"line\">\n"
 "                                        <tr>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: left;\"><t t-out=\"line['name']\"/></td>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\"><t t-out=\"format_amount(line['amount'], ctx['company'].currency_id) or ''\"/></td>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: left;\"><t t-out=\"line[1]['name']\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\"><t t-out=\"format_amount(line[1]['amount'], ctx['company'].currency_id) or ''\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * line[1]['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
 "                                        </tr>\n"
 "                                    </t>\n"
 "                                    <tr style=\"font-weight:bold;\">\n"
@@ -268,6 +268,11 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_integrations
+msgid "Integration Settings"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_mail_server
 msgid "Mail Servers"
 msgstr ""
@@ -285,6 +290,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "No setting found"
 msgstr ""
 
 #. module: payment_vendor
@@ -337,6 +347,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
+#: model:ir.ui.menu,name:payment_vendor.menu_settings
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Settings"
 msgstr ""
@@ -359,6 +370,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_transaction
 msgid "Transactions"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Try searching for another keyword"
 msgstr ""
 
 #. module: payment_vendor
@@ -415,8 +431,13 @@ msgid "Websites"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_syncops_connector
+msgid "syncOPS Integrations"
+msgstr ""
+
+#. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.mail_transaction_daily
-msgid "{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}"
+msgid "{{ ctx['domain'] }} | About transaction on {{ ctx['date'] }}"
 msgstr ""
 
 #. module: payment_vendor
