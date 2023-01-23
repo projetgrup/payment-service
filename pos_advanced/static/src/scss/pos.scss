@@ -1,3 +1,9 @@
+$pos-color-green-light: #6EC89B;
+$pos-color-green-dark: #43996E;
+$pos-color-damson: #875A7B;
+$pos-color-light: #f0eeee;
+$pos-color-tabs: #a886a0;
+
 .bank-dialog {
 
     .bank-popup {
@@ -343,6 +349,174 @@
     }
 }
 
+.address-dialog {
+
+    .address-popup {
+        border-radius: 10px !important;
+        max-width: 750px !important;
+        font-size: 1em !important;
+        overflow: hidden !important;
+        width: 90% !important;
+        border: 4px solid $pos-color-tabs;
+
+        main {
+            height: 300px;
+            background-color: #ffffff;
+            box-shadow: inset 0px 0px 5px 5px rgb(240, 240, 240);
+            transition: 0.2s ease all;
+            overflow-y: auto;
+        }
+
+        footer {
+            .fa {
+                margin: 0 5px;
+            }
+        }
+    }
+
+    .button.altlight {
+        background: $pos-color-tabs !important;
+        border-color: $pos-color-tabs !important;
+    }
+
+    .button.altlight.danger {
+        background: #cb4848 !important;
+        border-color: #cb4848 !important;
+    }
+
+    .address-type {
+        display: flex;
+        justify-content: space-evenly;
+        align-self: end;
+        width: 80%;
+        margin: 10px;
+
+        .address-radio {
+            display: flex;
+            width: 75px;
+            cursor: pointer;
+
+            label {
+                cursor: pointer;
+            }
+
+            input[type=radio] {
+                cursor: pointer;
+            }
+        }
+
+        .address-radio > div {
+            position: relative;
+            flex: 1;
+        }
+
+        .address-radio input {
+            margin: auto;
+            display: block;
+            appearance: none;
+            border-radius: 50%;
+            border: 6px solid #cccccc;
+            width: 0 !important;
+            box-shadow: none !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+        }
+
+        .address-radio input:checked {
+            border: 6px solid #ffffff;
+        }
+
+        .address-radio input ~ span:after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+       }
+
+        .address-radio input:checked ~ span:after {
+            background: $pos-color-tabs !important;
+       }
+    }
+
+    .address-details {
+        display: flex;
+        justify-content: center;
+        color: #707070;
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+
+        .address-detail {
+            display: flex;
+            align-items: center;
+
+            .label {
+                margin: 5px;
+                width: 20% !important;
+            }
+
+            input {
+                min-height: 30px !important;
+                margin: 5px;
+                height: 30px !important;
+                width: 80% !important;
+                font-size: 15px;
+            }
+
+            input:focus {
+                box-shadow: 0px 0px 0px 3px $pos-color-tabs;
+            }
+
+            input[name=street] {
+                height: 70px !important;
+            }
+
+            input[name=city], input[name=zip] {
+                width: 40% !important;
+            }
+
+            select {
+                width: 40% !important;
+                height: 30px;
+                margin: 5px;
+                color: #444444;
+                border-color: #cccccc;
+            }
+        }
+
+        .table-left {
+            width: 50%;
+            margin: 10px 5px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #eeeeee;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+        }
+
+        .table-right {
+            width: 50%;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #eeeeee;
+            box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+            overflow: hidden;
+        }
+    }
+}
+
 .pos {
 
     .d-none {
@@ -404,6 +578,34 @@
         }
     }
 
+    .actionpad {
+        .button {
+            &.pay {
+                height: calc(var(--btn-height-size) * 2) !important;
+            }
+
+            &.set-address {
+                font-size: 0.9em;
+            }
+
+            &.padding-icon {
+                padding-left: 50px;
+            }
+
+            .fa-truck {
+                position: absolute;
+                left: 13px;
+                top: 13px;
+                margin-right: 8px;
+                font-size: 18px;
+                background: rgba(255, 255, 255, 0.5);
+                line-height: 30px;
+                width: 30px;
+                border-radius: 100%;
+            }
+        }
+    }
+
     .left-content {
         display: flex;
         flex-direction: column;
@@ -431,11 +633,194 @@
             }
         }
     }
+
+    .client-details {
+        .client-details-tabs {
+            margin: 25px -15px 0 -15px;
+
+            .client-tabs {
+                display: flex;
+                border-bottom: 2px solid $pos-color-tabs;
+                padding: 0 25px;
+
+                .client-tabs-tab {
+                    color: #ffffff;
+                    font-weight: bold;
+                    position: relative;
+
+                    &::before, &::after {
+                        content: "";
+                        background-color: $pos-color-light;
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        bottom: 0;
+                        z-index: 1;
+                    }
+
+                    &::before {
+                        left: -10px;
+                        border-radius: 0 0 50% 0;
+                    }
+                    &::after {
+                        right: -10px;
+                        border-radius: 0 0 0 50%;
+                    }
+                    > div {
+                        background-color: $pos-color-tabs;
+                        border-radius: 5px 5px 0 0;
+                        padding: 10px 20px;
+
+                        &::before, &::after {
+                            content: "";
+                            background-color: $pos-color-tabs;
+                            position: absolute;
+                            width: 10px;
+                            height: 10px;
+                            bottom: 0;
+                        }
+
+                        &::before {
+                            left: -10px;
+                        }
+                        &::after {
+                            right: -10px;
+                        }
+                    }
+                }
+            }
+            .client-tabs-content {
+                display: grid;
+                grid-template-columns: auto auto auto;
+                justify-content: center;
+                padding: 20px;
+                background-color: #ffffff;
+                border-bottom: 2px solid $pos-color-tabs;
+                box-shadow: inset 0px 0px 5px 1px rgba($pos-color-tabs, 0.5);
+
+                .client-tabs-content-item {
+                    display: flex;
+                    position: relative;
+                    border: 2px solid $pos-color-tabs;
+                    height: 100px;
+                    width: 250px;
+                    padding: 0;
+                    font-size: 2em;
+                    margin: 10px;
+                    align-items: center;
+                    border-radius: 5px;
+                    overflow: hidden;
+                    background-color: #ffffff;
+                    box-shadow: 0px 5px 5px 1px rgb(240, 240, 240);
+    
+                    .client-tabs-content-item-selection {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 0;
+                        height: 0;
+                        border-bottom: 30px solid transparent;
+                        border-right: 30px solid #eeeeee;
+                        transition: 0.2s ease all; 
+                        -moz-transition: 0.2s ease all; 
+                        -webkit-transition: 0.2s ease all;
+                
+                        i {
+                            position: absolute;
+                            font-size: 0.4em;
+                            top: 3px;
+                            right: -27px;
+                            color: #aaaaaa;
+                            transition: 0.2s ease all; 
+                            -moz-transition: 0.2s ease all; 
+                            -webkit-transition: 0.2s ease all;
+                        }
+                    }
+
+                    .client-tabs-content-item-selected {
+                        border-right: 30px solid $pos-color-tabs !important;
+    
+                        i {
+                            color: #ffffff !important;
+                        }
+                    }
+
+                    .client-tabs-content-icon {
+                        display: flex;
+                        align-items: center;
+                        padding: 0 10px;
+                        height: 100%;
+                        color: $pos-color-tabs;
+                        background-color: #f5f5f5;
+                        border: 2px solid #dddddd;
+                        border-left: none;
+                        width: 50px;
+
+                        i {
+                            width: 100%;
+                        }
+                    }
+
+                    .client-tabs-content-name {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-self: start;
+                        justify-content: normal;
+                        color: #666666;
+                        padding: 0 5px;
+                        font-weight: bold;
+                        text-align: center;
+                        font-size: 0.5em;
+                        background-color: #ffffff;
+
+                        .client-tabs-content-title {
+                            color: $pos-color-tabs;
+                            font-size: 1.2em;
+                            margin: 5px;
+                            height: 25px;
+                            white-space: nowrap;
+                        }
+
+                        .client-tabs-content-detail {
+                            margin: 5px;
+                            font-weight: normal;
+                            font-size: 0.8em;
+                        }
+                    }
+
+                    &.client-tabs-content-add {
+                        background-color: #f5f5f5;
+                        border-style: dashed;
+                        border-color: rgba($pos-color-tabs, 0.5);
+
+                        .client-tabs-content-icon {
+                            border: none;
+                        }
+
+                        .client-tabs-content-name {
+                            width: 100%;
+                            align-self: center;
+                            justify-content: center;
+                            color: $pos-color-tabs;
+                            padding: 0 5px;
+                            font-weight: bold;
+                            text-align: center;
+                            font-size: 0.75em;
+                            border-left: none;
+                            background-color: initial;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
 @media (max-width: 428px) {
-    .bank-dialog .bank-popup{
+    .bank-dialog .bank-popup {
 
         main {
             min-height: 500px;
@@ -449,6 +834,29 @@
             }
 
             .bank-table {
+                width: 100% !important;
+            }
+        }
+    }
+
+    .client-tabs-content {
+        grid-template-columns: auto;
+    }
+
+    .address-dialog .address-popup {
+
+        main {
+            min-height: 500px;
+        }
+
+        .address-details {
+            flex-wrap: wrap;
+
+            .table-left {
+                width: 100% !important;
+            }
+
+            .table-right {
                 width: 100% !important;
             }
         }

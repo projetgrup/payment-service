@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_jetcheckout_system_api
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-23 07:53+0000\n"
+"PO-Revision-Date: 2023-01-23 07:53+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_template
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_template
+msgid "API Payment Item Email Notification Template on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_ok
+msgid "API Payment Item Email Notification on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_sms_create_template
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_sms_create_template
+msgid "API Payment Item SMS Notification Template on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_sms_create_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_sms_create_ok
+msgid "API Payment Item SMS Notification on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "API Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model,name:payment_jetcheckout_system_api.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Email Template"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model,name:payment_jetcheckout_system_api.model_payment_settings
+msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Send Email Notification"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Send SMS Notification"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_template
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_template
+msgid "API Payment Item Email Notification Template on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_ok
+msgid "Send SMS notifications to partners related to created payment items"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Send email notifications to partners related to created payment items"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Payment Items"
+msgstr ""

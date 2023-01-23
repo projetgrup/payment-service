@@ -1,0 +1,24 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_vendor_api
+#
+# fi3ei2 <fi3ei2@gmail.com>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-23 06:10+0000\n"
+"PO-Revision-Date: 2023-01-23 11:24+0300\n"
+"Last-Translator: \n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#. module: payment_vendor_api
+#: model:ir.ui.menu,name:payment_vendor_api.menu_api
+msgid "API Keys"
+msgstr "API Anahtarları"

@@ -72,12 +72,10 @@ class PosOrder(models.Model):
     transaction_count = fields.Integer(compute='_compute_transaction_count')
 
     @api.model
-    def _process_order(self, order, draft, existing_order):
-        res = super()._process_order(order, draft, existing_order)
-        pos_order = self.browse(res)
-        transaction_ids =  order['data']['transaction_ids']
-        if transaction_ids:
-            pos_order.transaction_ids = [(4, id) for id in transaction_ids]
+    def _order_fields(self, ui_order):
+        res = super()._order_fields(ui_order)
+        if ui_order['transaction_ids']:
+            res['transaction_ids'] = [(4, id) for id in ui_order['transaction_ids']]
         return res
 
     def action_view_transactions(self):

@@ -81,8 +81,8 @@ PosModel.Paymentline = PosModel.Paymentline.extend({
 const Order = PosModel.Order.prototype;
 PosModel.Order = PosModel.Order.extend({
     initialize: function() {
-        Order.initialize.apply(this, arguments);
         this.transaction_ids = [];
+        Order.initialize.apply(this, arguments);
     },
 
     init_from_JSON: function (json) {

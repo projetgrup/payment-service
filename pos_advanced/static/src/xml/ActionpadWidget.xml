@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[@class='button set-customer']" position="after">
+            <button class="button set-address" t-att-class="{'padding-icon': !env.isMobile}" t-on-click="trigger('click-address')">
+                <t t-if="!env.isMobile"><i class="fa fa-truck" role="img" aria-label="Address" title="Address"/></t>
+                <t t-if="address &amp;&amp; address.delivery &amp;&amp; address.delivery.address">
+                    <t t-esc="address.delivery.address"/>
+                </t>
+                <t t-else="">
+                    Address
+                </t>
+            </button>
+        </xpath>
+    </t>
+</templates>

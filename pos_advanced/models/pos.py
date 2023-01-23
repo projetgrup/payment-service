@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class PosBank(models.Model):
@@ -25,3 +25,33 @@ class PosConfig(models.Model):
     cash_payment_limit_amount = fields.Monetary(string='Cash Payment Amount Limit')
     bank_ids = fields.One2many('pos.bank', 'config_id', string='Banks')
     bank_ok = fields.Boolean(string='Show Bank Accounts')
+
+
+class PosOrder(models.Model):
+    _inherit = 'pos.order'
+
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, copy=False)
+
+    @api.model
+    def _order_fields(self, ui_order):
+        res = super()._order_fields(ui_order)
+        delivery = ui_order['partner_address']['delivery']
+        res['partner_shipping_id'] = delivery and delivery['id'] or False
+        return res
+
+    def _create_order_picking(self):
+        self.ensure_one()
+        if self._should_create_picking_real_time() and self.partner_shipping_id:
+            self = self.with_context(partner_shipping_id=self.partner_shipping_id)
+        return super(PosOrder, self)._create_order_picking()
+
+
+class StockPicking(models.Model):
+    _inherit='stock.picking'
+
+    def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
+        res = super(StockPicking, self)._prepare_picking_vals(partner, picking_type, location_id, location_dest_id)
+        partner_shipping_id = self.env.context.get('partner_shipping_id')
+        if partner_shipping_id:
+            res['partner_id'] = partner_shipping_id.id
+        return res

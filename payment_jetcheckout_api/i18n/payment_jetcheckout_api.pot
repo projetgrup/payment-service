@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20220324\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-09 11:09+0000\n"
-"PO-Revision-Date: 2022-08-09 11:09+0000\n"
+"POT-Creation-Date: 2023-01-23 06:12+0000\n"
+"PO-Revision-Date: 2023-01-23 06:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,12 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1\">Reference</strong>"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid "<strong class=\"text-primary font-weight-bold\">Contact</strong>"
 msgstr ""
 
@@ -40,6 +46,11 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_page
 msgid "<strong>Notification</strong>"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model:res.partner.category,name:payment_jetcheckout_api.categ_api
+msgid "API"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -75,6 +86,11 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.api_form
 msgid "API Key will be here"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_method
+msgid "API Method"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -139,6 +155,11 @@ msgid "Bank Accounts"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: model:ir.model.fields.selection,name:payment_jetcheckout_api.selection__payment_transaction__jetcheckout_api_method__bank
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.payment_bank_page
 msgid "Branch"
 msgstr ""
@@ -198,6 +219,11 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model:ir.model.fields.selection,name:payment_jetcheckout_api.selection__payment_transaction__jetcheckout_api_method__card
+msgid "Credit Card"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -345,6 +371,17 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
 #, python-format
 msgid "Transaction is going to be concluded after your confirmation"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
+#, python-format
+msgid "Transaction is successful"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
+msgid "VAT"
 msgstr ""
 
 #. module: payment_jetcheckout_api

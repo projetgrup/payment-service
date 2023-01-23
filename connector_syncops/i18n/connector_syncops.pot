@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-14 07:50+0000\n"
-"PO-Revision-Date: 2022-12-14 07:50+0000\n"
+"POT-Creation-Date: 2023-01-23 06:28+0000\n"
+"PO-Revision-Date: 2023-01-23 06:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,12 +34,6 @@ msgstr ""
 #: code:addons/connector_syncops/models/syncops.py:0
 #, python-format
 msgid "An error occured when connecting: %s"
-msgstr ""
-
-#. module: connector_syncops
-#: code:addons/connector_syncops/models/syncops.py:0
-#, python-format
-msgid "An error occured when connecting: %sresponse_message"
 msgstr ""
 
 #. module: connector_syncops
@@ -198,6 +192,12 @@ msgstr ""
 #: code:addons/connector_syncops/models/syncops.py:0
 #, python-format
 msgid "Success"
+msgstr ""
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "This token is already exist. Please ensure that it is correct."
 msgstr ""
 
 #. module: connector_syncops
