@@ -167,7 +167,7 @@ class StudentPaymentItemChild(Datamodel):
 
     name = fields.String(title="Student Name", description="Student name and surname", example="John Doe", required=True)
     vat = fields.String(title="Student VAT", description="Student citizen number", example="12345678912", required=True)
-    ref = fields.String(title="Student Reference", description="Student reference details", example="CODE12", required=True)
+    reference = fields.String(title="Student Reference", description="Student reference details", example="CODE12", required=True)
 
 
 class StudentPaymentItemBursary(Datamodel):

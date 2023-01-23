@@ -11,7 +11,7 @@ class VendorPaymentItemParent(Datamodel):
     vat = fields.String(title="Vendor VAT", description="VAT number of related vendor. The value of this field must be identical to its corresponding record in payment system. Otherwise, new vendor will be created with given parameters.", example="12345678912", required=True, allow_none=False)
     email = fields.String(title="Vendor Email", description="Email address of related vendor", example="test@example.com", required=True, allow_none=False)
     mobile = fields.String(title="Vendor Mobile", description="Mobile phone number of related vendor", example="+905001234567", required=True, allow_none=False)
-    ref = fields.String(required=False, title="Vendor Reference Number", description="Vendor Reference", example="ABC01", allow_none=False)
+    reference = fields.String(required=False, title="Vendor Reference Number", description="Vendor Reference", example="ABC01", allow_none=False)
 
 class VendorPaymentItemLine(Datamodel):
     class Meta:

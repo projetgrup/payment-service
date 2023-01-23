@@ -22,7 +22,7 @@ class SystemPaymentItemChild(Datamodel):
 
     name = fields.String(title="Child Name", description="Child name and surname", example="John Doe", required=True)
     vat = fields.String(title="Child VAT", description="Child citizen number", example="12345678912", required=True)
-    ref = fields.String(title="Child Reference", description="Child reference details", example="CODE12", required=True)
+    reference = fields.String(title="Child Reference", description="Child reference details", example="CODE12", required=True)
 
 
 class SystemPaymentItemAmountDiscount(Datamodel):
