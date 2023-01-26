@@ -48,7 +48,7 @@
             </t>
         </xpath>
         <xpath expr="//i" position="before">
-            <span class="jetcheckout-line-countdown"><t t-esc="props.line.duration"/> seconds left</span>
+            <span t-if="props.line.payment_method.use_payment_terminal === 'jetcheckout_link'" class="jetcheckout-line-countdown"><t t-esc="props.line.duration"/> seconds left</span>
         </xpath>
     </t>
 </templates>

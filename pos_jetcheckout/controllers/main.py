@@ -3,6 +3,7 @@
 # Part of Projetgrup BulutKOBI. See LICENSE file for full copyright and licensing details.
 
 import json
+import uuid
 import requests
 import base64
 import hashlib
@@ -61,6 +62,12 @@ class JetControllerPos(JetController):
         finally:
             if not force:
                 raise NotFound()
+
+    def _pos_physical_cancel(self, tx):
+        if not tx:
+            return
+
+        tx._jetcheckout_cancel()
 
     @route(['/pos/card/success', '/pos/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def pos_card_preresult(self, **kwargs):
@@ -142,7 +149,7 @@ class JetControllerPos(JetController):
 
         try:
             url = method.jetcheckout_link_url
-            base_url = method._set_link_url(request.httprequest.host_url)
+            base_url = method._set_url(request.httprequest.host_url)
 
             apikey = method.jetcheckout_link_apikey
             secretkey = method.jetcheckout_link_secretkey
@@ -178,7 +185,7 @@ class JetControllerPos(JetController):
             if response.status_code == 200:
                 result = response.json()
                 if result['status'] == 0:
-                    tx.update({
+                    tx.write({
                         'state': 'pending', 
                         'last_state_change': fields.Datetime.now(),
                         'callback_hash': result['hash']
@@ -196,7 +203,7 @@ class JetControllerPos(JetController):
                     }
                 else:
                     message = _('%s - (Error Code: %s)') % (result['message'], result['status'])
-                    tx.update({
+                    tx.write({
                         'state': 'error',
                         'state_message': message,
                         'last_state_change': fields.Datetime.now(),
@@ -204,7 +211,7 @@ class JetControllerPos(JetController):
                     return {'error': message}
             else:
                 message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
-                tx.update({
+                tx.write({
                     'state': 'error',
                     'state_message': message,
                     'last_state_change': fields.Datetime.now(),
@@ -212,7 +219,7 @@ class JetControllerPos(JetController):
                 return {'error': message}
         except Exception as e:
             message = _('%s - (Error Code: -2)') % e
-            tx.update({
+            tx.write({
                 'state': 'error',
                 'state_message': message,
                 'last_state_change': fields.Datetime.now(),
@@ -359,6 +366,140 @@ class JetControllerPos(JetController):
         return redirect('/payment/card/result')
 
 
-    @route(['/pos/physical/result'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
+
+    @route(['/pos/physical/prepare'], type='json', auth='user')
+    def pos_physical_prepare(self, **kwargs):
+        if not kwargs['amount'] > 0:
+            return {'error': _('Amount must be greater than zero')}
+
+        method = request.env['pos.payment.method'].sudo().browse(kwargs.get('method', 0))
+        if not method:
+            return {'error': _('Method not found')}
+
+        partner = request.env['res.partner'].sudo().browse(kwargs.get('partner', 0))
+        if not partner:
+            return {'error': _('Partner not found')}
+
+        acquirer = request.env['payment.acquirer'].sudo().browse(kwargs.get('acquirer', 0))
+        if not acquirer:
+            return {'error': _('Acquirer not found')}
+
+        config = request.env['pos.config'].sudo().browse(kwargs.get('config', 0))
+        if not config:
+            return {'error': _('Config not found')}
+
+        sequence = 'payment.jetcheckout.transaction'
+        name = request.env['ir.sequence'].sudo().next_by_code(sequence)
+        if not name:
+            return {'error': _('You have to define a sequence for %s') % (sequence,)}
+
+        company = request.env.company
+        token = str(uuid.uuid4())
+        order = kwargs.get('order', {})
+        tx = request.env['payment.transaction'].sudo().create({
+            'reference': name,
+            'acquirer_id': acquirer.id,
+            'amount': kwargs['amount'],
+            'partner_id': partner.id,
+            'company_id': company.id,
+            'currency_id': company.currency_id.id,
+            'pos_method_id': method.id,
+            'pos_order_name': order.get('name', ''),
+            'state': 'pending', 
+            'state': 'draft', 
+            'jetcheckout_order_id': token
+        })
+
+        try:
+            #url = acquirer.jetcheckout_gateway_api
+            url = 'https://testapi.jetcheckout.com'
+            #apikey = acquirer.jetcheckout_api_key
+            apikey = '66798159-b67a-4276-b1ff-d4574584995e'
+            base_url = method._set_url(request.httprequest.host_url)
+
+            response = requests.post('%s/api/v1/physical/payment' % url, json={
+                'application_key': apikey,
+                'order_id': token,
+                'amount': int(kwargs['amount'] * 100),
+                'currency': company.currency_id.name,
+                'store_code': config.jetcheckout_branch_code,
+                'callback_api_url': '%s/pos/physical/result' % base_url,
+                'mode': acquirer._get_jetcheckout_env(),
+            })
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == '00202':
+                    tx.write({
+                        'state': 'pending', 
+                        'last_state_change': fields.Datetime.now(),
+                        'jetcheckout_transaction_id': result['transaction_id']
+                    })
+                    return {'id': tx.id}
+                else:
+                    message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'error': message}
+            else:
+                message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                return {'error': message}
+        except Exception as e:
+            message = _('%s - (Error Code: -2)') % e
+            tx.write({
+                'state': 'error',
+                'state_message': message,
+                'last_state_change': fields.Datetime.now(),
+            })
+            return {'error': message}
+
+    @route(['/pos/physical/cancel'], type='json', auth='user')
+    def pos_physical_cancel(self, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
+        self._pos_physical_cancel(tx)
+        return {'status': 0}
+
+    @route(['/pos/physical/query'], type='json', auth='user')
+    def pos_physical_query(self, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
+        if tx:
+            if tx.state == 'done':
+                return {'status': 0, 'id': tx.id}
+            elif tx.state != 'pending':
+                return {'status': -1, 'message': tx.state_message}
+            return {'status': 1}
+        return {'status': -1, 'message': _('Transaction not found')}
+
+    @route(['/pos/physical/result'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False)
     def pos_physical_result(self, **kwargs):
-        _logger.error(kwargs)
+        try:
+            result = json.loads(request.httprequest.data)
+            order_id = result['order_id']
+        except Exception as e:
+            _logger.error('An error occured while processing PoS terminal response\n%s' % e)
+            return
+
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', order_id)], limit=1)
+        if not tx:
+            _logger.error('An error occured while processing PoS terminal response\nTransaction not found with order_id %s' % order_id)
+            return
+
+        if 'Document' in result:
+            tx.write({
+                'state': 'done',
+                'last_state_change': fields.Datetime.now(),
+                'state_message': _('Transaction is successful')
+            })
+        else:
+            tx.write({
+                'state': 'error',
+                'last_state_change': fields.Datetime.now(),
+                'state_message': _('Transaction is failed')
+            })

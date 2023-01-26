@@ -79,6 +79,13 @@ class PaymentTransaction(models.Model):
                 },
                 'amount': {
                     'total': item.amount,
+                    'discount': {
+                        'prepayment': item.prepayment_amount,
+                    },
+                    'installment': {
+                        'count': item.installment_count or 1,
+                        'amount': item.paid_amount / (item.installment_count or 1),
+                    },
                     'paid': item.paid_amount,
                 }
             } for item in self.jetcheckout_item_ids],

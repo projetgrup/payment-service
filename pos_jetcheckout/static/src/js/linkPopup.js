@@ -25,8 +25,8 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         if (!this.line.transaction) {
             try {
                 const transaction = await this.env.session.rpc('/pos/link/prepare', {
-                    partner: this.props.partner,
                     acquirer: this.env.pos.jetcheckout.acquirer.id,
+                    partner: this.props.partner,
                     method: this.line.payment_method.id,
                     amount: this.line.amount,
                     duration: this.props.duration || 0,
@@ -42,8 +42,6 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
             } catch (error) {
                 console.error(error);
                 this.line.popup = undefined;
-                this.line.set_payment_status('retry');
-                this.close();
                 Gui.showPopup('ErrorPopup', {
                     title: _t('Network Error'),
                     body: _t('Payment link could not be created. Please check your connection or contact with your system administrator.'),
@@ -60,7 +58,7 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
     showPopup(name, props) {
         if (name === 'ErrorPopup') {
             this.line.remove_transaction();
-            this.line.set_payment_status('retry');
+            this.cancel();
         }
         return super.showPopup(...arguments);
     }
@@ -73,10 +71,6 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
     showNotificationDanger(message) {
         const duration = 2002;
         this.trigger('show-notification', { message, duration });
-    }
-
-    close() {
-        this.trigger('close-popup');
     }
 
     cancel() {
