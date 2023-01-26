@@ -365,8 +365,6 @@ class JetControllerPos(JetController):
         request.session['__tx_id'] = tx.id
         return redirect('/payment/card/result')
 
-
-
     @route(['/pos/physical/prepare'], type='json', auth='user')
     def pos_physical_prepare(self, **kwargs):
         if not kwargs['amount'] > 0:
@@ -411,10 +409,8 @@ class JetControllerPos(JetController):
         })
 
         try:
-            #url = acquirer.jetcheckout_gateway_api
-            url = 'https://testapi.jetcheckout.com'
-            #apikey = acquirer.jetcheckout_api_key
-            apikey = '66798159-b67a-4276-b1ff-d4574584995e'
+            url = acquirer.jetcheckout_gateway_api
+            apikey = acquirer.jetcheckout_api_key
             base_url = method._set_url(request.httprequest.host_url)
 
             response = requests.post('%s/api/v1/physical/payment' % url, json={
