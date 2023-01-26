@@ -63,7 +63,7 @@ class AddressPopup extends AbstractAwaitablePopup {
             });
             await this.env.pos.load_new_partners();
 
-            const type = this.address.type;
+            const type = this.type;
             const address = this.order.get_address();
             if (address[type] && address[type].id === pid) {
                 const result = {};

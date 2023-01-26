@@ -176,9 +176,9 @@ class StudentPaymentItemBursary(Datamodel):
 
     _name = "student.payment.item.bursary"
 
-    name = fields.String(title="Bursary Name", description="Student bursary name", example="Management Bursary", required=True)
-    code = fields.String(title="Bursary Code", description="Student bursary code", example="BURSARY50", required=True)
-    discount = fields.Integer(title="Bursary Discount Percentage", description="Student bursary discount percentage", example=10, required=True)
+    name = fields.String(title="Bursary Name", description="Student bursary name", example="Management Bursary")
+    code = fields.String(title="Bursary Code", description="Student bursary code", example="BURSARY50")
+    discount = fields.Integer(title="Bursary Discount Percentage", description="Student bursary discount percentage", example=10)
 
 
 class StudentPaymentItemAmountDiscount(Datamodel):

@@ -34,6 +34,16 @@ class SystemPaymentItemAmountDiscount(Datamodel):
     prepayment = fields.Float(title="Prepayment Discount Amount", description="Prepayment discount amount of payment item", example=80.0, required=True)
 
 
+class SystemPaymentItemAmountInstallment(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "system.payment.item.amount.installment"
+
+    count = fields.Integer(title="Installment Count", description="Installment count of payment item", example=5, required=True)
+    amount = fields.Float(title="Installment Amount", description="Installment amount of payment item", example=400.0, required=True)
+
+
 class SystemPaymentItemAmount(Datamodel):
     class Meta:
         ordered = True
@@ -42,6 +52,7 @@ class SystemPaymentItemAmount(Datamodel):
 
     total = fields.Float(title="Total Amount", description="Total amount to be paid", example=2200.0, required=True)
     discount = NestedModel("system.payment.item.amount.discount", title="Discount details of payment transaction", description="Discount information", required=True)
+    installment = NestedModel("system.payment.item.amount.installment", title="Installment details of payment transaction", description="Installment information", required=True)
     paid = fields.Float(title="Payment Amount", description="Paid amount for current payment transaction", example=2000.0, required=True)
 
 

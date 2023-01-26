@@ -34,6 +34,18 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Store Code</span>
+                    <div class="text-muted">
+                        Specify a store code to be used on PoS terminal
+                    </div>
+                    <div class="content-group mt16 row">
+                        <label for="jetcheckout_branch_code" string="Code" class="col-lg-3 o_light_label"/>
+                        <field name="jetcheckout_branch_code"/>
+                    </div>
+                </div>
+            </div>
         </xpath>
     </field>
     </record>

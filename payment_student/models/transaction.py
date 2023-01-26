@@ -22,8 +22,8 @@ class PaymentTransaction(models.Model):
                     'ref': item.child_id.ref,
                 },
                 'bursary': {
-                    'name': item.bursary_id.name,
-                    'code': item.bursary_id.code,
+                    'name': item.bursary_id.name if item.bursary_id else None,
+                    'code': item.bursary_id.code if item.bursary_id else None,
                     'discount': item.bursary_id.percentage,
                 },
                 'amount': {
@@ -31,6 +31,10 @@ class PaymentTransaction(models.Model):
                     'discount': {
                         'bursary': item.bursary_amount,
                         'prepayment': item.prepayment_amount,
+                    },
+                    'installment': {
+                        'count': item.installment_count or 1,
+                        'amount': item.paid_amount / (item.installment_count or 1),
                     },
                     'paid': item.paid_amount,
                 }
