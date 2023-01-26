@@ -167,7 +167,7 @@ class StudentPaymentItemChild(Datamodel):
 
     name = fields.String(title="Student Name", description="Student name and surname", example="John Doe", required=True)
     vat = fields.String(title="Student VAT", description="Student citizen number", example="12345678912", required=True)
-    ref = fields.String(title="Student Reference", description="Student reference details", example="CODE12", required=True)
+    reference = fields.String(title="Student Reference", description="Student reference details", example="CODE12", required=True)
 
 
 class StudentPaymentItemBursary(Datamodel):
@@ -176,9 +176,9 @@ class StudentPaymentItemBursary(Datamodel):
 
     _name = "student.payment.item.bursary"
 
-    name = fields.String(title="Bursary Name", description="Student bursary name", example="Management Bursary", required=True)
-    code = fields.String(title="Bursary Code", description="Student bursary code", example="BURSARY50", required=True)
-    discount = fields.Integer(title="Bursary Discount Percentage", description="Student bursary discount percentage", example=10, required=True)
+    name = fields.String(title="Bursary Name", description="Student bursary name", example="Management Bursary")
+    code = fields.String(title="Bursary Code", description="Student bursary code", example="BURSARY50")
+    discount = fields.Integer(title="Bursary Discount Percentage", description="Student bursary discount percentage", example=10)
 
 
 class StudentPaymentItemAmountDiscount(Datamodel):

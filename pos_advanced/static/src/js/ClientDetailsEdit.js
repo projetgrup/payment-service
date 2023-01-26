@@ -22,6 +22,7 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
         async willStart() {
             const self = this;
             const address = this.order.get_address();
+            console.log(address);
             this.types.forEach(function(type) { self.state[type] = address[type] && address[type].id });
         }
 

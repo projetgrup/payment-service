@@ -23,7 +23,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
 
     showPopup(name, props) {
         if (name === 'ErrorPopup') {
-            this.line.set_payment_status('retry');
+            this.cancel();
         }
         return super.showPopup(...arguments);
     }
@@ -153,9 +153,8 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
         const value = ev.target.value.replaceAll('&#34;','"');
         const result = JSON.parse(value);
         if (result.state === 'done') {
-            this.line.set_payment_status('done');
             this.order.transaction_ids.push(result.id);
-            this.trigger('close-popup');
+            this.confirm();
         } else {
             this.showPopup('ErrorPopup', {
                 title: this.env._t('Error'),

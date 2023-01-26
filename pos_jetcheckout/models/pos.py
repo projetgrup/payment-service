@@ -8,6 +8,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     jetcheckout_link_duration = fields.Integer(string='Payment Link Lifetime', default=300)
+    jetcheckout_branch_code = fields.Char(string='Store Code')
 
     @api.constrains('jetcheckout_link_duration')
     def _check_link_duration(self):
@@ -31,7 +32,7 @@ class PosPaymentMethod(models.Model):
         ]
 
     @api.model
-    def _set_link_url(self, url):
+    def _set_url(self, url):
         try:
             url = urlparse(url)
             return '%s://%s' % (url.scheme, url.netloc)

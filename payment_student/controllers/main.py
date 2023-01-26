@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import werkzeug
 from odoo.http import request
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetSystemController
 
