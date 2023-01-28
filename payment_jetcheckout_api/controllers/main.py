@@ -71,13 +71,9 @@ class JetcheckoutApiController(JetController):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
-            ('state', '=', 'draft')
+            ('state', 'in', ('draft', 'cancel', 'expired'))
         ], limit=1)
         if not tx or tx.jetcheckout_api_method:
-            raise NotFound()
-
-        if tx.jetcheckout_date_expiration < datetime.now():
-            tx.unlink()
             raise NotFound()
 
         if tx.jetcheckout_api_method:
@@ -107,7 +103,7 @@ class JetcheckoutApiController(JetController):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
-            ('state','=','draft')
+            ('state', 'in', ('draft', 'cancel', 'expired'))
         ], limit=1)
         if not tx:
             raise NotFound()
