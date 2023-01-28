@@ -22,7 +22,7 @@
                 class="oe_stat_button"
                 icon="fa-times"
                 groups="base.group_user"
-                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error'))]}"
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}"
                 confirm="Do you confirm cancelling transaction?">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Cancel</span><span class="o_stat_text">Transaction</span>
@@ -33,7 +33,7 @@
                 class="oe_stat_button"
                 icon="fa-undo"
                 groups="base.group_user"
-                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error'))]}">
+                attrs="{'invisible': ['|','|',('is_jetcheckout','=',False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
                 </div>
@@ -48,6 +48,9 @@
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
+        </xpath>
+        <xpath expr="//field[@name='state']" position="attributes">
+            <attribute name="statusbar_visible">draft,pending,done</attribute>
         </xpath>
         <xpath expr="//field[@name='state_message']" position="attributes">
             <attribute name="colspan">2</attribute>

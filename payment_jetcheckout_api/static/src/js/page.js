@@ -27,6 +27,16 @@ publicWidget.registry.JetcheckoutPaymentApiOptions = publicWidget.Widget.extend(
     },
 });
 
+publicWidget.registry.JetcheckoutPaymentApiCreditCard = publicWidget.Widget.extend({
+    selector: '.payment-credit-card',
+
+    start: function () {
+        return this._super.apply(this, arguments).then(function () {
+            framework.hideLoading();
+        });
+    },
+});
+
 publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
