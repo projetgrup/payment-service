@@ -25,7 +25,20 @@ class PosConfig(models.Model):
     cash_payment_limit_amount = fields.Monetary(string='Cash Payment Amount Limit')
     bank_ids = fields.One2many('pos.bank', 'config_id', string='Banks')
     bank_ok = fields.Boolean(string='Show Bank Accounts')
+    partner_address_state_id = fields.Many2one('res.country.state', string='Default Partner State')
+    partner_address_country_id = fields.Many2one('res.country', string='Default Partner Country')
 
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        company = self.env.company
+        res['partner_address_state_id'] = company.state_id.id
+        res['partner_address_country_id'] = company.country_id.id
+        return res
+
+    @api.onchange('partner_address_country_id')
+    def onchange_partner_address_country_id(self):
+        self.partner_address_state_id = False
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'

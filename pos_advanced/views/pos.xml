@@ -101,6 +101,22 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//div[@id='iface_orderline_customer_notes']/.." position="inside">
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_right_pane">                    
+                    <span class="o_form_label">Default Addresses</span>
+                    <div class="text-muted">
+                        Choose default country and state values for newly created addresses
+                    </div>
+                    <div class="content-group mt16">
+                        <label for="partner_address_state_id" string="State" class="col-lg-3 o_light_label"/>
+                        <field name="partner_address_state_id" domain="[('country_id', '=', partner_address_country_id)]" options="{'no_create': True, 'no_open': True}"/>
+                        <label for="partner_address_country_id" string="Country" class="col-lg-3 o_light_label"/>
+                        <field name="partner_address_country_id" options="{'no_create': True, 'no_open': True}"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
     </field>
     </record>
 

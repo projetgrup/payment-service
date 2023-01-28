@@ -5,6 +5,21 @@ const PosModel = require('point_of_sale.models');
 
 PosModel.load_fields('res.partner', ['type', 'child_ids', 'comment']);
 
+PosModel.PosModel = PosModel.PosModel.extend({
+    get_address: function() {
+        var order = this.get_order();
+        if (order) {
+            return order.get_address();
+        }
+        return { id: null, delivery: null, invoice: null };
+    },
+
+    get_country_code: function(cid) {
+        const country = this.env.pos.countries.find(c => c.id === cid);
+        return country && country.code || '';
+    },
+});
+
 const Order = PosModel.Order.prototype;
 PosModel.Order = PosModel.Order.extend({
     initialize: function() {

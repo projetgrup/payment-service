@@ -12,6 +12,9 @@ export const PosProductScreen = (ProductScreen) =>
         }
 
         async _onClickAddress() {
+            if (!this.currentOrder.get_client()) {
+                return;
+            }
             const { confirmed, payload: client } = await this.showTempScreen('AddressScreen', {
                 client: this.currentOrder.get_client(),
                 addressType: 'delivery',

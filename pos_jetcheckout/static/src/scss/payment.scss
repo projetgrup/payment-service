@@ -621,7 +621,10 @@
     .left-content {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+
+        .paymentmethods-container {
+            flex: 1;
+        }
 
         .paymentmethods-jetcheckout {
 

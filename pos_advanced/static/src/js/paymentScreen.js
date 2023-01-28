@@ -5,6 +5,10 @@ import Registries from 'point_of_sale.Registries';
 
 export const PosPaymentScreen = (PaymentScreen) => 
     class PosPaymentScreen extends PaymentScreen {
+        constructor() {
+            super(...arguments);
+            this.address = this.env.pos.get_address();
+        }
 
         async showBankInfo() {
             const partner = this.currentOrder.get_client();
@@ -31,6 +35,19 @@ export const PosPaymentScreen = (PaymentScreen) =>
                 }
             }
             return super._isOrderValid(...arguments);
+        }
+
+        async selectAddress() {
+            if (!this.currentOrder.get_client()) {
+                return;
+            }
+            const { confirmed, payload: client } = await this.showTempScreen('AddressScreen', {
+                client: this.currentOrder.get_client(),
+                addressType: 'delivery',
+            });
+            if (confirmed) {
+                this.currentOrder.set_client(client);
+            }
         }
 
     };
