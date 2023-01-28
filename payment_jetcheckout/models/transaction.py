@@ -40,6 +40,7 @@ class PaymentTransaction(models.Model):
         return country.id
 
     partner_vat = fields.Char(string="VAT")
+    state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
     jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
@@ -334,7 +335,7 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_expire(self):
         self.filtered(lambda x: x.state in ('draft', 'pending')).write({
-            'state': 'cancel',
+            'state': 'expired',
             'state_message': _('Transaction has expired'),
             'last_state_change': fields.Datetime.now(),
         })

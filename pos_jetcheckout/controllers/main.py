@@ -59,9 +59,6 @@ class JetControllerPos(JetController):
             }, timeout=10)
         except:
             pass
-        finally:
-            if not force:
-                raise NotFound()
 
     def _pos_physical_cancel(self, tx):
         if not tx:
@@ -101,7 +98,7 @@ class JetControllerPos(JetController):
 
         hash = unquote(kwargs[''])
         tx = request.env['payment.transaction'].sudo().search([
-            ('state', '=', 'pending'),
+            ('state', 'in', ('pending', 'cancel', 'expired')),
             ('callback_hash', '=', hash)
         ], limit=1)
         if not tx:

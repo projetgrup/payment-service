@@ -47,10 +47,16 @@ var PaymentJetcheckout = PaymentInterface.extend({
 
         const client = order.get_client();
         const partner = client && client.id || 0;
-        if (!(partner > 0)) {
+        if (!partner) {
             Gui.showPopup('ErrorPopup', {
                 title: _t('Error'),
                 body: _t('Please select a customer'),
+            });
+            return Promise.resolve();
+        } else if (!client.email) {
+            Gui.showPopup('ErrorPopup', {
+                title: _t('Error'),
+                body: _t('Please specify an email address for current customer'),
             });
             return Promise.resolve();
         };

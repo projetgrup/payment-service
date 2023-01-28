@@ -41,7 +41,7 @@ PosModel.Order = PosModel.Order.extend({
     },
 
     get_address: function() {
-        return this.get('address');
+        return this.get('address') || this.partner_address;
     },
 
     set_address: function(address) {
