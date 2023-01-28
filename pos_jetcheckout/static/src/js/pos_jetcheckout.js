@@ -2,10 +2,12 @@ odoo.define('pos_jetcheckout.payment', function (require) {
 "use strict";
 
 const { Gui } = require('point_of_sale.Gui');
+var PaymentInterface = require('point_of_sale.PaymentInterface');
 var rpc = require('web.rpc');
 var core = require('web.core');
-var PaymentInterface = require('point_of_sale.PaymentInterface');
+var utils = require('web.utils');
 
+var round_di = utils.round_decimals;
 var _t = core._t;
 
 var PaymentJetcheckout = PaymentInterface.extend({
@@ -94,6 +96,25 @@ var PaymentJetcheckout = PaymentInterface.extend({
     _jetcheckout_physical_prepare: function (order, line, partner) {
         line.remove_transaction();
         line.set_payment_status('waiting');
+
+        const lines = [];
+        const precision = this.pos.dp['Product Price'];
+        order.get_orderlines().forEach(function(l) {
+            let product = l.product;
+            let tax = l.get_applicable_taxes();
+            let quantity = l.get_quantity();
+            let amount = l.get_price_with_tax();
+            let price = quantity && amount / quantity || 0;
+            lines.push({
+                name: product.display_name,
+                barcode: product.barcode,
+                quantity: round_di(quantity, precision),
+                price: round_di(price, precision),
+                amount: round_di(amount, precision),
+                tax: tax.length && tax[0].amount || 0,
+            });
+        });
+
         return this.pos.rpc({
             route: '/pos/physical/prepare',
             params: {
@@ -105,6 +126,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                 order: {
                     id: order.uid,
                     name: order.name,
+                    lines: lines
                 }
             }
         }).then(function (transaction) {
