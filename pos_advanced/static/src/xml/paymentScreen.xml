@@ -11,6 +11,17 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//div[@class='customer-button']" position="inside">
+            <div class="button address-button" t-att-class="{'padding-icon': address.delivery}" t-on-click="selectAddress">
+                <i class="fa fa-truck" role="img" aria-label="Address" title="Address"/>
+                <span>
+                    <t t-if="address.delivery">
+                        <t t-esc="env.pos.get_address().delivery.address"/>
+                    </t>
+                    <t t-else="">Address</t>
+                </span>
+            </div>
+        </xpath>
     </t>
 
     <t t-inherit="point_of_sale.Notification" t-inherit-mode="extension" owl="1">

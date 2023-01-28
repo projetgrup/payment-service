@@ -609,7 +609,10 @@ $pos-color-tabs: #a886a0;
     .left-content {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+
+        .paymentmethods-container {
+            flex: 1;
+        }
 
         .paymentmethods-bank {
 
@@ -634,7 +637,44 @@ $pos-color-tabs: #a886a0;
         }
     }
 
+    .right-content {
+        .customer-button {
+            .address-button {
+                font-size: 1em !important;
+
+                &.padding-icon {
+                    padding-left: 50px !important;
+                }
+            }
+        }
+    }
+
     .client-details {
+        .client-detail {
+            .vatcode {
+                width: 338px;
+                display: inline-flex;
+                border-radius: 3px;
+                border: solid 1px #cecbcb;
+                margin-bottom: 4px;
+                overflow: hidden;
+
+                span {
+                    background-color: #dddddd;
+                    padding: 0 5px;
+                    font-size: 0.75em;
+                    font-weight: bold;
+                }
+
+                input {
+                    width: 100% !important;
+                    border: none !important;
+                    border-radius: initial !important;
+                    margin: 0 !important;
+                }
+            }
+        }
+
         .client-details-tabs {
             margin: 25px -15px 0 -15px;
 
@@ -815,6 +855,12 @@ $pos-color-tabs: #a886a0;
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .pos .clientlist-screen .client-details .vatcode {
+        width: 100%;
     }
 }
 
