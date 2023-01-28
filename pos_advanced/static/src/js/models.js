@@ -9,10 +9,8 @@ PosModel.PosModel = PosModel.PosModel.extend({
     get_address: function() {
         var order = this.get_order();
         if (order) {
-            console.log(order.get_address());
             return order.get_address();
         }
-        console.log({ id: null, delivery: null, invoice: null });
         return { id: null, delivery: null, invoice: null };
     },
 
