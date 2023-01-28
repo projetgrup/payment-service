@@ -391,6 +391,7 @@ class JetControllerPos(JetController):
         company = request.env.company
         token = str(uuid.uuid4())
         order = kwargs.get('order', {})
+        lines = order.get('lines', {})
         tx = request.env['payment.transaction'].sudo().create({
             'reference': name,
             'acquirer_id': acquirer.id,
@@ -409,8 +410,7 @@ class JetControllerPos(JetController):
             url = acquirer.jetcheckout_gateway_api
             apikey = acquirer.jetcheckout_api_key
             base_url = method._set_url(request.httprequest.host_url)
-
-            response = requests.post('%s/api/v1/physical/payment' % url, json={
+            payload = {
                 'application_key': apikey,
                 'order_id': token,
                 'amount': int(kwargs['amount'] * 100),
@@ -418,7 +418,22 @@ class JetControllerPos(JetController):
                 'store_code': config.jetcheckout_branch_code,
                 'callback_api_url': '%s/pos/physical/result' % base_url,
                 'mode': acquirer._get_jetcheckout_env(),
-            })
+            }
+
+            if lines:
+                precision = request.env['decimal.precision'].sudo().precision_get('Product Price')
+                payload.update({
+                    'sale_items': [{
+                        'name': line['name'],
+                        'barcode': line['barcode'] or '',
+                        'qty': round(line['quantity'], precision),
+                        'price': round(line['price'], precision),
+                        'amount': round(line['amount'], precision),
+                        'tax_rate':  line['tax']
+                    } for line in lines]
+                })
+
+            response = requests.post('%s/api/v1/physical/payment' % url, json=payload)
             if response.status_code == 200:
                 result = response.json()
                 if result['response_code'] == '00202':
