@@ -39,5 +39,11 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//input[@class='detail vat']" position="replace">
+            <div class="vatcode">
+                <span t-esc="state.countryCode"/>
+                <input class="detail vat" name="vat" t-on-change="captureChange" t-att-value="getPartnerVat(props.partner.vat) || ''" />
+            </div>
+        </xpath>
     </t>
 </templates>

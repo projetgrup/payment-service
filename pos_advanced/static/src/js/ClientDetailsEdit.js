@@ -16,7 +16,22 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
             this.state = useState({
                 delivery: undefined,
                 invoice: undefined,
+                countryCode: this.env.pos.get_country_code(this.partner.country_id[0]),
             });
+        }
+
+        captureChange(event) {
+            super.captureChange(...arguments);
+            if (['country_id', 'vat'].includes(event.target.name)) {
+                const vat = (this.changes.vat || this.partner.vat || '').replace(/[A-Za-z]/g, '');
+                const countryCode = this.env.pos.get_country_code(parseInt(this.changes.country_id));
+                this.state.countryCode = countryCode;
+                this.changes.vat = countryCode + vat;
+            }
+        }
+
+        getPartnerVat(vat) {
+            return vat.replace(/[A-Za-z]/g, '');
         }
 
         async willStart() {

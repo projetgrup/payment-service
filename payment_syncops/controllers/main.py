@@ -33,8 +33,7 @@ class PaymentSyncopsController(JetController):
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_balance', params={
             'company_id': company_id,
             'vat': vat,
-            'ref': vat,
-            #'ref': ref, TODO will be soon asap
+            'ref': ref,
         }, company=company)
         if result:
             for res in result:
@@ -57,8 +56,7 @@ class PaymentSyncopsController(JetController):
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_ledger', params={
             'company_id': company.sudo().partner_id.ref,
             'vat': vat,
-            'ref': vat,
-            #'ref':ref, TODO will be soon asap
+            'ref': ref,
             'date_start': date_start.strftime('%Y-%m-%d') + ' 00:00:00',
             'date_end': date_end.strftime('%Y-%m-%d') + ' 23:59:59',
         }, company=company)

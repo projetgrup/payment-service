@@ -78,6 +78,10 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
         super.cancel(...arguments);
     }
 
+    close() {
+        this.trigger('close-popup');
+    }
+
     copyLink() {
         navigator.clipboard.writeText(this.transaction.url);
     }
