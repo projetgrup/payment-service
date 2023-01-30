@@ -589,7 +589,7 @@ $pos-color-tabs: #a886a0;
             }
 
             &.padding-icon {
-                padding-left: 50px;
+                padding: 0 10px 0 50px !important;
             }
 
             .fa-truck {
@@ -639,12 +639,25 @@ $pos-color-tabs: #a886a0;
 
     .right-content {
         .customer-button {
-            .address-button {
-                font-size: 1em !important;
+            div {
+                line-height: 2;
+                height: 75px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 &.padding-icon {
-                    padding-left: 75px !important;
+                    padding: 0 25px 0 75px !important;
                 }
+
+                span {
+                    max-width: 200px;
+                }
+            }
+            .address-button {
+                font-size: 1em !important;
             }
         }
     }
