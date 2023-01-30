@@ -18,15 +18,8 @@
     ],
     'assets': {
         'point_of_sale.assets': [
-            'payment_jetcheckout/static/src/js/imask.js',
-            'payment_jetcheckout/static/src/js/cards.js',
-            'pos_jetcheckout/static/src/js/models.js',
-            'pos_jetcheckout/static/src/js/pos_jetcheckout.js',
-            'pos_jetcheckout/static/src/js/paymentScreen.js',
-            'pos_jetcheckout/static/src/js/cardPopup.js',
-            'pos_jetcheckout/static/src/js/linkPopup.js',
-            'pos_jetcheckout/static/src/js/installmentPopup.js',
-            'pos_jetcheckout/static/src/scss/payment.scss',
+            'pos_jetcheckout/static/src/js/*',
+            'pos_jetcheckout/static/src/scss/*',
         ],
         'web.assets_qweb': [
             'pos_jetcheckout/static/src/xml/**/*',

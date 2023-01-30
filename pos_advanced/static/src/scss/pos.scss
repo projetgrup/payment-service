@@ -553,6 +553,10 @@ $pos-color-tabs: #a886a0;
         white-space: nowrap;
     }
 
+    .text-white {
+        color: #ffffff !important;
+    }
+
     .overflow-y {
         overflow-y: auto !important;
         padding-right: 5px !important;
@@ -561,6 +565,17 @@ $pos-color-tabs: #a886a0;
     .button.disabled {
         pointer-events: none;
         opacity: 0.8;
+    }
+
+    .client-balance {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 5px;
+        color: #888;
+        font-size: 0.75em;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 50% 0 0 0;
     }
 
     .notification {

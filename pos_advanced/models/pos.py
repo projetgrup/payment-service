@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 from odoo import models, fields, api
+from odoo.osv.expression import AND
 
 
 class PosBank(models.Model):
@@ -27,6 +28,7 @@ class PosConfig(models.Model):
     bank_ok = fields.Boolean(string='Show Bank Accounts')
     partner_address_state_id = fields.Many2one('res.country.state', string='Default Partner State')
     partner_address_country_id = fields.Many2one('res.country', string='Default Partner Country')
+    filter_order_all = fields.Boolean(string='Filter Orders from All Shops', default=True)
 
     @api.model
     def default_get(self, fields):
@@ -58,13 +60,17 @@ class PosOrder(models.Model):
             self = self.with_context(partner_shipping_id=self.partner_shipping_id)
         return super(PosOrder, self)._create_order_picking()
 
+    @api.model
+    def search_paid_order_ids(self, config_id, domain, limit, offset):
+        """
+        Get all orders from other shops
+        """
+        config = self.env['pos.config'].sudo().browse(config_id)
+        default_domain = [('state', 'not in', ('draft', 'cancelled'))]
+        if not config.filter_order_all:
+            default_domain.append(('config_id', '=', config.id))
 
-class StockPicking(models.Model):
-    _inherit='stock.picking'
-
-    def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
-        res = super(StockPicking, self)._prepare_picking_vals(partner, picking_type, location_id, location_dest_id)
-        partner_shipping_id = self.env.context.get('partner_shipping_id')
-        if partner_shipping_id:
-            res['partner_id'] = partner_shipping_id.id
-        return res
+        real_domain = AND([domain, default_domain])
+        ids = self.search(real_domain, limit=limit, offset=offset).ids
+        totalCount = self.search_count(real_domain)
+        return {'ids': ids, 'totalCount': totalCount}

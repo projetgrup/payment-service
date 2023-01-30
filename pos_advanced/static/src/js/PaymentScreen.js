@@ -48,7 +48,7 @@ export const PosPaymentScreen = (PaymentScreen) =>
             if (confirmed) {
                 this.currentOrder.set_client(client);
             }
-            this.render();
+            this.address = this.env.pos.get_address();
         }
 
     };

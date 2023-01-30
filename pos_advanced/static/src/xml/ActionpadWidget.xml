@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension" owl="1">
         <xpath expr="//button[@class='button set-customer']" position="after">
             <button class="button set-address padding-icon" t-on-click="trigger('click-address')">
@@ -10,6 +9,9 @@
                 </t>
                 <t t-else="">Address</t>
             </button>
+        </xpath>
+        <xpath expr="//button[@class='button set-customer']" position="inside">
+            <span t-if="client" class="client-balance"><t t-esc="env.pos.format_currency(client.debit - client.credit)"/></span>
         </xpath>
         <xpath expr="//button[@class='button set-customer']" position="attributes">
             <attribute name="class">button set-customer padding-icon</attribute>
