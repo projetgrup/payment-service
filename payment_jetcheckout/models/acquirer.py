@@ -80,10 +80,25 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     name = fields.Char(required=True, readonly=True)
     journal_id = fields.Many2one('account.journal')
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
-    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id, readonly=True)
-    company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True)
-    website_id = fields.Many2one('website', ondelete='cascade', readonly=True)
+    currency_id = fields.Many2one('res.currency', related='journal_id.currency_id', readonly=True, store=True)
+    company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True, default=lambda self: self.env.company)
+    website_id = fields.Many2one('website', ondelete='cascade', readonly=True, default=lambda self: self.env.company.website_id)
+    line_ids = fields.One2many('payment.acquirer.jetcheckout.journal.line', 'parent_id', 'Lines')
+    secondary_ok = fields.Boolean('Use Secondary Journals')
     res_id = fields.Integer(readonly=True)
+
+
+class PaymentAcquirerJetcheckoutJournalLine(models.Model):
+    _name = 'payment.acquirer.jetcheckout.journal.line'
+    _description = 'Jetcheckout Journal Item Lines'
+
+    parent_id = fields.Many2one('payment.acquirer.jetcheckout.journal')
+    name = fields.Char(required=True, readonly=True)
+    journal_id = fields.Many2one('account.journal')
+    partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)])
+    currency_id = fields.Many2one('res.currency', related='journal_id.currency_id', readonly=True, store=True)
+    company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True, default=lambda self: self.env.company)
+    website_id = fields.Many2one('website', ondelete='cascade', readonly=True, default=lambda self: self.env.company.website_id)
 
 
 class PaymentAcquirerJetcheckout(models.Model):

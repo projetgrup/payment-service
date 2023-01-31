@@ -8,10 +8,10 @@
                         <div class="client-tabs-tab"><div>Addresses</div></div>
                     </div>
                     <div class="client-tabs-content client-address">
-                        <t t-foreach="getAddresses()" t-as="address" t-key="address.id">
+                        <t t-foreach="state.childIds" t-as="address" t-key="address.id">
                             <t t-if="types.includes(address.type)">
                                 <button class="client-tabs-content-item">
-                                    <div t-if="type" class="client-tabs-content-item-selection" t-att-class="{'client-tabs-content-item-selected': state[type] === address.id}" t-on-click="selectAddress(address)"><i class="fa fa-check"/></div>
+                                    <div t-if="type" class="client-tabs-content-item-selection" t-att-class="{'client-tabs-content-item-selected': state.selectedIds[type] === address.id}" t-on-click="selectAddress(address)"><i class="fa fa-check"/></div>
                                     <div class="client-tabs-content-icon" t-on-click="saveAddress(address)">
                                         <i class="fa" t-att-class="{'fa-truck': address.type === 'delivery', 'fa-file-text-o': address.type === 'invoice'}"/>
                                     </div>
