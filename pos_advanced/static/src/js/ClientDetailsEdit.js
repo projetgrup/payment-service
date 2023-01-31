@@ -31,7 +31,7 @@ export const PosClientDetailsEdit = (ClientDetailsEdit) =>
         }
 
         getPartnerVat(vat) {
-            return vat.replace(/[A-Za-z]/g, '');
+            return (vat || '').replace(/[A-Za-z]/g, '');
         }
 
         async willStart() {

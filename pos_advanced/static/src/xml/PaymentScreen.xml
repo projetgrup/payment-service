@@ -11,12 +11,18 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//div[@class='customer-button']/div" position="inside">
+            <span t-if="env.pos.get_client()" class="client-balance text-white"><t t-esc="env.pos.format_currency(env.pos.get_client().debit - env.pos.get_client().credit)"/></span>
+        </xpath>
+        <xpath expr="//div[@class='customer-button']/div" position="attributes">
+            <attribute name="class">button padding-icon</attribute>
+        </xpath>
         <xpath expr="//div[@class='customer-button']" position="inside">
-            <div class="button address-button" t-att-class="{'padding-icon': address.delivery}" t-on-click="selectAddress">
+            <div class="button address-button padding-icon" t-att-class="{'highlight': address.id &amp;&amp; address.delivery &amp;&amp; address.id !== address.delivery.id}" t-on-click="selectAddress">
                 <i class="fa fa-truck" role="img" aria-label="Address" title="Address"/>
                 <span>
                     <t t-if="address.delivery">
-                        <t t-esc="env.pos.get_address().delivery.address"/>
+                        <t t-esc="address.delivery.address"/>
                     </t>
                     <t t-else="">Address</t>
                 </span>
