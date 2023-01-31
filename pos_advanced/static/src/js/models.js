@@ -3,7 +3,7 @@ odoo.define('pos_advanced.models', function (require) {
 
 const PosModel = require('point_of_sale.models');
 
-PosModel.load_fields('res.partner', ['type', 'child_ids', 'comment']);
+PosModel.load_fields('res.partner', ['type', 'child_ids', 'comment', 'debit', 'credit']);
 
 PosModel.PosModel = PosModel.PosModel.extend({
     get_address: function() {
