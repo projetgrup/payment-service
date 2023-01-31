@@ -5,13 +5,10 @@ var config = require('web.config');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var rpc = require('web.rpc');
-var utils = require('web.utils');
 var dialog = require('web.Dialog');
 var cards = require('payment_jetcheckout.cards');
 var framework = require('payment_jetcheckout.framework');
 
-var round_di = utils.round_decimals;
-var qweb = core.qweb;
 var _t = core._t;
 
 publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({

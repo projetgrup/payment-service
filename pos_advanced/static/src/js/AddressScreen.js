@@ -26,6 +26,7 @@ class AddressScreen extends ClientListScreen {
             });
             await this.env.pos.load_new_partners();
             const client = this.env.pos.db.get_partner_by_id(pid);
+            this._updateAddress();
             this.props.resolve({ confirmed: true, payload: client });
             this.trigger('close-temp-screen');
         } catch (error) {
@@ -38,6 +39,18 @@ class AddressScreen extends ClientListScreen {
                 throw error;
             }
         }
+    }
+
+    _updateAddress() {
+        const values = {};
+        const db = this.env.pos.db;
+        const order = this.env.pos.get_order();
+        const address = order.get_address();
+        for (const [key, value] of Object.entries(address)) {
+            if (key === 'id') continue;
+            values[key] = db.get_partner_by_id(value.id);
+        }
+        order.set_address({ ...values });
     }
 
 };
