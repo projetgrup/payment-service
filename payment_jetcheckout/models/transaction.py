@@ -43,11 +43,13 @@ class PaymentTransaction(models.Model):
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
     jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
+    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
     jetcheckout_card_type = fields.Char('Card Type', readonly=True, copy=False)
     jetcheckout_card_family = fields.Char('Card Family', readonly=True, copy=False)
-    jetcheckout_vpos_name = fields.Char('Virtual Pos', readonly=True, copy=False)
+    jetcheckout_vpos_name = fields.Char('Virtual PoS', readonly=True, copy=False)
+    jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
@@ -127,7 +129,7 @@ class PaymentTransaction(models.Model):
             'ref': self.reference,
         }
         payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
-        payment.post_with_jetcheckout(line, self.jetcheckout_commission_amount, self.jetcheckout_ip_address)
+        payment.post_with_jetcheckout(line, self.jetcheckout_customer_amount, self.jetcheckout_ip_address)
         self.payment_id = payment
 
         if self.invoice_ids:
@@ -223,6 +225,11 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_payment(self):
         self.ensure_one()
+        if not self.jetcheckout_payment_ok:
+            self.write({
+                'state_message': _('Transaction is succesful')
+            })
+            return
         try:
             self.env.cr.commit()
             self.sudo()._jetcheckout_payment_create()

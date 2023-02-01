@@ -553,7 +553,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
         if (this._checkData()) {
             framework.showLoading();
             rpc.query({
-                route: '/payment/card/payment',
+                route: '/payment/card/pay',
                 params: this._getParams(),
             }).then(function (result) {
                 if ('url' in result) {

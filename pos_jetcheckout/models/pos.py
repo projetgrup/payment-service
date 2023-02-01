@@ -3,6 +3,8 @@ from urllib.parse import urlparse
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
@@ -19,6 +21,12 @@ class PosConfig(models.Model):
 
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
+
+    @api.depends('type')
+    def _compute_hide_use_payment_terminal(self):
+        no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
+        for payment_method in self:
+            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type == 'cash'
 
     jetcheckout_link_url = fields.Char(string='Server Address', copy=False)
     jetcheckout_link_apikey = fields.Char(string='API Key', copy=False)
@@ -62,6 +70,29 @@ class PosPaymentMethod(models.Model):
         return action
 
 
+class PosPayment(models.Model):
+    _inherit = 'pos.payment'
+
+    payment_transaction_id = fields.Many2one('payment.transaction', string='Transaction', copy=False, readonly=True)
+
+    @api.model
+    def create(self, values):
+        if 'transaction_id' in values:
+            try:
+                values['payment_transaction_id'] = int(values['transaction_id'])
+            except:
+                pass
+        res = super().create(values)
+        res.payment_transaction_id.pos_payment_id = res.id
+        return res
+
+    def name_get(self):
+        res = []
+        for payment in self:
+            res.append((payment.id, '%s #%s' % (payment.session_id.name or _('Payment'), payment.id)))
+        return res
+
+
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
@@ -84,3 +115,17 @@ class PosOrder(models.Model):
         action = self.env.ref('payment.action_payment_transaction').read()[0]
         action['domain'] = [('pos_order_id', '=', self.id)]
         return action
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    def _create_account_move(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        data = super()._create_account_move(balancing_account=balancing_account, amount_to_balance=amount_to_balance, bank_payment_method_diffs=bank_payment_method_diffs)
+        #_logger.error(self.env['pos.payment'].sudo().search([('session_id', '=', self.id)]))
+        #_logger.error(data)
+        return data
+
+    def _compute_transaction_count(self):
+        for order in self:
+            order.transaction_count = len(order.transaction_ids)
