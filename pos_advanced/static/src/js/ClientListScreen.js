@@ -51,6 +51,7 @@ export const PosClientListScreen = (ClientListScreen) =>
             const address = order.get_address();
             for (const [key, value] of Object.entries(address)) {
                 if (key === 'id') continue;
+                if (!value) continue;
                 values[key] = db.get_partner_by_id(value.id);
             }
             order.set_address({ ...values });

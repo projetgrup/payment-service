@@ -3,7 +3,6 @@ odoo.define('pos_jetcheckout.payment', function (require) {
 
 const { Gui } = require('point_of_sale.Gui');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
-var rpc = require('web.rpc');
 var core = require('web.core');
 var utils = require('web.utils');
 
@@ -76,7 +75,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
             const duration = this.pos.config.jetcheckout_link_duration;
             if (!line.transaction) {
                 line.set_payment_status('waiting');
-                this._jetcheckout_link_listener(order, line, duration);
+                await this._jetcheckout_link_listener(order, line, duration);
             }
             const result = await Gui.showPopup('JetcheckoutLinkPopup', {
                 order: order,
@@ -87,16 +86,17 @@ var PaymentJetcheckout = PaymentInterface.extend({
             });
             return Promise.resolve(result.confirmed);
         } else if (line.payment_method.use_payment_terminal === 'jetcheckout_physical') {
-            return this._jetcheckout_physical_prepare(order, line, partner);
+            return await this._jetcheckout_physical_prepare(order, line, partner);
         }
 
         return Promise.resolve();
     },
 
-    _jetcheckout_physical_prepare: function (order, line, partner) {
+    _jetcheckout_physical_prepare: async function (order, line, partner) {
         line.remove_transaction();
         line.set_payment_status('waiting');
 
+        const self = this;
         const lines = [];
         const precision = this.pos.dp['Product Price'];
         order.get_orderlines().forEach(function(l) {
@@ -115,112 +115,126 @@ var PaymentJetcheckout = PaymentInterface.extend({
             });
         });
 
-        return this.pos.rpc({
-            route: '/pos/physical/prepare',
-            params: {
-                acquirer: this.pos.jetcheckout.acquirer.id,
-                config: this.pos.config.id,
-                partner: partner,
-                method: line.payment_method.id,
-                amount: line.amount,
-                order: {
-                    id: order.uid,
-                    name: order.name,
-                    lines: lines
+        try {
+            return await self.pos.rpc({
+                route: '/pos/physical/prepare',
+                params: {
+                    acquirer: this.pos.jetcheckout.acquirer.id,
+                    config: this.pos.config.id,
+                    partner: partner,
+                    method: line.payment_method.id,
+                    amount: line.amount,
+                    order: {
+                        id: order.uid,
+                        name: order.name,
+                        lines: lines
+                    }
                 }
-            }
-        }).then(function (transaction) {
-            if ('error' in transaction) {
-                console.error(transaction.error);
+            }).then(function (transaction) {
+                if ('error' in transaction) {
+                    console.error(transaction.error);
+                    Gui.showPopup('ErrorPopup', {
+                        title: _t('Network Error'),
+                        body: _t('An error occured. Please try again.'),
+                    });
+                    return Promise.resolve(false);
+                } else {
+                    line.transaction = transaction;
+                    const res = new Promise(function (resolve, reject) {
+                        line.interval = setInterval(async function() {
+                            await self.pos.rpc({
+                                route: '/pos/physical/query',
+                                params: {id: transaction.id}
+                            }, {timeout: 4500}).then(function (result) {
+                                if (result.status === 0) {
+                                    order.transaction_ids.push(result.id);
+                                    resolve(true);
+                                } else if (result.status === -1) {
+                                    Gui.showPopup('ErrorPopup', {
+                                        title: _t('Error'),
+                                        body: result.message || _t('An error occured. Please try again.'),
+                                    });
+                                    resolve(false);
+                                }
+                            }).catch(function(error) {
+                                console.error(error);
+                            });
+                        }, 5000);
+                    });
+                    res.finally(function () { line.remove_transaction(); });
+                    return res;
+                }
+            }).catch(function(error) {
+                console.error(error);
                 Gui.showPopup('ErrorPopup', {
                     title: _t('Network Error'),
                     body: _t('An error occured. Please try again.'),
                 });
                 return Promise.resolve(false);
-            } else {
-                line.transaction = transaction;
-                const res = new Promise(function (resolve, reject) {
-                    line.interval = setInterval(function() {
-                        rpc.query({
-                            route: '/pos/physical/query',
-                            params: {id: transaction.id}
-                        }, {timeout: 4500}).then(function (result) {
-                            if (result.status === 0) {
-                                order.transaction_ids.push(result.id);
-                                resolve(true);
-                            } else if (result.status === -1) {
-                                Gui.showPopup('ErrorPopup', {
-                                    title: _t('Error'),
-                                    body: result.message || _t('An error occured. Please try again.'),
-                                });
-                                resolve(false);
-                            }
-                        }).catch(function(error) {
-                            console.error(error);
-                        });
-                    }, 5000);
-                });
-                res.finally(function () { line.remove_transaction(); });
-                return res;
-            }
-        }).catch(function(error) {
-            console.error(error);
-            Gui.showPopup('ErrorPopup', {
-                title: _t('Network Error'),
-                body: _t('An error occured. Please try again.'),
             });
+        } catch (error) {
+            console.error(error);
             return Promise.resolve(false);
-        });
+        }
     },
 
-    _jetcheckout_link_listener: function (order, line, duration) {
+    _jetcheckout_link_listener: async function (order, line, duration) {
+        const self = this;
         line.remove_transaction();
         line.set_duration(duration);
-        line.interval = setInterval(function() {
+        line.interval = setInterval(async function() {
             if (line.duration === 0) {
                 const transactionId = line.transaction && line.transaction.id || false;
                 line.close_popup();
                 line.remove_transaction();
                 line.set_payment_status('timeout');
                 if (transactionId) {
-                    rpc.query({
-                        route: '/pos/link/expire',
-                        params: {id: transactionId}
-                    }).then(function () {
-                        return;
-                    }).catch(function(error) {
+                    try {
+                        await self.pos.rpc({
+                            route: '/pos/link/expire',
+                            params: {id: transactionId}
+                        }).then(function () {
+                            return;
+                        }).catch(function(error) {
+                            console.error(error);
+                            return;
+                        });
+                    } catch (error) {
                         console.error(error);
-                        return;
-                    });
+                    }
                 } else {
                     return;
                 }
             }
 
             if (line.transaction && line.duration % 5 === 0) {
-                rpc.query({
-                    route: '/pos/link/query',
-                    params: {id: line.transaction.id}
-                }, {timeout: 1000}).then(function (result) {
-                    if (result.status === 0) {
-                        line.close_popup();
-                        line.remove_transaction();
-                        line.set_payment_status('done');
-                        order.transaction_ids.push(result.id);
-                        return;
-                    } else if (result.status === -1) {
-                        line.close_popup();
-                        line.remove_transaction();
-                        line.set_payment_status('retry');
-                        Gui.showPopup('ErrorPopup', {
-                            title: _t('Error'),
-                            body: result.message || _t('An error occured. Please try again.'),
-                        });
-                        return;
-                    }
-                }).catch(function(error) {
+                try {
+                    await self.pos.rpc({
+                        route: '/pos/link/query',
+                        params: {id: line.transaction.id}
+                    }, {timeout: 4500}).then(function (result) {
+                        if (result.status === 0) {
+                            line.close_popup();
+                            line.remove_transaction();
+                            line.set_payment_status('done');
+                            order.transaction_ids.push(result.id);
+                            return;
+                        } else if (result.status === -1) {
+                            line.close_popup();
+                            line.remove_transaction();
+                            line.set_payment_status('retry');
+                            Gui.showPopup('ErrorPopup', {
+                                title: _t('Error'),
+                                body: result.message || _t('An error occured. Please try again.'),
+                            });
+                            return;
+                        }
+                    }).catch(function(error) {
+                        console.error(error);
+                    });
+                } catch (error) {
                     console.error(error);
-                });
+                }
             }
 
             line.set_duration(-1);
@@ -245,7 +259,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
             line.set_payment_status('retry');
             if (line.transaction) {
                 const type = line.payment_method.use_payment_terminal.split('_')[1];
-                return rpc.query({
+                return this.pos.rpc({
                     route: _.str.sprintf('/pos/%s/cancel', type),
                     params: {id: line.transaction.id}
                 }).then(function () {
