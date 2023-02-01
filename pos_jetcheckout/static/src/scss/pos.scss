@@ -624,6 +624,10 @@
 
         .paymentmethods-container {
             flex: 1;
+            
+            .paymentlines .electronic_payment div:last-child {
+                position: relative;
+            }
         }
 
         .paymentmethods-jetcheckout {
@@ -700,8 +704,9 @@
             }
         }
 
-        .jetcheckout-line-countdown {
-            margin-right: 5px;
+        .jetcheckout-line-info {
+            position: absolute;
+            right: calc(100%);
             font-weight: bold;
             font-size: 0.8em;
         }

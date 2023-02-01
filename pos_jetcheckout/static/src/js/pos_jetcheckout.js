@@ -140,6 +140,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                     return Promise.resolve(false);
                 } else {
                     line.transaction = transaction;
+                    line.trigger('change', line);
                     const res = new Promise(function (resolve, reject) {
                         line.interval = setInterval(async function() {
                             await self.pos.rpc({
