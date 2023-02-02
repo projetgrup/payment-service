@@ -7,12 +7,13 @@
         <xpath expr="//div[@name='button_box']" position="inside">
             <field name="is_jetcheckout" invisible="1"/>
             <field name="jetcheckout_api_ok" invisible="1"/>
+            <field name="jetcheckout_payment_ok" invisible="1"/>
             <button type="object"
                 name="jetcheckout_payment"
                 class="oe_stat_button"
                 icon="fa-money"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', ('is_jetcheckout', '=', False), ('state', '!=', 'done'), ('payment_id', '!=', False)]}">
+                attrs="{'invisible': ['|', '|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_payment_ok', '=', False), ('state', '!=', 'done'), ('payment_id', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
                 </div>
@@ -48,6 +49,9 @@
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
+        </xpath>
+        <xpath expr="//field[@name='payment_id']" position="attributes">
+            <attribute name="attrs">{'invisible': [('jetcheckout_payment_ok', '=', False)]}</attribute>
         </xpath>
         <xpath expr="//field[@name='state']" position="attributes">
             <attribute name="statusbar_visible">draft,pending,done</attribute>

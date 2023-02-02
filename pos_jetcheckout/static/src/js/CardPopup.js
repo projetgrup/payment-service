@@ -153,6 +153,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
         const value = ev.target.value.replaceAll('&#34;','"');
         const result = JSON.parse(value);
         if (result.state === 'done') {
+            this.line.transaction_id = result.id;
             this.order.transaction_ids.push(result.id);
             this.confirm();
         } else {
@@ -321,6 +322,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
             card_family: this.$jetcheckout.card.family,
             success_url: '/pos/card/success',
             fail_url: '/pos/card/fail',
+            payment_ok: false,
         }
     }
     
@@ -335,7 +337,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
                     $('div.jetcheckout-popup main').css('height', '400px');
                     self.$jetcheckout.payment.threed.classList.add('d-block');
                 });
-                this.env.session.rpc('/payment/card/payment', this._getCardParams()).then(function (result) {
+                this.env.session.rpc('/payment/card/pay', this._getCardParams()).then(function (result) {
                     if ('url' in result) {
                         self.$jetcheckout.payment.url.src = result.url;
                     } else {

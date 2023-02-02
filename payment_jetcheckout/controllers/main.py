@@ -38,7 +38,7 @@ class JetcheckoutController(http.Controller):
         return partner.campaign_id.name or ''
 
     def _jetcheckout_tx_vals(self, **kwargs):
-        return {}
+        return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
 
     @staticmethod
     def _jetcheckout_get_data(acquirer=False, company=False, transaction=False, balance=True):
@@ -283,7 +283,7 @@ class JetcheckoutController(http.Controller):
 
         return res
 
-    @http.route(['/payment/card/payment'], type='json', auth='public', csrf=False, sitemap=False, website=True)
+    @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id

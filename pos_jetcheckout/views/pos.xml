@@ -79,6 +79,9 @@
         <xpath expr="//field[@name='transaction_id']" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
+        <xpath expr="//field[@name='transaction_id']" position="after">
+            <field name="payment_transaction_id" options="{'no_create': True}"/>
+        </xpath>
     </field>
     </record>
 </odoo>

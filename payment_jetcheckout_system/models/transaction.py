@@ -112,10 +112,3 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_webhook_state_message': _('This transaction has not been notified yet.')
             })
             self.action_process_notification_webhook()
-
-    def jetcheckout_payment(self):
-        self.ensure_one()
-        if self.company_id.system:
-            self.write({'state_message': _('Transaction is succesful.')})
-        else:
-            super().jetcheckout_payment()

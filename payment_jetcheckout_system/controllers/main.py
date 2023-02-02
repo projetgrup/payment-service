@@ -34,9 +34,12 @@ class JetcheckoutSystemController(JetController):
 
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)
-        ids = kwargs.get('payment_ids',[])
+        ids = kwargs.get('payment_ids', [])
         if ids:
-            vals.update({'jetcheckout_item_ids': [(6, 0, ids)]})
+            vals.update({
+                'jetcheckout_payment_ok': False,
+                'jetcheckout_item_ids': [(6, 0, ids)],
+            })
         return vals
 
     def _jetcheckout_process(self, **kwargs):

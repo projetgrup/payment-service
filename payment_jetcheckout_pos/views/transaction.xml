@@ -6,6 +6,7 @@
     <field name="arch" type="xml">
         <xpath expr="//field[@name='payment_id']" position="after">
             <field name="pos_order_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+            <field name="pos_payment_id" attrs="{'invisible': [('pos_payment_id', '=', False)]}"/>
         </xpath>
     </field>
     </record>

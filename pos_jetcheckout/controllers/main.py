@@ -442,7 +442,7 @@ class JetControllerPos(JetController):
                         'last_state_change': fields.Datetime.now(),
                         'jetcheckout_transaction_id': result['transaction_id']
                     })
-                    return {'id': tx.id}
+                    return {'id': tx.id, 'name': result['pos_order_number']}
                 else:
                     message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
                     tx.write({
@@ -499,11 +499,15 @@ class JetControllerPos(JetController):
             _logger.error('An error occured while processing PoS terminal response\nTransaction not found with order_id %s' % order_id)
             return
 
-        if 'Document' in result:
+        if result.get('is_success'):
             tx.write({
                 'state': 'done',
                 'last_state_change': fields.Datetime.now(),
-                'state_message': _('Transaction is successful')
+                'state_message': _('Transaction is successful'),
+                'jetcheckout_vpos_name': result.get('virtual_pos_name'),
+                'jetcheckout_vpos_ref': result.get('bank_code'),
+                'jetcheckout_installment_count': result.get('installment_count'),
+                'jetcheckout_installment_amount': result.get('SalesTotal', tx.amount) / result.get('installment_count', 1),
             })
         else:
             tx.write({
