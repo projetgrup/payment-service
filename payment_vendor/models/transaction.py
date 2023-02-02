@@ -21,12 +21,15 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         try:
             with self.env.cr.savepoint():
+                company = self.env.company
+                if not company.system:
+                    return
+
                 template = self.env.ref('payment_vendor.mail_transaction_successful')
                 partner = self.partner_id
                 commercial_partner = partner.commercial_partner_id
                 followers = self.env['mail.followers'].search([('res_model', '=', 'res.partner'), ('res_id', '=', commercial_partner.id)])
                 partners = followers.mapped('partner_id') | partner
-                company = self.env.company
                 mail_server = company.mail_server_id
 
                 context = self.env.context.copy()

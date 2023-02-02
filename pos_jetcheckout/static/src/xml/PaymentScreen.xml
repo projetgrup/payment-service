@@ -37,6 +37,19 @@
         <xpath expr="//div[@class='paymentline electronic_payment']" position="attributes">
             <attribute name="t-on-click">trigger('select-electronic-payment-line', { cid: props.line.cid })</attribute>
         </xpath>
+        <xpath expr="//div[@class='paymentline electronic_payment']/t[1]" position="replace">
+            <t t-if="props.line.payment_status == 'pending'">
+                <div>
+                    Payment pending
+                </div>
+                <div class="button add_payment_transaction" title="Add Payment Transaction" t-on-click="trigger('add-payment-transaction', props.line)">
+                    Add
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                    Send
+                </div>
+            </t>
+        </xpath>
         <xpath expr="//div[@class='paymentline electronic_payment']" position="inside">
             <t t-elif="props.line.payment_status == 'timeout'">
                 <div>

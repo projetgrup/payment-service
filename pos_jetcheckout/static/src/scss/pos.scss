@@ -704,6 +704,12 @@
             }
         }
 
+        .add_payment_transaction {
+            flex-grow: 1;
+            background-color: #ccc;
+            text-align: center;
+        }
+
         .jetcheckout-line-info {
             position: absolute;
             right: calc(100%);

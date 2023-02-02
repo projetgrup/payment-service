@@ -208,6 +208,7 @@ class PaymentTransaction(models.Model):
             self.write({
                 'state': 'done',
                 'last_state_change': fields.Datetime.now(),
+                'state_message': _('Transaction is successful'),
             })
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()
@@ -228,10 +229,8 @@ class PaymentTransaction(models.Model):
     def jetcheckout_payment(self):
         self.ensure_one()
         if not self.jetcheckout_payment_ok:
-            self.write({
-                'state_message': _('Transaction is succesful')
-            })
             return
+
         try:
             self.env.cr.commit()
             payment = self.sudo()._jetcheckout_payment()
