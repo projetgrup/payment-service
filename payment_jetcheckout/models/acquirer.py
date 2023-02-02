@@ -83,7 +83,7 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     currency_id = fields.Many2one('res.currency', related='journal_id.currency_id', readonly=True, store=True)
     company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True, default=lambda self: self.env.company)
     website_id = fields.Many2one('website', ondelete='cascade', readonly=True, default=lambda self: self.env.company.website_id)
-    line_ids = fields.One2many('payment.acquirer.jetcheckout.journal.line', 'parent_id', 'Lines')
+    line_ids = fields.One2many('payment.acquirer.jetcheckout.journal.line', 'line_id', 'Lines')
     secondary_ok = fields.Boolean('Use Secondary Journals')
     res_id = fields.Integer(readonly=True)
 
@@ -92,7 +92,7 @@ class PaymentAcquirerJetcheckoutJournalLine(models.Model):
     _name = 'payment.acquirer.jetcheckout.journal.line'
     _description = 'Jetcheckout Journal Item Lines'
 
-    parent_id = fields.Many2one('payment.acquirer.jetcheckout.journal')
+    line_id = fields.Many2one('payment.acquirer.jetcheckout.journal')
     name = fields.Char(required=True)
     journal_id = fields.Many2one('account.journal')
     currency_id = fields.Many2one('res.currency', related='journal_id.currency_id', readonly=True, store=True)
@@ -164,11 +164,20 @@ class PaymentAcquirerJetcheckout(models.Model):
                 raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
         return acquirer
 
-    def _get_journal_line(self, name):
-        return self.env['payment.acquirer.jetcheckout.journal'].search([
+    def _get_journal_line(self, name, ref=None):
+        line = self.env['payment.acquirer.jetcheckout.journal'].search([
             ('acquirer_id', '=', self.id),
             ('name', '=', name)
         ], limit=1)
+
+        subline = self.env['payment.acquirer.jetcheckout.journal.line']
+        if ref and line and line.secondary_ok:
+            subline = subline.search([
+                ('line_id', '=', line.id),
+                ('name', '=', ref)
+            ], limit=1)
+
+        return subline or line
 
     def _get_default_payment_method_id(self):
         self.ensure_one()

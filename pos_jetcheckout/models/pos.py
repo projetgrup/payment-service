@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urlparse
 from odoo import models, fields, api, _
+from odoo.tools import float_compare
 from odoo.exceptions import ValidationError
 
-import logging
-_logger = logging.getLogger(__name__)
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
@@ -21,12 +20,6 @@ class PosConfig(models.Model):
 
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
-
-    @api.depends('type')
-    def _compute_hide_use_payment_terminal(self):
-        no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
-        for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type == 'cash'
 
     jetcheckout_link_url = fields.Char(string='Server Address', copy=False)
     jetcheckout_link_apikey = fields.Char(string='API Key', copy=False)
@@ -120,12 +113,40 @@ class PosOrder(models.Model):
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    def _create_account_move(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-        data = super()._create_account_move(balancing_account=balancing_account, amount_to_balance=amount_to_balance, bank_payment_method_diffs=bank_payment_method_diffs)
-        #_logger.error(self.env['pos.payment'].sudo().search([('session_id', '=', self.id)]))
-        #_logger.error(data)
-        return data
+    def _create_split_account_payment(self, payment, amounts):
+        payment_method = payment.payment_method_id
+        if not payment_method.use_payment_terminal or payment_method.use_payment_terminal not in ('jetcheckout_virtual', 'jetcheckout_physical', 'jetcheckout_link'):
+            return super()._create_split_account_payment(payment, amounts)
 
-    def _compute_transaction_count(self):
-        for order in self:
-            order.transaction_count = len(order.transaction_ids)
+        transaction = payment.payment_transaction_id
+        if not transaction:
+            return self.env['account.move.line']
+
+        journal_line = transaction.acquirer_id._get_journal_line(transaction.jetcheckout_vpos_name, transaction.jetcheckout_vpos_ref)
+        journal_id = journal_line.journal_id or payment_method.journal_id
+        if not journal_id:
+            return self.env['account.move.line']
+
+        outstanding_account = payment_method.outstanding_account_id or journal_id.default_account_id
+        accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        destination_account = accounting_partner.property_account_receivable_id
+
+        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
+            outstanding_account, destination_account = destination_account, outstanding_account
+
+        account_payment = self.env['account.payment'].create({
+            'amount': abs(amounts['amount']),
+            'partner_id': payment.partner_id.id,
+            'journal_id': journal_id.id,
+            'force_outstanding_account_id': outstanding_account.id,
+            'destination_account_id': destination_account.id,
+            'ref': _('%s POS payment of %s in %s') % (payment_method.name, payment.partner_id.display_name, self.name),
+            'pos_payment_method_id': payment_method.id,
+            'pos_session_id': self.id,
+        })
+        transaction.write({
+            'payment_id': account_payment.id,
+            'jetcheckout_payment_ok': True,
+        })
+        account_payment.action_post()
+        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
