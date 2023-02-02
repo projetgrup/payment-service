@@ -140,6 +140,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                     return Promise.resolve(false);
                 } else {
                     line.transaction = transaction;
+                    line.transaction_id = transaction.id;
                     line.trigger('change', line);
                     const res = new Promise(function (resolve, reject) {
                         line.interval = setInterval(async function() {
@@ -148,7 +149,6 @@ var PaymentJetcheckout = PaymentInterface.extend({
                                 params: {id: transaction.id}
                             }, {timeout: 4500}).then(function (result) {
                                 if (result.status === 0) {
-                                    line.transaction_id = result.id;
                                     order.transaction_ids.push(result.id);
                                     resolve(true);
                                 } else if (result.status === -1) {

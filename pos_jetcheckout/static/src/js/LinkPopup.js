@@ -39,6 +39,7 @@ class JetcheckoutLinkPopup extends AbstractAwaitablePopup {
                     throw transaction.error;
                 }
                 this.line.transaction = transaction;
+                this.line.transaction_id = transaction.id;
             } catch (error) {
                 console.error(error);
                 this.line.popup = undefined;
