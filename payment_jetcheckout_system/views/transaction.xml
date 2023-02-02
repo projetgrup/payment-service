@@ -16,12 +16,6 @@
                 </div>
             </button>
         </xpath>
-        <xpath expr='//button[@name="jetcheckout_payment"]' position="attributes">
-            <attribute name="attrs">{'invisible': ['|','|','|',('is_jetcheckout','=',False),('state','!=','done'),('payment_id', '!=', False),('system', '!=', False)]}</attribute>
-        </xpath>
-        <xpath expr='//field[@name="payment_id"]' position="attributes">
-            <attribute name="attrs">{'invisible': [('system', '!=', False)]}</attribute>
-        </xpath>
         <xpath expr="//button[@name='action_void']" position="after">
             <field name="jetcheckout_webhook_ok" invisible="1"/>
             <field name="jetcheckout_webhook_state" invisible="1"/>

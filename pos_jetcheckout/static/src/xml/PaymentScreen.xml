@@ -48,7 +48,8 @@
             </t>
         </xpath>
         <xpath expr="//i" position="before">
-            <span t-if="props.line.payment_method.use_payment_terminal === 'jetcheckout_link'" class="jetcheckout-line-countdown"><t t-esc="props.line.duration"/> seconds left</span>
+            <span t-if="props.line.payment_method.use_payment_terminal === 'jetcheckout_link'" class="jetcheckout-line-info"><t t-esc="props.line.duration || 0"/> seconds left</span>
+            <span t-elif="props.line.payment_method.use_payment_terminal === 'jetcheckout_physical'" class="jetcheckout-line-info"><t t-esc="props.line.transaction &amp;&amp; props.line.transaction.name || '...'"/></span>
         </xpath>
     </t>
 </templates>
