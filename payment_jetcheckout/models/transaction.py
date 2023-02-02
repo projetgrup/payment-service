@@ -105,36 +105,38 @@ class PaymentTransaction(models.Model):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def _jetcheckout_payment_create(self):
+    def _jetcheckout_payment(self, vals={}):
         if self.payment_id:
-            return
+            return False
 
-        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
         payment_method_line = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
-        line = self.acquirer_id.sudo()._get_journal_line(name=self.jetcheckout_vpos_name)
+        line = self.env.context.get('journal_line') or self.acquirer_id.sudo()._get_journal_line(self.jetcheckout_vpos_name, self.jetcheckout_vpos_ref)
         if not line:
-            raise UserError(_('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name))
+            self.state_message = _('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            return False
 
         values = {
             'amount': abs(self.amount),
-            'payment_type': 'inbound',
-            'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,
-            'partner_type': 'customer',
             'journal_id': line.journal_id.id,
-            'company_id': self.acquirer_id.company_id.id,
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': self.reference,
+            'ref': self.reference
         }
-        payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
-        payment.post_with_jetcheckout(line, self.jetcheckout_customer_amount, self.jetcheckout_ip_address)
-        self.payment_id = payment
+        if vals:
+            values.update({**vals})
 
-        if self.invoice_ids:
-            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
-            (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
+        payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
+
+        if not self.env.context.get('post_later'):
+            payment.post_with_jetcheckout(line, self.jetcheckout_customer_amount, self.jetcheckout_ip_address)
+
+        self.write({
+            'payment_id': payment.id,
+            'jetcheckout_payment_ok': True,
+        })
+        return payment
 
     def _jetcheckout_refund_postprocess(self, amount=None):
         values = {
@@ -232,7 +234,10 @@ class PaymentTransaction(models.Model):
             return
         try:
             self.env.cr.commit()
-            self.sudo()._jetcheckout_payment_create()
+            payment = self.sudo()._jetcheckout_payment()
+            if payment and self.invoice_ids:
+                self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+                (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
             self.write({
                 'state_message': _('Transaction is succesful and payment has been validated.'),
             })

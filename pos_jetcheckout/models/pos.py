@@ -128,13 +128,13 @@ class PosSession(models.Model):
             return self.env['account.move.line']
 
         outstanding_account = payment_method.outstanding_account_id or journal_id.default_account_id
-        accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        accounting_partner = self.env['res.partner']._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
 
         if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
             outstanding_account, destination_account = destination_account, outstanding_account
 
-        account_payment = self.env['account.payment'].create({
+        account_payment = transaction.with_context(journal_line=journal_line, no_terms=True)._jetcheckout_payment({
             'amount': abs(amounts['amount']),
             'partner_id': payment.partner_id.id,
             'journal_id': journal_id.id,
@@ -144,9 +144,4 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
-        transaction.write({
-            'payment_id': account_payment.id,
-            'jetcheckout_payment_ok': True,
-        })
-        account_payment.action_post()
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
