@@ -297,13 +297,12 @@ class PaymentTransaction(models.Model):
                 self._jetcheckout_cancel_postprocess()
             else:
                 self._jetcheckout_done_postprocess()
-        else:
-            if not self.state == 'error':
-                self.write({
-                    'state': 'error',
-                    'state_message': 'Ödeme başarısız.',
-                    'last_state_change': fields.Datetime.now(),
-                })
+        elif not self.env.context.get('skip_error') and not self.state == 'error':
+            self.write({
+                'state': 'error',
+                'state_message': 'Ödeme başarısız.',
+                'last_state_change': fields.Datetime.now(),
+            })
 
     def _jetcheckout_query(self):
         self.ensure_one()

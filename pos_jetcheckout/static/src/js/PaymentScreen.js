@@ -14,11 +14,30 @@ export const JetcheckoutPaymentScreen = (PaymentScreen) =>
             this.jetcheckout = this.env.pos.jetcheckout;
         }
 
+        _queryTransaction(line) {
+            this.rpc({
+                route: '/pos/transaction/query',
+                params: {
+                    id: line.transaction_id,
+                }
+            },{
+                timeout: 5000,
+                shadow: true,
+            });
+        }
+
         async _selectElectronicPaymentLine(event) {
             const { cid } = event.detail;
             const line = this.paymentLines.find((line) => line.cid === cid);
-            if (line && line.payment_method.use_payment_terminal === 'jetcheckout_link' && line.payment_status === 'waiting') {
-                await line.payment_method.payment_terminal._jetcheckout_pay(cid);
+            const method = line.payment_method.use_payment_terminal;
+            if (line && line.payment_status === 'waiting' && line.transaction_id) {
+                if (['jetcheckout_link', 'jetcheckout_physical'].includes(method)) {
+                    this._queryTransaction(line);
+                }
+
+                if (method === 'jetcheckout_link') {
+                    await line.payment_method.payment_terminal._jetcheckout_pay(cid);
+                }
             }
         }
 
