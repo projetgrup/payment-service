@@ -501,14 +501,12 @@ class JetControllerPos(JetController):
 
         if result.get('is_success'):
             tx.write({
-                'state': 'done',
-                'last_state_change': fields.Datetime.now(),
-                'state_message': _('Transaction is successful'),
                 'jetcheckout_vpos_name': result.get('virtual_pos_name'),
                 'jetcheckout_vpos_ref': result.get('bank_code'),
                 'jetcheckout_installment_count': result.get('installment_count'),
                 'jetcheckout_installment_amount': tx.amount / result.get('installment_count', 1),
             })
+            tx._jetcheckout_done_postprocess()
         else:
             tx.write({
                 'state': 'error',
