@@ -108,6 +108,14 @@ class JetControllerPos(JetController):
         url = tx.pos_method_id.jetcheckout_link_url
         return redirect('%s/payment/card?=%s' % (url, quote(hash, safe='')))
 
+    @route(['/pos/transaction/query'], type='json', auth='user')
+    def pos_transaction_query(self, **kwargs):
+        try:
+            tx = request.env['payment.transaction'].sudo().browse(int(kwargs['id']))
+            tx.with_context(skip_error=True)._jetcheckout_query()
+        except:
+            pass
+
     @route(['/pos/link/prepare'], type='json', auth='user')
     def pos_link_prepare(self, **kwargs):
         if not kwargs['amount'] > 0:
