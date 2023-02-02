@@ -507,7 +507,7 @@ class JetControllerPos(JetController):
                 'jetcheckout_vpos_name': result.get('virtual_pos_name'),
                 'jetcheckout_vpos_ref': result.get('bank_code'),
                 'jetcheckout_installment_count': result.get('installment_count'),
-                'jetcheckout_installment_amount': result.get('SalesTotal', tx.amount) / result.get('installment_count', 1),
+                'jetcheckout_installment_amount': tx.amount / result.get('installment_count', 1),
             })
         else:
             tx.write({
