@@ -34,6 +34,12 @@
             'payment_jetcheckout/static/src/js/payment_form.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
         ],
+        'web.assets_backend': [
+            'payment_jetcheckout/static/src/js/payment_transaction.js',
+        ],
+        'web.assets_qweb': [
+            'payment_jetcheckout/static/src/xml/payment_transaction.xml',
+        ],
     },
     'application': False,
     'uninstall_hook': 'uninstall_hook',

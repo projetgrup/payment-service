@@ -119,6 +119,9 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_list"/>
     <field name="arch" type="xml">
+        <xpath expr="//tree" position="attributes">
+            <attribute name="js_class">transaction_buttons</attribute>
+        </xpath>
         <xpath expr='//field[@name="partner_name"]' position="replace">
             <field name="partner_name" invisible="1"/>
         </xpath>

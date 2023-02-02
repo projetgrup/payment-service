@@ -8,6 +8,9 @@ export const PosPaymentScreen = (PaymentScreen) =>
         constructor() {
             super(...arguments);
             this.address = this.env.pos.get_address();
+
+            const order = this.currentOrder;
+            console.log(order);
         }
 
         async showBankInfo() {
