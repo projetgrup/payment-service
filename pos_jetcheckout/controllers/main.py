@@ -27,6 +27,11 @@ _logger = logging.getLogger(__name__)
 
 class JetControllerPos(JetController):
 
+    def _jetcheckout_tx_vals(self, **kwargs):
+        vals = super()._jetcheckout_tx_vals(**kwargs)
+        vals.update({'pos_method_id': int(kwargs.get('pos_method_id'))})
+        return vals
+
     def _pos_link_cancel(self, tx):
         if not tx:
             return

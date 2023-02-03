@@ -1,4 +1,4 @@
-odoo.define('pos_advanced.SyncButton', function (require) {
+odoo.define('pos_sync.SyncButton', function (require) {
 'use strict';
 
 const PosComponent = require('point_of_sale.PosComponent');
@@ -10,9 +10,9 @@ class SyncButton extends PosComponent {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
             if (order) {
-                order.in_sync = !order.in_sync;
+                order.syncing = !order.syncing;
+                order.need_synced();
                 this.render();
-                console.log(order);
             }
         }
 
@@ -34,10 +34,10 @@ class SyncButton extends PosComponent {
     willUnmount() {
         posbus.off('order-deleted', this);
     }*/
-    get inSync() {
+    get syncing() {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
-            return order && order.in_sync;
+            return order && order.syncing;
         } else {
             return false;
         }

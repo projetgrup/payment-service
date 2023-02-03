@@ -21,6 +21,7 @@
         'wizards/application.xml',
         'wizards/pos.xml',
         'wizards/campaign.xml',
+        'wizards/transaction_import.xml',
         'report/report.xml',
         'data/data.xml',
         'security/ir.model.access.csv',

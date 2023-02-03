@@ -568,39 +568,6 @@ $pos-color-tabs: #a886a0;
         opacity: 0.8;
     }
 
-    .ticket-button {
-        [badge]:after {
-            background-color: $pos-color-green-dark !important;
-        }
-    }
-
-    .sync-button {
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
-        font-size: medium;
-        color: white;
-        cursor: pointer;
-        //margin: 0 5px 0 5px;
-        transition: all .2s;
-
-        > div:first-child {
-            margin-right: 5px;
-        }
-
-        &:hover {
-            background: rgb(104,69,95);
-        }
-
-        &.highlight {
-            background-color: $pos-color-green-dark;
-
-            &:hover {
-                background-color: darken($pos-color-green-dark, 10%);
-            }
-        }
-    }
-
     .client-balance {
         position: absolute;
         bottom: 0;

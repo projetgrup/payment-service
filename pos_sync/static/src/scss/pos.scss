@@ -1,0 +1,105 @@
+$pos-color-green-light: #6EC89B;
+$pos-color-green-dark: #43996E;
+$pos-color-turquoise: #01a09d;
+$pos-color-damson: #875A7B;
+$pos-color-light: #f0eeee;
+$pos-color-tabs: #a886a0;
+
+.pos {
+
+    .d-none {
+        display: none !important;
+    }
+
+    .d-block {
+        display: block !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .visible {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .visible-half {
+        visibility: visible !important;
+        opacity: 0.75 !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .product-name {
+        white-space: nowrap;
+    }
+
+    .text-white {
+        color: #ffffff !important;
+    }
+
+    .overflow-y {
+        overflow-y: auto !important;
+        padding-right: 5px !important;
+    }
+
+    .button.disabled {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .ticket-button {
+        [badge]:after {
+            background-color: $pos-color-green-dark !important;
+        }
+    }
+
+    .sync-button {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        font-size: medium;
+        color: white;
+        cursor: pointer;
+        //margin: 0 5px 0 5px;
+        transition: all .2s;
+
+        > div:first-child {
+            margin-right: 5px;
+        }
+
+        &:hover {
+            background: rgb(104,69,95);
+        }
+
+        &.highlight {
+            background-color: $pos-color-green-dark;
+
+            &:hover {
+                background-color: darken($pos-color-green-dark, 10%);
+            }
+        }
+    }
+
+    .notification {
+        z-index: 9999;
+        background: rgba(75, 75, 75, 0.75);
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+
+        &.success {
+            background: rgba(67, 153, 110, 0.75) !important;
+        }
+
+        &.danger {
+            background: rgba(178, 34, 34, 0.75) !important;
+        }
+    }
+}

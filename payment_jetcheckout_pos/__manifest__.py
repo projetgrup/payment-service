@@ -11,7 +11,7 @@
     'sequence': 1455,
     'category': 'Sales/Point of Sale',
     'depends': ['point_of_sale', 'payment_jetcheckout'],
-    'data': ['views/config.xml', 'views/transaction.xml'],
+    'data': ['views/config.xml', 'views/transaction.xml', 'wizards/transaction_import.xml'],
     'application': False,
     'auto_install': True,
 }

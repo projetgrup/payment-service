@@ -24,7 +24,6 @@ const Order = PosModel.Order.prototype;
 PosModel.Order = PosModel.Order.extend({
     initialize: function() {
         this.partner_address = { id: null, delivery: null, invoice: null };
-        this.in_sync = false;
         this.set({ address: this.partner_address });
         Order.initialize.apply(this, arguments);
     },
