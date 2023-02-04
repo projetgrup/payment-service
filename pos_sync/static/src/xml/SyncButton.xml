@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="SyncButton" owl="1">
-        <div t-if="syncing" class="sync-button highlight" t-on-click="onClick">
+        <div t-if="syncing || !owner" t-attf-class="sync-button highlight {{owner ? '' : 'disabled'}}" t-on-click="onClick">
             <div>
                 <i class="fa fa-spin fa-refresh" aria-hidden="true"></i>
             </div>

@@ -11,6 +11,20 @@ export const PosProductScreen = (ProductScreen) =>
             useListener('click-address', this._onClickAddress);
         }
 
+        mounted() {
+            super.mounted(...arguments);
+            this.env.pos.on('change:selectedAddress', this.render, this);
+        }
+
+        willUnmount() {
+            super.willUnmount(...arguments);
+            this.env.pos.off('change:selectedAddress', null, this);
+        }
+
+        get address() {
+            return this.env.pos.get_address();
+        }
+
         async _onClickAddress() {
             if (!this.currentOrder.get_client()) {
                 return;

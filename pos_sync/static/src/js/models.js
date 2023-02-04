@@ -1,7 +1,11 @@
 odoo.define('pos_sync.models', function (require) {
 'use strict';
 
+const core = require('web.core');
 const exports = require('point_of_sale.models');
+const { posbus } = require('point_of_sale.utils');
+
+var _t = core._t;
 
 const PosModel = exports.PosModel.prototype;
 exports.PosModel = exports.PosModel.extend({
@@ -17,15 +21,14 @@ exports.PosModel = exports.PosModel.extend({
 
     sync_orders: async function() {
         var self = this;
-        console.log(this);
         setInterval(async function () {
             try {
                 var ordersList = self.get_order_list();
-                var orderList = ordersList.filter(order => order.syncing && !order.is_synced());
+                var orderList = ordersList.filter(order => order.is_syncing() && !order.is_synced());
                 var orders = [];
                 orderList.forEach(function (order) {
                     orders.push({
-                        name: order.name,
+                        name: order.uid,
                         data: JSON.stringify(order.export_as_JSON()),
                     });
                 });
@@ -46,23 +49,42 @@ exports.PosModel = exports.PosModel.extend({
                     });
                     result.orders.forEach(function (order) {
                         var json = JSON.parse(order.data);
-                        var nowOrder = ordersList.find(o => o.name === json.name);
-                        if (nowOrder) {
-                            console.log('aynı');
-                            console.log(nowOrder);
-                            nowOrder.init_from_JSON(json)
-                            //nowOrder.set_client(newOrder.get_client());
-                            //self.get('orders').reset([newOrder]);
-                            //nowOrder.collection.reset([ordersList]);
-                            //nowOrder.trigger('change', nowOrder);
-                            nowOrder.set_synced();
+                        var currentOrder = ordersList.find(o => o.uid === order.name);
+                        if (order.data) {
+                            var user = self.users.find(u => u.id === json.user_id);
+                            if (currentOrder) {
+                                currentOrder.paymentlines.forEach(function (line) {
+                                    currentOrder.remove_paymentline(line);
+                                });
+    
+                                currentOrder.orderlines.forEach(function (line) {
+                                    currentOrder.remove_orderline(line);
+                                });
+    
+                                currentOrder.init_from_JSON(json);
+                                currentOrder.employee = {name: user.name, user_id: [user.id, user.name], role: user.role, id: null, barcode: null,  pin: null};
+                                currentOrder.start_syncing();
+                                currentOrder.set_synced();
+                            } else {
+                                var newOrder = new exports.Order({}, { pos: self, json: json });
+                                self.get('orders').add(newOrder);
+                                newOrder.employee = {name: user.name, user_id: [user.id, user.name], role: user.role, id: null, barcode: null,  pin: null};
+                                newOrder.start_syncing();
+                                newOrder.set_synced();
+                            }
+                            posbus.trigger('order-deleted');
                         } else {
-                            console.log('değil');
-                            var newOrder = new exports.Order({}, { pos: self, json: json });
-                            self.get('orders').add(newOrder);
+                            if (currentOrder) {
+                                const selectedOrder = self.get_order();
+                                const currentOrderOn = selectedOrder && selectedOrder.uid === currentOrder.uid;
+                                currentOrder.destroy({ reason: 'abandon' });
+                                posbus.trigger('order-deleted');
+                                if (currentOrderOn) {
+                                    posbus.trigger('synced-order-completed');
+                                }
+                            }
                         }
                     });
-                    console.log(result);
                 }).catch(function(error) {
                     console.error(error);
                 });
@@ -76,14 +98,45 @@ exports.PosModel = exports.PosModel.extend({
 const Order = exports.Order.prototype;
 exports.Order = exports.Order.extend({
     initialize: function() {
-        this.syncing = false;
-        this.set({ synced: true });
+        this.set({ syncing: false,  synced: true });
         Order.initialize.apply(this, arguments);
+    },
+
+    export_as_JSON: function () {
+        var json = Order.export_as_JSON.apply(this, arguments);
+        json.is_owner = this.is_owner();
+        if (!json.is_owner && this.user_id) {
+            json.user_id = this.user_id;
+        }
+        return json;
     },
 
     save_to_db: function() {
         Order.save_to_db.apply(this, arguments);
         this.need_synced();
+    },
+
+    is_syncing: function () {
+        return this.get('syncing');
+    },
+
+    stop_syncing: async function () {
+        this.set('syncing', false, {silent: true});
+        try {
+            await this.pos.rpc({
+                route: '/pos/sync',
+                params: {
+                    operation: 'stop',
+                    name: this.uid,
+                }
+            }, {timeout: 4500});
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    start_syncing: function () {
+        this.set('syncing', true, {silent: true});
     },
 
     need_synced: function () {
@@ -96,6 +149,10 @@ exports.Order = exports.Order.extend({
 
     is_synced: function () {
         return this.get('synced');
-    }
+    },
+
+    is_owner: function () {
+        return this.employee.user_id[0] === this.pos.user.id;
+    },
 });
 });

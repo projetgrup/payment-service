@@ -14,6 +14,11 @@ class PosSync(Controller):
     def pos_sync(self, **params):
         sync = request.env['pos.sync'].sudo()
         ids = []
+
+        if params.get('operation') == 'stop':
+            sync.search([('name', '=', params['name'])], limit=1).write({'data': False})
+            return {}
+
         if params['orders']:
             for order in params['orders']:
                 synced_order = sync.search([('name', '=', order['name'])], limit=1)
@@ -31,7 +36,6 @@ class PosSync(Controller):
                     })
                 ids.append(synced_order.id)
 
-        _logger.error(params)
         now = datetime.now()
         date = params.get('date') or now
         orders = sync.search_read([('session_id', '=', params['sid']), ('cashier_id', '!=', params['id']), ('id', 'not in', ids), ('write_date', '>', date)], ['name', 'data'])

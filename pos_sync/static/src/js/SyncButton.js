@@ -10,34 +10,46 @@ class SyncButton extends PosComponent {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
             if (order) {
-                order.syncing = !order.syncing;
+                if (order.is_syncing()) {
+                    order.stop_syncing();
+                } else {
+                    order.start_syncing();
+                }
                 order.need_synced();
                 this.render();
             }
         }
-
-        /*if (this.props.inSync) {
-            posbus.trigger('ticket-button-clicked');
-        } else {
-            this.showScreen('TicketScreen');
-        }*/
     }
-    /*willPatch() {
+
+    willPatch() {
         posbus.off('order-deleted', this);
     }
+
     patched() {
         posbus.on('order-deleted', this, this.render);
     }
+
     mounted() {
         posbus.on('order-deleted', this, this.render);
     }
+
     willUnmount() {
         posbus.off('order-deleted', this);
-    }*/
+    }
+
+    get owner() {
+        if (this.env.pos) {
+            const order = this.env.pos.get_order();
+            return order && order.is_owner();
+        } else {
+            return true;
+        }
+    }
+
     get syncing() {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
-            return order && order.syncing;
+            return order && order.is_syncing();
         } else {
             return false;
         }
