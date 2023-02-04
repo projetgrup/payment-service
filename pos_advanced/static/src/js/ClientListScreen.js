@@ -9,7 +9,12 @@ export const PosClientListScreen = (ClientListScreen) =>
             let res;
             let query;
             let exist = false;
-            let client = this.env.pos.db.get_partner_by_id(this.props.client.id);
+
+            let client = this.props.client;
+            if (this.props.client) {
+                client = this.env.pos.db.get_partner_by_id(this.props.client.id);
+            }
+
             if (this.state.query && this.state.query.trim() !== '') {
                 query = true;
                 res = this.env.pos.db.search_partner(this.state.query.trim());
