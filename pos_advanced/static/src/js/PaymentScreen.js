@@ -5,11 +5,6 @@ import Registries from 'point_of_sale.Registries';
 
 export const PosPaymentScreen = (PaymentScreen) => 
     class PosPaymentScreen extends PaymentScreen {
-        constructor() {
-            super(...arguments);
-            this.address = this.env.pos.get_address();
-        }
-
         async showBankInfo() {
             const partner = this.currentOrder.get_client();
             const banks = this.env.pos.config.bank_ids;

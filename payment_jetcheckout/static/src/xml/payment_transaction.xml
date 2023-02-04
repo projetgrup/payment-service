@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="ListView.buttons" t-name="TransactionListView.buttons">
+        <t t-jquery="div > t:last-child" t-operation="before">
+            <button type="button" class="btn btn-secondary o_button_import_transaction">
+                <i class="fa fa-upload"/>
+            </button>
+        </t>
+    </t>
+</templates>

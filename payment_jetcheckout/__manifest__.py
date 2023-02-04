@@ -21,6 +21,7 @@
         'wizards/application.xml',
         'wizards/pos.xml',
         'wizards/campaign.xml',
+        'wizards/transaction_import.xml',
         'report/report.xml',
         'data/data.xml',
         'security/ir.model.access.csv',
@@ -33,6 +34,12 @@
             'payment_jetcheckout/static/src/js/payment_page.js',
             'payment_jetcheckout/static/src/js/payment_form.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
+        ],
+        'web.assets_backend': [
+            'payment_jetcheckout/static/src/js/payment_transaction.js',
+        ],
+        'web.assets_qweb': [
+            'payment_jetcheckout/static/src/xml/payment_transaction.xml',
         ],
     },
     'application': False,

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="import_form" model="ir.ui.view">
+    <field name="inherit_id" ref="payment_jetcheckout.import_form"/>
+    <field name="model">payment.transaction.import</field>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='line_ids']//tree//field[@name='currency_id']" position="after">
+            <field name="pos_method_id" force_save="1" optional="hide"/>
+        </xpath>
+        <xpath expr="//field[@name='line_ids']//form//field[@name='currency_id']" position="after">
+            <field name="pos_method_id" force_save="1"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

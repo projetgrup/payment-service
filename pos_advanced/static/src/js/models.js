@@ -1,11 +1,25 @@
 odoo.define('pos_advanced.models', function (require) {
 'use strict';
 
-const PosModel = require('point_of_sale.models');
+const exports = require('point_of_sale.models');
 
-PosModel.load_fields('res.partner', ['type', 'child_ids', 'comment', 'debit', 'credit']);
+exports.load_fields('res.partner', ['type', 'child_ids', 'comment', 'debit', 'credit']);
 
-PosModel.PosModel = PosModel.PosModel.extend({
+const PosModel = exports.PosModel.prototype;
+exports.PosModel = exports.PosModel.extend({
+    initialize: function() {
+        PosModel.initialize.apply(this, arguments);
+        var self = this;
+        this.set({'selectedAddress': this.get_address()});
+
+        function update_address() {
+            this.set('selectedAddress', self.get_address());
+        }
+
+        this.get('orders').on('add remove change', update_address, this);
+        this.on('change:selectedAddress', update_address, this);
+    },
+
     get_address: function() {
         var order = this.get_order();
         if (order) {
@@ -20,8 +34,8 @@ PosModel.PosModel = PosModel.PosModel.extend({
     },
 });
 
-const Order = PosModel.Order.prototype;
-PosModel.Order = PosModel.Order.extend({
+const Order = exports.Order.prototype;
+exports.Order = exports.Order.extend({
     initialize: function() {
         this.partner_address = { id: null, delivery: null, invoice: null };
         this.set({ address: this.partner_address });
@@ -31,17 +45,28 @@ PosModel.Order = PosModel.Order.extend({
     init_from_JSON: function (json) {
         Order.init_from_JSON.apply(this, arguments);
         this.partner_address = json.partner_address;
-        this.set({ address: this.partner_address });
+        const address = { id: null, delivery: null, invoice: null }
+        if (this.partner_address) {
+            address.id = this.partner_address.id || null;
+            address.delivery = this.partner_address.delivery ? this.pos.db.get_partner_by_id(this.partner_address.delivery) : null;
+            address.invoice = this.partner_address.invoice ? this.pos.db.get_partner_by_id(this.partner_address.invoice) : null;
+        }
+        this.set({ address: address });
     },
 
     export_as_JSON: function () {
         var res = Order.export_as_JSON.apply(this, arguments);
-        res.partner_address = this.get_address();
+        const address = this.get_address();
+        if (address) {
+            res.partner_address = { id: address.id || null, delivery: address.delivery && address.delivery.id || null, invoice: address.invoice && address.invoice.id || null };
+        } else {
+            res.partner_address = { id: null, delivery: null, invoice: null };
+        }
         return res;
     },
 
     get_address: function() {
-        return this.get('address') || this.partner_address;
+        return this.get('address') || { id: null, delivery: null, invoice: null };
     },
 
     set_address: function(address) {
