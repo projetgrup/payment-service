@@ -3,25 +3,23 @@
 # Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Point of Sale Advanced',
+    'name': 'Point of Sale Sync',
     'version': '1.0',
     'author': 'Projet',
     'license': 'LGPL-3',
-    'sequence': 1457,
+    'sequence': 1458,
     'category': 'Sales/Point of Sale',
     'depends': ['point_of_sale'],
     'data': [
-        'data/data.xml',
-        'views/pos.xml',
         'security/ir.model.access.csv',
     ],
     'assets': {
         'point_of_sale.assets': [
-            'pos_advanced/static/src/js/*',
-            'pos_advanced/static/src/scss/*',
+            'pos_sync/static/src/js/*',
+            'pos_sync/static/src/scss/*',
         ],
         'web.assets_qweb': [
-            'pos_advanced/static/src/xml/**/*',
+            'pos_sync/static/src/xml/**/*',
         ],
     },
     'application': False,

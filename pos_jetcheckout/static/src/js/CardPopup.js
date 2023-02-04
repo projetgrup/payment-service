@@ -313,6 +313,7 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
             amount: this.amount,
             amount_installment: 0,
             partner: this.partner,
+            pos_method_id: this.line.payment_method.id,
             cardnumber: this.$$jetcheckout.number.typedValue,
             card_holder_name: this.$jetcheckout.card.holder.value,
             expire_month: this.$$jetcheckout.expiry.typedValue.substring(0,2),

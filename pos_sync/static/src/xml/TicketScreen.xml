@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='order-row']//div[@name='delete']" position="after">
+            <div t-elif="!shouldHideSyncButton(order)" class="col very-narrow sync-button" name="sync">
+                <i class="fa fa-spin fa-refresh" aria-hidden="true"/><t t-if="env.isMobile"> Sync</t>
+            </div>
+        </xpath>
+    </t>
+</templates>
