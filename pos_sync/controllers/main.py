@@ -13,7 +13,7 @@ class PosSync(Controller):
 
     @route('/pos/ping', type='http', auth='none')
     def pos_ping(self):
-        partner = request.env['res.partner'].sudo().browse(47)
+        partner = request.env['res.partner'].sudo().browse(SUPERUSER_ID)
         request.env['bus.bus']._sendone(partner, 'pos.bus/all', {'status': 'success'})
 
     @route(['/pos/sync'], type='json', auth='user')
