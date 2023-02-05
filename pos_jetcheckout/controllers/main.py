@@ -29,7 +29,7 @@ class JetControllerPos(JetController):
 
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)
-        vals.update({'pos_method_id': int(kwargs.get('pos_method_id'))})
+        vals.update({'pos_method_id': kwargs.get('pos_method_id', False)})
         return vals
 
     def _pos_link_cancel(self, tx):
