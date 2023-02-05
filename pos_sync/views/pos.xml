@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_form" model="ir.ui.view">
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='iface_orderline_customer_notes']/.." position="inside">
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Synchronization</span>
+                    <div class="text-muted">
+                        Set PoS sessions in synchronization
+                    </div>
+                    <div class="content-group mt16">
+                        <label for="sync_continuous" string="Continuous" class="col-lg-3 o_light_label"/>
+                        <field name="sync_continuous" widget="boolean_toggle"/>
+                        <br/>
+                        <label for="sync_latency" string="Latency" class="col-lg-3 o_light_label"/>
+                        <field name="sync_latency" class="w-auto mr-1"/>seconds
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="pos_order_form" model="ir.ui.view">
+    <field name="model">pos.order</field>
+    <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='pos_reference']" position="after">
+            <field name="partner_shipping_id"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

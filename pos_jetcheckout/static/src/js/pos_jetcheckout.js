@@ -86,6 +86,21 @@ var PaymentJetcheckout = PaymentInterface.extend({
             });
             return Promise.resolve(result.confirmed);
         } else if (line.payment_method.use_payment_terminal === 'jetcheckout_physical') {
+            const products = [];
+            order.get_orderlines().forEach(function (orderline) {
+                if (!orderline.product.barcode) {
+                    products.push(orderline.product.display_name);
+                }
+            });
+
+            if (products.length) {
+                Gui.showPopup('ErrorPopup', {
+                    title: _t('Error'),
+                    body: _.str.sprintf(_t('You must specify barcode for following products before proceeding: %s'), products.join(', ')),
+                });
+                return Promise.resolve();
+            };
+
             return await this._jetcheckout_physical_prepare(order, line, partner);
         }
 

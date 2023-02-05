@@ -11,6 +11,12 @@ class PosSync(models.Model):
     cashier_id = fields.Integer()
     session_id = fields.Many2one('pos.session')
 
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
+
+    sync_continuous = fields.Boolean('Continuous Synchronization')
+    sync_latency = fields.Integer('Synchronization Latency', default=5)
+
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
