@@ -5,16 +5,18 @@ import Registries from 'point_of_sale.Registries';
 
 export const PosClientListScreen = (ClientListScreen) => 
     class PosClientListScreen extends ClientListScreen {
+        constructor() {
+            super(...arguments);
+            this.state = {
+                ...this.state,
+                currentClient: this.props.client,
+            }
+        }
+
         get clients() {
             let res;
             let query;
-            let exist = false;
-
-            let client = this.props.client;
-            if (this.props.client) {
-                client = this.env.pos.db.get_partner_by_id(this.props.client.id);
-            }
-
+            let client = this.state.currentClient;
             if (this.state.query && this.state.query.trim() !== '') {
                 query = true;
                 res = this.env.pos.db.search_partner(this.state.query.trim());
@@ -23,6 +25,7 @@ export const PosClientListScreen = (ClientListScreen) =>
                 res = this.env.pos.db.get_partners_sorted(1000);
             }
 
+            let exist = false;
             if (client) {
                 let clientIndex = res.findIndex(c => c.id === client.id);
                 if (clientIndex >= 0) {
@@ -43,6 +46,7 @@ export const PosClientListScreen = (ClientListScreen) =>
 
         async saveChanges() {
             await super.saveChanges(...arguments);
+            this.state.currentClient = this.props.client ? this.env.pos.db.get_partner_by_id(this.props.client.id) : null;
             this._updateAddress();
             if (this.state.isNewClient) {
                 this.clickNext();
