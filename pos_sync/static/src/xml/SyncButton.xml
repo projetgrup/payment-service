@@ -7,7 +7,7 @@
             </div>
             <div t-if="!env.isMobile">Synced</div>
         </div>
-        <div t-else="" class="sync-button" t-on-click="onClick">
+        <div t-else="" t-attf-class="sync-button {{syncOk ? '' : 'disabled'}}" t-on-click="onClick">
             <div>
                 <i class="fa fa-refresh" aria-hidden="true"></i>
             </div>

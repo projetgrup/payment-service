@@ -9,18 +9,26 @@ exports.PosModel = exports.PosModel.extend({
     initialize: function () {
         PosModel.initialize.apply(this, arguments);
         this.sync_date = null;
-        this.sync_continuous = false;
-        this.sync_latency = 5000;
+        this.sync_ok = false;
+        this.sync_concurrent = false;
+        this.sync_interval = 5000;
 
         const self = this;
         this.ready.then(function () {
-            self.sync_continuous = self.config.sync_continuous;
-            self.sync_latency = self.config.sync_latency ? self.config.sync_latency * 1000 : 5000;
-            if (self.sync_continuous) {
-                const busService = self.env.services.bus_service;
-                busService.updateOption('pos', true);
-                busService.onNotification(self, self._process_bus);
-                busService.startPolling();
+            self.sync_ok = self.config.sync_ok;
+            if (self.sync_ok) {
+                self.sync_concurrent = self.config.sync_concurrent;
+                self.sync_interval = self.config.sync_interval ? self.config.sync_interval * 1000 : 5000;
+                if (self.sync_concurrent) {
+                    const busService = self.env.services.bus_service;
+                    busService.updateOption('pos', {
+                        session: self.pos_session.id,
+                        cashier: self.pos_session.login_number,
+                    });
+                    busService.onNotification(self, self._process_bus);
+                    busService.startPolling();
+                }
+                self.sync_orders();
             }
         });
     },
@@ -87,11 +95,6 @@ exports.PosModel = exports.PosModel.extend({
         });
     },
 
-    load_orders: async function(){
-        await PosModel.load_orders.apply(this, arguments);
-        this.sync_orders();
-    },
-
     sync_orders: async function() {
         const self = this;
         setInterval(async function () {
@@ -104,7 +107,7 @@ exports.PosModel = exports.PosModel.extend({
                     });
                 });
 
-                if (!self.sync_continuous || orders.length) {
+                if (!self.sync_concurrent || orders.length) {
                     await self.rpc({
                         route: '/pos/sync',
                         params: {
@@ -113,7 +116,7 @@ exports.PosModel = exports.PosModel.extend({
                             uid: self.session.uid,
                             date: self.sync_date,
                             orders: orders,
-                            polling: self.sync_continuous,
+                            concurrent: self.sync_concurrent,
                         }
                     }, {timeout: 4500}).then(function (data) {
                         self._process_sync(data);
@@ -124,7 +127,7 @@ exports.PosModel = exports.PosModel.extend({
             } catch (error) {
                 console.error(error);
             }
-        }, self.sync_latency);
+        }, self.sync_interval);
     },
 });
 
@@ -155,16 +158,21 @@ exports.Order = exports.Order.extend({
 
     stop_syncing: async function () {
         this.set('syncing', false, {silent: true});
-        try {
-            await this.pos.rpc({
-                route: '/pos/sync',
-                params: {
-                    action: 'done',
-                    name: this.uid,
-                }
-            }, {timeout: 4500});
-        } catch (error) {
-            console.log(error);
+        if (this.pos.sync_ok) {
+            try {
+                await this.pos.rpc({
+                    route: '/pos/sync',
+                    params: {
+                        action: 'done',
+                        id: this.pos.pos_session.login_number,
+                        sid: this.pos.pos_session.id,
+                        name: this.uid,
+                        concurrent: this.pos.sync_concurrent,
+                    }
+                }, {timeout: 4500});
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
 
