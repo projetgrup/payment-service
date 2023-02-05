@@ -50,8 +50,8 @@ class PosOrder(models.Model):
     @api.model
     def _order_fields(self, ui_order):
         res = super()._order_fields(ui_order)
-        delivery = ui_order['partner_address']['delivery']
-        res['partner_shipping_id'] = delivery and delivery['id'] or False
+        delivery_id = ui_order['partner_address']['delivery']
+        res['partner_shipping_id'] = delivery_id or False
         return res
 
     def _create_order_picking(self):
