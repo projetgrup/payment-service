@@ -9,9 +9,10 @@
     'license': 'LGPL-3',
     'sequence': 1458,
     'category': 'Sales/Point of Sale',
-    'depends': ['point_of_sale'],
+    'depends': ['bus', 'point_of_sale'],
     'data': [
         'security/ir.model.access.csv',
+        'views/pos.xml',
     ],
     'assets': {
         'point_of_sale.assets': [

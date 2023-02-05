@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_form" model="ir.ui.view">
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='iface_orderline_customer_notes']/.." position="inside">
+            <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane">
+                    <field name="sync_ok"/>
+                </div>
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Synchronization</span>
+                    <div class="text-muted">
+                        Set PoS sessions in synchronization
+                    </div>
+                    <field name="sync_concurrent_readonly" invisible="1"/>
+                    <div class="content-group mt16" attrs="{'invisible': [('sync_ok', '=', False)]}">
+                        <label for="sync_interval" string="Interval" class="o_light_label"/>
+                        <field name="sync_interval" class="mr-1 text-right" style="width: 25px;"/>seconds
+                        <br attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                        <label for="sync_concurrent" string="Concurrent" class="o_light_label" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                        <field name="sync_concurrent" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                        <div class="alert alert-warning" attrs="{'invisible': [('sync_concurrent_readonly', '=', False)]}">
+                            <label for="sync_concurrent" string="Concurrent" class="font-weight-normal mb-3 mr-3 text-warning"/>
+                            <field name="sync_concurrent" attrs="{'readonly': [('sync_concurrent_readonly', '!=', False)]}"/>
+                            <br/>
+                            <span>Please set your server to handle longpolling to activate this option</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="pos_order_form" model="ir.ui.view">
+    <field name="model">pos.order</field>
+    <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='pos_reference']" position="after">
+            <field name="partner_shipping_id"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -37,6 +37,14 @@ class SyncButton extends PosComponent {
         posbus.off('order-deleted', this);
     }
 
+    get syncOk() {
+        if (this.env.pos) {
+            return this.env.pos.sync_ok;
+        } else {
+            return false;
+        }
+    }
+
     get owner() {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
