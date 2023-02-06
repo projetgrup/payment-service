@@ -43,12 +43,12 @@ class PosPaymentMethod(models.Model):
     @api.model
     def create(self, vals):
         if 'jetcheckout_link_url' in vals:
-            vals['jetcheckout_link_url'] = self._set_link_url(vals['jetcheckout_link_url'])
+            vals['jetcheckout_link_url'] = self._set_url(vals['jetcheckout_link_url'])
         return super().create(vals)
 
     def write(self, vals):
         if 'jetcheckout_link_url' in vals:
-            vals['jetcheckout_link_url'] = self._set_link_url(vals['jetcheckout_link_url'])
+            vals['jetcheckout_link_url'] = self._set_url(vals['jetcheckout_link_url'])
         return super().write(vals)
 
     def action_acquirer_jetcheckout(self):
