@@ -16,15 +16,19 @@
                     </div>
                     <field name="sync_concurrent_readonly" invisible="1"/>
                     <div class="content-group mt16" attrs="{'invisible': [('sync_ok', '=', False)]}">
-                        <label for="sync_interval" string="Interval" class="o_light_label"/>
-                        <field name="sync_interval" class="mr-1 text-right" style="width: 25px;"/>seconds
-                        <br attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
-                        <label for="sync_concurrent" string="Concurrent" class="o_light_label" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
-                        <field name="sync_concurrent" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                        <div class="d-flex">
+                            <label for="sync_interval" string="Interval" class="o_light_label mr-5"/>
+                            <field name="sync_interval" class="mr-1 text-right" style="width: 25px;"/>seconds
+                        </div>
+                        <div class="d-flex" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}">
+                            <label for="sync_concurrent" string="Concurrent" class="o_light_label mr-4" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                            <field name="sync_concurrent" attrs="{'invisible': [('sync_concurrent_readonly', '!=', False)]}"/>
+                        </div>
                         <div class="alert alert-warning" attrs="{'invisible': [('sync_concurrent_readonly', '=', False)]}">
-                            <label for="sync_concurrent" string="Concurrent" class="font-weight-normal mb-3 mr-3 text-warning"/>
-                            <field name="sync_concurrent" attrs="{'readonly': [('sync_concurrent_readonly', '!=', False)]}"/>
-                            <br/>
+                            <div class="d-flex">
+                                <label for="sync_concurrent" string="Concurrent" class="font-weight-normal mb-3 mr-4 text-warning"/>
+                                <field name="sync_concurrent" attrs="{'readonly': [('sync_concurrent_readonly', '!=', False)]}"/>
+                            </div>
                             <span>Please set your server to handle longpolling to activate this option</span>
                         </div>
                     </div>
