@@ -193,7 +193,8 @@ exports.Order = exports.Order.extend({
     },
 
     is_owner: function () {
-        return this.employee.user_id[0] === this.pos.user.id;
+        const cashier = this.pos.get_cashier();
+        return this.employee.id === cashier.id;
     },
 });
 });
