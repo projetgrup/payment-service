@@ -16,7 +16,7 @@ export const TicketScreenSync = (TicketScreen) =>
         }
 
         shouldHideSyncButton(order) {
-            return order.is_owner();
+            return order.locked || order.is_owner();
         }
     };
 
