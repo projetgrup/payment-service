@@ -238,7 +238,7 @@ class PaymentDasboard(models.Model):
         return self.env.cr.dictfetchall()
 
     def action_transactions(self):
-        action = self.env.ref('payment.action_payment_transaction').sudo().read()[0]
+        action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
         action['domain'] = self._get_domain()
         return action
 

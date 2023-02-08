@@ -5,7 +5,7 @@
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
     <field name="domain">[('system','=','student'),('parent_id','!=',False),('partner_share','!=',False)]</field>
-    <field name="context">{'active_system': 'student', 'active_child': True}</field>
+    <field name="context">{'active_system': 'student', 'default_system': 'student', 'active_child': True}</field>
     <field name="search_view_id" ref="child_search"/>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
@@ -27,7 +27,7 @@
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
     <field name="domain">[('system','=','student'),('parent_id','=',False),('partner_share','!=',False)]</field>
-    <field name="context">{'active_system': 'student', 'active_parent': True}</field>
+    <field name="context">{'active_system': 'student', 'default_system': 'student', 'active_parent': True}</field>
     <field name="search_view_id" ref="parent_search"/>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">

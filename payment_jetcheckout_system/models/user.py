@@ -9,35 +9,26 @@ class Users(models.Model):
 
     def _compute_privilege(self):
         for user in self:
-            system = user.company_id.system
-            if system:
-                if user.has_group('payment_%s.group_%s_manager' % (system, system)):
-                    user.privilege = 'admin'
-                elif user.has_group('payment_%s.group_%s_user' % (system, system)):
-                    user.privilege = 'user'
-                else:
-                    user.privilege = ''
+            system = user.company_id.system or 'jetcheckout_system'
+            if user.has_group('payment_%s.group_%s_manager' % (system, system)):
+                user.privilege = 'admin'
+            elif user.has_group('payment_%s.group_%s_user' % (system, system)):
+                user.privilege = 'user'
             else:
                 user.privilege = ''
 
     def _set_privilege(self):
         for user in self:
-            system = user.company_id.system
-            if system:
-                group_user = self.env.ref('payment_%s.group_%s_user' % (system, system))
-                group_admin = self.env.ref('payment_%s.group_%s_manager' % (system, system))
-                if user.privilege == 'admin':
-                    group_user.sudo().write({'users': [(4, user.id)]})
-                    group_admin.sudo().write({'users': [(4, user.id)]})
-                elif user.privilege == 'user':
-                    group_user.sudo().write({'users': [(4, user.id)]})
-                    group_admin.sudo().write({'users': [(3, user.id)]})
-                else:
-                    group_user.sudo().write({'users': [(3, user.id)]})
-                    group_admin.sudo().write({'users': [(3, user.id)]})
+            system = user.company_id.system or 'jetcheckout_system'
+            group_user = self.env.ref('payment_%s.group_%s_user' % (system, system))
+            group_admin = self.env.ref('payment_%s.group_%s_manager' % (system, system))
+            if user.privilege == 'admin':
+                group_user.sudo().write({'users': [(4, user.id)]})
+                group_admin.sudo().write({'users': [(4, user.id)]})
+            elif user.privilege == 'user':
+                group_user.sudo().write({'users': [(4, user.id)]})
+                group_admin.sudo().write({'users': [(3, user.id)]})
             else:
-                group_user = self.env.ref('payment_jetcheckout_system.group_system_user')
-                group_admin = self.env.ref('payment_jetcheckout_system.group_system_manager')
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
 

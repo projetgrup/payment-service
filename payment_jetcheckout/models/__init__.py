@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from . import dashboard
 from . import method
 from . import acquirer
 from . import transaction

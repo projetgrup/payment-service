@@ -16,6 +16,7 @@
     ],
     'data': [
         'data/data.xml',
+        'views/dashboard.xml',
         'views/company.xml',
         'views/acquirer.xml',
         'views/transaction.xml',
@@ -34,6 +35,7 @@
     ],
     'assets': {
         'web.assets_qweb': [
+            'payment_jetcheckout_system/static/src/xml/dashboard.xml',
             'payment_jetcheckout_system/static/src/xml/company.xml',
         ],
         'web.assets_backend': [
