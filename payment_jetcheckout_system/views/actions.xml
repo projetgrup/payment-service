@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_dashboard" model="ir.actions.act_window">
-    <field name="name">Dashboard</field>
-    <field name="res_model">payment.dashboard</field>
-    <field name="view_mode">kanban</field>
-    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
-    </record>
-
     <record id="action_website" model="ir.actions.act_window">
     <field name="name">Websites</field>
     <field name="res_model">website</field>

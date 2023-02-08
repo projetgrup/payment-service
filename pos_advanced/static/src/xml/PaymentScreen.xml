@@ -32,6 +32,12 @@
         </xpath>
     </t>
 
+    <t t-inherit="point_of_sale.PaymentMethodButton" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='payment-name']" position="before">
+            <i t-attf-class="fa {{props.paymentMethod.icon || 'fa-circle'}}"/>
+        </xpath>
+    </t>
+
     <t t-inherit="point_of_sale.Notification" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[@class='notification']" position="attributes">
             <attribute name="t-att-class">{'success': props.duration === 2001, 'danger': props.duration === 2002}</attribute>

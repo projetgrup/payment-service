@@ -19,6 +19,21 @@ class PosBank(models.Model):
     token = fields.Char(default=lambda self: str(uuid.uuid4()), readonly=True)
 
 
+class PosPaymentMethod(models.Model):
+    _inherit = 'pos.payment.method'
+
+    @api.onchange('icon')
+    def _compute_icon(self):
+        for method in self:
+            if method.icon:
+                method.icon_preview = '<i class="fa ' + method.icon + '"></i>'
+            else:
+                method.icon_preview = ''
+
+    icon = fields.Char()
+    icon_preview = fields.Html(compute='_compute_icon', sanitize=False)
+
+
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 

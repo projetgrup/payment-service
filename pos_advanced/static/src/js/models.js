@@ -4,6 +4,7 @@ odoo.define('pos_advanced.models', function (require) {
 const exports = require('point_of_sale.models');
 
 exports.load_fields('res.partner', ['type', 'child_ids', 'comment', 'debit', 'credit']);
+exports.load_fields('pos.payment.method', ['icon']);
 
 const PosModel = exports.PosModel.prototype;
 exports.PosModel = exports.PosModel.extend({

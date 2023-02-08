@@ -13,6 +13,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['account_payment','website_payment'],
     'data': [
+        'views/dashboard.xml',
         'views/acquirer.xml',
         'views/transaction.xml',
         'views/partner.xml',
@@ -36,10 +37,12 @@
             'payment_jetcheckout/static/src/scss/payment.scss',
         ],
         'web.assets_backend': [
-            'payment_jetcheckout/static/src/js/payment_transaction.js',
+            'payment_jetcheckout/static/src/js/dashboard.js',
+            'payment_jetcheckout/static/src/js/transaction.js',
         ],
         'web.assets_qweb': [
-            'payment_jetcheckout/static/src/xml/payment_transaction.xml',
+            'payment_jetcheckout/static/src/xml/dashboard.xml',
+            'payment_jetcheckout/static/src/xml/transaction.xml',
         ],
     },
     'application': False,

@@ -26,7 +26,6 @@
         'views/partner.xml',
         'views/website.xml',
         'views/settings.xml',
-        'views/dashboard.xml',
         'views/actions.xml',
         'report/company.xml',
         'wizards/send.xml',
@@ -35,7 +34,6 @@
     ],
     'assets': {
         'web.assets_qweb': [
-            'payment_jetcheckout_system/static/src/xml/dashboard.xml',
             'payment_jetcheckout_system/static/src/xml/company.xml',
         ],
         'web.assets_backend': [
