@@ -73,6 +73,13 @@
     </field>
     </record>
 
+    <record id="action_dashboard" model="ir.actions.act_window">
+    <field name="name">Dashboard</field>
+    <field name="res_model">payment.dashboard</field>
+    <field name="view_mode">kanban</field>
+    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
     <record id="action_user" model="ir.actions.act_window">
     <field name="name">Users</field>
     <field name="res_model">res.users</field>

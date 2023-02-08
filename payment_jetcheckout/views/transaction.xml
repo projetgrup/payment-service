@@ -129,23 +129,12 @@
             <field name="fees" invisible="1"/>
             <field name="jetcheckout_installment_count" invisible="1"/>
             <field name="jetcheckout_installment_description_long" string="Installment" decoration-info="jetcheckout_installment_count == 1" widget="badge"/>
+            <field name="jetcheckout_card_family" optional="hide"/>
         </xpath>
     </field>
-    </record>
-
-    <record id="action_dashboard" model="ir.actions.act_window">
-    <field name="name">Dashboard</field>
-    <field name="res_model">payment.dashboard</field>
-    <field name="view_mode">kanban</field>
-    <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
     </record>
 
     <record id="payment.action_payment_transaction" model="ir.actions.act_window">
     <field name="view_mode">tree,kanban,graph,pivot,form</field>
     </record>
-
-    <menuitem id="menu_payment" name="Payments" web_icon="payment,static/description/icon.png" sequence="24" groups="account.group_account_user"/>
-    <menuitem id="menu_dashboard" action="payment_jetcheckout.action_dashboard" parent="menu_payment" sequence="0" name="Dashboard"/>
-    <menuitem id="menu_transaction" action="payment.action_payment_transaction" parent="menu_payment" sequence="1" name="Transactions"/>
-    <menuitem id="menu_acquirer" action="payment.action_payment_acquirer" parent="menu_payment" sequence="1" name="Acquirers"/>
 </odoo>

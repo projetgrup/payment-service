@@ -11,4 +11,14 @@
         </xpath>
     </field>
     </record>
+
+    <record id="payment_transaction_list" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_list"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="fees"]' position="after">
+            <field name="pos_method_id" optional="hide"/>
+        </xpath>
+    </field>
+    </record>
 </odoo>
