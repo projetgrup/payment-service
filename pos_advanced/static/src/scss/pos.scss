@@ -628,6 +628,18 @@ $pos-color-tabs: #a886a0;
 
         .paymentmethods-container {
             flex: 1;
+
+            .paymentmethod {
+                i {
+                    color: $pos-color-green-dark;
+                    width: 48px;
+                    height: 48px;
+                    line-height: 48px;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    align-self: center;
+                }
+            }
         }
 
         .paymentmethods-bank {
