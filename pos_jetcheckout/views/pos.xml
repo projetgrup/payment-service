@@ -23,6 +23,29 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@id='payment_methods_new']" position="after">
             <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane"/>
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Physical PoS List for Single Payments</span>
+                    <div class="text-muted">
+                        List of PoS Terminal names to be used in single payments
+                    </div>
+                    <div class="content-group mt16">
+                        <field name="jetcheckout_physical_single_ids" nolabel="1" class="w-100">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="name"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 o_setting_box">
                 <div class="o_setting_right_pane">
                     <span class="o_form_label">Payment Link Lifetime</span>
                     <div class="text-muted">

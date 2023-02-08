@@ -10,6 +10,7 @@ class PosConfig(models.Model):
 
     jetcheckout_link_duration = fields.Integer(string='Payment Link Lifetime', default=300)
     jetcheckout_branch_code = fields.Char(string='Store Code')
+    jetcheckout_physical_single_ids = fields.One2many('pos.payment.method.physical.single', 'config_id', string='Physical PoS List for Single Payments')
 
     @api.constrains('jetcheckout_link_duration')
     def _check_link_duration(self):
@@ -61,6 +62,14 @@ class PosPaymentMethod(models.Model):
         else:
             action['res_id'] = acquirer.id
         return action
+
+
+class PosPaymentMethodPhysicalSingle(models.Model):
+    _name = 'pos.payment.method.physical.single'
+    _description = 'Physical PoS for Single Payments'
+
+    config_id = fields.Many2one('pos.config')
+    name = fields.Char()
 
 
 class PosPayment(models.Model):
