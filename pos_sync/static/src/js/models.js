@@ -61,14 +61,8 @@ exports.PosModel = exports.PosModel.extend({
             if (order.data) {
                 var user = self.users.find(u => u.id === json.user_id);
                 if (currentOrder) {
-                    currentOrder.paymentlines.forEach(function (line) {
-                        currentOrder.remove_paymentline(line);
-                    });
-
-                    currentOrder.orderlines.forEach(function (line) {
-                        currentOrder.remove_orderline(line);
-                    });
-
+                    currentOrder.paymentlines.remove(currentOrder.paymentlines.models);
+                    currentOrder.orderlines.remove(currentOrder.orderlines.models);
                     currentOrder.init_from_JSON(json);
                     currentOrder.employee = {name: user.name, user_id: [user.id, user.name], role: user.role, id: null, barcode: null,  pin: null};
                     currentOrder.start_syncing();
@@ -133,13 +127,20 @@ exports.PosModel = exports.PosModel.extend({
 
 const Order = exports.Order.prototype;
 exports.Order = exports.Order.extend({
-    initialize: function() {
+    initialize: function(attributes, options) {
         this.set({ syncing: false,  synced: true });
+        this.pos_uid = options.pos.pos_session.login_number;
         Order.initialize.apply(this, arguments);
+    },
+
+    init_from_JSON: function(json) {
+        Order.init_from_JSON.apply(this, arguments);
+        this.pos_uid = json.pos_uid;
     },
 
     export_as_JSON: function () {
         var json = Order.export_as_JSON.apply(this, arguments);
+        json.pos_uid = this.pos_uid;
         json.is_owner = this.is_owner();
         if (!json.is_owner && this.user_id) {
             json.user_id = this.user_id;
@@ -193,8 +194,7 @@ exports.Order = exports.Order.extend({
     },
 
     is_owner: function () {
-        const cashier = this.pos.get_cashier();
-        return this.employee.id === cashier.id;
+        return this.pos_uid === this.pos.pos_session.login_number;
     },
 });
 });
