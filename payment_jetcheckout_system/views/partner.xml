@@ -26,7 +26,7 @@
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
         <form>
-            <field name="system" invisible="1"/>
+            <field name="system" invisible="1" force_save="1"/>
             <header>
                 <button name="action_share_payment_link" type="object" string="Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
                 <button name="action_share_payment_page" type="object" string="Payment Page" class="oe_highlight" attrs="{'invisible': [('is_portal', '=', False)]}"/>
@@ -87,7 +87,7 @@
                         <field name="mobile" widget="phone"/>
                         <field name="email" widget="email"/>
                         <field name="ref"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('active_system')"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('system')"/>
                     </group>
                     <group name="communication" string="Communication Dates">
                         <field name="date_email_sent" string="Email"/>

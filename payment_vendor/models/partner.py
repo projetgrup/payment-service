@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from odoo import models
+from odoo import models, fields
 
 class Partner(models.Model):
     _inherit = 'res.partner'
+
+    system = fields.Selection(selection_add=[('vendor', 'Vendor Payment System')])
 
     def action_payable(self):
         action = super(Partner, self).action_payable()

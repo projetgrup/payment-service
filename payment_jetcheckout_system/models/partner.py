@@ -68,7 +68,7 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
-    system = fields.Selection(related='company_id.system', store=True, readonly=True)
+    system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
     transaction_done_ids = fields.One2many('payment.transaction', string='Done Transactions', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -95,6 +95,17 @@ class Partner(models.Model):
                 res['lang'] = 'tr_TR'
                 break
         return res
+
+    @api.model
+    def create(self, values):
+        if 'system' not in values and 'company_id' in values:
+            values['system'] = self.env['res.company'].sudo().browse(values['company_id']).system
+        return super().create(values)
+
+    def write(self, values):
+        if 'system' not in values and 'company_id' in values:
+            values['system'] = self.env['res.company'].sudo().browse(values['company_id']).system
+        return super().write(values)
 
     def _get_name(self):
         system = self.env.context.get('active_system') or self.env.context.get('system')
@@ -242,7 +253,7 @@ class Partner(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        system = self.env.context.get('active_system') or self.env.context.get('system')
+        system = self.env.context.get('active_system') or self.env.context.get('system') or 'jetcheckout_system'
         if system:
             child = self.env.context.get('active_child', False)
             if child:

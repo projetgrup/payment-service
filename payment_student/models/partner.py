@@ -14,6 +14,7 @@ class Partner(models.Model):
             else:
                 partner.school_ids = [(6, 0, partner.mapped('child_ids.school_id').ids)]
 
+    system = fields.Selection(selection_add=[('student', 'Student Payment System')])
     school_id = fields.Many2one('res.student.school', ondelete='restrict')
     class_id = fields.Many2one('res.student.class', ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', ondelete='restrict')
