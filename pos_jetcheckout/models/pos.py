@@ -84,6 +84,7 @@ class PosPayment(models.Model):
                 values['payment_transaction_id'] = int(values['transaction_id'])
             except:
                 pass
+
         res = super().create(values)
         res.payment_transaction_id.pos_payment_id = res.id
         return res
@@ -122,6 +123,11 @@ class PosOrder(models.Model):
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
+    #def _reconcile_account_move_lines(self, data):
+        
+    #def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+    #    return super(PosSession, self.with_context(skip_account_move_synchronization=True))._validate_session(balancing_account=balancing_account, amount_to_balance=amount_to_balance, bank_payment_method_diffs=bank_payment_method_diffs)
+
     def _create_split_account_payment(self, payment, amounts):
         payment_method = payment.payment_method_id
         if not payment_method.use_payment_terminal or payment_method.use_payment_terminal not in ('jetcheckout_virtual', 'jetcheckout_physical', 'jetcheckout_link'):
@@ -153,4 +159,4 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
-        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
+        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id).with_context(skip_account_move_synchronization=True)

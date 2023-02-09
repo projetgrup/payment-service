@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sh_pos_res_config_settings_take_away" model="ir.ui.view">
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.pos_config_view_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='inventory_location']" position="after">
+            <h2>Warehouses</h2>
+            <div class="row mt16 o_settings_container">
+                <div class="col-xs-6 col-md-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Delivery</span>
+                        <div class="text-muted">
+                            Select options about pickings
+                        </div>
+                        <div class="content-group mt16 row">
+                            <label for="picking_state" class="col-lg-4 o_light_label"/>
+                            <field name="picking_state"/>
+                        </div>
+                        <div class="content-group row">
+                            <label for="picking_negative_ok" class="col-lg-4 o_light_label"/>
+                            <field name="picking_negative_ok"/>
+                        </div>
+                        <div class="content-group row">
+                            <label for="picking_type" class="col-lg-4 o_light_label text-nowrap"/>
+                            <field name="picking_type"/>
+                        </div>
+                        <div class="content-group row">
+                            <label for="picking_day_threshold" class="col-lg-4 o_light_label text-nowrap"/>
+                            <field name="picking_day_threshold" class="mr-1 text-right" style="width: 40px;"/>days
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Warehouse</span>
+                        <div class="text-muted">
+                            Select options about warehouse
+                        </div>
+                        <div class="content-group mt16 row">
+                            <label for="warehouse_id" class="col-lg-4 o_light_label text-nowrap"/>
+                            <field name="warehouse_id" options="{'no_create': True}"/>
+                        </div>
+                        <div class="content-group row">
+                            <label for="warehouse_ids" class="col-lg-4 o_light_label text-nowrap"/>
+                            <field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

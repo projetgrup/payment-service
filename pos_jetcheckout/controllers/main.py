@@ -253,7 +253,7 @@ class JetControllerPos(JetController):
         tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
         if tx:
             if tx.state == 'done':
-                return {'status': 0, 'id': tx.id}
+                return {'status': 0}
             elif tx.state != 'pending':
                 return {'status': -1, 'message': tx.state_message}
             return {'status': 1}
@@ -420,7 +420,7 @@ class JetControllerPos(JetController):
         })
 
         try:
-            url = acquirer.jetcheckout_gateway_api
+            url = acquirer._get_jetcheckout_api_url()
             apikey = acquirer.jetcheckout_api_key
             base_url = method._set_url(request.httprequest.host_url)
             payload = {
@@ -492,7 +492,7 @@ class JetControllerPos(JetController):
         tx = request.env['payment.transaction'].sudo().browse(kwargs['id'])
         if tx:
             if tx.state == 'done':
-                return {'status': 0, 'id': tx.id}
+                return {'status': 0}
             elif tx.state != 'pending':
                 return {'status': -1, 'message': tx.state_message}
             return {'status': 1}

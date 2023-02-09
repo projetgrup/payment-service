@@ -152,9 +152,8 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
     _onChangeResult(ev) {
         const value = ev.target.value.replaceAll('&#34;','"');
         const result = JSON.parse(value);
+
         if (result.state === 'done') {
-            this.line.transaction_id = result.id;
-            this.order.transaction_ids.push(result.id);
             this.confirm();
         } else {
             this.showPopup('ErrorPopup', {
@@ -340,6 +339,8 @@ class JetcheckoutCardPopup extends AbstractAwaitablePopup {
                 });
                 this.env.session.rpc('/payment/card/pay', this._getCardParams()).then(function (result) {
                     if ('url' in result) {
+                        self.line.transaction_id = result.id;
+                        self.order.transaction_ids.push(result.id);
                         self.$jetcheckout.payment.url.src = result.url;
                     } else {
                         self.showPopup('ErrorPopup', {

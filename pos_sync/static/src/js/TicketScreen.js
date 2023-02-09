@@ -7,7 +7,7 @@ export const TicketScreenSync = (TicketScreen) =>
     class TicketScreenSync extends TicketScreen {
         async _onBeforeDeleteOrder(order) {
             await order.stop_syncing();
-            return true;
+            return super._onBeforeDeleteOrder(order);
         }
 
         shouldHideDeleteButton(order) {

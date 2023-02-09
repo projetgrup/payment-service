@@ -1,0 +1,217 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20221223\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-26 09:33+0000\n"
+"PO-Revision-Date: 2022-12-26 12:37+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: tr\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "AVAILABLE"
+msgstr "MEVCUT"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr "Sepete Ekle"
+
+#. module: pos_stock
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__sh_stock_type__available_quantity
+msgid "Available Quantity"
+msgstr "Uygun Miktar"
+
+#. module: pos_stock
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__sh_stock_type__available_quantity_unreserved
+msgid "Available Quantity Unreserved"
+msgstr "Kullanılabilir Miktar Rezerve Edilmemiş"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/js/models.js:0
+#, python-format
+msgid "Can't mix order with refund products with new products."
+msgstr "İade ürünlerle yeni ürünleri karıştıramazsınız."
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__cargo
+#: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
+#, python-format
+msgid "Cargo"
+msgstr "Kargo"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_config__sh_warehouse_tags
+msgid "Choose Related Warehouse"
+msgstr "İlgili Depoyu Seçin"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_config__default_warehouse_id
+msgid "Default Warehouse"
+msgstr "Varsayılan Depo"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_stock_picking
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_config__sh_negative_selling
+msgid "Enable Negative Selling"
+msgstr "Negatif Satışı Etkinleştir"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_type__immediately
+#, python-format
+msgid "Immediately"
+msgstr "Acil Olarak"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_type__later
+#, python-format
+msgid "Later"
+msgstr "Sonra"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__location_id
+msgid "Location"
+msgstr "Konum"
+
+#. module: pos_stock
+#: model_terms:ir.ui.view,arch_db:pos_stock.sh_pos_res_config_settings_take_away
+msgid "Multi Warehouse Configuration"
+msgstr "Çoklu Depo Yapılandırması"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__picking_type_id
+msgid "Operation Type"
+msgstr "Operasyon Türü"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/js/models.js:0
+#, python-format
+msgid "POS error"
+msgstr "POS hatası"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Satış Noktası Yapılandırması"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Satış Noktası Sipariş Satırları"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Satış Noktası Siparişleri"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Satış Noktası Oturumu"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "QTY"
+msgstr "MİKTAR"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_config__sh_picking_sate
+msgid "Ready State"
+msgstr "Hazır Durumda"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__shopping
+#: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
+#, python-format
+msgid "Shopping"
+msgstr "Alışveriş"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_config__sh_stock_type
+msgid "Stock Type"
+msgstr "Stok Türü"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "TOTAL"
+msgstr "TOPLAM"
+
+#. module: pos_stock
+#: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__transfer_location
+#: model:ir.model.fields,field_description:pos_stock.field_stock_picking__transfer_location
+msgid "Transfer Location"
+msgstr "Transfer Konumu"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__transfer_type
+#: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
+#, python-format
+msgid "Transfer Type"
+msgstr "Transfer Türü"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__vehicle
+#: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
+#, python-format
+msgid "Vehicle"
+msgstr "Araç"
+
+#. module: pos_stock
+#. openerp-web
+#: code:addons/pos_stock/static/src/xml/popup.xml:0
+#, python-format
+msgid "WAREHOUSE"
+msgstr "DEPO"
+
+#. module: pos_stock
+#: model:ir.model,name:pos_stock.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Depo"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductItem" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('price-tag')]" position="before">
+            <t t-if="props.product.type=='product'">
+                <t t-if="props.product.sh_pos_stock">
+                    <span class="quantity-available">
+                        <t t-esc="props.product.sh_pos_stock"/>
+                    </span>
+                </t>
+                <t t-else="">
+                    <span class="quantity-available absent">0</span>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <t t-if="props.line and props.line.get_location() and env.pos and env.pos.db.warehouse_by_id">
+                <li class="info">
+                    <t t-esc="env.pos.db.warehouse_by_id[props.line.get_location()].name"/>
+                </li>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
