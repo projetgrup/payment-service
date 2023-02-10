@@ -3,10 +3,10 @@
 
     <t t-name="ProductItem" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
         <xpath expr="//span[hasclass('price-tag')]" position="before">
-            <t t-if="props.product.type=='product'">
-                <t t-if="props.product.sh_pos_stock">
+            <t t-if="props.product.type == 'product'">
+                <t t-if="props.product.quantity > 0">
                     <span class="quantity-available">
-                        <t t-esc="props.product.sh_pos_stock"/>
+                        <t t-esc="props.product.quantity"/>
                     </span>
                 </t>
                 <t t-else="">
@@ -18,11 +18,20 @@
 
     <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
         <xpath expr="//ul[hasclass('info-list')]" position="after">
-            <t t-if="props.line and props.line.get_location() and env.pos and env.pos.db.warehouse_by_id">
+            <ul t-if="props.line.location_id" class="info-list info-list-picking">
                 <li class="info">
-                    <t t-esc="env.pos.db.warehouse_by_id[props.line.get_location()].name"/>
+                    <t t-esc="env.pos.db.warehouse_by_id[props.line.location_id].name"/>
                 </li>
-            </t>
+                <li class="info">
+                    <t t-esc="env.pos.db.transfer_type_by_code[props.line.transfer_type]"/>
+                </li>
+                <li class="info">
+                    <t t-esc="env.pos.db.transfer_location_by_code[props.line.transfer_location]"/>
+                </li>
+                <li class="info">
+                    <t t-esc="props.line.get_transfer_date()"/>
+                </li>
+            </ul>
         </xpath>
     </t>
 

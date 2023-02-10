@@ -16,8 +16,8 @@
     'assets': {
         'point_of_sale.assets': [
             'pos_stock/static/src/css/pos.scss',
+            'pos_stock/static/src/js/db.js',
             'pos_stock/static/src/js/models.js',
-            'pos_stock/static/src/js/db.js'
             'pos_stock/static/src/js/StockPopup.js',
             'pos_stock/static/src/js/ProductWidget.js',
         ],

@@ -1,24 +1,26 @@
 .pos {
-
-    .add-quantity {
-        border: 1px solid red !important;
-        box-shadow: 0px 0px 0px 1px red !important;
+    .info-list-picking {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        font-weight: bold;
+        margin-top: 5px;
     }
     
     .quantity-available {
+        position: absolute;
+        top: 20px;
+        right: 2px;
         vertical-align: top;
-        color: white;
+        color: #ffffff;
         line-height: 13px;
-        background: #6ec89b;
+        background-color: #6ec89b;
         padding: 2px 5px;
         border-radius: 2px;
-        position: absolute;
         width: 17px;
         top: 22px;
-        left: 5px;
     
         &.absent {
-            background: red;
+            background-color: #ff4c4c;
         }
     }
 
@@ -42,6 +44,9 @@
                     th {
                         background: lightgrey;
                         padding: 8px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
                     }
                 }
 
@@ -74,11 +79,20 @@
             }
         }
 
+        .altlight {
+            background-color: #5cb98a !important;
+            border-color: #5cb98a !important;
+        }
+
         .title {
             margin-bottom: 0px !important;
             overflow-y: scroll;
         }
 
+        .add-quantity {
+            border: 2px solid #ff4c4c !important;
+            box-shadow: 0px 0px 0px 1px #ff4c4c !important;
+        }
     
         .options {
             display: flex;

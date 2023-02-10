@@ -123,11 +123,6 @@ class PosOrder(models.Model):
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    #def _reconcile_account_move_lines(self, data):
-        
-    #def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
-    #    return super(PosSession, self.with_context(skip_account_move_synchronization=True))._validate_session(balancing_account=balancing_account, amount_to_balance=amount_to_balance, bank_payment_method_diffs=bank_payment_method_diffs)
-
     def _create_split_account_payment(self, payment, amounts):
         payment_method = payment.payment_method_id
         if not payment_method.use_payment_terminal or payment_method.use_payment_terminal not in ('jetcheckout_virtual', 'jetcheckout_physical', 'jetcheckout_link'):
@@ -159,4 +154,14 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
-        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id).with_context(skip_account_move_synchronization=True)
+        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def _synchronize_business_models(self, changed_fields):
+        method = self.sudo().payment_id.pos_payment_method_id
+        if method and method.use_payment_terminal and method.use_payment_terminal in ('jetcheckout_virtual', 'jetcheckout_physical', 'jetcheckout_link'):
+            self = self.with_context(skip_account_move_synchronization=True)
+        return super(AccountMove, self)._synchronize_business_models(changed_fields)

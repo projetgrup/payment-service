@@ -5,6 +5,7 @@ const ProductsWidget = require('point_of_sale.ProductsWidget');
 const Registries = require('point_of_sale.Registries');
 const TicketScreen = require('point_of_sale.TicketScreen');
 const RefundButton = require('point_of_sale.RefundButton');
+const ErrorPopup = require('point_of_sale.ErrorPopup');
 
 const StockRefundButton = (RefundButton) =>
     class extends RefundButton {
@@ -82,17 +83,14 @@ const StockTicketScreen = (TicketScreen) =>
 
         async _onBeforeDeleteOrder(order) {
             const self = this;
+            const db = self.env.pos.db;
             const lines = order && order.get_orderlines();
             if (lines) {
                 _.each(lines, function (line) {
                     if (line.location_id) {
-                        var quant_by_product_id = self.env.pos.db.quant_by_product_id[line.product.id];
-                        if (quant_by_product_id) {
-                            if (self.env.pos.config.picking_type == 'quantity_available') {
-                                quant_by_product_id[line.location_id]['quantity_available'] = quant_by_product_id[line.location_id]['quantity_available'] + line.quantity
-                            } else if (self.env.pos.config.picking_type == 'quantity_unreserved') {
-                                quant_by_product_id[line.location_id]['quantity_unreserved'] = quant_by_product_id[line.location_id]['quantity_unreserved'] + line.quantity
-                            }
+                        const quant = db.quant_by_product_id[line.product.id];
+                        if (quant) {
+                            quant[line.location_id] += line.quantity;
                         }
                     }
                 });
@@ -104,36 +102,33 @@ const StockTicketScreen = (TicketScreen) =>
 const StockProductsWidget = (ProductsWidget) =>
     class extends ProductsWidget {
         get productsToDisplay() {
-            const self = this;
+            const db = this.env.pos.db;
             const products = [];
 
-            _.each(this.env.pos.db.search_product_in_category(this.selectedCategoryId, this.searchWord), function (product) {
-                var quant_by_product_id = self.env.pos.db.quant_by_product_id[product.id];
-                if (quant_by_product_id) {
-                    product.quantity = 0;
-                    $.each(quant_by_product_id, function (key, value) {
-                        var warehouse = self.env.pos.db.warehouse_by_id[key];
-                        if (warehouse) {
-                            if (self.env.pos.config.warehouse_ids.includes(warehouse.id)) {
-                                if (self.env.pos.config.picking_type == 'quantity_available') {
-                                    product.quantity += value.quantity_available;
-                                } else if (self.env.pos.config.picking_type == 'quantity_unreserved') {
-                                    product.quantity += value.quantity_unreserved;
-                                }
-                            }
-                        }
-                    });
-
-                } else {
-                    product.quantity = 0;
-                }
+            _.each(db.search_product_in_category(this.selectedCategoryId, this.searchWord), function (product) {
+                const quant = db.quant_by_product_id[product.id];
+                product.quantity = 0;
+                $.each(quant, function (key, value) {
+                    product.quantity += value;
+                });
                 products.push(product);
             });
             return products;
         }
     };
 
+const StockErrorPopup = (ErrorPopup) =>
+    class extends ErrorPopup {
+        mounted() {
+            if (this.props.silent) {
+                return;
+            }
+            super.mounted();
+        }
+    };
+
 Registries.Component.extend(RefundButton, StockRefundButton);
 Registries.Component.extend(TicketScreen, StockTicketScreen);
 Registries.Component.extend(ProductsWidget, StockProductsWidget);
+Registries.Component.extend(ErrorPopup, StockErrorPopup);
 });
