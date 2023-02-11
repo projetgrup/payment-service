@@ -12,12 +12,12 @@ export const TicketScreenSync = (TicketScreen) =>
 
         shouldHideDeleteButton(order) {
             const res = super.shouldHideDeleteButton(order);
-            return res || !order.is_owner();
+            return res || !order.is_owner;
         }
 
         shouldHideSyncButton(order) {
-            return order.locked || order.is_owner();
+            return order.locked || order.is_owner;
         }
     };
 
-Registries.Component.extend(TicketScreen, TicketScreenSync)
+Registries.Component.extend(TicketScreen, TicketScreenSync);

@@ -21,7 +21,7 @@ class PosSync(Controller):
         date = params.get('date') or now
 
         if params.get('concurrent'):
-            partners = request.env['res.users'].sudo().search([('company_id', '=', request.env.company.id), ('share', '=', False)]).mapped('partner_id')
+            partners = request.env['res.users'].sudo().search([('id', '!=', request.env.uid), ('company_id', '=', request.env.company.id), ('share', '=', False)]).mapped('partner_id')
 
             messages = []
             if params.get('action') == 'done':

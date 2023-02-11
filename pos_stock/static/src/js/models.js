@@ -38,10 +38,10 @@ exports.load_models({
 
 const PosModel = exports.PosModel.prototype;
 exports.PosModel = exports.PosModel.extend({
-    initialize: function (session, attributes) {
+    initialize: function () {
         this.is_ticket_screen_show = false;
-        PosModel.initialize.call(this, session, attributes);
-    }
+        PosModel.initialize.call(this, ...arguments);
+    },
 });
 
 const Order = exports.Order.prototype;
@@ -173,12 +173,17 @@ exports.Order = exports.Order.extend({
 
 const Orderline = exports.Orderline.prototype;
 exports.Orderline = exports.Orderline.extend({
-    initialize: function (attr, options) {
+    initialize: function () {
         this.location_id = false;
         this.transfer_type = false;
         this.transfer_location = false;
         this.transfer_date = false;
-        Orderline.initialize.call(this, attr, options);
+        Orderline.initialize.call(this, ...arguments);
+    },
+
+    destroy: function () {
+        console.log(this);
+        return Orderline.destroy.call(this, ...arguments);
     },
 
     set_location: function (location_id) {
@@ -216,7 +221,7 @@ exports.Orderline = exports.Orderline.extend({
     set_quantity: function (quantity, keep_price) {
         if (this.location_id && quantity !== 'remove') {
             const quant = this.pos.db.quant_by_product_id[this.product.id];
-            const qty = quant[this.location_id] + this.quantity - (field_utils.parse.float('' + quantity) || 0);
+            const qty = quant[this.location_id] + (this.quantity || 0) - (field_utils.parse.float('' + quantity) || 0);
             const $qty = $('div.product-list article[data-product-id=' + this.product.id + '] span.quantity-available');
 
             if (qty <= 0) {

@@ -41,7 +41,6 @@ class ImBus(models.Model):
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
         domain.append(('channel', 'in', channels))
         notifications = self.sudo().search_read(domain)
-
         result = []
         for notif in notifications:
             result.append({

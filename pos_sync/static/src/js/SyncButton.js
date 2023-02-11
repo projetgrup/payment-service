@@ -15,7 +15,6 @@ class SyncButton extends PosComponent {
                 } else {
                     order.start_syncing();
                 }
-                order.need_synced();
                 this.render();
             }
         }
@@ -48,7 +47,7 @@ class SyncButton extends PosComponent {
     get owner() {
         if (this.env.pos) {
             const order = this.env.pos.get_order();
-            return order && order.is_owner();
+            return order && order.is_owner;
         } else {
             return true;
         }
