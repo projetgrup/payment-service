@@ -42,10 +42,20 @@ exports.PosModel = exports.PosModel.extend({
         this.is_ticket_screen_show = false;
         PosModel.initialize.call(this, ...arguments);
     },
+
+    _after_flush_orders: function(orders) {
+        console.log(orders);
+        PosModel._after_flush_orders.call(this, ...arguments);
+    },
 });
 
 const Order = exports.Order.prototype;
 exports.Order = exports.Order.extend({
+    destroy: function(){
+        this.orderlines.remove(this.orderlines.models);
+        Order.destroy.apply(this, arguments);
+    },
+
     add_product: async function (product, options) {
         const self = this;
         const negativeOk = this.pos.config.picking_negative_ok;
@@ -179,11 +189,13 @@ exports.Orderline = exports.Orderline.extend({
         this.transfer_location = false;
         this.transfer_date = false;
         Orderline.initialize.call(this, ...arguments);
+        this.on('remove', this.on_remove, this);
     },
 
-    destroy: function () {
-        console.log(this);
-        return Orderline.destroy.call(this, ...arguments);
+    on_remove: function () {
+        try {
+            this.set_quantity(0);
+        } catch {}
     },
 
     set_location: function (location_id) {

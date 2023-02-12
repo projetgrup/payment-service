@@ -14,10 +14,6 @@
                             Select options about pickings
                         </div>
                         <div class="content-group mt16 row">
-                            <label for="picking_state" class="col-lg-4 o_light_label"/>
-                            <field name="picking_state"/>
-                        </div>
-                        <div class="content-group row">
                             <label for="picking_negative_ok" class="col-lg-4 o_light_label"/>
                             <field name="picking_negative_ok"/>
                         </div>

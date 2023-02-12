@@ -80,23 +80,6 @@ const StockTicketScreen = (TicketScreen) =>
             }
             this._onCloseScreen();
         }
-
-        async _onBeforeDeleteOrder(order) {
-            const self = this;
-            const db = self.env.pos.db;
-            const lines = order && order.get_orderlines();
-            if (lines) {
-                _.each(lines, function (line) {
-                    if (line.location_id) {
-                        const quant = db.quant_by_product_id[line.product.id];
-                        if (quant) {
-                            quant[line.location_id] += line.quantity;
-                        }
-                    }
-                });
-            }
-            return super._onBeforeDeleteOrder(order);
-        }
     }
 
 const StockProductsWidget = (ProductsWidget) =>
