@@ -6,7 +6,7 @@
     'version': '1.0',
     'author': 'Projet',
     'license': 'LGPL-3',
-    'sequence': 1458,
+    'sequence': 1459,
     'category': 'Sales/Point of Sale',
     'depends': ['point_of_sale'],
     'data': [

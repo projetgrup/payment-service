@@ -4,6 +4,7 @@ odoo.define('pos_stock.models', function (require) {
 const exports = require('point_of_sale.models');
 const field_utils = require('web.field_utils');
 const { Gui } = require('point_of_sale.Gui');
+const { posbus } = require('point_of_sale.utils');
 const core = require('web.core');
 const _t = core._t;
 
@@ -38,21 +39,36 @@ exports.load_models({
 
 const PosModel = exports.PosModel.prototype;
 exports.PosModel = exports.PosModel.extend({
-    initialize: function () {
-        this.is_ticket_screen_show = false;
-        PosModel.initialize.call(this, ...arguments);
+    _process_sync: function (data) {
+        try {
+            PosModel._process_sync.call(this, ...arguments);
+            if (data.type === 'stock' && (data.session == this.pos_session.id && data.cashier != this.pos_session.login_number || data.session != this.pos_session.id)) {
+                this._process_sync_stocks(data);
+            }
+        } catch {}
     },
 
-    _after_flush_orders: function(orders) {
-        console.log(orders);
-        PosModel._after_flush_orders.call(this, ...arguments);
+    _process_sync_stocks: function (data) {
+        console.log(data);
+        if (data.orders) {
+            const quants = this.db.quant_by_product_id;
+            console.log(quants);
+            for (let order of data.orders) {
+                if (order.location && order.product in quants && order.location in quants[order.product]) {
+                    quants[order.product][order.location] -= order.quantity;
+                }
+            }
+            posbus.trigger('render-product-list');
+        }
     },
 });
 
 const Order = exports.Order.prototype;
 exports.Order = exports.Order.extend({
     destroy: function(){
-        this.orderlines.remove(this.orderlines.models);
+        if (!this.finalized) {
+            this.orderlines.remove(this.orderlines.models);
+        }
         Order.destroy.apply(this, arguments);
     },
 
@@ -189,13 +205,13 @@ exports.Orderline = exports.Orderline.extend({
         this.transfer_location = false;
         this.transfer_date = false;
         Orderline.initialize.call(this, ...arguments);
-        this.on('remove', this.on_remove, this);
+        this.on('remove', this.on_remove_order, this);
     },
 
-    on_remove: function () {
-        try {
+    on_remove_order: function () {
+        if (!this.finalized) {
             this.set_quantity(0);
-        } catch {}
+        }
     },
 
     set_location: function (location_id) {

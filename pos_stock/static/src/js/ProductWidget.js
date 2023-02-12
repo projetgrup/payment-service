@@ -4,29 +4,11 @@ odoo.define('pos_stock.ProductWidget', function (require) {
 const ProductsWidget = require('point_of_sale.ProductsWidget');
 const Registries = require('point_of_sale.Registries');
 const TicketScreen = require('point_of_sale.TicketScreen');
-const RefundButton = require('point_of_sale.RefundButton');
 const ErrorPopup = require('point_of_sale.ErrorPopup');
-
-const StockRefundButton = (RefundButton) =>
-    class extends RefundButton {
-        _onClick() {
-            this.env.pos.is_ticket_screen_show = true;
-            super._onClick();
-        }
-    };
+const { posbus } = require('point_of_sale.utils');
 
 const StockTicketScreen = (TicketScreen) =>
     class extends TicketScreen {
-        _onCloseScreen() {
-            this.env.pos.is_ticket_screen_show = false;
-            super._onCloseScreen();
-        }
-
-        _onCreateNewOrder() {
-            this.env.pos.is_ticket_screen_show = false;
-            super._onCreateNewOrder();
-        }
-
         _getToRefundDetail(orderline) {
             const line = super._getToRefundDetail(orderline);
             if (orderline && orderline.location_id) {
@@ -84,6 +66,30 @@ const StockTicketScreen = (TicketScreen) =>
 
 const StockProductsWidget = (ProductsWidget) =>
     class extends ProductsWidget {
+        willPatch() {
+            super.willPatch();
+            posbus.off('render-product-list', this);
+        }
+
+        patched() {
+            super.patched();
+            posbus.on('render-product-list', this, this._renderProductList);
+        }
+
+        mounted() {
+            super.mounted();
+            posbus.on('render-product-list', this, this._renderProductList);
+        }
+
+        willUnmount() {
+            super.willUnmount();
+            posbus.off('render-product-list', this);
+        }
+
+        _renderProductList() {
+            this.render();
+        }
+
         get productsToDisplay() {
             const db = this.env.pos.db;
             const products = [];
@@ -110,7 +116,6 @@ const StockErrorPopup = (ErrorPopup) =>
         }
     };
 
-Registries.Component.extend(RefundButton, StockRefundButton);
 Registries.Component.extend(TicketScreen, StockTicketScreen);
 Registries.Component.extend(ProductsWidget, StockProductsWidget);
 Registries.Component.extend(ErrorPopup, StockErrorPopup);

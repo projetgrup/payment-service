@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from odoo import models, fields, api
 
 
@@ -13,6 +14,34 @@ class PosConfig(models.Model):
     ], string='Picking Type', default='quantity_available', required=True)
     warehouse_id = fields.Many2one('stock.warehouse', string='Default Warehouse', ondelete='restrict')
     warehouse_ids = fields.Many2many('stock.warehouse', 'pos_warehouse_rel', 'pos_id', 'warehouse_id', string='Related Warehouses')
+
+
+class PosOrder(models.Model):
+    _inherit = 'pos.order'
+
+    @api.model
+    def _process_order(self, order, draft, existing_order):
+        res = super(PosOrder, self)._process_order(order, draft, existing_order)
+        try:
+            now = datetime.now()
+            partners = self.env['res.users'].sudo().search([('id', '!=', self.env.uid), ('company_id', '=', self.env.company.id), ('share', '=', False)]).mapped('partner_id')
+            messages = [
+                [partner, 'pos.bus/all', {
+                    'date': now,
+                    'type': 'stock',
+                    'session': order['data']['pos_session_id'],
+                    'cashier': order['data']['pos_uid'],
+                    'orders': [{
+                        'product': line[2]['product_id'],
+                        'location': line[2]['location_id'],
+                        'quantity': line[2]['qty'],
+                    } for line in order['data']['lines']],
+                }
+            ] for partner in partners]
+            self.env['bus.bus'].with_context(pos=True)._sendmany(messages)
+        except:
+            pass
+        return res
 
 
 class PosOrderLine(models.Model):

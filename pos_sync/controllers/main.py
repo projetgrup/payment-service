@@ -22,43 +22,25 @@ class PosSync(Controller):
 
         if params.get('concurrent'):
             partners = request.env['res.users'].sudo().search([('id', '!=', request.env.uid), ('company_id', '=', request.env.company.id), ('share', '=', False)]).mapped('partner_id')
-
-            messages = []
-            if params.get('action') == 'done':
-                for partner in partners:
-                    messages.append([partner, 'pos.bus/all', {
-                        'date': now,
-                        'orders': [{
-                            'name': params['name'],
-                            'data': False,
-                        }],
-                    }])
-
-            else:
-                orders = [{
+            orders = [{
+                'name': order['name'],
+                'data': order['data'],
+            } for order in params.get('orders', [])]
+            messages = [
+                [partner, 'pos.bus/all', {
+                    'date': now,
+                    'type': params['type'],
                     'session': params['sid'],
                     'cashier': params['id'],
-                    'name': order['name'],
-                    'data': order['data'],
-                } for order in params.get('orders', [])]
-
-                messages = []
-                for partner in partners:
-                    messages.append([partner, 'pos.bus/all', {
-                        'date': now,
-                        'orders': orders,
-                    }])
-
-            request.env['bus.bus'].with_context(pos={'session': params['sid'], 'cashier': params['id']})._sendmany(messages)
+                    'orders': orders,
+                }
+            ] for partner in partners]
+            request.env['bus.bus'].with_context(pos=True)._sendmany(messages)
             return {}
 
         else:
             sync = request.env['pos.sync'].sudo()
             ids = []
-
-            if params.get('action') == 'done':
-                sync.search([('name', '=', params['name'])], limit=1).write({'data': False})
-                return {}
 
             if params.get('orders'):
                 for order in params['orders']:
@@ -78,8 +60,4 @@ class PosSync(Controller):
                     ids.append(synced.id)
 
             orders = sync.search_read([('session', '=', params['sid']), ('cashier', '!=', params['id']), ('id', 'not in', ids), ('write_date', '>', date)], ['name', 'data'])
-
-            return {
-                'date': now,
-                'orders': orders,
-            }
+            return {'date': now, 'orders': orders}

@@ -22,10 +22,7 @@ exports.PosModel = exports.PosModel.extend({
                 self.sync_interval = Number.isInteger(self.config.sync_interval)  ? self.config.sync_interval * 1000 : 5000;
                 if (self.sync_concurrent) {
                     const busService = self.env.services.bus_service;
-                    busService.updateOption('pos', {
-                        session: self.pos_session.id,
-                        cashier: self.pos_session.login_number,
-                    });
+                    busService.updateOption('pos', true);
                     busService.onNotification(self, self._process_bus);
                     busService.startPolling();
                 }
@@ -34,14 +31,10 @@ exports.PosModel = exports.PosModel.extend({
         });
     },
 
-    _process_bus: function (data) {
-        for (let i=0; i < data.length; i++) {
-            this._process_sync(data[i]['payload']);
+    _process_bus: function (datas) {
+        for (let i=0; i < datas.length; i++) {
+            this._process_sync(datas[i]['payload']);
         }
-    },
-
-    _get_sync: function () {
-        return this.get_order_list().filter(order => order.is_syncing() && !order.is_synced());
     },
 
     _clear_sync: function () {
@@ -49,13 +42,24 @@ exports.PosModel = exports.PosModel.extend({
         this.sync_on = false;
     },
 
+    _get_sync_orders: function () {
+        return this.get_order_list().filter(order => order.is_syncing() && !order.is_synced());
+    },
+
     _process_sync: function (data) {
+        if (data.type === 'order' && data.session == this.pos_session.id && data.cashier != this.pos_session.login_number) {
+            this._process_sync_orders(data);
+        }
+    },
+
+    _process_sync_orders: function (data) {
+        this._clear_sync();
         this.sync_date = data.date;
-        const orders = this._get_sync();
+
+        const orders = this._get_sync_orders();
         orders.forEach(function (order) {
             order.set_synced();
         });
-        this._clear_sync();
 
         if (_.isEmpty(data)) {
             return;
@@ -110,6 +114,7 @@ exports.PosModel = exports.PosModel.extend({
         await this.rpc({
             route: '/pos/sync',
             params: {
+                type: 'order',
                 concurrent: this.sync_concurrent,
                 id: this.pos_session.login_number,
                 sid: this.pos_session.id,
@@ -130,7 +135,7 @@ exports.PosModel = exports.PosModel.extend({
             setInterval(async function () {
                 try {
                     var orders = [];
-                    self._get_sync().forEach(function (order) {
+                    self._get_sync_orders().forEach(function (order) {
                         orders.push({
                             name: order.uid,
                             data: JSON.stringify(order.export_as_JSON()),
@@ -223,11 +228,16 @@ exports.Order = exports.Order.extend({
                 await this.pos.rpc({
                     route: '/pos/sync',
                     params: {
-                        action: 'done',
+                        type: 'order',
                         concurrent: this.pos.sync_concurrent,
                         id: this.pos.pos_session.login_number,
                         sid: this.pos.pos_session.id,
-                        name: this.uid,
+                        uid: this.pos.session.uid,
+                        date: this.pos.sync_date,
+                        orders: [{
+                            name: this.uid,
+                            data: false,
+                        }],
                     }
                 }, {timeout: 4500});
             } catch (error) {
