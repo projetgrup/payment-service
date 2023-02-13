@@ -156,6 +156,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                 } else {
                     line.transaction = transaction;
                     line.transaction_id = transaction.id;
+                    order.transaction_ids.push(transaction.id);
                     line.trigger('change', line);
                     const res = new Promise(function (resolve, reject) {
                         line.interval = setInterval(async function() {
@@ -164,7 +165,6 @@ var PaymentJetcheckout = PaymentInterface.extend({
                                 params: {id: transaction.id}
                             }, {timeout: 4500}).then(function (result) {
                                 if (result.status === 0) {
-                                    order.transaction_ids.push(result.id);
                                     resolve(true);
                                 } else if (result.status === -1) {
                                     Gui.showPopup('ErrorPopup', {
@@ -178,7 +178,7 @@ var PaymentJetcheckout = PaymentInterface.extend({
                             });
                         }, 5000);
                     });
-                    res.finally(function () { line.remove_transaction(); });
+                    res.finally(function () { line.clear_transaction(); });
                     return res;
                 }
             }).catch(function(error) {
@@ -234,8 +234,6 @@ var PaymentJetcheckout = PaymentInterface.extend({
                             line.close_popup();
                             line.remove_transaction();
                             line.set_payment_status('done');
-                            line.transaction_id = result.id;
-                            order.transaction_ids.push(result.id);
                             return;
                         } else if (result.status === -1) {
                             line.close_popup();

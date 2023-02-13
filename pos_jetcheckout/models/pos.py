@@ -84,6 +84,7 @@ class PosPayment(models.Model):
                 values['payment_transaction_id'] = int(values['transaction_id'])
             except:
                 pass
+
         res = super().create(values)
         res.payment_transaction_id.pos_payment_id = res.id
         return res
@@ -154,3 +155,13 @@ class PosSession(models.Model):
             'pos_session_id': self.id,
         })
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def _synchronize_business_models(self, changed_fields):
+        method = self.sudo().payment_id.pos_payment_method_id
+        if method and method.use_payment_terminal and method.use_payment_terminal in ('jetcheckout_virtual', 'jetcheckout_physical', 'jetcheckout_link'):
+            self = self.with_context(skip_account_move_synchronization=True)
+        return super(AccountMove, self)._synchronize_business_models(changed_fields)

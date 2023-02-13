@@ -56,11 +56,15 @@ PosModel.Paymentline = PosModel.Paymentline.extend({
         this.duration = 0;
     },
 
-    remove_transaction() {
+    clear_transaction() {
         clearInterval(this.interval);
-        this.transaction = undefined;
-        this.transaction_id = '';
         this.duration = 0;
+    },
+
+    remove_transaction() {
+        this.transaction_id = 0;
+        this.transaction = undefined;
+        this.clear_transaction();
     },
 
     set_duration(duration) {
