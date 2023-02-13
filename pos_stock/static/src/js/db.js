@@ -15,7 +15,7 @@ DB.include({
             'immediately': _('Immediately'),
             'later': _('Later'),
         };
-        this.transfer_location_by_code = {
+        this.transfer_method_by_code = {
             'shopping': _('Shopping'),
             'cargo_paid': _('Paid Cargo'),
             'cargo_free': _('Free Cargo'),

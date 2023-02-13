@@ -12,12 +12,12 @@ class Warehouse(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    transfer_location = fields.Selection([
+    transfer_method = fields.Selection([
         ('shopping', 'Shopping'),
         ('cargo_paid', 'Paid Cargo'),
         ('cargo_free', 'Free Cargo'),
         ('vehicle', 'Vehicle')
-    ], string='Transfer Location', readonly=True)
+    ], string='Transfer Method', readonly=True)
 
     def _create_move_from_pos_order_lines(self, lines):
         self.ensure_one()
@@ -47,7 +47,7 @@ class StockPicking(models.Model):
     @api.model
     def _create_picking_from_pos_order_lines(self, location_dest_id, lines, picking_type, partner=False):
         locations = lines.mapped('location_id').ids
-        transfers = list(set(lines.mapped('transfer_location')))
+        transfers = list(set(lines.mapped('transfer_method')))
 
         header = []
         items = []
@@ -56,7 +56,7 @@ class StockPicking(models.Model):
             header.append('location_id')
         if transfers:
             items.append(transfers)
-            header.append('transfer_location')
+            header.append('transfer_method')
         items = list(itertools.product(*items))
         if not items:
             return super(StockPicking, self)._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type, partner=partner)
@@ -65,7 +65,7 @@ class StockPicking(models.Model):
         warehouses = self.env['stock.warehouse'].sudo()
         for item in items:
             values = dict(zip(header, item))
-            orderlines = lines.filtered(lambda l: l.location_id.id == values.get('location_id') and l.transfer_location == values.get('transfer_location'))
+            orderlines = lines.filtered(lambda l: l.location_id.id == values.get('location_id') and l.transfer_method == values.get('transfer_method'))
             values['transfer_values'] = {
                 orderline.id: {
                     'date': orderline.transfer_date,
@@ -84,6 +84,6 @@ class StockPicking(models.Model):
         if vals:
             if 'location_id' in vals:
                 values['location_id'] = vals['location_id']
-            if 'transfer_location' in vals:
-                values['transfer_location'] = vals['transfer_location']
+            if 'transfer_method' in vals:
+                values['transfer_method'] = vals['transfer_method']
         return super(StockPicking, self).create(values)

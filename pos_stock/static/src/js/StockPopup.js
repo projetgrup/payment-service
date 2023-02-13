@@ -9,20 +9,19 @@ class StockPopup extends AbstractAwaitablePopup {
 
     constructor() {
         super(...arguments);
+        this.mode = this.props.mode;
         this.title = this.props.title;
         this.product = this.props.product;
         this.config = this.env.pos.config;
 
-        const date = new Date();
-        date.setDate(date.getDate() + this.env.pos.config.picking_day_threshold);
-        const dateStr = date.toISOString().slice(0,10)
-
         const transfers = {};
         this.props.warehouses.forEach(wh => {
             transfers[wh.id] = {
-                type: this.props.default === wh.id ? 'immediately' : 'later',
-                location: 'shopping',
-                date: dateStr,
+                location: wh.location,
+                quantity: this.props.quantity || (this.props.default === wh.id ? 1 : ''),
+                type: this.props.type || (this.props.default === wh.id ? 'immediately' : 'later'),
+                method: this.props.method || 'shopping',
+                date: this.props.date,
             }
         });
 
@@ -33,22 +32,14 @@ class StockPopup extends AbstractAwaitablePopup {
 
     async getPayload() {
         var values = [];
-        _.each($('input.input-quantity'), async function (input) {
-            const $row = $(input).closest('tr');
-            if (input.value) {
-                var location_id = $row.data('id');
-                var transfer_type = $row.find('input.transfer-type');
-                var transfer_date = $row.find('input.transfer-date');
-                var transfer_location = $row.find('input.transfer-location');
-                values.push({
-                    quantity: input.value,
-                    location_id: location_id,
-                    transfer_type: transfer_type.val() === '-1' ? false : transfer_type.val(),
-                    transfer_location: transfer_location.val() === '-1' ? false : transfer_location.val(),
-                    transfer_date: transfer_date.val() == '' ? false : transfer_date.val(),
-                    merge: false,
-                });
-            }
+        $.each(this.state.transfers, function (key, value) {
+            values.push({
+                location_id: value.location,
+                quantity: value.quantity,
+                transfer_type: value.type,
+                transfer_method: value.method,
+                transfer_date: value.date,
+            });
         });
         return values;
     }
@@ -57,8 +48,8 @@ class StockPopup extends AbstractAwaitablePopup {
         const $btn = $(event.target).closest('button');
         if ($btn.data('type') === 'type') {
             this.state.transfers[$btn.data('id')].type = $btn.data('name');
-        } else if ($btn.data('type') === 'location') {
-            this.state.transfers[$btn.data('id')].location = $btn.data('name');
+        } else if ($btn.data('type') === 'method') {
+            this.state.transfers[$btn.data('id')].method = $btn.data('name');
         }
     }
 

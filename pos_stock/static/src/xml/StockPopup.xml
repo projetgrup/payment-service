@@ -26,7 +26,7 @@
                         <tbody>
                             <t t-foreach="props.warehouses" t-as="warehouse">
                                 <t t-if="env.pos.config.picking_negative_ok || warehouse.value &gt; 0">
-                                    <tr t-att-data-id="warehouse.lot">
+                                    <tr t-att-data-id="warehouse.location">
                                         <td>
                                             <t t-esc="warehouse.name"/>
                                         </td>
@@ -34,7 +34,7 @@
                                             <t t-esc="warehouse.value"/>
                                         </td>
                                         <td>
-                                            <input type="number" step="1" class="input-quantity" t-att-value="props.default == warehouse.id ? 1 : '' " t-on-keyup="onKeyupQuantity"/>
+                                            <input type="number" step="1" class="input-quantity" t-model="state.transfers[warehouse.id].quantity" t-on-keyup="onKeyupQuantity"/>
                                         </td>
                                         <td>
                                             <div class="options" t-att-class="{'disabled': props.default !== warehouse.id}">
@@ -45,24 +45,24 @@
                                                 <div class="selection">
                                                     <span t-if="state.transfers[warehouse.id].type === 'later'">Later</span>
                                                     <span t-elif="state.transfers[warehouse.id].type === 'immediately'">Immediately</span>
-                                                    <input type="hidden" class="transfer-type" t-att-value="state.transfers[warehouse.id].type"/>
+                                                    <input type="hidden" class="transfer-type" t-model="state.transfers[warehouse.id].type"/>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="options">
                                                 <div class="buttons">
-                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'shopping'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="shopping"><i class="fa fa-2x fa-shopping-cart"/></button>
-                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'cargo_paid'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="cargo_paid"><i class="fa fa-2x fa-truck"/></button>
-                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'cargo_free'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="cargo_free"><i class="fa fa-2x fa-check-square-o"/></button>
-                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'vehicle'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="vehicle"><i class="fa fa-2x fa-automobile"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].method === 'shopping'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="method" data-name="shopping"><i class="fa fa-2x fa-shopping-cart"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].method === 'cargo_paid'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="method" data-name="cargo_paid"><i class="fa fa-2x fa-truck"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].method === 'cargo_free'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="method" data-name="cargo_free"><i class="fa fa-2x fa-check-square-o"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].method === 'vehicle'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="method" data-name="vehicle"><i class="fa fa-2x fa-automobile"/></button>
                                                 </div>
                                                 <div class="selection">
-                                                    <span t-if="state.transfers[warehouse.id].location === 'shopping'">Shopping</span>
-                                                    <span t-elif="state.transfers[warehouse.id].location === 'cargo_paid'">Paid Cargo</span>
-                                                    <span t-elif="state.transfers[warehouse.id].location === 'cargo_free'">Free Cargo</span>
-                                                    <span t-elif="state.transfers[warehouse.id].location === 'vehicle'">Vehicle</span>
-                                                    <input type="hidden" class="transfer-location" t-att-value="state.transfers[warehouse.id].location"/>
+                                                    <span t-if="state.transfers[warehouse.id].method === 'shopping'">Shopping</span>
+                                                    <span t-elif="state.transfers[warehouse.id].method === 'cargo_paid'">Paid Cargo</span>
+                                                    <span t-elif="state.transfers[warehouse.id].method === 'cargo_free'">Free Cargo</span>
+                                                    <span t-elif="state.transfers[warehouse.id].method === 'vehicle'">Vehicle</span>
+                                                    <input type="hidden" class="transfer-method" t-model="state.transfers[warehouse.id].method"/>
                                                 </div>
                                             </div>
                                         </td>
@@ -82,7 +82,8 @@
                     </table>
                 </div>
                 <footer class="footer">
-                    <div class="button confirm altlight" t-on-click="confirm">Add</div>
+                    <div t-if="mode === 'edit'" class="button confirm altlight" t-on-click="confirm">Edit</div>
+                    <div t-else="" class="button confirm altlight" t-on-click="confirm">Add</div>
                     <div class="button cancel" t-on-click="cancel">Cancel</div>
                 </footer>
             </div>

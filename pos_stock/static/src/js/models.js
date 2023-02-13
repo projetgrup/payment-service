@@ -72,6 +72,46 @@ exports.Order = exports.Order.extend({
         Order.destroy.apply(this, arguments);
     },
 
+    set_product: async function (line) {
+        if (line.product.type !== 'product' || this._isRefundAndSaleOrder()) {
+            return;
+        }
+
+        const total = this.pos.db.quant_by_product_id[line.product.id][line.location_id] + line.quantity;
+        const warehouse = this.pos.db.warehouse_by_id[line.location_id];
+        const warehouseId = this.pos.config.warehouse_id[0];
+        const warehouses = [{
+            id: warehouse.id,
+            name: warehouse.name,
+            location: warehouse.lot_stock_id[0],
+            value: total,
+            default: warehouseId === warehouse.id,
+        }];
+
+        const { confirmed, payload } = await Gui.showPopup('StockPopup', {
+            mode: 'edit',
+            title: line.product.display_name,
+            product: line.product.id,
+            default: warehouseId,
+            quantity: line.quantity,
+            type: line.transfer_type,
+            method: line.transfer_method,
+            date: line.transfer_date,
+            warehouses: warehouses,
+            total: total,
+        });
+
+        if (confirmed) {
+            _.each(payload, function (value) {
+                line.set_quantity(value.quantity);
+                line.location_id = value.location_id;
+                line.transfer_type = value.transfer_type;
+                line.transfer_method = value.transfer_method;
+                line.transfer_date = value.transfer_date;
+            });
+        }
+    },
+
     add_product: async function (product, options) {
         const self = this;
         const negativeOk = this.pos.config.picking_negative_ok;
@@ -87,10 +127,13 @@ exports.Order = exports.Order.extend({
             return;
         }
 
+        const date = new Date();
+        date.setDate(date.getDate() + this.pos.config.picking_day_threshold);
+        const dateStr = date.toISOString().slice(0,10);
         const quant = this.pos.db.quant_by_product_id[product.id];
         const warehouseId = this.pos.config.warehouse_id[0];
         let total = 0;
-        var lot;
+        var location;
         var warehouse;
         var warehouses = [];
         var warehouseIds = [];
@@ -99,23 +142,36 @@ exports.Order = exports.Order.extend({
             if (negativeOk) {
                 _.each(self.pos.config.warehouse_ids, function (id) {
                     warehouse = self.pos.db.warehouse_data_by_id[id];
-                    lot = warehouse.lot_stock_id[0];
-                    if (!quant[lot]) {
-                        quant[lot] = 0;
+                    location = warehouse.lot_stock_id[0];
+                    if (!quant[location]) {
+                        quant[location] = 0;
                     }
                 });
             }
 
+            let isAdded = false;
             $.each(quant, function (key, value) {
                 warehouse = self.pos.db.warehouse_by_id[key];
-                lot = warehouse.lot_stock_id[0];
+                location = warehouse.lot_stock_id[0];
                 if (warehouse) {
                     if (self.pos.config.warehouse_ids.includes(warehouse.id)) {
+                        if (!options.forceOpen && warehouseId === warehouse.id && value > 0) {
+                            Order.add_product.apply(self, [product, {
+                                quantity: 1,
+                                location_id: location,
+                                transfer_type: 'immediately',
+                                transfer_method: 'shopping',
+                                transfer_date: dateStr,
+                                merge: false,
+                            }]);
+                            isAdded = true;
+                            return false;
+                        }
                         total += value;
                         warehouses.push({
                             id: warehouse.id,
                             name: warehouse.name,
-                            lot: lot,
+                            location: location,
                             value: value,
                             default: warehouseId === warehouse.id,
                         });
@@ -123,15 +179,16 @@ exports.Order = exports.Order.extend({
                     }
                 }
             });
+            if (isAdded) return;
         } else {
             if (negativeOk) {
                 _.each(self.pos.config.warehouse_ids, function (id) {
                     warehouse = self.pos.db.warehouse_data_by_id[id];
-                    lot = warehouse.lot_stock_id[0];
+                    location = warehouse.lot_stock_id[0];
                     warehouses.push({
                         id: warehouse.id,
                         name: warehouse.name,
-                        lot: lot,
+                        location: location,
                         value: 0,
                         default: warehouseId === warehouse.id,
                     });
@@ -144,8 +201,9 @@ exports.Order = exports.Order.extend({
             title: product.display_name,
             product: product.id,
             default: warehouseId,
+            date: dateStr,
             warehouses: warehouses,
-            total: total
+            total: total,
         });
 
         if (confirmed) {
@@ -154,7 +212,7 @@ exports.Order = exports.Order.extend({
                     quantity: field_utils.parse.float(value.quantity),
                     location_id: value.location_id,
                     transfer_type: value.transfer_type,
-                    transfer_location: value.transfer_location,
+                    transfer_method: value.transfer_method,
                     transfer_date: value.transfer_date,
                     merge: false,
                 }]);
@@ -169,8 +227,8 @@ exports.Order = exports.Order.extend({
         if (options.transfer_type !== undefined) {
             orderline.set_transfer_type(options.transfer_type);
         }
-        if (options.transfer_location !== undefined) {
-            orderline.set_transfer_location(options.transfer_location);
+        if (options.transfer_method !== undefined) {
+            orderline.set_transfer_method(options.transfer_method);
         }
         if (options.location_id !== undefined) {
             orderline.set_location(options.location_id);
@@ -202,7 +260,7 @@ exports.Orderline = exports.Orderline.extend({
     initialize: function () {
         this.location_id = false;
         this.transfer_type = false;
-        this.transfer_location = false;
+        this.transfer_method = false;
         this.transfer_date = false;
         Orderline.initialize.call(this, ...arguments);
         this.on('remove', this.on_remove_order, this);
@@ -230,12 +288,12 @@ exports.Orderline = exports.Orderline.extend({
         return this.transfer_type || false;
     },
 
-    set_transfer_location: function (transfer_location) {
-        this.transfer_location = transfer_location || false;;
+    set_transfer_method: function (transfer_method) {
+        this.transfer_method = transfer_method || false;;
     },
 
-    get_transfer_location: function () {
-        return this.transfer_location || false;
+    get_transfer_method: function () {
+        return this.transfer_method || false;
     },
 
     set_transfer_date: function (transfer_date) {
@@ -283,7 +341,7 @@ exports.Orderline = exports.Orderline.extend({
         json.location_id = this.location_id;
         json.transfer_type = this.transfer_type;
         json.transfer_date = this.transfer_date;
-        json.transfer_location = this.transfer_location;
+        json.transfer_method = this.transfer_method;
         return json;
     },
 
@@ -291,7 +349,7 @@ exports.Orderline = exports.Orderline.extend({
         this.set_location(json.location_id);
         this.set_transfer_date(json.transfer_date);
         this.set_transfer_type(json.transfer_type);
-        this.set_transfer_location(json.transfer_location);
+        this.set_transfer_method(json.transfer_method);
         Orderline.init_from_JSON.apply(this, arguments);
     },
 });
