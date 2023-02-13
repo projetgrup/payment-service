@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="StockPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="clientlist-screen popup popup-text popup-lg product-configurator-popup popup-stock" style="max-width: initial !important;">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <div class="main-body touch-scrollable scrollable-y">
+                    <table width="100%">
+                        <colgroup>
+                            <col width="20%"/>
+                            <col width="5%"/>
+                            <col width="10%"/>
+                            <col width="20%"/>
+                            <col width="30%"/>
+                            <col width="15%"/>
+                        </colgroup>
+                        <thead>
+                            <th>WAREHOUSE</th>
+                            <th>AVAILABLE</th>
+                            <th>QUANTITY</th>
+                            <th colspan="2">TYPE</th>
+                            <th>DATE</th>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="props.warehouses" t-as="warehouse">
+                                <t t-if="env.pos.config.picking_negative_ok || warehouse.value &gt; 0">
+                                    <tr t-att-data-id="warehouse.lot">
+                                        <td>
+                                            <t t-esc="warehouse.name"/>
+                                        </td>
+                                        <td class="input-available">
+                                            <t t-esc="warehouse.value"/>
+                                        </td>
+                                        <td>
+                                            <input type="number" step="1" class="input-quantity" t-att-value="props.default == warehouse.id ? 1 : '' " t-on-keyup="onKeyupQuantity"/>
+                                        </td>
+                                        <td>
+                                            <div class="options" t-att-class="{'disabled': props.default !== warehouse.id}">
+                                                <div class="buttons">
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].type === 'later'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="type" data-name="later"><i class="fa fa-2x fa-history"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].type === 'immediately'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="type" data-name="immediately"><i class="fa fa-2x fa-thumbs-o-up"/></button>
+                                                </div>
+                                                <div class="selection">
+                                                    <span t-if="state.transfers[warehouse.id].type === 'later'">Later</span>
+                                                    <span t-elif="state.transfers[warehouse.id].type === 'immediately'">Immediately</span>
+                                                    <input type="hidden" class="transfer-type" t-att-value="state.transfers[warehouse.id].type"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="options">
+                                                <div class="buttons">
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'shopping'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="shopping"><i class="fa fa-2x fa-shopping-cart"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'cargo_paid'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="cargo_paid"><i class="fa fa-2x fa-truck"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'cargo_free'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="cargo_free"><i class="fa fa-2x fa-check-square-o"/></button>
+                                                    <button t-att-class="{'active': state.transfers[warehouse.id].location === 'vehicle'}" t-on-click="onClickSelect" t-att-data-id="warehouse.id" data-type="location" data-name="vehicle"><i class="fa fa-2x fa-automobile"/></button>
+                                                </div>
+                                                <div class="selection">
+                                                    <span t-if="state.transfers[warehouse.id].location === 'shopping'">Shopping</span>
+                                                    <span t-elif="state.transfers[warehouse.id].location === 'cargo_paid'">Paid Cargo</span>
+                                                    <span t-elif="state.transfers[warehouse.id].location === 'cargo_free'">Free Cargo</span>
+                                                    <span t-elif="state.transfers[warehouse.id].location === 'vehicle'">Vehicle</span>
+                                                    <input type="hidden" class="transfer-location" t-att-value="state.transfers[warehouse.id].location"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="date" class="transfer-date" t-model="state.transfers[warehouse.id].date"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr>
+                                <td>TOTAL</td>
+                                <td><t t-esc="props.total"/></td>
+                                <td/>
+                                <td colspan="3"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="footer">
+                    <div class="button confirm altlight" t-on-click="confirm">Add</div>
+                    <div class="button cancel" t-on-click="cancel">Cancel</div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+import odoo
 from odoo import models, fields
-#from odoo.addons.bus.models.bus import dispatch
 
 
 class PosSync(models.Model):
@@ -16,8 +16,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     def _compute_sync_concurrent(self):
-        #concurrent = not bool(not dispatch)
-        concurrent = True
+        concurrent = odoo.multi_process or odoo.evented
         for config in self:
             config.sync_concurrent_readonly = not concurrent
             config.sync_concurrent = concurrent and config.sync_concurrent_ok

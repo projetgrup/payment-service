@@ -7,17 +7,17 @@ export const TicketScreenSync = (TicketScreen) =>
     class TicketScreenSync extends TicketScreen {
         async _onBeforeDeleteOrder(order) {
             await order.stop_syncing();
-            return true;
+            return super._onBeforeDeleteOrder(order);
         }
 
         shouldHideDeleteButton(order) {
             const res = super.shouldHideDeleteButton(order);
-            return res || !order.is_owner();
+            return res || !order.is_owner;
         }
 
         shouldHideSyncButton(order) {
-            return order.locked || order.is_owner();
+            return order.locked || order.is_owner;
         }
     };
 
-Registries.Component.extend(TicketScreen, TicketScreenSync)
+Registries.Component.extend(TicketScreen, TicketScreenSync);

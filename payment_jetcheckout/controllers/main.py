@@ -446,7 +446,7 @@ class JetcheckoutController(http.Controller):
                     'jetcheckout_transaction_id': txid,
                     'last_state_change': fields.Datetime.now(),
                 })
-                return {'url': '%s/%s' % (rurl, txid)}
+                return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
             else:
                 tx.state = 'error'
                 message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
