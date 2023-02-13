@@ -53,12 +53,12 @@ class PosOrderLine(models.Model):
         ('immediately', 'Immediately'),
         ('later', 'Later')
     ], string='Transfer Type')
-    transfer_location = fields.Selection([
+    transfer_method = fields.Selection([
         ('shopping', 'Shopping'),
         ('cargo_paid', 'Paid Cargo'),
         ('cargo_free', 'Free Cargo'),
         ('vehicle', 'Vehicle')
-    ], string='Transfer Location')
+    ], string='Transfer Method')
 
     def _export_for_ui(self, orderline):
         res = super(PosOrderLine, self)._export_for_ui(orderline)
@@ -66,7 +66,7 @@ class PosOrderLine(models.Model):
             'location_id' : orderline.location_id.id,
             'transfer_date' : orderline.transfer_date,
             'transfer_type' : orderline.transfer_type,
-            'transfer_location' : orderline.transfer_location,
+            'transfer_method' : orderline.transfer_method,
         })
         return res
 
@@ -80,6 +80,6 @@ class PosOrderLine(models.Model):
                 'location_id' : orderline.location_id.id,
                 'transfer_date' : orderline.transfer_date,
                 'transfer_type' : orderline.transfer_type,
-                'transfer_location' : orderline.transfer_location,
+                'transfer_method' : orderline.transfer_method,
             })
         return res

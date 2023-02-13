@@ -19,11 +19,12 @@
             'pos_stock/static/src/js/db.js',
             'pos_stock/static/src/js/models.js',
             'pos_stock/static/src/js/StockPopup.js',
-            'pos_stock/static/src/js/ProductWidget.js',
+            'pos_stock/static/src/js/Components.js',
         ],
         'web.assets_qweb': [
             'pos_stock/static/src/xml/StockPopup.xml',
-            'pos_stock/static/src/xml/ProductItem.xml'
+            'pos_stock/static/src/xml/ProductItem.xml',
+            'pos_stock/static/src/xml/Orderline.xml',
         ]
     },
     'application': False,

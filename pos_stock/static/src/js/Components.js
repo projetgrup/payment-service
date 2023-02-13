@@ -1,11 +1,23 @@
-odoo.define('pos_stock.ProductWidget', function (require) {
+odoo.define('pos_stock.Components', function (require) {
 'use strict';
 
+const NumberBuffer = require('point_of_sale.NumberBuffer');
+const Orderline = require('point_of_sale.Orderline');
+const ProductScreen = require('point_of_sale.ProductScreen');
 const ProductsWidget = require('point_of_sale.ProductsWidget');
 const Registries = require('point_of_sale.Registries');
 const TicketScreen = require('point_of_sale.TicketScreen');
 const ErrorPopup = require('point_of_sale.ErrorPopup');
 const { posbus } = require('point_of_sale.utils');
+const { useListener } = require('web.custom_hooks');
+
+
+const StockOrderline = (Orderline) =>
+    class extends Orderline {
+        configureLine() {
+            this.props.line.order.set_product(this.props.line);
+        }
+    }
 
 const StockTicketScreen = (TicketScreen) =>
     class extends TicketScreen {
@@ -64,6 +76,26 @@ const StockTicketScreen = (TicketScreen) =>
         }
     }
 
+const StockProductScreen = (ProductScreen) =>
+    class extends ProductScreen {
+        constructor() {
+            super(...arguments);
+            useListener('right-click-product', this._rightClickProduct);
+        }
+
+        async _rightClickProduct(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!this.currentOrder) this.env.pos.add_new_order();
+            const product = event.detail;
+            const options = await this._getAddProductOptions(product);
+            if (!options) return;
+            options.forceOpen = true;
+            this.currentOrder.add_product(product, options);
+            NumberBuffer.reset();
+        }
+    }
+
 const StockProductsWidget = (ProductsWidget) =>
     class extends ProductsWidget {
         willPatch() {
@@ -116,7 +148,9 @@ const StockErrorPopup = (ErrorPopup) =>
         }
     };
 
+Registries.Component.extend(Orderline, StockOrderline);
 Registries.Component.extend(TicketScreen, StockTicketScreen);
+Registries.Component.extend(ProductScreen, StockProductScreen);
 Registries.Component.extend(ProductsWidget, StockProductsWidget);
 Registries.Component.extend(ErrorPopup, StockErrorPopup);
 });

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//li[@class='orderline']" position="attributes">
+            <attribute name="oncontextmenu">return false;</attribute>
+            <attribute name="t-on-contextmenu">configureLine</attribute>
+        </xpath>
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <ul t-if="props.line.location_id" class="info-list info-list-picking">
+                <li class="info">
+                    <t t-esc="env.pos.db.warehouse_by_id[props.line.location_id].name"/>
+                </li>
+                <li class="info">
+                    <t t-esc="env.pos.db.transfer_type_by_code[props.line.transfer_type]"/>
+                </li>
+                <li class="info">
+                    <t t-esc="env.pos.db.transfer_method_by_code[props.line.transfer_method]"/>
+                </li>
+                <li class="info">
+                    <t t-esc="props.line.get_transfer_date()"/>
+                </li>
+            </ul>
+        </xpath>
+    </t>
+</templates>
