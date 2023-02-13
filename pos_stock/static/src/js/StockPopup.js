@@ -33,13 +33,15 @@ class StockPopup extends AbstractAwaitablePopup {
     async getPayload() {
         var values = [];
         $.each(this.state.transfers, function (key, value) {
-            values.push({
-                location_id: value.location,
-                quantity: value.quantity,
-                transfer_type: value.type,
-                transfer_method: value.method,
-                transfer_date: value.date,
-            });
+            if (value.quantity > 0) {
+                values.push({
+                    location_id: value.location,
+                    quantity: value.quantity,
+                    transfer_type: value.type,
+                    transfer_method: value.method,
+                    transfer_date: value.date,
+                });
+            }
         });
         return values;
     }
