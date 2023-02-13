@@ -58,7 +58,7 @@ msgstr "İptal"
 #. module: pos_stock
 #. openerp-web
 #: code:addons/pos_stock/static/src/xml/popup.xml:0
-#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__cargo
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_method__cargo
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
 #, python-format
 msgid "Cargo"
@@ -157,7 +157,7 @@ msgstr "Hazır Durumda"
 #. module: pos_stock
 #. openerp-web
 #: code:addons/pos_stock/static/src/xml/popup.xml:0
-#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__shopping
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_method__shopping
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
 #, python-format
 msgid "Shopping"
@@ -181,8 +181,8 @@ msgid "TOTAL"
 msgstr "TOPLAM"
 
 #. module: pos_stock
-#: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__transfer_location
-#: model:ir.model.fields,field_description:pos_stock.field_stock_picking__transfer_location
+#: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__transfer_method
+#: model:ir.model.fields,field_description:pos_stock.field_stock_picking__transfer_method
 msgid "Transfer Location"
 msgstr "Transfer Konumu"
 
@@ -198,7 +198,7 @@ msgstr "Transfer Türü"
 #. module: pos_stock
 #. openerp-web
 #: code:addons/pos_stock/static/src/xml/popup.xml:0
-#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_location__vehicle
+#: model:ir.model.fields.selection,name:pos_stock.selection__pos_order_line__transfer_method__vehicle
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_picking_internal_search
 #, python-format
 msgid "Vehicle"
