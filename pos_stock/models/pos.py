@@ -23,19 +23,28 @@ class PosOrder(models.Model):
     def _process_order(self, order, draft, existing_order):
         res = super(PosOrder, self)._process_order(order, draft, existing_order)
         try:
+            products = []
+            locations = []
+            company = self.env.company.id
             now = datetime.now()
-            partners = self.env['res.users'].sudo().search([('id', '!=', self.env.uid), ('company_id', '=', self.env.company.id), ('share', '=', False)]).mapped('partner_id')
+            for line in order['data']['lines']:
+                products.append(line[2]['product_id'])
+                locations.append(line[2]['location_id'])
+
+            partners = self.env['res.users'].sudo().search([('company_id', '=', company), ('share', '=', False)]).mapped('partner_id')
+            quants = self.env['stock.quant'].sudo().search_read([('product_id', 'in', products), ('location_id', 'in', locations), ('company_id', '=', company)], ['product_id', 'location_id', 'quantity', 'reserved_quantity'])
             messages = [
                 [partner, 'pos.bus/all', {
                     'date': now,
                     'type': 'stock',
                     'session': order['data']['pos_session_id'],
                     'cashier': order['data']['pos_uid'],
-                    'orders': [{
-                        'product': line[2]['product_id'],
-                        'location': line[2]['location_id'],
-                        'quantity': line[2]['qty'],
-                    } for line in order['data']['lines']],
+                    'stocks': [{
+                        'product': quant['product_id'],
+                        'location': quant['location_id'],
+                        'quantity': quant['quantity'],
+                        'reserved': quant['reserved_quantity'],
+                    } for quant in quants],
                 }
             ] for partner in partners]
             self.env['bus.bus'].with_context(pos=True)._sendmany(messages)

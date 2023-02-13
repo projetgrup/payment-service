@@ -14,7 +14,7 @@ exports.load_models({
     model: 'stock.quant',
     fields: ['id', 'product_id', 'location_id', 'company_id', 'quantity', 'reserved_quantity'],
     domain: function (self) {
-        return [['location_id.usage', 'in', ['internal']]];
+        return [['location_id.usage', '=', 'internal']];
     },
     loaded: function (self, quants) {
         self.db.add_quant(quants, self.config.picking_type);
@@ -42,20 +42,20 @@ exports.PosModel = exports.PosModel.extend({
     _process_sync: function (data) {
         try {
             PosModel._process_sync.call(this, ...arguments);
-            if (data.type === 'stock' && (data.session == this.pos_session.id && data.cashier != this.pos_session.login_number || data.session != this.pos_session.id)) {
+            if (data.type === 'stock') {
                 this._process_sync_stocks(data);
             }
         } catch {}
     },
 
     _process_sync_stocks: function (data) {
-        console.log(data);
-        if (data.orders) {
+        if (data.stocks) {
+            const unreserved = this.config.picking_type === 'quantity_unreserved';
             const quants = this.db.quant_by_product_id;
-            console.log(quants);
-            for (let order of data.orders) {
-                if (order.location && order.product in quants && order.location in quants[order.product]) {
-                    quants[order.product][order.location] -= order.quantity;
+            for (let stock of data.stocks) {
+                if (stock.location && stock.product in quants && stock.location in quants[stock.product]) {
+                    var quant = unreserved ? stock.quantity - stock.reserved : stock.quantity;
+                    quants[stock.product][stock.location] = quant;
                 }
             }
             posbus.trigger('render-product-list');
