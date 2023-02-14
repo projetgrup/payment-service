@@ -351,6 +351,7 @@
                                 <button id="payment_pay" class="payment_pay d-none"/>
                             </div>
                         </div>
+                        <input id="campaign" type="hidden" t-att-value="campaign"/>
                     </div>
                 </div>
             </div>
