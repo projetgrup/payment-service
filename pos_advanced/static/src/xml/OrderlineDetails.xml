@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-inherit="point_of_sale.OrderlineDetails" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-if='_destinationOrderUid']" position="inside">
-            <i class="fa fa-pull-left fa-times-circle oe_link_icon" t-on-click.stop="trigger('remove-refund-order-uid', _destinationOrderUid)"/>
-        </xpath>
-    </t>
-</templates>
