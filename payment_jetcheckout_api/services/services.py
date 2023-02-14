@@ -296,10 +296,11 @@ class PaymentAPIService(Component):
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
             'jetcheckout_api_method': method,
-            'jetcheckout_api_contact': getattr(params.partner, 'contact', '') or '',
+            'jetcheckout_api_contact': getattr(params.partner, 'contact', False) or False,
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_card_return_url': params.url.card.result,
-            'jetcheckout_date_expiration': params.expiration,
+            'jetcheckout_date_expiration': getattr(params, 'expiration', False) or False,
+            'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
 
         if products:
