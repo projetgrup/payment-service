@@ -142,6 +142,9 @@
         <xpath expr='//field[@name="property_account_payable_id"]' position="attributes">
             <attribute name="required">0</attribute>
         </xpath>
+        <xpath expr='//group[@name="misc"]' position="inside">
+            <field name="system" readonly="0"/>
+        </xpath>
     </field>
     </record>
 
