@@ -53,13 +53,15 @@ class JetcheckoutSystemController(JetController):
         currency = company.currency_id
         lang = get_lang(request.env)
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        card_family = self._jetcheckout_get_card_family(acquirer)
+        campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
+        card_family = self._jetcheckout_get_card_family(acquirer=acquirer, campaign=campaign)
         return {
             'partner': partner,
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,
             'acquirer': acquirer,
+            'campaign': campaign,
             'card_family': card_family,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
@@ -80,18 +82,18 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def jetcheckout_system_payment_page(self, token, **kwargs):
-        parent = self._jetcheckout_get_parent(token)
+        partner = self._jetcheckout_get_parent(token)
         transaction = None
         if '' in kwargs:
             transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs[''])], limit=1)
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
-        company = parent.company_id
+        company = partner.company_id
         if company and not company == request.env.company:
             raise werkzeug.exceptions.NotFound()
-        system = company.system
-        values = self._jetcheckout_system_page_values(company, system, parent, transaction)
+        system = company.system or partner.system or 'jetcheckout_system'
+        values = self._jetcheckout_system_page_values(company, system, partner, transaction)
         return request.render('payment_%s.payment_page' % system, values)
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)

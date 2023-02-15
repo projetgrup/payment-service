@@ -20,6 +20,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$cctype = '';
             self.$ccfamily = '';
             self.$name = document.getElementById('name');
+            self.$campaign = document.getElementById('campaign');
             self.$cardnumber = document.getElementById('cardnumber');
             self.$expirationdate = document.getElementById('expirationdate');
             self.$securitycode = document.getElementById('securitycode');
@@ -314,7 +315,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 amount: this.amount.typedValue,
                 amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
                 cardnumber: this.cardnumber.typedValue,
-                partner: this.$partner && this.$partner.value || 0
+                partner: this.$partner && this.$partner.value || 0,
+                campaign: this.$campaign && this.$campaign.value || '',
             },
         }).then(function (result) {
             if ('error' in result) {
@@ -411,6 +413,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         prefix: 'bin_',
                         render: true,
                         partner: this.$partner && this.$partner.value || 0,
+                        campaign: this.$campaign && this.$campaign.value || '',
                         s2s: !(!this.$order && !this.$invoice && !this.$subscription),
                     },
                 }).then(function (result) {
@@ -539,6 +542,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             cvc: this.securitycode.typedValue,
             card_type: this.$cctype,
             card_family: this.$ccfamily,
+            campaign: this.$campaign && this.$campaign.value || '',
             success_url: this.$success_url && this.$success_url.value || false,
             fail_url: this.$fail_url && this.$fail_url.value || false,
             partner: this.$partner && this.$partner.value || 0,
