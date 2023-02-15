@@ -89,7 +89,7 @@ class JetcheckoutApiController(JetController):
         values = {
             'acquirers': acquirers,
             'tx': tx,
-            'order': order
+            'order': order,
         }
         return request.render('payment_jetcheckout_api.payment_page', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -110,7 +110,7 @@ class JetcheckoutApiController(JetController):
         elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'card':
             raise NotFound()
 
-        values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
+        values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, transaction=tx, balance=False)
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_card_page', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate',

@@ -13,9 +13,9 @@
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="before">
             <header>
-                <button name="action_student_payment_table" type="object" string="Payment Table" invisible="not context.get('active_system',False) == 'student'"/>
+                <button name="action_student_payment_table" type="object" string="Payment Table" invisible="not context.get('active_system', False) == 'student'"/>
             </header>
-            <field name="child_id" string="Student" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain'])] or [('parent_id','!=',False),('company_id','=',company_id)]" required="1"/>
+            <field name="child_id" string="Student" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id', 'in', context['domain'])] or [('parent_id', '!=', False), ('company_id', '=', company_id)]" required="1"/>
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="after">
             <field name="school_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>

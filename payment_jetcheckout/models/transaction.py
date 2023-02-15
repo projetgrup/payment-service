@@ -44,6 +44,7 @@ class PaymentTransaction(models.Model):
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
     jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False)
+    jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
     jetcheckout_card_type = fields.Char('Card Type', readonly=True, copy=False)
