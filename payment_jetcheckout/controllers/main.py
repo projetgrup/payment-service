@@ -473,6 +473,7 @@ class JetcheckoutController(http.Controller):
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
+        #_logger.error(kwargs)
         url, tx, status = self._jetcheckout_process(**kwargs)
         return werkzeug.utils.redirect(url)
 
