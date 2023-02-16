@@ -88,7 +88,8 @@ class Partner(models.Model):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        res['company_id'] = self.env.company.id
+        if not self.env.context.get('skip_company') and self.env.company.system:
+            res['company_id'] = self.env.company.id
         langs = self.env['res.lang'].get_installed()
         for lang in langs:
             if lang[0] == 'tr_TR':

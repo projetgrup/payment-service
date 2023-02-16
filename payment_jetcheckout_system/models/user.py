@@ -19,9 +19,11 @@ class Users(models.Model):
 
     def _set_privilege(self):
         for user in self:
-            system = user.company_id.system or 'jetcheckout_system'
-            group_user = self.env.ref('payment_%s.group_%s_user' % (system, system))
-            group_admin = self.env.ref('payment_%s.group_%s_manager' % (system, system))
+            system = user.company_id.system
+            module = system or 'jetcheckout_system'
+            name = system or 'system'
+            group_user = self.env.ref('payment_%s.group_%s_user' % (module, name))
+            group_admin = self.env.ref('payment_%s.group_%s_manager' % (module, name))
             if user.privilege == 'admin':
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(4, user.id)]})
