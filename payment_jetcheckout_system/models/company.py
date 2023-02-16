@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields,api
 
 class Company(models.Model):
     _inherit = 'res.company'
@@ -18,7 +18,24 @@ class Company(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
     notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')
 
+    @api.model
+    def create(self, vals):
+        company = super(Company, self.with_context(skip_company=True)).create(vals)
+        if 'system' in vals:
+            company.partner_id.write({
+                'company_id': company.id,
+                'system': vals['system'],
+            })
+        return company
+
     def write(self, vals):
-        if 'system' in vals and not self.env.user.has_group('base.group_system'):
-            del vals['system']
+        if 'system' in vals:
+            if self.env.user.has_group('base.group_system'):
+                for company in self:
+                    company.partner_id.write({
+                        'company_id': company.id,
+                        'system': vals['system'],
+                    })
+            else:
+                del vals['system']
         return super().write(vals)
