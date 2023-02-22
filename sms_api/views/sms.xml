@@ -32,7 +32,7 @@
             <field name="originator"/>
             <field name="active" widget="boolean_toggle"/>
             <button name="action_test_connection" string="Test Connection" type="object" icon="fa-wrench" attrs="{'invisible': [('active', '=', False)]}"/>
-            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide"/>
         </tree>
     </field>
     </record>
@@ -53,7 +53,7 @@
                     </group>
                     <group>
                         <field name="active" widget="boolean_toggle"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </group>
             </sheet>

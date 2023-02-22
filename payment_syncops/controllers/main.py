@@ -226,6 +226,7 @@ class PaymentSyncopsController(JetController):
         partner = request.env.user.partner_id
         return {
             'name': partner.name,
+            'campaign': partner.campaign_id.name,
             'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_partner_balance', {
                 'balances': self._jetcheckout_connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
             })

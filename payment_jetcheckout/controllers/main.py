@@ -10,7 +10,7 @@ import logging
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +36,15 @@ class JetcheckoutController(http.Controller):
     def _jetcheckout_get_partner_campaign(pid):
         partner = JetcheckoutController._jetcheckout_get_partner(pid)
         return partner.campaign_id.name or ''
+
+    @staticmethod
+    def _jetcheckout_get_installment_description(installment):
+        if installment['plus_installment'] > 0:
+            if installment['plus_installment_description']:
+                return '%s + %s (%s)' % (installment['installment_count'], installment['plus_installment'], installment['plus_installment_description'])
+            else:
+                return '%s + %s' % (installment['installment_count'], installment['plus_installment'])
+        return '%s' % installment['installment_count']
 
     def _jetcheckout_tx_vals(self, **kwargs):
         return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
@@ -112,6 +121,7 @@ class JetcheckoutController(http.Controller):
                 for options in installment_options:
                     installment_list = []
                     for installment in options['installments']:
+                        installment['installment_desc'] = self._jetcheckout_get_installment_description(installment)
                         if amount_installment > 0 and amount > 0 and installment['installment_count'] != 1:
                             installment['installment_rate'] = (100 * amount_installment / amount) - 100
                         else:
@@ -139,7 +149,8 @@ class JetcheckoutController(http.Controller):
                             "plus_installment": 0,
                             "plus_installment_description": "",
                             "total_installment": 1,
-                            "installment_rate": 0.0
+                            "installment_rate": 0.0,
+                            "installment_desc": "1",
                         }]
                     }],
                     'amount': kwargs['amount'],
@@ -181,27 +192,6 @@ class JetcheckoutController(http.Controller):
         else:
             return []
 
-    def _jetcheckout_get_fees(self, acquirer=False, **kwargs):
-        kwargs['prefix'] = 'bin_'
-        values = self._jetcheckout_get_installment_data(acquirer=acquirer, **kwargs)
-        if 'error' in values:
-            return values
-        installments = filter(lambda x: x['installment_count'] == int(kwargs['installment']) ,values['installments'][0]['installments'])
-        for installment in installments:
-            return float(installment.get('customer_rate', 0.0))
-        return 0.0
-
-    def _jetcheckout_payment_simulation(self, url, data):
-        response = requests.post(url, data=json.dumps(data))
-        if response.status_code == 200:
-            result = response.json()
-            if result['response_code'] == "00":
-                return result.get('virtual_pos_name', '-').split(' - ', 1)[1], result.get('expected_cost_rate', 0)
-            else:
-                return {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}, None
-        else:
-            return {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}, None
-
     def _jetcheckout_get_transaction(self):
         return False
 
@@ -214,16 +204,7 @@ class JetcheckoutController(http.Controller):
             return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
-        if kwargs.get('response_code') == "00":
-            domain = request.httprequest.referrer
-            tx.with_context(domain=domain)._jetcheckout_done_postprocess()
-        else:
-            tx.write({
-                'state': 'error',
-                'state_message': _('%s (Error Code: %s)') % (kwargs.get('response_message', '-'), kwargs.get('response_code','')),
-                'last_state_change': fields.Datetime.now(),
-            })
-
+        tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
         return url, tx, False
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
@@ -269,48 +250,60 @@ class JetcheckoutController(http.Controller):
         if 'error' in values or 'installments' not in values or not len(values['installments']):
             return values
 
-        installments = values['installments'][0]
-        values['installment'] = {'installments': installments['installments']}
-        res = {
-            'card': installments['card_family'],
-            'logo': installments['card_family_logo']
-        }
+        installment = values['installments'][0]
+        installments = installment['installments']
+        request.session['__tx_installments'] = installments
+        values['installment'] = {'installments': installments}
+        res = {'card': installment['card_family'], 'logo': installment['card_family_logo']}
 
         if kwargs.get('render'):
             template = kwargs.get('template', 'payment_jetcheckout.installment')
             res.update({'render': request.env['ir.ui.view']._render_template(template, values)})
 
         if kwargs.get('list'):
-            res.update({'installments': installments['installments']})
+            res.update(values['installment'])
 
         return res
 
     @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
-        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        currency = request.env.company.currency_id
-        installment = int(kwargs.get('installment', 1))
-        installment_desc = kwargs.get('installment_desc')
-        amount = float(kwargs['amount'])
+        installment_count = int(kwargs.get('installment', 1))
+        installments = request.session.get('__tx_installments', [])
+        installment = None
+        for i in installments:
+            if i['installment_count'] == installment_count:
+                installment = i
+                break
+        if not installment:
+            raise ValidationError(_('An error occured. Please restart your payment transaction.'))
+
+        amount = float(kwargs.get('amount', 0))
         amount_installment = float(kwargs.get('amount_installment', 0))
         if amount_installment > 0 and installment != 1:
             amount = amount_installment
 
-        customer_rate = self._jetcheckout_get_fees(acquirer=acquirer, **kwargs)
+        installment_count = installment['installment_count'] + installment['plus_installment']
+        installment_desc = installment['installment_desc']
+        cost_rate = installment['cost_rate']
+        customer_rate = installment['customer_rate']
         customer_amount = amount * customer_rate / 100
-        amount_int = int((amount + customer_amount) * 100)
+        amount_total = float_round(amount + customer_amount, 2)
+        cost_amount = float_round(amount_total * cost_rate / 100, 2)
+        amount_integer = int(amount_total * 100)
 
+        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
         partner = self._jetcheckout_get_partner(pid)
-        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['cardnumber']), str(amount_int), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        currency = request.env.company.currency_id
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['cardnumber']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_jetcheckout_env(),
-            "campaign_name": kwargs['campaign'] or partner.campaign_id.name or '',
-            "amount": amount_int,
+            "campaign_name": kwargs['campaign'] or '',
+            "amount": amount_integer,
             "currency": currency.name,
-            "installment_count": kwargs['installment'],
+            "installment_count": installment_count,
             "card_number": str(kwargs['cardnumber']),
             "expire_month": kwargs['expire_month'],
             "expire_year": "20" + kwargs['expire_year'],
@@ -319,14 +312,9 @@ class JetcheckoutController(http.Controller):
             "language": "tr",
         }
 
-        vpos, rate = self._jetcheckout_payment_simulation(url, data)
-        if not isinstance(vpos, str):
-            return vpos
-
         order_id = str(uuid.uuid4())
         sale_id = int(kwargs.get('order', 0))
         invoice_id = int(kwargs.get('invoice', 0))
-
 
         tx = self._jetcheckout_get_transaction()
         vals = {
@@ -339,14 +327,13 @@ class JetcheckoutController(http.Controller):
             'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
             'jetcheckout_card_type': kwargs['card_type'].capitalize(),
             'jetcheckout_card_family': kwargs['card_family'].capitalize(),
-            'jetcheckout_vpos_name': vpos,
             'jetcheckout_order_id': order_id,
             'jetcheckout_payment_amount': amount,
-            'jetcheckout_installment_count': installment,
+            'jetcheckout_installment_count': installment_count,
             'jetcheckout_installment_description': installment_desc,
-            'jetcheckout_installment_amount': amount / installment if installment > 0 else amount,
-            'jetcheckout_commission_rate': rate,
-            'jetcheckout_commission_amount': amount * rate / 100,
+            'jetcheckout_installment_amount': amount / installment_count if installment_count > 0 else amount,
+            'jetcheckout_commission_rate': cost_rate,
+            'jetcheckout_commission_amount': cost_amount,
             'jetcheckout_customer_rate': customer_rate,
             'jetcheckout_customer_amount': customer_amount,
         }
@@ -472,6 +459,7 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
+        _logger.error(kwargs)
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._jetcheckout_process(**kwargs)
         return werkzeug.utils.redirect(url)
