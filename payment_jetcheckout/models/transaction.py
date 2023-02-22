@@ -292,18 +292,22 @@ class PaymentTransaction(models.Model):
             'target': 'new',
         }
 
-    def _jetcheckout_process_query(self, vals):
-        if vals['successful']:
-            if vals['cancelled']:
+    def _jetcheckout_process_query(self, response):
+        self.write({'jetcheckout_vpos_name': response['virtual_pos_name']})
+        if response['successful']:
+            if response['cancelled']:
                 self._jetcheckout_cancel_postprocess()
             else:
                 self._jetcheckout_done_postprocess()
-        elif not self.env.context.get('skip_error') and not self.state == 'error':
-            self.write({
-                'state': 'error',
-                'state_message': 'Ödeme başarısız.',
-                'last_state_change': fields.Datetime.now(),
-            })
+        else:
+            if self.state == 'error' or self.env.context.get('skip_error'):
+                return
+            else:
+                self.write({
+                    'state': 'error',
+                    'state_message': _('%s (Error Code: %s)') % (response.get('message', '-'), response.get('response_code','')),
+                    'last_state_change': fields.Datetime.now(),
+                })
 
     def _jetcheckout_query(self):
         self.ensure_one()
@@ -311,24 +315,24 @@ class PaymentTransaction(models.Model):
         if 'error' in values:
             raise UserError(values['error'])
 
-        result = values['result']
+        response = values['result']
         vals = {
-            'date': result['transaction_date'][:19],
-            'name': result['virtual_pos_name'],
-            'successful': result['successful'],
-            'completed': result['completed'],
-            'cancelled': result['cancelled'],
-            'threed': result['is_3d'],
-            'amount': result['amount'],
-            'customer_amount': result['commission_amount'],
-            'customer_rate': 100 * result['commission_amount'] / result['amount'] if not result['amount'] == 0 else 0,
-            'commission_amount': result['amount'] * result['expected_cost_rate'] / 100,
-            'commission_rate': result['expected_cost_rate'],
-            'auth_code': result['auth_code'],
-            'service_ref_id': result['service_ref_id'],
+            'date': response['transaction_date'][:19],
+            'name': response['virtual_pos_name'],
+            'successful': response['successful'],
+            'completed': response['completed'],
+            'cancelled': response['cancelled'],
+            'threed': response['is_3d'],
+            'amount': response['amount'],
+            'customer_amount': response['commission_amount'],
+            'customer_rate': 100 * response['commission_amount'] / response['amount'] if not response['amount'] == 0 else 0,
+            'commission_amount': response['amount'] * response['expected_cost_rate'] / 100,
+            'commission_rate': response['expected_cost_rate'],
+            'auth_code': response['auth_code'],
+            'service_ref_id': response['service_ref_id'],
             'currency_id': self.currency_id.id,
         }
-        self._jetcheckout_process_query(result)
+        self._jetcheckout_process_query(response)
         return vals
 
     def jetcheckout_query(self):

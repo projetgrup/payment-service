@@ -19,7 +19,7 @@
             <field name="login"/>
             <field name="lang"/>
             <field name="login_date"/>
-            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
             <field name="active" invisible="1"/>
         </tree>
     </field>

@@ -16,7 +16,7 @@
             <field name="email"/>
             <field name="date_email_sent" optional="hide"/>
             <field name="date_sms_sent" optional="hide"/>
-            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
         </tree>
     </field>
     </record>
@@ -87,7 +87,7 @@
                         <field name="mobile" widget="phone"/>
                         <field name="email" widget="email"/>
                         <field name="ref"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}" required="context.get('system')"/>
+                        <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" required="context.get('system')"/>
                     </group>
                     <group name="communication" string="Communication Dates">
                         <field name="date_email_sent" string="Email"/>
@@ -198,7 +198,7 @@
         <search>
             <field name="name"/>
             <field name="vat"/>
-            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
             <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
             <separator/>
             <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>

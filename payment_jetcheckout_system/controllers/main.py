@@ -89,8 +89,8 @@ class JetcheckoutSystemController(JetController):
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
-        company = partner.company_id
-        if company and not company == request.env.company:
+        company = partner.company_id or request.website.company_id or request.env.company
+        if not company == request.env.company:
             raise werkzeug.exceptions.NotFound()
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._jetcheckout_system_page_values(company, system, partner, transaction)
