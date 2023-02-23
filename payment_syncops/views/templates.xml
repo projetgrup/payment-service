@@ -15,14 +15,32 @@
     <template id="payment_partner_balance" name="Payment System Page - syncOPS Partner Balance">
         <t t-if="show_balance">
             <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
-                Balance
                 <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
                     <i class="fa fa-book mr-2" t-translation="off"/>See Ledger
                 </a>
             </label>
-            <div class="d-flex flex-column">
+            <div>
+                <div class="d-flex flex-row justify-content-between w-100 text-primary font-weight-bold">
+                    <div>
+                        Balance
+                    </div>
+                    <div>
+                        Total Debit &amp; Credit
+                        <i class="fa fa-info-circle text-white"/>
+                    </div>
+                </div>
+            </div>
+            <div>
                 <t t-foreach="balances" t-as="balance">
-                    <span t-esc="balance['amount']" t-attf-class="#{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                    <div t-attf-class="d-flex flex-row justify-content-between w-100 #{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}">
+                        <div>
+                            <span t-esc="balance['amount']" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                        </div>
+                        <div>
+                            <span t-esc="balance['amount_total']" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                            <i t-attf-class="fa fa-info-circle #{'' if balance['note'] else 'text-white'}" t-att-title="balance['note']"/>
+                        </div>
+                    </div>
                 </t>
             </div>
         </t>

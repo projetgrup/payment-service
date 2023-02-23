@@ -37,18 +37,20 @@ class PaymentSyncopsController(JetController):
         }, company=company)
         if result:
             for res in result:
-                currency_name = res['currency_name']
+                currency_name = res.get('currency_name', '')
 
                 # Following two lines are for compatibility purposes
                 if currency_name == 'TRL':
                     currency_name = 'TRY'
 
-                amount = isinstance(res['amount'], float) and res['amount'] or 0
                 currency = request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', currency_name)], limit=1)
                 if not currency:
                     continue
 
-                balances.append({'amount': amount, 'currency': currency})
+                amount = isinstance(res.get('amount'), float) and res['amount'] or 0
+                amount_total = isinstance(res.get('amount_total'), float) and res['amount_total'] or 0
+
+                balances.append({'amount': amount, 'currency': currency, 'amount_total': amount_total, 'note': res.get('note', '')})
         return balances
 
     def _jetcheckout_connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):

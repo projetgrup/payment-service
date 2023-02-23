@@ -106,7 +106,7 @@ paymentSystemPage.include({
                     },
                 }).then(function (result) {
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');
-                    $('input#campaign').value($el.data('campaign') || '');
+                    $('input#campaign').val($el.data('campaign') || '');
                     $('label[for="partner"] + span').text($el.data('company'));
                     $('.o_connector_partner_balance').html(result.render);
                     $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
