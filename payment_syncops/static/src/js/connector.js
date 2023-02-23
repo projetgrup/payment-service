@@ -106,6 +106,7 @@ paymentSystemPage.include({
                     },
                 }).then(function (result) {
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');
+                    $('input#campaign').val($el.data('campaign') || '');
                     $('label[for="partner"] + span').text($el.data('company'));
                     $('.o_connector_partner_balance').html(result.render);
                     $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
@@ -273,6 +274,7 @@ paymentSystemPage.include({
             route: '/my/payment/partners/reset',
         }).then(function (result) {
             if (!result) return false;
+            $('input#campaign').value(result.campaign || '');
             $('label[for="partner"] + span').text(result.name);
             $('.o_connector_partner_balance').html(result.render);
             $el.addClass('d-none');

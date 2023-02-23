@@ -100,12 +100,16 @@ class Partner(models.Model):
     @api.model
     def create(self, values):
         if 'system' not in values and 'company_id' in values:
-            values['system'] = self.env['res.company'].sudo().browse(values['company_id']).system
+            company = self.env['res.company'].sudo().browse(values['company_id'])
+            if company and company.system:
+                values['system'] = company.system
         return super().create(values)
 
     def write(self, values):
         if 'system' not in values and 'company_id' in values:
-            values['system'] = self.env['res.company'].sudo().browse(values['company_id']).system
+            company = self.env['res.company'].sudo().browse(values['company_id'])
+            if company and company.system:
+                values['system'] = company.system
         return super().write(values)
 
     def _get_name(self):

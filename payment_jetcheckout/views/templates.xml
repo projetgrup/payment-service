@@ -83,24 +83,15 @@
     <template id="payment_sidebar" name="Payment Sidebar">
         <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
             <div>
-                <div class="px-3 py-4 bg-white card my-4">
-                    <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
-                    <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
-                    <span t-else="" t-esc="partner.name" class="text-600"/>
-                    <t t-if="contact">
-                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
-                        <span t-esc="contact.name" class="text-600"/>
-                    </t>
-                    <t t-if="labels" t-raw="labels"/>
-                    <input id="partner" type="hidden" name="partner" t-att-value="partner.id"/>
+                <div class="px-3 py-4 bg-white card my-4 shadow">
                     <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
                     <t t-if="page == 'payment'">
-                        <div class="field-container mt-5">
-                            <input id="amount" type="text" inputmode="decimal" class="text-center" required="required"/>
+                        <div class="field-container">
+                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required"/>
                             <span class="bar-container"/>
                             <span t-if="currency['position'] == 'before'" class="symbol symbol-before" t-esc="currency['symbol']"/>
                             <span t-else="" class="symbol symbol-after" t-esc="currency['symbol']"/>
-                            <label for="amount"><span>Amount to Pay</span></label>
+                            <label for="amount" class="text-primary"><span>Amount to Pay</span></label>
                         </div>
                         <input id="commission" type="hidden" value="0"/>
                     </t>
@@ -108,7 +99,6 @@
                         <button t-if="tx and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
                         <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
                     </t>
-                    <t t-if="buttons" t-raw="buttons"/>
                     <div t-if="page == 'payment' and not no_payment_icons" class="mt-3">
                         <ul class="mb-0 text-center list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -126,6 +116,18 @@
                             </t>
                         </ul>
                     </div>
+                </div>
+                <div class="px-3 py-4 bg-white card my-4">
+                    <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
+                    <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
+                    <span t-else="" t-esc="partner.name" class="text-600"/>
+                    <t t-if="contact">
+                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
+                        <span t-esc="contact.name" class="text-600"/>
+                    </t>
+                    <t t-if="labels" t-raw="labels"/>
+                    <input id="partner" type="hidden" name="partner" t-att-value="partner.id"/>
+                    <t t-if="buttons" t-raw="buttons"/>
                 </div>
                 <div t-if="page == 'payment' and not no_card_preview" style="height: 200px;">
                     <t t-call="payment_jetcheckout.payment_preview"/>
@@ -461,7 +463,7 @@
                     <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
                     <div class="installment-cell">
                         <div class="text-center">
-                            <input type="radio" name="installment_radio" t-att-value="row['installment_count'] + row['plus_installment']" t-att-data-value="'%s + %s (%s)' % (row['installment_count'], row['plus_installment'], row['plus_installment_description']) if row['plus_installment'] > 0 and row['plus_installment_description'] else '%s + %s' % (row['installment_count'], row['plus_installment']) if row['plus_installment'] > 0 else '%s' % row['installment_count']" t-att-checked="row['installment_count'] == 1"/>
+                            <input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-data-value="row['installment_desc']" t-att-checked="row['installment_count'] == 1"/>
                             <span class="installment-radio"/>
                         </div>
                         <div>
