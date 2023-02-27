@@ -28,7 +28,8 @@ class PaymentTransactionImport(models.TransientModel):
             'acquirer_id': line.acquirer_id.id,
             'partner_id': line.partner_id.id,
             'amount': line.amount,
-            'jetcheckout_payment_amount': line.amount,
+            'fees': line.fees,
+            'jetcheckout_payment_amount': line.amount - line.cost,
             'currency_id': line.currency_id.id,
             'company_id': line.company_id.id,
             'state': line.state,
@@ -95,6 +96,8 @@ class PaymentTransactionImportLine(models.TransientModel):
     partner_id = fields.Many2one('res.partner', readonly=True, required=True)
     acquirer_id = fields.Many2one('payment.acquirer', readonly=True, required=True)
     amount = fields.Monetary(readonly=True)
+    fees = fields.Monetary(readonly=True)
+    cost = fields.Monetary(readonly=True)
     currency_id = fields.Many2one('res.currency', readonly=True, required=True, default=lambda self: self.env.company.currency_id)
     company_id = fields.Many2one('res.company', readonly=True, required=True, default=lambda self: self.env.company)
     state = fields.Selection([
