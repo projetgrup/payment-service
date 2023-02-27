@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
             'card_name': self.jetcheckout_card_name,
             'installments': self.jetcheckout_installment_description,
             'currency_name': self.currency_id.name,
-            'amount': self.jetcheckout_payment_amount,
+            'amount': self.amount,
             'amount_commission_cost': self.jetcheckout_commission_amount,
             'amount_customer_cost': self.jetcheckout_customer_amount,
             'amount_commission_rate': self.jetcheckout_commission_rate,
