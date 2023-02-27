@@ -350,7 +350,7 @@ class PaymentAPIService(Component):
                     'family': tx.jetcheckout_card_family or '',
                 },
                 'amounts': {
-                    'amount': tx.jetcheckout_payment_amount,
+                    'amount': tx.amount,
                     'fees': tx.fees,
                     'installment': {
                         'amount': tx.jetcheckout_installment_amount,

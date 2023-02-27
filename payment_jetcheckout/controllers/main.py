@@ -349,8 +349,8 @@ class JetcheckoutController(http.Controller):
 
             vals.update({
                 'reference': name,
-                'amount': amount,
-                'fees': customer_amount,
+                'amount': amount_total,
+                'fees': cost_amount,
                 'currency_id': currency.id,
                 'acquirer_id': acquirer.id,
                 'partner_id': partner.id,
