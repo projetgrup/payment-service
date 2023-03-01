@@ -25,6 +25,10 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="after">
+            <field name="campaign_id" string="Campaign" optional="show"/>
+            <field name="is_portal" string="Active"/>
+        </xpath>
     </field>
     </record>
 
