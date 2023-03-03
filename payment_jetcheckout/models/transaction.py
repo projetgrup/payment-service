@@ -4,6 +4,7 @@ import logging
 import json
 
 from odoo import fields, models, api, _
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -293,7 +294,24 @@ class PaymentTransaction(models.Model):
         }
 
     def _jetcheckout_process_query(self, response):
-        self.write({'jetcheckout_vpos_name': response['virtual_pos_name']})
+        vpos = response['virtual_pos_name']
+        amount = self.jetcheckout_payment_amount
+        customer_rate = response['customer_rate']
+        commission_rate = response['commission_rate']
+        customer_amount = amount * customer_rate / 100
+        amount_total = float_round(amount + customer_amount, 2)
+        commission_amount = float_round(amount_total * commission_rate / 100, 2)
+
+        self.write({
+            'amount': amount_total,
+            'fees': commission_amount,
+            'jetcheckout_vpos_name': vpos,
+            'jetcheckout_customer_rate': customer_rate,
+            'jetcheckout_customer_amount': customer_amount,
+            'jetcheckout_commission_rate': commission_rate,
+            'jetcheckout_commission_amount': commission_amount,
+        })
+
         if response['successful']:
             if response['cancelled']:
                 self._jetcheckout_cancel_postprocess()
