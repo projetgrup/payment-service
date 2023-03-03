@@ -121,14 +121,15 @@ class JetcheckoutController(http.Controller):
                 for options in installment_options:
                     installment_list = []
                     for installment in options['installments']:
+                        installment['installment_count'] = int(installment['installment_count'])
                         installment['installment_desc'] = self._jetcheckout_get_installment_description(installment)
                         if amount_installment > 0 and amount > 0 and installment['installment_count'] != 1:
                             installment['installment_rate'] = (100 * amount_installment / amount) - 100
                         else:
                             installment['installment_rate'] = 0.0
-                        installment['total_installment'] = int(installment['installment_count']) + installment['plus_installment']
+                        installment['total_installment'] = installment['installment_count'] + installment['plus_installment']
                         installment_list.append(installment)
-                    installment_list.sort(key=lambda x: int(x['installment_count']))
+                    installment_list.sort(key=lambda x: x['installment_count'])
                     installments.append(options)
 
                 values = {
