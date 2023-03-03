@@ -178,18 +178,21 @@ class JetcheckoutController(http.Controller):
             "is_3d": True,
         }
 
-        response = requests.post(url, data=json.dumps(data))
-        if response.status_code == 200:
-            result = response.json()
-            if result['response_code'] == "00":
-                installments = result.get('installment_options', [])
-                card_family = set()
-                for installment in installments:
-                    card_family.add(installment['card_family_logo'])
-                return list(card_family)
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    installments = result.get('installment_options', [])
+                    card_family = set()
+                    for installment in installments:
+                        card_family.add(installment['card_family_logo'])
+                    return list(card_family)
+                else:
+                    return []
             else:
                 return []
-        else:
+        except:
             return []
 
     def _jetcheckout_get_transaction(self):
