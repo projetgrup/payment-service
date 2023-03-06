@@ -241,12 +241,18 @@ class PaymentTransaction(models.Model):
         try:
             self.env.cr.commit()
             payment = self.sudo()._jetcheckout_payment()
-            if payment and self.invoice_ids:
-                self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
-                (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
-            self.write({
-                'state_message': _('Transaction is succesful and payment has been validated.'),
-            })
+            if payment:
+                if self.invoice_ids:
+                    self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+                    (payment.line_ids + self.invoice_ids.line_ids).filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled).reconcile()
+                self.write({
+                    'state_message': _('Transaction is succesful and payment has been validated.'),
+                })
+            else:
+                if not self.state_message:
+                    self.write({
+                        'state_message': _('Transaction is succesful.'),
+                    })
         except Exception as e:
             self.env.cr.rollback()
             self.write({
