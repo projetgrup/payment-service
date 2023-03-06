@@ -116,7 +116,7 @@ class PaymentTransaction(models.Model):
             self.state_message = _('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
             return False
 
-        payment_method = self.env.ref('payment_jetcheckout.payment_method_jetcheckout').id
+        payment_method = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
         payment_method_line = line.journal_id.inbound_payment_method_line_ids.filtered(lambda x: x.payment_method_id.id == payment_method.id)
         if not payment_method_line:
             self.state_message = _('Jetcheckout payment method has not been set yet on inbound payment methods of journal %s.' % line.journal_id.name)
