@@ -296,11 +296,15 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_process_query(self, response):
         vpos = response['virtual_pos_name']
         amount = self.jetcheckout_payment_amount
-        customer_rate = response['customer_rate']
-        commission_rate = response['commission_rate']
+        customer_rate = response['expected_cost_rate']
         customer_amount = amount * customer_rate / 100
         amount_total = float_round(amount + customer_amount, 2)
-        commission_amount = float_round(amount_total * commission_rate / 100, 2)
+
+        commission_amount = response['commission_amount']
+        if amount_total:
+            commission_rate = float_round(commission_amount * 100 / amount_total, 2)
+        else:
+            commission_rate = self.jetcheckout_customer_rate
 
         self.write({
             'amount': amount_total,
