@@ -121,14 +121,15 @@ class JetcheckoutController(http.Controller):
                 for options in installment_options:
                     installment_list = []
                     for installment in options['installments']:
+                        installment['installment_count'] = int(installment['installment_count'])
                         installment['installment_desc'] = self._jetcheckout_get_installment_description(installment)
                         if amount_installment > 0 and amount > 0 and installment['installment_count'] != 1:
                             installment['installment_rate'] = (100 * amount_installment / amount) - 100
                         else:
                             installment['installment_rate'] = 0.0
-                        installment['total_installment'] = int(installment['installment_count']) + installment['plus_installment']
+                        installment['total_installment'] = installment['installment_count'] + installment['plus_installment']
                         installment_list.append(installment)
-                    installment_list.sort(key=lambda x: int(x['installment_count']))
+                    installment_list.sort(key=lambda x: x['installment_count'])
                     installments.append(options)
 
                 values = {
@@ -178,18 +179,21 @@ class JetcheckoutController(http.Controller):
             "is_3d": True,
         }
 
-        response = requests.post(url, data=json.dumps(data))
-        if response.status_code == 200:
-            result = response.json()
-            if result['response_code'] == "00":
-                installments = result.get('installment_options', [])
-                card_family = set()
-                for installment in installments:
-                    card_family.add(installment['card_family_logo'])
-                return list(card_family)
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    installments = result.get('installment_options', [])
+                    card_family = set()
+                    for installment in installments:
+                        card_family.add(installment['card_family_logo'])
+                    return list(card_family)
+                else:
+                    return []
             else:
                 return []
-        else:
+        except:
             return []
 
     def _jetcheckout_get_transaction(self):
