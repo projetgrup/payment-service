@@ -17,7 +17,7 @@ class StudentDiscount(models.Model):
     date_start = fields.Date(string='Start Date')
     date_end = fields.Date(string='End Date')
     installment = fields.Integer(string='Installment')
-    percentage = fields.Integer(string='Discount (%)')
+    percentage = fields.Float(string='Discount (%)')
 
     @api.model
     def create(self, vals):
@@ -75,7 +75,7 @@ class StudentBursary(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(required=True)
-    percentage = fields.Integer(string='Discount (%)')
+    percentage = fields.Float(string='Discount (%)')
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
 
