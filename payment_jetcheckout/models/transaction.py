@@ -369,6 +369,8 @@ class PaymentTransaction(models.Model):
             'code': response.get('response_code', ''),
         }
         self._jetcheckout_process_query(vals)
+        del vals['message']
+        del vals['code']
         return vals
 
     def jetcheckout_query(self):
