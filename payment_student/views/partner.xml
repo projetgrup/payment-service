@@ -6,6 +6,9 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
+        <xpath expr='//tree' position="attributes">
+            <attribute name="js_class">student_buttons</attribute>
+        </xpath>
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="ref"/>
             <field name="school_id"/>

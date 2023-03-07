@@ -196,6 +196,7 @@ class StudentAPIService(Component):
         Create Student
         """
         StudentResponse = self.env.datamodels["student.child.output"]
+        context = {}
         company = self.env.company
         key = self._auth(company.id, params.application_key, params.secret_key)
         if not key:
@@ -223,27 +224,52 @@ class StudentAPIService(Component):
                 'is_company': True,
                 'parent_id': False,
                 'company_id': company.id,
+                'system': 'student',
                 'category_id': [(6, 0, categ_api.ids)],
             })
+
+        if hasattr(params, 'campaign_name'):
+            acquirers = self.env['payment.acquirer'].sudo()._get_acquirer(company=self.env.company, providers=['jetcheckout'], raise_exception=False)
+            campaign = self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
+                ('acquirer_id', 'in', acquirers.ids),
+                ('name', '=', params.campaign_name),
+            ], limit=1)
+            if not campaign:
+                return Response("No campaign found with given name", status=404, mimetype="application/json")
+            parent.write({'campaign_id': campaign.id})
 
         if not params.ref:
             return Response("No ref found with given code", status=404, mimetype="application/json")
 
-        students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo()
-        student = students.search([('company_id', '=', company.id), ('ref', '=', params.ref)])
+        if hasattr(params, 'term_code'):
+            term = self.env['res.student.term'].sudo().search([
+                ('company_id', '=', company.id),
+                ('code', '=', params.term_code)
+            ], limit=1)
+            if not term:
+                return Response("No term found with given code", status=404, mimetype="application/json")
+            context.update({'term_id': term.id})
+
+        students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
+        student = students.search([
+            ('company_id', '=', company.id),
+            ('ref', '=', params.ref),
+            ('vat', '=', params.vat)
+        ])
         if len(student) > 1:
             return Response("There is more than one student with the same characteristics in the records. Please contact the system administrator.", status=400, mimetype="application/json")
 
         values = {
             'name': params.name,
             'vat': params.vat,
+            'ref': params.ref,
             'school_id': school.id,
             'bursary_id': bursary.id,
-            'ref': params.ref,
             'class_id': classroom.id,
             'parent_id': parent.id,
-            'is_company': False,
             'company_id': company.id,
+            'is_company': False,
+            'system': 'student',
             'category_id': [(6, 0, categ_api.ids)],
         }
         if student:
