@@ -191,4 +191,3 @@ class PaymentStudentImportLine(models.TransientModel):
     parent_email = fields.Char('Email', readonly=True, required=True)
     parent_mobile = fields.Char('Mobile', readonly=True, required=True)
     parent_campaign = fields.Char('Campaign', readonly=True)
-
