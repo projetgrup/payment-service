@@ -304,31 +304,19 @@ class PaymentTransaction(models.Model):
             'target': 'new',
         }
 
-    def _jetcheckout_process_query(self, response):
-        vpos = response['virtual_pos_name']
-        amount = self.jetcheckout_payment_amount
-        customer_rate = response['expected_cost_rate']
-        customer_amount = amount * customer_rate / 100
-        amount_total = float_round(amount + customer_amount, 2)
-
-        commission_amount = response['commission_amount']
-        if amount_total:
-            commission_rate = float_round(commission_amount * 100 / amount_total, 2)
-        else:
-            commission_rate = self.jetcheckout_customer_rate
-
+    def _jetcheckout_process_query(self, vals):
         self.write({
-            'amount': amount_total,
-            'fees': commission_amount,
-            'jetcheckout_vpos_name': vpos,
-            'jetcheckout_customer_rate': customer_rate,
-            'jetcheckout_customer_amount': customer_amount,
-            'jetcheckout_commission_rate': commission_rate,
-            'jetcheckout_commission_amount': commission_amount,
+            'amount': vals['amount_total'],
+            'fees': vals['commission_amount'],
+            'jetcheckout_vpos_name': vals['name'],
+            'jetcheckout_customer_rate': vals['customer_rate'],
+            'jetcheckout_customer_amount': vals['customer_amount'],
+            'jetcheckout_commission_rate': vals['commission_rate'],
+            'jetcheckout_commission_amount': vals['commission_amount'],
         })
 
-        if response['successful']:
-            if response['cancelled']:
+        if vals['successful']:
+            if vals['cancelled']:
                 self._jetcheckout_cancel_postprocess()
             else:
                 self._jetcheckout_done_postprocess()
@@ -338,7 +326,7 @@ class PaymentTransaction(models.Model):
             else:
                 self.write({
                     'state': 'error',
-                    'state_message': _('%s (Error Code: %s)') % (response.get('message', '-'), response.get('response_code','')),
+                    'state_message': _('%s (Error Code: %s)') % (vals.get('message', '-'), vals.get('code','')),
                     'last_state_change': fields.Datetime.now(),
                 })
 
@@ -349,6 +337,18 @@ class PaymentTransaction(models.Model):
             raise UserError(values['error'])
 
         response = values['result']
+        amount = self.jetcheckout_payment_amount
+
+        customer_rate = response['expected_cost_rate']
+        customer_amount = amount * customer_rate / 100
+        amount_total = float_round(amount + customer_amount, 2)
+
+        commission_amount = response['commission_amount']
+        if amount_total:
+            commission_rate = float_round(commission_amount * 100 / amount_total, 2)
+        else:
+            commission_rate = self.jetcheckout_customer_rate
+
         vals = {
             'date': response['transaction_date'][:19],
             'name': response['virtual_pos_name'],
@@ -356,16 +356,19 @@ class PaymentTransaction(models.Model):
             'completed': response['completed'],
             'cancelled': response['cancelled'],
             'threed': response['is_3d'],
-            'amount': response['amount'],
-            'customer_amount': response['commission_amount'],
-            'customer_rate': 100 * response['commission_amount'] / response['amount'] if not response['amount'] == 0 else 0,
-            'commission_amount': response['amount'] * response['expected_cost_rate'] / 100,
-            'commission_rate': response['expected_cost_rate'],
+            'amount': amount,
+            'amount_total': amount_total,
+            'commission_amount': commission_amount,
+            'commission_rate': commission_rate,
+            'customer_amount': customer_amount,
+            'customer_rate': customer_rate,
             'auth_code': response['auth_code'],
             'service_ref_id': response['service_ref_id'],
             'currency_id': self.currency_id.id,
+            'message': response.get('message', '-'),
+            'code': response.get('response_code', ''),
         }
-        self._jetcheckout_process_query(response)
+        self._jetcheckout_process_query(vals)
         return vals
 
     def jetcheckout_query(self):
