@@ -31,12 +31,12 @@ class Partner(models.Model):
             ])
             if templates:
                 val = []
-                term_id = self.env.context.get('term_id', template.term_id.id)
+                term_id = self.env.context.get('term_id', False)
                 for template in templates:
                     val.append({
                         'child_id': res.id,
                         'parent_id': res.parent_id.id,
-                        'term_id': term_id,
+                        'term_id': term_id or template.term_id.id,
                         'payment_type_id': template.payment_type_id.id,
                         'amount': template.amount,
                         'campaign_id': res.parent_id.campaign_id.id,
