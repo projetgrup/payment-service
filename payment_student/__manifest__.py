@@ -20,12 +20,15 @@
         'views/menu.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'wizards/student_import.xml',
     ],
     'assets': {
         'web.assets_qweb': [
+            'payment_student/static/src/xml/view.xml',
             'payment_student/static/src/xml/templates.xml',
         ],
         'web.assets_backend': [
+            'payment_student/static/src/js/view.js',
             'payment_student/static/src/scss/backend.scss',
         ],
         'web.assets_frontend': [

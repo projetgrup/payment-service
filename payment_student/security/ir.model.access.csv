@@ -14,3 +14,5 @@ payment_template_manager,payment_template_manager,model_res_student_payment_temp
 discount_user,discount_user,model_res_student_discount,base.group_user,1,0,0,0
 discount_manager,discount_manager,model_res_student_discount,payment_student.group_student_manager,1,1,1,1
 payment_table_user,payment_table_user,model_res_student_payment_table,base.group_user,1,1,1,1
+student_import_manager,student_import_manager,model_payment_student_import,payment_student.group_student_manager,1,1,1,1
+student_import_line_manager,student_import_line_manager,model_payment_student_import_line,payment_student.group_student_manager,1,1,1,1
