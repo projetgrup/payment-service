@@ -283,7 +283,7 @@ class JetcheckoutController(http.Controller):
 
         amount = float(kwargs.get('amount', 0))
         amount_installment = float(kwargs.get('amount_installment', 0))
-        if amount_installment > 0 and installment != 1:
+        if amount_installment > 0 and installment['installment_count']  != 1:
             amount = amount_installment
 
         installment_count = installment['installment_count'] + installment['plus_installment']
@@ -463,7 +463,6 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def jetcheckout_return(self, **kwargs):
-        _logger.error(kwargs)
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._jetcheckout_process(**kwargs)
         return werkzeug.utils.redirect(url)
