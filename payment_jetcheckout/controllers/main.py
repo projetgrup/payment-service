@@ -218,6 +218,16 @@ class JetcheckoutController(http.Controller):
         })
         return url, tx, False
 
+    @http.route(['/payment/callback'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
+    def jetcheckout_payment_callback(self, **kwargs):
+        if kwargs.get('is_success'):
+            tx = request.env['payment.transaction'].sudo().search([
+                ('jetcheckout_order_id', '=', kwargs.get('order_id')),
+                ('jetcheckout_transaction_id', '=', kwargs.get('transaction_id')),
+            ], limit=1)
+            if tx:
+                tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
+
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def jetcheckout_payment_acquirer(self):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
