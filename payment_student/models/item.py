@@ -52,13 +52,10 @@ class PaymentItem(models.Model):
         return action
 
     def get_student_payment_table(self):
-        if len(self.mapped('company_id')) != 1:
+        company = self.mapped('company_id')
+        if not len(company) == 1:
             return False
             #raise UserError(_('Payment table cannot be related to more than one company'))
-
-        company = self.mapped('company_id')
-        if not company.system == 'student':
-            return False
 
         currency = company.currency_id
         precision = currency.decimal_places or 2

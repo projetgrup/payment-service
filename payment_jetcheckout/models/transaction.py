@@ -306,11 +306,8 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_process_query(self, vals):
         self.write({
-            'amount': vals['amount_total'],
             'fees': vals['commission_amount'],
             'jetcheckout_vpos_name': vals['name'],
-            'jetcheckout_customer_rate': vals['customer_rate'],
-            'jetcheckout_customer_amount': vals['customer_amount'],
             'jetcheckout_commission_rate': vals['commission_rate'],
             'jetcheckout_commission_amount': vals['commission_amount'],
         })
@@ -337,17 +334,11 @@ class PaymentTransaction(models.Model):
             raise UserError(values['error'])
 
         response = values['result']
-        amount = self.jetcheckout_payment_amount
-
-        customer_rate = response['expected_cost_rate']
-        customer_amount = amount * customer_rate / 100
-        amount_total = float_round(amount + customer_amount, 2)
-
-        commission_amount = response['commission_amount']
-        if amount_total:
-            commission_rate = float_round(commission_amount * 100 / amount_total, 2)
-        else:
-            commission_rate = self.jetcheckout_customer_rate
+        amount = self.amount
+        customer_rate = self.jetcheckout_customer_rate
+        customer_amount = self.jetcheckout_customer_amount
+        commission_rate = response['expected_cost_rate']
+        commission_amount = float_round(self.amount * commission_rate / 100, 2)
 
         vals = {
             'date': response['transaction_date'][:19],
@@ -357,7 +348,6 @@ class PaymentTransaction(models.Model):
             'cancelled': response['cancelled'],
             'threed': response['is_3d'],
             'amount': amount,
-            'amount_total': amount_total,
             'commission_amount': commission_amount,
             'commission_rate': commission_rate,
             'customer_amount': customer_amount,
