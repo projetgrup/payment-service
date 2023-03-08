@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from odoo import http, _
 from odoo.http import request
 from odoo.tools.misc import get_lang
+from odoo.exceptions import AccessError
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
 
 
@@ -12,10 +13,10 @@ class JetcheckoutSystemController(JetController):
 
     def _jetcheckout_check_redirect(self, partner):
         company_id = partner.company_id.id or request.env.company.id
-        path = urlparse(request.httprequest.url).path
         if not request.website.company_id.id == company_id:
             website = request.env['website'].sudo().search([('company_id', '=', company_id)], limit=1)
             if website:
+                path = urlparse(request.httprequest.url).path
                 return werkzeug.utils.redirect(website.domain + path)
             else:
                 raise werkzeug.exceptions.NotFound()
@@ -31,6 +32,12 @@ class JetcheckoutSystemController(JetController):
             raise werkzeug.exceptions.NotFound()
 
         return partner
+
+    def _jetcheckout_check_user(self):
+        path = urlparse(request.httprequest.referrer).path
+        if path == '/my/payment' and not request.env.user.active:
+            raise AccessError(_('Access Denied'))
+        return super()._jetcheckout_check_user()
 
     def _jetcheckout_tx_vals(self, **kwargs):
         vals = super()._jetcheckout_tx_vals(**kwargs)

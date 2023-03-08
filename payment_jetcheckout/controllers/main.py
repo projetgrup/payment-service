@@ -46,6 +46,9 @@ class JetcheckoutController(http.Controller):
                 return '%s + %s' % (installment['installment_count'], installment['plus_installment'])
         return '%s' % installment['installment_count']
 
+    def _jetcheckout_check_user(self):
+        return True
+
     def _jetcheckout_tx_vals(self, **kwargs):
         return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
 
@@ -94,6 +97,7 @@ class JetcheckoutController(http.Controller):
         return vals
 
     def _jetcheckout_get_installment_data(self, acquirer=False, **kwargs):
+        self._jetcheckout_check_user()
         acquirer = self._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
         currency = request.env.company.currency_id
         bin_number = kwargs['cardnumber'][:6] if len(kwargs.get('cardnumber', [])) >= 6 else False
@@ -288,6 +292,8 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def jetcheckout_payment(self, **kwargs):
+        self._jetcheckout_check_user()
+
         installment_count = int(kwargs.get('installment', 1))
         installments = request.session.get('__tx_installments', [])
         installment = None
