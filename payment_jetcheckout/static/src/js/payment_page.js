@@ -530,9 +530,10 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     },
 
     _getParams: function () {
+        const $installment = document.querySelector('input[name="installment_radio"]:checked')
         return {
-            installment: document.querySelector('input[name="installment_radio"]:checked').value,
-            installment_desc: document.querySelector('input[name="installment_radio"]:checked').dataset.value,
+            installment: $installment.value,
+            installment_desc: $installment.dataset.value,
             amount: this.amount.typedValue,
             amount_installment: this.amount_installment && this.amount_installment.typedValue || 0,
             cardnumber: this.cardnumber.typedValue,
