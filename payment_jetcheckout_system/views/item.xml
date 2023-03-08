@@ -5,8 +5,8 @@
     <field name="model">payment.item</field>
     <field name="arch" type="xml">
         <tree editable="top" sample="1">
-            <field name="child_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" invisible="context.get('domain',False)" domain="[('parent_id', '!=', False), ('company_id', '=', company_id)]"/>
-            <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_create': True}" domain="[('parent_id','=',False),('child_ids','!=',False),('company_id','=',company_id)]"/>
+            <field name="child_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" invisible="context.get('domain',False)" domain="[('parent_id', '!=', False), ('system', '=', context.get('active_system')), ('company_id', '=', company_id)]"/>
+            <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_create': True}" domain="[('parent_id','=',False), ('system', '=', context.get('active_system')),('child_ids','!=',False),('company_id','=',company_id)]"/>
             <field name="campaign_id" optional="show" options="{'no_create': True, 'no_open': True}"/>
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
             <field name="paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
@@ -17,8 +17,9 @@
             <button name="action_receipt" string="Receipt" type="object" icon="fa-file-text-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="description" optional="hide"/>
-            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="currency_id" force_save="1" invisible="1"/>
+            <field name="system" invisible="1" force_save="1"/>
             <field name="is_admin" invisible="1"/>
         </tree>
     </field>

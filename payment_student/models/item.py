@@ -13,6 +13,7 @@ class PaymentItem(models.Model):
     payment_type_id = fields.Many2one('res.student.payment.type', ondelete='restrict')
     bursary_amount = fields.Monetary(string='Bursary Discount', readonly=True)
     prepayment_amount = fields.Monetary(string='Prepayment Discount', readonly=True)
+    system = fields.Selection(selection_add=[('student', 'Student Payment System')])
 
     @api.onchange('child_id','term_id','payment_type_id')
     def _onchange_student_id(self):
@@ -56,6 +57,9 @@ class PaymentItem(models.Model):
         if not len(company) == 1:
             return False
             #raise UserError(_('Payment table cannot be related to more than one company'))
+        
+        if any(not system == 'student' for system in self.mapped('system')):
+            return False
 
         currency = company.currency_id
         precision = currency.decimal_places or 2

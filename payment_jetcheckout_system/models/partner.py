@@ -50,7 +50,7 @@ class Partner(models.Model):
     @api.depends('user_ids', 'company_id')
     def _compute_user_details(self):
         for partner in self:
-            users = partner.user_ids.filtered(lambda x: x.company_id.id == partner.company_id.id)
+            users = partner.with_context(active_test=False).user_ids.filtered(lambda x: x.company_id.id == partner.company_id.id)
             user = users[0] if users else False
             if user:
                 partner.users_id = user.id
@@ -191,7 +191,6 @@ class Partner(models.Model):
 
     def action_revoke_access(self):
         self.ensure_one()
-        self._check_portal_user()
 
         if not self.is_portal:
             raise UserError(_('The partner "%s" has no portal access.', self.name))
@@ -205,12 +204,7 @@ class Partner(models.Model):
         if not user:
             return True
 
-        user = user.sudo()
-        if user.has_group('base.group_portal'):
-            if len(user.groups_id) <= 1:
-                user.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
-            else:
-                user.write({'groups_id': [(3, group_portal.id), (4, group_public.id)]})
+        user.sudo().write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
         return True
 
     def action_invite_again(self):
