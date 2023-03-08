@@ -5,8 +5,8 @@
     <field name="model">payment.item</field>
     <field name="arch" type="xml">
         <tree editable="top" sample="1">
-            <field name="child_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" invisible="context.get('domain',False)" domain="[('parent_id','!=',False),('company_id','=',company_id)]"/>
-            <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" domain="[('parent_id','=',False),('child_ids','!=',False),('company_id','=',company_id)]"/>
+            <field name="child_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" invisible="context.get('domain',False)" domain="[('parent_id', '!=', False), ('company_id', '=', company_id)]"/>
+            <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_create': True}" domain="[('parent_id','=',False),('child_ids','!=',False),('company_id','=',company_id)]"/>
             <field name="campaign_id" optional="show" options="{'no_create': True, 'no_open': True}"/>
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
             <field name="paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
