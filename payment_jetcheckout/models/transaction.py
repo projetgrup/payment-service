@@ -304,16 +304,19 @@ class PaymentTransaction(models.Model):
             'target': 'new',
         }
 
-    def _jetcheckout_process_query(self, vals):
+    def _jetcheckout_process_query(self, values):
+        if 'commission_amount' not in values:
+            values['commission_amount'] = float_round(self.amount * values['commission_rate'] / 100, 2)
+
         self.write({
-            'fees': vals['commission_amount'],
-            'jetcheckout_vpos_name': vals['name'],
-            'jetcheckout_commission_rate': vals['commission_rate'],
-            'jetcheckout_commission_amount': vals['commission_amount'],
+            'fees': values['commission_amount'],
+            'jetcheckout_vpos_name': values['name'],
+            'jetcheckout_commission_rate': values['commission_rate'],
+            'jetcheckout_commission_amount': values['commission_amount'],
         })
 
-        if vals['successful']:
-            if vals['cancelled']:
+        if values['successful']:
+            if 'cancelled' in values and values['cancelled']:
                 self._jetcheckout_cancel_postprocess()
             else:
                 self._jetcheckout_done_postprocess()
@@ -323,50 +326,44 @@ class PaymentTransaction(models.Model):
             else:
                 self.write({
                     'state': 'error',
-                    'state_message': _('%s (Error Code: %s)') % (vals.get('message', '-'), vals.get('code','')),
+                    'state_message': _('%s (Error Code: %s)') % (values.get('message', '-'), values.get('code','')),
                     'last_state_change': fields.Datetime.now(),
                 })
 
-    def _jetcheckout_query(self):
+    def _jetcheckout_query(self, values={}):
         self.ensure_one()
-        values = self._jetcheckout_api_status()
-        if 'error' in values:
-            raise UserError(values['error'])
+        if not values:
+            values = self._jetcheckout_api_status()
+            if 'error' in values:
+                raise UserError(values['error'])
 
-        response = values['result']
-        amount = self.amount
-        customer_rate = self.jetcheckout_customer_rate
-        customer_amount = self.jetcheckout_customer_amount
-        commission_rate = response['expected_cost_rate']
-        commission_amount = float_round(self.amount * commission_rate / 100, 2)
+            result = values['result']
+            commission_rate = result['expected_cost_rate']
+            commission_amount = float_round(self.amount * commission_rate / 100, 2)
+            values = {
+                'date': result['transaction_date'][:19],
+                'name': result['virtual_pos_name'],
+                'successful': result['successful'],
+                'completed': result['completed'],
+                'cancelled': result['cancelled'],
+                'threed': result['is_3d'],
+                'auth_code': result['auth_code'],
+                'service_ref_id': result['service_ref_id'],
+                'amount': self.amount,
+                'commission_amount': commission_amount,
+                'commission_rate': commission_rate,
+                'customer_amount': self.jetcheckout_customer_amount,
+                'customer_rate': self.jetcheckout_customer_rate,
+                'currency_id': self.currency_id.id,
+            }
 
-        vals = {
-            'date': response['transaction_date'][:19],
-            'name': response['virtual_pos_name'],
-            'successful': response['successful'],
-            'completed': response['completed'],
-            'cancelled': response['cancelled'],
-            'threed': response['is_3d'],
-            'amount': amount,
-            'commission_amount': commission_amount,
-            'commission_rate': commission_rate,
-            'customer_amount': customer_amount,
-            'customer_rate': customer_rate,
-            'auth_code': response['auth_code'],
-            'service_ref_id': response['service_ref_id'],
-            'currency_id': self.currency_id.id,
-            'message': response.get('message', '-'),
-            'code': response.get('response_code', ''),
-        }
-        self._jetcheckout_process_query(vals)
-        del vals['message']
-        del vals['code']
-        return vals
+        self._jetcheckout_process_query(values)
+        return values
 
     def jetcheckout_query(self):
         self.ensure_one()
-        vals = self._jetcheckout_query()
-        status = self.env['payment.acquirer.jetcheckout.status'].create(vals)
+        values = self._jetcheckout_query()
+        status = self.env['payment.acquirer.jetcheckout.status'].create(values)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'payment.acquirer.jetcheckout.status',

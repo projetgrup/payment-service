@@ -208,7 +208,14 @@ class JetcheckoutController(http.Controller):
             return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
-        tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
+        tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query({
+            'successful': kwargs.get('response_code') == '00',
+            'code': kwargs.get('response_code'),
+            'message': kwargs.get('response_message'),
+            'name': kwargs.get('virtual_pos_name'),
+            'commission_rate': float(kwargs.get('expected_cost_rate')),
+            
+        })
         return url, tx, False
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
