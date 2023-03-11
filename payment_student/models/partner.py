@@ -23,26 +23,31 @@ class Partner(models.Model):
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        if res.company_id.system == 'student' and res.parent_id:
-            templates = self.env['res.student.payment.template'].search([
-                ('school_id','=',res.school_id.id),
-                '|', ('class_id','=',res.class_id.id), ('class_id','=',False),
-                ('company_id','=',res.company_id.id),
-            ])
-            if templates:
-                val = []
-                term_id = self.env.context.get('term_id', False)
-                for template in templates:
-                    val.append({
-                        'child_id': res.id,
-                        'parent_id': res.parent_id.id,
-                        'term_id': term_id or template.term_id.id,
-                        'payment_type_id': template.payment_type_id.id,
-                        'amount': template.amount,
-                        'campaign_id': res.parent_id.campaign_id.id,
-                        'company_id': res.company_id.id,
-                    })
-                self.env['payment.item'].sudo().create(val)
+        if res.company_id.system == 'student':
+            if res.parent_id:
+                templates = self.env['res.student.payment.template'].search([
+                    ('school_id', '=', res.school_id.id),
+                    '|', ('class_id', '=', res.class_id.id), ('class_id', '=', False),
+                    ('company_id', '=', res.company_id.id),
+                ])
+                if templates:
+                    val = []
+                    term_id = self.env.context.get('term_id', False)
+                    for template in templates:
+                        val.append({
+                            'child_id': res.id,
+                            'parent_id': res.parent_id.id,
+                            'term_id': term_id or template.term_id.id,
+                            'payment_type_id': template.payment_type_id.id,
+                            'amount': template.amount,
+                            'campaign_id': res.parent_id.campaign_id.id,
+                            'company_id': res.company_id.id,
+                        })
+                    self.env['payment.item'].sudo().create(val)
+            else:
+                campaign_id = self.env.context.get('campaign_id', False)
+                if campaign_id:
+                    res.write({'campaign_id': campaign_id})
         return res
 
     def _get_name(self):
