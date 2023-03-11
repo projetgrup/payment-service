@@ -138,6 +138,7 @@ class StudentChildCreate(Datamodel):
 
     name = fields.String(required=True, allow_none=False, title="Student Name", description="Student name", example="Jane Doe")
     vat = fields.String(required=True, allow_none=False, title="Student ID Number", description="Student citizen number", example="12345678912")
+    ref = fields.String(required=True, allow_none=False, title="Student Reference", description="Student reference number", example="ABC01")
     school_code = fields.String(required=True, allow_none=False, title="School Code", description="School codename", example="JOHNDC")
     bursary_code = fields.String(allow_none=True, title="Bursary Code", description="Bursary codename", example="BURSARY50")
     class_code = fields.String(required=True, allow_none=False, title="Class Code", description="Class codename", example="CLASS1")
@@ -146,7 +147,6 @@ class StudentChildCreate(Datamodel):
     parent_email = fields.String(required=True, allow_none=False, title="Parent Email", description="Email address of related parent", example="test@example.com")
     parent_mobile = fields.String(required=True, allow_none=False, title="Parent Mobile", description="Mobile phone number of related parent", example="+905001234567")
     campaign_name = fields.String(required=False, allow_none=False, title="Campaign", description="Campaign name", example="New Year Campaign")
-    ref = fields.String(required=True, allow_none=False, title="Ref", description="Student your REF number", example="ABC01")
 
 
 class StudentChildDelete(Datamodel):

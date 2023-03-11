@@ -87,20 +87,6 @@ class PaymentStudentImport(models.TransientModel):
             if not classroom:
                 raise ValidationError(_('No classroom found with code "%s" for student "%s"') % (line.student_class, line.student_name))
 
-            parent = self.env['res.partner'].sudo().search([
-                ('company_id', '=', company.id),
-                ('email', '=', line.parent_email)
-            ], limit=1)
-            if not parent:
-                parent = self.env['res.partner'].sudo().create({
-                    'name': line.parent_name,
-                    'email': line.parent_email,
-                    'mobile': line.parent_mobile,
-                    'company_id': company.id,
-                    'system': 'student',
-                    'is_company': True,
-                    'parent_id': False,
-                })
 
             if line.parent_campaign:
                 acquirers = self.env['payment.acquirer'].sudo()._get_acquirer(company=self.env.company, providers=['jetcheckout'], raise_exception=False)
@@ -110,7 +96,7 @@ class PaymentStudentImport(models.TransientModel):
                 ], limit=1)
                 if not campaign:
                     raise ValidationError(_('No campaign found with name "%s" for parent "%s"') % (line.student_class, line.parent_name))
-                parent.write({'campaign_id': campaign.id})
+                context.update({'campaign_id': campaign.id})
 
             if line.student_term:
                 term = self.env['res.student.term'].search([
@@ -130,6 +116,20 @@ class PaymentStudentImport(models.TransientModel):
             if len(student) > 1:
                 raise ValidationError(_('There is more than one student with the same characteristics in the records. Please contact the system administrator.'))
 
+            parent = self.env['res.partner'].sudo().search([
+                ('company_id', '=', company.id),
+                ('email', '=', line.parent_email)
+            ], limit=1)
+            if not parent:
+                parent = self.env['res.partner'].sudo().create({
+                    'name': line.parent_name,
+                    'email': line.parent_email,
+                    'mobile': line.parent_mobile,
+                    'company_id': company.id,
+                    'system': 'student',
+                    'is_company': True,
+                    'parent_id': False,
+                })
             values = {
                 'name': line.student_name,
                 'vat': line.student_vat,

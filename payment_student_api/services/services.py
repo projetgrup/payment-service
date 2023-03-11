@@ -212,23 +212,9 @@ class StudentAPIService(Component):
 
         classroom = self.env['res.student.class'].sudo().search([('company_id', '=', company.id), ('code', '=', params.class_code)], limit=1)
         if not classroom:
-            return Response("No classrocreate_stom found with given code", status=404, mimetype="application/json")
+            return Response("No classroom found with given code", status=404, mimetype="application/json")
 
-        categ_api = self.env.ref('payment_jetcheckout_api.categ_api')
-        parent = self.env['res.partner'].sudo().search([('company_id', '=', company.id), ('email', '=', params.parent_email)], limit=1)
-        if not parent:
-            parent = self.env['res.partner'].sudo().create({
-                'name': params.parent_name,
-                'email': params.parent_email,
-                'mobile': params.parent_mobile,
-                'is_company': True,
-                'parent_id': False,
-                'company_id': company.id,
-                'system': 'student',
-                'category_id': [(6, 0, categ_api.ids)],
-            })
-
-        if hasattr(params, 'campaign_name'):
+        if hasattr(params, 'campaign_name') and params.campaign_name:
             acquirers = self.env['payment.acquirer'].sudo()._get_acquirer(company=self.env.company, providers=['jetcheckout'], raise_exception=False)
             campaign = self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
                 ('acquirer_id', 'in', acquirers.ids),
@@ -236,12 +222,9 @@ class StudentAPIService(Component):
             ], limit=1)
             if not campaign:
                 return Response("No campaign found with given name", status=404, mimetype="application/json")
-            parent.write({'campaign_id': campaign.id})
+            context.update({'campaign_id': campaign.id})
 
-        if not params.ref:
-            return Response("No ref found with given code", status=404, mimetype="application/json")
-
-        if hasattr(params, 'term_code'):
+        if hasattr(params, 'term_code') and params.term_code:
             term = self.env['res.student.term'].sudo().search([
                 ('company_id', '=', company.id),
                 ('code', '=', params.term_code)
@@ -259,6 +242,19 @@ class StudentAPIService(Component):
         if len(student) > 1:
             return Response("There is more than one student with the same characteristics in the records. Please contact the system administrator.", status=400, mimetype="application/json")
 
+        categ_api = self.env.ref('payment_jetcheckout_api.categ_api')
+        parent = self.env['res.partner'].sudo().search([('company_id', '=', company.id), ('email', '=', params.parent_email)], limit=1)
+        if not parent:
+            parent = self.env['res.partner'].sudo().create({
+                'name': params.parent_name,
+                'email': params.parent_email,
+                'mobile': params.parent_mobile,
+                'is_company': True,
+                'parent_id': False,
+                'company_id': company.id,
+                'system': 'student',
+                'category_id': [(6, 0, categ_api.ids)],
+            })
         values = {
             'name': params.name,
             'vat': params.vat,
