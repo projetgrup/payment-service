@@ -33,11 +33,6 @@ class JetcheckoutController(http.Controller):
         return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
 
     @staticmethod
-    def _jetcheckout_get_partner_campaign(pid):
-        partner = JetcheckoutController._jetcheckout_get_partner(pid)
-        return partner.campaign_id.name or ''
-
-    @staticmethod
     def _jetcheckout_get_installment_description(installment):
         if installment['plus_installment'] > 0:
             if installment['plus_installment_description']:
@@ -109,7 +104,7 @@ class JetcheckoutController(http.Controller):
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": kwargs['campaign'] or self._jetcheckout_get_partner_campaign(pid),
+            "campaign_name": kwargs['campaign'] or acquirer._get_campaign_name(pid),
         }
         if prefix:
             data.update({"bin": bin_number})
@@ -179,7 +174,7 @@ class JetcheckoutController(http.Controller):
             "mode": acquirer._get_jetcheckout_env(),
             "language": "tr",
             "currency": currency.name,
-            "campaign_name": kwargs['campaign'] or JetcheckoutController._jetcheckout_get_partner_campaign(pid),
+            "campaign_name": kwargs['campaign'] or acquirer._get_campaign_name(pid),
             "is_3d": True,
         }
 
@@ -235,7 +230,7 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def jetcheckout_payment_acquirer(self):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        return {'id': acquirer.id}
+        return {'id': acquirer.id, 'campaign': acquirer.jetcheckout_campaign_id.name}
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
     def jetcheckout_payment_card_type(self, acquirer=False):
