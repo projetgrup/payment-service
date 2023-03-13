@@ -215,7 +215,7 @@ class PaymentTransaction(models.Model):
             self.write({
                 'state': 'done',
                 'last_state_change': fields.Datetime.now(),
-                'state_message': _('Transaction is successful'),
+                'state_message': _('Transaction is successful.'),
             })
             self.jetcheckout_order_confirm()
             self.jetcheckout_payment()

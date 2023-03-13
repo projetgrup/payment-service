@@ -376,7 +376,7 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/services/services.py:0
 #, python-format
-msgid "Transaction is successful"
+msgid "Transaction is successful."
 msgstr ""
 
 #. module: payment_jetcheckout_api

@@ -2238,7 +2238,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.status_form
 #, python-format
-msgid "Transaction is successful"
+msgid "Transaction is successful."
 msgstr ""
 
 #. module: payment_jetcheckout
