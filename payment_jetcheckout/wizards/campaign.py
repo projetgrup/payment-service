@@ -1,6 +1,28 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, _
 
+class PaymentAcquirerJetcheckoutApiCampaigns(models.TransientModel):
+    _name = 'payment.acquirer.jetcheckout.api.campaigns'
+    _description = 'Jetcheckout API Campaigns'
+
+    acquirer_id = fields.Many2one('payment.acquirer')
+    line_ids = fields.One2many('payment.acquirer.jetcheckout.api.campaigns.line', 'parent_id')
+
+
+class PaymentAcquirerJetcheckoutApiCampaignsLine(models.TransientModel):
+    _name = 'payment.acquirer.jetcheckout.api.campaigns.line'
+    _description = 'Jetcheckout API Campaigns Line'
+    _order = 'name'
+
+    parent_id = fields.Many2one('payment.acquirer.jetcheckout.api.campaigns', ondelete='cascade')
+    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign')
+    name = fields.Char()
+    is_active = fields.Boolean('Active')
+
+    def select(self):
+        self.parent_id.acquirer_id.jetcheckout_campaign_id = self.campaign_id.id
+
+
 class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.campaign'
     _description = 'Jetcheckout API Campaign'

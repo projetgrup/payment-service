@@ -32,9 +32,10 @@
                     <field name="jetcheckout_api_key" string="API Key" readonly="1"/>
                     <field name="jetcheckout_secret_key" string="Secret Key" password="True" readonly="1"/>
                     <field name="jetcheckout_gateway_api" string="API URL" placeholder="https://api.jetcheckout.com" attrs="{'invisible': [('jetcheckout_gateway_api','=',False)]}" readonly="1"/>
-                    <div class="justify-content-center row">
+                    <div class="justify-content-center row" colspan="2">
                         <button name="action_jetcheckout_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
                         <button name="action_jetcheckout_pos" type="object" class="btn-secondary my-2" string="Virtual Pos" icon="fa-certificate"/>
+                        <button name="action_jetcheckout_campaign" type="object" class="btn-secondary my-2" string="Campaigns" icon="fa-star"/>
                     </div>
                 </group>
             </group>
