@@ -2295,8 +2295,8 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.status_form
 #, python-format
-msgid "Transaction is successful"
-msgstr "İşlem başarılı"
+msgid "Transaction is successful."
+msgstr "İşlem başarılı."
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__unionpay

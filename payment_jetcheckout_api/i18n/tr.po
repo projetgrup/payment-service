@@ -383,8 +383,8 @@ msgstr "Onayınızla birlikte işleminiz tamamlanacaktır"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/services/services.py:0
 #, python-format
-msgid "Transaction is successful"
-msgstr "İşlem başarılı"
+msgid "Transaction is successful."
+msgstr "İşlem başarılı."
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
