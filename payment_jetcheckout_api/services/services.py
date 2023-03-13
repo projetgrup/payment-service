@@ -338,7 +338,7 @@ class PaymentAPIService(Component):
                 'virtual_pos_name': tx.jetcheckout_vpos_name or '',
                 'order_id': tx.jetcheckout_order_id or '',
                 'transaction_id': tx.jetcheckout_transaction_id or '',
-                'message': tx.state_message if not tx.state == 'done' else _('Transaction is successful'),
+                'message': tx.state_message if not tx.state == 'done' else _('Transaction is successful.'),
                 'partner': {
                     'name': tx.partner_id.name or '',
                     'ip_address': tx.jetcheckout_ip_address or '',

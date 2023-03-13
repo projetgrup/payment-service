@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, SUPERUSER_ID, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -192,14 +192,24 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
     def send(self):
         user = self.env.user
         self = self.sudo()
-        selections = self.selection.mapped('code')
         partner_ids = self.env.context.get('partners', self.partner_ids)
+        company = self.company_id or partner_ids.mapped('company_id') or self.env.company
+        if len(company) > 1:
+            raise UserError(_('Partners must belong to only one company to get sent properly'))
+
+        authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
+        user = self.env['res.users'].search([
+            ('company_id', '=', company.id),
+            ('partner_id.category_id', 'in', [authorized.id])
+        ], limit=1) or user
+
+        selections = self.selection.mapped('code')
         mail_template = 'email' in selections and self.mail_template_id or False
         sms_template = 'sms' in selections and self.sms_template_id or False
         comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', self.company_id.id)], limit=1).id
-        sms_provider_id = self.env['sms.provider'].get(self.company_id.id).id
+        mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
+        sms_provider_id = self.env['sms.provider'].get(company.id).id
         email_from = user.email_formatted
         mail_messages = []
         sms_messages = []
