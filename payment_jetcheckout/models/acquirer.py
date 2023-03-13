@@ -145,6 +145,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     jetcheckout_password = fields.Char(readonly=True)
     jetcheckout_user_id = fields.Integer(readonly=True)
     jetcheckout_api_name = fields.Char(readonly=True)
+    jetcheckout_campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', copy=False)
 
     @api.model
     def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
@@ -178,6 +179,11 @@ class PaymentAcquirerJetcheckout(models.Model):
             ], limit=1)
 
         return subline or line
+
+    def _get_campaign_name(self, pid):
+        self.ensure_one()
+        partner = self.env['res.partner'].sudo().browse(pid) if pid else self.env.user.partner_id.commercial_partner_id
+        return partner.campaign_id.name or self.jetcheckout_campaign_id.name or ''
 
     def _get_default_payment_method_id(self):
         self.ensure_one()
@@ -270,6 +276,25 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.jetcheckout_secret_key = False
         self.jetcheckout_journal_ids = [(5, 0, 0)]
 
+    def action_jetcheckout_campaign(self):
+        self.ensure_one()
+        self._jetcheckout_api_vacuum()
+        campaign_id = self.jetcheckout_campaign_id.id
+        line_ids = [(0, 0, {
+            'campaign_id': False,
+            'name': _('Default'),
+            'is_active': not campaign_id,
+        })] + [(0, 0, {
+            'campaign_id': campaign.id,
+            'name': campaign.name,
+            'is_active': campaign.id == campaign_id,
+        }) for campaign in self.env['payment.acquirer.jetcheckout.campaign'].search([])]
+        campaigns = self.env['payment.acquirer.jetcheckout.api.campaigns'].create({'acquirer_id': self.id, 'line_ids': line_ids})
+        action = self.env.ref('payment_jetcheckout.action_api_campaigns').sudo().read()[0]
+        action['res_id'] = campaigns.id
+        action['context'] = {'dialog_size': 'small', 'create': False, 'delete': False}
+        return action
+
     def action_jetcheckout_pos(self):
         self.ensure_one()
         pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id, 'application_id': self.jetcheckout_api_key})
@@ -300,6 +325,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.env['payment.acquirer.jetcheckout.api.application'].search([]).unlink()
         self.env['payment.acquirer.jetcheckout.api.pos'].search([]).unlink()
         self.env['payment.acquirer.jetcheckout.api.campaign'].search([]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.campaigns'].search([]).unlink()
         self.env['payment.acquirer.jetcheckout.api.installment'].search([]).unlink()
         self.env['payment.acquirer.jetcheckout.api.excluded'].search([]).unlink()
         self.env['payment.acquirer.jetcheckout.api.bank'].search([]).unlink()

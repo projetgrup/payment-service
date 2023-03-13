@@ -109,4 +109,77 @@
         </tree>
     </field>
     </record>
+
+    <record id="api_campaigns_line_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.campaigns.line.form</field>
+    <field name="model">payment.acquirer.jetcheckout.api.campaigns.line</field>
+    <field name="arch" type="xml">
+        <form string="Campaigns" create="0" edit="0" delete="0">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="is_active" invisible="1" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="is_active" readonly="1" widget="boolean_toggle" style="pointer-events: none;"/>
+                    </group>
+                </group>
+            </sheet>
+            <footer>
+                <button name="select" type="object" class="btn-primary" attrs="{'invisible': [('is_active', '!=', False)]}" string="Select"/>
+                <button name="select" type="object" attrs="{'invisible': [('is_active', '=', False)]}" string="Select"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="api_campaigns_line_kanban" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.campaigns.line.kanban</field>
+    <field name="model">payment.acquirer.jetcheckout.api.campaigns.line</field>
+    <field name="arch" type="xml">
+        <kanban string="Campaigns">
+            <field name="name"/>
+            <field name="is_active"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_global_click d-flex mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
+                        <div t-attf-class="font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center border-right h5 shadow #{record.is_active.raw_value ? 'bg-success' : 'bg-100'}">
+                        </div>
+                        <div class="col-6 d-flex align-items-center font-weight-bold h-100 h4 justify-content-center p-2 shadow text-600 text-center">
+                            <t t-esc="record.name.value"/>
+                        </div>
+                        <div class="col-6 d-flex align-items-center p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <button t-if="record.is_active.raw_value" class="btn text-uppercase bg-muted" disabled="disabled">Select</button>
+                            <button t-else="" name="select" type="object" class="btn btn-primary">Select</button>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="api_campaigns_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.api.campaigns.form</field>
+    <field name="model">payment.acquirer.jetcheckout.api.campaigns</field>
+    <field name="arch" type="xml">
+        <form string="Campaigns">
+            <sheet>
+                <field name="acquirer_id" invisible="1" readonly="1"/>
+                <field name="line_ids" nolabel="1" mode="kanban" colspan="2" readonly="1"/>
+            </sheet>
+            <footer>
+                <button special="cancel" string="Cancel"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_api_campaigns" model="ir.actions.act_window">
+    <field name="name">Campaigns</field>
+    <field name="res_model">payment.acquirer.jetcheckout.api.campaigns</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
 </odoo>
