@@ -154,7 +154,7 @@ class PaymentPrepareInput(Datamodel):
 
     id = fields.Integer(required=True, allow_none=False, metadata={"title": "ID", "description": "Any unique number related to your specified record in your database for tracking the payment flow", "example": 12})
     expiration = fields.DateTime(allow_none=False, metadata={"title": "Expiration Date", "description": "Datetime in ISO format to get transaction expired", "example": "2023-01-01T00:00:00"})
-    campaign = fields.String({"title": "Campaign Name", "description": "Name of campaign to be used in getting installment options", "example": "Standard"})
+    campaign = fields.String(metadata={"title": "Campaign Name", "description": "Name of campaign to be used in getting installment options", "example": "Standard"})
     partner = NestedModel("payment.partner", required=True, metadata={"title": "Partner information related to request", "description": "Partner information"})
     order = NestedModel("payment.order", required=True, metadata={"title": "Order information related to request", "description": "Order details"})
     url = NestedModel("payment.url", required=True, metadata={"title": "Return URLs by payment method", "description": "URL addresses"})
@@ -220,7 +220,7 @@ class PaymentAmount(Datamodel):
 
     _name = "payment.amount"
 
-    amount = fields.Float({"title": "Payment Amount", "description": "Total amount of payment", "example": 145.3})
+    amount = fields.Float(metadata={"title": "Payment Amount", "description": "Total amount of payment", "example": 145.3})
     fees = fields.Float(metadata={"title": "Payment Fee", "description": "System use charge", "example": 10})
     installment = NestedModel("payment.installment", metadata={"title": "Installment information related to transaction", "description": "Installment details"})
     installment = NestedModel("payment.installment", metadata={"title": "Installment information related to transaction", "description": "Installment details"})
