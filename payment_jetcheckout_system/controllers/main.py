@@ -35,7 +35,7 @@ class JetcheckoutSystemController(JetController):
 
     def _jetcheckout_check_user(self):
         path = urlparse(request.httprequest.referrer).path
-        if path == '/my/payment' and not request.env.user.active:
+        if '/my/payment' in path and not request.env.user.active:
             raise AccessError(_('Access Denied'))
         return super()._jetcheckout_check_user()
 
