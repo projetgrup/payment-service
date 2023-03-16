@@ -6,7 +6,6 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@name='button_box']" position="inside">
             <field name="is_jetcheckout" invisible="1"/>
-            <field name="jetcheckout_api_ok" invisible="1"/>
             <field name="jetcheckout_payment_ok" invisible="1"/>
             <button type="object"
                 name="jetcheckout_payment"

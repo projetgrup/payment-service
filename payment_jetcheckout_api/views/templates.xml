@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="payment_sidebar" inherit_id="payment_jetcheckout.payment_sidebar">
+        <xpath expr="//span[@t-esc='partner.name']" position="replace">
+            <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
+            <span t-else="" t-esc="partner.name" class="text-600"/>
+        </xpath>
+    </template>
+
+    <template id="payment_page_result" inherit_id="payment_jetcheckout.payment_page_result">
+        <xpath expr="//t[@t-set='title']" position="before">
+            <t t-if="tx.jetcheckout_api_ok" t-set="no_footer" t-value="True"/>
+        </xpath>
+        <xpath expr="//t[@t-call='payment_jetcheckout.payment_smart_button']" position="attributes">
+            <attribute name="t-if">not tx.jetcheckout_api_ok</attribute>
+        </xpath>
+    </template>
+
     <template id="layout" name="Payment Layout">
         <t t-call="web.layout">
             <t t-set="head_website">

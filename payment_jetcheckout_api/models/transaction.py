@@ -4,6 +4,7 @@ from odoo import fields, models
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
     jetcheckout_api_contact = fields.Char('API Contact', readonly=True)
     jetcheckout_api_order = fields.Char('API Order', readonly=True)
     jetcheckout_api_product = fields.Char('API Product', readonly=True)
