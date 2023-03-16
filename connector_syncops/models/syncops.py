@@ -53,16 +53,18 @@ class SyncopsConnector(models.Model):
     def _execute(self, method, params={}, company=None, message=None):
         result = []
         try:
-            url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
-            if not url:
-                raise ValidationError(_('No syncOPS endpoint URL found'))
-
             if not company:
                 company = self.env.company
 
             connector = self._find(method, company)
             if not connector:
-                raise ValidationError(_('No connector found'))
+                info = _('No connector found for %s') % company.name
+                _logger.info(info)
+                return (None, info) if message else None
+
+            url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
+            if not url:
+                raise ValidationError(_('No syncOPS endpoint URL found'))
 
             url += '/api/v1/execute'
             response = requests.post(url, json={

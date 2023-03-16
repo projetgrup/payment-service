@@ -40,10 +40,9 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Please define a country for this company'))
         return country.id
 
-    partner_vat = fields.Char(string="VAT")
+    partner_vat = fields.Char(string='VAT')
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
-    jetcheckout_api_ok = fields.Boolean('API Active', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False)
     jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
