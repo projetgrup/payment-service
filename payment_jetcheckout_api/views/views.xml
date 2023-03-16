@@ -49,6 +49,9 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <field name="jetcheckout_api_ok" invisible="1"/>
+        </xpath>
         <xpath expr='//group[@name="transaction_partner"]' position="attributes">
             <attribute name="attrs">{'invisible': [('jetcheckout_api_ok', '!=', False)]}</attribute>
         </xpath>
@@ -70,9 +73,13 @@
                 <field name="jetcheckout_api_contact" string="Contact"/>
                 <field name="jetcheckout_api_order" string="Order"/>
                 <field name="jetcheckout_api_product" string="Product"/>
+                <field name="jetcheckout_api_method" string="Method"/>
             </group>
         </xpath>
         <xpath expr='//field[@name="jetcheckout_ip_address"]' position="attributes">
+            <attribute name="attrs">{'invisible': ['|', ('is_jetcheckout', '=', False), ('jetcheckout_api_method', '!=', 'card')]}</attribute>
+        </xpath>
+        <xpath expr='//field[@name="transaction_jetcheckout"]' position="attributes">
             <attribute name="attrs">{'invisible': ['|', ('source_transaction_id', '!=', False), ('jetcheckout_api_ok', '!=', False)]}</attribute>
         </xpath>
         <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">

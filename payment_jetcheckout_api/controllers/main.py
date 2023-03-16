@@ -13,6 +13,11 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 
 class JetcheckoutApiController(JetController):
 
+    def _jetcheckout_tx_vals(self, **kwargs):
+        vals = super()._jetcheckout_tx_vals(**kwargs)
+        vals.update({'jetcheckout_payment_ok': False})
+        return vals
+
     def _confirm_bank_webhook(self, tx):
         try:
             url = tx.jetcheckout_api_bank_webhook_url
@@ -34,6 +39,9 @@ class JetcheckoutApiController(JetController):
         hash = request.session.get('__tx_hash')
         if '' in kwargs:
             hash = unquote(kwargs[''])
+            request.session['__tx_hash'] = hash
+        elif 'hash' in kwargs:
+            hash = unquote(kwargs['hash'])
             request.session['__tx_hash'] = hash
 
         if not hash:

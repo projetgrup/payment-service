@@ -314,7 +314,6 @@ class JetcheckoutController(http.Controller):
         amount_integer = int(amount_total * 100)
 
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        url = '%s/api/v1/payment/simulation' % acquirer._get_jetcheckout_api_url()
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
         partner = self._jetcheckout_get_partner(pid)
         currency = request.env.company.currency_id
