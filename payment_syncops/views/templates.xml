@@ -7,7 +7,7 @@
                 <a role="button" t-attf-class="btn btn-sm float-right font-weight-bold text-primary o_connector_partner_reset #{'' if partner_connector['connector'] and show_reset else 'd-none'}" href="#"><i class="fa fa-undo mr-1" t-translation="off"/>Reset</a>
             </t>
         </xpath>
-        <xpath expr="//span[@t-esc='partner.name']" position="attributes">
+        <xpath expr="//span[@name='partner']" position="attributes">
             <attribute name="t-esc">partner_connector['name']</attribute>
         </xpath>
     </template>
