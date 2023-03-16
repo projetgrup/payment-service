@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="payment_sidebar" inherit_id="payment_jetcheckout.payment_sidebar">
-        <xpath expr="//span[@t-esc='partner.name']" position="replace">
+        <xpath expr="//span[@name='name']" position="replace">
             <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
-            <span t-else="" t-esc="partner.name" class="text-600"/>
+            <span t-else="" name="partner" t-esc="partner.name" class="text-600"/>
         </xpath>
     </template>
 
