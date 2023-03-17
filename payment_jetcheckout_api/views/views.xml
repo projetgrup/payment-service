@@ -79,9 +79,6 @@
         <xpath expr='//field[@name="jetcheckout_ip_address"]' position="attributes">
             <attribute name="attrs">{'invisible': ['|', ('is_jetcheckout', '=', False), ('jetcheckout_api_method', '!=', 'card')]}</attribute>
         </xpath>
-        <xpath expr='//group[@name="transaction_jetcheckout"]' position="attributes">
-            <attribute name="attrs">{'invisible': ['|', ('source_transaction_id', '!=', False), ('jetcheckout_api_ok', '!=', False)]}</attribute>
-        </xpath>
         <xpath expr='//group[@name="transaction_jetcheckout"]' position="after">
             <group name="transaction_api" attrs="{'invisible': [('jetcheckout_api_ok', '=', False)]}">
                 <group>

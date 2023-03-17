@@ -444,8 +444,8 @@ class PaymentAcquirerJetcheckout(models.Model):
         bin_model.create([{
             'res_id': bin['id'],
             'code': bin['code'],
-            'bank_code': bank_model.search([('res_id', '=', bin['bank_code'][0])], limit=1).id,
-            'card_family_id': family_model.search([('res_id', '=', bin['card_family_id'][0])], limit=1).id,
+            'bank_code': bin['bank_code'] and bank_model.search([('res_id', '=', bin['bank_code'][0])], limit=1).id,
+            'card_family_id': bin['card_family_id'] and family_model.search([('res_id', '=', bin['card_family_id'][0])], limit=1).id,
             'card_type': bin['card_type'],
             'mandatory_3d': bin['mandatory_3d'],
             'program': bin['program'],
