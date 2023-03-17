@@ -118,7 +118,6 @@ class JetcheckoutController(http.Controller):
                 amount_installment = kwargs.get('amount_installment', 0)
                 installment_options = result.get('installment_options', result.get('installments', []))
                 for options in installment_options:
-                    installment_list = []
                     for installment in options['installments']:
                         installment['installment_count'] = int(installment['installment_count'])
                         installment['installment_desc'] = self._jetcheckout_get_installment_description(installment)
@@ -127,8 +126,7 @@ class JetcheckoutController(http.Controller):
                         else:
                             installment['installment_rate'] = 0.0
                         installment['total_installment'] = installment['installment_count'] + installment['plus_installment']
-                        installment_list.append(installment)
-                    installment_list.sort(key=lambda x: x['installment_count'])
+                    options['installments'].sort(key=lambda x: x['installment_count'])
                     installments.append(options)
 
                 values = {
@@ -213,7 +211,6 @@ class JetcheckoutController(http.Controller):
             'message': kwargs.get('response_message'),
             'name': kwargs.get('virtual_pos_name'),
             'commission_rate': float(kwargs.get('expected_cost_rate')),
-            
         })
         return url, tx, False
 
@@ -341,6 +338,9 @@ class JetcheckoutController(http.Controller):
         vals = {
             'acquirer_id': acquirer.id,
             'callback_hash': hash,
+            'amount': amount_total,
+            'fees': cost_amount,
+            'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
             'jetcheckout_campaign_name': kwargs['campaign'] or False,
