@@ -58,7 +58,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
             technical: false,
             buttons: [
                 {text: _t("Confirm"), classes: 'btn-primary btn-confirm'},
-                {text: _t("Cancel"), close: true},
+                {text: _t("Cancel"), classes: 'btn-secondary text-white', close: true},
             ],
             $content: $('<div/>', {
                 html: _t('Transaction is going to be concluded after your confirmation'),
