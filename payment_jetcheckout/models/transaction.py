@@ -210,15 +210,14 @@ class PaymentTransaction(models.Model):
         return values
 
     def _jetcheckout_done_postprocess(self):
-        if not self.state == 'done':
-            self.write({
-                'state': 'done',
-                'last_state_change': fields.Datetime.now(),
-                'state_message': _('Transaction is successful.'),
-            })
-            self.jetcheckout_order_confirm()
-            self.jetcheckout_payment()
-            self.is_post_processed = True
+        self.write({
+            'state': 'done',
+            'is_post_processed': True,
+            'last_state_change': fields.Datetime.now(),
+            'state_message': _('Transaction is successful.'),
+        })
+        self.jetcheckout_order_confirm()
+        self.jetcheckout_payment()
 
     def jetcheckout_order_confirm(self):
         self.ensure_one()

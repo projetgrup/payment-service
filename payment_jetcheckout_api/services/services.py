@@ -318,7 +318,7 @@ class PaymentAPIService(Component):
             'partner_email': params.partner.email,
             'partner_address': params.partner.address,
             'partner_phone': params.partner.phone,
-            'partner_zip': params.partner.zip,
+            'partner_zip': getattr(params.partner, 'zip', '') or '',
             'partner_city': getattr(params.partner, 'city', '') or '',
             'partner_country_id': country and country.id or False,
             'partner_state_id': state and state.id or False,
