@@ -5,6 +5,9 @@
     <field name="model">payment.acquirer.jetcheckout.api.pos</field>
     <field name="arch" type="xml">
         <form>
+            <header>
+                <button string="Import/Update Cost Rates" type="object" name="import_cost_rates" class="oe_highlight" attrs=" {'invisible': ['|', '|', ('rates_importable', '=', False), ('id', '=', False), ('import_rates', '=', False)] } "/>
+            </header>
             <sheet>
                 <group>
                     <group>
@@ -35,6 +38,9 @@
                         <field name="priority" readonly="context.get('no_edit')"/>
                         <field name="usage_3d" readonly="context.get('no_edit')"/>
                         <field name="mode" widget="radio" options="{'horizontal': True}" readonly="context.get('no_edit')"/>
+                        <field name="rates_importable" invisible="1"/>
+                        <field name="import_rates" attrs=" { 'invisible': [('rates_importable', '=', False)] } "/>
+                        <field name="calc_cust_rates"/>
                     </group>
                     <group colspan="2" string="Notes" class="text-muted" attrs="{'invisible': [('notes', '=', False)]}">
                         <field name="notes" nolabel="1"/>

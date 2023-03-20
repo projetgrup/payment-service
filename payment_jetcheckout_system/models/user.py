@@ -34,7 +34,18 @@ class Users(models.Model):
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
 
+    def _compute_group_transaction_commission(self):
+        for user in self:
+            user.group_transaction_commission = user.has_group('payment_jetcheckout.group_transaction_commission')
+
+    def _set_group_transaction_commission(self):
+        for user in self:
+            code = user.group_transaction_commission and 4 or 3
+            group = self.env.ref('payment_jetcheckout.group_transaction_commission')
+            group.sudo().write({'users': [(code, user.id)]})
+
     privilege = fields.Selection([('user','User'),('admin','Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
+    group_transaction_commission = fields.Boolean(string='Transaction Commissions', compute='_compute_group_transaction_commission', inverse='_set_group_transaction_commission')
 
     def _check_token(self, token):
         id, token = self.partner_id._resolve_token(token)

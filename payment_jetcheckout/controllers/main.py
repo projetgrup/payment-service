@@ -64,7 +64,10 @@ class JetcheckoutController(http.Controller):
             'contact': partner_contact,
             'acquirer': acquirer,
             'company': company,
-            'campaign': campaign,
+            'campaign': {
+                'name': campaign,
+                'visible': not request.env.user.share,
+            },
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
@@ -260,6 +263,13 @@ class JetcheckoutController(http.Controller):
             return values
 
         return {'render': request.env['ir.ui.view']._render_template('payment_jetcheckout.installments', values)}
+
+    @http.route(['/payment/card/campaigns'], type='json', auth='user', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
+    def jetcheckout_get_campaigns(self, **kwargs):
+        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+        campaigns = [{'id': 0, 'name': ''}]
+        campaigns.extend(request.env['payment.acquirer.jetcheckout.campaign'].sudo().search_read([('acquirer_id', '=', acquirer.id)], ['id', 'name']))
+        return {'campaigns': campaigns}
 
     @http.route(['/payment/card/installment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_get_installment(self, **kwargs):

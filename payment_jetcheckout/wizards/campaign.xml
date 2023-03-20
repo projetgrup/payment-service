@@ -45,6 +45,10 @@
                                 <field name="installment_type"/>
                                 <field name="customer_rate"/>
                                 <field name="cost_rate"/>
+                                <field name="additional_rate"/>
+                                <field name="fixed_customer_rate"/>
+                                <field name="min_amount"/>
+                                <field name="max_amount"/>
                                 <field name="is_active"/>
                                 <field name="plus_installment"/>
                                 <field name="plus_installment_description"/>

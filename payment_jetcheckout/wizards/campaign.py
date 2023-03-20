@@ -14,6 +14,7 @@ class PaymentAcquirerJetcheckoutApiCampaignsLine(models.TransientModel):
     _description = 'Jetcheckout API Campaigns Line'
     _order = 'name'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     parent_id = fields.Many2one('payment.acquirer.jetcheckout.api.campaigns', ondelete='cascade')
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign')
     name = fields.Char()
@@ -28,6 +29,7 @@ class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
     _description = 'Jetcheckout API Campaign'
     _remote_name = 'jet.pos.price'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     application_id = fields.Many2one('payment.acquirer.jetcheckout.api.application')
     virtual_pos_id = fields.Many2one('payment.acquirer.jetcheckout.api.pos')
     res_id = fields.Integer(readonly=True)
@@ -48,6 +50,7 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     _description = 'Jetcheckout API Installment'
     _remote_name = 'jet.pos.price.line'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     pos_price_id = fields.Many2one('payment.acquirer.jetcheckout.api.campaign')
     installment_type = fields.Selection([
@@ -66,6 +69,10 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     ], string='Installment Count', required=True)
     customer_rate = fields.Float('Customer Rate')
     cost_rate = fields.Float('Cost Rate')
+    additional_rate = fields.Float('Additional Rate')
+    fixed_customer_rate = fields.Boolean('Fixed Customer Rate')
+    min_amount = fields.Integer('Minimum Amount')
+    max_amount = fields.Integer('Maximum Amount')
     is_active = fields.Boolean('Active', default=True)
     plus_installment = fields.Integer('Plus Installment')
     plus_installment_description = fields.Char('Plus Installment Description')
@@ -76,6 +83,7 @@ class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     _order = 'name'
     _remote_name = 'jet.card.family'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
     logo = fields.Char(readonly=True)
@@ -85,6 +93,7 @@ class PaymentAcquirerJetcheckoutApiBank(models.TransientModel):
     _description = 'Jetcheckout API Bank'
     _remote_name = 'jet.bank'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
 
@@ -93,6 +102,7 @@ class PaymentAcquirerJetcheckoutApiExcluded(models.TransientModel):
     _description = 'Jetcheckout API Excluded Bins'
     _remote_name = 'jet.bin'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     code = fields.Char(readonly=True)
     card_family_id = fields.Many2one('payment.acquirer.jetcheckout.api.family', string='Card Family', readonly=True)

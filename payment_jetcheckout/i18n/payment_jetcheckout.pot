@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-14 08:22+0000\n"
-"PO-Revision-Date: 2023-02-14 08:22+0000\n"
+"POT-Creation-Date: 2023-03-20 16:17+0000\n"
+"PO-Revision-Date: 2023-03-20 16:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/transaction.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
@@ -317,11 +315,6 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_api_ok
-msgid "API Active"
-msgstr ""
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__api_key
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "API Key"
@@ -347,8 +340,17 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_poses__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__acquirer_id
@@ -360,9 +362,15 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__is_active
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__is_active
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__is_active
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__is_active
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_active
 msgid "Active"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__additional_rate
+msgid "Additional Rate"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -398,8 +406,15 @@ msgstr ""
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
+#: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #, python-format
 msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "An error occured. Please restart your payment transaction."
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -516,24 +531,58 @@ msgid "CVC"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__calc_cust_rates
+msgid "Calculate Customer Rates"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__campaign_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaign_form
 msgid "Campaign"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__offer_name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_campaign_name
 msgid "Campaign Name"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
+msgid "Campaign Options"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
+msgid "Campaign:"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.actions.act_window,name:payment_jetcheckout.action_api_campaigns
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__pos_price
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Campaigns"
 msgstr ""
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
+#, python-format
+msgid "Campaigns Table"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
+#, python-format
 msgid "Cancel"
 msgstr ""
 
@@ -712,6 +761,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__create_uid
@@ -737,6 +788,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__create_date
@@ -958,6 +1011,14 @@ msgid "Debit-Business"
 msgstr ""
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Default"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__display_icon
 msgid "Display Icon"
 msgstr ""
@@ -972,6 +1033,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__display_name
@@ -1024,6 +1087,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
+#: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__error
 #, python-format
 msgid "Error"
@@ -1067,6 +1131,11 @@ msgid "First Selection Criteria"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__fixed_customer_rate
+msgid "Fixed Customer Rate"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__gateway_app
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
 msgid "Gateway URL"
@@ -1092,6 +1161,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__id
@@ -1123,11 +1194,21 @@ msgid "Import"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__import_rates
+msgid "Import Commission Rates"
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/transaction.js:0
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_import
 #, python-format
 msgid "Import Transaction"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
+msgid "Import/Update Cost Rates"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1222,6 +1303,16 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaign
 msgid "Jetcheckout API Campaign"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns
+msgid "Jetcheckout API Campaigns"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns_line
+msgid "Jetcheckout API Campaigns Line"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1368,6 +1459,14 @@ msgid "Jetcheckout Username"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid ""
+"Jetcheckout payment method has not been set yet on inbound payment methods "
+"of journal %s."
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__journal_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__journal_id
 msgid "Journal"
@@ -1384,6 +1483,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family____last_update
@@ -1409,6 +1510,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__write_uid
@@ -1434,6 +1537,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__write_date
@@ -1455,6 +1560,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns__line_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__line_id
 msgid "Line"
 msgstr ""
@@ -1495,6 +1601,11 @@ msgid "Mastercard"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__max_amount
+msgid "Maximum Amount"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_merchant_active
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__merchant_active
 msgid "Merchant Active"
@@ -1516,6 +1627,11 @@ msgid "Methods"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__min_amount
+msgid "Minimum Amount"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__mode
 msgid "Mode"
 msgstr ""
@@ -1533,6 +1649,7 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank__name
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_currency__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__name
@@ -1582,6 +1699,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__parent_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__parent_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__parent_id
 msgid "Parent"
 msgstr ""
@@ -1907,6 +2025,11 @@ msgid "Rate"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__rates_importable
+msgid "Rates Importable"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.actions.report,name:payment_jetcheckout.report_receipt
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_transaction
@@ -2007,7 +2130,13 @@ msgid "Security Code"
 msgstr ""
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_kanban
+#, python-format
 msgid "Select"
 msgstr ""
 
@@ -2193,6 +2322,11 @@ msgid "Transaction"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:res.groups,name:payment_jetcheckout.group_transaction_commission
+msgid "Transaction commissions"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "Transaction has been cancelled successfully."
@@ -2236,7 +2370,17 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Transaction is succesful."
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.status_form
+msgid "Transaction is successful"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "Transaction is successful."
 msgstr ""

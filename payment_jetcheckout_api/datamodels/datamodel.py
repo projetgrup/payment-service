@@ -88,9 +88,9 @@ class PaymentPartner(Datamodel):
     ip_address = fields.String(required=True, allow_none=False, metadata={"title": "IP Address", "description": "IP Address", "example": "34.06.50.01"})
     country = fields.String(required=False, allow_none=False, metadata={"title": "Country Code", "description": "Country code", "example": "TR"})
     state = fields.String(required=False, allow_none=False, metadata={"title": "State Code", "description": "State code", "example": "34"})
-    city = fields.String(required=False, allow_none=False, metadata={"title": "City/Town Name", "description": "City/Town name", "example": "Beyoğlu"})
+    city = fields.String(required=False, allow_none=True, metadata={"title": "City/Town Name", "description": "City/Town name", "example": "Beyoğlu"})
     address = fields.String(required=False, allow_none=False, metadata={"title": "Partner Address", "description": "Partner address", "example": "Example Street, No: 1"})
-    zip = fields.String(required=False, allow_none=False, metadata={"title": "ZIP Code", "description": "ZIP Code", "example": "34100"})
+    zip = fields.String(required=False, allow_none=True, metadata={"title": "ZIP Code", "description": "ZIP Code", "example": "34100"})
     contact = fields.String(required=False, allow_none=False, metadata={"title": "Contact Name", "description": "Contact name", "example": "Jane Doe"})
 
 
