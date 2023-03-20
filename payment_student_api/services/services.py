@@ -236,7 +236,6 @@ class StudentAPIService(Component):
         students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
         student = students.search([
             ('company_id', '=', company.id),
-            ('ref', '=', params.ref),
             ('vat', '=', params.vat)
         ])
         if len(student) > 1:
