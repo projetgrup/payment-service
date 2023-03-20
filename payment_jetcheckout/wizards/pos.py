@@ -37,6 +37,9 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
     priority = fields.Integer('Priority', required=True)
     usage_3d = fields.Selection([('Not Usable','Not Usable'),('Choosable','Choosable'),('Mandatory','Mandatory')], string='3D Usage')
     mode = fields.Selection([('P','Production'),('T','Test')], string='Mode', required=True, default='T')
+    rates_importable = fields.Boolean('Rates Importable', readonly=True)
+    import_rates = fields.Boolean('Import Commission Rates')
+    calc_cust_rates = fields.Boolean('Calculate Customer Rates')
     notes = fields.Text('Notes', readonly=True)
 
     customer_ip = fields.Char()
@@ -91,10 +94,15 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
         self.basket_item_desc = self.payment_org_id.basket_item_desc
         self.basket_item_categ = self.payment_org_id.basket_item_categ
 
+    def import_cost_rates(self):
+        self.acquirer_id._rpc('jet.virtual.pos', 'import_cost_rates')
+
+
 class PaymentAcquirerJetcheckoutApiCurrency(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.currency'
     _description = 'Jetcheckout API Currency'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
 
@@ -102,6 +110,7 @@ class PaymentAcquirerJetcheckoutApiProvider(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.provider'
     _description = 'Jetcheckout API Provider'
 
+    acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     code = fields.Char(readonly=True)
     name = fields.Char(readonly=True)

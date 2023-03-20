@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="payment_jetcheckout.campaign_list">
+        <table>
+            <colgroup>
+                <col width="5px"/>
+                <col width="60%"/>
+                <col width=""/>
+            </colgroup>
+            <t t-foreach="campaigns" t-as="campaign" t-key="campaign.id">
+                <t t-set="selected" t-value="campaign.name === current"/>
+                <tr>
+                    <td t-attf-class="#{selected ? 'bg-success' : ''}"/>
+                    <td class="font-weight-bold h4 text-700 text-center">
+                        <span t-if="campaign.id" t-esc="campaign.name"/>
+                        <span t-else="">Default</span>
+                    </td>
+                    <td t-if="selected" class="text-center py-1">
+                        <button class="btn rounded font-weight-bold btn-success disabled" t-att-data-name="campaign.name" disabled=""><i class="fa fa-check mr-2" t-translation="off"/>Select</button>
+                    </td>
+                    <td t-else="" class="text-center py-1">
+                        <button class="btn rounded font-weight-bold btn-success o_button_select_campaign" t-att-data-name="campaign.name"><i class="fa fa-check mr-2" t-translation="off"/>Select</button>
+                    </td>
+                </tr>
+            </t>
+        </table>
+    </t>
+</templates>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:10+0000\n"
-"PO-Revision-Date: 2023-01-23 10:49+0300\n"
+"POT-Creation-Date: 2023-03-20 16:18+0000\n"
+"PO-Revision-Date: 2023-03-20 19:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -187,8 +187,9 @@ msgid ""
 "size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
 "                            </a>\n"
-"                            <a href=\"/web/login\" style=\"display: inline-"
-"block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                            <a t-att-href=\"object.users_id.signup_url."
+"replace('signup','login')\" style=\"display: inline-block; padding: 10px; "
+"text-decoration: none; font-size: 12px;\">\n"
 "                                <strong>Log in</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -288,8 +289,9 @@ msgstr ""
 "size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Hesabı Aktifleştir</strong>\n"
 "                            </a>\n"
-"                            <a href=\"/web/login\" style=\"display: inline-"
-"block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                            <a t-att-href=\"object.users_id.signup_url."
+"replace('signup','login')\" style=\"display: inline-block; padding: 10px; "
+"text-decoration: none; font-size: 12px;\">\n"
 "                                <strong>Giriş Yap</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -335,6 +337,12 @@ msgstr ""
 "</td></tr>\n"
 "</table>\n"
 "            "
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Erişim İzni Yok"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_warning
@@ -388,21 +396,6 @@ msgstr "Ortalama Tutar"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Amount<br/>(All / Success)"
 msgstr "Tutar<br/>(Tümü / Başarılı)"
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "An error occured."
-msgstr "Bir hata meydana geldi."
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "An error occured. Please contact with your system administrator."
-msgstr ""
-"Bir hata meydana geldi. Lütfen sistem yöneticisi ile iletişime geçiniz."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -495,13 +488,6 @@ msgstr "Kapat"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__code
 msgid "Code"
 msgstr "Kod"
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "Code must be 6 digits"
-msgstr "Kod 6 hane olmalıdır"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
@@ -789,6 +775,11 @@ msgstr "Cuma"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_kanban
 msgid "Grant Access"
+msgstr "Yetki Ver"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_portal_wizard
+msgid "Grant Portal Access"
 msgstr "Yetki Ver"
 
 #. module: payment_jetcheckout_system
@@ -1193,11 +1184,6 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: payment_jetcheckout_system
-#: model:mail.template,name:payment_jetcheckout_system.otp_mail_template
-msgid "OTP: Partner"
-msgstr "OTP: İş Ortağı"
-
-#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "October"
@@ -1271,6 +1257,13 @@ msgstr ""
 "görünüyor. (%s)"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/wizards/send.py:0
+#, python-format
+msgid "Partners must belong to only one company to get sent properly"
+msgstr ""
+"İş ortakları düzgün gönderim için tek bir şirket ile ilişkili olmalıdır"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Payable"
 msgstr "Ödenecek"
@@ -1291,6 +1284,12 @@ msgstr "Ödeme"
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Ödeme Alıcısı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__acquirer_branch_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__acquirer_branch_id
+msgid "Payment Acquirer Branch"
+msgstr "Ödeme Alıcısı Şubesi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_payment_acquirer
@@ -1379,9 +1378,20 @@ msgid "Period"
 msgstr "Periyot"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
+msgid "Permissions"
+msgstr "İzinler"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/wizards/portal.py:0
+#, python-format
+msgid "Please use \"Grant Access\" button to get this feature"
+msgstr "Bu özelliği kullanmak için lütfen \"Yetki Ver\" butonunu kullanınız"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
@@ -1576,6 +1586,7 @@ msgid "September"
 msgstr "Eylül"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__sequence
 msgid "Sequence"
@@ -1826,6 +1837,11 @@ msgid "Transaction"
 msgstr "İşlem"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_transaction_commission
+msgid "Transaction Commissions"
+msgstr "İşlem Komisyonları"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_done_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_done_count
 msgid "Transaction Done"
@@ -1836,12 +1852,6 @@ msgstr "Başarılı İşlem"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_count
 msgid "Transaction Failed"
 msgstr "Başarısız İşlem"
-
-#. module: payment_jetcheckout_system
-#: code:addons/payment_jetcheckout_system/models/transaction.py:0
-#, python-format
-msgid "Transaction is succesful."
-msgstr "İşlem başarıyla tamamlandı."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -1914,13 +1924,6 @@ msgstr "Vergi No"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Virtual Pos Settings"
 msgstr "Sanal Pos Ayarları"
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_webhook_ok
@@ -2044,11 +2047,6 @@ msgid "You should first grant the portal access to the partner \"%s\"."
 msgstr "Öncelikle \"%s\" için portal yetkisi vermelisiniz."
 
 #. module: payment_jetcheckout_system
-#: model:mail.template,subject:payment_jetcheckout_system.otp_mail_template
-msgid "Your Authentication Code"
-msgstr "Yetki Kodunuz"
-
-#. module: payment_jetcheckout_system
 #: model:mail.template,subject:payment_jetcheckout_system.portal_mail_template
 msgid "Your account at {{ object.company_id.name }}"
 msgstr "{{ object.company_id.name }} hesabınız hakkında"
@@ -2081,3 +2079,30 @@ msgstr "e.g. eposta@sirketiniz.com"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#, python-format
+#~ msgid "An error occured."
+#~ msgstr "Bir hata meydana geldi."
+
+#, python-format
+#~ msgid "An error occured. Please contact with your system administrator."
+#~ msgstr ""
+#~ "Bir hata meydana geldi. Lütfen sistem yöneticisi ile iletişime geçiniz."
+
+#, python-format
+#~ msgid "Code must be 6 digits"
+#~ msgstr "Kod 6 hane olmalıdır"
+
+#~ msgid "OTP: Partner"
+#~ msgstr "OTP: İş Ortağı"
+
+#, python-format
+#~ msgid "Transaction is succesful."
+#~ msgstr "İşlem başarıyla tamamlandı."
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Uyarı"
+
+#~ msgid "Your Authentication Code"
+#~ msgstr "Yetki Kodunuz"

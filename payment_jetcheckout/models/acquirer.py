@@ -281,10 +281,12 @@ class PaymentAcquirerJetcheckout(models.Model):
         self._jetcheckout_api_vacuum()
         campaign_id = self.jetcheckout_campaign_id.id
         line_ids = [(0, 0, {
+            'acquirer_id': self.id,
             'campaign_id': False,
             'name': _('Default'),
             'is_active': not campaign_id,
         })] + [(0, 0, {
+            'acquirer_id': self.id,
             'campaign_id': campaign.id,
             'name': campaign.name,
             'is_active': campaign.id == campaign_id,
@@ -322,22 +324,23 @@ class PaymentAcquirerJetcheckout(models.Model):
         return rpc.execute(url, database, self.jetcheckout_user_id, self.jetcheckout_password, *args)
 
     def _jetcheckout_api_vacuum(self):
-        self.env['payment.acquirer.jetcheckout.api.application'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.pos'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.campaign'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.campaigns'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.installment'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.excluded'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.bank'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.family'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.provider'].search([]).unlink()
-        self.env['payment.acquirer.jetcheckout.api.currency'].search([]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.application'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.pos'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.campaign'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.campaigns'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.installment'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.excluded'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.bank'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.family'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.provider'].search([('acquirer_id', '=', self.id)]).unlink()
+        self.env['payment.acquirer.jetcheckout.api.currency'].search([('acquirer_id', '=', self.id)]).unlink()
 
     def _jetcheckout_api_create_currencies(self):
         currency_table = self.env['payment.acquirer.jetcheckout.api.currency']
         currencies = self._rpc('res.currency', 'search_read', [])
         for currency in currencies:
             currency_table.create({
+                'acquirer_id': self.id,
                 'res_id': currency['id'],
                 'name': currency['name'],
             })
@@ -350,6 +353,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         provider_table = self.env['payment.acquirer.jetcheckout.api.provider']
         for provider in providers:
             vals = {
+                'acquirer_id': self.id,
                 'res_id': provider['id'],
                 'code': provider['virtual_pos_infraid'][1],
                 'name': provider['name'],
@@ -427,6 +431,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         bank_model = self.env['payment.acquirer.jetcheckout.api.bank']
         banks = self._rpc('jet.bank', 'search_read', [], ['id', 'name'])
         bank_model.create([{
+            'acquirer_id': self.id,
             'res_id': bank['id'],
             'name': bank['name'],
         } for bank in banks])
@@ -434,6 +439,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         family_model = self.env['payment.acquirer.jetcheckout.api.family']
         families = self._rpc('jet.card.family', 'search_read', [], ['id', 'name', 'logo_path'])
         family_model.create([{
+            'acquirer_id': self.id,
             'res_id': family['id'],
             'name': family['name'],
             'logo': family['logo_path']
@@ -442,6 +448,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         bin_model = self.env['payment.acquirer.jetcheckout.api.excluded']
         bins = self._rpc('jet.bin', 'search_read', [], ['id', 'code', 'bank_code', 'card_type', 'card_family_id', 'mandatory_3d', 'program'])
         bin_model.create([{
+            'acquirer_id': self.id,
             'res_id': bin['id'],
             'code': bin['code'],
             'bank_code': bin['bank_code'] and bank_model.search([('res_id', '=', bin['bank_code'][0])], limit=1).id,
@@ -453,8 +460,8 @@ class PaymentAcquirerJetcheckout(models.Model):
 
         for pos in poses:
             self.env['payment.acquirer.jetcheckout.api.pos'].create({
-                'res_id': pos['id'],
                 'acquirer_id': self.id,
+                'res_id': pos['id'],
                 'name': pos['name'],
                 'parent_id': record.id if record._name == 'payment.acquirer.jetcheckout.api.poses' else False,
                 'payment_org_id': providers[pos['payment_org_id'][0]],
@@ -507,6 +514,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'shipping_address_country': pos['shipping_address_country'],
                 'applications': [(6, 0, [val for key, val in apps.items() if key in pos['applications']])],
                 'pos_price': [(0, 0, {
+                    'acquirer_id': self.id,
                     'res_id': price['id'],
                     'offer_name': price['offer_name'],
                     'currency_id': currencies[price['currency_id'][0]],
@@ -516,6 +524,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                     'card_family_names': price['card_family_names'],
                     'installments': price['installments'],
                     'pos_lines': [(0, 0, {
+                        'acquirer_id': self.id,
                         'res_id': line['id'],
                         'installment_type': line['installment_type'],
                         'customer_rate': line['customer_rate'],
@@ -537,14 +546,14 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def _jetcheckout_api_read(self):
         data = {}
-        data['payment.acquirer.jetcheckout.api.pos'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.pos'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.provider'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.provider'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.application'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.application'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.campaign'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.campaign'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.installment'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.installment'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.excluded'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.excluded'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.family'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.family'].search_read([], ['id', 'res_id'])}
-        data['payment.acquirer.jetcheckout.api.currency'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.currency'].search_read([], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.pos'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.pos'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.provider'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.provider'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.application'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.application'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.campaign'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.campaign'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.installment'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.installment'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.excluded'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.excluded'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.family'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.family'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
+        data['payment.acquirer.jetcheckout.api.currency'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.currency'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
         data['acquirer'] = self
         return data
 

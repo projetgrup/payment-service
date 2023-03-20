@@ -25,9 +25,11 @@
         'report/report.xml',
         'data/data.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
     ],
     'assets': {
         'web.assets_frontend': [
+            'payment_jetcheckout/static/src/xml/templates.xml',
             'payment_jetcheckout/static/src/js/imask.js',
             'payment_jetcheckout/static/src/js/cards.js',
             'payment_jetcheckout/static/src/js/framework.js',

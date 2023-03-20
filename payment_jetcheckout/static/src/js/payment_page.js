@@ -10,9 +10,11 @@ var cards = require('payment_jetcheckout.cards');
 var framework = require('payment_jetcheckout.framework');
 
 var _t = core._t;
+var qweb = core.qweb;
 
 publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     selector: '.payment-card',
+    xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
     start: function () {
         var self = this;
@@ -21,6 +23,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$ccfamily = '';
             self.$name = document.getElementById('name');
             self.$campaign = document.getElementById('campaign');
+            self.$campaignname = document.getElementById('campaign_name');
             self.$cardnumber = document.getElementById('cardnumber');
             self.$expirationdate = document.getElementById('expirationdate');
             self.$securitycode = document.getElementById('securitycode');
@@ -38,6 +41,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$svgnumber = document.getElementById('svgnumber');
             self.$creditcard = document.querySelector('.creditcard');
             self.$installments_table = document.getElementById('installments_table');
+            self.$campaigns_table = document.getElementById('campaigns_table');
             self.$payment_pay = document.getElementById('payment_pay');
             self.$payment_form = document.getElementById('o_payment_form_pay');
             self.$success_url = document.getElementById('success_url');
@@ -154,6 +158,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.cardnumber.on('accept', self.acceptCardNumber.bind(self));
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
+                self.$campaigns_table.addEventListener('click', self.clickCampaingTable.bind(self));
                 if (self.$creditcard) {
                     self.expirationdate.on('accept', self.acceptExpirationDate.bind(self));
                     self.securitycode.on('accept', self.acceptSecurityCode.bind(self));
@@ -332,6 +337,44 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                     $content: result.render
                 }).open();
             }
+        }).guardedCatch(function (error) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
+            });
+            if (config.isDebug()) {
+                console.error(error);
+            }
+        });
+    },
+
+    clickCampaingTable: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        ev.preventDefault();
+        rpc.query({
+            route: '/payment/card/campaigns',
+        }).then(function (result) {
+            var popup = new dialog(self, {
+                title: _t('Campaigns Table'),
+                size: 'small',
+                buttons: [
+                    {text: _t('Cancel'), classes: 'btn-secondary text-white', close: true},
+                ],
+                $content: qweb.render('payment_jetcheckout.campaign_list', { campaigns: result.campaigns, current: self.$campaign.value })
+            });
+
+            popup.open().opened(function () {
+                const $button = $('.modal-body button.o_button_select_campaign');
+                $button.click(function(e) {
+                    const campaign = e.currentTarget.dataset.name;
+                    self.$campaign.value = campaign;
+                    self.$campaignname.innerHTML = campaign || '-';
+                    self.getInstallment();
+                    popup.destroy();
+                });
+            });
         }).guardedCatch(function (error) {
             self.displayNotification({
                 type: 'danger',

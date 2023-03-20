@@ -98,6 +98,9 @@
                         <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                         <field string="Companies count" name="companies_count" invisible="1"/>
                     </group>
+                    <group string="Permissions" name="permissions">
+                        <field name="group_transaction_commission"/>
+                    </group>
                 </group>
             </sheet>
         </form>
