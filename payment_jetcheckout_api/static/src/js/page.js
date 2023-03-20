@@ -53,8 +53,8 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     _onBankConfirmButton: function (ev) {
         var self = this;
         let popup = new Dialog(self, {
-            size: 'medium',
             title: _t('Are you confirm the transaction?'),
+            size: 'medium',
             technical: false,
             buttons: [
                 {text: _t("Confirm"), classes: 'btn-primary btn-confirm'},

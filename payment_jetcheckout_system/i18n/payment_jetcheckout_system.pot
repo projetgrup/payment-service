@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:10+0000\n"
-"PO-Revision-Date: 2023-01-23 06:10+0000\n"
+"POT-Creation-Date: 2023-03-20 16:18+0000\n"
+"PO-Revision-Date: 2023-03-20 16:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgid ""
 "                            <a t-att-href=\"object.users_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
 "                            </a>\n"
-"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                            <a t-att-href=\"object.users_id.signup_url.replace('signup','login')\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
 "                                <strong>Log in</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -183,6 +183,12 @@ msgid ""
 "</td></tr>\n"
 "</table>\n"
 "            "
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Access Denied"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -236,21 +242,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Amount<br/>(All / Success)"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "An error occured."
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "An error occured. Please contact with your system administrator."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -343,13 +334,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__code
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__code
 msgid "Code"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "Code must be 6 digits"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -635,6 +619,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_kanban
 msgid "Grant Access"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_portal_wizard
+msgid "Grant Portal Access"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1034,11 +1023,6 @@ msgid "November"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:mail.template,name:payment_jetcheckout_system.otp_mail_template
-msgid "OTP: Partner"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "October"
@@ -1110,6 +1094,12 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/wizards/send.py:0
+#, python-format
+msgid "Partners must belong to only one company to get sent properly"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Payable"
 msgstr ""
@@ -1129,6 +1119,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer
 msgid "Payment Acquirer"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__acquirer_branch_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__acquirer_branch_id
+msgid "Payment Acquirer Branch"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1218,8 +1214,19 @@ msgid "Period"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
+msgid "Permissions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
 msgid "Phone"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/wizards/portal.py:0
+#, python-format
+msgid "Please use \"Grant Access\" button to get this feature"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1415,6 +1422,7 @@ msgid "September"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__sequence
 msgid "Sequence"
@@ -1658,6 +1666,11 @@ msgid "Transaction"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_transaction_commission
+msgid "Transaction Commissions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_done_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_done_count
 msgid "Transaction Done"
@@ -1667,12 +1680,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__transaction_failed_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_count
 msgid "Transaction Failed"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: code:addons/payment_jetcheckout_system/models/transaction.py:0
-#, python-format
-msgid "Transaction is succesful."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1746,13 +1753,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Virtual Pos Settings"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/frontend.js:0
-#, python-format
-msgid "Warning"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1874,11 +1874,6 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:mail.template,subject:payment_jetcheckout_system.otp_mail_template
-msgid "Your Authentication Code"
 msgstr ""
 
 #. module: payment_jetcheckout_system
