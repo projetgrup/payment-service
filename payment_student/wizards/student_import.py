@@ -110,7 +110,6 @@ class PaymentStudentImport(models.TransientModel):
             students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
             student = students.search([
                 ('company_id', '=', company.id),
-                ('ref', '=', line.student_ref),
                 ('vat', '=', line.student_vat)
             ])
             if len(student) > 1:
