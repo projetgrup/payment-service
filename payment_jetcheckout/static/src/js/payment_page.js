@@ -158,7 +158,9 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 self.cardnumber.on('accept', self.acceptCardNumber.bind(self));
                 self.$amount.addEventListener('change', self.getInstallment.bind(self));
                 self.$installments_table.addEventListener('click', self.clickInstallmentTable.bind(self));
-                self.$campaigns_table.addEventListener('click', self.clickCampaingTable.bind(self));
+                if (self.$campaigns_table) {
+                    self.$campaigns_table.addEventListener('click', self.clickCampaingTable.bind(self));
+                }
                 if (self.$creditcard) {
                     self.expirationdate.on('accept', self.acceptExpirationDate.bind(self));
                     self.securitycode.on('accept', self.acceptSecurityCode.bind(self));
