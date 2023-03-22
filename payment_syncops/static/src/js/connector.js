@@ -274,7 +274,7 @@ paymentSystemPage.include({
             route: '/my/payment/partners/reset',
         }).then(function (result) {
             if (!result) return false;
-            $('input#campaign').value(result.campaign || '');
+            $('input#campaign').val(result.campaign || '');
             $('label[for="partner"] + span').text(result.name);
             $('.o_connector_partner_balance').html(result.render);
             $el.addClass('d-none');
