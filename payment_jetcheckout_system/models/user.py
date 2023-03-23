@@ -24,12 +24,21 @@ class Users(models.Model):
             name = system or 'system'
             group_user = self.env.ref('payment_%s.group_%s_user' % (module, name))
             group_admin = self.env.ref('payment_%s.group_%s_manager' % (module, name))
+            group_public = self.env.ref('base.group_public')
+            group_portal = self.env.ref('base.group_portal')
+            group_user = self.env.ref('base.group_user')
             if user.privilege == 'admin':
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(4, user.id)]})
+                group_public.sudo().write({'users': [(3, user.id)]})
+                group_portal.sudo().write({'users': [(3, user.id)]})
+                group_user.sudo().write({'users': [(4, user.id)]})
             elif user.privilege == 'user':
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
+                group_public.sudo().write({'users': [(3, user.id)]})
+                group_portal.sudo().write({'users': [(3, user.id)]})
+                group_user.sudo().write({'users': [(4, user.id)]})
             else:
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
