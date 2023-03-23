@@ -288,7 +288,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         })]
 
         names = []
-        for c in self.env['payment.acquirer.jetcheckout.campaign'].search([]):
+        for c in self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', '=', self.id)]):
             if c.name not in names:
                 names.append(c.name)
                 line_ids.append((0, 0, {
