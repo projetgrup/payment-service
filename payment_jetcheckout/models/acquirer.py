@@ -279,18 +279,24 @@ class PaymentAcquirerJetcheckout(models.Model):
     def action_jetcheckout_campaign(self):
         self.ensure_one()
         self._jetcheckout_api_vacuum()
-        campaign_id = self.jetcheckout_campaign_id.id
+        campaign = self.jetcheckout_campaign_id.name
         line_ids = [(0, 0, {
             'acquirer_id': self.id,
             'campaign_id': False,
             'name': _('Default'),
-            'is_active': not campaign_id,
-        })] + [(0, 0, {
-            'acquirer_id': self.id,
-            'campaign_id': campaign.id,
-            'name': campaign.name,
-            'is_active': campaign.id == campaign_id,
-        }) for campaign in self.env['payment.acquirer.jetcheckout.campaign'].search([])]
+            'is_active': not campaign,
+        })]
+
+        names = []
+        for c in self.env['payment.acquirer.jetcheckout.campaign'].search([]):
+            if c.name not in names:
+                line_ids.append((0, 0, {
+                    'acquirer_id': self.id,
+                    'campaign_id': c.id,
+                    'name': c.name,
+                    'is_active': c.name == campaign,
+                }))
+
         campaigns = self.env['payment.acquirer.jetcheckout.api.campaigns'].create({'acquirer_id': self.id, 'line_ids': line_ids})
         action = self.env.ref('payment_jetcheckout.action_api_campaigns').sudo().read()[0]
         action['res_id'] = campaigns.id
@@ -557,7 +563,14 @@ class PaymentAcquirerJetcheckout(models.Model):
         data['acquirer'] = self
         return data
 
-    def _jetcheckout_api_sync_campaign(self, poses):
+    def _jetcheckout_api_sync_campaign(self, poses=None):
+        if not poses:
+            poses = self.env['payment.acquirer.jetcheckout.api.application'].search([
+                ('application_id', '=', self.jetcheckout_api_key)
+            ], limit=1).mapped('virtual_pos_ids')
+            if not poses:
+                return
+
         api_campaigns_list = poses.filtered(lambda x: x.is_active).mapped('pos_price').filtered(lambda x: x.is_active).mapped('offer_name')
         acq_campaigns_list = self.jetcheckout_campaign_ids.mapped('name')
         api_campaigns = set(api_campaigns_list)
@@ -573,12 +586,14 @@ class PaymentAcquirerJetcheckout(models.Model):
             if campaign not in acq_campaigns:
                 creates.append(campaign)
 
-        self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([('acquirer_id', '=', self.id), ('name', 'in', unlinks)]).unlink()
+        self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
+            ('acquirer_id', '=', self.id),
+            ('name', 'in', unlinks)
+        ]).unlink()
         self.env['payment.acquirer.jetcheckout.campaign'].sudo().create([{
             'acquirer_id': self.id,
             'name': name,
         } for name in creates])
-
 
     def _jetcheckout_api_upload_vals(self, vals, data, table):
         values = {}

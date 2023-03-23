@@ -63,7 +63,7 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
             journals.append((2, line.id, 0))
 
         acquirer.jetcheckout_journal_ids = journals
-        acquirer._jetcheckout_api_sync_campaign(pos_ids)
+        acquirer._jetcheckout_api_sync_campaign(poses=pos_ids)
 
     def write(self, vals):
         if 'name' in vals:
@@ -93,5 +93,5 @@ class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):
     def write(self, vals):
         data = self.acquirer_id._jetcheckout_api_read()
         self.acquirer_id._jetcheckout_api_upload(vals, data, self)
-        self.acquirer_id._jetcheckout_api_sync_campaign(self.application_ids.virtual_pos_ids)
+        self.acquirer_id._jetcheckout_api_sync_campaign()
         return super().write(vals)
