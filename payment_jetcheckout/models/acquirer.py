@@ -280,27 +280,22 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.ensure_one()
         self._jetcheckout_api_vacuum()
         campaign = self.jetcheckout_campaign_id.name
+        campaigns = self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', '=', self.id)])
         line_ids = [(0, 0, {
             'acquirer_id': self.id,
             'campaign_id': False,
             'name': _('Default'),
             'is_active': not campaign,
-        })]
+        })] + [(0, 0, {
+            'acquirer_id': self.id,
+            'campaign_id': c.id,
+            'name': c.name,
+            'is_active': c.name == campaign,
+        }) for c in campaigns]
 
-        names = []
-        for c in self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', '=', self.id)]):
-            if c.name not in names:
-                names.append(c.name)
-                line_ids.append((0, 0, {
-                    'acquirer_id': self.id,
-                    'campaign_id': c.id,
-                    'name': c.name,
-                    'is_active': c.name == campaign,
-                }))
-
-        campaigns = self.env['payment.acquirer.jetcheckout.api.campaigns'].create({'acquirer_id': self.id, 'line_ids': line_ids})
+        wizard = self.env['payment.acquirer.jetcheckout.api.campaigns'].create({'acquirer_id': self.id, 'line_ids': line_ids})
         action = self.env.ref('payment_jetcheckout.action_api_campaigns').sudo().read()[0]
-        action['res_id'] = campaigns.id
+        action['res_id'] = wizard.id
         action['context'] = {'dialog_size': 'small', 'create': False, 'delete': False}
         return action
 
