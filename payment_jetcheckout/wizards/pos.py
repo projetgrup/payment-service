@@ -161,5 +161,5 @@ class PaymentAcquirerJetcheckoutApiPoses(models.TransientModel):
     def write(self, vals):
         data = self.acquirer_id._jetcheckout_api_read()
         self.acquirer_id._jetcheckout_api_upload(vals, data, self)
-        self.acquirer_id._jetcheckout_api_sync_campaign(self.pos_ids)
+        self.acquirer_id._jetcheckout_api_sync_campaign()
         return super().write(vals)
