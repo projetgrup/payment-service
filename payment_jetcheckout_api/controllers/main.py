@@ -118,7 +118,18 @@ class JetcheckoutApiController(JetController):
         elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'card':
             raise NotFound()
 
-        values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, transaction=tx, balance=False)
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['jetcheckout'],
+            limit=1,
+        )
+        values = self._jetcheckout_get_data(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False
+        )
+        values = self._jetcheckout_get_data(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False)
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_card_page', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -149,7 +160,17 @@ class JetcheckoutApiController(JetController):
             self._confirm_bank_webhook(tx)
             return werkzeug.utils.redirect('/payment/bank/result')
 
-        values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['transfer'],
+            limit=1,
+        )
+        values = self._jetcheckout_get_data(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False
+        )
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -170,7 +191,17 @@ class JetcheckoutApiController(JetController):
         elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'bank':
             raise NotFound()
 
-        values = self._jetcheckout_get_data(acquirer=tx.acquirer_id, company=tx.company_id, balance=False)
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['transfer'],
+            limit=1,
+        )
+        values = self._jetcheckout_get_data(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False
+        )
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate',

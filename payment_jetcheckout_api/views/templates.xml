@@ -186,7 +186,7 @@
             <div class="row mx-0 w-100 px-3">
                 You can pick one of the following bank accounts for your bank transfer transaction.
             </div>
-            <t t-foreach="tx.acquirer_id.jetcheckout_bank_ids" t-as="bank">
+            <t t-foreach="acquirer.jetcheckout_bank_ids" t-as="bank">
                 <div class="row mx-0 w-100 card shadow mt-3">
                     <div class="row mx-0 w-100">
                         <div class="align-self-center text-center col-md-3 py-3 text-center">
@@ -220,7 +220,7 @@
                 </div>
             </t>
             <div class="row mx-0 w-100 px-3 mt48">
-                <t t-raw="tx.acquirer_id.pending_msg"/>
+                <t t-raw="acquirer.pending_msg"/>
             </div>
             <div t-if="not tx_pending" class="row mx-0 w-100 px-3 mt-4">
                 <div class="col-md-9 small align-self-center">

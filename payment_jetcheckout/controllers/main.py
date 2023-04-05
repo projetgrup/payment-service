@@ -25,7 +25,6 @@ class JetcheckoutController(http.Controller):
                 return request.env['payment.acquirer'].sudo().browse(acquirer)
             else:
                 return acquirer
-
         return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
 
     @staticmethod
