@@ -144,8 +144,8 @@ class PaymentTransaction(models.Model):
         })
         return payment
 
-    def _jetcheckout_refund_postprocess(self, amount=None):
-        values = {
+    def _jetcheckout_refund_postprocess_values(self):
+        return {
             'jetcheckout_card_name': self.jetcheckout_card_name,
             'jetcheckout_card_number': self.jetcheckout_card_number,
             'jetcheckout_card_type': self.jetcheckout_card_type,
@@ -156,7 +156,9 @@ class PaymentTransaction(models.Model):
             'state_message': _('Transaction has been refunded successfully.'),
             'last_state_change': fields.Datetime.now(),
         }
-        transaction = self._create_refund_transaction(amount_to_refund=amount, **values)
+
+    def _jetcheckout_refund_postprocess(self, amount=None):
+        transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values())
         transaction._log_sent_message()
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
@@ -209,13 +211,16 @@ class PaymentTransaction(models.Model):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def _jetcheckout_done_postprocess(self):
-        self.write({
+    def _jetcheckout_done_postprocess_values(self):
+        return {
             'state': 'done',
             'is_post_processed': True,
             'last_state_change': fields.Datetime.now(),
             'state_message': _('Transaction is successful.'),
-        })
+        }
+
+    def _jetcheckout_done_postprocess(self):
+        self.write(self._jetcheckout_done_postprocess_values())
         self.jetcheckout_order_confirm()
         self.jetcheckout_payment()
 
@@ -258,13 +263,16 @@ class PaymentTransaction(models.Model):
             })
             _logger.warning('Creating payment for transaction %s is failed\n%s' % (self.reference, e))
 
+    def _jetcheckout_cancel_postprocess_values(self):
+        return {
+            'state': 'cancel',
+            'state_message': _('Transaction has been cancelled successfully.'),
+            'last_state_change': fields.Datetime.now(),
+        }
+
     def _jetcheckout_cancel_postprocess(self):
         if not self.state == 'cancel':
-            self.write({
-                'state': 'cancel',
-                'state_message': _('Transaction has been cancelled successfully.'),
-                'last_state_change': fields.Datetime.now(),
-            })
+            self.write(self._jetcheckout_cancel_postprocess_values())
 
     def _jetcheckout_cancel(self):
         self.ensure_one()
@@ -287,9 +295,10 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_refund(self):
         self.ensure_one()
+        refunds = self.search([('source_transaction_id', '=', self.id)])
         vals = {
             'transaction_id': self.id,
-            'total': self.amount,
+            'total': self.amount + sum(refunds.mapped('amount')),
             'currency_id': self.currency_id.id,
         }
         refund = self.env['payment.acquirer.jetcheckout.refund'].create(vals)
