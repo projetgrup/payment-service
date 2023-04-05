@@ -359,7 +359,7 @@
                                 <button id="payment_pay" class="payment_pay d-none"/>
                             </div>
                         </div>
-                        <input id="campaign" type="hidden" t-att-value="campaign['name']"/>
+                        <input id="campaign" type="hidden" t-att-value="campaign.get('name', '')"/>
                     </div>
                 </div>
             </div>
