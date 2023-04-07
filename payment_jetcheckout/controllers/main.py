@@ -12,8 +12,19 @@ from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import ValidationError
+from odoo.addons.payment.controllers import portal
 
 _logger = logging.getLogger(__name__)
+
+
+class PaymentPortal(portal.PaymentPortal):
+
+    @http.route('/my/payment_method', type='http', methods=['GET'], auth='user', website=True)
+    def payment_method(self, **kwargs):
+        """
+        We don't use payment tokens yet, so redirect 404
+        """
+        raise werkzeug.exceptions.NotFound
 
 
 class JetcheckoutController(http.Controller):
