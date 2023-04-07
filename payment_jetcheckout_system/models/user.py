@@ -9,10 +9,12 @@ class Users(models.Model):
 
     def _compute_privilege(self):
         for user in self:
-            system = user.company_id.system or 'jetcheckout_system'
-            if user.has_group('payment_%s.group_%s_manager' % (system, system)):
+            system = user.company_id.system
+            module = system or 'jetcheckout_system'
+            name = system or 'system'
+            if user.has_group('payment_%s.group_%s_manager' % (module, name)):
                 user.privilege = 'admin'
-            elif user.has_group('payment_%s.group_%s_user' % (system, system)):
+            elif user.has_group('payment_%s.group_%s_user' % (module, name)):
                 user.privilege = 'user'
             else:
                 user.privilege = ''
@@ -28,16 +30,14 @@ class Users(models.Model):
             group_portal = self.env.ref('base.group_portal')
             group_user = self.env.ref('base.group_user')
             if user.privilege == 'admin':
-                group_user.sudo().write({'users': [(4, user.id)]})
-                group_admin.sudo().write({'users': [(4, user.id)]})
                 group_public.sudo().write({'users': [(3, user.id)]})
                 group_portal.sudo().write({'users': [(3, user.id)]})
+                group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
             elif user.privilege == 'user':
-                group_user.sudo().write({'users': [(4, user.id)]})
-                group_admin.sudo().write({'users': [(3, user.id)]})
                 group_public.sudo().write({'users': [(3, user.id)]})
                 group_portal.sudo().write({'users': [(3, user.id)]})
+                group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
             else:
                 group_user.sudo().write({'users': [(3, user.id)]})
