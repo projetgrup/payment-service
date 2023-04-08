@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
+
 class PaymentItem(models.Model):
     _name = 'payment.item'
     _description = 'Payment Items'

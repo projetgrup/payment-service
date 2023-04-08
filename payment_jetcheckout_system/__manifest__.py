@@ -30,6 +30,7 @@
         'views/actions.xml',
         'report/company.xml',
         'wizards/send.xml',
+        'wizards/item.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
     ],

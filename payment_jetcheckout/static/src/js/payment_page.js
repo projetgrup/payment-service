@@ -52,6 +52,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$subscription = document.getElementById('subscription');
 
             if (self.$amount) {
+                var amount = self.$amount.value.replace(self.$currency.dataset.thousand, '').replace(self.$currency.dataset.separator, '.');
+                self.$amount.value = parseFloat(amount);
                 self.amount = new IMask(self.$amount, {
                     mask: Number,
                     scale: self.$currency.dataset.decimal,

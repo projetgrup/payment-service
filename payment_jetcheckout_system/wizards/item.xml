@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_wizard_form" model="ir.ui.view">
+    <field name="name">payment.item.wizard.form</field>
+    <field name="model">payment.item.wizard</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <p class="h4 text-center pt-3 text-700">
+                            You can review payment item(s) of<br/><field name="partner_id" options="{'no_create': True, 'no_open': True}" class="font-weight-bold text-primary h2 pt-3 pb-2"/><br/>and redirect payment link page.
+                        </p>
+                    </group>
+                    <group>
+                        <field name="line_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="amount"/>
+                                <field name="paid"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="item_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+            </sheet>
+            <footer>
+                <button name="confirm" type="object" string="Confirm" class="btn-primary"/>
+                <button special="cancel" string="Cancel"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_item_wizard" model="ir.actions.act_window">
+    <field name="name">Payment Items</field>
+    <field name="res_model">payment.item.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+</odoo>
