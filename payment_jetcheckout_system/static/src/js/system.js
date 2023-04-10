@@ -23,6 +23,7 @@ paymentPage.include({
             self.$items.on('change', self.onChangePaid.bind(self));
             self.$items_all.on('change', self.onChangePaidAll.bind(self));
             self.$tags.on('click', self.onClickTag.bind(self));
+            self.onChangePaid();
         });
     },
 
@@ -36,12 +37,28 @@ paymentPage.include({
         return params
     },
 
+    _checkData: function () {
+        const $payable_items = $('input[type="checkbox"].payment-items:checked');
+        if (!$payable_items.length) {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('Please select at least one payment'),
+            });
+            this._enableButton();
+            return false;
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+
     onChangePaidAll: function (ev) {
         if (this.$items_all.prop('checked')) {
             this.$items.prop('checked', true);
         } else {
             this.$items.prop('checked', false);
         }
+        this.onChangePaid();
     },
 
     onClickTag: function (ev) {
@@ -61,9 +78,29 @@ paymentPage.include({
                 }
             }
         });
+        this.onChangePaid();
     },
 
-    onChangePaid: function (ev) {},
+    onChangePaid: function (ev) {
+        const $items = $('input[type="checkbox"].payment-items:checked');
+        if ($items.length) {
+            this.$items_all.prop('checked', true);
+        } else {
+            this.$items_all.prop('checked', false);
+        }
+
+        const $amount = $('#amount');
+        if (!$amount.length) {
+            return;
+        }
+
+        let amount = 0;
+        $items.each(function() { amount += parseFloat($(this).data('amount'))});
+
+        const event = new Event('change');
+        $amount.val(amount);
+        $amount[0].dispatchEvent(event);
+    },
 });
 
 publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend({

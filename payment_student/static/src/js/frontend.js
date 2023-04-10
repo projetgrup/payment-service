@@ -15,30 +15,21 @@ publicWidget.registry.StudentPaymentPage = systemPage.extend({
         ["/payment_student/static/src/xml/templates.xml"]
     ),
 
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.$advance_discount = $('#advance_discount');
-            self.$maximum_discount = $('#maximum_discount').val();
-            self.$sibling_discount = $('#sibling_discount');
-            self.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
-            self.onChangePaid();
-        });
-    },
-
-    onChangePaidAll: function (ev) {
+    init: function() {
         this._super.apply(this, arguments);
-        this.onChangePaid();
-    },
-
-    onClickTag: function (ev) {
-        this._super.apply(this, arguments);
-        this.onChangePaid();
+        this.rendered = false;
     },
 
     onChangePaid: function (ev) {
-        this._super.apply(this, arguments);
-        const $items = $('.payment-student input.payment-items:checked');
+        if(!this.rendered) {
+            this.$advance_discount = $('#advance_discount');
+            this.$maximum_discount = $('#maximum_discount').val();
+            this.$sibling_discount = $('#sibling_discount');
+            this.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
+            this.rendered = true;
+        }
+
+        const $items = $('input[type="checkbox"].payment-items:checked');
         if ($items.length) {
             this.$items_all.prop('checked', true);
         } else {
