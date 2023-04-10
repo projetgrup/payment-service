@@ -9,14 +9,18 @@
             <field name="parent_id" string="Parent" required="1" force_save="1" options="{'no_create': True}" domain="[('parent_id','=',False), ('system', '=', context.get('active_system')),('child_ids','!=',False),('company_id','=',company_id)]"/>
             <field name="campaign_id" optional="show" options="{'no_create': True, 'no_open': True}"/>
             <field name="amount" attrs="{'readonly': [('paid','=',True)]}"/>
+            <field name="date" optional="hide"/>
+            <field name="due_date" optional="hide"/>
+            <field name="description" optional="hide"/>
+            <field name="file" optional="hide"/>
             <field name="paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
-            <field name="paid_amount" string="Amount" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="paid_amount" string="Paid"/>
+            <field name="residual_amount" string="Residual"/>
             <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
             <button name="action_receipt" string="Receipt" type="object" icon="fa-file-text-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
-            <field name="description" optional="hide"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="currency_id" force_save="1" invisible="1"/>
             <field name="system" invisible="1" force_save="1"/>

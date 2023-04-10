@@ -42,11 +42,54 @@
                                 <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
                                 <p class="h2 text-right font-weight-bold z-index-1">
                                     <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency['self']}"/>
-                                    <t t-foreach="payments" t-as="payment">
-                                        <input type="checkbox" class="payment-items d-none" t-att-name="payment.id" t-att-data-amount="payment.amount" checked="checked"/>
-                                    </t>
                                 </p>
                             </div>
+                        </div>
+                    </div>
+                    <div t-if="payments" class="row bg-white mx-0 px-3">
+                        <div class="payment-list bg-white card table-responsive overflow-auto">
+                            <table class="table table-sm sidebar-table mb-0 text-700">
+                                <thead>
+                                    <tr class="shadow-sm font-weight-bold">
+                                        <th class="px-2">Date</th>
+                                        <th class="px-2">Due Date</th>
+                                        <th class="px-2">Description</th>
+                                        <th class="text-right px-2">Amount</th>
+                                        <th class="text-right px-2">Residual</th>
+                                        <th class="text-center px-2">Document</th>
+                                        <th/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="payments" t-as="payment">
+                                        <tr>
+                                            <td class="px-2"><span t-field="payment.date"/></td>
+                                            <td class="px-2"><span t-field="payment.due_date"/></td>
+                                            <td class="px-2"><span t-field="payment.description"/></td>
+                                            <td class="text-right px-2"><span t-field="payment.amount"/></td>
+                                            <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
+                                            <td class="text-center"><button class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/></td>
+                                            <td class="text-center">
+                                                <label class="switch" style="margin-bottom: 0;">
+                                                    <input type="checkbox" class="payment-items" t-att-data-id="payment.id" checked="checked"/>
+                                                    <span class="slider round fa"/>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot class="shadow bg-light">
+                                    <tr>
+                                        <td class="text-right" colspan="6"><em>Select All</em></td>
+                                        <td class="text-center">
+                                            <label class="switch" style="margin-bottom: 0;">
+                                                <input type="checkbox" class="payment-all-items" checked="checked"/>
+                                                <span class="slider round fa"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                     <div t-if="len(payments) > 0" class="justify-content-center mx-0 w-100">

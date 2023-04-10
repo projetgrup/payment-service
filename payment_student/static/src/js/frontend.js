@@ -18,51 +18,26 @@ publicWidget.registry.StudentPaymentPage = systemPage.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.$pivot = $('.payment-student div.payment-pivot');
-            self.$items = $('.payment-student input.payment-items');
-            self.$items_all = $('.payment-student input.payment-all-items');
-            self.$tags = $('.payment-student button.btn-payments');
             self.$advance_discount = $('#advance_discount');
             self.$maximum_discount = $('#maximum_discount').val();
             self.$sibling_discount = $('#sibling_discount');
             self.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
-            self.$items.on('change', self.onChangePaid.bind(self));
-            self.$items_all.on('change', self.onChangePaidAll.bind(self));
-            self.$tags.on('click', self.onClickTag.bind(self));
             self.onChangePaid();
         });
     },
 
     onChangePaidAll: function (ev) {
-        if (this.$items_all.prop('checked')) {
-            this.$items.prop('checked', true);
-        } else {
-            this.$items.prop('checked', false);
-        }
+        this._super.apply(this, arguments);
         this.onChangePaid();
     },
 
     onClickTag: function (ev) {
-        const $button = $(ev.currentTarget);
-        const pid = $button.data('id');
-        $button.toggleClass('btn-light');
-
-        _.each(this.$items, function(item) {
-            var $el = $(item);
-            if ($el.data('type-id') === pid) {
-                if ($button.hasClass('btn-light')) {
-                    $el.prop('checked', false);
-                    $el.closest('tr').addClass('d-none');
-                } else {
-                    $el.prop('checked', true);
-                    $el.closest('tr').removeClass('d-none');
-                }
-            }
-        });
+        this._super.apply(this, arguments);
         this.onChangePaid();
     },
 
     onChangePaid: function (ev) {
+        this._super.apply(this, arguments);
         const $items = $('.payment-student input.payment-items:checked');
         if ($items.length) {
             this.$items_all.prop('checked', true);

@@ -16,18 +16,54 @@ paymentPage.include({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.$system = document.getElementById('system');
+            self.$pivot = $('.payment-page div.payment-pivot');
+            self.$items = $('.payment-page input.payment-items');
+            self.$items_all = $('.payment-page input.payment-all-items');
+            self.$tags = $('.payment-page button.btn-payments');
+            self.$items.on('change', self.onChangePaid.bind(self));
+            self.$items_all.on('change', self.onChangePaidAll.bind(self));
+            self.$tags.on('click', self.onClickTag.bind(self));
         });
     },
 
     _getParams: function () {
         const payment_ids = [];
         const $payable_items = $('input[type="checkbox"].payment-items:checked');
-        $payable_items.each(function() { payment_ids.push(parseInt($(this).prop('name'))); });
+        $payable_items.each(function() { payment_ids.push(parseInt($(this).data('id'))); });
         const params = this._super.apply(this, arguments);
         params['system'] = this.$system && this.$system.value || false;
         params['payment_ids'] = payment_ids;
         return params
     },
+
+    onChangePaidAll: function (ev) {
+        if (this.$items_all.prop('checked')) {
+            this.$items.prop('checked', true);
+        } else {
+            this.$items.prop('checked', false);
+        }
+    },
+
+    onClickTag: function (ev) {
+        const $button = $(ev.currentTarget);
+        const pid = $button.data('id');
+        $button.toggleClass('btn-light');
+
+        _.each(this.$items, function(item) {
+            var $el = $(item);
+            if ($el.data('type-id') === pid) {
+                if ($button.hasClass('btn-light')) {
+                    $el.prop('checked', false);
+                    $el.closest('tr').addClass('d-none');
+                } else {
+                    $el.prop('checked', true);
+                    $el.closest('tr').removeClass('d-none');
+                }
+            }
+        });
+    },
+
+    onChangePaid: function (ev) {},
 });
 
 publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend({

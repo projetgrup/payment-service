@@ -353,10 +353,6 @@ class Partner(models.Model):
         ])
         wizard = self.env['payment.item.wizard'].create({
             'partner_id': self.id,
-            'line_ids': [(0, 0, {
-               'item_id': item.id, 
-               'amount': item.amount, 
-            }) for item in items]
         })
         action = self.sudo().env.ref('payment_jetcheckout_system.action_item_wizard').sudo().read()[0]
         action['res_id'] = wizard.id
