@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-11 19:51+0000\n"
-"PO-Revision-Date: 2023-04-11 23:01+0300\n"
+"PO-Revision-Date: 2023-04-11 23:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -21,7 +21,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 msgid "<br/>and redirect payment link page."
 msgstr ""
-"<br/>için ödeme kalemleri oluşturabilir ve ödeme sayfasına ulaşabilirsiniz."
+"<br/>için ödeme kalemleri oluşturabilir<br/>ve ödeme sayfasına "
+"ulaşabilirsiniz."
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -2106,7 +2107,7 @@ msgstr "Bu kaydı arşivleyebilirsiniz"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 msgid "You can review payment item(s) of<br/>"
-msgstr "İş Ortağı<br/>"
+msgstr "<span/>"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0

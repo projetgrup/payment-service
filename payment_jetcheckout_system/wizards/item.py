@@ -27,5 +27,5 @@ class PaymentItemWizard(models.TransientModel):
             'name': 'Payment Items',
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': '/p/%s' % self.partner_id._get_token()
+            'url': '%s/p/%s' % (self.get_base_url(), self.partner_id._get_token())
         }
