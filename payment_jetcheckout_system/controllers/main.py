@@ -146,7 +146,10 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
-        partner = request.env.user.partner_id
+        if '_tx_partner' in request.session:
+            partner = request.env['res.partner'].browse(request.session['_tx_partner'])
+        else:
+            partner = request.env.user.partner_id
 
         redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
@@ -206,8 +209,12 @@ class JetcheckoutSystemController(JetController):
             return redirect
 
         if partner.is_portal:
-            user = partner.users_id
-            request.session.authenticate(request.db, user.login, {'token': token})
-            return werkzeug.utils.redirect('/my/payment')
+            if request.env.user.has_group('base.group_user'):
+                request.session['_tx_partner'] = partner.id
+                return werkzeug.utils.redirect('/my/payment')
+            else:
+                user = partner.users_id
+                request.session.authenticate(request.db, user.login, {'token': token})
+                return werkzeug.utils.redirect('/my/payment')
         else:
             return werkzeug.utils.redirect('/p/%s' % token)

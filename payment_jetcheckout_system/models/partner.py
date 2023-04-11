@@ -347,13 +347,7 @@ class Partner(models.Model):
 
     def action_redirect_payment_link(self):
         self.ensure_one()
-        items = self.env['payment.item'].search([
-            ('parent_id', '=', self.id),
-            ('paid', '=', False),
-        ])
-        wizard = self.env['payment.item.wizard'].create({
-            'partner_id': self.id,
-        })
+        wizard = self.env['payment.item.wizard'].create({'partner_id': self.id})
         action = self.sudo().env.ref('payment_jetcheckout_system.action_item_wizard').sudo().read()[0]
         action['res_id'] = wizard.id
         return action
@@ -363,7 +357,7 @@ class Partner(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': '/my/payment'
+            'url': '/my/payment/%s' % self._get_token()
         }
 
     def action_send(self):

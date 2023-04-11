@@ -24,6 +24,8 @@ class Users(models.Model):
             system = user.company_id.system
             module = system or 'jetcheckout_system'
             name = system or 'system'
+            group_system_user = self.env.ref('payment_jetcheckout_system.group_system_user')
+            group_system_admin = self.env.ref('payment_jetcheckout_system.group_system_manager')
             group_user = self.env.ref('payment_%s.group_%s_user' % (module, name))
             group_admin = self.env.ref('payment_%s.group_%s_manager' % (module, name))
             group_public = self.env.ref('base.group_public')
@@ -47,6 +49,8 @@ class Users(models.Model):
                 group_internal.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
+                group_system_admin.sudo().write({'users': [(4, user.id)]})
+                group_system_user.sudo().write({'users': [(4, user.id)]})
 
                 try:
                     group_admin_show_delete.sudo().write({'users': [(4, user.id)]})
@@ -65,6 +69,8 @@ class Users(models.Model):
                 group_internal.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
+                group_system_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_user.sudo().write({'users': [(4, user.id)]})
 
                 try:
                     group_admin_show_delete.sudo().write({'users': [(3, user.id)]})
@@ -80,6 +86,8 @@ class Users(models.Model):
             else:
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_user.sudo().write({'users': [(3, user.id)]})
 
                 try:
                     group_admin_show_delete.sudo().write({'users': [(3, user.id)]})

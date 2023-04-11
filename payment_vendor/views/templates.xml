@@ -40,7 +40,7 @@
                                 <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
                                 <strong class="text-primary font-weight-bold z-index-1 flex-fill">Payment</strong>
                                 <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
-                                <p class="h2 text-right font-weight-bold z-index-1">
+                                <p class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
                                     <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency['self']}"/>
                                 </p>
                             </div>
@@ -69,7 +69,7 @@
                                             <td class="text-right px-2"><span t-field="payment.amount"/></td>
                                             <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
                                             <td class="text-center">
-                                                <form t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
                                                     <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
                                                 </form>
                                             </td>

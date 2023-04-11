@@ -75,3 +75,8 @@ class PaymentItem(models.Model):
         transaction_ids = self.transaction_ids.filtered(lambda x: x.state == 'done')
         action = self.env.ref('payment_jetcheckout.report_conveyance').report_action(transaction_ids.ids)
         return action
+
+    def write(self, values):
+        if 'paid' in values and not values['paid']:
+            values['paid_amount'] = 0
+        return super().write(values)

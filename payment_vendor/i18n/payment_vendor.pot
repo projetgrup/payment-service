@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:10+0000\n"
-"PO-Revision-Date: 2023-01-23 06:10+0000\n"
+"POT-Creation-Date: 2023-04-11 20:08+0000\n"
+"PO-Revision-Date: 2023-04-11 20:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "<em>Select All</em>"
+msgstr ""
 
 #. module: payment_vendor
 #: model:mail.template,body_html:payment_vendor.vendor_mail
@@ -63,10 +68,10 @@ msgid ""
 "                    <div>\n"
 "                        Hello <strong t-out=\"object.name or ''\">Marc Demo</strong>,<br/><br/>\n"
 "                        Successful transaction information as follows.<br/><br/>\n"
-"                        Transaction Owner Company : <t t-esc=\"ctx['partner'].name or ''\"/><br/>\n"
-"                        Transaction Date : <t t-out=\"ctx['tx'].last_state_change.strftime('%d.%m.%Y %H:%M:%S')\">01.01.2022 00:00:00</t><br/>\n"
-"                        Transaction Amount : <t t-esc=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''\"/><br/>\n"
-"                        Installment Count : <t t-esc=\"ctx['tx'].jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
+"                        Transaction Owner Company : <t t-out=\"ctx['partner'].name or ''\"/><br/>\n"
+"                        Transaction Date : <t t-out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')\">01.01.2023 00:00:00</t><br/>\n"
+"                        Transaction Amount : <t t-out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''\"/><br/>\n"
+"                        Installment Count : <t t-out=\"ctx['tx'].jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "                            <a t-att-href=\"'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Receipt</strong>\n"
@@ -144,9 +149,9 @@ msgid ""
 "                                <tbody>\n"
 "                                    <t t-foreach=\"ctx['transactions']\" t-as=\"line\">\n"
 "                                        <tr>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: left;\"><t t-out=\"line[1]['name']\"/></td>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\"><t t-out=\"format_amount(line[1]['amount'], ctx['company'].currency_id) or ''\"/></td>\n"
-"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * line[1]['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: left;\"><t t-out=\"line['name']\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\"><t t-out=\"format_amount(line['amount'], ctx['company'].currency_id) or ''\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
 "                                        </tr>\n"
 "                                    </t>\n"
 "                                    <tr style=\"font-weight:bold;\">\n"
@@ -199,10 +204,26 @@ msgid ""
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Amount"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
 #: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
 msgid "Authorized"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_form
+msgid "Branch"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
+msgid "Campaign"
 msgstr ""
 
 #. module: payment_vendor
@@ -250,6 +271,26 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_dashboard
 msgid "Dashboard"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Date"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Description"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Document"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Due Date"
 msgstr ""
 
 #. module: payment_vendor
@@ -308,6 +349,21 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_payment_item
+msgid "Payment Items"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
+msgid "Payment Link"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
+msgid "Payment Page"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_acquirers
 msgid "Payment Settings"
 msgstr ""
@@ -321,6 +377,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_vendor.action_item
 #: model:ir.ui.menu,name:payment_vendor.menu_payment
 msgid "Payments"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+msgid "Residual"
 msgstr ""
 
 #. module: payment_vendor
@@ -353,7 +414,10 @@ msgid "Settings"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_payment_item__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_company__system
+#: model:ir.model.fields,field_description:payment_vendor.field_res_partner__system
+#: model:ir.model.fields,field_description:payment_vendor.field_res_users__system
 msgid "System"
 msgstr ""
 
@@ -407,7 +471,9 @@ msgid "Vendor Payment Email"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.model.fields.selection,name:payment_vendor.selection__payment_item__system__vendor
 #: model:ir.model.fields.selection,name:payment_vendor.selection__res_company__system__vendor
+#: model:ir.model.fields.selection,name:payment_vendor.selection__res_partner__system__vendor
 #: model:ir.module.category,description:payment_vendor.module_category_vendor
 #: model:ir.module.category,name:payment_vendor.module_category_vendor
 msgid "Vendor Payment System"
@@ -437,7 +503,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.mail_transaction_daily
-msgid "{{ ctx['domain'] }} | About transaction on {{ ctx['date'] }}"
+msgid "{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}"
 msgstr ""
 
 #. module: payment_vendor
