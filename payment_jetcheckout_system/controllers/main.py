@@ -144,10 +144,13 @@ class JetcheckoutSystemController(JetController):
     def jetcheckout_contact_page(self):
         return request.website.payment_contact_page
 
-    @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
-        if '_tx_partner' in request.session:
-            partner = request.env['res.partner'].browse(request.session['_tx_partner'])
+        if request.env.user.has_group('base.group_public'):
+            raise werkzeug.exceptions.NotFound()
+
+        if request.httprequest.method == 'POST' and 'pid' in kwargs:
+            partner = self._jetcheckout_get_parent(kwargs['pid'])
         else:
             partner = request.env.user.partner_id
 
@@ -155,7 +158,7 @@ class JetcheckoutSystemController(JetController):
         if redirect:
             return redirect
 
-        values = self._jetcheckout_get_data()
+        values = self._jetcheckout_get_data(partner=partner)
         values.update({
             'fail_url': '/my/payment/success',
             'success_url': '/my/payment/fail',
@@ -209,12 +212,9 @@ class JetcheckoutSystemController(JetController):
             return redirect
 
         if partner.is_portal:
-            if request.env.user.has_group('base.group_user'):
-                request.session['_tx_partner'] = partner.id
-                return werkzeug.utils.redirect('/my/payment')
-            else:
+            if request.env.user.has_group('base.group_public'):
                 user = partner.users_id
                 request.session.authenticate(request.db, user.login, {'token': token})
-                return werkzeug.utils.redirect('/my/payment')
+            return request.render('payment_jetcheckout_system.payment_page_signin', {'token': token})
         else:
             return werkzeug.utils.redirect('/p/%s' % token)

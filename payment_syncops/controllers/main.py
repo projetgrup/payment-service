@@ -132,8 +132,8 @@ class PaymentSyncopsController(JetController):
 
         return vals
 
-    def _jetcheckout_get_data(self, acquirer=False, company=False, transaction=False, balance=True):
-        values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, transaction=transaction, balance=balance)
+    def _jetcheckout_get_data(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
+        values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
         partner_connector = self._jetcheckout_connector_get_partner_info()
         values['balances'] = self._jetcheckout_connector_get_partner_balance(partner_connector['vat'], partner_connector['ref'], company)
         values['show_balance'] = self._jetcheckout_connector_can_show_partner_balance(values['balances'])
