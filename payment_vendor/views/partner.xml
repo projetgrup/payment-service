@@ -27,7 +27,11 @@
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="after">
             <field name="campaign_id" string="Campaign" optional="show"/>
-            <field name="is_portal" string="Active"/>
+            <field name="is_portal" string="Authorized"/>
+        </xpath>
+        <xpath expr='//tree' position="inside">
+            <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link"/>
+            <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card" attrs="{'invisible': [('is_portal', '=', False)]}"/>
         </xpath>
     </field>
     </record>

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import werkzeug
+import base64
 from urllib.parse import urlparse
 
 from odoo import http, _
 from odoo.http import request
+from odoo.tools import html_escape
 from odoo.tools.misc import get_lang
 from odoo.exceptions import AccessError
 from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutController as JetController
@@ -61,6 +63,7 @@ class JetcheckoutSystemController(JetController):
         acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._jetcheckout_get_card_family(acquirer=acquirer, campaign=campaign)
+        token = partner._get_token()
         return {
             'partner': partner,
             'company': company,
@@ -76,6 +79,7 @@ class JetcheckoutSystemController(JetController):
             'fail_url': '/payment/card/fail',
             'tx': transaction,
             'system': system,
+            'token': token,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
                 'self' : currency,
@@ -105,6 +109,25 @@ class JetcheckoutSystemController(JetController):
         values = self._jetcheckout_system_page_values(company, system, partner, transaction)
         return request.render('payment_%s.payment_page' % system, values)
 
+    @http.route('/p/<token>/<int:pid>', type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
+    def jetcheckout_system_payment_page_file(self, token, pid, **kwargs):
+        partner = self._jetcheckout_get_parent(token)
+        payment = request.env['payment.item'].sudo().browse(pid)
+        if not payment.parent_id.id == partner.id or payment.paid:
+            raise werkzeug.exceptions.NotFound()
+
+        pdf = payment.file
+        if not pdf:
+            raise werkzeug.exceptions.NotFound()
+
+        pdf = base64.b64decode(pdf)
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Disposition', 'attachment; filename="%s.pdf"' % html_escape(payment.description)),
+            ('Content-Length', len(pdf)),
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)
     def jetcheckout_privacy_policy(self):
         return request.website.payment_privacy_policy
@@ -123,7 +146,10 @@ class JetcheckoutSystemController(JetController):
 
     @http.route('/my/payment', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def jetcheckout_portal_payment_page(self, **kwargs):
-        partner = request.env.user.partner_id
+        if '_tx_partner' in request.session:
+            partner = request.env['res.partner'].browse(request.session['_tx_partner'])
+        else:
+            partner = request.env.user.partner_id
 
         redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
@@ -183,8 +209,12 @@ class JetcheckoutSystemController(JetController):
             return redirect
 
         if partner.is_portal:
-            user = partner.users_id
-            request.session.authenticate(request.db, user.login, {'token': token})
-            return werkzeug.utils.redirect('/my/payment')
+            if request.env.user.has_group('base.group_user'):
+                request.session['_tx_partner'] = partner.id
+                return werkzeug.utils.redirect('/my/payment')
+            else:
+                user = partner.users_id
+                request.session.authenticate(request.db, user.login, {'token': token})
+                return werkzeug.utils.redirect('/my/payment')
         else:
             return werkzeug.utils.redirect('/p/%s' % token)

@@ -33,15 +33,20 @@ class PaymentTransaction(models.Model):
                 mail_server = company.mail_server_id
 
                 context = self.env.context.copy()
-                context['tx'] = self
-                context['partner'] = commercial_partner
-                context['company'] = company
-                context['server'] = mail_server
-                context['url'] = self.jetcheckout_website_id.domain
-                context['domain'] = urlparse(context['url']).netloc
-                context['from'] = mail_server.email_formatted or company.email_formatted
+                context.update({
+                    'tx': self,
+                    'partner': commercial_partner,
+                    'company': company,
+                    'server': mail_server,
+                    'url': self.jetcheckout_website_id.domain,
+                    'domain': urlparse(self.jetcheckout_website_id.domain).netloc,
+                    'from': mail_server.email_formatted or company.email_formatted,
+                })
 
                 for partner in partners:
+                    context.update({
+                        'tz': partner.tz,
+                    })
                     template.with_context(context).send_mail(partner.id, force_send=True, email_values={
                         'is_notification': True,
                         'mail_server_id': mail_server.id,

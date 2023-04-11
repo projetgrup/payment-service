@@ -7,7 +7,7 @@ from .constants import PRIMEFACTOR
 
 class Partner(models.Model):
     _name = 'res.partner'
-    _inherit = ['res.partner','portal.mixin']
+    _inherit = ['res.partner', 'portal.mixin']
 
     def _compute_payment(self):
         for partner in self:
@@ -68,6 +68,22 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
+    def _search_is_portal(self, operator, operand):
+        group_portal = self.env.ref('base.group_portal')
+        ids = group_portal.users.mapped('partner_id').ids
+        operator = 1 if operator == '=' else -1
+        operand = 1 if operand else -1
+        op = 'in' if operator * operand == 1 else 'not in'
+        return [('id', op, ids)]
+
+    def _search_is_internal(self, operator, operand):
+        group_user = self.env.ref('base.group_user')
+        ids = group_user.users.mapped('partner_id').ids
+        operator = 1 if operator == '=' else -1
+        operand = 1 if operand else -1
+        op = 'in' if operator * operand == 1 else 'not in'
+        return [('id', op, ids)]
+
     system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -80,8 +96,8 @@ class Partner(models.Model):
     transaction_failed_count = fields.Integer(string='Transaction Failed', compute='_compute_payment', compute_sudo=True)
     date_email_sent = fields.Datetime('Email Sent Date', readonly=True)
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
-    is_portal = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
-    is_internal = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
+    is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
+    is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     acquirer_branch_id = fields.Many2one('payment.acquirer.jetcheckout.branch', string='Payment Acquirer Branch')
     users_id = fields.Many2one('res.users', compute='_compute_user_details', compute_sudo=True, readonly=True)
 
@@ -328,6 +344,21 @@ class Partner(models.Model):
     def action_share_payment_page(self):
         self.ensure_one()
         return self.sudo().env.ref('payment_jetcheckout_system.payment_share_page').sudo().read()[0]
+
+    def action_redirect_payment_link(self):
+        self.ensure_one()
+        wizard = self.env['payment.item.wizard'].create({'partner_id': self.id})
+        action = self.sudo().env.ref('payment_jetcheckout_system.action_item_wizard').sudo().read()[0]
+        action['res_id'] = wizard.id
+        return action
+
+    def action_redirect_payment_page(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': '/my/payment/%s' % self._get_token()
+        }
 
     def action_send(self):
         company = self.mapped('company_id')

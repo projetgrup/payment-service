@@ -20,14 +20,37 @@ paymentPage.include({
     },
 
     _getParams: function () {
-        const payment_ids = [];
-        const $payable_items = $('input[type="checkbox"].payment-items:checked');
-        $payable_items.each(function() { payment_ids.push(parseInt($(this).prop('name'))); });
         const params = this._super.apply(this, arguments);
-        params['system'] = this.$system && this.$system.value || false;
-        params['payment_ids'] = payment_ids;
-        return params
+        const $items = $('input[type="checkbox"].payment-items:checked');
+        if ($items.length) {
+            const payment_ids = [];
+            $items.each(function () { payment_ids.push(parseInt($(this).data('id'))); });
+            params['system'] = this.$system && this.$system.value || false;
+            params['payment_ids'] = payment_ids;
+        }
+        return params;
     },
+
+    _checkData: function () {
+        var $items = $('input[type="checkbox"].payment-items');
+        if (!$items.length) {
+            return this._super.apply(this, arguments);
+        }
+
+        var $items = $('input[type="checkbox"].payment-items:checked');
+        if (!$items.length) {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('Please select at least one payment'),
+            });
+            this._enableButton();
+            return false;
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+
 });
 
 publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend({
@@ -44,11 +67,71 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
             self.$agreement = $('#distant_sale_agreement');
             self.$membership = $('#membership_agreement');
             self.$contact = $('#contact');
+            self.$pivot = $('.payment-page div.payment-pivot');
+            self.$items = $('.payment-page input.payment-items');
+            self.$items_all = $('.payment-page input.payment-all-items');
+            self.$tags = $('.payment-page button.btn-payments');
+            self.$items.on('change', self.onChangePaid.bind(self));
+            self.$items_all.on('change', self.onChangePaidAll.bind(self));
+            self.$tags.on('click', self.onClickTag.bind(self));
             self.$privacy.on('click', self._onClickPrivacy.bind(self));
             self.$agreement.on('click', self._onClickAgreement.bind(self));
             self.$membership.on('click', self._onClickMembership.bind(self));
             self.$contact.on('click', self._onClickContact.bind(self));
+            self.onChangePaid();
         });
+    },
+
+    onChangePaidAll: function (ev) {
+        if (this.$items_all.prop('checked')) {
+            this.$items.prop('checked', true);
+        } else {
+            this.$items.prop('checked', false);
+        }
+        this.onChangePaid();
+    },
+
+    onClickTag: function (ev) {
+        const $button = $(ev.currentTarget);
+        const pid = $button.data('id');
+        $button.toggleClass('btn-light');
+
+        _.each(this.$items, function(item) {
+            var $el = $(item);
+            if ($el.data('type-id') === pid) {
+                if ($button.hasClass('btn-light')) {
+                    $el.prop('checked', false);
+                    $el.closest('tr').addClass('d-none');
+                } else {
+                    $el.prop('checked', true);
+                    $el.closest('tr').removeClass('d-none');
+                }
+            }
+        });
+        this.onChangePaid();
+    },
+
+    onChangePaid: function (ev) {
+        const $total = $('p.payment-amount-total');
+        const $items = $('input[type="checkbox"].payment-items:checked');
+        if ($items.length) {
+            this.$items_all.prop('checked', true);
+        } else {
+            this.$items_all.prop('checked', false);
+        }
+
+        const $amount = this.$amount;
+        if (!$amount.length) {
+            return;
+        }
+
+        let amount = 0;
+        $items.each(function() { amount += parseFloat($(this).data('amount'))});
+
+        const event = new Event('change');
+        $amount.val(amount);
+        $amount[0].dispatchEvent(event);
+        $total.html(this.formatCurrency(amount));
     },
 
     formatCurrency: function(value, position=false, symbol=false, precision=false) {

@@ -24,26 +24,81 @@ class Users(models.Model):
             system = user.company_id.system
             module = system or 'jetcheckout_system'
             name = system or 'system'
+            group_system_user = self.env.ref('payment_jetcheckout_system.group_system_user')
+            group_system_admin = self.env.ref('payment_jetcheckout_system.group_system_manager')
             group_user = self.env.ref('payment_%s.group_%s_user' % (module, name))
             group_admin = self.env.ref('payment_%s.group_%s_manager' % (module, name))
             group_public = self.env.ref('base.group_public')
             group_portal = self.env.ref('base.group_portal')
             group_internal = self.env.ref('base.group_user')
+
+            try: # grant admin_tools groups if exists
+                group_admin_show_delete = self.env.ref('admin_tools.group_show_delete')
+                group_admin_show_export = self.env.ref('admin_tools.group_show_export')
+                group_admin_show_duplicate = self.env.ref('admin_tools.group_show_duplicate')
+                group_admin_show_create = self.env.ref('admin_tools.group_show_create')
+                group_admin_show_edit = self.env.ref('admin_tools.group_show_edit')
+                group_admin_show_print = self.env.ref('admin_tools.group_show_print')
+                group_admin_show_action = self.env.ref('admin_tools.group_show_action')
+            except:
+                pass
+
             if user.privilege == 'admin':
                 group_public.sudo().write({'users': [(3, user.id)]})
                 group_portal.sudo().write({'users': [(3, user.id)]})
                 group_internal.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
+                group_system_admin.sudo().write({'users': [(4, user.id)]})
+                group_system_user.sudo().write({'users': [(4, user.id)]})
+
+                try:
+                    group_admin_show_delete.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_export.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_duplicate.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_create.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_edit.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_print.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_action.sudo().write({'users': [(4, user.id)]})
+                except:
+                    pass
+
             elif user.privilege == 'user':
                 group_public.sudo().write({'users': [(3, user.id)]})
                 group_portal.sudo().write({'users': [(3, user.id)]})
                 group_internal.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
+                group_system_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_user.sudo().write({'users': [(4, user.id)]})
+
+                try:
+                    group_admin_show_delete.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_export.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_duplicate.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_create.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_edit.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_print.sudo().write({'users': [(4, user.id)]})
+                    group_admin_show_action.sudo().write({'users': [(4, user.id)]})
+                except:
+                    pass
+
             else:
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_admin.sudo().write({'users': [(3, user.id)]})
+                group_system_user.sudo().write({'users': [(3, user.id)]})
+
+                try:
+                    group_admin_show_delete.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_export.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_duplicate.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_create.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_edit.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_print.sudo().write({'users': [(3, user.id)]})
+                    group_admin_show_action.sudo().write({'users': [(3, user.id)]})
+                except:
+                    pass
 
     def _compute_group_transaction_commission(self):
         for user in self:

@@ -201,6 +201,8 @@
             <field name="vat"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system"/>
             <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+            <filter name="filterby_authorized" string="Authorized" domain="[('is_portal', '=', True)]"/>
+            <filter name="filterby_user" string="User" domain="[('is_internal', '=', True)]"/>
             <separator/>
             <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>
             <filter name="filterby_no_payment" string="Has No Payments" domain="[('payable_ids', '=', False)]"/>

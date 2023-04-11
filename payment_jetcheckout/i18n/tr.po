@@ -1792,7 +1792,7 @@ msgstr "Parola Aktif"
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Pay"
-msgstr "Ödeme Yap"
+msgstr "Öde"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
