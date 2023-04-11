@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
+
 class PaymentItem(models.Model):
     _name = 'payment.item'
     _description = 'Payment Items'
@@ -28,14 +29,23 @@ class PaymentItem(models.Model):
         for item in self:
             item.system = item.company_id.system or item.parent_id.system or item.child_id.system
 
+    @api.depends('amount', 'paid_amount')
+    def _compute_residual(self):
+        for item in self:
+            item.residual_amount = item.amount - item.paid_amount
+
     name = fields.Char(compute='_compute_name')
     child_id = fields.Many2one('res.partner', ondelete='restrict')
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
     amount = fields.Monetary()
+    date = fields.Date()
+    due_date = fields.Date()
+    file = fields.Binary()
     paid = fields.Boolean()
     description = fields.Char()
     is_admin = fields.Boolean(compute='_compute_is_admin')
     paid_amount = fields.Monetary(readonly=True)
+    residual_amount = fields.Monetary(compute='_compute_residual', store=True, readonly=True)
     installment_count = fields.Integer(readonly=True)
     paid_date = fields.Datetime(readonly=True)
     campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
@@ -65,3 +75,8 @@ class PaymentItem(models.Model):
         transaction_ids = self.transaction_ids.filtered(lambda x: x.state == 'done')
         action = self.env.ref('payment_jetcheckout.report_conveyance').report_action(transaction_ids.ids)
         return action
+
+    def write(self, values):
+        if 'paid' in values and not values['paid']:
+            values['paid_amount'] = 0
+        return super().write(values)

@@ -53,6 +53,34 @@
             color: #edf2f7;
         }
     }
+    
+    .payment-list {
+        max-height: 250px;
+        thead {
+            position: sticky;
+            top: -1px;
+        }
+
+        tfoot {
+            position:sticky;
+            bottom: -1px;
+        }
+
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background-color: #f7fafc;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 50px;
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: initial;
+        }
+    }
 
 }
 

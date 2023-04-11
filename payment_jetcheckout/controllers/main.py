@@ -63,7 +63,12 @@ class JetcheckoutController(http.Controller):
         company = company or request.env.company
         currency = transaction and transaction.currency_id or company.currency_id
         lang = get_lang(request.env)
-        partner = request.env.user.partner_id
+
+        if '_tx_partner' in request.session:
+            partner = request.env['res.partner'].browse(request.session['_tx_partner'])
+        else:
+            partner = request.env.user.partner_id
+
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''

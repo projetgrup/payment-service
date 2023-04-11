@@ -809,6 +809,24 @@ input:checked + .slider:before {
     }
 }
 
+.installment-container {
+    &.lg {
+        display: flex;
+    }
+    &.sm {
+        display: none;
+    }
+}
+
+.campaign-container {
+    &.lg {
+        display: flex;
+    }
+    &.sm {
+        display: none;
+    }
+}
+
 .o_payment_form .field-container > label {
     top: -24px !important;
 }
@@ -985,6 +1003,24 @@ input:checked + .slider:before {
             bottom: -20px !important;
             width: 50px !important;
             height: 30px !important;
+        }
+    }
+
+    .installment-container {
+        &.lg {
+            display: none;
+        }
+        &.sm {
+            display: flex;
+        }
+    }
+
+    .campaign-container {
+        &.lg {
+            display: none;
+        }
+        &.sm {
+            display: flex;
         }
     }
 }
