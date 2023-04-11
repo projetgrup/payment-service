@@ -357,7 +357,7 @@ class Partner(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'new',
-            'url': '/my/payment/%s' % self._get_token()
+            'url': '%s/my/payment/%s' % (self.get_base_url(), self._get_token())
         }
 
     def action_send(self):
