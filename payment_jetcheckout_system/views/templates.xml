@@ -144,6 +144,28 @@
         </t>
     </template>
 
+    <template id="payment_page_signin" name="Payment System Page Signin">
+        <html>
+            <body>
+                <script>
+                    let form = document.createElement('form');
+                    let input = document.createElement('input');
+
+                    form.setAttribute('action', '/my/payment');
+                    form.setAttribute('method', 'POST');
+
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'pid');
+                    input.setAttribute('value', '<t t-esc="token"/>');
+                    form.appendChild(input);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                </script>
+            </body>
+        </html>
+    </template>
+
     <template id="payment_page_result" name="Payment System Page Result">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
