@@ -151,8 +151,11 @@ class JetcheckoutSystemController(JetController):
 
         if request.httprequest.method == 'POST' and 'pid' in kwargs:
             partner = self._jetcheckout_get_parent(kwargs['pid'])
+            values = {**kwargs, 'test': 5}
+            raise Exception(values)
         else:
             partner = request.env.user.partner_id
+            raise Exception(kwargs)
 
         redirect = self._jetcheckout_check_redirect(partner)
         if redirect:
