@@ -8,7 +8,7 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutS
 
 class PaymentSyncopsController(JetController):
 
-    def _jetcheckout_connector_get_partner_info(self):
+    def _jetcheckout_connector_get_partner_info(self, partner):
         if '__jetcheckout_partner_connector' in request.session:
             partner = request.session['__jetcheckout_partner_connector']
             return {
@@ -18,7 +18,7 @@ class PaymentSyncopsController(JetController):
                 'connector': True,
             }
         else:
-            partner = request.env.user.sudo().partner_id
+            partner = partner or request.env.user.sudo().partner_id
             return {
                 'name': partner.name,
                 'vat': partner.vat,
@@ -134,7 +134,7 @@ class PaymentSyncopsController(JetController):
 
     def _jetcheckout_get_data(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
         values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
-        partner_connector = self._jetcheckout_connector_get_partner_info()
+        partner_connector = self._jetcheckout_connector_get_partner_info(partner)
         values['balances'] = self._jetcheckout_connector_get_partner_balance(partner_connector['vat'], partner_connector['ref'], company)
         values['show_balance'] = self._jetcheckout_connector_can_show_partner_balance(values['balances'])
         values['show_ledger'] = self._jetcheckout_connector_can_show_partner_ledger(company)
