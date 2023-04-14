@@ -137,6 +137,7 @@ class Partner(models.Model):
         return partner.name or ''
 
     def _get_token(self):
+        self._portal_ensure_token()
         return '%s-%x' % (self.access_token, self.id * PRIMEFACTOR)
 
     @api.model
