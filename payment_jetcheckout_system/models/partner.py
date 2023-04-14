@@ -50,7 +50,7 @@ class Partner(models.Model):
     @api.depends('user_ids', 'company_id')
     def _compute_user_details(self):
         for partner in self:
-            users = partner.with_context(active_test=False).user_ids.filtered(lambda x: x.company_id.id == partner.company_id.id)
+            users = partner.with_context(active_test=False).user_ids.filtered(lambda x: x.company_id.id == (partner.company_id.id or self.env.company.id))
             user = users[0] if users else False
             if user:
                 partner.users_id = user.id
