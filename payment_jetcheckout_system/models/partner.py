@@ -362,8 +362,8 @@ class Partner(models.Model):
         }
 
     def action_send(self):
-        company = self.mapped('company_id')
-        if not len(company) == 1:
+        company = self.mapped('company_id') or self.env.company
+        if len(company) > 1:
             raise UserError(_('Partners have to be in one company when sending mass messages, but there are %s of them. (%s)') % (len(company), ', '.join(company.mapped('name'))))
 
         type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
