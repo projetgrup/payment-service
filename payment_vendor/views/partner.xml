@@ -29,6 +29,11 @@
             <field name="campaign_id" string="Campaign" optional="show"/>
             <field name="is_portal" string="Authorized"/>
         </xpath>
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="user_id" optional="hide"/>
+            <field name="team_id" optional="hide"/>
+            <field name="category_id" widget="many2many_tags" optional="hide"/>
+        </xpath>
         <xpath expr='//tree' position="inside">
             <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link"/>
             <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card" attrs="{'invisible': [('is_portal', '=', False)]}"/>
@@ -70,6 +75,19 @@
         <xpath expr='//page[@name="children"]' position="attributes">
             <attribute name="string">Contacts</attribute>
         </xpath>
+        <xpath expr='//group[@name="general"]' position="inside">
+            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
+        </xpath>
+        <xpath expr='//notebook' position="inside">
+            <page name="other" string="Other">
+                <group>
+                    <group string="Representatives">
+                        <field name="user_id" options="{'no_create': True}"/>
+                        <field name="team_id" options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </page>
+        </xpath>
     </field>
     </record>
 
@@ -102,6 +120,10 @@
     <field name="arch" type="xml">
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="mobile"/>
+        </xpath>
+        <xpath expr='//group' position="inside">
+            <filter string="Sales Person" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+            <filter string="Sales Team" name="groupby_salesteam" domain="[]" context="{'group_by':'team_id'}"/>
         </xpath>
     </field>
     </record>

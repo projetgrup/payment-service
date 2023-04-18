@@ -99,6 +99,7 @@
                         <field string="Companies count" name="companies_count" invisible="1"/>
                     </group>
                     <group string="Permissions" name="permissions">
+                        <field name="group_own_partner"/>
                         <field name="group_transaction_commission"/>
                     </group>
                 </group>
