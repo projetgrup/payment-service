@@ -29,3 +29,6 @@ class PaymentItemWizard(models.TransientModel):
             'target': 'new',
             'url': '%s/p/%s' % (self.get_base_url(), self.partner_id._get_token())
         }
+    
+    def send(self):
+        return self.partner_id.action_send()

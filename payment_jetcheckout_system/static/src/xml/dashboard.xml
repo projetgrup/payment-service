@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-	<t t-name="Dasboard.Buttons">
+	<t t-name="Dashboard.Buttons">
         <button type="button" class="btn btn-primary o_button_payment_page">
             Receive Payment
         </button>
