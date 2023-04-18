@@ -129,11 +129,5 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
-        <record id="base.res_partner_rule_private_employee" model="ir.rule">
-            <field name="active" eval="False"/>
-        </record>
-        <record id="base.res_partner_rule_private_group" model="ir.rule">
-            <field name="active" eval="False"/>
-        </record>
     </data>
 </odoo>
