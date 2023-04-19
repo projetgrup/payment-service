@@ -31,4 +31,21 @@ class PaymentItemWizard(models.TransientModel):
         }
     
     def send(self):
+        company = self.mapped('company_id') or self.env.company
+        if len(company) > 1:
+            raise Exception(_('Partners have to be in one company when sending mass messages, but there are %s of them. (%s)') % (len(company), ', '.join(company.mapped('name'))))
+
+        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
+        mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
+        sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
+        res = self.env['payment.acquirer.jetcheckout.send'].create({
+            'selection': [(6, 0, type_email.ids)],
+            'type_ids': [(6, 0, type_email.ids)],
+            'mail_template_id': mail_template.id,
+            'sms_template_id': sms_template.id,
+            'company_id': company.id,
+        })
+        action = self.env.ref('payment_jetcheckout_system.action_system_send').sudo().read()[0]
+        action['res_id'] = res.id
+        return action
         return self.partner_id.action_send()
