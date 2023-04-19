@@ -31,4 +31,7 @@ class PaymentItemWizard(models.TransientModel):
         }
     
     def send(self):
-        return self.sudo().partner_id.action_send()
+        action = self.partner_id.action_send()
+        action['context']['default_system'] = 'vendor'
+        action['context']['active_model'] = 'res.partner'
+        return action
