@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from odoo import models, fields
 
 
@@ -32,6 +33,7 @@ class PaymentItemWizard(models.TransientModel):
     
     def send(self):
         action = self.partner_id.action_send()
+        action['context'] = json.loads(action['context'])
         action['context']['default_system'] = 'vendor'
         action['context']['active_model'] = 'res.partner'
         return action
