@@ -401,4 +401,9 @@ class Partner(models.Model):
         })
         action = self.env.ref('payment_jetcheckout_system.action_system_send').sudo().read()[0]
         action['res_id'] = res.id
+        action['context'] = {
+            'readonly': True,
+            'active_ids': self.ids,
+            'active_model': 'res.partner'
+        }
         return action
