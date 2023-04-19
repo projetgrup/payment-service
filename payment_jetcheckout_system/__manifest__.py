@@ -11,6 +11,7 @@
     'sequence': 1454,
     'category': 'Accounting/Payment Acquirers',
     'depends': [
+        'sales_team',
         'payment_jetcheckout',
         'sms_api'
     ],

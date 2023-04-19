@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+from odoo import fields, models, api
 
-import logging
-_logger = logging.getLogger(__name__)
+
 class PaymentAcquirerJetcheckoutBranch(models.Model):
     _name = 'payment.acquirer.jetcheckout.branch'
     _description = 'Jetcheckout Company Branches'
@@ -22,6 +21,7 @@ class PaymentAcquirerJetcheckout(models.Model):
     _inherit = 'payment.acquirer'
 
     jetcheckout_branch_ids = fields.One2many('payment.acquirer.jetcheckout.branch', 'acquirer_id', groups='base.group_user')
+    jetcheckout_no_dashboard_button = fields.Boolean('Hide Dashboard Payment Button', groups='base.group_user')
 
     def _get_branch_line(self, name, user):
         line = self._get_journal_line(name)
@@ -41,3 +41,10 @@ class PaymentAcquirerJetcheckout(models.Model):
                 return branch
 
         return None
+
+    @api.model
+    def has_dashboard_button(self):
+        acquirer = self._get_acquirer(providers=['jetcheckout'], limit=1, raise_exception=False)
+        if not acquirer:
+            return False
+        return not acquirer.jetcheckout_no_dashboard_button

@@ -110,8 +110,19 @@ class Users(models.Model):
             group = self.env.ref('payment_jetcheckout.group_transaction_commission')
             group.sudo().write({'users': [(code, user.id)]})
 
+    def _compute_group_own_partner(self):
+        for user in self:
+            user.group_own_partner = user.has_group('payment_jetcheckout_system.group_system_own_partner')
+
+    def _set_group_own_partner(self):
+        for user in self:
+            code = user.group_own_partner and 4 or 3
+            group = self.env.ref('payment_jetcheckout_system.group_system_own_partner')
+            group.sudo().write({'users': [(code, user.id)]})
+
     privilege = fields.Selection([('user','User'),('admin','Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
     group_transaction_commission = fields.Boolean(string='Transaction Commissions', compute='_compute_group_transaction_commission', inverse='_set_group_transaction_commission')
+    group_own_partner = fields.Boolean(string='Only Own Partners', compute='_compute_group_own_partner', inverse='_set_group_own_partner')
 
     def _check_token(self, token):
         id, token = self.partner_id._resolve_token(token)

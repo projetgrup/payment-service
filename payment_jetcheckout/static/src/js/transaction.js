@@ -16,10 +16,10 @@ var TransactionListController = ListController.extend({
     willStart: function() {
         var self = this;
         var ready = this.getSession().user_has_group('account.group_account_manager').then(function (is_admin) {
-                if (is_admin) {
-                    self.buttons_template = 'TransactionListView.buttons';
-                }
-            });
+            if (is_admin) {
+                self.buttons_template = 'TransactionListView.buttons';
+            }
+        });
         return Promise.all([this._super.apply(this, arguments), ready]);
     },
 

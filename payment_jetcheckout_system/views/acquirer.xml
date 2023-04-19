@@ -19,6 +19,11 @@
                 </field>
             </page>
         </xpath>
+        <xpath expr="//group[@name='availability']" position="before">
+            <group string="Dashboard" name="dashboard">
+                <field name="jetcheckout_no_dashboard_button" widget="boolean_toggle"/>
+            </group>
+        </xpath>
     </field>
     </record>
 </odoo>

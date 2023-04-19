@@ -156,6 +156,7 @@
         <kanban>
             <field name="id"/>
             <field name="name"/>
+            <field name="parent_id"/>
             <field name="image_128"/>
             <field name="avatar_128"/>
             <field name="is_portal"/>
@@ -167,20 +168,20 @@
                             <img alt="" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                             <img alt="" t-else="" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
                         </div>
-                        <div class="oe_kanban_details d-flex flex-column">
+                        <div class="oe_kanban_details">
                             <strong><field name="name"/></strong>
                             <ul></ul>
-                            <div class="o_row">
+                            <div t-if="!record.parent_id.raw_value" class="o_row">
                                 <t t-if="record.is_internal.value">
-                                    <button string="Internal User" disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
+                                    <button class="btn" disabled="True" title="This partner is linked to an internal User and already has access to the Portal.">Internal User</button>
                                 </t>
                                 <t t-else="">
                                     <t t-if="record.is_portal.value">
-                                        <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"/>
-                                        <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"/>
+                                        <button name="action_revoke_access" type="object" class="btn btn-secondary">Revoke Access</button>
+                                        <button name="action_invite_again" type="object" class="btn btn-secondary">Re-Invite</button>
                                     </t>
                                     <t t-else="">
-                                        <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"/>
+                                        <button name="action_grant_access" type="object" class="btn btn-secondary">Grant Access</button>
                                     </t>
                                 </t>
                             </div>

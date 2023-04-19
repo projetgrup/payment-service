@@ -19,6 +19,16 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
+        <record id="module_category_system_technical" model="ir.module.category">
+            <field name="name">Payment System Technical</field>
+            <field name="description">Payment System Technical</field>
+            <field name="sequence">5</field>
+        </record>
+        <record model="res.groups" id="group_system_own_partner">
+            <field name="name">Own Partners Only</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
+
         <!-- rules -->
         <record id="payment_item_rule" model="ir.rule">
             <field name="name">Access only related items</field>
@@ -84,6 +94,36 @@
             <field name="model_id" ref="website.model_website"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="own_partner_rule" model="ir.rule">
+            <field name="name">Access only own partners for partners</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">['|', '|', ('id', '=', user.partner_id.id), ('user_id', '=', user.id), ('parent_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_own_partner'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="own_partner_item_rule" model="ir.rule">
+            <field name="name">Access only own partners for payment items</field>
+            <field name="model_id" ref="payment_jetcheckout_system.model_payment_item"/>
+            <field name="domain_force">['|', ('child_id.user_id', '=', user.id), ('parent_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_own_partner'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="own_partner_transaction_rule" model="ir.rule">
+            <field name="name">Access only own partners for transactions</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="domain_force">['|', ('partner_id.user_id', '=', user.id), ('partner_id.parent_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_own_partner'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>

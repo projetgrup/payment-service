@@ -27,15 +27,40 @@
     </field>
     </record>
 
+    <record id="transaction_tree" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_list"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="jetcheckout_partner_user_id" optional="hide"/>
+            <field name="jetcheckout_partner_team_id" optional="hide"/>
+            <field name="jetcheckout_partner_categ_ids" options="{'color_field': 'color', 'no_create_edit': True}" widget="many2many_tags" optional="hide"/>
+        </xpath>
+    </field>
+    </record>
+
     <record id="transaction_search" model="ir.ui.view">
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_search"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='partner_name']" position="after">
+            <field name="jetcheckout_partner_user_id"/>
+            <field name="jetcheckout_partner_team_id"/>
             <separator/>
             <filter string="Webhook Notifications" name="notif_webhook_ok" domain="[('jetcheckout_webhook_ok', '=', True)]"/>
             <separator/>
             <filter string="Failed Webhook Notifications" name="notif_webhook_state" domain="[('jetcheckout_webhook_ok', '=', True), ('jetcheckout_webhook_state', '=', True)]"/>
+        </xpath>
+        <xpath expr='//group' position="inside">
+            <filter string="Sales Person" name="groupby_salesperson" domain="[]" context="{'group_by':'jetcheckout_partner_user_id'}"/>
+            <filter string="Sales Team" name="groupby_salesteam" domain="[]" context="{'group_by':'jetcheckout_partner_team_id'}"/>
+        </xpath>
+        <xpath expr='//group' position="after">
+            <searchpanel>
+                <field name="jetcheckout_partner_user_id" select="multi" icon="fa-user" enable_counters="1"/>
+                <field name="jetcheckout_partner_team_id" select="multi" icon="fa-file-text-o" enable_counters="1"/>
+                <field name="jetcheckout_partner_categ_ids" select="multi" icon="fa-envelope-o" enable_counters="1"/>
+            </searchpanel>
         </xpath>
     </field>
     </record>
