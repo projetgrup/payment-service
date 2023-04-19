@@ -47,8 +47,7 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
                 else:
                     message = _('There is not any SMS provider selected')
             else:
-                message = _('This feature is implemented soon')
-
+                message = _('This feature is going to be implemented soon')
             type.message = message
 
     def _compute_params(self):
@@ -177,8 +176,8 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
             send.partner_ids = [(6, 0, self.env.context.get('active_ids', []))]
             send.partner_count = len(send.partner_ids)
 
-    partner_ids = fields.Many2many('res.partner', compute='_compute_partner', string='Partners')
-    partner_count = fields.Integer(compute='_compute_partner')
+    partner_ids = fields.Many2many('res.partner', compute='_compute_partner', string='Partners', compute_sudo=True)
+    partner_count = fields.Integer(compute='_compute_partner', compute_sudo=True)
     selection = fields.Many2many('payment.acquirer.jetcheckout.send.type', 'system_send_type_rel', 'send_id', 'type_id', string='Selection')
     type_ids = fields.Many2many('payment.acquirer.jetcheckout.send.type', 'system_send_type_rel', 'send_id', 'type_id', string='Types')
     mail_template_id = fields.Many2one('mail.template')
