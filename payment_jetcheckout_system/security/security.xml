@@ -99,6 +99,26 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+        <record id="partner_category_company_rule" model="ir.rule">
+            <field name="name">Access only related partner categories for users</field>
+            <field name="model_id" ref="base.model_res_partner_category"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="poartner_category_company_admin_rule" model="ir.rule">
+            <field name="name">Access only related categories for admins</field>
+            <field name="model_id" ref="base.model_res_partner_category"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
         <record id="own_partner_rule" model="ir.rule">
             <field name="name">Access only own partners for partners</field>
             <field name="model_id" ref="base.model_res_partner"/>
