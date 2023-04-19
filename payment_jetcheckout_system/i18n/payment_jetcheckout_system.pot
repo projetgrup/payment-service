@@ -1717,7 +1717,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #, python-format
-msgid "This feature is implemented soon"
+msgid "This feature is going to be implemented soon"
 msgstr ""
 
 #. module: payment_jetcheckout_system
