@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 09:36+0000\n"
-"PO-Revision-Date: 2023-04-19 12:40+0300\n"
+"POT-Creation-Date: 2023-04-19 11:40+0000\n"
+"PO-Revision-Date: 2023-04-19 14:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -533,8 +533,10 @@ msgstr "Şirket adedi"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_category__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_sms_template__company_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_category_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Company"
 msgstr "Şirket"
@@ -827,6 +829,7 @@ msgstr "Grafik Türü"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_category_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Groupby"
 msgstr "Grupla"
@@ -1300,6 +1303,11 @@ msgid "Partner Count"
 msgstr "İş Ortağı Adedi"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
+msgid "Partner Tags"
+msgstr "İş Ortakları Etiketleri"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_ids
 msgid "Partners"
 msgstr "İş Ortakları"
@@ -1613,10 +1621,16 @@ msgid "Sales Representative"
 msgstr "Satış Temsilcisi"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_crm_team
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_team_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Sales Team"
 msgstr "Satış Ekibi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_team
+msgid "Sales Teams"
+msgstr "Satış Ekipleri"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -1787,6 +1801,7 @@ msgid "System"
 msgstr "Sistem"
 
 #. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
 msgid "Tags"
 msgstr "Etiketler"
@@ -1889,7 +1904,7 @@ msgstr "Bu Yıl"
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #, python-format
-msgid "This feature is implemented soon"
+msgid "This feature is going to be implemented soon"
 msgstr "Bu özellik yakında entegre edilecektir"
 
 #. module: payment_jetcheckout_system

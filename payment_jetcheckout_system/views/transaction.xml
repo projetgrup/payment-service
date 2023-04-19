@@ -34,7 +34,7 @@
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="jetcheckout_partner_user_id" optional="hide"/>
             <field name="jetcheckout_partner_team_id" optional="hide"/>
-            <field name="jetcheckout_partner_categ_ids" options="{'color_field': 'color', 'no_create_edit': True}" widget="many2many_tags" optional="hide"/>
+            <field name="jetcheckout_partner_categ_ids" options="{'color_field': 'color', 'no_create': True}" widget="many2many_tags" optional="hide"/>
         </xpath>
     </field>
     </record>
