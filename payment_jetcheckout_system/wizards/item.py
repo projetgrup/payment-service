@@ -31,4 +31,4 @@ class PaymentItemWizard(models.TransientModel):
         }
     
     def send(self):
-        return self.partner_id.action_send()
+        return self.sudo().partner_id.action_send()
