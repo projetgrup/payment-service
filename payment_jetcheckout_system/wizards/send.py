@@ -173,7 +173,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
 
     def _compute_partner(self):
         for send in self:
-            send.partner_ids = [(6, 0, self.env.context.get('active_ids', []))]
+            send.partner_ids = [(6, 0, [51])]
             send.partner_count = len(send.partner_ids)
 
     partner_ids = fields.Many2many('res.partner', compute='_compute_partner', string='Partners', compute_sudo=True)
