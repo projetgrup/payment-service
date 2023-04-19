@@ -5,6 +5,29 @@ from odoo.tools import email_normalize
 from .constants import PRIMEFACTOR
 
 
+class PartnerTeam(models.Model):
+    _inherit = 'crm.team'
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('settings'):
+            res['company_id'] = self.env.company.id
+        return res
+
+
+class PartnerCategory(models.Model):
+    _inherit = 'res.partner.category'
+
+    company_id = fields.Many2one('res.company')
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('settings'):
+            res['company_id'] = self.env.company.id
+        return res
+
 class Partner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'portal.mixin']

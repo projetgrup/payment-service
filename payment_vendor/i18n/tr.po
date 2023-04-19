@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 09:36+0000\n"
-"PO-Revision-Date: 2023-04-19 12:41+0300\n"
+"POT-Creation-Date: 2023-04-19 11:40+0000\n"
+"PO-Revision-Date: 2023-04-19 14:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -740,6 +740,11 @@ msgstr "Ayarlar"
 #: model:ir.model.fields,field_description:payment_vendor.field_res_users__system
 msgid "System"
 msgstr "Sistem"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_tags
+msgid "Tags"
+msgstr "Etiketler"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form

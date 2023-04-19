@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="partner_category_tree" model="ir.ui.view">
+    <field name="model">res.partner.category</field>
+    <field name="inherit_id" ref="base.view_partner_category_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree" position="inside">
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="partner_category_form" model="ir.ui.view">
+    <field name="model">res.partner.category</field>
+    <field name="inherit_id" ref="base.view_partner_category_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group" position="inside">
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="partner_category_search" model="ir.ui.view">
+    <field name="model">res.partner.category</field>
+    <field name="inherit_id" ref="base.res_partner_category_view_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//search" position="inside">
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </xpath>
+    </field>
+    </record>
+
     <record id="partner_tree" model="ir.ui.view">
     <field name="name">res.partner.payment.tree</field>
     <field name="model">res.partner</field>
