@@ -18,9 +18,9 @@ class PaymentTransaction(models.Model):
     jetcheckout_webhook_state = fields.Boolean('Webhook Notification State', readonly=True)
     jetcheckout_webhook_state_message = fields.Text('Webhook Notification State Message', readonly=True)
     jetcheckout_webhook_failed_ids = fields.Many2many('payment.settings.notification.webhook', 'transaction_webhook_rel', 'transaction_id', 'webhook_id', string='Failed Webhook Notifications', readonly=True)
-    jetcheckout_partner_user_id = fields.Many2one('res.users', 'Sales Representative', related='partner_id.user_id', store=True, readonly=True)
-    jetcheckout_partner_team_id = fields.Many2one('crm.team', 'Sales Team', related='partner_id.team_id', store=True, readonly=True)
-    jetcheckout_partner_categ_ids = fields.Many2many('res.partner.category', 'transaction_partner_category_rel', 'transaction_id', 'category_id', 'Tags', related='partner_id.category_id', store=True, readonly=True)
+    jetcheckout_partner_user_id = fields.Many2one('res.users', 'Sales Representative', related='partner_id.user_id', store=True, readonly=True, ondelete='set null')
+    jetcheckout_partner_team_id = fields.Many2one('crm.team', 'Sales Team', related='partner_id.team_id', store=True, readonly=True, ondelete='set null')
+    jetcheckout_partner_categ_ids = fields.Many2many('res.partner.category', 'transaction_partner_category_rel', 'transaction_id', 'category_id', 'Tags', related='partner_id.category_id', store=True, readonly=True, ondelete='set null')
 
     def action_items(self):
         self.ensure_one()
