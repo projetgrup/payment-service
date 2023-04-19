@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 09:36+0000\n"
-"PO-Revision-Date: 2023-04-19 09:36+0000\n"
+"POT-Creation-Date: 2023-04-11 20:08+0000\n"
+"PO-Revision-Date: 2023-04-11 20:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -339,11 +339,6 @@ msgid "No setting found"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
-msgid "Other"
-msgstr ""
-
-#. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.vendor_mail
 msgid "Payment - {{ object.company_id.name }}"
 msgstr ""
@@ -385,11 +380,6 @@ msgid "Payments"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
-msgid "Representatives"
-msgstr ""
-
-#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
 msgid "Residual"
 msgstr ""
@@ -407,21 +397,6 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_sms_template
 msgid "SMS Templates"
-msgstr ""
-
-#. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
-msgid "Sales Person"
-msgstr ""
-
-#. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
-msgid "Sales Team"
-msgstr ""
-
-#. module: payment_vendor
-#: model:ir.ui.menu,name:payment_vendor.menu_team
-msgid "Sales Teams"
 msgstr ""
 
 #. module: payment_vendor
@@ -444,11 +419,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_vendor.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_users__system
 msgid "System"
-msgstr ""
-
-#. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
-msgid "Tags..."
 msgstr ""
 
 #. module: payment_vendor

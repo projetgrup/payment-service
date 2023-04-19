@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 19:51+0000\n"
-"PO-Revision-Date: 2023-04-11 23:40+0300\n"
+"POT-Creation-Date: 2023-04-19 09:36+0000\n"
+"PO-Revision-Date: 2023-04-19 12:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -631,6 +631,7 @@ msgstr "Müşteri Portal Adresi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_dashboard
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -846,6 +847,11 @@ msgid "Has Payments"
 msgstr "Ödemesi Var"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__jetcheckout_no_dashboard_button
+msgid "Hide Dashboard Payment Button"
+msgstr "Panel Ödeme Butonunu Gizle"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__hours
 msgid "Hour"
 msgstr "Saat"
@@ -871,6 +877,15 @@ msgstr "İkon"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__icon_preview
 msgid "Icon Preview"
 msgstr "İkon Görünümü"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_team_id
+msgid ""
+"If set, this Sales Team will be used for sales and assignments related to "
+"this partner"
+msgstr ""
+"Eğer ayarlıysa, Satış Ekibi bu iş ortağı ile ilgili teklif ve görevlerde "
+"kullanılacaktır"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
@@ -1231,6 +1246,11 @@ msgid "Offset"
 msgstr "Ofset"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_own_partner
+msgid "Only Own Partners"
+msgstr "Sadece Kendi İş Ortakları"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Page Footer"
 msgstr "Sayfa Alt Bilgi"
@@ -1388,6 +1408,23 @@ msgid "Payment System"
 msgstr "Ödeme Sistemi"
 
 #. module: payment_jetcheckout_system
+#: model:ir.module.category,description:payment_jetcheckout_system.module_category_system_partner
+#: model:ir.module.category,name:payment_jetcheckout_system.module_category_system_partner
+msgid "Payment System Partners"
+msgstr "Ödeme Sistemi İş Ortakları"
+
+#. module: payment_jetcheckout_system
+#: model:ir.module.category,description:payment_jetcheckout_system.module_category_system_technical
+#: model:ir.module.category,name:payment_jetcheckout_system.module_category_system_technical
+msgid "Payment System Technical"
+msgstr "Ödeme Sistemi Teknik"
+
+#. module: payment_jetcheckout_system
+#: model:res.groups,name:payment_jetcheckout_system.group_system_own_partner
+msgid "Payment System: Own Partners Only"
+msgstr "Ödeme Sistemi: Sadece Kendi İş Ortakları"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemleri"
@@ -1517,6 +1554,11 @@ msgid "Receive Payment"
 msgstr "Ödeme Al"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_ir_rule
+msgid "Record Rule"
+msgstr "Kayıt Kuralı"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Residual"
 msgstr "Açık Tutar"
@@ -1561,6 +1603,22 @@ msgid "Sale Agreement"
 msgstr "Satış Sözleşmesi"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
+msgid "Sales Person"
+msgstr "Satış Temsilcisi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_user_id
+msgid "Sales Representative"
+msgstr "Satış Temsilcisi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_team_id
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
+msgid "Sales Team"
+msgstr "Satış Ekibi"
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Sample Amount"
@@ -1601,6 +1659,7 @@ msgstr "Seçim"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_system_send
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "Send"
@@ -1728,6 +1787,11 @@ msgid "System"
 msgstr "Sistem"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
+msgid "Tags"
+msgstr "Etiketler"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
@@ -1763,6 +1827,11 @@ msgstr "Kişi \"%s\" için eposta adresi geçerli değil."
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
 msgstr "Kişi \"%s\" eposta adresine sahip başka bir kullanıcı mevcut (%s)."
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_user_id
+msgid "The internal user in charge of this contact."
+msgstr "Bu iş ortağından sorumlu iç kullanıcı."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
