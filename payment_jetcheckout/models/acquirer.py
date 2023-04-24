@@ -393,7 +393,6 @@ class PaymentAcquirerJetcheckout(models.Model):
                     'terminal_active': pos_infra[0]['terminal_active'],
                     'username_active': pos_infra[0]['username_active'],
                     'password_active': pos_infra[0]['password_active'],
-                    'refid_active': pos_infra[0]['refId_active'],
                     'rfnd_username_active': pos_infra[0]['rfnd_username_active'],
                     'rfnd_password_active': pos_infra[0]['rfnd_password_active'],
                 })
@@ -474,7 +473,6 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'is_terminal_active': pos['is_terminal_active'],
                 'is_username_active': pos['is_username_active'],
                 'is_password_active': pos['is_password_active'],
-                'is_refid_active': pos['is_refid_active'],
                 'is_rfnd_username_active': pos['is_rfnd_username_active'],
                 'is_rfnd_password_active': pos['is_rfnd_password_active'],
                 'client_id': pos['client_id'],
@@ -486,7 +484,6 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'password': pos['password'],
                 'rfnd_username': pos['rfnd_username'],
                 'rfnd_password': pos['rfnd_password'],
-                'ref_id': pos['ref_id'],
                 'priority': pos['priority'],
                 'usage_3d': pos['usage_3d'],
                 'mode': pos['mode'],

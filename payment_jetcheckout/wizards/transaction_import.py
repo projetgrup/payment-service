@@ -22,9 +22,8 @@ class PaymentTransactionImport(models.TransientModel):
             'state_message': 'Message' in value and value['Message'],
         }
 
-    def _prepare_row(self, reference, line):
+    def _prepare_row(self, line):
         return {
-            'reference': reference,
             'acquirer_id': line.acquirer_id.id,
             'partner_id': line.partner_id.id,
             'amount': line.amount,
@@ -77,14 +76,9 @@ class PaymentTransactionImport(models.TransientModel):
             self.line_ids = [(5, 0, 0)]
 
     def confirm(self):
-        sequence = 'payment.jetcheckout.transaction'
         transactions = self.env['payment.transaction']
         for line in self.line_ids:
-            reference = self.env['ir.sequence'].sudo().next_by_code(sequence)
-            if not reference:
-                raise ValidationError(_('You have to define a sequence for %s in your company.') % (sequence,))
-
-            row = self._prepare_row(reference, line)
+            row = self._prepare_row(line)
             transactions.create(row)
 
 
