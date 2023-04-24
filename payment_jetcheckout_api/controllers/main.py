@@ -2,7 +2,6 @@
 import werkzeug
 import requests
 from werkzeug.exceptions import NotFound
-from datetime import datetime
 from urllib.parse import unquote
 
 from odoo import fields, http, _
@@ -12,11 +11,6 @@ from odoo.addons.payment_jetcheckout.controllers.main import JetcheckoutControll
 
 
 class JetcheckoutApiController(JetController):
-
-    def _jetcheckout_tx_vals(self, **kwargs):
-        vals = super()._jetcheckout_tx_vals(**kwargs)
-        vals.update({'jetcheckout_payment_ok': False})
-        return vals
 
     def _confirm_bank_webhook(self, tx):
         try:

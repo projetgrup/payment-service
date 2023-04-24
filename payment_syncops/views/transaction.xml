@@ -43,6 +43,17 @@
     </field>
     </record>
 
+    <record id="payment_transaction_list" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree" position="inside">
+            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" optional="hide"/>
+            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" optional="hide"/>
+        </xpath>
+    </field>
+    </record>
+
     <record id="transaction_search" model="ir.ui.view">
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_search"/>

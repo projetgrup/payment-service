@@ -17,3 +17,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_api_card_return_url = fields.Char('API Card Return URL', readonly=True)
     jetcheckout_api_bank_return_url = fields.Char('API Bank Return URL', readonly=True)
     jetcheckout_api_bank_webhook_url = fields.Char('API Bank Webhook URL', readonly=True)
+
+    def write(self, values):
+        if 'jetcheckout_payment_ok' in values and any(tx.jetcheckout_api_ok for tx in self):
+            values['jetcheckout_payment_ok'] = False
+        return super().write(values)

@@ -265,11 +265,6 @@ class PaymentAPIService(Component):
         else:
             state = False
 
-        sequence_code = 'payment.jetcheckout.transaction'
-        name = self.env['ir.sequence'].sudo().next_by_code(sequence_code)
-        if not name:
-            raise ValidationError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
-
         codes = hasattr(params, 'methods') and params.methods or []
         method = ''
         providers = []
@@ -284,7 +279,6 @@ class PaymentAPIService(Component):
         acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=providers, limit=1)
         products = getattr(params.order, 'products', [])
         values = {
-            'reference': name,
             'acquirer_id': acquirer.id,
             'partner_id': api.partner_id.id,
             'amount': params.amount,

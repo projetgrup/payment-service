@@ -127,12 +127,29 @@ class PaymentDasboard(models.Model):
             format = DF
         else:
             raise UserError(_('This time period is not implemented'))
-            
-        template = """
-            SELECT %s AS line, COUNT(id) AS count, SUM(amount) AS amount
-            FROM payment_transaction
-            WHERE state = 'done'
-            AND company_id IN %s
+ 
+        user = self.env.user
+        restricted = user.has_group('payment_jetcheckout_system.group_system_own_partner')
+        restricted_join = """
+            LEFT JOIN res_partner p on t.partner_id = p.id
+            LEFT JOIN res_partner b on p.parent_id = b.id
+        """ if restricted else ""
+        restricted_where = f"""
+            AND (
+                p.id = {user.partner_id.id}
+                OR
+                p.user_id = {user.id}
+                OR
+                b.user_id = {user.id}
+            )
+        """ if restricted else ""
+        template = f"""
+            SELECT %s AS line, COUNT(t.id) AS count, SUM(t.amount) AS amount
+            FROM payment_transaction t
+            {restricted_join}
+            WHERE t.state = 'done'
+            {restricted_where}
+            AND t.company_id IN %s
         """
         query = []
         index = 0
@@ -151,7 +168,7 @@ class PaymentDasboard(models.Model):
             if date_start <= dates['now'] < date_end:
                 index = i
 
-            query.append("(" + template % (i, companies) + " AND create_date >= '" + (date_start - dates['offset']).strftime(format) + "' AND create_date < '" + (date_end - dates['offset']).strftime(format) + "')")
+            query.append("(" + template % (i, companies) + " AND t.create_date >= '" + (date_start - dates['offset']).strftime(format) + "' AND t.create_date < '" + (date_end - dates['offset']).strftime(format) + "')")
 
         self.env.cr.execute(" UNION ALL ".join(query))
         result = self.env.cr.dictfetchall()
@@ -216,7 +233,22 @@ class PaymentDasboard(models.Model):
     def _get_domain_query(self):
         dates = self._get_dates()
         companies = tuple(self.env.companies.ids + [0])
-        query = """
+        user = self.env.user
+        restricted = user.has_group('payment_jetcheckout_system.group_system_own_partner')
+        restricted_join = """
+            LEFT JOIN res_partner p on t.partner_id = p.id
+            LEFT JOIN res_partner b on p.parent_id = b.id
+        """ if restricted else ""
+        restricted_where = f"""
+            AND (
+                p.id = {user.partner_id.id}
+                OR
+                p.user_id = {user.id}
+                OR
+                b.user_id = {user.id}
+            )
+        """ if restricted else ""
+        query = f"""
             SELECT
                 COUNT(*) AS total_count,
                 SUM(t.amount) AS total_amount,
@@ -228,10 +260,12 @@ class PaymentDasboard(models.Model):
                 c.id AS currency_id
             FROM payment_transaction t
             LEFT JOIN res_currency c ON t.currency_id = c.id
+            {restricted_join}
             WHERE t.state IN ('done', 'pending', 'error')
             AND t.create_date >= %s
             AND t.create_date < %s
             AND t.company_id IN %s
+            {restricted_where}
             GROUP BY c.name, c.id
         """
         self.env.cr.execute(query, (dates['start'], dates['end'], companies))

@@ -90,13 +90,22 @@ class PaymentTransaction(models.Model):
                     context['transactions'] = []
                     context['total'] = 0
 
-                    transactions = self.env['payment.transaction'].sudo().read_group([
+                    domain = [
                         ('company_id', '=', company.id),
                         ('last_state_change', '>=', date_start - offset),
                         ('last_state_change', '<', date_end - offset),
                         ('state', '=', 'done'),
                         ('jetcheckout_website_id', '=', website.id),
-                    ], fields=['amount:sum'], groupby=['partner_id'], orderby='amount desc')
+                    ]
+                    if user.has_group('payment_jetcheckout_system.group_system_own_partner'):
+                        domain.extend([
+                            '|', '|',
+                            ('partner_id', '=', user.partner_id.id),
+                            ('partner_id.user_id', '=', user.id),
+                            ('partner_id.parent_id.user_id', '=', user.id),
+                        ])
+
+                    transactions = self.env['payment.transaction'].sudo().read_group(domain, fields=['amount:sum'], groupby=['partner_id'], orderby='amount desc')
                     for transaction in transactions:
                         context['transactions'].append({'name': transaction['partner_id'][1], 'amount': transaction['amount']})
                         context['total'] += transaction['amount']
