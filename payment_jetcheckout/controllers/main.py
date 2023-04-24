@@ -384,13 +384,7 @@ class JetcheckoutController(http.Controller):
             vals.update(self._jetcheckout_tx_vals(**kwargs))
             tx.write(vals)
         else:
-            sequence_code = 'payment.jetcheckout.transaction'
-            name = request.env['ir.sequence'].sudo().next_by_code(sequence_code)
-            if not name:
-                raise ValidationError(_('You have to define a sequence for %s in your company.') % (sequence_code,))
-
             vals.update({
-                'reference': name,
                 'amount': amount_total,
                 'fees': cost_amount,
                 'currency_id': currency.id,

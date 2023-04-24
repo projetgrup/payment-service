@@ -240,6 +240,9 @@
             <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>
             <filter name="filterby_no_payment" string="Has No Payments" domain="[('payable_ids', '=', False)]"/>
             <separator/>
+            <filter name="filterby_following" string="My Followings" domain="[('message_is_follower', '=', True)]"/>
+            <filter name="filterby_no_following" string="My Unfollowings" domain="[('message_is_follower', '=', False)]"/>
+            <separator/>
             <filter name="filterby_email_sent_today" string="Sent Email Today" domain="[('date_email_sent', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
             <filter name="filterby_email_sent_before" string="Sent Email Before" domain="[('date_email_sent', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
             <filter name="filterby_email_sent_no" string="No Sent Email" domain="[('date_email_sent', '=', False)]"/>

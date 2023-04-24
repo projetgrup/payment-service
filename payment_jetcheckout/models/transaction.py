@@ -51,6 +51,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_card_family = fields.Char('Card Family', readonly=True, copy=False)
     jetcheckout_vpos_name = fields.Char('Virtual PoS', readonly=True, copy=False)
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
+    jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
@@ -65,6 +66,16 @@ class PaymentTransaction(models.Model):
     jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True, copy=False)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
+
+    @api.model
+    def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):
+        if provider == 'jetcheckout':
+            sequence = 'payment.jetcheckout.transaction'
+            reference = self.env['ir.sequence'].sudo().next_by_code(sequence)
+            if not reference:
+                raise ValidationError(_('You have to define a sequence for %s') % sequence)
+            return reference
+        return super()._compute_reference(provider, prefix=prefix, separator=separator, **kwargs) 
 
     @api.model_create_multi
     def create(self, values_list):
