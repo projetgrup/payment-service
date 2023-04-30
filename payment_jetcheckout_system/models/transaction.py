@@ -12,7 +12,7 @@ class PaymentTransaction(models.Model):
             tx.jetcheckout_item_count = len(tx.jetcheckout_item_ids)
 
     system = fields.Selection(related='company_id.system')
-    partner_ref = fields.Char(related='partner_id.ref')
+    partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
     jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
     jetcheckout_item_count = fields.Integer(compute='_compute_item_count')
     jetcheckout_webhook_ok = fields.Boolean('Webhook Notification', readonly=True)

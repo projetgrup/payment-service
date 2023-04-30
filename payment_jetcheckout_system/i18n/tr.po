@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-24 18:53+0000\n"
-"PO-Revision-Date: 2023-04-24 21:54+0300\n"
+"POT-Creation-Date: 2023-04-30 19:12+0000\n"
+"PO-Revision-Date: 2023-04-30 22:14+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -1311,6 +1311,11 @@ msgstr "İş Ortağı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_count
 msgid "Partner Count"
 msgstr "İş Ortağı Adedi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__partner_ref
+msgid "Partner Reference"
+msgstr "İş Ortağı Referansı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
