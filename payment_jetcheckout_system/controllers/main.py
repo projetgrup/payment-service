@@ -187,7 +187,7 @@ class JetcheckoutSystemController(JetController):
             del request.session['__tx_id']
         return request.render('payment_jetcheckout_system.payment_page_result', values)
 
-    @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', website=True)
+    @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
     def jetcheckout_portal_payment_page_transactions(self, page=0, tpp=20, **kwargs):
         values = self._jetcheckout_get_data()
         tx_ids = request.env['payment.transaction'].sudo().search([
