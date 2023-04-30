@@ -32,7 +32,8 @@ class Users(models.Model):
             group_portal = self.env.ref('base.group_portal')
             group_internal = self.env.ref('base.group_user')
 
-            try: # grant admin_tools groups if exists
+            try: # grant sales_team and admin_tools groups if exists
+                group_sale_manager = self.env.ref('sales_team.group_sale_manager')
                 group_admin_show_delete = self.env.ref('admin_tools.group_show_delete')
                 group_admin_show_export = self.env.ref('admin_tools.group_show_export')
                 group_admin_show_duplicate = self.env.ref('admin_tools.group_show_duplicate')
@@ -53,6 +54,7 @@ class Users(models.Model):
                 group_system_user.sudo().write({'users': [(4, user.id)]})
 
                 try:
+                    group_sale_manager.sudo().write({'users': [(4, user.id)]})
                     group_admin_show_delete.sudo().write({'users': [(4, user.id)]})
                     group_admin_show_export.sudo().write({'users': [(4, user.id)]})
                     group_admin_show_duplicate.sudo().write({'users': [(4, user.id)]})
@@ -73,6 +75,7 @@ class Users(models.Model):
                 group_system_user.sudo().write({'users': [(4, user.id)]})
 
                 try:
+                    group_sale_manager.sudo().write({'users': [(3, user.id)]})
                     group_admin_show_delete.sudo().write({'users': [(3, user.id)]})
                     group_admin_show_export.sudo().write({'users': [(4, user.id)]})
                     group_admin_show_duplicate.sudo().write({'users': [(4, user.id)]})
@@ -90,6 +93,7 @@ class Users(models.Model):
                 group_system_user.sudo().write({'users': [(3, user.id)]})
 
                 try:
+                    group_sale_manager.sudo().write({'users': [(3, user.id)]})
                     group_admin_show_delete.sudo().write({'users': [(3, user.id)]})
                     group_admin_show_export.sudo().write({'users': [(3, user.id)]})
                     group_admin_show_duplicate.sudo().write({'users': [(3, user.id)]})
