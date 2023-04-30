@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
+import json
+import base64
 from datetime import datetime
 
-from odoo import http, _
+from odoo import http, fields, _
 from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetController
 
 
 class PaymentSyncopsController(JetController):
 
+    def _jetcheckout_connector_auth(self, company, header):
+        code = header.split(' ', 1)[1]
+        auth = base64.b64decode(code).decode('utf-8')
+        username, password = auth.split(':', 1)
+        connector = request.env['syncops.connector'].sudo().search([
+            ('company_id', '=', company.id),
+            ('username', '=', username),
+            ('token', '=', password),
+        ], limit=1)
+        if not connector:
+            raise
+        return connector
+ 
     def _jetcheckout_connector_get_partner_info(self, partner):
         if '__jetcheckout_partner_connector' in request.session:
             partner = request.session['__jetcheckout_partner_connector']
@@ -233,3 +249,39 @@ class PaymentSyncopsController(JetController):
                 'balances': self._jetcheckout_connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
             })
         }
+
+    @http.route(['/syncops/payment/transactions/'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
+    def jetcheckout_syncops_transactions(self, **kwargs):
+        headers = request.httprequest.headers
+        company = request.env.company
+        connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
+        data = json.loads(request.httprequest.get_data())
+        response = json.dumps([{
+            'id': 1,
+            'ref': data['date'],
+            'partner_ref': 'test',
+            'partner_name': 'test',
+            'card_6': 'test',
+            'card_4': 'test',
+            'vpos_id': 3,
+            'bank_payment_day': 'test',
+            'installment_count': 4,
+            'installment_code': 'test',
+            'payment_date': '2023-04-04',
+            'payment_time': '11:12:32',
+            'currency_code': 'test',
+            'payment_amount': 123.21,
+            'payment_net_amount': 235.12,
+            'plus_installment': 6,
+            'payment_deferral': 7,
+            'bank_id': 1,
+            'bank_name': 'test',
+            'payment_ref': 'test',
+            'refund_currency_code': 'test',
+            'refund_date': '2023-03-01',
+            'refund_time': '11:56:14',
+            'company_code': 'test',
+            'vpos_name': 'test',
+        }])
+        headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
+        return request.make_response(response, headers)
