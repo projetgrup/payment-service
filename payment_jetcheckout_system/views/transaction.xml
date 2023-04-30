@@ -32,6 +32,7 @@
     <field name="inherit_id" ref="payment.payment_transaction_list"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="partner_ref" optional="hide"/>
             <field name="jetcheckout_partner_user_id" optional="hide"/>
             <field name="jetcheckout_partner_team_id" optional="hide"/>
             <field name="jetcheckout_partner_categ_ids" options="{'color_field': 'color', 'no_create': True}" widget="many2many_tags" optional="hide"/>
