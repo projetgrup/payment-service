@@ -61,7 +61,7 @@
     <field name="name">Transactions</field>
     <field name="res_model">payment.transaction</field>
     <field name="view_mode">tree,kanban,graph,pivot,form</field>
-    <field name="context">{'settings': True, 'create': False, 'edit': False, 'delete': False}</field>
+    <field name="context">{'settings': True, 'create': False, 'edit': False, 'delete': False, 'search_default_filterby_today': True}</field>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
             No transactions yet

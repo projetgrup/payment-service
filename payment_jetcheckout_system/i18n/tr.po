@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-30 19:12+0000\n"
-"PO-Revision-Date: 2023-04-30 22:14+0300\n"
+"POT-Creation-Date: 2023-05-02 15:45+0000\n"
+"PO-Revision-Date: 2023-05-02 18:47+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
@@ -99,11 +99,11 @@ msgstr "<span class=\"o_stat_text\">Ödeme Kalemleri</span>"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid ""
-"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
-"label=\"Search\" title=\"Search\"/></span>"
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-label="
+"\"Search\" title=\"Search\"/></span>"
 msgstr ""
-"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
-"label=\"Ara\" title=\"Ara\"/></span>"
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-label="
+"\"Ara\" title=\"Ara\"/></span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -143,17 +143,17 @@ msgstr "<strong>Bu kullanıcıya bağlı iş ortağı hala aktif</strong>"
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"padding: 16px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align="
+"\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-collapse:"
+"separate;\">\n"
 "<tbody>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Your Account</span><br/"
 ">\n"
@@ -174,15 +174,15 @@ msgid ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,"
 "<br/> <br/>\n"
-"                        Welcome to <t t-out=\"object.company_id."
-"name\">YourCompany</t>'s Portal!<br/><br/>\n"
+"                        Welcome to <t t-out=\"object.company_id.name"
+"\">YourCompany</t>'s Portal!<br/><br/>\n"
 "                        An account has been created for you with the "
 "following login: <t t-out=\"object.users_id.login\">demo</t><br/><br/>\n"
 "                        Click on the button below to pick a password and "
@@ -213,9 +213,9 @@ msgid ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
-"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>\n"
@@ -226,8 +226,8 @@ msgid ""
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
 "                        | <a t-attf-href=\"'mailto:%s' % {{ object."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out="
+"\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ object.user_id."
@@ -246,17 +246,17 @@ msgid ""
 msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"padding: 16px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align="
+"\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-collapse:"
+"separate;\">\n"
 "<tbody>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Hesabınız</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
@@ -276,9 +276,9 @@ msgstr ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Sayın <t t-out=\"object.name or ''\">Yetkili</t>,<br/"
@@ -315,9 +315,9 @@ msgstr ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
-"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"object.company_id.name or ''\">Şirket</t>\n"
 "                </td></tr>\n"
@@ -327,8 +327,8 @@ msgstr ""
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
 "                        | <a t-attf-href=\"'mailto:%s' % {{ object."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.company_id.email or ''\">bilgi@sirket.com</a>\n"
+"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out="
+"\"object.company_id.email or ''\">bilgi@sirket.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ object.user_id."
@@ -380,6 +380,11 @@ msgstr "Yönetici"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
 msgid "Agreements"
 msgstr "Sözleşmeler"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
+msgid "All Times"
+msgstr "Tüm Zamanlar"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -1026,6 +1031,7 @@ msgstr "Son Düzenleme Tarihi"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_month
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Month"
 msgstr "Geçen Ay"
 
@@ -1056,12 +1062,14 @@ msgstr "Son Güncelleme Tarihi"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_week
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Week"
 msgstr "Geçen Hafta"
 
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_year
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Year"
 msgstr "Geçen Yıl"
 
@@ -1900,18 +1908,21 @@ msgstr "Bir giden eposta sunucusu ayarlanmadı"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_month
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Month"
 msgstr "Bu Ay"
 
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_week
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Week"
 msgstr "Bu Hafta"
 
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_year
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Year"
 msgstr "Bu Yıl"
 
@@ -1989,6 +2000,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_today
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Today"
 msgstr "Bugün"
 
@@ -2195,6 +2207,7 @@ msgstr "Yıl"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_yesterday
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Yesterday"
 msgstr "Dün"
 
