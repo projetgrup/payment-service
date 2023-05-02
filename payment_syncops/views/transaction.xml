@@ -57,8 +57,10 @@
     <record id="transaction_search" model="ir.ui.view">
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment.payment_transaction_search"/>
+    <field name="priority" eval="15"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='partner_name']" position="after">
+            <separator/>
             <filter string="Connector Transactions" name="connector_ok" domain="[('jetcheckout_connector_ok', '=', True)]"/>
             <separator/>
             <filter string="Failed Connector Transactions" name="connector_state" domain="[('jetcheckout_connector_ok', '=', True), ('jetcheckout_connector_state', '=', True)]"/>

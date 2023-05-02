@@ -47,16 +47,20 @@
         <xpath expr="//field[@name='partner_name']" position="after">
             <field name="jetcheckout_partner_user_id"/>
             <field name="jetcheckout_partner_team_id"/>
+            <filter string="Today" name="filterby_today" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
+            <filter string="Last 7 days" name="filterby_last_7days" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+            <filter string="Last 30 days" name="filterby_last_month" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
             <separator/>
             <filter string="Webhook Notifications" name="notif_webhook_ok" domain="[('jetcheckout_webhook_ok', '=', True)]"/>
             <separator/>
             <filter string="Failed Webhook Notifications" name="notif_webhook_state" domain="[('jetcheckout_webhook_ok', '=', True), ('jetcheckout_webhook_state', '=', True)]"/>
+            <separator/>
         </xpath>
-        <xpath expr='//group' position="inside">
+        <xpath expr="//group" position="inside">
             <filter string="Sales Person" name="groupby_salesperson" domain="[]" context="{'group_by':'jetcheckout_partner_user_id'}"/>
             <filter string="Sales Team" name="groupby_salesteam" domain="[]" context="{'group_by':'jetcheckout_partner_team_id'}"/>
         </xpath>
-        <xpath expr='//group' position="after">
+        <xpath expr="//group" position="after">
             <searchpanel>
                 <field name="jetcheckout_partner_user_id" select="multi" icon="fa-user" enable_counters="1"/>
                 <field name="jetcheckout_partner_team_id" select="multi" icon="fa-file-text-o" enable_counters="1"/>
