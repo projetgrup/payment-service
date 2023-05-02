@@ -54,7 +54,6 @@
             <filter string="Webhook Notifications" name="notif_webhook_ok" domain="[('jetcheckout_webhook_ok', '=', True)]"/>
             <separator/>
             <filter string="Failed Webhook Notifications" name="notif_webhook_state" domain="[('jetcheckout_webhook_ok', '=', True), ('jetcheckout_webhook_state', '=', True)]"/>
-            <separator/>
         </xpath>
         <xpath expr="//group" position="inside">
             <filter string="Sales Person" name="groupby_salesperson" domain="[]" context="{'group_by':'jetcheckout_partner_user_id'}"/>
