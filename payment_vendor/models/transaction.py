@@ -107,7 +107,11 @@ class PaymentTransaction(models.Model):
 
                     transactions = self.env['payment.transaction'].sudo().read_group(domain, fields=['amount:sum'], groupby=['partner_id'], orderby='amount desc')
                     for transaction in transactions:
-                        context['transactions'].append({'name': transaction['partner_id'][1], 'amount': transaction['amount']})
+                        partner = self.env['res.partner'].sudo().browse(transaction['partner_id'][0])
+                        context['transactions'].append({
+                            'name': '[%s] %s' % (partner.ref, partner.name) if partner.ref else partner.name,
+                            'amount': transaction['amount']
+                        })
                         context['total'] += transaction['amount']
 
                     try:

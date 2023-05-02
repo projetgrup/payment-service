@@ -129,6 +129,7 @@
             <field name="jetcheckout_installment_count" invisible="1"/>
             <field name="jetcheckout_installment_description_long" string="Installment" decoration-info="jetcheckout_installment_count == 1" widget="badge"/>
             <field name="jetcheckout_card_family" optional="hide"/>
+            <field name="jetcheckout_transaction_id" optional="hide"/>
         </xpath>
     </field>
     </record>
