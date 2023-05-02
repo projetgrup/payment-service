@@ -57,6 +57,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
     jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True, copy=False)
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
+    jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)
     jetcheckout_installment_description = fields.Char('Installment Description', readonly=True, copy=False)
     jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True, copy=False)
