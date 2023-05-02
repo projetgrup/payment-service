@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import base64
+import pytz
 from datetime import datetime
 
 from odoo import http, fields, _
@@ -17,6 +18,8 @@ class PaymentSyncopsController(JetController):
         username, password = auth.split(':', 1)
         connector = request.env['syncops.connector'].sudo().search([
             ('company_id', '=', company.id),
+            ('active', '=', True),
+            ('connected', '=', True),
             ('username', '=', username),
             ('token', '=', password),
         ], limit=1)
@@ -250,38 +253,64 @@ class PaymentSyncopsController(JetController):
             })
         }
 
-    @http.route(['/syncops/payment/transactions/'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
+    @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
     def jetcheckout_syncops_transactions(self, **kwargs):
         headers = request.httprequest.headers
         company = request.env.company
-        connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
-        data = json.loads(request.httprequest.get_data())
-        response = json.dumps([{
-            'id': 1,
-            'ref': data['date'],
-            'partner_ref': 'test',
-            'partner_name': 'test',
-            'card_6': 'test',
-            'card_4': 'test',
-            'vpos_id': 3,
-            'bank_payment_day': 'test',
-            'installment_count': 4,
-            'installment_code': 'test',
-            'payment_date': '2023-04-04',
-            'payment_time': '11:12:32',
-            'currency_code': 'test',
-            'payment_amount': 123.21,
-            'payment_net_amount': 235.12,
-            'plus_installment': 6,
-            'payment_deferral': 7,
-            'bank_id': 1,
-            'bank_name': 'test',
-            'payment_ref': 'test',
-            'refund_currency_code': 'test',
-            'refund_date': '2023-03-01',
-            'refund_time': '11:56:14',
-            'company_code': 'test',
-            'vpos_name': 'test',
-        }])
+        self._jetcheckout_connector_auth(company, headers['Authorization'])
+
+        response = []
+        data = request.httprequest.get_data()
+        if data:
+            data = json.loads(data)
+            date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
+            timezone = pytz.timezone('Europe/Istanbul')
+            offset = timezone.utcoffset(date)
+            transactions = request.env['payment.transaction'].sudo().search([
+                ('company_id', '=', company.id),
+                ('create_date', '>=', date - offset),
+            ])
+
+            for transaction in transactions:
+                branch = transaction.acquirer_id._get_branch_line(name=transaction.jetcheckout_vpos_name, user=transaction.create_uid)
+
+                values = {
+                    'id': transaction.id,
+                    'ref': transaction.jetcheckout_order_id,
+                    'state': transaction.state,
+                    'partner_ref': transaction.partner_id.ref,
+                    'partner_name': transaction.partner_id.name,
+                    'card_6': transaction.jetcheckout_card_number[:6] if transaction.jetcheckout_card_number else '',
+                    'card_4': transaction.jetcheckout_card_number[-4:] if transaction.jetcheckout_card_number else '',
+                    'vpos_id': 0,
+                    'bank_payment_day': 1,
+                    'installment_count': transaction.jetcheckout_installment_count,
+                    'installment_code': transaction.jetcheckout_campaign_name,
+                    'payment_date': (transaction.create_date + offset).strftime('%Y-%m-%d'),
+                    'payment_time': (transaction.create_date + offset).strftime('%H:%M:%S'),
+                    'currency_code': transaction.currency_id.name,
+                    'payment_amount': transaction.amount,
+                    'payment_net_amount': transaction.jetcheckout_payment_amount,
+                    'plus_installment': transaction.jetcheckout_installment_plus,
+                    'payment_deferral': 0,
+                    'bank_id': 0,
+                    'bank_name': '',
+                    'refund_payment_id': '',
+                    'refund_currency_code': '',
+                    'refund_date': '',
+                    'refund_time': '',
+                    'branch_code': branch and branch.account_code or '',
+                    'company_code': transaction.company_id.partner_id.ref,
+                    'payment_ref': '03',
+                }
+                if transaction.source_transaction_id:
+                    values.update({
+                        'refund_payment_id': transaction.source_transaction_id.id,
+                        'refund_currency_code': transaction.source_transaction_id.currency_id.name,
+                        'refund_date': (transaction.source_transaction_id.create_date + offset).strftime('%Y-%m-%d'),
+                        'refund_time': (transaction.source_transaction_id.create_date + offset).strftime('%H:%M:%S'),
+                    })
+                response.append(values)
+
         headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
-        return request.make_response(response, headers)
+        return request.make_response(json.dumps(response), headers)

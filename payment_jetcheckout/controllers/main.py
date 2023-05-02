@@ -323,6 +323,7 @@ class JetcheckoutController(http.Controller):
             amount = amount_installment
 
         installment_count = installment['installment_count'] + installment['plus_installment']
+        installment_plus = installment['plus_installment']
         installment_desc = installment['installment_desc']
         cost_rate = installment['cost_rate']
         customer_rate = installment['customer_rate']
@@ -372,6 +373,7 @@ class JetcheckoutController(http.Controller):
             'jetcheckout_order_id': order_id,
             'jetcheckout_payment_amount': amount,
             'jetcheckout_installment_count': installment_count,
+            'jetcheckout_installment_plus': installment_plus,
             'jetcheckout_installment_description': installment_desc,
             'jetcheckout_installment_amount': amount / installment_count if installment_count > 0 else amount,
             'jetcheckout_commission_rate': cost_rate,
