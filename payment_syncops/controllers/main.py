@@ -282,7 +282,7 @@ class PaymentSyncopsController(JetController):
                     'partner_name': transaction.partner_id.name,
                     'card_6': transaction.jetcheckout_card_number[:6] if transaction.jetcheckout_card_number else '',
                     'card_4': transaction.jetcheckout_card_number[-4:] if transaction.jetcheckout_card_number else '',
-                    'vpos_id': 0,
+                    'vpos_id': transaction.jetcheckout_vpos_id or 0,
                     'bank_payment_day': 1,
                     'installment_count': transaction.jetcheckout_installment_count,
                     'installment_code': transaction.jetcheckout_campaign_name,
