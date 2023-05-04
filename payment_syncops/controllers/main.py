@@ -252,7 +252,7 @@ class PaymentSyncopsController(JetController):
         }
 
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
-    def jetcheckout_syncops_transactions(self, **kwargs):
+    def jetcheckout_syncops_transactions(self, **data):
         headers = request.httprequest.headers
         company = request.env.company
         connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
@@ -260,10 +260,7 @@ class PaymentSyncopsController(JetController):
             return Response('Access Denied', status=401)
 
         response = []
-        data = request.httprequest.get_data()
-        raise Exception(kwargs)
         if data:
-            data = json.loads(data)
             date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
             timezone = pytz.timezone('Europe/Istanbul')
             offset = timezone.utcoffset(date)
