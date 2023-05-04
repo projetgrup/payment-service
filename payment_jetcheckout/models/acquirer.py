@@ -18,7 +18,8 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     _description = 'Jetcheckout Status'
 
     date = fields.Datetime(readonly=True)
-    name = fields.Char(readonly=True)
+    vpos_id = fields.Integer(readonly=True)
+    vpos_name = fields.Char(readonly=True)
     successful = fields.Boolean(readonly=True)
     completed = fields.Boolean(readonly=True)
     cancelled = fields.Boolean(readonly=True)
