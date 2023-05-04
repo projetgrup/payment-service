@@ -223,7 +223,8 @@ class JetcheckoutController(http.Controller):
             'successful': kwargs.get('response_code') == '00',
             'code': kwargs.get('response_code'),
             'message': kwargs.get('response_message'),
-            'name': kwargs.get('virtual_pos_name'),
+            'vpos_id': kwargs.get('virtual_pos_id'),
+            'vpos_name': kwargs.get('virtual_pos_name'),
             'commission_rate': float(kwargs.get('expected_cost_rate')),
         })
         return url, tx, False
