@@ -49,6 +49,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
     jetcheckout_card_type = fields.Char('Card Type', readonly=True, copy=False)
     jetcheckout_card_family = fields.Char('Card Family', readonly=True, copy=False)
+    jetcheckout_vpos_id = fields.Integer('Virtual PoS Id', readonly=True, copy=False)
     jetcheckout_vpos_name = fields.Char('Virtual PoS', readonly=True, copy=False)
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
@@ -162,6 +163,7 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_number': self.jetcheckout_card_number,
             'jetcheckout_card_type': self.jetcheckout_card_type,
             'jetcheckout_card_family': self.jetcheckout_card_family,
+            'jetcheckout_vpos_id': self.jetcheckout_vpos_id,
             'jetcheckout_vpos_name': self.jetcheckout_vpos_name,
             'is_post_processed': True,
             'state': 'done',
@@ -329,7 +331,8 @@ class PaymentTransaction(models.Model):
 
         self.write({
             'fees': values['commission_amount'],
-            'jetcheckout_vpos_name': values['name'],
+            'jetcheckout_vpos_id': values['vpos_id'],
+            'jetcheckout_vpos_name': values['vpos_name'],
             'jetcheckout_commission_rate': values['commission_rate'],
             'jetcheckout_commission_amount': values['commission_amount'],
         })
@@ -361,7 +364,8 @@ class PaymentTransaction(models.Model):
             commission_amount = float_round(self.amount * commission_rate / 100, 2)
             values = {
                 'date': result['transaction_date'][:19],
-                'name': result['virtual_pos_name'],
+                'vpos_id': result['virtual_pos_id'],
+                'vpos_name': result['virtual_pos_name'],
                 'successful': result['successful'],
                 'completed': result['completed'],
                 'cancelled': result['cancelled'],
