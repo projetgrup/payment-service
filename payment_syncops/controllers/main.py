@@ -5,7 +5,7 @@ import pytz
 from datetime import datetime
 
 from odoo import http, fields, _
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetController
 
@@ -23,8 +23,6 @@ class PaymentSyncopsController(JetController):
             ('username', '=', username),
             ('token', '=', password),
         ], limit=1)
-        if not connector:
-            raise
         return connector
  
     def _jetcheckout_connector_get_partner_info(self, partner):
@@ -257,7 +255,9 @@ class PaymentSyncopsController(JetController):
     def jetcheckout_syncops_transactions(self, **kwargs):
         headers = request.httprequest.headers
         company = request.env.company
-        self._jetcheckout_connector_auth(company, headers['Authorization'])
+        connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
+        if not connector:
+            return Response('Access Denied', status=401)
 
         response = []
         data = request.httprequest.get_data()
