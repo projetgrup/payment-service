@@ -261,10 +261,6 @@ class PaymentSyncopsController(JetController):
 
         response = []
         data = request.httprequest.get_data()
-        data = json.loads(data)
-        headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
-        return request.make_response(json.dumps(data), headers)
-
         if data:
             data = json.loads(data)
             date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
