@@ -254,6 +254,9 @@ class PaymentSyncopsController(JetController):
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
     def jetcheckout_syncops_transactions(self, **data):
         headers = request.httprequest.headers
+        if 'Authorization' not in headers:
+            return Response('Access Denied', status=401)
+
         company = request.env.company
         connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
         if not connector:
