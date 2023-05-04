@@ -261,6 +261,7 @@ class PaymentSyncopsController(JetController):
 
         response = []
         data = request.httprequest.get_data()
+        raise Exception(kwargs)
         if data:
             data = json.loads(data)
             date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
