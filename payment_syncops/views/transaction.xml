@@ -51,6 +51,11 @@
             <field name="jetcheckout_connector_partner_name" string="Related Partner Name" optional="hide"/>
             <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" optional="hide"/>
         </xpath>
+        <xpath expr="//tree//field" position="before">
+            <header>
+                <button name="action_syncops_xlsx" type="object" string="Excel"/>
+            </header>
+        </xpath>
     </field>
     </record>
 
