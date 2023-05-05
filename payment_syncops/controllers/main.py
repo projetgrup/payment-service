@@ -362,7 +362,7 @@ class PaymentSyncopsController(JetController):
 
         transactions = request.env['payment.transaction'].sudo().search([
             ('id', 'in', list(map(int, data[''].split(',')))),
-            ('company_id', '=', request.env.company.id)
+            ('company_id', '=', request.env.user.company_ids.ids)
         ])
         row = 0
         for transaction in transactions:
