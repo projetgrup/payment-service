@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+import io
 import json
 import base64
 import pytz
 from datetime import datetime
 
 from odoo import http, fields, _
-from odoo.http import request, Response
+from odoo.http import content_disposition, request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
+from odoo.tools.misc import xlsxwriter
 from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetController
 
 
@@ -24,6 +26,48 @@ class PaymentSyncopsController(JetController):
             ('token', '=', password),
         ], limit=1)
         return connector
+    
+    def _jetcheckout_prepare_syncops_transactions(self, tx, tz=None):
+        tz = tz or pytz.timezone('Europe/Istanbul')
+        offset = tz.utcoffset(fields.Datetime.now())
+        branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
+        values = {
+            'id': tx.id,
+            'ref': tx.jetcheckout_order_id,
+            'state': tx.state,
+            'partner_ref': tx.partner_id.ref or '',
+            'partner_name': tx.partner_id.name or '',
+            'card_6': tx.jetcheckout_card_number[:6] if tx.jetcheckout_card_number else '',
+            'card_4': tx.jetcheckout_card_number[-4:] if tx.jetcheckout_card_number else '',
+            'vpos_id': tx.jetcheckout_vpos_id or 0,
+            'bank_payment_day': 1,
+            'installment_count': tx.jetcheckout_installment_count,
+            'installment_code': tx.jetcheckout_campaign_name or '',
+            'payment_date': (tx.create_date + offset).strftime('%Y-%m-%d'),
+            'payment_time': (tx.create_date + offset).strftime('%H:%M:%S'),
+            'currency_code': tx.currency_id.name or '',
+            'payment_amount': tx.amount,
+            'payment_net_amount': tx.jetcheckout_payment_amount,
+            'plus_installment': tx.jetcheckout_installment_plus,
+            'payment_deferral': 0,
+            'bank_id': 0,
+            'bank_name': '',
+            'refund_payment_id': '',
+            'refund_currency_code': '',
+            'refund_date': '',
+            'refund_time': '',
+            'branch_code': branch and branch.account_code or '',
+            'company_code': tx.company_id.partner_id.ref or '',
+            'payment_ref': '03',
+        }
+        if tx.source_transaction_id:
+            values.update({
+                'refund_payment_id': tx.source_transaction_id.id,
+                'refund_currency_code': tx.source_transaction_id.currency_id.name,
+                'refund_date': (tx.source_transaction_id.create_date + offset).strftime('%Y-%m-%d'),
+                'refund_time': (tx.source_transaction_id.create_date + offset).strftime('%H:%M:%S'),
+            })
+        return values
  
     def _jetcheckout_connector_get_partner_info(self, partner):
         if '__jetcheckout_partner_connector' in request.session:
@@ -265,53 +309,72 @@ class PaymentSyncopsController(JetController):
         response = []
         if data:
             date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
-            timezone = pytz.timezone('Europe/Istanbul')
-            offset = timezone.utcoffset(date)
+            tz = pytz.timezone('Europe/Istanbul')
+            offset = tz.utcoffset(date)
             transactions = request.env['payment.transaction'].sudo().search([
                 ('company_id', '=', company.id),
                 ('create_date', '>=', date - offset),
             ])
 
             for transaction in transactions:
-                branch = transaction.acquirer_id._get_branch_line(name=transaction.jetcheckout_vpos_name, user=transaction.create_uid)
-
-                values = {
-                    'id': transaction.id,
-                    'ref': transaction.jetcheckout_order_id,
-                    'state': transaction.state,
-                    'partner_ref': transaction.partner_id.ref,
-                    'partner_name': transaction.partner_id.name,
-                    'card_6': transaction.jetcheckout_card_number[:6] if transaction.jetcheckout_card_number else '',
-                    'card_4': transaction.jetcheckout_card_number[-4:] if transaction.jetcheckout_card_number else '',
-                    'vpos_id': transaction.jetcheckout_vpos_id or 0,
-                    'bank_payment_day': 1,
-                    'installment_count': transaction.jetcheckout_installment_count,
-                    'installment_code': transaction.jetcheckout_campaign_name,
-                    'payment_date': (transaction.create_date + offset).strftime('%Y-%m-%d'),
-                    'payment_time': (transaction.create_date + offset).strftime('%H:%M:%S'),
-                    'currency_code': transaction.currency_id.name,
-                    'payment_amount': transaction.amount,
-                    'payment_net_amount': transaction.jetcheckout_payment_amount,
-                    'plus_installment': transaction.jetcheckout_installment_plus,
-                    'payment_deferral': 0,
-                    'bank_id': 0,
-                    'bank_name': '',
-                    'refund_payment_id': '',
-                    'refund_currency_code': '',
-                    'refund_date': '',
-                    'refund_time': '',
-                    'branch_code': branch and branch.account_code or '',
-                    'company_code': transaction.company_id.partner_id.ref,
-                    'payment_ref': '03',
-                }
-                if transaction.source_transaction_id:
-                    values.update({
-                        'refund_payment_id': transaction.source_transaction_id.id,
-                        'refund_currency_code': transaction.source_transaction_id.currency_id.name,
-                        'refund_date': (transaction.source_transaction_id.create_date + offset).strftime('%Y-%m-%d'),
-                        'refund_time': (transaction.source_transaction_id.create_date + offset).strftime('%H:%M:%S'),
-                    })
+                values = self._jetcheckout_prepare_syncops_transactions(transaction)
                 response.append(values)
 
         headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
         return request.make_response(json.dumps(response), headers)
+
+    @http.route(['/syncops/payment/transactions/xlsx'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def jetcheckout_syncops_transactions_xlsx(self, **data):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+        headers = {
+            'id': 'PAYMENTID',
+            'ref': 'REFERENCECODE',
+            'partner_ref': 'CUST_ERP_CODE',
+            'id': 'CUST_ERP_NAME',
+            'card_6': 'CARD_6',
+            'card_4': 'CARD_4',
+            'vpos_id': 'VPOSID',
+            'bank_payment_day': 'BANK_PAYMENT_DAY',
+            'state': 'STATUS',
+            'installment_count': 'PERIOD',
+            'installment_code': 'PERIOD_CODE',
+            'payment_date': 'PAYMENTDATE',
+            'payment_time': 'PAYMENTTIME',
+            'currency_code': 'CURRENCYCODE',
+            'payment_amount': 'PROCCESSAMOUNT',
+            'payment_net_amount': 'PROCCESSNETAMOUN',
+            'plus_installment': 'PLUS_PERIOD',
+            'payment_deferral': 'PAYMENT_DEFERRAL',
+            'bank_id': 'BANKID',
+            'bank_name': 'BANK_NAME',
+            'branch_code': 'HKONT',
+            'refund_payment_id': 'REV_PAYMENTID',
+            'refund_currency_code': 'REV_CURRENCYCODE',
+            'refund_date': 'REV_DATE',
+            'refund_time': 'REV_TIME',
+            'company_code': 'BRANCH_CODE',
+            'payment_ref': 'SOURCEID',
+        }
+        for i, col in enumerate(headers.values()):
+            worksheet.write(0, i, col)
+
+        transactions = request.env['payment.transaction'].sudo().search([
+            ('id', 'in', list(map(int, data[''].split(',')))),
+            ('company_id', '=', request.env.company.id)
+        ])
+        row = 0
+        for transaction in transactions:
+            row += 1
+            values = self._jetcheckout_prepare_syncops_transactions(transaction)
+            for i, key in enumerate(headers.keys()):
+                worksheet.write(row, i, values[key])
+        workbook.close()
+
+        xlsx = output.getvalue()
+        headers = [
+            ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            ('Content-Disposition', content_disposition('Transactions.xlsx'))
+        ]
+        return request.make_response(xlsx, headers=headers)

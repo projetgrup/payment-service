@@ -10,6 +10,12 @@ class PaymentTransaction(models.Model):
     jetcheckout_connector_partner_vat = fields.Char('Connector Partner VAT', readonly=True)
     jetcheckout_connector_state_message = fields.Text('Connector State Message', readonly=True)
 
+    def action_syncops_xlsx(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/syncops/payment/transactions/xlsx?=%s' % ','.join(map(str, self.ids))
+        }
+
     def action_process_connector(self):
         self.ensure_one()
         if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
