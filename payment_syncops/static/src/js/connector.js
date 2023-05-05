@@ -100,9 +100,9 @@ paymentSystemPage.include({
                 rpc.query({
                     route: '/my/payment/partners/select',
                     params: {
-                        vat: $el.data('vat'),
-                        ref: $el.data('ref'),
-                        company: $el.data('company'),
+                        vat: $el.attr('data-vat'),
+                        ref: $el.attr('data-ref'),
+                        company: $el.attr('data-company'),
                     },
                 }).then(function (result) {
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');

@@ -74,16 +74,16 @@ class PaymentSyncopsController(JetController):
             partner = request.session['__jetcheckout_partner_connector']
             return {
                 'name': partner['name'],
-                'vat': str(partner['vat']),
-                'ref': str(partner['ref']),
+                'vat': partner['vat'],
+                'ref': partner['ref'],
                 'connector': True,
             }
         else:
             partner = partner or request.env.user.sudo().partner_id
             return {
                 'name': partner.name,
-                'vat': str(partner.vat),
-                'ref': str(partner.ref),
+                'vat': partner.vat,
+                'ref': partner.ref,
                 'connector': False,
             }
 
