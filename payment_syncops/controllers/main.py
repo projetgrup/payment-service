@@ -69,21 +69,21 @@ class PaymentSyncopsController(JetController):
             })
         return values
  
-    def _jetcheckout_connector_get_partner_info(self, partner):
+    def _jetcheckout_connector_get_partner_info(self, partner=None):
         if '__jetcheckout_partner_connector' in request.session:
             partner = request.session['__jetcheckout_partner_connector']
             return {
                 'name': partner['name'],
-                'vat': partner['vat'],
-                'ref': partner['ref'],
+                'vat': str(partner['vat']),
+                'ref': str(partner['ref']),
                 'connector': True,
             }
         else:
             partner = partner or request.env.user.sudo().partner_id
             return {
                 'name': partner.name,
-                'vat': partner.vat,
-                'ref': partner.ref,
+                'vat': str(partner.vat),
+                'ref': str(partner.ref),
                 'connector': False,
             }
 
