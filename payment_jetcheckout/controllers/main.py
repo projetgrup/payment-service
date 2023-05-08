@@ -75,10 +75,8 @@ class JetcheckoutController(http.Controller):
             'contact': partner_contact,
             'acquirer': acquirer,
             'company': company,
-            'campaign': {
-                'name': campaign,
-                'visible': not request.env.user.share,
-            },
+            'campaign': campaign,
+            'share': request.env.user.share,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
@@ -366,7 +364,7 @@ class JetcheckoutController(http.Controller):
             'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-            'jetcheckout_campaign_name': kwargs['campaign'] or False,
+            'jetcheckout_campaign_name': kwargs['campaign'] or '',
             'jetcheckout_card_name': kwargs['card_holder_name'],
             'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
             'jetcheckout_card_type': kwargs['card_type'].capitalize(),
