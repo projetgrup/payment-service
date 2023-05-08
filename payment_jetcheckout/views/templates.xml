@@ -337,14 +337,14 @@
                         <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
-                        <div t-if="campaign.get('visible')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign_name" class="ml-2" t-esc="campaign.get('name') or '-'"/></div>
+                        <div t-if="not share" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign_name" class="ml-2" t-esc="campaign.get('name') or '-'"/></div>
                         <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
                                 <div id="installments_table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
-                                <div t-if="campaign.get('visible')" id="campaigns_table" class="mt-2">
+                                <div t-if="not share" id="campaigns_table" class="mt-2">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
                                 </div>
