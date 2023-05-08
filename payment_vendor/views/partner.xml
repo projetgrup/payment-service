@@ -82,7 +82,7 @@
             <page name="other" string="Other">
                 <group>
                     <group string="Representatives">
-                        <field name="user_id" options="{'no_create': True}"/>
+                        <field name="user_id" options="{'no_create': True}" domain="[('share', '=', False)]"/>
                         <field name="team_id" options="{'no_create': True}"/>
                     </group>
                 </group>
