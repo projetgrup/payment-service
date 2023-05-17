@@ -40,6 +40,7 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
     rates_importable = fields.Boolean('Rates Importable', readonly=True)
     import_rates = fields.Boolean('Import Commission Rates')
     calc_cust_rates = fields.Boolean('Calculate Customer Rates')
+    excluded_card_families = fields.Many2many('jet.card.family', 'jetcheckout_pos_card_rel', 'pos_id', 'card_id', string='Excluded Card Families')
     notes = fields.Text('Notes', readonly=True)
 
     customer_ip = fields.Char()
@@ -93,6 +94,11 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
         self.basket_item_name = self.payment_org_id.basket_item_name
         self.basket_item_desc = self.payment_org_id.basket_item_desc
         self.basket_item_categ = self.payment_org_id.basket_item_categ
+
+    @api.onchange('calc_cust_rates')
+    def onchange_calc_cust_rates(self):
+        if (isinstance(self._origin.id, int)):
+            self.browse(self._origin.id).write({'calc_cust_rates': True})
 
     def import_cost_rates(self):
         self.acquirer_id._rpc('jet.virtual.pos', 'import_cost_rates')

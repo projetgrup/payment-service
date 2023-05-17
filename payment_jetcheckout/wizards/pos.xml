@@ -21,16 +21,16 @@
                         <field name="is_refid_active" invisible="1"/>
                         <field name="is_rfnd_username_active" invisible="1"/>
                         <field name="is_rfnd_password_active" invisible="1"/>
-                        <field name="client_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_client_active', '=', False)], 'required': [('is_client_active', '=', True)]}"/>
-                        <field name="merchant_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_merchant_active', '=', False)], 'required': [('is_merchant_active', '=', True)]}"/>
-                        <field name="api_key" readonly="context.get('no_edit')" attrs="{'invisible': [('is_apikey_active', '=', False)], 'required': [('is_apikey_active', '=', True)]}"/>
-                        <field name="terminal_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_terminal_active', '=', False)], 'required': [('is_terminal_active', '=', True)]}"/>
-                        <field name="secret_key" readonly="context.get('no_edit')" password="True"/>
-                        <field name="username" readonly="context.get('no_edit')" attrs="{'invisible': [('is_username_active', '=', False)], 'required': [('is_username_active', '=', True)]}"/>
-                        <field name="password" readonly="context.get('no_edit')" attrs="{'invisible': [('is_password_active', '=', False)], 'required': [('is_password_active', '=', True)]}" password="True"/>
-                        <field name="rfnd_username" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_username_active', '=', False)], 'required': [('is_rfnd_username_active', '=', True)]}"/>
-                        <field name="rfnd_password" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_password_active', '=', False)], 'required': [('is_rfnd_password_active', '=', True)]}"/>
-                        <field name="ref_id" readonly="context.get('no_edit')" attrs="{'invisible': [('is_refid_active', '=', False)]}" password="True"/>
+                        <field name="client_id" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_client_active', '=', False)], 'required': [('is_client_active', '=', True)]}"/>
+                        <field name="merchant_id" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_merchant_active', '=', False)], 'required': [('is_merchant_active', '=', True)]}"/>
+                        <field name="api_key" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_apikey_active', '=', False)], 'required': [('is_apikey_active', '=', True)]}"/>
+                        <field name="terminal_id" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_terminal_active', '=', False)], 'required': [('is_terminal_active', '=', True)]}"/>
+                        <field name="secret_key" password="True" readonly="context.get('no_edit')"/>
+                        <field name="username" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_username_active', '=', False)], 'required': [('is_username_active', '=', True)]}"/>
+                        <field name="password" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_password_active', '=', False)], 'required': [('is_password_active', '=', True)]}"/>
+                        <field name="rfnd_username" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_username_active', '=', False)], 'required': [('is_rfnd_username_active', '=', True)]}"/>
+                        <field name="rfnd_password" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_rfnd_password_active', '=', False)], 'required': [('is_rfnd_password_active', '=', True)]}"/>
+                        <field name="ref_id" password="True" readonly="context.get('no_edit')" attrs="{'invisible': [('is_refid_active', '=', False)]}"/>
                     </group>
                     <group>
                         <field name="name" readonly="context.get('no_edit')"/>
@@ -38,12 +38,14 @@
                         <field name="priority" readonly="context.get('no_edit')"/>
                         <field name="usage_3d" readonly="context.get('no_edit')"/>
                         <field name="mode" widget="radio" options="{'horizontal': True}" readonly="context.get('no_edit')"/>
-                        <field name="rates_importable" invisible="1"/>
-                        <field name="import_rates" attrs=" { 'invisible': [('rates_importable', '=', False)] } "/>
-                        <field name="calc_cust_rates"/>
+                        <field name="rates_importable" invisible="1" readonly="context.get('no_edit')"/>
+                        <field name="import_rates" attrs="{'invisible': [('rates_importable', '=', False)]}" readonly="context.get('no_edit')"/>
+                        <field name="rates_importable" invisible="1" readonly="context.get('no_edit')"/>
+                        <field name="import_rates" attrs="{'invisible': [('rates_importable', '=', False)]}" readonly="context.get('no_edit')"/>
+                        <field name="calc_cust_rates" readonly="context.get('no_edit')"/>
                     </group>
                     <group colspan="2" string="Notes" class="text-muted" attrs="{'invisible': [('notes', '=', False)]}">
-                        <field name="notes" nolabel="1"/>
+                        <field name="notes" nolabel="1" readonly="context.get('no_edit')"/>
                     </group>
                 </group>
                 <notebook>
@@ -59,6 +61,9 @@
                                 <field name="installments"/>
                             </tree>
                         </field>
+                    </page>
+                    <page id="excluded_card_family" string="Excluded Card Families">
+                        <!--<field name="excluded_card_families" readonly="context.get('no_edit')"/>-->
                     </page>
                     <page id="applications" string="Applications">
                         <field name="applications" readonly="context.get('no_edit')" context="{'no_edit': 1}">
@@ -139,7 +144,7 @@
             <field name="usage_3d"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
+                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-1 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
                         <div t-attf-class="col-md-2 font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
                             <t t-if="record.is_active.raw_value">
                                 <i class="fa fa-check mr-2"/><span>Active</span>
