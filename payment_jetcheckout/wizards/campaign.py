@@ -43,6 +43,8 @@ class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
     pos_lines = fields.One2many('payment.acquirer.jetcheckout.api.installment', 'pos_price_id', 'Lines')
     card_families = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_campaing_family_rel', 'campaign_id', 'family_id', string='Card Families', ondelete='cascade')
     excluded_bins = fields.Many2many('payment.acquirer.jetcheckout.api.excluded', 'payment_jetcheckout_api_campaing_excluded_rel', 'campaign_id', 'excluded_id', string='Excluded Bins', ondelete='cascade')
+    imported = fields.Boolean()
+    import_rates = fields.Boolean(related='virtual_pos_id.import_rates')
 
 
 class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
@@ -76,6 +78,8 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     is_active = fields.Boolean('Active', default=True)
     plus_installment = fields.Integer('Plus Installment')
     plus_installment_description = fields.Char('Plus Installment Description')
+    imported = fields.Boolean(related='pos_price_id.imported')
+    calc_cust_rates = fields.Boolean(related='pos_price_id.virtual_pos_id.calc_cust_rates')
 
 class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.family'

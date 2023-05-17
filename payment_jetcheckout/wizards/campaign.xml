@@ -7,9 +7,9 @@
         <form string="Campaign">
             <sheet>
                 <group>
-                    <field name="offer_name" readonly="context.get('no_edit')"/>
-                    <field name="currency_id" readonly="context.get('no_edit')" options="{'no_create': True, 'no_open': True}"/>
-                    <field name="card_families" readonly="context.get('no_edit')" mode="kanban">
+                    <field name="offer_name" readonly="context.get('no_edit')" attrs="{'readonly': [('imported', '=', True)]}"/>
+                    <field name="currency_id" readonly="context.get('no_edit')" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('imported', '=', True)]}"/>
+                    <field name="card_families" readonly="context.get('no_edit')" mode="kanban" attrs="{'readonly': [('imported', '=', True)]}">
                         <kanban create="0" edit="0">
                             <field name="name"/>
                             <field name="logo"/>
@@ -34,6 +34,8 @@
                     </field>
                 </group>
                 <group>
+                    <field name="import_rates" invisible="1" readonly="context.get('no_edit')"/>
+                    <field name="imported" readonly="context.get('no_edit')"/>
                     <field name="is_active" readonly="context.get('no_edit')"/>
                     <field name="from_date" readonly="context.get('no_edit')"/>
                     <field name="to_date" readonly="context.get('no_edit')"/>
@@ -42,9 +44,11 @@
                     <page string="Installments">
                         <field name="pos_lines" readonly="context.get('no_edit')">
                             <tree editable="bottom">
-                                <field name="installment_type"/>
-                                <field name="customer_rate"/>
-                                <field name="cost_rate"/>
+                                <field name="imported" invisible="1"/>
+                                <field name="calc_cust_rates" invisible="1"/>
+                                <field name="installment_type" attrs="{'readonly': [('imported', '=', True)]}"/>
+                                <field name="customer_rate" attrs="{'readonly': [('calc_cust_rates', '=', True), ('fixed_customer_rate', '=', False)]}"/>
+                                <field name="cost_rate" attrs="{'readonly': [('imported', '=', True)]}"/>
                                 <field name="additional_rate"/>
                                 <field name="fixed_customer_rate"/>
                                 <field name="min_amount"/>

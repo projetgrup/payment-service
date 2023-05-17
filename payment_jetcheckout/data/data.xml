@@ -11,6 +11,16 @@
             <field name="code">jetcheckout</field>
             <field name="payment_type">inbound</field>
         </record>
+ 
+        <record id="product_commission" model="product.product">
+            <field name="name">Commission</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="base_unit_count" eval="0"/>
+            <field name="purchase_ok" eval="False"/>
+        </record>
 
         <record id="sequence_transaction" model="ir.sequence">
             <field name="name">Jetcheckout sequence</field>
