@@ -89,6 +89,9 @@ class SmsApi(models.AbstractModel):
     @api.model
     def _send_sms(self, numbers, message):
         provider = self.env['sms.provider'].get().id
+        if not provider:
+            return super(SmsApi, self)._send_sms(numbers, message)
+
         if isinstance(numbers, list):
             vals = [{
                 'res_id': 0,
@@ -111,7 +114,7 @@ class SmsApi(models.AbstractModel):
         providers = {message.get('provider') for message in messages}
 
         if not providers:
-            return results
+            return super(SmsApi, self)._send_sms_batch(messages)
 
         vals = {provider: [] for provider in providers}
         for message in messages:
@@ -122,7 +125,6 @@ class SmsApi(models.AbstractModel):
             else:
                 results.extend(super(SmsApi, self)._send_sms_batch(messages))
         return results
-
 
     @api.model
     def _send_sms_api(self, messages, provider):
