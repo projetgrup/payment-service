@@ -26,7 +26,7 @@
             <field name="virtual_poses"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
+                    <div t-attf-class="oe_kanban_global_click row mx-0 shadow-sm my-1 p-0 w-100 overflow-hidden d-none d-md-flex #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
                         <div t-attf-class="col-md-2 font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center bg-100 border-right h5 shadow #{record.is_active.raw_value ? 'text-primary' : 'text-400'}">
                             <t t-if="record.is_active.raw_value">
                                 <i class="fa fa-check mr-2"/><span>Active</span>

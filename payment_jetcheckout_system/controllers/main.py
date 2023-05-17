@@ -71,7 +71,7 @@ class JetcheckoutSystemController(JetController):
             'footer': request.website.payment_footer,
             'acquirer': acquirer,
             'campaign': campaign,
-            'share': False,
+            'share': request.env.user.share,
             'card_family': card_family,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',

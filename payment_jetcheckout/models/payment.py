@@ -107,23 +107,8 @@ class AccountPayment(models.Model):
 
     def post_with_jetcheckout(self, line, commission, ip_address):
         self.move_id._post(soft=False)
-
         if commission > 0:
-            product = self.env['product.product'].search([('default_code','=','JETCOM')], limit=1)
-            if not product:
-                product = self.env['product.product'].create({
-                    'name': _('Commission'),
-                    'default_code': 'JETCOM',
-                    'type': 'service',
-                    'uom_id': self.env.ref('uom.product_uom_unit').id,
-                    'uom_po_id': self.env.ref('uom.product_uom_unit').id,
-                    'categ_id': self.env.ref('product.cat_expense').id,
-                    'purchase_ok': False,
-                })
-        else:
-            product = False
-
-        if product:
+            product = self.env.ref('payment_jetcheckout.product_commission')
             order_vals = {
                 'partner_id': self.partner_id.id,
                 'order_line': [(0, 0, {
