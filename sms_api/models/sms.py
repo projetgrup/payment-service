@@ -113,8 +113,11 @@ class SmsApi(models.AbstractModel):
         results = []
         providers = {message.get('provider') for message in messages}
 
-        if not providers:
+        if not all(providers):
             return super(SmsApi, self)._send_sms_batch(messages)
+
+        if not providers:
+            return results
 
         vals = {provider: [] for provider in providers}
         for message in messages:
