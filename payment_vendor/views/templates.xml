@@ -19,7 +19,7 @@
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
                 <t t-call="payment_jetcheckout_system.payment_page_state"/>
                 <div class="row mx-0 my-4 card border shadow p-4">
-                    <div t-if="len(payments) > 0" class="row mx-0 my-2">
+                    <div t-if="len(payments) > 0" class="row mx-0 my-2 w-100">
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
@@ -46,8 +46,33 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="payments" class="row bg-white mx-0 px-3">
-                        <div class="payment-list bg-white card table-responsive overflow-auto">
+                    <div t-if="payments" class="row bg-white mx-0 px-3 w-100">
+                        <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
+                            <t t-foreach="payments" t-as="payment">
+                                <div class="card shadow-sm w-100 text-700 position-relative">
+                                    <div class="p-2 text-center"><span t-field="payment.date"/><span class="text-500">Date</span></div>
+                                    <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
+                                    <div class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
+                                    <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
+                                    <div class="p-2 text-center bg-200 border-top">
+                                        <span t-if="payment.description" t-field="payment.description"/>
+                                        <span t-else="" class="text-500">Description</span>
+                                        <div class="payment-kanban-pdf position-absolute">
+                                            <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                <button type="submit" class="btn btn-danger px-2 py-0 fa fa-file-pdf-o"/>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="payment-kanban-checkbox position-absolute">
+                                        <label>
+                                            <input type="checkbox" class="payment-items" t-att-data-id="payment.id" data-amount="0" checked="checked"/>
+                                            <span><i class="fa fa-check"/></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
                             <table class="table table-sm sidebar-table mb-0 text-700">
                                 <thead>
                                     <tr class="shadow-sm font-weight-bold">

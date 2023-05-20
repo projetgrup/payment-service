@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <!-- groups -->
         <record id="module_category_system" model="ir.module.category">
             <field name="name">Payment System</field>
@@ -15,7 +15,7 @@
         <record model="res.groups" id="group_system_manager">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_system"/>
-            <field name="implied_ids" eval="[(4, ref('group_system_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_system_user')), (4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
@@ -28,7 +28,9 @@
             <field name="name">Own Partners Only</field>
             <field name="category_id" ref="module_category_system_technical"/>
         </record>
+    </data>
 
+    <data noupdate="1">
         <!-- rules -->
         <record id="payment_item_rule" model="ir.rule">
             <field name="name">Access only related items</field>
