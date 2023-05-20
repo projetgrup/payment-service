@@ -18,8 +18,8 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="categ_id" ref="product.product_category_all"/>
-            <field name="base_unit_count" eval="0"/>
             <field name="purchase_ok" eval="False"/>
+            <!--<field name="base_unit_count" eval="0"/>-->
         </record>
 
         <record id="sequence_transaction" model="ir.sequence">

@@ -112,6 +112,11 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
     },
 
     onChangePaid: function (ev) {
+        const $input = $(ev.currentTarget);
+        const id = $input.data('id');
+        const checked = $input.prop('checked');
+        $('input[type="checkbox"][data-id="' + id + '"].payment-items').prop('checked', checked);
+
         const $total = $('p.payment-amount-total');
         const $items = $('input[type="checkbox"].payment-items:checked');
         if ($items.length) {

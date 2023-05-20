@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <record id="group_transaction_commission" model="res.groups">
             <field name="name">Transaction commissions</field>
+        </record>
+ 
+        <record id="group_transaction_cancel" model="res.groups">
+            <field name="name">Transaction cancel</field>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+ 
+        <record id="group_transaction_refund" model="res.groups">
+            <field name="name">Transaction refund</field>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+ 
+        <record model="res.groups" id="base.group_system">
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+        </record>
+ 
+        <record model="res.groups" id="base.group_erp_manager">
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+        </record>
+ 
+        <record model="res.groups" id="account.group_account_invoice">
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
         </record>
     </data>
 </odoo>

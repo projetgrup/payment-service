@@ -275,6 +275,10 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.jetcheckout_user_id = False
         self.jetcheckout_api_key = False
         self.jetcheckout_secret_key = False
+        self.jetcheckout_gateway_api = False
+        self.jetcheckout_gateway_app = False
+        self.jetcheckout_campaign_id = False
+        self.jetcheckout_campaign_ids = [(5, 0, 0)]
         self.jetcheckout_journal_ids = [(5, 0, 0)]
 
     def action_jetcheckout_campaign(self):

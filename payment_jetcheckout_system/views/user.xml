@@ -101,6 +101,8 @@
                     <group string="Permissions" name="permissions">
                         <field name="group_own_partner"/>
                         <field name="group_transaction_commission"/>
+                        <field name="group_transaction_cancel"/>
+                        <field name="group_transaction_refund"/>
                     </group>
                 </group>
             </sheet>

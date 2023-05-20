@@ -274,6 +274,7 @@ class PaymentDasboard(models.Model):
     def action_transactions(self):
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
         action['domain'] = self._get_domain()
+        action['context'] = {'settings': True, 'create': False, 'edit': False, 'delete': False, 'search_default_filterby_%s' % self.code: True}
         return action
 
     def action_success_transactions(self):
