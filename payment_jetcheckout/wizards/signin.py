@@ -27,6 +27,7 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
         url = self.gateway_app
         if url and url[-1] == '/':
             url = url[:-1]
+        url = url and '%s/jsonrpc' % url or 'https://app.jetcheckout.com/jsonrpc'
         database = self.gateway_database or 'jetcheckout'
 
         vals = {}
@@ -47,7 +48,6 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
             self.acquirer_id.write(vals)
             return
 
-        url = url and '%s/jsonrpc' % url or 'https://app.jetcheckout.com/jsonrpc'
         uid = rpc.login(url, database, self.username, self.password)
         if not uid:
             raise ValidationError(_('Connection is failed. Please correct your username or password.'))
