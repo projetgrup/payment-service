@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-20 16:17+0000\n"
-"PO-Revision-Date: 2023-03-20 19:24+0300\n"
+"POT-Creation-Date: 2023-05-20 18:02+0000\n"
+"PO-Revision-Date: 2023-05-20 21:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/controllers/main.py:0
@@ -105,6 +105,17 @@ msgid "<i class=\"fa fa-times\"/><br/><span>Passive</span>"
 msgstr "<i class=\"fa fa-times\"/><br/><span>Pasif</span>"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+msgid ""
+"<span attrs=\"{'invisible': [('jetcheckout_username','!=',False)]}\">You are "
+"signed <strong>manually</strong></span>\n"
+"                        <br/>"
+msgstr ""
+"<span attrs=\"{'invisible': [('jetcheckout_username','!=',"
+"False)]}\"><strong>Elle</strong> giriş yaptınız</span>\n"
+"                        <br/>"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_result
 msgid ""
 "<span class=\"font-italic font-weight-light btn-sm\">Transaction is done, "
@@ -128,8 +139,8 @@ msgstr "<span class=\"font-weight-bold\">Bakiye:</span>"
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_smart_button
 msgid ""
-"<span class=\"o_stat_text\">Last</span><span class=\"o_stat_text"
-"\">Transactions</span>"
+"<span class=\"o_stat_text\">Last</span><span "
+"class=\"o_stat_text\">Transactions</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Son</span><span class=\"o_stat_text\">İşlemler</"
 "span>"
@@ -137,8 +148,8 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_smart_button
 msgid ""
-"<span class=\"o_stat_text\">Return</span><span class=\"o_stat_text"
-"\">Payment</span>"
+"<span class=\"o_stat_text\">Return</span><span "
+"class=\"o_stat_text\">Payment</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Ödemeye</span><span class=\"o_stat_text\">Dön</"
 "span>"
@@ -146,8 +157,8 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Cancel</span><span class=\"o_stat_text"
-"\">Transaction</span>"
+"<span class=\"o_stat_value\">Cancel</span><span "
+"class=\"o_stat_text\">Transaction</span>"
 msgstr ""
 "<span class=\"o_stat_text\">İşlemi</span><span class=\"o_stat_value\">İptal "
 "Et</span>"
@@ -155,26 +166,26 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Create</span><span class=\"o_stat_text"
-"\">Payment</span>"
+"<span class=\"o_stat_value\">Create</span><span "
+"class=\"o_stat_text\">Payment</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Ödeme</span><span class=\"o_stat_value"
-"\">Oluştur</span>"
+"<span class=\"o_stat_text\">Ödeme</span><span "
+"class=\"o_stat_value\">Oluştur</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Query</span><span class=\"o_stat_text"
-"\">Transaction</span>"
+"<span class=\"o_stat_value\">Query</span><span "
+"class=\"o_stat_text\">Transaction</span>"
 msgstr ""
-"<span class=\"o_stat_text\">İşlemi</span><span class=\"o_stat_value"
-"\">Sorgula</span>"
+"<span class=\"o_stat_text\">İşlemi</span><span "
+"class=\"o_stat_value\">Sorgula</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Refund</span><span class=\"o_stat_text"
-"\">Transaction</span>"
+"<span class=\"o_stat_value\">Refund</span><span "
+"class=\"o_stat_text\">Transaction</span>"
 msgstr ""
 "<span class=\"o_stat_text\">İşlemi</span><span class=\"o_stat_value\">İade "
 "Et</span>"
@@ -322,15 +333,15 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_preview
 msgid ""
-"<text transform=\"matrix(1 0 0 1 574.4219 433.8095)\" id=\"svgexpire\" class="
-"\"st2 st5 st9\">**/**</text>\n"
+"<text transform=\"matrix(1 0 0 1 574.4219 433.8095)\" id=\"svgexpire\" "
+"class=\"st2 st5 st9\">**/**</text>\n"
 "                            <text transform=\"matrix(1 0 0 1 479.3848 "
 "417.0097)\" class=\"st2 st10 st11\">VALID</text>\n"
 "                            <text transform=\"matrix(1 0 0 1 479.3848 "
 "435.6762)\" class=\"st2 st10 st11\">THRU</text>"
 msgstr ""
-"<text transform=\"matrix(1 0 0 1 574.4219 433.8095)\" id=\"svgexpire\" class="
-"\"st2 st5 st9\">**/**</text>\n"
+"<text transform=\"matrix(1 0 0 1 574.4219 433.8095)\" id=\"svgexpire\" "
+"class=\"st2 st5 st9\">**/**</text>\n"
 "                                                <text transform=\"matrix(1 0 "
 "0 1 479.3848 417.0097)\" class=\"st2 st10 st11\">VALID</text>\n"
 "                                                <text transform=\"matrix(1 0 "
@@ -339,8 +350,8 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_preview
 msgid ""
-"<text transform=\"matrix(1 0 0 1 60.106 295.0121)\" id=\"svgnumber\" class="
-"\"st2 st3 st4\">0123 4567 8910 1112</text>\n"
+"<text transform=\"matrix(1 0 0 1 60.106 295.0121)\" id=\"svgnumber\" "
+"class=\"st2 st3 st4\">0123 4567 8910 1112</text>\n"
 "                        <text transform=\"matrix(1 0 0 1 54.1064 428.1723)\" "
 "id=\"svgname\" class=\"st2 st5 st6\"/>\n"
 "                        <text transform=\"matrix(1 0 0 1 54.1074 389.8793)\" "
@@ -350,8 +361,8 @@ msgid ""
 "                        <text transform=\"matrix(1 0 0 1 65.1054 241.5)\" "
 "class=\"st7 st5 st8\">Card Number</text>"
 msgstr ""
-"<text transform=\"matrix(1 0 0 1 60.106 295.0121)\" id=\"svgnumber\" class="
-"\"st2 st3 st4\">0123 4567 8910 1112</text>\n"
+"<text transform=\"matrix(1 0 0 1 60.106 295.0121)\" id=\"svgnumber\" "
+"class=\"st2 st3 st4\">0123 4567 8910 1112</text>\n"
 "                                            <text transform=\"matrix(1 0 0 1 "
 "54.1064 428.1723)\" id=\"svgname\" class=\"st2 st5 st6\"/>\n"
 "                                            <text transform=\"matrix(1 0 0 1 "
@@ -486,6 +497,18 @@ msgid "Application ID"
 msgstr "Uygulama ID"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_key
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Application Key"
+msgstr "Uygulama"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_name
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Application Name"
+msgstr "Uygulama"
+
+#. module: payment_jetcheckout
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_applications
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__application_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__applications
@@ -582,6 +605,7 @@ msgid "CVC"
 msgstr "CVC"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__calc_cust_rates
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__calc_cust_rates
 msgid "Calculate Customer Rates"
 msgstr "Müşteri Oranlarını Hesapla"
@@ -617,6 +641,7 @@ msgstr "Kampanya:"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Campaigns"
 msgstr "Kampanyalar"
 
@@ -733,8 +758,8 @@ msgid "Color"
 msgstr "Renk"
 
 #. module: payment_jetcheckout
-#: code:addons/payment_jetcheckout/models/payment.py:0
-#, python-format
+#: model:product.product,name:payment_jetcheckout.product_commission
+#: model:product.template,name:payment_jetcheckout.product_commission_product_template
 msgid "Commission"
 msgstr "Komisyon"
 
@@ -791,6 +816,11 @@ msgstr "İlgili"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Conveyance"
 msgstr "Temlikname"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__cost
+msgid "Cost"
+msgstr "Maliyet Oranı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__cost_rate
@@ -1131,6 +1161,12 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__manual
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Enter Manually"
+msgstr "Elle Gir"
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__error
@@ -1143,6 +1179,12 @@ msgstr "Hata"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaign_form
 msgid "Excluded Bins"
 msgstr "Harici Binler"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__excluded_card_families
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
+msgid "Excluded Card Families"
+msgstr "Kart Aileleri"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_date_expiration
@@ -1159,6 +1201,11 @@ msgstr "Süresi Doldu"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Fail"
 msgstr "Başarısız"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__fees
+msgid "Fees"
+msgstr "Masraflar"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import__file
@@ -1239,6 +1286,7 @@ msgid "Import"
 msgstr "İçe Aktar"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__import_rates
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__import_rates
 msgid "Import Commission Rates"
 msgstr "Maliyet Oranlarını Al"
@@ -1255,6 +1303,12 @@ msgstr "Ödem İşlemi İçe Aktar"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Import/Update Cost Rates"
 msgstr "Maliyet Oranlarını İçe Aktar/Güncelle"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__imported
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__imported
+msgid "Imported"
+msgstr "İçe Aktar"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__in_use
@@ -1315,6 +1369,7 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__installments
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaign_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Installments"
 msgstr "Taksitler"
 
@@ -1706,7 +1761,6 @@ msgstr "Aylık Ödeme"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__name
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__name
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "Name"
 msgstr "Adı"
@@ -2019,6 +2073,11 @@ msgid "Plus Installment"
 msgstr "Artı Taksit"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_installment_plus
+msgid "Plus Installment Count"
+msgstr "Taksit Miktarı"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__plus_installment_description
 msgid "Plus Installment Description"
 msgstr "Artı Taksit Açıklaması"
@@ -2175,7 +2234,9 @@ msgstr "İkinci Seçim Kriteri"
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__secret_key
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__secret_key
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__secret_key
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
 msgid "Secret Key"
 msgstr "Gizli Anahtar"
 
@@ -2378,6 +2439,11 @@ msgid "Transaction"
 msgstr "İşlem"
 
 #. module: payment_jetcheckout
+#: model:res.groups,name:payment_jetcheckout.group_transaction_cancel
+msgid "Transaction cancel"
+msgstr "İşlem iptal edildi"
+
+#. module: payment_jetcheckout
 #: model:res.groups,name:payment_jetcheckout.group_transaction_commission
 msgid "Transaction commissions"
 msgstr "İşlem komisyonları"
@@ -2444,9 +2510,20 @@ msgid "Transaction is successful."
 msgstr "İşlem başarılı."
 
 #. module: payment_jetcheckout
+#: model:res.groups,name:payment_jetcheckout.group_transaction_refund
+msgid "Transaction refund"
+msgstr "İşlem"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__unionpay
 msgid "UnionPay"
 msgstr "UnionPay"
+
+#. module: payment_jetcheckout
+#: model:product.product,uom_name:payment_jetcheckout.product_commission
+#: model:product.template,uom_name:payment_jetcheckout.product_commission_product_template
+msgid "Units"
+msgstr "Birim"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__secondary_ok
@@ -2498,6 +2575,16 @@ msgid "Virtual PoS"
 msgstr "Sanal Pos"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_code
+msgid "Virtual PoS Code"
+msgstr "Sanal Pos Kod"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_id
+msgid "Virtual PoS Id"
+msgstr "Sanal Pos No"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_ref
 msgid "Virtual PoS Reference"
 msgstr "Sanal Pos Referansı"
@@ -2513,6 +2600,16 @@ msgstr "Sanal Pos Referansı"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
 msgid "Virtual Pos"
 msgstr "Sanal Pos"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_id
+msgid "Vpos"
+msgstr "Sanal Pos"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_name
+msgid "Vpos Name"
+msgstr "Pos Adı"
 
 #. module: payment_jetcheckout
 #. openerp-web
@@ -2539,11 +2636,22 @@ msgid "You are signed as"
 msgstr "Giriş yapılan kullanıcı"
 
 #. module: payment_jetcheckout
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/wizards/transaction_import.py:0
+#: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
-msgid "You have to define a sequence for %s in your company."
-msgstr "%s için şirketinizde bir sıra dizisi oluşturun."
+msgid "You do not have any permission to cancel this transaction"
+msgstr "Bu işlemi iptal etmek için bir izniniz yok"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "You do not have any permission to refund this transaction"
+msgstr "Bu işlemi iade etmek için bir izniniz yok"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "You have to define a sequence for %s"
+msgstr "%s için bir sıra dizisi oluşturun"
 
 #. module: payment_jetcheckout
 #: model_terms:payment.acquirer,cancel_msg:payment_jetcheckout.payment_acquirer_jetcheckout
@@ -2612,9 +2720,6 @@ msgstr "jetcheckout"
 
 #~ msgid "Pos"
 #~ msgstr "Pos"
-
-#~ msgid "Vpos"
-#~ msgstr "Sanal Pos"
 
 #~ msgid "<strong>Secret Key:</strong>"
 #~ msgstr "<strong>Gizli Anahtar:</strong>"
@@ -2702,36 +2807,36 @@ msgstr "jetcheckout"
 
 #, fuzzy
 #~| msgid ""
-#~| "<span class=\"o_stat_text\">Last</span><span class=\"o_stat_text"
-#~| "\">Transactions</span>"
+#~| "<span class=\"o_stat_text\">Last</span><span "
+#~| "class=\"o_stat_text\">Transactions</span>"
 #~ msgid ""
 #~ "<span class=\"o_stat_value\">Cancel</span>\n"
 #~ "                    <span class=\"o_stat_text\">Transaction</span>"
 #~ msgstr ""
-#~ "<span class=\"o_stat_text\">Son</span><span class=\"o_stat_text"
-#~ "\">İşlemler</span>"
+#~ "<span class=\"o_stat_text\">Son</span><span "
+#~ "class=\"o_stat_text\">İşlemler</span>"
 
 #, fuzzy
 #~| msgid ""
-#~| "<span class=\"o_stat_text\">Last</span><span class=\"o_stat_text"
-#~| "\">Transactions</span>"
+#~| "<span class=\"o_stat_text\">Last</span><span "
+#~| "class=\"o_stat_text\">Transactions</span>"
 #~ msgid ""
 #~ "<span class=\"o_stat_value\">Query</span>\n"
 #~ "                    <span class=\"o_stat_text\">Transaction</span>"
 #~ msgstr ""
-#~ "<span class=\"o_stat_text\">Son</span><span class=\"o_stat_text"
-#~ "\">İşlemler</span>"
+#~ "<span class=\"o_stat_text\">Son</span><span "
+#~ "class=\"o_stat_text\">İşlemler</span>"
 
 #, fuzzy
 #~| msgid ""
-#~| "<span class=\"o_stat_text\">Last</span><span class=\"o_stat_text"
-#~| "\">Transactions</span>"
+#~| "<span class=\"o_stat_text\">Last</span><span "
+#~| "class=\"o_stat_text\">Transactions</span>"
 #~ msgid ""
 #~ "<span class=\"o_stat_value\">Refund</span>\n"
 #~ "                    <span class=\"o_stat_text\">Transaction</span>"
 #~ msgstr ""
-#~ "<span class=\"o_stat_text\">Son</span><span class=\"o_stat_text"
-#~ "\">İşlemler</span>"
+#~ "<span class=\"o_stat_text\">Son</span><span "
+#~ "class=\"o_stat_text\">İşlemler</span>"
 
 #, python-format
 #~ msgid "%s - %s%s Installment(s)"

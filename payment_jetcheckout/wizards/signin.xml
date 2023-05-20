@@ -10,15 +10,31 @@
                     <p class="font-weight-bold text-center">Please enter your account details</p>
                 </group>
                 <group>
-                    <div class="row mx-4 my-4" colspan="2">
+                    <div class="row mx-4 my-4" colspan="2" attrs="{'invisible': [('manual', '!=', False)]}">
                         <div class="mb-1">Username</div>
-                        <field name="username" required="1"/>
+                        <field name="username" attrs="{'required': [('manual', '=', False)]}"/>
                     </div>
-                    <div class="row mx-4" colspan="2">
+                    <div class="row mx-4" colspan="2" attrs="{'invisible': [('manual', '!=', False)]}">
                         <div class="mb-1">Password</div>
-                        <field name="password" required="1" password="True"/>
+                        <field name="password" attrs="{'required': [('manual', '=', False)]}" password="True"/>
                     </div>
-                    <div class="row mx-4 font-weight-bold justify-content-center mt-4" colspan="2">
+                    <div class="row mx-4 my-4" colspan="2" attrs="{'invisible': [('manual', '=', False)]}">
+                        <div class="mb-1">Application Name</div>
+                        <field name="api_name" attrs="{'required': [('manual', '!=', False)]}"/>
+                    </div>
+                    <div class="row mx-4 my-4" colspan="2" attrs="{'invisible': [('manual', '=', False)]}">
+                        <div class="mb-1">Application Key</div>
+                        <field name="api_key" attrs="{'required': [('manual', '!=', False)]}"/>
+                    </div>
+                    <div class="row mx-4" colspan="2" attrs="{'invisible': [('manual', '=', False)]}">
+                        <div class="mb-1">Secret Key</div>
+                        <field name="secret_key" attrs="{'required': [('manual', '!=', False)]}" password="True"/>
+                    </div>
+                    <div class="row mx-4 font-weight-bold justify-content-between px-4 mt-4" colspan="2">
+                        <div class="mr-3">Enter Manually</div>
+                        <field name="manual" widget="boolean_toggle"/>
+                    </div>
+                    <div class="row mx-4 font-weight-bold justify-content-between px-4 mt-4" colspan="2">
                         <div class="mr-3">Advanced Options</div>
                         <field name="option" widget="boolean_toggle"/>
                     </div>

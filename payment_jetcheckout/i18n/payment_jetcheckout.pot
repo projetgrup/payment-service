@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 19:50+0000\n"
-"PO-Revision-Date: 2023-04-11 19:50+0000\n"
+"POT-Creation-Date: 2023-05-20 18:02+0000\n"
+"PO-Revision-Date: 2023-05-20 18:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -107,6 +107,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid "<i class=\"fa fa-times\"/><br/><span>Passive</span>"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+msgid ""
+"<span attrs=\"{'invisible': [('jetcheckout_username','!=',False)]}\">You are signed <strong>manually</strong></span>\n"
+"                        <br/>"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -435,6 +442,18 @@ msgid "Application ID"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_key
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Application Key"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_name
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Application Name"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_applications
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__application_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__applications
@@ -531,6 +550,7 @@ msgid "CVC"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__calc_cust_rates
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__calc_cust_rates
 msgid "Calculate Customer Rates"
 msgstr ""
@@ -683,8 +703,8 @@ msgid "Color"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: code:addons/payment_jetcheckout/models/payment.py:0
-#, python-format
+#: model:product.product,name:payment_jetcheckout.product_commission
+#: model:product.template,name:payment_jetcheckout.product_commission_product_template
 msgid "Commission"
 msgstr ""
 
@@ -739,6 +759,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Conveyance"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__cost
+msgid "Cost"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1082,6 +1107,12 @@ msgid "End Date"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__manual
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
+msgid "Enter Manually"
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
@@ -1101,6 +1132,12 @@ msgid "Excluded Bins"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__excluded_card_families
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
+msgid "Excluded Card Families"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_date_expiration
 msgid "Expiration Date"
 msgstr ""
@@ -1114,6 +1151,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Fail"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__fees
+msgid "Fees"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1195,6 +1237,7 @@ msgid "Import"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__import_rates
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__import_rates
 msgid "Import Commission Rates"
 msgstr ""
@@ -1210,6 +1253,12 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Import/Update Cost Rates"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__imported
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__imported
+msgid "Imported"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1660,7 +1709,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__name
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__name
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__name
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "Name"
 msgstr ""
@@ -1966,6 +2014,11 @@ msgid "Plus Installment"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_installment_plus
+msgid "Plus Installment Count"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__plus_installment_description
 msgid "Plus Installment Description"
 msgstr ""
@@ -2122,7 +2175,9 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__secret_key
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__secret_key
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__secret_key
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
 msgid "Secret Key"
 msgstr ""
 
@@ -2324,6 +2379,11 @@ msgid "Transaction"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:res.groups,name:payment_jetcheckout.group_transaction_cancel
+msgid "Transaction cancel"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:res.groups,name:payment_jetcheckout.group_transaction_commission
 msgid "Transaction commissions"
 msgstr ""
@@ -2388,8 +2448,19 @@ msgid "Transaction is successful."
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:res.groups,name:payment_jetcheckout.group_transaction_refund
+msgid "Transaction refund"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__unionpay
 msgid "UnionPay"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:product.product,uom_name:payment_jetcheckout.product_commission
+#: model:product.template,uom_name:payment_jetcheckout.product_commission_product_template
+msgid "Units"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2442,6 +2513,16 @@ msgid "Virtual PoS"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_code
+msgid "Virtual PoS Code"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_id
+msgid "Virtual PoS Id"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_ref
 msgid "Virtual PoS Reference"
 msgstr ""
@@ -2456,6 +2537,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
 msgid "Virtual Pos"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_id
+msgid "Vpos"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_name
+msgid "Vpos Name"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2491,10 +2582,21 @@ msgid "You are signed as"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/wizards/transaction_import.py:0
+#: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
-msgid "You have to define a sequence for %s in your company."
+msgid "You do not have any permission to cancel this transaction"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "You do not have any permission to refund this transaction"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "You have to define a sequence for %s"
 msgstr ""
 
 #. module: payment_jetcheckout

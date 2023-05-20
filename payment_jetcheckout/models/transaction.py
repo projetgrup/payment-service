@@ -5,7 +5,7 @@ import json
 
 from odoo import fields, models, api, _
 from odoo.tools.float_utils import float_round
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -299,6 +299,9 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_cancel(self):
         self.ensure_one()
+        if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
+            raise AccessError(_('You do not have any permission to cancel this transaction'))
+ 
         self._jetcheckout_cancel()
 
     def _jetcheckout_refund(self, amount):
@@ -309,6 +312,9 @@ class PaymentTransaction(models.Model):
 
     def jetcheckout_refund(self):
         self.ensure_one()
+        if not self.env.user.has_group('payment_jetcheckout.group_transaction_refund'):
+            raise AccessError(_('You do not have any permission to refund this transaction'))
+
         refunds = self.search([('source_transaction_id', '=', self.id)])
         vals = {
             'transaction_id': self.id,

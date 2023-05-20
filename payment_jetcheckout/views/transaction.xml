@@ -21,7 +21,7 @@
                 name="jetcheckout_cancel"
                 class="oe_stat_button"
                 icon="fa-times"
-                groups="base.group_user"
+                groups="payment_jetcheckout.group_transaction_cancel"
                 attrs="{'invisible': ['|','|','|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}"
                 confirm="Do you confirm cancelling transaction?">
                 <div class="o_form_field o_stat_info mr3">
@@ -32,7 +32,7 @@
                 name="jetcheckout_refund"
                 class="oe_stat_button"
                 icon="fa-undo"
-                groups="base.group_user"
+                groups="payment_jetcheckout.group_transaction_refund"
                 attrs="{'invisible': ['|','|','|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
