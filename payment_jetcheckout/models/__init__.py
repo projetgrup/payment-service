@@ -7,3 +7,4 @@ from . import payment
 from . import http
 from . import view
 from . import partner
+from . import product
