@@ -43,7 +43,7 @@ class PaymentTransaction(models.Model):
     partner_vat = fields.Char(string='VAT')
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
-    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False)
+    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
@@ -119,42 +119,44 @@ class PaymentTransaction(models.Model):
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
 
-    def _jetcheckout_payment(self, vals={}):
+    def _jetcheckout_payment(self, values={}, raise_exception=False):
         if self.payment_id:
             return False
 
+        if not self.jetcheckout_payment_ok:
+            self.write({'jetcheckout_payment_ok': True})
+
         line = self.env.context.get('journal_line') or self.acquirer_id.sudo()._get_journal_line(self.jetcheckout_vpos_name, self.jetcheckout_vpos_ref)
         if not line:
-            self.state_message = _('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            message = _('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            if raise_exception:
+                raise ValidationError(message)
+            self.write({'state_message': message})
             return False
 
         payment_method = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
         payment_method_line = line.journal_id.inbound_payment_method_line_ids.filtered(lambda x: x.payment_method_id.id == payment_method.id)
         if not payment_method_line:
-            self.state_message = _('Jetcheckout payment method has not been set yet on inbound payment methods of journal %s.' % line.journal_id.name)
+            message = _('Jetcheckout payment method has not been set yet on inbound payment methods of journal %s.' % line.journal_id.name)
+            if raise_exception:
+                raise ValidationError(message)
+            self.write({'state_message': message})
             return False
 
-        values = {
+        payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create({
             'amount': abs(self.amount),
             'partner_id': self.partner_id.commercial_partner_id.id,
             'journal_id': line.journal_id.id,
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': self.reference
-        }
-        if vals:
-            values.update({**vals})
-
-        payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create(values)
+            'ref': self.reference,
+            **values
+        })
+        self.write({'payment_id': payment.id})
 
         if not self.env.context.get('post_later'):
             payment.post_with_jetcheckout(line, self.jetcheckout_customer_amount, self.jetcheckout_ip_address)
-
-        self.write({
-            'payment_id': payment.id,
-            'jetcheckout_payment_ok': True,
-        })
         return payment
 
     def _jetcheckout_refund_postprocess_values(self):
