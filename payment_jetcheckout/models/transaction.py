@@ -43,7 +43,7 @@ class PaymentTransaction(models.Model):
     partner_vat = fields.Char(string='VAT')
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
-    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False)
+    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
@@ -120,6 +120,7 @@ class PaymentTransaction(models.Model):
         return values
 
     def _jetcheckout_payment(self, vals={}):
+        raise Exception('t est')
         if self.payment_id:
             return False
 
