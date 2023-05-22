@@ -120,7 +120,7 @@ class PaymentTransaction(models.Model):
         return values
 
     def _jetcheckout_payment(self, vals={}):
-        raise Exception('test')
+        raise Exception('t est')
         if self.payment_id:
             return False
 
