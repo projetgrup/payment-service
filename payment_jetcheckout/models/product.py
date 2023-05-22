@@ -2,10 +2,10 @@
 from odoo import models
 
 
-class Product(models.Model):
-    _inherit = 'product.product'
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
 
     def _sanitize_vals(self, vals):
-        super(Product, self)._sanitize_vals(vals)
-        if 'base_unit_count' in self._fields and 'base_unit_count' not in vals:
+        super(ProductTemplate, self)._sanitize_vals(vals)
+        if 'base_unit_count' in self._fields and ('base_unit_count' not in vals or not vals['base_unit_count']):
             vals['base_unit_count'] = 0
