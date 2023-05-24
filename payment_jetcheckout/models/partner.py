@@ -10,6 +10,7 @@ class Partner(models.Model):
         company = partner and partner.company_id or self.env.company
         return self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=limit, raise_exception=False)
 
+    @api.onchange('lang')
     def _compute_acquirers(self):
         for partner in self:
             acquirers = self._get_acquirers(partner)
@@ -26,5 +27,5 @@ class Partner(models.Model):
             return acquirers.jetcheckout_campaign_id.id
         return False
 
-    acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers')
+    acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers', store=False)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='PoS Campaign', ondelete='set null', default=_default_campaign_id, copy=False)
