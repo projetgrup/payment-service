@@ -387,7 +387,7 @@ class PaymentTransaction(models.Model):
                 'date': result['transaction_date'][:19],
                 'vpos_id': result['virtual_pos_id'],
                 'vpos_name': result['virtual_pos_name'],
-                'vpos_ref': result['card_bank_eft_code'],
+                'vpos_ref': result['pos_bank_eft_code'] or result['card_bank_eft_code'],
                 'vpos_code': result['auth_code'],
                 'successful': result['successful'],
                 'completed': result['completed'],
