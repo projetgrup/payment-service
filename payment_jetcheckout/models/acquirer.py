@@ -173,7 +173,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         ], limit=1)
 
         subline = self.env['payment.acquirer.jetcheckout.journal.line']
-        if ref and line and line.secondary_ok:
+        if not ref == None and line and line.secondary_ok:
             subline = subline.search([
                 ('line_id', '=', line.id),
                 ('name', '=', ref)
