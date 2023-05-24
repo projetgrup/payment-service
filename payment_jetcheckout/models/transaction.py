@@ -128,14 +128,14 @@ class PaymentTransaction(models.Model):
 
         line = self.env.context.get('journal_line') or self.acquirer_id.sudo()._get_journal_line(self.jetcheckout_vpos_name, self.jetcheckout_vpos_ref)
         if not line:
-            message = _('There is no journal line for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            message = _('There is no journal line for %s in %s (%s)') % (self.jetcheckout_vpos_name, self.acquirer_id.name, self.reference)
             if raise_exception:
                 raise ValidationError(message)
             self.write({'state_message': message})
             return False
 
         if not line.journal_id:
-            message = _('There is no journal for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            message = _('There is no journal for %s in %s (%s)') % (self.jetcheckout_vpos_name, self.acquirer_id.name, self.reference)
             if raise_exception:
                 raise ValidationError(message)
             self.write({'state_message': message})
