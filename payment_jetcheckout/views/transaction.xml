@@ -82,7 +82,16 @@
                 <group>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>
-                    <field name="jetcheckout_vpos_name"/>
+                    <label for="jetcheckout_vpos_name"/>
+                    <div class="o_row">
+                        <field name="jetcheckout_vpos_name"/>
+                        <span class="ml-2 font-italic" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '=', False)]}">
+                            (<field name="jetcheckout_vpos_ref"/>)
+                        </span>
+                        <span class="ml-2 font-italic" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '!=', False)]}">
+                            (No Reference)
+                        </span>
+                    </div>
                     <field name="jetcheckout_ip_address" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <field name="jetcheckout_order_id" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <field name="jetcheckout_transaction_id" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
