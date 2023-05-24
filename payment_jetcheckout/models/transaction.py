@@ -134,6 +134,13 @@ class PaymentTransaction(models.Model):
             self.write({'state_message': message})
             return False
 
+        if not line.journal_id:
+            message = _('There is no journal for %s in %s') % (self.jetcheckout_vpos_name, self.acquirer_id.name)
+            if raise_exception:
+                raise ValidationError(message)
+            self.write({'state_message': message})
+            return False
+
         payment_method = self.env.ref('payment_jetcheckout.payment_method_jetcheckout')
         payment_method_line = line.journal_id.inbound_payment_method_line_ids.filtered(lambda x: x.payment_method_id.id == payment_method.id)
         if not payment_method_line:
