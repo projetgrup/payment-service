@@ -20,6 +20,8 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     date = fields.Datetime(readonly=True)
     vpos_id = fields.Integer(readonly=True)
     vpos_name = fields.Char(readonly=True)
+    vpos_ref = fields.Char(readonly=True)
+    vpos_code = fields.Char(readonly=True)
     successful = fields.Boolean(readonly=True)
     completed = fields.Boolean(readonly=True)
     cancelled = fields.Boolean(readonly=True)
@@ -31,6 +33,9 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     customer_amount = fields.Monetary(readonly=True, string='Customer Commission Amount')
     customer_rate = fields.Float(readonly=True, string='Customer Commission Rate')
     auth_code = fields.Char(readonly=True)
+    card_family = fields.Char(readonly=True)
+    card_program = fields.Char(readonly=True)
+    bin_code = fields.Char(readonly=True)
     service_ref_id = fields.Char(readonly=True)
 
 
