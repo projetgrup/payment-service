@@ -350,6 +350,7 @@ class PaymentTransaction(models.Model):
             'jetcheckout_vpos_name': values['vpos_name'],
             'jetcheckout_vpos_ref': values['vpos_ref'],
             'jetcheckout_vpos_code': values['vpos_code'],
+            'jetcheckout_payment_amount': self.jetcheckout_payment_amount or self.amount - self.customer_amount,
             'jetcheckout_commission_rate': values['commission_rate'],
             'jetcheckout_commission_amount': values['commission_amount'],
             'jetcheckout_card_family': values['card_family'],
