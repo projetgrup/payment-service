@@ -100,6 +100,7 @@ class PaymentAcquirerJetcheckoutJournalLine(models.Model):
 
     line_id = fields.Many2one('payment.acquirer.jetcheckout.journal')
     name = fields.Char(required=True)
+    acquirer_id = fields.Many2one('payment.acquirer', related='line_id.acquirer_id', store=True)
     journal_id = fields.Many2one('account.journal', required=True)
     partner_id = fields.Many2one('res.partner', domain=[('is_company','=',True)], required=True)
     currency_id = fields.Many2one('res.currency', related='journal_id.currency_id', readonly=True, store=True)
