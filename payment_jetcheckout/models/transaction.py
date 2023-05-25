@@ -156,6 +156,7 @@ class PaymentTransaction(models.Model):
             return False
 
         payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create({
+            'date': self.create_date.date(),
             'amount': abs(self.amount),
             'payment_type': 'outbound' if self.source_transaction_id else 'inbound',
             'partner_id': self.partner_id.commercial_partner_id.id,
