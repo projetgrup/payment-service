@@ -176,7 +176,7 @@ class PaymentTransaction(models.Model):
             'jetcheckout_vpos_id': self.jetcheckout_vpos_id,
             'jetcheckout_vpos_name': self.jetcheckout_vpos_name,
             'jetcheckout_commission_rate': self.jetcheckout_commission_rate,
-            'jetcheckout_commission_amount': self.jetcheckout_commission_amount * amount / self.amount if self.amount else 0,
+            'jetcheckout_commission_amount': -self.jetcheckout_commission_amount * amount / self.amount if self.amount else 0,
             'is_post_processed': True,
             'state': 'done',
             'state_message': _('Transaction has been refunded successfully.'),
