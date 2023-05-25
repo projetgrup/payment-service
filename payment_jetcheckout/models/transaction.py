@@ -185,7 +185,8 @@ class PaymentTransaction(models.Model):
 
     def _jetcheckout_refund_postprocess(self, amount=0):
         transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values(amount=amount))
-        transaction.jetcheckout_payment()
+        if not self.env.context.get('skip_payment'):
+            transaction.jetcheckout_payment()
         transaction._log_sent_message()
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
