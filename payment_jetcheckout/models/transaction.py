@@ -490,3 +490,22 @@ class PaymentTransaction(models.Model):
                 self.env.cr.commit()
             except:
                 self.cr.rollback()
+
+        refunds = self.sudo().search([('source_transaction_id', 'in', txs.ids)])
+        for refund in refunds:
+            try:
+                ref = refund.source_transaction_id
+                refund.write({
+                    'jetcheckout_card_name': ref.jetcheckout_card_name,
+                    'jetcheckout_card_number': ref.jetcheckout_card_number,
+                    'jetcheckout_card_type': ref.jetcheckout_card_type,
+                    'jetcheckout_card_family': ref.jetcheckout_card_family,
+                    'jetcheckout_vpos_id': ref.jetcheckout_vpos_id,
+                    'jetcheckout_vpos_name': ref.jetcheckout_vpos_name,
+                    'jetcheckout_vpos_ref': ref.jetcheckout_vpos_ref,
+                    'jetcheckout_commission_rate': ref.jetcheckout_commission_rate,
+                    'jetcheckout_commission_amount': -ref.jetcheckout_commission_amount * refund.amount / ref.amount if ref.amount else 0,
+                })
+                self.env.cr.commit()
+            except:
+                self.cr.rollback()
