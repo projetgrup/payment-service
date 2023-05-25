@@ -12,98 +12,94 @@ class AccountPayment(models.Model):
         if not line:
             return super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-        try:
-            journal_account_id = self.journal_id.default_account_id
-            if not journal_account_id:
-                raise ValidationError(_('Journal default account missing'))
-            partner_payable_account_id = line.partner_id.property_account_payable_id
-            if not partner_payable_account_id:
-                raise ValidationError(_('Partner payable account missing'))
-            partner_receivable_account_id = self.partner_id.property_account_receivable_id
-            if not partner_receivable_account_id:
-                raise ValidationError(_('Partner receivable account missing'))
+        journal_account_id = self.journal_id.default_account_id
+        if not journal_account_id:
+            raise ValidationError(_('Journal default account missing'))
+        partner_payable_account_id = line.partner_id.property_account_payable_id
+        if not partner_payable_account_id:
+            raise ValidationError(_('Partner payable account missing'))
+        partner_receivable_account_id = self.partner_id.property_account_receivable_id
+        if not partner_receivable_account_id:
+            raise ValidationError(_('Partner receivable account missing'))
 
-            if self.payment_type == 'inbound':
-                amount_currency = self.amount
-                commission_currency = self.payment_transaction_id.jetcheckout_commission_amount
-            elif self.payment_type == 'outbound':
-                amount_currency = -self.amount
-                commission_currency = -self.payment_transaction_id.jetcheckout_commission_amount
-            else:
-                amount_currency = 0.0
-                commission_currency = 0.0
+        if self.payment_type == 'inbound':
+            amount_currency = self.amount
+            commission_currency = self.payment_transaction_id.jetcheckout_commission_amount
+        elif self.payment_type == 'outbound':
+            amount_currency = -self.amount
+            commission_currency = -self.payment_transaction_id.jetcheckout_commission_amount
+        else:
+            amount_currency = 0.0
+            commission_currency = 0.0
 
-            balance = self.currency_id._convert(
-                amount_currency,
-                self.company_id.currency_id,
-                self.company_id,
-                self.date,
-            )
+        balance = self.currency_id._convert(
+            amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
 
-            commission_balance = self.currency_id._convert(
-                commission_currency,
-                self.company_id.currency_id,
-                self.company_id,
-                self.date,
-            )
+        commission_balance = self.currency_id._convert(
+            commission_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
 
-            currency_id = self.currency_id.id
-            liquidity_line_name = self.payment_reference
-            payment_display_name = self._prepare_payment_display_name()
-            default_line_name = self.env['account.move.line']._get_default_line_name(
-                payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
-                self.amount,
-                self.currency_id,
-                self.date,
-                partner=self.partner_id,
-            )
+        currency_id = self.currency_id.id
+        liquidity_line_name = self.payment_reference
+        payment_display_name = self._prepare_payment_display_name()
+        default_line_name = self.env['account.move.line']._get_default_line_name(
+            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            self.amount,
+            self.currency_id,
+            self.date,
+            partner=self.partner_id,
+        )
 
-            line_vals_list = [
-                {
-                    'name': liquidity_line_name or default_line_name,
-                    'date_maturity': self.date,
-                    'amount_currency': amount_currency,
-                    'currency_id': currency_id,
-                    'debit': balance,
-                    'credit': 0.0,
-                    'partner_id': False,
-                    'account_id': journal_account_id.id,
-                },
-                {
-                    'name': liquidity_line_name or default_line_name,
-                    'date_maturity': self.date,
-                    'amount_currency': amount_currency,
-                    'currency_id': currency_id,
-                    'debit': commission_balance,
-                    'credit': 0.0,
-                    'partner_id': line.partner_id.id,
-                    'account_id': partner_payable_account_id.id,
-                },
-                {
-                    'name': liquidity_line_name or default_line_name,
-                    'date_maturity': self.date,
-                    'amount_currency': amount_currency,
-                    'currency_id': currency_id,
-                    'debit': 0.0,
-                    'credit': balance,
-                    'partner_id': self.partner_id.id,
-                    'account_id': partner_receivable_account_id.id,
-                },
-                {
-                    'name': liquidity_line_name or default_line_name,
-                    'date_maturity': self.date,
-                    'amount_currency': amount_currency,
-                    'currency_id': currency_id,
-                    'debit': 0.0,
-                    'credit': commission_balance,
-                    'partner_id': False,
-                    'account_id': journal_account_id.id,
-                }
-            ]
-            return line_vals_list
-
-        except:
-            return super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+        line_vals_list = [
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': balance if balance > 0.0 else 0.0,
+                'credit': -balance if balance < 0.0 else 0.0,
+                'partner_id': False,
+                'account_id': journal_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': commission_balance if commission_balance > 0.0 else 0.0,
+                'credit': -commission_balance if commission_balance < 0.0 else 0.0,
+                'partner_id': line.partner_id.id,
+                'account_id': partner_payable_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': -balance if balance < 0.0 else 0.0,
+                'credit': balance if balance > 0.0 else 0.0,
+                'partner_id': self.partner_id.id,
+                'account_id': partner_receivable_account_id.id,
+            },
+            {
+                'name': liquidity_line_name or default_line_name,
+                'date_maturity': self.date,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+                'debit': -commission_balance if commission_balance < 0.0 else 0.0,
+                'credit': commission_balance if commission_balance > 0.0 else 0.0,
+                'partner_id': False,
+                'account_id': journal_account_id.id,
+            }
+        ]
+        return line_vals_list
 
     def post_with_jetcheckout(self, line, commission, ip_address):
         self.move_id._post(soft=False)
