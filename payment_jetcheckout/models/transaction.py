@@ -183,7 +183,7 @@ class PaymentTransaction(models.Model):
             'last_state_change': fields.Datetime.now(),
         }
 
-    def _jetcheckout_refund_postprocess(self, amount=None):
+    def _jetcheckout_refund_postprocess(self, amount=0):
         transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values(amount=amount))
         transaction._log_sent_message()
 
