@@ -2,10 +2,15 @@
 import requests
 import logging
 import json
+import pytz
+
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 _logger = logging.getLogger(__name__)
 
@@ -453,15 +458,32 @@ class PaymentTransaction(models.Model):
         ])._jetcheckout_expire()
 
     @api.model
-    def jetcheckout_fix(self, companies=None, states=None):
+    def jetcheckout_resync(self, date_start=None, date_end=None, companies=None, states=None):
         """
         Use this function in case of emergency when transaction records are corrupted.
         It requests data from payment service and resync related transactions.
         """
-        if not companies or not states:
-            return
+        date_start = datetime.strptime(date_start, DF).date() if date_start else date.today() - relativedelta(days=1)
+        date_end = datetime.strptime(date_end, DF).date() if date_end else date.today()
 
-        txs = self.sudo().search([('company_id', 'in', companies), ('state', 'in', states)])
+        tz = pytz.timezone('Europe/Istanbul')
+        offset = tz.utcoffset(fields.Datetime.now())
+
+        date_start = datetime.combine(date_start, datetime.min.time()) + offset
+        date_end = datetime.combine(date_end, datetime.min.time()) + offset
+
+        domain = [
+            ('acquirer_id.provider', '=', 'jetcheckout'),
+            ('source_transaction_id', '=', False),
+            ('create_date', '>=', date_start.strftime(DTF)),
+            ('create_date', '<=', date_end.strftime(DTF)),
+        ]
+        if companies:
+            domain.append(('company_id', 'in', companies))
+        if states:
+            domain.append(('state', 'in', states))
+
+        txs = self.sudo().search(domain)
         for tx in txs:
             try:
                 tx._jetcheckout_query()

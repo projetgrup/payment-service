@@ -33,24 +33,24 @@
             <field name="padding">6</field>
         </record>
 
+        <record id="cron_resync_transaction" model="ir.cron">
+            <field name="name">Payment Transaction: Resync transactions</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="state">code</field>
+            <field name="code">model.jetcheckout_resync()</field>
+            <field name="interval_number">1</field>
+            <field name="active">True</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1)).strftime('%Y-%m-%d 04:00:00')" />
+        </record>
+
         <record id="cron_expire_transaction" model="ir.cron">
             <field name="name">Payment Transaction: Expire outdated transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>
             <field name="code">model.jetcheckout_expire()</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1)).strftime('%Y-%m-%d 04:00:00')" />
-        </record>
-
-        <record id="cron_fix_transaction" model="ir.cron">
-            <field name="name">Payment Transaction: Fix corrupted transactions</field>
-            <field name="model_id" ref="payment.model_payment_transaction"/>
-            <field name="state">code</field>
-            <field name="code">model.jetcheckout_fix()</field>
-            <field name="interval_number">1</field>
-            <field name="active">False</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1)).strftime('%Y-%m-%d 04:00:00')" />
