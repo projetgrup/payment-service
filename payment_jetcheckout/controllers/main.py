@@ -221,6 +221,7 @@ class JetcheckoutController(http.Controller):
             'successful': kwargs.get('response_code') == '00',
             'code': kwargs.get('response_code', ''),
             'message': kwargs.get('response_message', ''),
+            'amount': kwargs.get('amount', 0),
             'vpos_id': kwargs.get('virtual_pos_id', ''),
             'vpos_name': kwargs.get('virtual_pos_name', ''),
             'vpos_code': kwargs.get('auth_code', ''),
