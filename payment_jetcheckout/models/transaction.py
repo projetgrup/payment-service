@@ -152,6 +152,7 @@ class PaymentTransaction(models.Model):
 
         payment = self.env['account.payment'].with_context(line=line, skip_account_move_synchronization=True).create({
             'amount': abs(self.amount),
+            'payment_type': 'outbound' if self.source_transaction_id else 'inbound',
             'partner_id': self.partner_id.commercial_partner_id.id,
             'journal_id': line.journal_id.id,
             'payment_method_line_id': payment_method_line.id,
@@ -166,7 +167,7 @@ class PaymentTransaction(models.Model):
             payment.post_with_jetcheckout(line, self.jetcheckout_customer_amount, self.jetcheckout_ip_address)
         return payment
 
-    def _jetcheckout_refund_postprocess_values(self):
+    def _jetcheckout_refund_postprocess_values(self, amount=0):
         return {
             'jetcheckout_card_name': self.jetcheckout_card_name,
             'jetcheckout_card_number': self.jetcheckout_card_number,
@@ -174,6 +175,8 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_family': self.jetcheckout_card_family,
             'jetcheckout_vpos_id': self.jetcheckout_vpos_id,
             'jetcheckout_vpos_name': self.jetcheckout_vpos_name,
+            'jetcheckout_commission_rate': self.jetcheckout_commission_rate,
+            'jetcheckout_commission_amount': self.jetcheckout_commission_amount * amount / self.amount if self.amount else 0,
             'is_post_processed': True,
             'state': 'done',
             'state_message': _('Transaction has been refunded successfully.'),
@@ -181,7 +184,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _jetcheckout_refund_postprocess(self, amount=None):
-        transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values())
+        transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values(amount=amount))
         transaction._log_sent_message()
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
