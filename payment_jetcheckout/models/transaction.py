@@ -344,18 +344,21 @@ class PaymentTransaction(models.Model):
         if 'commission_amount' not in values:
             values['commission_amount'] = float_round(self.amount * values['commission_rate'] / 100, 2)
 
+        amount = values.get('amount', self.amount)
+        commission = values.get('commission_amount', 0)
         self.write({
-            'fees': values['commission_amount'],
-            'jetcheckout_vpos_id': values.get('vpos_id', ''),
+            'amount': amount,
+            'fees': commission,
+            'jetcheckout_vpos_id': values.get('vpos_id', 0),
             'jetcheckout_vpos_name': values.get('vpos_name', ''),
             'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
             'jetcheckout_vpos_code': values.get('vpos_code', ''),
-            'jetcheckout_commission_rate': values.get('commission_rate', ''),
-            'jetcheckout_commission_amount': values.get('commission_amount', ''),
+            'jetcheckout_commission_rate': values.get('commission_rate', 0),
+            'jetcheckout_commission_amount': values.get('commission_amount', 0),
             'jetcheckout_card_family': values.get('card_family', ''),
             'jetcheckout_card_type': values.get('card_program', ''),
             'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % values.get('bin_code', ''),
-            'jetcheckout_payment_amount': self.jetcheckout_payment_amount or self.amount - self.jetcheckout_customer_amount,
+            'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         })
 
         if values['successful']:
@@ -398,7 +401,7 @@ class PaymentTransaction(models.Model):
                 'card_program': result['card_program'] and result['card_program'].lower().capitalize() or '',
                 'bin_code': result['bin_code'],
                 'service_ref_id': result['service_ref_id'],
-                'amount': self.amount,
+                'amount': result['amount'],
                 'commission_amount': commission_amount,
                 'commission_rate': commission_rate,
                 'customer_amount': self.jetcheckout_customer_amount,
