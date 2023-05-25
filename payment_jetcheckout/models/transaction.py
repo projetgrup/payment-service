@@ -346,16 +346,16 @@ class PaymentTransaction(models.Model):
 
         self.write({
             'fees': values['commission_amount'],
-            'jetcheckout_vpos_id': values['vpos_id'],
-            'jetcheckout_vpos_name': values['vpos_name'],
-            'jetcheckout_vpos_ref': values['vpos_ref'],
-            'jetcheckout_vpos_code': values['vpos_code'],
+            'jetcheckout_vpos_id': values.get('vpos_id', ''),
+            'jetcheckout_vpos_name': values.get('vpos_name', ''),
+            'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
+            'jetcheckout_vpos_code': values.get('vpos_code', ''),
+            'jetcheckout_commission_rate': values.get('commission_rate', ''),
+            'jetcheckout_commission_amount': values.get('commission_amount', ''),
+            'jetcheckout_card_family': values.get('card_family', ''),
+            'jetcheckout_card_type': values.get('card_program', ''),
+            'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % values.get('bin_code', ''),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or self.amount - self.jetcheckout_customer_amount,
-            'jetcheckout_commission_rate': values['commission_rate'],
-            'jetcheckout_commission_amount': values['commission_amount'],
-            'jetcheckout_card_family': values['card_family'],
-            'jetcheckout_card_type': values['card_program'],
-            'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % values['bin_code'],
         })
 
         if values['successful']:
