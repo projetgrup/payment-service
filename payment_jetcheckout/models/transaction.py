@@ -308,6 +308,9 @@ class PaymentTransaction(models.Model):
     def _jetcheckout_cancel_postprocess(self):
         if not self.state == 'cancel':
             self.write(self._jetcheckout_cancel_postprocess_values())
+        if self.payment_id:
+            self.payment_id.action_draft()
+            self.payment_id.unlink()
 
     def _jetcheckout_cancel(self):
         self.ensure_one()
