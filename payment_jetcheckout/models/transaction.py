@@ -197,8 +197,6 @@ class PaymentTransaction(models.Model):
         transaction._log_sent_message()
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
-        self._jetcheckout_refund_postprocess(amount)
-        return
         self.ensure_one()
         url = '%s/api/v1/payment/refund' % self.acquirer_id._get_jetcheckout_api_url()
         data = {
