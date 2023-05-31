@@ -12,6 +12,8 @@ class VendorPaymentItemParent(Datamodel):
     email = fields.String(required=True, allow_none=False, metadata={"title": "Vendor Email", "description": "Email address of related vendor", "example": "test@example.com"})
     mobile = fields.String(required=True, allow_none=False, metadata={"title": "Vendor Mobile", "description": "Mobile phone number of related vendor", "example": "+905001234567"})
     reference = fields.String(required=False, allow_none=False, metadata={"title": "Vendor Reference Number", "description": "Vendor Reference", "example": "ABC01"})
+    campaign = fields.String(required=False, allow_none=False, metadata={"title": "Vendor Campaign Name", "description": "Vendor Campaign", "example": "Standard"})
+
 
 class VendorPaymentItemLine(Datamodel):
     class Meta:
