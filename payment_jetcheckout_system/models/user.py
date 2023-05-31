@@ -43,10 +43,14 @@ class Users(models.Model):
             except:
                 pass
 
-            if user.privilege == 'admin':
+            if user.has_group('base.group_public'):
                 group_public.sudo().write({'users': [(3, user.id)]})
+            if user.has_group('base.group_portal'):
                 group_portal.sudo().write({'users': [(3, user.id)]})
+            if not user.has_group('base.group_user'):
                 group_internal.sudo().write({'users': [(4, user.id)]})
+
+            if user.privilege == 'admin':
                 group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(4, user.id)]})
@@ -64,9 +68,6 @@ class Users(models.Model):
                     pass
 
             elif user.privilege == 'user':
-                group_public.sudo().write({'users': [(3, user.id)]})
-                group_portal.sudo().write({'users': [(3, user.id)]})
-                group_internal.sudo().write({'users': [(4, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(3, user.id)]})
