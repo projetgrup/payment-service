@@ -209,7 +209,8 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
         sms_provider_id = self.env['sms.provider'].get(company.id).id
-        email_from = user.email_formatted
+        email_from = user.email_formatted or mail_server_id.email_formatted
+        reply_to = email_from
         mail_messages = []
         sms_messages = []
 
@@ -224,7 +225,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                         'recipient_ids': [(6, 0, (values['res_id'],))],
                         #'partner_ids': [(6, 0, (values['res_id'],))],
                         'subject': values['subject'],
-                        'email_from': email_from,
+                        'email_from': email_from or values['email_from'],
                         'email_to': values['email_to'],
                         'body': values['body'],
                         'body_html': values['body'],
@@ -232,7 +233,7 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
                         'mail_server_id': mail_server_id or values['mail_server_id'],
                         'auto_delete': values['auto_delete'],
                         'scheduled_date': values['scheduled_date'],
-                        'reply_to': email_from,
+                        'reply_to': reply_to or values['reply_to'],
                         'state': 'outgoing',
                         'is_notification': True,
                         'notification_ids': [(0, 0, {
