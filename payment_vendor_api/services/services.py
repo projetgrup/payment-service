@@ -41,7 +41,7 @@ class VendorAPIService(Component):
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
-            hash = self._get_hash(api, params.hash, 1)
+            hash = self._get_hash(api, params.hash, 0)
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
