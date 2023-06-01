@@ -131,16 +131,16 @@ class VendorAPIService(Component):
                 campaign = campaign[0]
         else:
             campaign = acquirer.jetcheckout_campaign_id
- 
+
         return self.env['res.partner'].sudo().with_context({'no_vat_validation': True, 'active_system': 'vendor'}).create({
             'is_company': True,
             'company_id': company.id,
+            'campaign_id': campaign.id,
             'name': vendor.name,
             'vat': vendor.vat,
-            'ref': vendor.ref,
             'email': vendor.email,
             'mobile': vendor.mobile,
-            'campaign_id': campaign.id,
+            'ref': getattr(vendor, 'reference', False),
         })
 
     def _prepare_item(self, company, vendor, payment):
