@@ -75,7 +75,7 @@ class JetcheckoutApiController(JetController):
             ('jetcheckout_api_hash', '=', hash),
             ('state', 'in', ('draft', 'cancel', 'expired'))
         ], limit=1)
-        if not tx or tx.jetcheckout_api_method:
+        if not tx:
             raise NotFound()
 
         if tx.jetcheckout_api_method:

@@ -45,11 +45,16 @@ class VendorAPIService(Component):
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
+            result = []
             vendors = self.env['res.partner'].sudo()
             for item in params.items:
                 vendor = self._get_vendor(company, item.vendor)
                 if not vendor:
                     vendor = self._create_vendor(company, item.vendor)
+                result.append({
+                    'vat': vendor.vat,
+                    'link': vendor._get_payment_url(shorten=True),
+                })
                 vendors |= vendor
 
                 items = []
@@ -85,7 +90,7 @@ class VendorAPIService(Component):
                 sending.with_user(user).send()
 
             ResponseOk = self.env.datamodels["vendor.payment.output"]
-            return ResponseOk(**RESPONSE[200])
+            return ResponseOk(result=result, **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
