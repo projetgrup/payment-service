@@ -45,12 +45,23 @@ class VendorPaymentCreate(Datamodel):
     items = fields.List(NestedModel("vendor.payment.item"), required=True, allow_none=False, metadata={"title": "Payment List", "description": "List of payment items"})
 
 
+class VendorPaymentResult(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "vendor.payment.result"
+
+    vat = fields.String(metadata={"title": "Vendor VAT", "description": "VAT number of related vendor", "example": "12345678912"})
+    link = fields.String(metadata={"title": "Vendor Payment Link", "description": "Payment Link URL address of related vendor", "example": "https://yourdomain.com/p/8850dd69-4496-45b2-bc13-9b47ad939d81"})
+
 class VendorPaymentOutput(Datamodel):
     class Meta:
         ordered = True
 
     _name = "vendor.payment.output"
     _inherit = "payment.output"
+
+    result = fields.List(NestedModel("vendor.payment.result"), metadata={"title": "Result", "description": "Detailed result for related request"})
 
 
 class VendorPaymentItemWebhook(Datamodel):
