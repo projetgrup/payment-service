@@ -320,15 +320,15 @@ class PaymentSyncopsController(JetController):
             ]
             if 'payment_type' in data:
                 if data['payment_type'] == 'payment':
-                    domain.append(('state', '=', 'done'), ('source_transaction_id', '=', False))
+                    domain.extend([('state', '=', 'done'), ('source_transaction_id', '=', False)])
                 elif data['payment_type'] == 'cancel':
-                    domain.append(('state', '=', 'cancel'), ('source_transaction_id', '=', False))
+                    domain.extend([('state', '=', 'cancel'), ('source_transaction_id', '=', False)])
                 elif data['payment_type'] == 'refund':
-                    domain.append(('state', '=', 'done'), ('source_transaction_id', '!=', False))
+                    domain.extend([('state', '=', 'done'), ('source_transaction_id', '!=', False)])
                 else:
-                    domain.append(('state', 'in', ('done', 'cancel')))
+                    domain.extend([('state', 'in', ('done', 'cancel'))])
             else:
-                domain.append(('state', 'in', ('done', 'cancel')))
+                domain.extend([('state', 'in', ('done', 'cancel'))])
 
             transactions = request.env['payment.transaction'].sudo().search(domain)
             for transaction in transactions:
