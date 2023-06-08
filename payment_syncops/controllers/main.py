@@ -325,6 +325,8 @@ class PaymentSyncopsController(JetController):
                     domain.append(('state', '=', 'cancel'), ('source_transaction_id', '=', False))
                 elif data['payment_type'] == 'refund':
                     domain.append(('state', '=', 'done'), ('source_transaction_id', '!=', False))
+                else:
+                    domain.append(('state', 'in', ('done', 'cancel')))
             else:
                 domain.append(('state', 'in', ('done', 'cancel')))
 
