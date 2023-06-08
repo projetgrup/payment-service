@@ -51,7 +51,7 @@ class VendorPaymentResult(Datamodel):
 
     _name = "vendor.payment.result"
 
-    vat = fields.String(metadata={"title": "Vendor VAT", "description": "VAT number of related vendor", "example": "12345678912"})
+    vat = fields.String(required=True, metadata={"title": "Vendor VAT", "description": "VAT number of related vendor", "example": "12345678912"})
     link = fields.String(metadata={"title": "Vendor Payment Link", "description": "Payment Link URL address of related vendor", "example": "https://yourdomain.com/p/8850dd69-4496-45b2-bc13-9b47ad939d81"})
 
 class VendorPaymentOutput(Datamodel):
@@ -61,7 +61,7 @@ class VendorPaymentOutput(Datamodel):
     _name = "vendor.payment.output"
     _inherit = "payment.output"
 
-    result = fields.List(NestedModel("vendor.payment.result"), metadata={"title": "Result", "description": "Detailed result for related request"})
+    result = fields.List(NestedModel("vendor.payment.result"), required=True, metadata={"title": "Result", "description": "Detailed result for related request"})
 
 
 class VendorPaymentItemWebhook(Datamodel):

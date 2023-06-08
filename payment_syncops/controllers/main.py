@@ -308,12 +308,15 @@ class PaymentSyncopsController(JetController):
 
         response = []
         if data:
-            date = datetime.strptime(data['payment_date'], DT) if 'payment_date' in data else fields.Datetime.now()
+            now = fields.Datetime.now()
+            date_start = datetime.strptime(data['payment_date_start'], DT) if 'payment_date_start' in data else now
+            date_end = datetime.strptime(data['payment_date_end'], DT) if 'payment_date_end' in data else now
             tz = pytz.timezone('Europe/Istanbul')
-            offset = tz.utcoffset(date)
+            offset = tz.utcoffset(now)
             transactions = request.env['payment.transaction'].sudo().search([
                 ('company_id', '=', company.id),
-                ('create_date', '>=', date - offset),
+                ('create_date', '>=', date_start - offset),
+                ('create_date', '<=', date_end - offset),
             ])
 
             for transaction in transactions:
