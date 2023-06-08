@@ -313,12 +313,22 @@ class PaymentSyncopsController(JetController):
             date_end = datetime.strptime(data['payment_date_end'], DT) if 'payment_date_end' in data else now
             tz = pytz.timezone('Europe/Istanbul')
             offset = tz.utcoffset(now)
-            transactions = request.env['payment.transaction'].sudo().search([
+            domain = [
                 ('company_id', '=', company.id),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
-            ])
+            ]
+            if 'payment_type' in data:
+                if data['payment_type'] == 'payment':
+                    domain.append(('state', '=', 'done'), ('source_transaction_id', '=', False))
+                elif data['payment_type'] == 'cancel':
+                    domain.append(('state', '=', 'cancel'), ('source_transaction_id', '=', False))
+                elif data['payment_type'] == 'refund':
+                    domain.append(('state', '=', 'done'), ('source_transaction_id', '!=', False))
+            else:
+                domain.append(('state', 'in', ('done', 'cancel')))
 
+            transactions = request.env['payment.transaction'].sudo().search(domain)
             for transaction in transactions:
                 values = self._jetcheckout_prepare_syncops_transactions(transaction)
                 response.append(values)
