@@ -24,10 +24,10 @@ class AccountPayment(models.Model):
 
         if self.payment_type == 'inbound':
             amount_currency = self.amount
-            commission_currency = self.payment_transaction_id.jetcheckout_commission_amount
+            commission_currency = self.payment_transaction_id.jetcheckout_customer_amount
         elif self.payment_type == 'outbound':
             amount_currency = -self.amount
-            commission_currency = -self.payment_transaction_id.jetcheckout_commission_amount
+            commission_currency = -self.payment_transaction_id.jetcheckout_customer_amount
         else:
             amount_currency = 0.0
             commission_currency = 0.0
