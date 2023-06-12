@@ -14,6 +14,7 @@ class PaymentTransaction(models.Model):
         ('card', 'Credit Card'),
         ('bank', 'Bank Transfer'),
     ], string='API Method', readonly=True)
+    jetcheckout_api_html = fields.Html('API HTML', sanitize=False, readonly=True)
     jetcheckout_api_card_return_url = fields.Char('API Card Return URL', readonly=True)
     jetcheckout_api_bank_return_url = fields.Char('API Bank Return URL', readonly=True)
     jetcheckout_api_bank_webhook_url = fields.Char('API Bank Webhook URL', readonly=True)
