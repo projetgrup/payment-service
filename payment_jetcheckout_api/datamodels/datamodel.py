@@ -158,6 +158,7 @@ class PaymentPrepareInput(Datamodel):
     partner = NestedModel("payment.partner", required=True, metadata={"title": "Partner information related to request", "description": "Partner information"})
     order = NestedModel("payment.order", required=True, metadata={"title": "Order information related to request", "description": "Order details"})
     url = NestedModel("payment.url", required=True, metadata={"title": "Return URLs by payment method", "description": "URL addresses"})
+    html = fields.String(metadata={"title": "Custom HTML", "description": "Custom code to be viewed bottom of the page", "example": "<p>Copyright</p>"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": "Amount", "description": "Amount to pay", "example": 145.3})
     methods = fields.List(fields.String(), required=False, allow_none=False, metadata={"title": "Method List", "description": "List of codes of methods. Possible values are 'card' and 'bank'.", "example": ["bank", "card"]})
 

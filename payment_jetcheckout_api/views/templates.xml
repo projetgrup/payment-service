@@ -114,6 +114,7 @@
                     </div>
                 </div>
             </div>
+            <t t-if="tx.jetcheckout_api_html" t-raw="tx.jetcheckout_api_html"/>
         </t>
     </template>
 
