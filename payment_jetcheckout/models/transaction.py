@@ -495,7 +495,7 @@ class PaymentTransaction(models.Model):
                 tx._jetcheckout_query()
                 self.env.cr.commit()
             except:
-                self.cr.rollback()
+                self.env.cr.rollback()
 
         refunds = self.sudo().search([('source_transaction_id', 'in', txs.ids)])
         for refund in refunds:
@@ -514,4 +514,4 @@ class PaymentTransaction(models.Model):
                 })
                 self.env.cr.commit()
             except:
-                self.cr.rollback()
+                self.env.cr.rollback()
