@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 18:02+0000\n"
-"PO-Revision-Date: 2023-05-20 18:02+0000\n"
+"POT-Creation-Date: 2023-06-12 13:42+0000\n"
+"PO-Revision-Date: 2023-06-12 13:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -98,6 +98,13 @@ msgid "<i class=\"fa fa-check\"/><br/><span>Active</span>"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid ""
+"<i class=\"fa fa-fw fa-external-link mr-2\"/>\n"
+"                            <span>Details</span>"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_kanban
 msgid "<i class=\"fa fa-times mr-2\"/><span>Passive</span>"
@@ -127,6 +134,14 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_transaction
 msgid "<span class=\"font-weight-bold\">Message:</span>"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid ""
+"<span class=\"ml-2 font-italic\" groups=\"base.group_no_one\" attrs=\"{'invisible': [('jetcheckout_vpos_ref', '!=', False)]}\">\n"
+"                            (No Reference)\n"
+"                        </span>"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -361,6 +376,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_campaign__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__acquirer_id
 msgid "Acquirer"
@@ -540,6 +556,11 @@ msgid "Billing Address Country"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__bin_code
+msgid "Bin Code"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__branch
 msgid "Branch"
 msgstr ""
@@ -632,6 +653,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_family_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_family
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_family
 msgid "Card Family"
 msgstr ""
@@ -658,6 +680,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Card Number"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_program
+msgid "Card Program"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1756,6 +1783,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__partner_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_term__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__partner_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
@@ -1874,6 +1902,13 @@ msgstr ""
 #: model:ir.cron,cron_name:payment_jetcheckout.cron_fix_transaction
 #: model:ir.cron,name:payment_jetcheckout.cron_fix_transaction
 msgid "Payment Transaction: Fix corrupted transactions"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.actions.server,name:payment_jetcheckout.cron_resync_transaction_ir_actions_server
+#: model:ir.cron,cron_name:payment_jetcheckout.cron_resync_transaction
+#: model:ir.cron,name:payment_jetcheckout.cron_resync_transaction
+msgid "Payment Transaction: Resync transactions"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2056,6 +2091,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_application__second_selection__priority
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_application__third_selection__priority
 msgid "Priority"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_product_template
+msgid "Product Template"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2347,7 +2387,13 @@ msgstr ""
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
-msgid "There is no journal line for %s in %s"
+msgid "There is no journal for %s in %s (%s)"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "There is no journal line for %s in %s (%s)"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2545,8 +2591,18 @@ msgid "Vpos"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_code
+msgid "Vpos Code"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_name
 msgid "Vpos Name"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_ref
+msgid "Vpos Ref"
 msgstr ""
 
 #. module: payment_jetcheckout

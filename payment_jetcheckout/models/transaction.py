@@ -455,6 +455,13 @@ class PaymentTransaction(models.Model):
             'last_state_change': fields.Datetime.now(),
         })
 
+    def action_jetcheckout_redirect_transaction(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': 'https://jetcheckout.com/web#cids=1&menu_id=333&action=875&model=jet.payment.transaction&view_type=list',
+            'target': 'new',
+        }
+
     @api.model
     def jetcheckout_expire(self):
         self.sudo().search([
