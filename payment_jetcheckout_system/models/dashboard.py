@@ -292,7 +292,14 @@ class PaymentDasboard(models.Model):
         action['domain'].append(('state', '=', 'done'))
         action['view_mode'] = 'pivot,list,graph,kanban,form'
         action['views'] = []
-        context = ast.literal_eval(action['context']) if action['context'] else {}
+
+        context = {}
+        if action['context']:
+            if isinstance(action['context'], str):
+                context = ast.literal_eval(action['context'])
+            else:
+                context = action['context']
+
         context['group_by'] = 'jetcheckout_vpos_name'
         action['context'] = context
         return action
