@@ -92,8 +92,8 @@ class PaymentTransaction(models.Model):
 
                     domain = [
                         ('company_id', '=', company.id),
-                        ('last_state_change', '>=', date_start - offset),
-                        ('last_state_change', '<', date_end - offset),
+                        ('create_date', '>=', date_start - offset),
+                        ('create_date', '<', date_end - offset),
                         ('state', '=', 'done'),
                         ('jetcheckout_website_id', '=', website.id),
                     ]
