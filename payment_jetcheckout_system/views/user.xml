@@ -32,6 +32,7 @@
         <form string="Users">
             <header>
                 <button string="Send Password Reset Instructions" type="object" name="action_reset_password" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                <button string="Set Password" type="object" name="action_set_password"/>
                 <button string="Send an Invitation Email" type="object" name="action_reset_password" context="{'create_user': 1}" attrs="{'invisible': [('state', '!=', 'new')]}"/>
                 <field name="state" widget="statusbar"/>
             </header>
