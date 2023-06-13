@@ -8,6 +8,7 @@ class PaymentSettings(models.TransientModel):
     _description = 'Payment Settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    required_2fa = fields.Boolean(related='company_id.required_2fa', readonly=False)
     notif_webhook_ids = fields.One2many(related='company_id.notif_webhook_ids', readonly=False)
 
     def start(self):
