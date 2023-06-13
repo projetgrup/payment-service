@@ -2,7 +2,7 @@
 from odoo.tools.sql import column_exists
 
 def migrate(cr, version):
-    if column_exists(cr, "res_company", "required_2fa"):
+    if not column_exists(cr, "res_company", "required_2fa"):
         cr.execute(
             """
             ALTER TABLE res_company
