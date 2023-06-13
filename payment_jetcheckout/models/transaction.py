@@ -4,6 +4,7 @@ import logging
 import json
 import pytz
 
+from urllib.parse import urlparse
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
@@ -456,9 +457,16 @@ class PaymentTransaction(models.Model):
         })
 
     def action_jetcheckout_redirect_transaction(self):
+        self.ensure_one()
+        acquirer = self.acquirer_id
+        result = acquirer._rpc('jet.payment.transaction', 'search_read', [('transaction_id', '=', self.jetcheckout_transaction_id)], ['id'])
+        if not result:
+            raise UserError(_('This transaction could not be found on payment server'))
+
+        url = urlparse(acquirer.jetcheckout_gateway_app or 'https://jetcheckout.com')
         return {
             'type': 'ir.actions.act_url',
-            'url': 'https://jetcheckout.com/web#cids=1&menu_id=333&action=875&model=jet.payment.transaction&view_type=list',
+            'url': '%s/web#id=%s&model=jet.payment.transaction&view_type=form' % ('%s://%s' % (url.scheme, url.netloc), result[0]['id']),
             'target': 'new',
         }
 
