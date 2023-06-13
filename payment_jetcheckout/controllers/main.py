@@ -242,7 +242,14 @@ class JetcheckoutController(http.Controller):
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def jetcheckout_payment_acquirer(self):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        return {'id': acquirer.id, 'campaign': acquirer.jetcheckout_campaign_id.name}
+        commission = request.env['ir.model.data'].sudo()._xmlid_to_res_id('payment_jetcheckout.product_commission')
+        return {
+            'id': acquirer.id,
+            'campaign': acquirer.jetcheckout_campaign_id.name,
+            'product': {
+                'commission': commission,
+            }
+        }
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
     def jetcheckout_payment_card_type(self, acquirer=False):
