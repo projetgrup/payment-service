@@ -258,7 +258,8 @@ class PaymentTransaction(models.Model):
         }
 
     def _jetcheckout_done_postprocess(self):
-        self.write(self._jetcheckout_done_postprocess_values())
+        if not self.state == 'done':
+            self.write(self._jetcheckout_done_postprocess_values())
         self.jetcheckout_order_confirm()
         self.jetcheckout_payment()
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_is_zero
 import base64
 
 class AccountPayment(models.Model):
@@ -57,18 +58,28 @@ class AccountPayment(models.Model):
             partner=self.partner_id,
         )
 
-        line_vals_list = [
-            {
-                'name': liquidity_line_name or default_line_name,
-                'date_maturity': self.date,
-                'amount_currency': amount_currency,
-                'currency_id': currency_id,
-                'debit': balance if balance > 0.0 else 0.0,
-                'credit': -balance if balance < 0.0 else 0.0,
-                'partner_id': False,
-                'account_id': journal_account_id.id,
-            },
-            {
+        lines = [{
+            'name': liquidity_line_name or default_line_name,
+            'date_maturity': self.date,
+            'amount_currency': amount_currency,
+            'currency_id': currency_id,
+            'debit': balance if balance > 0.0 else 0.0,
+            'credit': -balance if balance < 0.0 else 0.0,
+            'partner_id': False,
+            'account_id': journal_account_id.id,
+        }, {
+            'name': liquidity_line_name or default_line_name,
+            'date_maturity': self.date,
+            'amount_currency': amount_currency,
+            'currency_id': currency_id,
+            'debit': -balance if balance < 0.0 else 0.0,
+            'credit': balance if balance > 0.0 else 0.0,
+            'partner_id': self.partner_id.id,
+            'account_id': partner_receivable_account_id.id,
+        }]
+
+        if not float_is_zero(commission_balance, precision_digits=currency_id.decimal_places):
+            lines.insert(1, {
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': amount_currency,
@@ -77,18 +88,8 @@ class AccountPayment(models.Model):
                 'credit': -commission_balance if commission_balance < 0.0 else 0.0,
                 'partner_id': line.partner_id.id,
                 'account_id': partner_payable_account_id.id,
-            },
-            {
-                'name': liquidity_line_name or default_line_name,
-                'date_maturity': self.date,
-                'amount_currency': amount_currency,
-                'currency_id': currency_id,
-                'debit': -balance if balance < 0.0 else 0.0,
-                'credit': balance if balance > 0.0 else 0.0,
-                'partner_id': self.partner_id.id,
-                'account_id': partner_receivable_account_id.id,
-            },
-            {
+            })
+            lines.append({
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': amount_currency,
@@ -97,9 +98,9 @@ class AccountPayment(models.Model):
                 'credit': commission_balance if commission_balance > 0.0 else 0.0,
                 'partner_id': False,
                 'account_id': journal_account_id.id,
-            }
-        ]
-        return line_vals_list
+            })
+
+        return lines
 
     def post_with_jetcheckout(self, line, commission, ip_address):
         self.move_id._post(soft=False)
