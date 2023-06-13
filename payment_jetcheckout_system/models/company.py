@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields,api
 
+import odoo
+from odoo.tools.sql import column_exists
+registry = odoo.registry('staging')
+with registry.cursor() as cr:
+    if not column_exists(cr, "res_company", "required_2fa"):
+        cr.execute('ALTER TABLE res_company ADD COLUMN required_2fa boolean')
+
 class Company(models.Model):
     _inherit = 'res.company'
 
@@ -16,6 +23,7 @@ class Company(models.Model):
     system = fields.Selection([])
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
+    required_2fa = fields.Boolean('Two Factor Required')
     notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')
 
     @api.model
