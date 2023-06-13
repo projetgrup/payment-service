@@ -3,8 +3,7 @@ from odoo import models, fields,api
 
 import odoo
 from odoo.tools.sql import column_exists
-registry = odoo.registry('premium')
-#registry = odoo.registry('jettahsilat')
+registry = odoo.registry('jettahsilat')
 with registry.cursor() as cr:
     if not column_exists(cr, "res_company", "required_2fa"):
         cr.execute('ALTER TABLE res_company ADD COLUMN required_2fa boolean')
