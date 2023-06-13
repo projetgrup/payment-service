@@ -5,9 +5,9 @@
     <field name="model">payment.settings</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//div[hasclass('notFound')]" position="after">
+        <xpath expr="//div[@data-key='general_settings']" position="after">
             <div class="app_settings_block" data-string="Vendors" string="Vendors" data-key="payment_vendor" invisible="context.get('active_system') != 'vendor'">
-                <h2>Settings</h2>
+                <h2>Vendors</h2>
                 <div class="notFound">
                     <div class="o_view_nocontent">
                         <div class="o_nocontent_help">

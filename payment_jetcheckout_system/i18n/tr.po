@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-13 10:04+0000\n"
-"PO-Revision-Date: 2023-06-13 13:04+0300\n"
+"POT-Creation-Date: 2023-06-13 11:22+0000\n"
+"PO-Revision-Date: 2023-06-13 14:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -1135,6 +1135,13 @@ msgid "Mail To"
 msgstr "Eposta Kime"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Make two factor authentication usage essential for users"
+msgstr ""
+"Kullanıcılar için iki faktörlü kimlik doğrulama kullanımını zorunlu hale "
+"getirin."
+
+#. module: payment_jetcheckout_system
 #: model:res.groups,name:payment_jetcheckout_system.group_system_manager
 msgid "Manager"
 msgstr "Yönetici"
@@ -2061,6 +2068,12 @@ msgstr "Farklı bir anahtar kelime aramayı deneyin"
 #, python-format
 msgid "Tuesday"
 msgstr "Salı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__required_2fa
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__required_2fa
+msgid "Two Factor Required"
+msgstr "İki Faktör Zorunlu"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
