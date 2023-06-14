@@ -47,7 +47,7 @@ class AccountPayment(models.Model):
             self.date,
         )
 
-        currency_id = self.currency_id.id
+        currency = self.currency_id
         liquidity_line_name = self.payment_reference
         payment_display_name = self._prepare_payment_display_name()
         default_line_name = self.env['account.move.line']._get_default_line_name(
@@ -62,7 +62,7 @@ class AccountPayment(models.Model):
             'name': liquidity_line_name or default_line_name,
             'date_maturity': self.date,
             'amount_currency': amount_currency,
-            'currency_id': currency_id,
+            'currency_id': currency.id,
             'debit': balance if balance > 0.0 else 0.0,
             'credit': -balance if balance < 0.0 else 0.0,
             'partner_id': False,
@@ -71,19 +71,19 @@ class AccountPayment(models.Model):
             'name': liquidity_line_name or default_line_name,
             'date_maturity': self.date,
             'amount_currency': amount_currency,
-            'currency_id': currency_id,
+            'currency_id': currency.id,
             'debit': -balance if balance < 0.0 else 0.0,
             'credit': balance if balance > 0.0 else 0.0,
             'partner_id': self.partner_id.id,
             'account_id': partner_receivable_account_id.id,
         }]
 
-        if not float_is_zero(commission_balance, precision_digits=currency_id.decimal_places):
+        if not float_is_zero(commission_balance, precision_digits=currency.decimal_places):
             lines.insert(1, {
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': amount_currency,
-                'currency_id': currency_id,
+                'currency_id': currency.id,
                 'debit': commission_balance if commission_balance > 0.0 else 0.0,
                 'credit': -commission_balance if commission_balance < 0.0 else 0.0,
                 'partner_id': line.partner_id.id,
@@ -93,7 +93,7 @@ class AccountPayment(models.Model):
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
                 'amount_currency': amount_currency,
-                'currency_id': currency_id,
+                'currency_id': currency.id,
                 'debit': -commission_balance if commission_balance < 0.0 else 0.0,
                 'credit': commission_balance if commission_balance > 0.0 else 0.0,
                 'partner_id': False,
