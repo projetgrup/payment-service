@@ -38,6 +38,10 @@
                     <group attrs="{'invisible': [('api_key','=',False)]}">
                         <field name="api_key" widget="CopyClipboardChar" options="{'string': 'Copy API Key'}"/>
                         <field name="secret_key" widget="CopyClipboardChar" options="{'string': 'Copy Secret Key'}"/>
+                        <br colspan="2" class="oe_edit_only" groups="base.group_system"/>
+                        <separator colspan="2" string="Hash" class="oe_edit_only" groups="base.group_system"/>
+                        <field name="hash_id" string="ID" class="oe_edit_only" groups="base.group_system"/>
+                        <field name="hash_key" string="Key" class="oe_edit_only" groups="base.group_system" widget="CopyClipboardChar" options="{'string': 'Copy Hash Key'}"/>
                     </group>
                 </group>
             </sheet>
