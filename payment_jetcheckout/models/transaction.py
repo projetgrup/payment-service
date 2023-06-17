@@ -378,7 +378,7 @@ class PaymentTransaction(models.Model):
             'jetcheckout_commission_amount': values.get('commission_amount', 0),
             'jetcheckout_card_family': values.get('card_family', ''),
             'jetcheckout_card_type': values.get('card_program', ''),
-            'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % values.get('bin_code', ''),
+            'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         })
 

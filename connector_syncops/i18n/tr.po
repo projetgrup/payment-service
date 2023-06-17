@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:28+0000\n"
-"PO-Revision-Date: 2023-01-23 11:27+0300\n"
+"POT-Creation-Date: 2023-06-17 12:19+0000\n"
+"PO-Revision-Date: 2023-06-17 15:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
@@ -39,12 +39,18 @@ msgid "An error occured when connecting: %s"
 msgstr "Bağlantı sırasında bir hata meydana geldi: %s"
 
 #. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
+msgid "Close"
+msgstr "Kapat"
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__code
 msgid "Code"
 msgstr "Kod"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__company_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__company_id
 msgid "Company"
 msgstr "Şirket"
 
@@ -78,27 +84,51 @@ msgid "Connection is succesful"
 msgstr "Bağlantı başarılı"
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__connector_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__connector_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__connector_id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__connector_id
 msgid "Connector"
 msgstr "Bağlayıcı"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_date
 msgid "Created on"
 msgstr "Oluşturma Tarihi"
 
 #. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__request_method__delete
+msgid "DELETE"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__date
+msgid "Date"
+msgstr "Tarih"
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__date_end
+msgid "End Date"
+msgstr "Bitiş Tarihi"
 
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
@@ -112,9 +142,20 @@ msgstr "syncOPS sunucusu adresini giriniz"
 
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__state__error
 #, python-format
 msgid "Error"
 msgstr "Hata"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_search
+msgid "Failed Requests"
+msgstr "Başarısız İstekler"
+
+#. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__request_method__get
+msgid "GET"
+msgstr ""
 
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
@@ -123,28 +164,63 @@ msgid "Go to settings"
 msgstr "Ayarlara git"
 
 #. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_search
+msgid "Group By"
+msgstr "Grupla"
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__id
 msgid "ID"
 msgstr "ID"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
+
+#. module: connector_syncops
+#: model:ir.actions.act_window,name:connector_syncops.action_log
+#: model:ir.actions.act_window,name:connector_syncops.action_log_wizard
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Logs"
+msgstr "Günlükler"
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_log
+msgid "Logs are listed here"
+msgstr "Günlükler burada listelenir"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__message
+msgid "Message"
+msgstr "Mesaj"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__method_name
+msgid "Method"
+msgstr "Metot"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__method_ids
@@ -160,11 +236,23 @@ msgstr "Ad"
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
 #, python-format
-msgid "No connector found"
-msgstr "Bağlantı bulunamadı"
+msgid "No connector found for %s"
+msgstr "%s için bir bağlayıcı bulunamadı"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/wizards/log.py:0
+#, python-format
+msgid "No log found"
+msgstr "Bir günlük bulunamadı"
+
+#. module: connector_syncops
+#: model_terms:ir.actions.act_window,help:connector_syncops.action_log
+msgid "No logs yet"
+msgstr "Bir günlük yok"
 
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
+#: code:addons/connector_syncops/wizards/log.py:0
 #, python-format
 msgid "No syncOPS endpoint URL found"
 msgstr "syncOPS uç nokta adresi bulunamadı"
@@ -180,9 +268,69 @@ msgid "Not Connected"
 msgstr "Bağlı Değil"
 
 #. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__request_method__post
+msgid "POST"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__request_method__put
+msgid "PUT"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__partner_name
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
 msgid "Passive"
 msgstr "Pasif"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
+msgid "Please select a date range"
+msgstr "Lütfen bir tarih aralığı seçiniz"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_form
+msgid "Request"
+msgstr "İstek"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__request_data
+msgid "Request Data"
+msgstr "İstek Veri"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__request_method
+msgid "Request Method"
+msgstr "İstek Metot"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__request_url
+msgid "Request Url"
+msgstr "İstek Adres"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_form
+msgid "Response"
+msgstr "Yanıt"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__response_code
+msgid "Response Code"
+msgstr "Yanıt Kodu"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__response_data
+msgid "Response Data"
+msgstr "Yanıt Veri"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__response_message
+msgid "Response Message"
+msgstr "Yanıt Mesajı"
 
 #. module: connector_syncops
 #: model:ir.actions.act_window,name:connector_syncops.action_syncops_config_settings
@@ -190,10 +338,43 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__date_start
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: connector_syncops
+#: code:addons/connector_syncops/wizards/log.py:0
+#, python-format
+msgid "Start date must be before end date"
+msgstr "Başlangıç tarihi, bitiş tarihinden önce olmalıdır"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__state
+msgid "State"
+msgstr "Durumu"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_search
+msgid "Status"
+msgstr "Durum"
+
+#. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__status
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_log__state__success
 #, python-format
 msgid "Success"
 msgstr "Başarılı"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_search
+msgid "Successful Requests"
+msgstr "Başarılı İstekler"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_log_wizard
+msgid "SyncOPS Log Wizard"
+msgstr "SyncOPS Günlük Sihirbazı"
 
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
@@ -203,6 +384,7 @@ msgstr "Bu jeton zaten mevcut. Lütfen doğru olduğundan emin olun."
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__token
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__token_name
 msgid "Token"
 msgstr "Jeton"
 
@@ -210,6 +392,11 @@ msgstr "Jeton"
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__username
 msgid "Username"
 msgstr "Kullanıcı Adı"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
+msgid "View"
+msgstr "Gözat"
 
 #. module: connector_syncops
 #: code:addons/connector_syncops/models/syncops.py:0
@@ -236,6 +423,11 @@ msgstr "syncOPS Uç Nokta Adresi"
 #: model:ir.actions.act_window,name:connector_syncops.action_connector
 msgid "syncOPS Integrations"
 msgstr "syncOPS Entegrasyonları"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_log
+msgid "syncOPS Logs"
+msgstr "syncOPS Günlükleri"
 
 #. module: connector_syncops
 #: model:ir.model,name:connector_syncops.model_syncops_method

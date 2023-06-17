@@ -23,6 +23,7 @@
         <form>
             <sheet>
                 <div class="oe_button_box" name="button_box">
+                    <button name="action_view_log" type="object" class="oe_stat_button" icon="fa-file-text-o" attrs="{'invisible': [('connected','=',False)]}" string="Logs"/>
                     <button name="action_connect" type="object" class="oe_stat_button text-danger" icon="fa-unlink" attrs="{'invisible': [('connected','!=',False)]}" string="Not Connected"/>
                     <button name="action_connect" type="object" class="oe_stat_button text-success" icon="fa-chain" attrs="{'invisible': [('connected','=',False)]}" string="Connected"/>
                     <button name="action_toggle_active" type="object" class="oe_stat_button text-muted" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}" string="Passive"/>
@@ -55,6 +56,80 @@
     </field>
     </record>
 
+    <record id="log_tree" model="ir.ui.view">
+    <field name="name">syncops.log.tree</field>
+    <field name="model">syncops.log</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="date"/>
+            <field name="partner_name"/>
+            <field name="token_name"/>
+            <field name="connector_name"/>
+            <field name="method_name"/>
+            <field name="state" widget="badge" decoration-danger="status == False" decoration-success="status == True"/>
+            <field name="message" optional="hide"/>
+            <field name="status" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="log_form" model="ir.ui.view">
+    <field name="name">syncops.log.form</field>
+    <field name="model">syncops.log</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="state" widget="statusbar" statusbar_visible="success"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="partner_name"/>
+                        <field name="connector_name"/>
+                        <field name="method_name"/>
+                        <field name="token_name"/>
+                        <field name="status" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                        <field name="message"/>
+                    </group>
+                </group>
+                <group class="mt-5">
+                    <group string="Request">
+                        <div colspan="2">
+                            <field name="request_method" nolabel="1"/>: <field name="request_url" nolabel="1"/>
+                        </div>
+                        <br/>
+                        <field name="request_data" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Response">
+                        <div colspan="2">
+                            <field name="response_code" nolabel="1"/> - <field name="response_message" nolabel="1"/>
+                        </div>
+                        <br/>
+                        <field name="response_data" nolabel="1" colspan="2"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="log_search" model="ir.ui.view">
+    <field name="name">syncops.log.search</field>
+    <field name="model">syncops.log</field>
+    <field name="arch" type="xml">
+        <search>
+            <filter string="Failed Requests" name="filterby_error" domain="[('status', '=', False)]"/>
+            <filter string="Successful Requests" name="filterby_success" domain="[('status', '=', True)]"/>
+            <group expand="0" string="Group By">
+                <filter string="Status" name="groupby_status" context="{'group_by': 'state'}"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
     <record id="action_connector" model="ir.actions.act_window">
     <field name="name">syncOPS Integrations</field>
     <field name="res_model">syncops.connector</field>
@@ -66,6 +141,20 @@
         </p>
         <p>
             syncOPS integrations are listed here
+        </p>
+    </field>
+    </record>
+
+    <record id="action_log" model="ir.actions.act_window">
+    <field name="name">Logs</field>
+    <field name="res_model">syncops.log</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No logs yet
+        </p>
+        <p>
+            Logs are listed here
         </p>
     </field>
     </record>
