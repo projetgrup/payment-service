@@ -37,10 +37,11 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
     priority = fields.Integer('Priority', required=True)
     usage_3d = fields.Selection([('Not Usable','Not Usable'),('Choosable','Choosable'),('Mandatory','Mandatory')], string='3D Usage')
     mode = fields.Selection([('P','Production'),('T','Test')], string='Mode', required=True, default='T')
+    is_physical = fields.Boolean('Physical POS', readonly=True)
     rates_importable = fields.Boolean('Rates Importable', readonly=True)
     import_rates = fields.Boolean('Import Commission Rates')
     calc_cust_rates = fields.Boolean('Calculate Customer Rates')
-    excluded_card_families = fields.Many2many('jet.card.family', 'jetcheckout_pos_card_rel', 'pos_id', 'card_id', string='Excluded Card Families')
+    excluded_card_families = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_excluded_pos_rel', 'pos_id', 'family_id', string='Excluded Card Families', domain='[("acquirer_id", "=", acquirer_id)]')
     notes = fields.Text('Notes', readonly=True)
 
     customer_ip = fields.Char()
@@ -101,7 +102,29 @@ class PaymentAcquirerJetcheckoutApiPos(models.TransientModel):
             self.browse(self._origin.id).write({'calc_cust_rates': True})
 
     def import_cost_rates(self):
-        self.acquirer_id._rpc('jet.virtual.pos', 'import_cost_rates')
+        self.acquirer_id._rpc('jet.virtual.pos', 'import_cost_rates', self.res_id)
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        if 'res_id' not in vals:
+            id = res.acquirer_id._rpc(res._remote_name, 'create', vals)
+            res.write({'res_id': id})
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'res_id' not in vals:
+            for pos in self:
+                pos.acquirer_id._rpc(pos._remote_name, 'write', pos.res_id, vals)
+            self.acquirer_id._jetcheckout_api_sync_campaign()
+        return res
+ 
+    def unlink(self):
+        if not self.env.context.get('no_sync'):
+            for pos in self:
+                pos.acquirer_id._rpc(pos._remote_name, 'unlink', pos.res_id)
+        return super().unlink()
 
 
 class PaymentAcquirerJetcheckoutApiCurrency(models.TransientModel):
@@ -115,6 +138,7 @@ class PaymentAcquirerJetcheckoutApiCurrency(models.TransientModel):
 class PaymentAcquirerJetcheckoutApiProvider(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.provider'
     _description = 'Jetcheckout API Provider'
+    _remote_name = 'jet.payment.org'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)

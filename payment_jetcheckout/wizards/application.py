@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
 class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
@@ -64,14 +64,38 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
 
         acquirer.jetcheckout_journal_ids = journals
         acquirer._jetcheckout_api_sync_campaign(poses=pos_ids)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'redirect_acquirer',
+            'params': {
+                'back': True,
+                'id': self.acquirer_id.id,
+            }
+        }
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        if 'res_id' not in vals:
+            id = res.acquirer_id._rpc(res._remote_name, 'create', vals)
+            res.write({'res_id': id})
+        return res
 
     def write(self, vals):
+        res = super().write(vals)
+        if 'res_id' not in vals:
+            for app in self:
+                app.acquirer_id._rpc(app._remote_name, 'write', app.res_id, vals)
+
         if 'name' in vals:
             for app in self:
                 if app.in_use:
                     app.acquirer_id.jetcheckout_api_name = vals['name']
                     break
-        return super().write(vals)
+
+        self.acquirer_id._jetcheckout_api_sync_campaign()
+        return res
 
     def unlink(self):
         if 'application' in self.env.context:
@@ -81,6 +105,10 @@ class PaymentAcquirerJetcheckoutApiApplication(models.TransientModel):
                     app.acquirer_id.jetcheckout_secret_key = False
                     app.acquirer_id.jetcheckout_journal_ids = [(5, 0, 0)]
                     break
+                
+        if not self.env.context.get('no_sync'):
+            for app in self:
+                app.acquirer_id._rpc(app._remote_name, 'unlink', app.res_id)
         return super().unlink()
 
 class PaymentAcquirerJetcheckoutApiApplications(models.TransientModel):

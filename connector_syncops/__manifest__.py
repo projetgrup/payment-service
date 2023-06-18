@@ -13,6 +13,7 @@
     'data': [
         'views/config.xml',
         'views/syncops.xml',
+        'wizards/log.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
     ],

@@ -20,7 +20,7 @@ class rpc():
         reply = json.loads(urllib.request.urlopen(req).read().decode('UTF-8'))
         if reply.get("error"):
             raise ValidationError(reply["error"]["data"]["message"])
-        return reply["result"]
+        return reply.get("result")
 
     @classmethod
     def _call(self, service, method, url, *args):

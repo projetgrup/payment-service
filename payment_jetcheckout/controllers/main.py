@@ -204,6 +204,28 @@ class JetcheckoutController(http.Controller):
                 return []
         except:
             return []
+ 
+    @staticmethod
+    def _jetcheckout_get_bank_codes(**kwargs):
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+        url = '%s/api/v1/prepayment/bankcodes' % acquirer._get_jetcheckout_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "language": "tr",
+        }
+
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    return result.get('bank_codes', [])
+                else:
+                    return []
+            else:
+                return []
+        except:
+            return []
 
     def _jetcheckout_get_transaction(self):
         return False
@@ -231,13 +253,18 @@ class JetcheckoutController(http.Controller):
 
     @http.route(['/payment/callback'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
     def jetcheckout_payment_callback(self, **kwargs):
-        if kwargs.get('is_success'):
-            tx = request.env['payment.transaction'].sudo().search([
-                ('jetcheckout_order_id', '=', kwargs.get('order_id')),
-                ('jetcheckout_transaction_id', '=', kwargs.get('transaction_id')),
-            ], limit=1)
-            if tx:
-                tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
+        try:
+            data = json.loads(request.httprequest.data) or {}
+            if data.get('is_success'):
+                tx = request.env['payment.transaction'].sudo().search([
+                    ('jetcheckout_order_id', '=', data.get('order_id')),
+                    ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
+                ], limit=1)
+                if tx:
+                    tx._jetcheckout_done_postprocess()
+                    #tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
+        except Exception as e:
+            _logger.error('An error occured when processing payment callback: %s' % e)
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def jetcheckout_payment_acquirer(self):
@@ -263,6 +290,13 @@ class JetcheckoutController(http.Controller):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
         if acquirer:
             return self._jetcheckout_get_card_family(**kwargs)
+        return []
+ 
+    @http.route('/payment/card/banks', type='json', auth='user', website=True)
+    def jetcheckout_payment_card_banks(self, **kwargs):
+        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+        if acquirer:
+            return self._jetcheckout_get_bank_codes(**kwargs)
         return []
 
     @http.route(['/pay'], type='http', auth='user', website=True)

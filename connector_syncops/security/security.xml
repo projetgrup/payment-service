@@ -20,5 +20,14 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+        <record id="syncops_log_rule" model="ir.rule">
+            <field name="name">Access only related syncops logs</field>
+            <field name="model_id" ref="model_syncops_log"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
     </data>
 </odoo>

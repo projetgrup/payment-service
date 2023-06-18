@@ -313,20 +313,20 @@ class PaymentAcquirerJetcheckout(models.Model):
 
     def action_jetcheckout_pos(self):
         self.ensure_one()
-        pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id, 'application_id': self.jetcheckout_api_key})
-        self._jetcheckout_api_connect(pos)
-        action = self.env.ref('payment_jetcheckout.action_api_poses').sudo().read()[0]
-        action['res_id'] = pos.id
-        action['context'] = {'dialog_size': 'large', 'create': False, 'delete': False, 'pos': True}
+        #pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id, 'application_id': self.jetcheckout_api_key})
+        self._jetcheckout_api_connect(pos=True)
+        action = self.env.ref('payment_jetcheckout.action_api_pos').sudo().read()[0]
+        action['domain'] = [('acquirer_id', '=', self.id)]
+        action['context'] = {'default_acquirer_id': self.id, 'pos': True}
         return action
 
     def action_jetcheckout_application(self):
         self.ensure_one()
-        app = self.env['payment.acquirer.jetcheckout.api.applications'].create({'acquirer_id': self.id})
-        self._jetcheckout_api_connect(app)
-        action = self.env.ref('payment_jetcheckout.action_api_applications').sudo().read()[0]
-        action['res_id'] = app.id
-        action['context'] = {'dialog_size': 'large', 'create': False, 'delete': False, 'application': True}
+        #app = self.env['payment.acquirer.jetcheckout.api.applications'].create({'acquirer_id': self.id})
+        self._jetcheckout_api_connect()
+        action = self.env.ref('payment_jetcheckout.action_api_application').sudo().read()[0]
+        action['domain'] = [('acquirer_id', '=', self.id)]
+        action['context'] = {'default_acquirer_id': self.id, 'application': True}
         return action
 
     def _rpc(self, *args):
@@ -338,6 +338,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         return rpc.execute(url, database, self.jetcheckout_user_id, self.jetcheckout_password, *args)
 
     def _jetcheckout_api_vacuum(self):
+        self = self.with_context(no_sync=True)
         self.env['payment.acquirer.jetcheckout.api.application'].search([('acquirer_id', '=', self.id)]).unlink()
         self.env['payment.acquirer.jetcheckout.api.pos'].search([('acquirer_id', '=', self.id)]).unlink()
         self.env['payment.acquirer.jetcheckout.api.campaign'].search([('acquirer_id', '=', self.id)]).unlink()
@@ -412,17 +413,17 @@ class PaymentAcquirerJetcheckout(models.Model):
             provider_table.create(vals)
         return {item['res_id']: item['id'] for item in provider_table.search_read([], ['id', 'res_id'])}
 
-    def _jetcheckout_api_create_application(self, record):
+    def _jetcheckout_api_create_application(self, pos):
         application_table = self.env['payment.acquirer.jetcheckout.api.application']
         domain = [('user_id', '=', self.jetcheckout_user_id)]
-        if record._name == 'payment.acquirer.jetcheckout.api.poses':
+        if pos:
             domain.append(('application_id', '=', self.jetcheckout_api_key))
         apps = self._rpc('jet.application', 'search_read', domain)
         for app in apps:
             application_table.create({
                 'acquirer_id': self.id,
                 'res_id': app['id'],
-                'parent_id': record.id if record._name == 'payment.acquirer.jetcheckout.api.applications' else False,
+                'parent_id': False,
                 'name': app['name'],
                 'application_id': app['application_id'],
                 'secret_key': app['secret_key'],
@@ -435,11 +436,11 @@ class PaymentAcquirerJetcheckout(models.Model):
             })
         return {item['res_id']: item['id'] for item in application_table.search_read([], ['id', 'res_id'])}
 
-    def _jetcheckout_api_create_pos(self, poses, apps, providers, currencies, record):
+    def _jetcheckout_api_create_pos(self, poses, apps, providers, currencies):
         pos_ids = [pos['id'] for pos in poses]
-        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_families', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id'])
+        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_families', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id', 'imported'])
         pos_price_ids = [price['id'] for price in pos_prices]
-        pos_lines = self._rpc('jet.pos.price.line', 'search_read', [('pos_price_id', 'in', pos_price_ids)], ['id', 'pos_price_id', 'installment_type', 'customer_rate', 'cost_rate', 'is_active', 'plus_installment', 'plus_installment_description'])
+        pos_lines = self._rpc('jet.pos.price.line', 'search_read', [('pos_price_id', 'in', pos_price_ids)], ['id', 'pos_price_id', 'installment_type', 'customer_rate', 'cost_rate', 'is_active', 'plus_installment', 'plus_installment_description', 'fixed_customer_rate', 'margin_rate', 'additional_rate', 'only_fundings_active'])
 
         bank_model = self.env['payment.acquirer.jetcheckout.api.bank']
         banks = self._rpc('jet.bank', 'search_read', [], ['id', 'name'])
@@ -476,7 +477,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'acquirer_id': self.id,
                 'res_id': pos['id'],
                 'name': pos['name'],
-                'parent_id': record.id if record._name == 'payment.acquirer.jetcheckout.api.poses' else False,
+                'parent_id': False,
                 'payment_org_id': providers[pos['payment_org_id'][0]],
                 'is_active': pos['is_active'],
                 'is_client_active': pos['is_client_active'],
@@ -500,6 +501,10 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'usage_3d': pos['usage_3d'],
                 'mode': pos['mode'],
                 'notes': pos['notes'],
+                'is_physical': pos['is_physical'],
+                'rates_importable': pos['rates_importable'],
+                'import_rates': pos['import_rates'],
+                'calc_cust_rates': pos['calc_cust_rates'],
                 'customer_ip': pos['customer_ip'],
                 'customer_email': pos['customer_email'],
                 'customer_name': pos['customer_name'],
@@ -524,6 +529,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                 'shipping_address_city': pos['shipping_address_city'],
                 'shipping_address_country': pos['shipping_address_country'],
                 'applications': [(6, 0, [val for key, val in apps.items() if key in pos['applications']])],
+                'excluded_card_families': [(6, 0, family_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', pos['excluded_card_families'])]).ids)],
                 'pos_price': [(0, 0, {
                     'acquirer_id': self.id,
                     'res_id': price['id'],
@@ -544,16 +550,16 @@ class PaymentAcquirerJetcheckout(models.Model):
                         'plus_installment': line['plus_installment'],
                         'plus_installment_description': line['plus_installment_description'],
                     }) for line in pos_lines if line['pos_price_id'][0] == price['id']],
-                    'card_families': [(6, 0, family_model.search([('res_id', 'in', price['card_families'])]).ids)],
-                    'excluded_bins': [(6, 0, bin_model.search([('res_id', 'in', price['excluded_bins'])]).ids)]
+                    'card_families': [(6, 0, family_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', price['card_families'])]).ids)],
+                    'excluded_bins': [(6, 0, bin_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', price['excluded_bins'])]).ids)]
                 }) for price in pos_prices if price['virtual_pos_id'][0] == pos['id']],
             })
 
-    def _jetcheckout_api_create(self, poses, record):
+    def _jetcheckout_api_create(self, poses, pos):
         currencies = self._jetcheckout_api_create_currencies()
         providers = self._jetcheckout_api_create_providers()
-        apps = self._jetcheckout_api_create_application(record)
-        self._jetcheckout_api_create_pos(poses, apps, providers, currencies, record)
+        apps = self._jetcheckout_api_create_application(pos)
+        self._jetcheckout_api_create_pos(poses, apps, providers, currencies)
 
     def _jetcheckout_api_read(self):
         data = {}
@@ -643,10 +649,10 @@ class PaymentAcquirerJetcheckout(models.Model):
                         elif val[0] == 2:
                             self._rpc(name, 'unlink', val[1])
 
-    def _jetcheckout_api_connect(self, record):
+    def _jetcheckout_api_connect(self, pos=None):
         # Get all data
         domain = [('user_id', '=', self.jetcheckout_user_id)]
-        if record._name == 'payment.acquirer.jetcheckout.api.poses':
+        if pos:
             domain.append(('applications.application_id', '=', self.jetcheckout_api_key))
         poses = self._rpc('jet.virtual.pos', 'search_read', domain)
 
@@ -654,4 +660,4 @@ class PaymentAcquirerJetcheckout(models.Model):
         self._jetcheckout_api_vacuum()
 
         # Create transient records
-        self._jetcheckout_api_create(poses, record)
+        self._jetcheckout_api_create(poses, pos)
