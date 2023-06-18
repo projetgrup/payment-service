@@ -293,7 +293,7 @@ class JetcheckoutController(http.Controller):
         return []
  
     @http.route('/payment/card/banks', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_family(self, **kwargs):
+    def jetcheckout_payment_card_banks(self, **kwargs):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
         if acquirer:
             return self._jetcheckout_get_bank_codes(**kwargs)
