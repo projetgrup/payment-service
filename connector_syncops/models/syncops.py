@@ -186,7 +186,44 @@ class SyncopsConnector(models.Model):
             }
         }
 
-    
+    def action_view_log(self):
+        self.ensure_one()
+        self.env['syncops.log'].sudo().search([('connector_id', '=', self.id)]).unlink()
+        action = self.env.ref('connector_syncops.action_log_wizard').sudo().read()[0]
+        action['context'] = {'dialog_size': 'small', 'create': False, 'delete': False, 'default_connector_id': self.id}
+        return action
+
+class SyncopsLog(models.TransientModel):
+    _name = 'syncops.log'
+    _description = 'syncOPS Logs'
+    _order = 'id DESC'
+
+    connector_id = fields.Many2one('syncops.connector', readonly=True, copy=False, index=True, ondelete='cascade')
+    company_id = fields.Many2one('res.company', readonly=True, copy=False, ondelete='cascade')
+    date = fields.Datetime(string='Date', readonly=True, copy=False)
+    partner_name = fields.Char(string='Partner', readonly=True, copy=False)
+    connector_name = fields.Char(string='Connector', readonly=True, copy=False)
+    token_name = fields.Char(string='Token', readonly=True, copy=False)
+    method_name = fields.Char(string='Method', readonly=True, copy=False)
+    state = fields.Selection([('error', 'Error'), ('success', 'Success')], string='State', readonly=True, copy=False)
+    status = fields.Boolean(string='Success', readonly=True, copy=False)
+    message = fields.Text(string='Message', readonly=True, copy=False)
+    request_method = fields.Selection([
+        ('post', 'POST'),
+        ('get', 'GET'),
+        ('put', 'PUT'),
+        ('delete', 'DELETE'),
+    ], string='Request Method', readonly=True, copy=False)
+    request_url = fields.Text(string='Request Url', readonly=True, copy=False)
+    request_data = fields.Text(string='Request Data', readonly=True, copy=False)
+    response_code = fields.Integer(string='Response Code', readonly=True, copy=False)
+    response_message = fields.Char(string='Response Message', readonly=True, copy=False)
+    response_data = fields.Text(string='Response Data', readonly=True, copy=False)
+
+    def name_get(self):
+        return [(log.id, 'Log #%s' % log.id) for log in self]
+
+
 class SyncopsMethod(models.Model):
     _name = 'syncops.method'
     _description = 'syncOPS Methods'

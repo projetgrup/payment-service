@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 
 class PaymentAcquirerJetcheckoutApiCampaigns(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.campaigns'
@@ -41,9 +41,9 @@ class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
     card_family_names = fields.Char('Card Family Names', readonly=True)
     installments = fields.Char('Installments', readonly=True)
     pos_lines = fields.One2many('payment.acquirer.jetcheckout.api.installment', 'pos_price_id', 'Lines')
-    card_families = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_campaing_family_rel', 'campaign_id', 'family_id', string='Card Families', ondelete='cascade')
-    excluded_bins = fields.Many2many('payment.acquirer.jetcheckout.api.excluded', 'payment_jetcheckout_api_campaing_excluded_rel', 'campaign_id', 'excluded_id', string='Excluded Bins', ondelete='cascade')
-    imported = fields.Boolean()
+    card_families = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_campaing_family_rel', 'campaign_id', 'family_id', string='Card Families', ondelete='cascade', domain='[("acquirer_id", "=", acquirer_id)]')
+    excluded_bins = fields.Many2many('payment.acquirer.jetcheckout.api.excluded', 'payment_jetcheckout_api_campaing_excluded_rel', 'campaign_id', 'excluded_id', string='Excluded Bins', ondelete='cascade', domain='[("acquirer_id", "=", acquirer_id)]')
+    imported = fields.Boolean(default=False, readonly=True)
     import_rates = fields.Boolean(related='virtual_pos_id.import_rates')
 
 
@@ -51,6 +51,15 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.installment'
     _description = 'Jetcheckout API Installment'
     _remote_name = 'jet.pos.price.line'
+
+    @api.depends('fixed_customer_rate')
+    def _compute_customer_rate_active(self):
+        for rec in self:
+            rec.customer_rate_active = False
+            if rec.fixed_customer_rate:
+                rec.customer_rate_active = True
+            else:
+                rec.customer_rate_active = True
 
     acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
@@ -72,7 +81,9 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     customer_rate = fields.Float('Customer Rate')
     cost_rate = fields.Float('Cost Rate')
     additional_rate = fields.Float('Additional Rate')
+    margin_rate = fields.Float('Margin Rate')
     fixed_customer_rate = fields.Boolean('Fixed Customer Rate')
+    only_fundings_active = fields.Boolean('Only Fundings Active')
     min_amount = fields.Integer('Minimum Amount')
     max_amount = fields.Integer('Maximum Amount')
     is_active = fields.Boolean('Active', default=True)
@@ -80,6 +91,40 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
     plus_installment_description = fields.Char('Plus Installment Description')
     imported = fields.Boolean(related='pos_price_id.imported')
     calc_cust_rates = fields.Boolean(related='pos_price_id.virtual_pos_id.calc_cust_rates')
+    customer_rate_active = fields.Boolean(compute='_compute_customer_rate_active')
+
+    @api.onchange('cost_rate', 'additional_rate', 'margin_rate', 'only_fundings_active')
+    def _onchange_rates(self):
+        if self.calc_cust_rates or self.campaign_id != False:
+            base_amount = 100 - (self.cost_rate - self.additional_rate)
+            cost_amount = self.cost_rate - self.additional_rate
+
+            customer_rate = 0
+            if cost_amount > 0:
+                customer_rate = float((cost_amount * 100) / base_amount)
+
+            if customer_rate < self.margin_rate:
+                customer_rate = 0
+
+            if self.campaign_id != False:
+                if self.cost_rate > 0:
+                    self.is_active = True
+                else:
+                    self.is_active = False
+                
+                if customer_rate > 0 and self.only_fundings_active:
+                    self.is_active = False
+
+                if self.fixed_customer_rate:
+                    if not self.is_active:
+                        self.fixed_customer_rate = False
+                        self.customer_rate = customer_rate
+                else:
+                    self.customer_rate = customer_rate
+            else:
+                if not self.fixed_customer_rate:
+                    self.customer_rate = customer_rate
+
 
 class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.family'
@@ -87,10 +132,19 @@ class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     _order = 'name'
     _remote_name = 'jet.card.family'
 
+    def _compute_preview(self):
+        for family in self:
+            if family.logo:
+                family.preview = '<img src="%s"/>' % family.logo
+            else:
+                family.preview = False
+
     acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
     logo = fields.Char(readonly=True)
+    preview = fields.Html(compute='_compute_preview', readonly=True, sanitize=False)
+
 
 class PaymentAcquirerJetcheckoutApiBank(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.bank'

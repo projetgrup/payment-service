@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="log_wizard_form" model="ir.ui.view">
+    <field name="name">syncops.log.wizard.form</field>
+    <field name="model">syncops.log.wizard</field>
+    <field name="arch" type="xml">
+        <form>
+            <group>
+                <p class="h4 my-3 text-700 text-center" colspan="2">Please select a date range</p>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="connector_id" force_save="1" invisible="1"/>
+            </group>
+            <footer>
+                <button name="confirm" type="object" class="btn-primary" string="View" icon="fa-file-text-o"/>
+                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_log_wizard" model="ir.actions.act_window">
+    <field name="name">Logs</field>
+    <field name="res_model">syncops.log.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+</odoo>

@@ -38,6 +38,7 @@
             'payment_jetcheckout/static/src/scss/payment.scss',
         ],
         'web.assets_backend': [
+            'payment_jetcheckout/static/src/js/widget.js',
             'payment_jetcheckout/static/src/js/transaction.js',
         ],
         'web.assets_qweb': [
