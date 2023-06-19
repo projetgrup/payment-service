@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-12 13:42+0000\n"
-"PO-Revision-Date: 2023-06-12 13:42+0000\n"
+"POT-Creation-Date: 2023-06-19 19:38+0000\n"
+"PO-Revision-Date: 2023-06-19 19:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -470,6 +470,7 @@ msgid "Application Name"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.actions.act_window,name:payment_jetcheckout.action_api_application
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_applications
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__application_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__applications
@@ -480,6 +481,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Applications"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_application
+msgid "Applications are listed here"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -595,6 +601,11 @@ msgid "Campaign Options"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_campaign_table_ok
+msgid "Campaign Table on Payment Page"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Campaign:"
 msgstr ""
@@ -647,6 +658,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__card_families
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_family_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Card Families"
 msgstr ""
@@ -748,6 +760,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_rate
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Commission Rate"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1028,6 +1045,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate
 msgid "Customer Rate"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate_active
+msgid "Customer Rate Active"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1674,6 +1696,11 @@ msgid "Mandatory"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__margin_rate
+msgid "Margin Rate"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__mastercard
 msgid "Mastercard"
 msgstr ""
@@ -1753,6 +1780,16 @@ msgid "No application selected"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_application
+msgid "No application yet"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_pos
+msgid "No virtual pos yet"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_pos__usage_3d__not_usable
 msgid "Not Usable"
 msgstr ""
@@ -1767,6 +1804,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "Only \"Draft\" or \"Pending\" payment transactions can be removed"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__only_fundings_active
+msgid "Only Fundings Active"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1943,6 +1985,11 @@ msgid "Pending"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_physical
+msgid "Physical POS"
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #, python-format
@@ -2083,6 +2130,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__card_type__prepaid-business
 msgid "Prepaid-Business"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__preview
+msgid "Preview"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2231,6 +2283,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_kanban
 #, python-format
@@ -2399,6 +2452,12 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__third_selection
 msgid "Third Selection Criteria"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "This transaction could not be found on payment server"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2574,6 +2633,7 @@ msgid "Virtual PoS Reference"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.actions.act_window,name:payment_jetcheckout.action_api_pos
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_poses
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__virtual_poses
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__virtual_pos_id
@@ -2583,6 +2643,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
 msgid "Virtual Pos"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_pos
+msgid "Virtual poses are listed here"
 msgstr ""
 
 #. module: payment_jetcheckout

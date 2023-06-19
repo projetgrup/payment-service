@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-12 13:42+0000\n"
-"PO-Revision-Date: 2023-06-12 16:48+0300\n"
+"POT-Creation-Date: 2023-06-19 19:38+0000\n"
+"PO-Revision-Date: 2023-06-19 22:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -532,6 +532,7 @@ msgid "Application Name"
 msgstr "Uygulama"
 
 #. module: payment_jetcheckout
+#: model:ir.actions.act_window,name:payment_jetcheckout.action_api_application
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_applications
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications__application_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__applications
@@ -543,6 +544,11 @@ msgstr "Uygulama"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Applications"
 msgstr "Uygulamalar"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_application
+msgid "Applications are listed here"
+msgstr "Uygulamalar burada listelenir"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__auth_code
@@ -657,6 +663,11 @@ msgid "Campaign Options"
 msgstr "Kampanya Seçenekleri"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_campaign_table_ok
+msgid "Campaign Table on Payment Page"
+msgstr "Ödeme Sayfasında Kampanya Tablosu"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_form
 msgid "Campaign:"
 msgstr "Kampanya:"
@@ -709,6 +720,7 @@ msgstr "Kart Bankası"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__card_families
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_family_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
 msgid "Card Families"
 msgstr "Kart Aileleri"
@@ -811,6 +823,11 @@ msgstr "Komisyon Tutarı"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Commission Rate"
 msgstr "Komisyon Oranı"
+
+#. module: payment_jetcheckout
+#: model:ir.model,name:payment_jetcheckout.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__company_id
@@ -1091,6 +1108,11 @@ msgstr "Müşteri Posta Kodu"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate
 msgid "Customer Rate"
 msgstr "Müşteri Oranı"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate_active
+msgid "Customer Rate Active"
+msgstr "Müşteri Oranı Aktif"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__customer_surname
@@ -1733,6 +1755,11 @@ msgid "Mandatory"
 msgstr "Zorunlu"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__margin_rate
+msgid "Margin Rate"
+msgstr "Marj Oranı"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__mastercard
 msgid "Mastercard"
 msgstr "Mastercard"
@@ -1814,6 +1841,16 @@ msgid "No application selected"
 msgstr "Bir uygulama seçilmedi"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_application
+msgid "No application yet"
+msgstr "Bir uygulama yok"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_pos
+msgid "No virtual pos yet"
+msgstr "Bir sanal pos yok"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_pos__usage_3d__not_usable
 msgid "Not Usable"
 msgstr "Kullanılamaz"
@@ -1831,6 +1868,11 @@ msgid "Only \"Draft\" or \"Pending\" payment transactions can be removed"
 msgstr ""
 "Sadece \"Taslak\" veya \"Beklemede\" durumundaki ödeme işlemleri "
 "kaldırılabilir"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__only_fundings_active
+msgid "Only Fundings Active"
+msgstr "Sadece Fonlar Aktif"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_order_id
@@ -2007,6 +2049,11 @@ msgid "Pending"
 msgstr "Beklemede"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_physical
+msgid "Physical POS"
+msgstr "Fiziksel POS"
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/payment_page.js:0
 #, python-format
@@ -2150,6 +2197,11 @@ msgstr "Prepaid"
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__card_type__prepaid-business
 msgid "Prepaid-Business"
 msgstr "Prepaid-Business"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_family__preview
+msgid "Preview"
+msgstr "Önizleme"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__priority
@@ -2296,6 +2348,7 @@ msgstr "CVC"
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_kanban
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_line_kanban
 #, python-format
@@ -2467,6 +2520,12 @@ msgstr "%s için %s içinde bir yevmiye satırı bulunamadı (%s)"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__third_selection
 msgid "Third Selection Criteria"
 msgstr "Üçüncü Seçim Kriteri"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "This transaction could not be found on payment server"
+msgstr "Bu işlem ödeme sunucusunda bulunamadı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__threed
@@ -2643,6 +2702,7 @@ msgid "Virtual PoS Reference"
 msgstr "Sanal Pos Referansı"
 
 #. module: payment_jetcheckout
+#: model:ir.actions.act_window,name:payment_jetcheckout.action_api_pos
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_poses
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__virtual_poses
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__virtual_pos_id
@@ -2653,6 +2713,11 @@ msgstr "Sanal Pos Referansı"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
 msgid "Virtual Pos"
 msgstr "Sanal Pos"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout.action_api_pos
+msgid "Virtual poses are listed here"
+msgstr "Sanal poslar burada listelenir"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__vpos_id

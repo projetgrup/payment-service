@@ -324,7 +324,7 @@
                     <div t-if="not s2s_form" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div id="installment_table" class="payment-gradient border card p-3">
+                    <div t-if="not company.payment_page_campaign_table_ok" id="installment_table" class="payment-gradient border card p-3">
                         <div>
                             <div class="font-weight-bold text-primary text-uppercase installment-row installment-header">
                                 <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
@@ -347,6 +347,40 @@
                                 <div t-if="not share" id="campaigns_table" class="mt-2">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 p-2">
+                                <button id="payment_pay" class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100" style="text-overflow: ellipsis;">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                            </div>
+                        </div>
+                        <div t-else="" class="row font-weight-bold text-uppercase">
+                            <div id="installments_table" class="col-12 p-2">
+                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
+                            </div>
+                            <div class="d-none">
+                                <button id="payment_pay" class="payment_pay d-none"/>
+                            </div>
+                        </div>
+                        <input id="campaign" type="hidden" t-att-value="campaign or ''"/>
+                    </div>
+                    <div t-else="" id="campaign_table" class="payment-gradient border card p-3">
+                        <div>
+                            <div class="font-weight-bold text-primary text-uppercase installment-row installment-header">
+                                <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
+                                <t t-foreach="campaigns" t-as="campaign_name">
+                                    <div class="text-center" t-esc="campaign_name"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div id="installment_row" class="d-none"/>
+                        <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
+                            <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
+                        </div>
+                        <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
+                            <div class="col-xl-6 p-2">
+                                <div id="installments_table">
+                                    <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
+                                    <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
@@ -445,7 +479,7 @@
                                         <td><span t-field="aml.name"/></td>
                                         <td class="text-right"><span t-field="aml.debit"/></td>
                                         <td class="text-right"><span t-field="aml.credit"/></td>
-                                        <td class="border-right text-right pr-2"><span t-esc="amount_balance" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
+                                        <td class="border-right text-right pr-2"><span t-esc="amount_balance" t-options="{'widget': 'monetary', 'display_currency': installment_table.currency_id}"/></td>
                                     </tr>
                                     <t t-set="amount_balance" t-value="amount_balance - aml.balance"/>
                                 </t>
@@ -530,6 +564,33 @@
                 </div>
             </t>
         </main>
+    </template>
+
+
+    <template id="campaign" name="Payment Campaign">
+        <t t-foreach="installment['installments']" t-as="row">
+            <t t-set="installment_count" t-value="row['total_installment']"/>
+            <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
+                <t t-set="customer_rate" t-value="row['customer_rate']"/>
+                <t t-set="installment_rate" t-value="row['installment_rate']"/>
+                <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                <div class="installment-cell">
+                    <div class="text-center">
+                        <input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-data-value="row['installment_desc']" t-att-checked="row['installment_count'] == 1"/>
+                        <span class="installment-radio"/>
+                    </div>
+                    <div>
+                        <span t-esc="row['installment_count']"/>
+                    </div>
+                </div>
+                <div class="text-center side-border">
+                    <span t-esc="2" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    <span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></div>
+                <div class="text-center">
+                    <span t-esc="3" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                </div>
+            </div>
+        </t>
     </template>
 
     <template id="payment_page_transaction" name="Payment Transactions">
