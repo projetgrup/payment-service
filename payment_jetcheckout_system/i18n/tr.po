@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-19 12:12+0000\n"
-"PO-Revision-Date: 2023-06-19 15:15+0300\n"
+"POT-Creation-Date: 2023-06-19 19:37+0000\n"
+"PO-Revision-Date: 2023-06-19 22:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -462,6 +462,16 @@ msgstr "Şubeler"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Campaign"
 msgstr "Kampanya"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Campaign Table"
+msgstr "Kampanya Tablosu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_table_ok
+msgid "Campaign Table on Payment Page"
+msgstr "Ödeme Sayfasında Kampanya Tablosu"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
@@ -1828,6 +1838,12 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_show_payment_link
+#: model:res.groups,name:payment_jetcheckout_system.group_show_payment_link
+msgid "Show Payment Link"
+msgstr "Ödeme Linki Göster"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__sibling_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__sibling_ids
 msgid "Sibling"
@@ -2156,6 +2172,11 @@ msgstr "%s adresine bildirim gönderilemedi: %s"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__url
 msgid "Url"
 msgstr "Url"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Use campaign table instead of installment table on payment page"
+msgstr "Ödeme sayfasında taksit tablosu yerine kampanya tablosu kullanın"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form

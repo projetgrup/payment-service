@@ -4,7 +4,7 @@
 
 {
     'name': 'jetCheckout Payment System',
-    'version': '1.3',
+    'version': '1.4',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',

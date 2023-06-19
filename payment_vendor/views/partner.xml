@@ -35,8 +35,25 @@
             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" optional="hide"/>
         </xpath>
         <xpath expr='//tree' position="inside">
-            <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link"/>
+            <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link" groups="payment_jetcheckout_system.group_show_payment_link"/>
             <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card" attrs="{'invisible': [('is_portal', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="parent_kanban" model="ir.ui.view">
+    <field name="name">res.vendor.parent.kanban</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr='//div[@class="oe_kanban_details"]/ul' position="after">
+            <div t-if="!record.parent_id.raw_value" class="o_row">
+                <button name="action_redirect_payment_link" type="object" class="btn btn-secondary" groups="payment_jetcheckout_system.group_show_payment_link"><i class="fa fa-link mr-2"/>Payment Link</button>
+                <t t-if="record.is_internal.value">
+                    <button name="action_redirect_payment_page" type="object" class="btn btn-secondary"><i class="fa fa-credit-card mr-2"/>Payment Page</button>
+                </t>
+            </div>
         </xpath>
     </field>
     </record>
