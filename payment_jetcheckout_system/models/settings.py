@@ -47,3 +47,15 @@ class PaymentSettingsNotificationWebhook(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     url = fields.Char('Url', required=True)
+
+
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    payment_default_email_setting = fields.Boolean(string='Payment Default Email Settings', config_parameter='jetcheckout.email.default')
+    payment_default_email_server = fields.Many2one('ir.mail_server', string='Payment Default Email Server', config_parameter='jetcheckout.email.server')
+    payment_default_email_template = fields.Many2one('mail.template', string='Payment Default Email Template', config_parameter='jetcheckout.email.template')
+    payment_default_sms_setting = fields.Boolean(string='Payment Default SMS Settings', config_parameter='jetcheckout.sms.default')
+    payment_default_sms_provider = fields.Many2one('sms.provider', string='Payment Default SMS Provider', config_parameter='jetcheckout.sms.provider')
+    payment_default_sms_template = fields.Many2one('sms.template', string='Payment Default SMS Settings', config_parameter='jetcheckout.sms.template')
+ 

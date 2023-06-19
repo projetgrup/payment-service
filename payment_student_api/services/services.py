@@ -317,7 +317,9 @@ class StudentAPIService(Component):
         if not key:
             return Response("Application key and secret key are not matched", status=401, mimetype="application/json")
 
-        if hasattr(params, 'vat') and params.vat:
+        if hasattr(params, 'vat') and params.vat and hasattr(params, 'ref') and params.ref:
+            student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('parent_id', '!=', False), ('vat', '=ilike', '%%%s' % params.vat), ('ref', '=', params.ref)], limit=1)
+        elif hasattr(params, 'vat') and params.vat:
             student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('parent_id', '!=', False), ('vat', '=ilike', '%%%s' % params.vat)], limit=1)
         elif hasattr(params, 'ref') and params.ref:
             student = self.env['res.partner'].sudo().search([('company_id', '=', company), ('parent_id', '!=', False), ('ref', '=', params.ref)], limit=1)

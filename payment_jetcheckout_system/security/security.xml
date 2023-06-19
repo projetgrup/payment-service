@@ -2,6 +2,20 @@
 <odoo>
     <data>
         <!-- groups -->
+        <record id="module_category_system_technical" model="ir.module.category">
+            <field name="name">Payment System Technical</field>
+            <field name="description">Payment System Technical</field>
+            <field name="sequence">5</field>
+        </record>
+        <record model="res.groups" id="group_system_own_partner">
+            <field name="name">Own Partners Only</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
+        <record model="res.groups" id="group_system_create_partner">
+            <field name="name">Create Partners</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
+
         <record id="module_category_system" model="ir.module.category">
             <field name="name">Payment System</field>
             <field name="description">Payment System</field>
@@ -15,18 +29,8 @@
         <record model="res.groups" id="group_system_manager">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_system"/>
-            <field name="implied_ids" eval="[(4, ref('group_system_user')), (4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_system_user')), (4, ref('group_system_create_partner')), (4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
-        </record>
-
-        <record id="module_category_system_technical" model="ir.module.category">
-            <field name="name">Payment System Technical</field>
-            <field name="description">Payment System Technical</field>
-            <field name="sequence">5</field>
-        </record>
-        <record model="res.groups" id="group_system_own_partner">
-            <field name="name">Own Partners Only</field>
-            <field name="category_id" ref="module_category_system_technical"/>
         </record>
     </data>
 
