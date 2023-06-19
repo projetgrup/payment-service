@@ -126,6 +126,9 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, fields):
+        if self.env.user.company_id.system and not self.env.user.has_group('payment_jetcheckout_system.group_system_create_partner'):
+            raise UserError(_('You do not have permission to create a partner'))
+ 
         res = super().default_get(fields)
         if not self.env.context.get('skip_company') and self.env.company.system:
             res['company_id'] = self.env.company.id
@@ -138,6 +141,9 @@ class Partner(models.Model):
 
     @api.model
     def create(self, values):
+        if self.env.user.company_id.system and not self.env.user.has_group('payment_jetcheckout_system.group_system_create_partner'):
+            raise UserError(_('You do not have permission to create a partner'))
+
         if 'system' not in values and 'company_id' in values:
             company = self.env['res.company'].sudo().browse(values['company_id'])
             if company and company.system:
@@ -389,9 +395,17 @@ class Partner(models.Model):
         if len(company) > 1:
             raise UserError(_('Partners have to be in one company when sending mass messages, but there are %s of them. (%s)') % (len(company), ', '.join(company.mapped('name'))))
 
-        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
+        params = self.env['ir.config_parameter'].sudo().get_param
         mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
+        if not mail_template and params('jetcheckout.email.default'):
+            id = int(params('jetcheckout.email.template', '0'))
+            mail_template = self.env['mail.template'].browse(id)
         sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
+        if not sms_template and params('jetcheckout.sms.default'):
+            id = int(params('jetcheckout.sms.template', '0'))
+            sms_template = self.env['sms.template'].browse(id)
+ 
+        type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
         res = self.env['payment.acquirer.jetcheckout.send'].create({
             'selection': [(6, 0, type_email.ids)],
             'type_ids': [(6, 0, type_email.ids)],

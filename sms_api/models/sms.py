@@ -14,7 +14,6 @@ class SmsProvider(models.Model):
     _name = 'sms.provider'
     _description = 'SMS Providers'
     _order = 'sequence'
-    _rec_name = 'type'
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(string='Priority', default=10)
@@ -23,6 +22,12 @@ class SmsProvider(models.Model):
     username = fields.Char(required=True)
     password = fields.Char(required=True)
     originator = fields.Char()
+
+    def name_get(self):
+        return [(provider.id, provider._name_get()) for provider in self]
+ 
+    def _name_get(self):
+        return self.type.capitalize()
 
     _sql_constraints = [
         ('company_provider_unique', 'unique (company_id, provider)', 'Provider must be unique per company'),
