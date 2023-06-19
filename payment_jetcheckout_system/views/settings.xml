@@ -96,4 +96,60 @@
         </form>
     </field>
     </record>
+ 
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="Payment" string="Payment" data-key="payment" groups="base.group_system">
+                <h2>Payment System</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="payment_default_email_setting"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_default_email_setting" string="Default Email Settings"/>
+                            <div class="text-muted">
+                                Use default email server and email template
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('payment_default_email_setting', '=', False)]}">
+                                <div class="mt16">
+                                    <label for="payment_default_email_server" string="Server" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="payment_default_email_server" class="oe_inline" options="{'no_create': True}"/>
+                                    <br/>
+                                    <label for="payment_default_email_template" string="Template" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="payment_default_email_template" class="oe_inline" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="payment_default_sms_setting"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_default_sms_setting" string="Default SMS Settings"/>
+                            <div class="text-muted">
+                                Use default SMS provider and SMS template
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('payment_default_sms_setting', '=', False)]}">
+                                <div class="mt16">
+                                    <label for="payment_default_sms_provider" string="Provider" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="payment_default_sms_provider" class="oe_inline" options="{'no_create': True}"/>
+                                    <br/>
+                                    <label for="payment_default_sms_template" string="Template" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="payment_default_sms_template" class="oe_inline" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        </field>
+     </record>
 </odoo>

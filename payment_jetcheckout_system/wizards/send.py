@@ -32,16 +32,25 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
                 type.icon_preview = ''
 
     def _compute_message(self):
+        params = self.env['ir.config_parameter'].sudo().get_param
         for type in self:
             message = ''
             if type.code == 'email':
                 server = self.env['ir.mail_server'].search([('company_id', '=', type.company_id.id)], limit=1)
+                if not server and params('jetcheckout.email.default'):
+                    id = int(params('jetcheckout.email.server', '0'))
+                    server = self.env['ir.mail_server'].browse(id)
+ 
                 if server:
                     message = _('Emails are going to be sent on %s') % server.smtp_host
                 else:
                     message = _('There is not any outgoing mail server set')
             elif type.code == 'sms':
                 provider = self.env['sms.provider'].get(type.company_id.id)
+                if not provider and params('jetcheckout.sms.default'):
+                    id = int(params('jetcheckout.sms.provider', '0'))
+                    provider = self.env['sms.provider'].browse(id)
+
                 if provider:
                     message = _('SMS messages are going to be sent on %s') % provider.type.capitalize()
                 else:
@@ -207,8 +216,18 @@ class PaymentAcquirerJetcheckoutSend(models.TransientModel):
         sms_template = 'sms' in selections and self.sms_template_id or False
         comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+
+        params = self.env['ir.config_parameter'].sudo().get_param
         mail_server = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1)
+        if not mail_server and params('jetcheckout.email.default'):
+            id = int(params('jetcheckout.email.server', '0'))
+            mail_server = self.env['ir.mail_server'].browse(id)
+
         sms_provider = self.env['sms.provider'].get(company.id)
+        if not sms_provider and params('jetcheckout.sms.default'):
+            id = int(params('jetcheckout.sms.provider', '0'))
+            sms_provider = self.env['sms.provider'].browse(id)
+
         email_from = user.email_formatted or mail_server.email_formatted
         reply_to = email_from
         mail_messages = []

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-13 11:22+0000\n"
-"PO-Revision-Date: 2023-06-13 14:25+0300\n"
+"POT-Creation-Date: 2023-06-19 12:12+0000\n"
+"PO-Revision-Date: 2023-06-19 15:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -557,6 +557,11 @@ msgid "Company Hierarchy"
 msgstr "Şirket Hiyerarşisi"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_config_settings
+msgid "Config Settings"
+msgstr "Yapılandırma Ayarları"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 msgid "Confirm"
 msgstr "Onayla"
@@ -595,6 +600,12 @@ msgstr "İşlem<br/>(Tümü / Başarılı)"
 #, python-format
 msgid "Create"
 msgstr "Oluştur"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_create_partner
+#: model:res.groups,name:payment_jetcheckout_system.group_system_create_partner
+msgid "Create Partners"
+msgstr "İş Ortağı Oluştur"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_uid
@@ -684,6 +695,16 @@ msgstr "Varsayılan Şirket"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__email
 msgid "Default Email Address"
 msgstr "Varsayılan Eposta Adresi"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Default Email Settings"
+msgstr "Varsayılan Eposta Ayarları"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Default SMS Settings"
+msgstr "Varsayılan SMS Ayarları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__description
@@ -1379,6 +1400,7 @@ msgstr "Ödenecekler"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment"
 msgstr "Ödeme"
 
@@ -1407,6 +1429,32 @@ msgstr "Ödeme Tutarı"
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_dashboard
 msgid "Payment Dashboard"
 msgstr "Ödeme Paneli"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_server
+msgid "Payment Default Email Server"
+msgstr "Ödeme Varsayılan Eposta Sunucusu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_setting
+msgid "Payment Default Email Settings"
+msgstr "Ödeme Varsayılan Eposta Ayarları"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_template
+msgid "Payment Default Email Template"
+msgstr "Ödeme Varsayılan Eposta Şablonu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_provider
+msgid "Payment Default SMS Provider"
+msgstr "Ödeme Varsayılan SMS Sağlayıcı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_setting
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_template
+msgid "Payment Default SMS Settings"
+msgstr "Ödeme Varsayılan SMS Ayarları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_item
@@ -1447,6 +1495,7 @@ msgstr "Ödeme Ayarları Bildirim Web Kancası"
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
 #: model:ir.module.category,name:payment_jetcheckout_system.module_category_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment System"
 msgstr "Ödeme Sistemi"
 
@@ -1569,6 +1618,11 @@ msgstr "Yetki Türü"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Process Notifications"
 msgstr "Bildirimleri İşle"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Provider"
+msgstr "Sağlayıcı"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
@@ -1758,6 +1812,11 @@ msgid "Sequence"
 msgstr "Sıra"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Server"
+msgstr "Sunucu"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Set Password"
 msgstr "Parola Ayarla"
@@ -1852,6 +1911,7 @@ msgid "Telegram"
 msgstr "Telegram"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Template"
 msgstr "Şablon"
@@ -2098,6 +2158,16 @@ msgid "Url"
 msgstr "Url"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Use default SMS provider and SMS template"
+msgstr "Varsayılan SMS sağlayıcı ve SMS şablonu kullanın"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Use default email server and email template"
+msgstr "Varsayılan eposta sunucusu ve eposta şablonu kullanın"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__user
 #: model:res.groups,name:payment_jetcheckout_system.group_system_user
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
@@ -2254,6 +2324,12 @@ msgstr "<span/>"
 #, python-format
 msgid "You cannot group dashboard items"
 msgstr "Panel kayıtlarını gruplayamazsınız"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "You do not have permission to create a partner"
+msgstr "İş ortağı oluşturmak için yetkiniz mevcut değil"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0

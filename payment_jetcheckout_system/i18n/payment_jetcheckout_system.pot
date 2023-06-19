@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-13 11:22+0000\n"
-"PO-Revision-Date: 2023-06-13 11:22+0000\n"
+"POT-Creation-Date: 2023-06-19 12:12+0000\n"
+"PO-Revision-Date: 2023-06-19 12:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -402,6 +402,11 @@ msgid "Company Hierarchy"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 msgid "Confirm"
 msgstr ""
@@ -439,6 +444,12 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/static/src/xml/company.xml:0
 #, python-format
 msgid "Create"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_create_partner
+#: model:res.groups,name:payment_jetcheckout_system.group_system_create_partner
+msgid "Create Partners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -525,6 +536,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__email
 msgid "Default Email Address"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Default Email Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Default SMS Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1209,6 +1230,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment"
 msgstr ""
 
@@ -1236,6 +1258,32 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_dashboard
 msgid "Payment Dashboard"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_server
+msgid "Payment Default Email Server"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_setting
+msgid "Payment Default Email Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_email_template
+msgid "Payment Default Email Template"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_provider
+msgid "Payment Default SMS Provider"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_setting
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_default_sms_template
+msgid "Payment Default SMS Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1277,6 +1325,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
 #: model:ir.module.category,name:payment_jetcheckout_system.module_category_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment System"
 msgstr ""
 
@@ -1398,6 +1447,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Process Notifications"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Provider"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1588,6 +1642,11 @@ msgid "Sequence"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Server"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Set Password"
 msgstr ""
@@ -1680,6 +1739,7 @@ msgid "Telegram"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Template"
 msgstr ""
@@ -1922,6 +1982,16 @@ msgid "Url"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Use default SMS provider and SMS template"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Use default email server and email template"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__user
 #: model:res.groups,name:payment_jetcheckout_system.group_system_user
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
@@ -2077,6 +2147,13 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "You cannot group dashboard items"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "You do not have permission to create a partner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
