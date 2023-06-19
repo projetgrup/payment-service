@@ -51,6 +51,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_campaign_table_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
+                                    <div class="text-muted">
+                                        Use campaign table instead of installment table on payment page
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">
                         <h2>Notifications</h2>

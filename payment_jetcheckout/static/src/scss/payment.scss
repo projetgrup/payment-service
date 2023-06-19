@@ -128,7 +128,7 @@ input:checked + .slider:before {
     }
 }
 
-#installment_table {
+#installment_table, #campaign_table {
     background-color: #fff;
     color: #888 !important;
     display: flex;
@@ -177,6 +177,18 @@ input:checked + .slider:before {
             background-color: #fff !important;
             height: 30px;
             cursor: initial;
+        }
+    }
+}
+
+#campaign_table {
+    .installment-row {
+        justify-content: space-around;
+        > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
         }
     }
 }
