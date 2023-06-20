@@ -1,23 +1,28 @@
-odoo.define('payment_jetcheckout.payment_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.page **/
+'use strict';
 
-var config = require('web.config');
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var rpc = require('web.rpc');
-var dialog = require('web.Dialog');
-var cards = require('payment_jetcheckout.cards');
-var framework = require('payment_jetcheckout.framework');
+import config from 'web.config';
+import core from 'web.core';
+import rpc from 'web.rpc';
+import publicWidget from 'web.public.widget';
+import dialog from 'web.Dialog';
+import cards from 'paylox.cards';
+import framework from 'paylox.framework';
 
-var _t = core._t;
-var qweb = core.qweb;
+const _t = core._t;
+const qweb = core.qweb;
 
-publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
+publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     selector: '.payment-card',
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
+    init: function (parent, options) {
+        this._super(parent, options);
+    },
+ 
     start: function () {
         var self = this;
+        console.log(this);
         return this._super.apply(this, arguments).then(function () {
             self.$cctype = '';
             self.$ccfamily = '';
@@ -41,6 +46,8 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
             self.$svgnumber = document.getElementById('svgnumber');
             self.$creditcard = document.querySelector('.creditcard');
             self.$installments_table = document.getElementById('installments_table');
+            self.$header_empty = document.getElementById('installment_header_empty');
+            self.$header = document.getElementById('installment_header');
             self.$campaigns_table = document.getElementById('campaigns_table');
             self.$payment_pay = document.getElementById('payment_pay');
             self.$payment_form = document.getElementById('o_payment_form_pay');
@@ -413,12 +420,30 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     },
 
     clickRow: function (ev) {
-        var $rows = $(this.$row).find('div');
-        $rows.removeClass('installment-selected');
-        $rows.find('input').attr({'checked': false});
-        var $el = $(ev.target).closest('div.installment-row');
-        $el.addClass('installment-selected');
-        $el.find('input').attr({'checked': true});
+        if ($(this.$row).data('type') === 'installment') {
+            var $rows = $(this.$row).find('div');
+            $rows.removeClass('installment-selected');
+            $rows.find('input').attr({'checked': false});
+
+            var $el = $(ev.target).closest('div.installment-row');
+            $el.addClass('installment-selected');
+            $el.find('input').attr({'checked': true});
+        } else if ($(this.$row).data('type') === 'campaign') {
+            var $el = $(ev.target).closest('div.campaign-cell');
+            if (!$el.length) {
+                return;
+            }
+
+            var $cells = $(this.$row).find('div.campaign-cell');
+            $cells.removeClass('installment-selected');
+            $cells.find('input').attr({'checked': false});
+
+            $el.addClass('installment-selected');
+            var $input = $el.find('input');
+            $input.attr({'checked': true});
+
+            this.$campaign.value = $input.data('campaign');
+        }
     },
 
     acceptExpirationDate: function () {
@@ -444,8 +469,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 this.$svgnumber.innerHTML = '0123 4567 8910 1112';
             }
             this.$empty.classList.remove('d-none');
+            this.$header_empty.classList.remove('d-none');
             this.$row.classList.add('d-none');
             this.$row.innerHTML = '';
+            this.$header.classList.add('d-none');
+            this.$header.innerHTML = '';
             this.$cclogo.innerHTML = '';
             this.$cclogo.classList.remove('show');
             this.$ccfamily = '';
@@ -469,8 +497,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 }).then(function (result) {
                     if ('error' in result) {
                         self.$empty.classList.remove('d-none');
+                        self.$header_empty.classList.remove('d-none');
                         self.$row.classList.add('d-none');
-                        self.$row.innerHTML = ''
+                        self.$row.innerHTML = '';
+                        self.$header.classList.add('d-none');
+                        self.$header.innerHTML = '';
                         self.displayNotification({
                             type: 'warning',
                             title: _t('Warning'),
@@ -479,8 +510,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                         return false;
                     } else {
                         self.$empty.classList.add('d-none');
+                        self.$header_empty.classList.add('d-none');
                         self.$row.classList.remove('d-none');
                         self.$row.innerHTML = result.render;
+                        self.$header.classList.remove('d-none');
+                        self.$header.innerHTML = result.header;
                         if (result.card) {
                             self.$cclogo.innerHTML = '<img src="' + result.logo + '" alt="' + result.card + '"/>';
                             self.$cclogo.classList.add('show');
@@ -499,7 +533,11 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
                 });
             } else {
                 this.$empty.classList.remove('d-none');
+                this.$header_empty.classList.remove('d-none');
+                this.$row.classList.add('d-none');
                 this.$row.innerHTML = '';
+                this.$header.classList.add('d-none');
+                this.$header.innerHTML = '';
                 this.$cclogo.innerHTML = '';
                 this.$cclogo.classList.remove('show');
                 this.$ccfamily = '';
@@ -637,7 +675,7 @@ publicWidget.registry.JetcheckoutPaymentPage = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.JetcheckoutPaymentTransaction = publicWidget.Widget.extend({
+publicWidget.registry.payloxPaymentTransaction = publicWidget.Widget.extend({
     selector: '.payment-transaction',
 
     start: function () {
@@ -649,4 +687,4 @@ publicWidget.registry.JetcheckoutPaymentTransaction = publicWidget.Widget.extend
     },
 });
 
-});
+export default publicWidget.registry.payloxPage;

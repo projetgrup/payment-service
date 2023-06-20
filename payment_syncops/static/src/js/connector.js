@@ -1,23 +1,22 @@
-odoo.define('payment_syncops.payment_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.syncops.page **/
+'use strict';
 
-let core = require('web.core');
-let publicWidget = require('web.public.widget');
-let rpc = require('web.rpc');
-let dialog = require('web.Dialog');
-var framework = require('payment_jetcheckout.framework');
-let paymentSystemPage = publicWidget.registry.JetcheckoutPaymentSystemPage;
+import core from 'web.core';
+import rpc from 'web.rpc';
+import Dialog from 'web.Dialog';
+import framework from 'paylox.framework';
+import systemPage from 'paylox.system.page';
 
-let qweb = core.qweb;
-let _t = core._t;
+const qweb = core.qweb;
+const _t = core._t;
 
-paymentSystemPage.include({
-    events: _.extend({}, paymentSystemPage.prototype.events, {
+systemPage.include({
+    events: _.extend({}, systemPage.prototype.events, {
         'click .o_connector_partner_get': '_onClickConnectorPartnerGet',
         'click .o_connector_partner_reset': '_onClickConnectorPartnerReset',
     }),
 
-    xmlDependencies: (paymentSystemPage.prototype.xmlDependencies || []).concat(
+    xmlDependencies: (systemPage.prototype.xmlDependencies || []).concat(
         ["/payment_syncops/static/src/xml/connector.xml"]
     ),
 
@@ -82,7 +81,7 @@ paymentSystemPage.include({
         partner.flist = [];
         partner.filter = false;
         const self = this;
-        const popup = new dialog(this, {
+        const popup = new Dialog(this, {
             title: _t('Select a partner'),
             $content: qweb.render('payment_syncops.partner_list', {}),
             dialogClass: 'o_connector_partner_table'
@@ -280,6 +279,4 @@ paymentSystemPage.include({
             $el.addClass('d-none');
         });
     },
-});
-
 });
