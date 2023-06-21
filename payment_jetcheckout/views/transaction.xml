@@ -85,10 +85,10 @@
                     <label for="jetcheckout_vpos_name"/>
                     <div class="o_row">
                         <field name="jetcheckout_vpos_name"/>
-                        <span class="ml-2 font-italic" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '=', False)]}">
+                        <span class="ml-2 font-italic text-muted" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '=', '')]}">
                             (<field name="jetcheckout_vpos_ref"/>)
                         </span>
-                        <span class="ml-2 font-italic" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '!=', False)]}">
+                        <span class="ml-2 font-italic text-muted" groups="base.group_no_one" attrs="{'invisible': [('jetcheckout_vpos_ref', '!=', '')]}">
                             (No Reference)
                         </span>
                     </div>

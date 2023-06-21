@@ -21,8 +21,8 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_vendor/static/src/scss/frontend.scss',
-            'payment_vendor/static/src/js/frontend.js',
+            'payment_vendor/static/src/scss/page.scss',
+            'payment_vendor/static/src/js/page.js',
         ],
     },
 }

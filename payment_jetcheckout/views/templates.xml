@@ -290,16 +290,16 @@
                             <label for="name"><span>Name</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                            <input name="widget" id="card.number" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
                             <span class="bar-container"/>
                             <div id="cclogo" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
                             <svg id="ccicon" t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471"/>
-                            <label for="cardnumber"><span>Card Number</span></label>
+                            <label for="card.number"><span>Card Number</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="expirationdate" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
+                            <input name="widget" id="card.date" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
                             <span class="bar-container"/>
-                            <label for="expirationdate"><span>Expiration</span></label>
+                            <label for="card.date"><span>Expiration</span></label>
                         </div>
                         <div class="field-container">
                             <input id="securitycode" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
@@ -326,14 +326,12 @@
                     </div>
                     <div t-if="not company.payment_page_campaign_table_ok" id="installment_table" class="payment-gradient border card p-3">
                         <div>
-                            <div class="font-weight-bold text-primary text-uppercase installment-row installment-header">
-                                <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
-                                <div t-if="not s2s_form" class="text-center">Rate</div>
-                                <div class="text-center">Monthly</div>
-                                <div class="text-center">Total</div>
+                            <div id="installment_header_empty" class="font-weight-bold text-primary text-uppercase installment-row installment-header">
+                                <t t-call="payment_jetcheckout.payment_table_header"/>
                             </div>
+                            <div id="installment_header" class="d-none font-weight-bold text-primary text-uppercase installment-row installment-header"/>
                         </div>
-                        <div id="installment_row" class="d-none"/>
+                        <div id="installment_row" data-type="installment" class="d-none"/>
                         <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
@@ -365,14 +363,12 @@
                     </div>
                     <div t-else="" id="campaign_table" class="payment-gradient border card p-3">
                         <div>
-                            <div class="font-weight-bold text-primary text-uppercase installment-row installment-header">
-                                <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
-                                <t t-foreach="campaigns" t-as="campaign_name">
-                                    <div class="text-center" t-esc="campaign_name"/>
-                                </t>
+                            <div id="installment_header_empty" class="font-weight-bold text-primary text-uppercase installment-row installment-header">
+                                <t t-call="payment_jetcheckout.payment_table_header"/>
                             </div>
+                            <div id="installment_header" class="d-none font-weight-bold text-primary text-uppercase installment-row installment-header"/>
                         </div>
-                        <div id="installment_row" class="d-none"/>
+                        <div id="installment_row" data-type="campaign" class="d-none"/>
                         <div id="installment_empty" class="text-muted small h-100 w-75 text-center mt72 mx-auto">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
@@ -401,6 +397,26 @@
             </div>
             <div id="payment_installments" class="row mx-0 d-none"/>
         </div>
+    </template>
+
+    <template id="payment_table_header" name="Payment Table Header">
+        <t t-if="not company.payment_page_campaign_table_ok">
+            <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
+            <div t-if="not s2s_form" class="text-center">Rate</div>
+            <div class="text-center">Monthly</div>
+            <div class="text-center">Total</div>
+        </t>
+        <t t-else="">
+            <div class="text-center"><t t-if="s2s_form">Install.</t><t t-else="">Installment</t></div>
+            <t t-if="not campaigns or campaigns['index'] &lt; 0">
+                <div class="text-center">Campaign</div>
+            </t>
+            <t t-else="">
+                <t t-foreach="campaigns['names']" t-as="campaign_name">
+                    <div class="text-center" t-esc="campaign_name"/>
+                </t>
+            </t>
+        </t>
     </template>
 
     <template id="payment_loading" name="Payment Loading">
@@ -495,40 +511,69 @@
     </template>
 
     <template id="installment" name="Payment Installment">
-        <t t-if="not no_input">
-            <t t-foreach="installment['installments']" t-as="row">
-                <t t-set="installment_count" t-value="row['total_installment']"/>
-                <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
+        <t t-if="not company.payment_page_campaign_table_ok">
+            <t t-if="not no_input">
+                <t t-foreach="installment['installments']" t-as="row">
+                    <t t-set="installment_count" t-value="row['total_installment']"/>
+                    <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
+                        <t t-set="customer_rate" t-value="row['customer_rate']"/>
+                        <t t-set="installment_rate" t-value="row['installment_rate']"/>
+                        <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                        <div class="installment-cell">
+                            <div class="text-center">
+                                <input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-data-value="row['installment_desc']" t-att-checked="row['installment_count'] == 1" t-att-data-amount="installment_amount"/>
+                                <span class="installment-radio"/>
+                            </div>
+                            <div>
+                                <span t-esc="row['installment_count']"/>
+                                <span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/>
+                            </div>
+                        </div>
+                        <div t-if="not s2s_form" class="text-center side-border">%<span t-esc="customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></div>
+                        <div class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
+                        <div class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-foreach="installment['installments']" t-as="row">
                     <t t-set="customer_rate" t-value="row['customer_rate']"/>
                     <t t-set="installment_rate" t-value="row['installment_rate']"/>
-                    <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
-                    <div class="installment-cell">
-                        <div class="text-center">
-                            <input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-data-value="row['installment_desc']" t-att-checked="row['installment_count'] == 1"/>
-                            <span class="installment-radio"/>
-                        </div>
-                        <div>
-                            <span t-esc="row['installment_count']"/>
-                            <span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/>
-                        </div>
-                    </div>
-                    <div t-if="not s2s_form" class="text-center side-border">%<span t-esc="customer_rate" t-options="{'widget': 'float', 'precision': 2}"/></div>
-                    <div class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
-                    <div class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></div>
-                </div>
+                    <t t-set="installment_count" t-value="row['total_installment']"/>
+                    <tr t-if="installment_count > 0">
+                        <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                        <td class="text-center"><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></td>
+                        <td class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                        <td class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                    </tr>
+                </t>
             </t>
         </t>
         <t t-else="">
-            <t t-foreach="installment['installments']" t-as="row">
-                <t t-set="customer_rate" t-value="row['customer_rate']"/>
-                <t t-set="installment_rate" t-value="row['installment_rate']"/>
-                <t t-set="installment_count" t-value="row['total_installment']"/>
-                <tr t-if="installment_count > 0">
-                    <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
-                    <td class="text-center"><span t-esc="row['installment_count']"/><span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></td>
-                    <td class="text-center side-border"><span t-esc="installment_amount/installment_count" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
-                    <td class="text-center"><span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
-                </tr>
+            <t t-foreach="campaigns['installments'].items()" t-as="row">
+                <div class="installment-row">
+                    <div class="text-center">
+                        <span t-esc="row[0]"/>
+                    </div>
+                    <t t-foreach="enumerate(campaigns['names'])" t-as="col">
+                        <t t-if="col[0] in row[1]">
+                            <t t-set="installment" t-value="row[1][col[0]]"/>
+                            <t t-set="customer_rate" t-value="installment['customer_rate']"/>
+                            <t t-set="installment_rate" t-value="installment['installment_rate']"/>
+                            <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                            <div class="campaign-cell text-center">
+                                <div class="d-inline position-relative">
+                                    <input type="radio" name="installment_radio" class="d-none" t-att-value="row[0]" t-att-data-value="row[0]" t-att-data-campaign="col[1]" t-att-data-amount="installment_amount"/>
+                                    <span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <span t-if="installment['plus_installment']" t-esc="'+%s' % installment['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" style="right: -20px;" t-att-title="installment['plus_installment_description']"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div/>
+                        </t>
+                    </t>
+                </div>
             </t>
         </t>
     </template>
@@ -564,33 +609,6 @@
                 </div>
             </t>
         </main>
-    </template>
-
-
-    <template id="campaign" name="Payment Campaign">
-        <t t-foreach="installment['installments']" t-as="row">
-            <t t-set="installment_count" t-value="row['total_installment']"/>
-            <div t-if="installment_count > 0" t-attf-class="installment-row #{row['installment_count'] == 1 and 'installment-selected' or ''}">
-                <t t-set="customer_rate" t-value="row['customer_rate']"/>
-                <t t-set="installment_rate" t-value="row['installment_rate']"/>
-                <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
-                <div class="installment-cell">
-                    <div class="text-center">
-                        <input type="radio" name="installment_radio" t-att-value="row['installment_count']" t-att-data-value="row['installment_desc']" t-att-checked="row['installment_count'] == 1"/>
-                        <span class="installment-radio"/>
-                    </div>
-                    <div>
-                        <span t-esc="row['installment_count']"/>
-                    </div>
-                </div>
-                <div class="text-center side-border">
-                    <span t-esc="2" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                    <span t-if="row['plus_installment']" t-esc="'+%s' % row['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="row['plus_installment_description']"/></div>
-                <div class="text-center">
-                    <span t-esc="3" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                </div>
-            </div>
-        </t>
     </template>
 
     <template id="payment_page_transaction" name="Payment Transactions">

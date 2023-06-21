@@ -1,4 +1,4 @@
-odoo.define('payment_jetcheckout.framework', function (require) {
+/** @odoo-module alias=paylox.framework **/
 "use strict";
 
 function showLoading() {
@@ -25,9 +25,7 @@ function hideLoading() {
     }
 }
 
-return {
+export default {
     showLoading: showLoading,
     hideLoading: hideLoading,
 };
-
-});

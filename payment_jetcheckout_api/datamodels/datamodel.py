@@ -222,6 +222,7 @@ class PaymentAmount(Datamodel):
     _name = "payment.amount"
 
     amount = fields.Float(metadata={"title": "Payment Amount", "description": "Total amount of payment", "example": 145.3})
+    raw = fields.Float(metadata={"title": "Payment Raw Amount", "description": "Total amount of payment without customer commission rate", "example": 140.94})
     fees = fields.Float(metadata={"title": "Payment Fee", "description": "System use charge", "example": 10})
     installment = NestedModel("payment.installment", metadata={"title": "Installment information related to transaction", "description": "Installment details"})
     installment = NestedModel("payment.installment", metadata={"title": "Installment information related to transaction", "description": "Installment details"})

@@ -32,8 +32,8 @@
             'payment_student/static/src/scss/backend.scss',
         ],
         'web.assets_frontend': [
-            'payment_student/static/src/js/frontend.js',
-            'payment_student/static/src/scss/frontend.scss',
+            'payment_student/static/src/js/page.js',
+            'payment_student/static/src/scss/page.scss',
         ],
     },
 }

@@ -1,17 +1,17 @@
-odoo.define('payment_jetcheckout_system.payment_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.system.page **/
+'use strict';
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var rpc = require('web.rpc');
-var utils = require('web.utils');
-var dialog = require('web.Dialog');
-var paymentPage = publicWidget.registry.JetcheckoutPaymentPage;
+import core from 'web.core';
+import rpc from 'web.rpc';
+import publicWidget from 'web.public.widget';
+import dialog from 'web.Dialog';
+import utils from 'web.utils';
+import payloxPage from 'paylox.page';
 
-var round_di = utils.round_decimals;
-var _t = core._t;
+const round_di = utils.round_decimals;
+const _t = core._t;
 
-paymentPage.include({
+payloxPage.include({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
@@ -53,7 +53,7 @@ paymentPage.include({
 
 });
 
-publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend({
+publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',
 
     start: function () {
@@ -202,4 +202,4 @@ publicWidget.registry.JetcheckoutPaymentSystemPage = publicWidget.Widget.extend(
     },
 });
 
-});
+export default publicWidget.registry.payloxSystemPage;
