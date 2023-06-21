@@ -8,6 +8,7 @@ import publicWidget from 'web.public.widget';
 import dialog from 'web.Dialog';
 import cards from 'paylox.cards';
 import framework from 'paylox.framework';
+import payloxWidget from 'paylox.page.widget';
 
 const _t = core._t;
 const qweb = core.qweb;
@@ -18,77 +19,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
-    },
- 
-    start: function () {
-        var self = this;
-        console.log(this);
-        return this._super.apply(this, arguments).then(function () {
-            self.$cctype = '';
-            self.$ccfamily = '';
-            self.$name = document.getElementById('name');
-            self.$campaign = document.getElementById('campaign');
-            self.$campaignname = document.getElementById('campaign_name');
-            self.$cardnumber = document.getElementById('cardnumber');
-            self.$expirationdate = document.getElementById('expirationdate');
-            self.$securitycode = document.getElementById('securitycode');
-            self.$ccicon = document.getElementById('ccicon');
-            self.$ccsingle = document.getElementById('ccsingle');
-            self.$cclogo = document.getElementById('cclogo');
-            self.$amount = document.getElementById('amount');
-            self.$amount_installment = document.getElementById('amount_installment');
-            self.$currency = document.getElementById('currency');
-            self.$accept_terms = document.getElementById('accept_terms');
-            self.$payment_terms = document.querySelector('.terms-container');
-            self.$commission = document.getElementById('commission');
-            self.$row = document.getElementById('installment_row');
-            self.$empty = document.getElementById('installment_empty');
-            self.$svgnumber = document.getElementById('svgnumber');
-            self.$creditcard = document.querySelector('.creditcard');
-            self.$installments_table = document.getElementById('installments_table');
-            self.$header_empty = document.getElementById('installment_header_empty');
-            self.$header = document.getElementById('installment_header');
-            self.$campaigns_table = document.getElementById('campaigns_table');
-            self.$payment_pay = document.getElementById('payment_pay');
-            self.$payment_form = document.getElementById('o_payment_form_pay');
-            self.$success_url = document.getElementById('success_url');
-            self.$fail_url = document.getElementById('fail_url');
-            self.$partner = document.getElementById('partner');
-            self.$order = document.getElementById('order');
-            self.$invoice = document.getElementById('invoice');
-            self.$subscription = document.getElementById('subscription');
-
-            if (self.$amount) {
-                let amount = self.$amount.value;
-                if (amount.indexOf(',') >= 0) {
-                    amount = amount.replace('.', '').replace(',', '.');
-                    self.$amount.value = parseFloat(amount);
-                }
-                self.amount = new IMask(self.$amount, {
-                    mask: Number,
-                    scale: self.$currency.dataset.decimal,
-                    signed: false,
-                    thousandsSeparator: self.$currency.dataset.thousand,
-                    padFractionalZeros: true,
-                    normalizeZeros: true,
-                    radix: self.$currency.dataset.separator,
-                    mapToRadix: [self.$currency.dataset.thousand],
-                    min: 0,
-                });
-                if (self.$amount_installment) {
-                    self.amount_installment = new IMask(self.$amount_installment, {
-                        mask: Number,
-                        scale: self.$currency.dataset.decimal,
-                        signed: false,
-                        thousandsSeparator: self.$currency.dataset.thousand,
-                        padFractionalZeros: true,
-                        normalizeZeros: true,
-                        radix: self.$currency.dataset.separator,
-                        mapToRadix: [self.$currency.dataset.thousand],
-                        min: 0,
-                    });
-                }
-                self.cardnumber = new IMask(self.$cardnumber, {
+        this.card = {
+            number: new payloxWidget({
+                events: [['focus', this._onFocusCardFront]],
+                mask: {
                     mask: [
                         {
                             mask: '0000 000000 00000',
@@ -155,14 +89,113 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             }
                         }
                     }
-                });
-                self.expirationdate = new IMask(self.$expirationdate, {
+                }
+            }),
+            date: new payloxWidget({
+                events: [['focus', this._onFocusCardFront]],
+                mask: {
                     mask: 'MM{/}YY',
                     groups: {
                         YY: new IMask.MaskedPattern.Group.Range([0, 99]),
                         MM: new IMask.MaskedPattern.Group.Range([1, 12]),
                     }
+                }
+            }),
+        }
+    },
+ 
+    _start: function (element) {
+        const ids = element.id.split('.');
+        if (!ids.length) {
+            return;
+        }
+
+        let i = 0;
+        let l = ids.length - 1;
+        let self = this;
+
+        while (i < l) {
+            const id = ids[i];
+            self = self[id];
+            i++;
+        }
+        self[ids[l]].$ = $(element);
+        self[ids[l]].start(this);
+    },
+ 
+    start: function () {
+        const self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$('[name=widget]').each((i, e) => self._start(e));
+            console.log(self);
+
+            self.$cctype = '';
+            self.$ccfamily = '';
+            self.$securitycode = document.getElementById('securitycode');
+            self.$ccicon = document.getElementById('ccicon');
+            self.$ccsingle = document.getElementById('ccsingle');
+            self.$cclogo = document.getElementById('cclogo');
+
+            self.$name = document.getElementById('name');
+            self.$campaign = document.getElementById('campaign');
+            self.$campaignname = document.getElementById('campaign_name');
+            self.$amount = document.getElementById('amount');
+            self.$amount_installment = document.getElementById('amount_installment');
+            self.$currency = document.getElementById('currency');
+            self.$accept_terms = document.getElementById('accept_terms');
+            self.$payment_terms = document.querySelector('.terms-container');
+            self.$commission = document.getElementById('commission');
+            self.$row = document.getElementById('installment_row');
+            self.$empty = document.getElementById('installment_empty');
+
+            self.$svgnumber = document.getElementById('svgnumber');
+            self.$creditcard = document.querySelector('.creditcard');
+
+            self.$installments_table = document.getElementById('installments_table');
+            self.$header_empty = document.getElementById('installment_header_empty');
+            self.$header = document.getElementById('installment_header');
+            self.$campaigns_table = document.getElementById('campaigns_table');
+            self.$payment_pay = document.getElementById('payment_pay');
+            self.$payment_form = document.getElementById('o_payment_form_pay');
+            self.$success_url = document.getElementById('success_url');
+            self.$fail_url = document.getElementById('fail_url');
+            self.$partner = document.getElementById('partner');
+            self.$order = document.getElementById('order');
+            self.$invoice = document.getElementById('invoice');
+            self.$subscription = document.getElementById('subscription');
+
+            if (self.$amount) {
+                let amount = self.$amount.value;
+                if (amount.indexOf(',') >= 0) {
+                    amount = amount.replace('.', '').replace(',', '.');
+                    self.$amount.value = parseFloat(amount);
+                }
+                self.amount = new IMask(self.$amount, {
+                    mask: Number,
+                    scale: self.$currency.dataset.decimal,
+                    signed: false,
+                    thousandsSeparator: self.$currency.dataset.thousand,
+                    padFractionalZeros: true,
+                    normalizeZeros: true,
+                    radix: self.$currency.dataset.separator,
+                    mapToRadix: [self.$currency.dataset.thousand],
+                    min: 0,
                 });
+                if (self.$amount_installment) {
+                    self.amount_installment = new IMask(self.$amount_installment, {
+                        mask: Number,
+                        scale: self.$currency.dataset.decimal,
+                        signed: false,
+                        thousandsSeparator: self.$currency.dataset.thousand,
+                        padFractionalZeros: true,
+                        normalizeZeros: true,
+                        radix: self.$currency.dataset.separator,
+                        mapToRadix: [self.$currency.dataset.thousand],
+                        min: 0,
+                    });
+                }
+                self.cardnumber = self.card.number._;
+                self.expirationdate = self.card.date._;
                 self.securitycode = new IMask(self.$securitycode, {
                     mask: '000[0]',
                 });
@@ -179,8 +212,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     self.$creditcard.addEventListener('click', self.clickCreditCard.bind(self));
                     self.$name.addEventListener('input', self.inputName);
                     self.$name.addEventListener('focus', self.removeFlipped.bind(self));
-                    self.$cardnumber.addEventListener('focus', self.removeFlipped.bind(self));
-                    self.$expirationdate.addEventListener('focus', self.removeFlipped.bind(self));
                     self.$securitycode.addEventListener('focus', self.addFlipped.bind(self));
                 }
                 if (self.$payment_terms) {
@@ -413,6 +444,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     removeFlipped: function () {
         this.$creditcard.classList.remove('flipped');
+    },
+
+    _onFocusCardFront: function () {
+        if (this.$creditcard) {
+            this.$creditcard.classList.remove('flipped');
+        }
     },
 
     addFlipped: function () {

@@ -1,24 +1,20 @@
-odoo.define('payment_jetcheckout.widget', function (require) {
+/** @odoo-module alias=paylox.page.widget **/
 'use strict';
 
-const { FormViewDialog } = require('web.view_dialogs');
-const core = require('web.core');
-
-FormViewDialog.include({
-    init: function (parent, options) {
-        if (options && options.context && options.context.no_edit) {
-            options.readonly = true;
-        }
-        this._super(parent, options);
-    },
-});
-
-function redirectAcquirer(parent, action) {
-    let {back=false, next=false} = action.params || {};
-    if (back) {
-        $('.breadcrumb-item.o_back_button').trigger('click');
+export default class {
+    constructor (options) {
+        this.events = options.events || [];
+        this.mask = options.mask;
+        this.$ = undefined;
+        this._ = undefined;
     }
-    return next;
+
+    async start (self) {
+        for (const [e, f] of this.events) {
+            this.$.on(e, f.bind(self));
+        }
+        if (this.mask) {
+            this._ = new IMask(this.$[0], this.mask);
+        }
+    }
 }
-core.action_registry.add("redirect_acquirer", redirectAcquirer);
-});

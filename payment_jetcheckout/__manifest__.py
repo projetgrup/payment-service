@@ -30,15 +30,16 @@
     'assets': {
         'web.assets_frontend': [
             'payment_jetcheckout/static/src/lib/imask.js',
+            'payment_jetcheckout/static/src/scss/payment.scss',
             'payment_jetcheckout/static/src/xml/templates.xml',
             'payment_jetcheckout/static/src/js/cards.js',
             'payment_jetcheckout/static/src/js/framework.js',
-            'payment_jetcheckout/static/src/js/page.js',
             'payment_jetcheckout/static/src/js/form.js',
-            'payment_jetcheckout/static/src/scss/payment.scss',
+            'payment_jetcheckout/static/src/js/widget.js',
+            'payment_jetcheckout/static/src/js/page.js',
         ],
         'web.assets_backend': [
-            'payment_jetcheckout/static/src/js/widget.js',
+            'payment_jetcheckout/static/src/js/backend.js',
             'payment_jetcheckout/static/src/js/transaction.js',
         ],
         'web.assets_qweb': [
