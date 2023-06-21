@@ -1,14 +1,14 @@
-odoo.define('payment_jetcheckout_api.payment_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.api.page **/
+'use strict';
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var Dialog = require('web.Dialog');
-var framework = require('payment_jetcheckout.framework');
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
+import framework from 'paylox.framework';
 
-var _t = core._t;
+const _t = core._t;
 
-publicWidget.registry.JetcheckoutPaymentApiOptions = publicWidget.Widget.extend({
+publicWidget.registry.payloxApiPage = publicWidget.Widget.extend({
     selector: '.payment-options',
     events: {
         'click div.payment-option': '_onClickPaymentOption',
@@ -112,6 +112,4 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
             framework.hideLoading();
         });
     },
-});
-
 });

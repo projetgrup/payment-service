@@ -70,18 +70,12 @@ class JetcheckoutController(http.Controller):
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = JetcheckoutController._jetcheckout_get_card_family(acquirer=acquirer, campaign=campaign)
 
-        if company.payment_page_campaign_table_ok:
-            campaigns = JetcheckoutController._jetcheckout_get_campaigns(acquirer=acquirer)
-        else:
-            campaigns = []
-
         vals = {
             'partner': partner_commercial,
             'contact': partner_contact,
             'acquirer': acquirer,
             'company': company,
             'campaign': campaign,
-            'campaigns': campaigns,
             'share': request.env.user.share,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
@@ -132,15 +126,20 @@ class JetcheckoutController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
+            installments = []
+            campaigns = {
+                'index': -1,
+                'names': [],
+                'installments': {},
+            }
             if result['response_code'] == "00":
-                installments = []
-                campaigns = {}
                 amount = kwargs.get('amount', 0)
                 amount_installment = kwargs.get('amount_installment', 0)
                 installment_options = result.get('installment_options', result.get('installments', []))
+
                 for options in installment_options:
-                    if options['campaign_name'] not in campaigns:
-                        campaigns[options['campaign_name']] = []
+                    campaigns['index'] += 1
+                    campaigns['names'].append(options['campaign_name'])
 
                     for installment in options['installments']:
                         installment['installment_count'] = int(installment['installment_count'])
@@ -150,11 +149,21 @@ class JetcheckoutController(http.Controller):
                         else:
                             installment['installment_rate'] = 0.0
                         installment['total_installment'] = installment['installment_count'] + installment['plus_installment']
+
+                        if installment['installment_count'] not in campaigns['installments']:
+                            campaigns['installments'][installment['installment_count']] = {campaigns['index']: installment}
+                        else:
+                            campaigns['installments'][installment['installment_count']][campaigns['index']] = installment
+
                     options['installments'].sort(key=lambda x: x['installment_count'])
-                    campaigns[options['campaign_name']].append(options)
                     installments.append(options)
 
+                keys = list(campaigns['installments'].keys())
+                keys.sort()
+                campaigns['installments'] = {k: campaigns['installments'][k] for k in keys}
+
                 values = {
+                    'company': request.env.company,
                     'installments': installments,
                     'campaigns': campaigns,
                     'amount': amount,
@@ -163,6 +172,7 @@ class JetcheckoutController(http.Controller):
                 }
             elif result['response_code'] == "00104":
                 values = {
+                    'company': request.env.company,
                     'installments': [{
                         "card_family": "",
                         "card_family_logo": "",
@@ -177,7 +187,7 @@ class JetcheckoutController(http.Controller):
                             "installment_desc": "1",
                         }]
                     }],
-                    'campaigns': {},
+                    'campaigns': campaigns,
                     'amount': kwargs['amount'],
                     'currency': currency,
                     's2s_form': kwargs.get('s2s', False)
@@ -339,7 +349,7 @@ class JetcheckoutController(http.Controller):
         return []
  
     @http.route('/payment/card/banks', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_family(self, **kwargs):
+    def jetcheckout_payment_card_banks(self, **kwargs):
         acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
         if acquirer:
             return self._jetcheckout_get_bank_codes(**kwargs)
@@ -383,13 +393,12 @@ class JetcheckoutController(http.Controller):
         res = {'card': installment['card_family'], 'logo': installment['card_family_logo']}
 
         if kwargs.get('render'):
-            template = kwargs.get('template')
-            if not template:
-                if request.env.company.payment_page_campaign_table_ok:
-                    template = 'payment_jetcheckout.campaign'
-                else:
-                    template = 'payment_jetcheckout.installment'
-            res.update({'render': request.env['ir.ui.view']._render_template(template, values)})
+            template = kwargs.get('template') or 'payment_jetcheckout.installment'
+            header = 'payment_jetcheckout.payment_table_header'
+            res.update({
+                'header': request.env['ir.ui.view']._render_template(header, values),
+                'render': request.env['ir.ui.view']._render_template(template, values),
+            })
 
         if kwargs.get('list'):
             res.update(values['installment'])

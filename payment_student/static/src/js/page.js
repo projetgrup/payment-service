@@ -1,15 +1,15 @@
-odoo.define('payment_student.payment_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.system.student **/
+'use strict';
 
-var core = require('web.core');
-var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+import core from 'web.core';
+import utils from 'web.utils';
+import publicWidget from 'web.public.widget';
+import systemPage from 'paylox.system.page';
 
-var systemPage = publicWidget.registry.JetcheckoutPaymentSystemPage;
-var round_di = utils.round_decimals;
-var qweb = core.qweb;
+const round_di = utils.round_decimals;
+const qweb = core.qweb;
 
-publicWidget.registry.StudentPaymentPage = systemPage.extend({
+publicWidget.registry.payloxSystemStudent = systemPage.extend({
     selector: '.payment-student #wrapwrap',
     xmlDependencies: (systemPage.prototype.xmlDependencies || []).concat(
         ["/payment_student/static/src/xml/templates.xml"]
@@ -254,8 +254,5 @@ publicWidget.registry.StudentPaymentPage = systemPage.extend({
         this.$amount.val(amount_straight);
         this.$amount[0].dispatchEvent(event);
     },
-
-});
-
 
 });

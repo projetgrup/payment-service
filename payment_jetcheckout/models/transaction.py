@@ -49,7 +49,6 @@ class PaymentTransaction(models.Model):
     partner_vat = fields.Char(string='VAT')
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
     is_jetcheckout = fields.Boolean(compute='_calc_is_jetcheckout')
-    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
     jetcheckout_card_name = fields.Char('Card Holder Name', readonly=True, copy=False)
     jetcheckout_card_number = fields.Char('Card Number', readonly=True, copy=False)
@@ -62,6 +61,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+    jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True, copy=False)
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
     jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)
@@ -194,10 +194,11 @@ class PaymentTransaction(models.Model):
         }
 
     def _jetcheckout_refund_postprocess(self, amount=0):
-        transaction = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values(amount=amount))
+        tx = self._create_refund_transaction(amount_to_refund=amount, **self._jetcheckout_refund_postprocess_values(amount=amount))
         if not self.env.context.get('skip_payment'):
-            transaction.jetcheckout_payment()
-        transaction._log_sent_message()
+            tx.jetcheckout_payment()
+        tx._log_sent_message()
+        return tx
 
     def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
         self.ensure_one()
@@ -223,7 +224,7 @@ class PaymentTransaction(models.Model):
 
         if 'error' in values:
             raise UserError(values['error'])
-        self._jetcheckout_refund_postprocess(amount)
+        return self._jetcheckout_refund_postprocess(amount)
 
     def _jetcheckout_api_cancel(self, **kwargs):
         self.ensure_one()
@@ -336,7 +337,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if amount > self.amount:
             raise UserError(_('Refund amount cannot be higher than total amount'))
-        self._jetcheckout_api_refund(amount)
+        return self._jetcheckout_api_refund(amount)
 
     def jetcheckout_refund(self):
         self.ensure_one()

@@ -346,6 +346,7 @@ class PaymentAPIService(Component):
                 },
                 'amounts': {
                     'amount': tx.amount,
+                    'raw': tx.jetcheckout_payment_amount,
                     'fees': tx.fees,
                     'installment': {
                         'amount': tx.jetcheckout_installment_amount,

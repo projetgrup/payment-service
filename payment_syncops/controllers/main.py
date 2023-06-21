@@ -179,6 +179,7 @@ class PaymentSyncopsController(JetController):
             vals.update({
                 'jetcheckout_connector_partner_name': partner['name'],
                 'jetcheckout_connector_partner_vat': partner['vat'],
+                'jetcheckout_connector_partner_ref': partner['ref'],
             })
 
         connector = request.env['syncops.connector'].sudo().search_count([
