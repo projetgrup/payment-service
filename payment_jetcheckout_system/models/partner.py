@@ -126,7 +126,7 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, fields):
-        if self.env.user.company_id.system and not self.env.user.has_group('payment_jetcheckout_system.group_system_create_partner'):
+        if not self.env.su and self.env.user.company_id.system and not self.env.user.has_group('payment_jetcheckout_system.group_system_create_partner'):
             raise UserError(_('You do not have permission to create a partner'))
  
         res = super().default_get(fields)
