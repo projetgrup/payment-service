@@ -4,7 +4,7 @@
 
 {
     'name': 'Jetcheckout Payment System - OTP Login',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',
@@ -15,6 +15,7 @@
     ],
     'data': [
         'data/data.xml',
+        'views/settings.xml',
         'views/templates.xml',
     ],
     'assets': {

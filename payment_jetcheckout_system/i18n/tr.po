@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-19 19:37+0000\n"
-"PO-Revision-Date: 2023-06-19 22:38+0300\n"
+"POT-Creation-Date: 2023-06-26 17:03+0000\n"
+"PO-Revision-Date: 2023-06-26 20:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -372,6 +372,17 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_follower
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
+msgid "Add Follower"
+msgstr "Takipçi Ekle"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Add Followers"
+msgstr "Takipçi Ekle"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__admin
 msgid "Administrator"
 msgstr "Yönetici"
@@ -507,6 +518,7 @@ msgid "Children"
 msgstr "Çocuklar"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
 msgstr "Kapat"
@@ -542,6 +554,7 @@ msgstr "Şirket adedi"
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_mail_template__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__company_id
@@ -618,6 +631,7 @@ msgid "Create Partners"
 msgstr "İş Ortağı Oluştur"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_uid
@@ -630,6 +644,7 @@ msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_date
@@ -732,6 +747,7 @@ msgid "Discard"
 msgstr "Vazgeç"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__display_name
@@ -827,6 +843,16 @@ msgid "File"
 msgstr "Dosya"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Follow"
+msgstr "Takip Et"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_footer
 msgid "Footer"
 msgstr "Alt Bilgi"
@@ -896,6 +922,7 @@ msgid "Hour"
 msgstr "Saat"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__id
@@ -1048,6 +1075,7 @@ msgid "Language"
 msgstr "Dil"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type____last_update
@@ -1067,6 +1095,7 @@ msgid "Last Month"
 msgstr "Geçen Ay"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_uid
@@ -1079,6 +1108,7 @@ msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_date
@@ -1364,6 +1394,11 @@ msgid "Partner Count"
 msgstr "İş Ortağı Adedi"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_paylox_partner_follower
+msgid "Partner Follower"
+msgstr "İş Ortağı Takibi"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__partner_ref
 msgid "Partner Reference"
 msgstr "İş Ortağı Referansı"
@@ -1572,6 +1607,11 @@ msgstr "Telefon"
 #, python-format
 msgid "Please select at least one payment"
 msgstr "Lütfen en az bir ödeme seçin"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
+msgid "Please select partners to follow selected records"
+msgstr "Lütfen seçilen kayıtları takip edecek kişileri seçiniz"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/portal.py:0
@@ -1784,9 +1824,39 @@ msgid "Send Password Reset Instructions"
 msgstr "Parola Sıfırlama Talimatlarını Gönder"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Send SMS to transaction owner and its followers right after completing a "
+"transaction with success"
+msgstr ""
+"Ödeme işlemi başarıyla tamamlandıktan sonra işlem sahibine ve takipçilerine "
+"SMS gönderin"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__notif_mail_success_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__notif_mail_success_ok
+msgid "Send Successful Payment Transaction Email"
+msgstr "Başarılı Ödeme İşlemi Epostası Gönder"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__notif_sms_success_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__notif_sms_success_ok
+msgid "Send Successful Payment Transaction SMS"
+msgstr "Başarılı Ödeme İşlemi SMS Mesajı Gönder"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send an Invitation Email"
 msgstr "Davet Epostası Gönder"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Send email to transaction owner and its followers right after completing a "
+"transaction with success"
+msgstr ""
+"Ödeme işlemi başarıyla tamamlandıktan sonra işlem sahibine ve takipçilerine "
+"eposta gönderin"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
@@ -2167,6 +2237,11 @@ msgstr "Türler"
 #, python-format
 msgid "URL %s could not be notified: %s"
 msgstr "%s adresine bildirim gönderilemedi: %s"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Unfollow"
+msgstr "Takibi Bırak"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__url
