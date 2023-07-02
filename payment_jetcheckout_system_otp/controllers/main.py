@@ -30,6 +30,7 @@ AND company_id = {company.id}
 AND parent_id IS NULL
 AND (
     email = '{login}'
+    OR ref = '{login}'
     OR RIGHT(REPLACE(phone, ' ', ''), 10) = '{login}'
     OR RIGHT(REPLACE(mobile, ' ', ''), 10) = '{login}'
 )
@@ -95,17 +96,18 @@ LIMIT 1
 
     @http.route(['/otp/validate'], type='json', auth='public', sitemap=False, website=True)
     def page_system_otp_validate(self, **kwargs):
+        company = request.env.company
         otp = request.env['res.partner.otp'].sudo().search([
-            ('company_id', '=', request.env.company.id),
-            ('id', '=', kwargs['id']),
+            ('company_id', '=', company.id),
             ('partner_id', '!=', False),
+            ('id', '=', kwargs['id']),
             ('code', '=', kwargs['code']),
             ('date', '>', fields.Datetime.now())
         ], limit=1)
 
         if otp:
             return {
-                'url': '/my/payment/%s' % otp.partner_id._get_token()
+                'url': '%s/%s' % (company.otp_redirect_url or '/my/payment', otp.partner_id._get_token())
             }
         else:
             return {

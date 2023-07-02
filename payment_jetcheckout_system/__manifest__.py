@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2022 Projet (https://www.jetcheckout.com)
+# Copyright © 2022 Projet (https://www.bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Paylox Payment System',
-    'version': '1.3',
+    'version': '1.4',
     'author': 'Projet',
-    'website': 'https://www.jetcheckout.com',
+    'website': 'https://www.bulutkobi.io',
     'license': 'LGPL-3',
     'sequence': 1454,
     'category': 'Accounting/Payment Acquirers',
@@ -33,6 +33,7 @@
         'report/company.xml',
         'wizards/send.xml',
         'wizards/item.xml',
+        'wizards/follower.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
     ],

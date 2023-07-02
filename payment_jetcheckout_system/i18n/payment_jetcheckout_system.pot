@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-19 19:37+0000\n"
-"PO-Revision-Date: 2023-06-19 19:37+0000\n"
+"POT-Creation-Date: 2023-06-26 17:03+0000\n"
+"PO-Revision-Date: 2023-06-26 17:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -217,6 +217,17 @@ msgid "Active"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_follower
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
+msgid "Add Follower"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Add Followers"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__admin
 msgid "Administrator"
 msgstr ""
@@ -352,6 +363,7 @@ msgid "Children"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
 msgstr ""
@@ -387,6 +399,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_ir_mail_server__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_mail_template__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__company_id
@@ -463,6 +476,7 @@ msgid "Create Partners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_uid
@@ -475,6 +489,7 @@ msgid "Created by"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__create_date
@@ -574,6 +589,7 @@ msgid "Discard"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__display_name
@@ -669,6 +685,16 @@ msgid "File"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Follow"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_footer
 msgid "Footer"
 msgstr ""
@@ -738,6 +764,7 @@ msgid "Hour"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__id
@@ -883,6 +910,7 @@ msgid "Language"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type____last_update
@@ -902,6 +930,7 @@ msgid "Last Month"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_uid
@@ -914,6 +943,7 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__write_date
@@ -1197,6 +1227,11 @@ msgid "Partner Count"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_paylox_partner_follower
+msgid "Partner Follower"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__partner_ref
 msgid "Partner Reference"
 msgstr ""
@@ -1401,6 +1436,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Please select at least one payment"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
+msgid "Please select partners to follow selected records"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1614,8 +1654,34 @@ msgid "Send Password Reset Instructions"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Send SMS to transaction owner and its followers right after completing a "
+"transaction with success"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__notif_mail_success_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__notif_mail_success_ok
+msgid "Send Successful Payment Transaction Email"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__notif_sms_success_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__notif_sms_success_ok
+msgid "Send Successful Payment Transaction SMS"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send an Invitation Email"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Send email to transaction owner and its followers right after completing a "
+"transaction with success"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1990,6 +2056,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/transaction.py:0
 #, python-format
 msgid "URL %s could not be notified: %s"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
+msgid "Unfollow"
 msgstr ""
 
 #. module: payment_jetcheckout_system

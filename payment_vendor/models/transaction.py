@@ -16,13 +16,14 @@ class PaymentTransaction(models.Model):
     def _paylox_done_postprocess(self):
         super()._paylox_done_postprocess()
         self._paylox_send_done_email()
+        self._paylox_send_done_sms()
 
     def _paylox_send_done_email(self):
         self.ensure_one()
         try:
             with self.env.cr.savepoint():
                 company = self.env.company
-                if not company.system:
+                if not company.system or not company.notif_mail_success_ok:
                     return
 
                 template = self.env.ref('payment_vendor.mail_transaction_successful')
@@ -54,6 +55,73 @@ class PaymentTransaction(models.Model):
 
         except Exception as e:
             _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))
+ 
+    def _paylox_send_done_sms(self):
+        self.ensure_one()
+        try:
+            with self.env.cr.savepoint():
+                company = self.env.company
+                if not company.system or not company.notif_sms_success_ok:
+                    return
+
+                partner = self.partner_id
+                commercial_partner = partner.commercial_partner_id
+                followers = self.env['mail.followers'].search([('res_model', '=', 'res.partner'), ('res_id', '=', commercial_partner.id)])
+                partners = followers.mapped('partner_id') | partner
+                template = self.env.ref('payment_vendor.sms_transaction_successful')
+                note = self.env['ir.model.data'].sudo()._xmlid_to_res_id('mail.mt_note')
+                params = self.env['ir.config_parameter'].sudo().get_param
+                provider = self.env['sms.provider'].get(company.id)
+                if not provider and params('paylox.sms.default'):
+                    id = int(params('paylox.sms.provider', '0'))
+                    provider = self.env['sms.provider'].browse(id)
+
+                context = self.env.context.copy()
+                context.update({
+                    'tx': self,
+                    'partner': commercial_partner,
+                    'company': company,
+                    'url': self.jetcheckout_website_id.domain,
+                    'domain': urlparse(self.jetcheckout_website_id.domain).netloc,
+                })
+
+                messages = []
+                for partner in partners:
+                    context.update({'tz': partner.tz})
+                    body = template._render_field('body', [partner.id], set_lang=partner.lang, add_context=context)[partner.id]
+                    sms_values = {
+                        'partner_id': partner.id,
+                        'body': body,
+                        'number': partner.mobile,
+                        'state': 'outgoing',
+                        'provider_id': provider.id,
+                    }
+                    messages.append(sms_values)
+                sendings = self.env['sms.sms'].create(messages)
+
+                messages = []
+                for sending in sendings:
+                    messages.append({
+                        'res_id': sending.partner_id.id,
+                        'model': 'res.partner',
+                        'message_type': 'sms',
+                        'subtype_id': note,
+                        'body': sending.body,
+                        'notification_ids': [(0, 0, {
+                            'res_partner_id': sending.partner_id.id,
+                            'sms_number': sending.number,
+                            'notification_type': 'sms',
+                            'sms_id': sending.id,
+                            'is_read': True,
+                            'notification_status': 'ready',
+                            'failure_type': '',
+                        })]
+                    })
+                self.env['mail.message'].create(messages)
+                self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
+
+        except Exception as e:
+            _logger.error('Sending sms for transaction %s is failed\n%s' % (self.reference, e))
 
     @api.model
     def paylox_send_daily_email(self):

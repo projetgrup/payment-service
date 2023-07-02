@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-02 11:05+0000\n"
-"PO-Revision-Date: 2022-09-02 14:07+0300\n"
+"POT-Creation-Date: 2023-06-26 17:03+0000\n"
+"PO-Revision-Date: 2023-06-26 20:05+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.1\n"
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.settings_form
+msgid "/my/payment"
+msgstr ""
 
 #. module: payment_jetcheckout_system_otp
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
@@ -29,25 +34,25 @@ msgstr "<span>Kod</span>"
 
 #. module: payment_jetcheckout_system_otp
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
-msgid "<span>Email address or phone number</span>"
-msgstr "<span>Eposta adresi veya telefon numarası</span>"
+msgid "<span>Email address or phone number or reference code</span>"
+msgstr "<span>Eposta adresi veya telefon numarası veya referans kodu</span>"
 
 #. module: payment_jetcheckout_system_otp
 #: model:mail.template,body_html:payment_jetcheckout_system_otp.otp_mail_template
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align="
-"\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 16px; background-color: white; color: #454748; border-collapse:"
-"separate;\">\n"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Dear</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
@@ -67,9 +72,9 @@ msgid ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div style=\"text-align: center\">\n"
 "                        Your specially generated authentication code is<br/"
@@ -89,9 +94,9 @@ msgid ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
-"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>\n"
@@ -102,8 +107,8 @@ msgid ""
 "530-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
 "                        | <a t-attf-href=\"'mailto:%s' % {{ object."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out="
-"\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ object.company_id."
@@ -122,17 +127,17 @@ msgid ""
 msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align="
-"\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 16px; background-color: white; color: #454748; border-collapse:"
-"separate;\">\n"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Sayın</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
@@ -152,9 +157,9 @@ msgstr ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div style=\"text-align: center\">\n"
 "                        Size özel üretilen yetki kodunuz<br/>\n"
@@ -173,9 +178,9 @@ msgstr ""
 "    </tr>\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
-"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>\n"
@@ -186,8 +191,8 @@ msgstr ""
 "530-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
 "                        | <a t-attf-href=\"'mailto:%s' % {{ object."
-"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out="
-"\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ object.company_id."
@@ -203,6 +208,11 @@ msgstr ""
 "</td></tr>\n"
 "</table>\n"
 "            "
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+msgid "ABC01 (Reference code)"
+msgstr "ABC01 (Referans kodu)"
 
 #. module: payment_jetcheckout_system_otp
 #. openerp-web
@@ -240,6 +250,11 @@ msgid "Code must be 4 digits"
 msgstr "Yetki kodu 4 haneli olmalıdır"
 
 #. module: payment_jetcheckout_system_otp
+#: model:ir.model,name:payment_jetcheckout_system_otp.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: payment_jetcheckout_system_otp
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__company_id
 msgid "Company"
 msgstr "Şirket"
@@ -268,6 +283,12 @@ msgstr "Tarih"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__date_local
 msgid "Date Local"
 msgstr "Yerel Tarih"
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.settings_form
+msgid "Default URL address to redirect after successful OTP login"
+msgstr ""
+"Başarılı OTP girişinden sonra yönlendirme yapılacak varsayılan URL adresi"
 
 #. module: payment_jetcheckout_system_otp
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__display_name
@@ -322,6 +343,12 @@ msgid "OTP Authentication"
 msgstr "OTP Yetkilendirme"
 
 #. module: payment_jetcheckout_system_otp
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_payment_settings__otp_redirect_url
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_company__otp_redirect_url
+msgid "OTP Redirect URL"
+msgstr "OTP Yönlendirme URL"
+
+#. module: payment_jetcheckout_system_otp
 #: model:mail.template,name:payment_jetcheckout_system_otp.otp_mail_template
 #: model:sms.template,name:payment_jetcheckout_system_otp.otp_sms_template
 msgid "OTP: Partner"
@@ -331,6 +358,11 @@ msgstr "OTP: İş Ortağı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_otp.field_res_partner_otp__partner_id
 msgid "Partner"
 msgstr "İş Ortağı"
+
+#. module: payment_jetcheckout_system_otp
+#: model:ir.model,name:payment_jetcheckout_system_otp.model_payment_settings
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
 
 #. module: payment_jetcheckout_system_otp
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
@@ -355,8 +387,9 @@ msgstr "Lütfen eposta adresinizi veya telefon numaranızı giriniz."
 #. openerp-web
 #: code:addons/payment_jetcheckout_system_otp/static/src/js/frontend.js:0
 #, python-format
-msgid "Please enter your email address or phone number"
-msgstr "Lütfen eposta adresinizi veya telefon numaranızı giriniz"
+msgid "Please enter your email address or phone number or reference code"
+msgstr ""
+"Lütfen eposta adresinizi, telefon numaranızı veya referans kodunuzu giriniz"
 
 #. module: payment_jetcheckout_system_otp
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
@@ -382,6 +415,11 @@ msgstr "Öğrenci Numarası:"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
 msgid "Time left for entering authentication code is"
 msgstr "Yetki kodunu doğrulamak için kalan süre"
+
+#. module: payment_jetcheckout_system_otp
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.settings_form
+msgid "URL Address"
+msgstr "URL Adresi"
 
 #. module: payment_jetcheckout_system_otp
 #. openerp-web

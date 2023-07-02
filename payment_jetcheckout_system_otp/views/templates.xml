@@ -26,7 +26,7 @@
                             <div class="field-container form-group field-login">
                                 <input type="text" name="login" t-att-value="login" id="login" class="p_fields form-control form-control-sm" autocapitalize="off"/>
                                 <span class="bar-container"/>
-                                <label for="login"><span>Email address or phone number</span></label>
+                                <label for="login"><span>Email address or phone number or reference code</span></label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -34,6 +34,7 @@
                                 <ul>
                                     <li>test@test.com (Email address in regular format)</li>
                                     <li>5301111111 (Phone number without leading zero)</li>
+                                    <li>ABC01 (Reference code)</li>
                                 </ul>
                             </div>
                         </div>

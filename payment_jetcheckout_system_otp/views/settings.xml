@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.otp.form</field>
+    <field name="model">payment.settings</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@data-key='general_settings']" position="inside">
+            <div class="row mt16 o_settings_container">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label for="otp_redirect_url"/>
+                        <div class="text-muted">
+                            Default URL address to redirect after successful OTP login
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="otp_redirect_url" class="col-lg-4 o_light_label" string="URL Address"/>
+                                <field name="otp_redirect_url" class="mx-2" placeholder="/my/payment"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

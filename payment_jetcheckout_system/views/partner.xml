@@ -51,7 +51,10 @@
     <field name="arch" type="xml">
         <tree decoration-muted="active == False" sample="1">
             <header>
-                <button name="action_send" type="object" string="Send"/>
+                <button name="action_send" type="object" string="Send" icon="fa-send"/>
+                <button name="action_follower" type="object" string="Add Followers" icon="fa-user-plus"/>
+                <button name="action_follow" type="object" string="Follow" icon="fa-check"/>
+                <button name="action_unfollow" type="object" string="Unfollow" class="text-danger" icon="fa-times"/>
             </header>
             <field name="active" invisible="1"/>
             <field name="name"/>
