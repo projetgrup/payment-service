@@ -27,7 +27,7 @@ publicWidget.registry.payloxApiPage = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.JetcheckoutPaymentApiCreditCard = publicWidget.Widget.extend({
+publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
     selector: '.payment-credit-card',
 
     start: function () {
@@ -37,7 +37,7 @@ publicWidget.registry.JetcheckoutPaymentApiCreditCard = publicWidget.Widget.exte
     },
 });
 
-publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
+publicWidget.registry.PayloxApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {
         'click button#confirm': '_onBankConfirmButton',
@@ -51,7 +51,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     },
 
     _onBankConfirmButton: function (ev) {
-        var self = this;
+        const self = this;
         let popup = new Dialog(self, {
             title: _t('Are you confirm the transaction?'),
             size: 'medium',
@@ -91,7 +91,7 @@ publicWidget.registry.JetcheckoutPaymentApiBank = publicWidget.Widget.extend({
     },
 
     _onBankReturnButton: function () {
-        var self = this;
+        const self = this;
         framework.showLoading();
         this._rpc({
             route: '/payment/bank/return',

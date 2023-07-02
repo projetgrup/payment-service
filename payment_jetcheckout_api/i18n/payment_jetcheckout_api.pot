@@ -256,7 +256,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model:ir.model,name:payment_jetcheckout_api.model_payment_acquirer_jetcheckout_api
-msgid "Jetcheckout API"
+msgid "Paylox API"
 msgstr ""
 
 #. module: payment_jetcheckout_api

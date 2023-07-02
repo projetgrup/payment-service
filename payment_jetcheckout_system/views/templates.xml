@@ -2,11 +2,11 @@
 <odoo>
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
         <xpath expr="//div[@id='payment_card']/div" position="inside">
-            <input t-if="system" id="system" type="hidden" t-att-value="system"/>
+            <input t-if="system" id="system" type="hidden" t-att-value="system" class="p_fields"/>
         </xpath>
     </template>
 
-    <template id="payment_page_footer" name="Payment System Page Footer">
+    <template id="payment_footer" name="Payment System Page Footer">
         <div class="row mx-0 flex-column">
             <div class="row mx-0 mt-4 pb-1 border-bottom">
                 <div class="col-md-12 text-center text-md-left">
@@ -36,7 +36,7 @@
         </div>
     </template>
 
-    <template id="payment_page_contact" name="Payment System Page Contact">
+    <template id="payment_contact" name="Payment System Page Contact">
         <div t-attf-class="row mx-0 shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold #{classes}">
             If you need assistance, you can contact with us by using one of the following methods.
         </div>
@@ -61,7 +61,7 @@
         </div>
     </template>
 
-    <template id="payment_page_agreements" name="Payment System Page Agreements">
+    <template id="payment_agreement" name="Payment System Page Agreements">
         <t t-if="sidebar">
             <div t-attf-class="row mx-0 shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold #{classes}">
                 Agreements
@@ -69,31 +69,31 @@
             <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto #{classes}">
                 <table class="table table-sm small mb-0">
                     <tr>
-                        <td><a id="privacy_policy" href="#" class="d-block w-100">Privacy Policy</a></td>
+                        <td><a id="privacy" href="#" class="p_fields d-block w-100">Privacy Policy</a></td>
                     </tr>
                     <tr>
-                        <td><a id="distant_sale_agreement" href="#" class="d-block w-100">Distant Sale Agreement</a></td>
+                        <td><a id="agreement" href="#" class="p_fields d-block w-100">Distant Sale Agreement</a></td>
                     </tr>
                     <tr>
-                        <td><a id="membership_agreement" href="#" class="d-block w-100">Membership Agreement</a></td>
+                        <td><a id="membership" href="#" class="p_fields d-block w-100">Membership Agreement</a></td>
                     </tr>
                     <tr>
-                        <td><a id="contact" href="#" class="d-block w-100">Contact Page</a></td>
+                        <td><a id="contact" href="#" class="p_fields d-block w-100">Contact Page</a></td>
                     </tr>
                 </table>
             </div>
         </t>
         <t t-else="">
             <div class="row mx-5 my-3 justify-content-around">
-                <button id="privacy_policy" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Privacy Policy</button>
-                <button id="distant_sale_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Distant Sale Agreement</button>
-                <button id="membership_agreement" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Membership Agreement</button>
-                <button id="contact" class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Contact Page</button>
+                <button id="privacy" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Privacy Policy</button>
+                <button id="agreement" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Distant Sale Agreement</button>
+                <button id="membership" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Membership Agreement</button>
+                <button id="contact" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Contact Page</button>
             </div>
         </t>
     </template>
 
-    <template id="payment_page_state" name="Payment System Page Result">
+    <template id="payment_state" name="Payment System Page Result">
         <div t-if="tx and tx.state == 'error'" t-attf-class="row alert alert-danger text-center my-2 #{classes}">
             <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
             <small class="d-block mt-1" t-esc="tx.state_message"/>
@@ -107,7 +107,7 @@
         </div>
     </template>
 
-    <template id="payment_page" name="Payment System Page">
+    <template id="page_payment" name="Payment System Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -128,23 +128,23 @@
                     <t t-set="buttons">
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                     </t>
-                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                    <t t-call="payment_jetcheckout_system.payment_contact"/>
                     <t t-set="labels"/>
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                     <t t-call="payment_jetcheckout.payment_form">
                         <t t-set="no_smart_buttons" t-value="True"/>
                     </t>
-                    <input id="success_url" type="hidden" name="success_url" t-att-value="success_url"/>
-                    <input id="fail_url" type="hidden" name="fail_url" t-att-value="fail_url"/>
+                    <input id="paymentSuccessurl" type="hidden" t-att-value="success_url"/>
+                    <input id="paymentFailurl" type="hidden" t-att-value="fail_url"/>
                 </div>
             </div>
-            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
-            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 
-    <template id="payment_page_signin" name="Payment System Page Signin">
+    <template id="page_login" name="Payment System Page Signin">
         <html>
             <body>
                 <script>
@@ -166,7 +166,7 @@
         </html>
     </template>
 
-    <template id="payment_page_result" name="Payment System Page Result">
+    <template id="page_result" name="Payment System Page Result">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -188,7 +188,7 @@
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                     </t>
-                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                    <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                     <div class="px-3 py-4 bg-white card my-4 w-100">
@@ -211,12 +211,12 @@
                     </div>
                 </div>
             </div>
-            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
-            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 
-    <template id="payment_page_transaction" name="Payment System Page Transactions">
+    <template id="page_transaction" name="Payment System Page Transactions">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -237,7 +237,7 @@
                     <t t-set="buttons">
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
-                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                    <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                     <div class="px-3 py-4 bg-white card my-4 w-100">
@@ -294,8 +294,8 @@
                     </div>
                 </div>
             </div>
-            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
-            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 </odoo>

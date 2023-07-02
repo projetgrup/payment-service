@@ -1381,7 +1381,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__is_jetcheckout
-msgid "Is Jetcheckout"
+msgid "Is Paylox"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1392,177 +1392,177 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:account.payment.method,name:payment_jetcheckout.payment_method_jetcheckout
 #: model:payment.acquirer,name:payment_jetcheckout.payment_acquirer_jetcheckout
-msgid "Jetcheckout"
+msgid "Paylox"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_bank
-msgid "Jetcheckout API Bank"
+msgid "Paylox API Bank"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaign
-msgid "Jetcheckout API Campaign"
+msgid "Paylox API Campaign"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns
-msgid "Jetcheckout API Campaigns"
+msgid "Paylox API Campaigns"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns_line
-msgid "Jetcheckout API Campaigns Line"
+msgid "Paylox API Campaigns Line"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_currency
-msgid "Jetcheckout API Currency"
+msgid "Paylox API Currency"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_excluded
-msgid "Jetcheckout API Excluded Bins"
+msgid "Paylox API Excluded Bins"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_family
-msgid "Jetcheckout API Family"
+msgid "Paylox API Family"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_installment
-msgid "Jetcheckout API Installment"
+msgid "Paylox API Installment"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_provider
-msgid "Jetcheckout API Provider"
+msgid "Paylox API Provider"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_api_key
-msgid "Jetcheckout Api Key"
+msgid "Paylox Api Key"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_api_name
-msgid "Jetcheckout Api Name"
+msgid "Paylox Api Name"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_application
-msgid "Jetcheckout Application"
+msgid "Paylox Application"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_applications
-msgid "Jetcheckout Applications"
+msgid "Paylox Applications"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_bank
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_bank_ids
-msgid "Jetcheckout Bank"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_bank_ids
+msgid "Paylox Bank"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_campaign
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_campaign_ids
-msgid "Jetcheckout Campaign"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_campaign_ids
+msgid "Paylox Campaign"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_api
-msgid "Jetcheckout Gateway Api"
+msgid "Paylox Gateway Api"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_app
-msgid "Jetcheckout Gateway App"
+msgid "Paylox Gateway App"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_database
-msgid "Jetcheckout Gateway Database"
+msgid "Paylox Gateway Database"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_journal_ids
-msgid "Jetcheckout Journal"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_journal_ids
+msgid "Paylox Journal"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_journal_line
-msgid "Jetcheckout Journal Item Lines"
+msgid "Paylox Journal Item Lines"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_journal
-msgid "Jetcheckout Journal Items"
+msgid "Paylox Journal Items"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_password
-msgid "Jetcheckout Password"
+msgid "Paylox Password"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_pos
-msgid "Jetcheckout Pos"
+msgid "Paylox Pos"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_poses
-msgid "Jetcheckout Poses"
+msgid "Paylox Poses"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_refund
-msgid "Jetcheckout Refund"
+msgid "Paylox Refund"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_secret_key
-msgid "Jetcheckout Secret Key"
+msgid "Paylox Secret Key"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_signin
-msgid "Jetcheckout Signin"
+msgid "Paylox Signin"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_status
-msgid "Jetcheckout Status"
+msgid "Paylox Status"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_term
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_terms
-msgid "Jetcheckout Terms"
+msgid "Paylox Terms"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_url
-msgid "Jetcheckout Url"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_url
+msgid "Paylox Url"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_user_id
-msgid "Jetcheckout User"
+msgid "Paylox User"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_username
-msgid "Jetcheckout Username"
+msgid "Paylox Username"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid ""
-"Jetcheckout payment method has not been set yet on inbound payment methods "
+"Paylox payment method has not been set yet on inbound payment methods "
 "of journal %s."
 msgstr ""
 

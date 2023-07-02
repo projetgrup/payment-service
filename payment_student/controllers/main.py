@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo.http import request
-from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetSystemController
+from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
-class StudentPaymentController(JetSystemController):
+class PayloxSystemStudentController(Controller):
 
-    def _jetcheckout_tx_vals(self, **kwargs):
-        res = super()._jetcheckout_tx_vals(**kwargs)
+    def _get_tx_vals(self, **kwargs):
+        res = super()._get_tx_vals(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'student':
             ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
@@ -29,12 +29,12 @@ class StudentPaymentController(JetSystemController):
                     payment.prepayment_amount = payment.amount - payment.paid_amount - payment.bursary_amount
         return res
 
-    def _jetcheckout_system_page_values(self, company, system, partner, transaction):
-        res = super()._jetcheckout_system_page_values(company, system, partner, transaction)
+    def _prepare_system(self, company, system, partner, transaction):
+        res = super()._prepare_system(company, system, partner, transaction)
         if system == 'student':
             res.update({
-                'advance_discount': company.get_student_discount() if company.student_discount_advance_active else 0,
-                'maximum_discount': int(company.student_discount_sibling_maximum) if company.student_discount_sibling_active else 0,
-                'sibling_discount': company.student_discount_sibling_rate if company.student_discount_sibling_active else 0,
+                'discount_single': company.get_student_discount() if company.student_discount_advance_active else 0,
+                'discount_maximum': int(company.student_discount_sibling_maximum) if company.student_discount_sibling_active else 0,
+                'discount_sibling': company.student_discount_sibling_rate if company.student_discount_sibling_active else 0,
             })
         return res

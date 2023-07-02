@@ -102,7 +102,7 @@ class AccountPayment(models.Model):
 
         return lines
 
-    def post_with_jetcheckout(self, line, commission, ip_address):
+    def _paylox_post(self, line, commission, ip_address):
         self.move_id._post(soft=False)
         if commission > 0:
             product = self.env.ref('payment_jetcheckout.product_commission')
@@ -116,22 +116,22 @@ class AccountPayment(models.Model):
             order = self.env['sale.order'].sudo().create(order_vals)
             order.action_confirm()
 
-            parameter = self.env['ir.config_parameter'].sudo().get_param('payment_jetcheckout.commission_invoice', 'no')
+            parameter = self.env['ir.config_parameter'].sudo().get_param('paylox.invoice.commission', 'no')
             if parameter == 'draft' or parameter == 'post':
                 moves = order._create_invoices()
                 if parameter == 'post':
                     moves.sudo().action_post()
 
         if not self.env.context.get('no_terms'):
-            self._generate_jetcheckout_terms(line, ip_address)
+            self._paylox_generate_terms(line, ip_address)
         return True
 
-    def _generate_jetcheckout_terms(self, line, ip_address):
+    def _paylox_generate_terms(self, line, ip_address):
         icp = self.env['ir.config_parameter'].sudo()
         base_url = icp.get_param('report.url') or icp.get_param('web.base.url')
         acquirer = line.acquirer_id
         if acquirer.provider == 'jetcheckout' and not acquirer.jetcheckout_no_terms:
-            body = line.acquirer_id._render_jetcheckout_terms(self.company_id.id, self.partner_id.id)
+            body = line.acquirer_id._render_paylox_terms(self.company_id.id, self.partner_id.id)
             layout = self.env.ref('payment_jetcheckout.report_layout')
             html = layout._render({'body': body, 'base_url': base_url})
             pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(

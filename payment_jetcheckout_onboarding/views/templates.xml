@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="fields" inherit_id="auth_signup.fields" name="Jetcheckout Onboarding Fields">
+    <template id="fields" inherit_id="auth_signup.fields" name="Paylox Onboarding Fields">
         <xpath expr="//input[@name='name']/.." position="after">
             <div class="form-group field-phone">
                 <label for="name">Your Phone</label>
@@ -9,9 +9,9 @@
         </xpath>
     </template>
 
-    <template id="signup" inherit_id="auth_signup.signup" name="Jetcheckout Onboarding Signup">
+    <template id="signup" inherit_id="auth_signup.signup" name="Paylox Onboarding Signup">
         <xpath expr="//form" position="replace">
-            <div class="o_payment_loading" style="opacity: 0; visibility: hidden">
+            <div class="o_loading" style="opacity: 0; visibility: hidden">
                 <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
             </div>
             <t t-set="only_passwords" t-value="bool(token and not invalid_token)"/>

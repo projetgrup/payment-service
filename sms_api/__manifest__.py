@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
-# Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+# Part of Paylox License. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'SMS API',

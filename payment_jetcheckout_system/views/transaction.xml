@@ -4,15 +4,15 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//button[@name="jetcheckout_payment"]' position="before">
+        <xpath expr='//button[@name="paylox_payment"]' position="before">
             <field name="system" invisible="1"/>
             <button type="object"
                 name="action_items"
                 class="oe_stat_button"
                 icon="fa-list"
-                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_item_count', '=', 0)]}">
+                attrs="{'invisible': ['|',('is_paylox','=',False),('paylox_item_count', '=', 0)]}">
                 <div class="o_form_field o_stat_info mr3">
-                    <span class="o_stat_value"><field name="jetcheckout_item_count"/></span><span class="o_stat_text">Items</span>
+                    <span class="o_stat_value"><field name="paylox_item_count"/></span><span class="o_stat_text">Items</span>
                 </div>
             </button>
         </xpath>

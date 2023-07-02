@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="payment_page" name="Student Payment Page">
+    <template id="page_payment" name="Student Payment Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -68,17 +68,17 @@
                             </div>
                         </div>
                         <div>
-                            <t t-call="payment_jetcheckout_system.payment_page_contact">
+                            <t t-call="payment_jetcheckout_system.payment_contact">
                                 <t t-set="classes" t-value="'d-md-block d-none'"/>
                             </t>
-                            <t t-call="payment_jetcheckout_system.payment_page_agreements">
+                            <t t-call="payment_jetcheckout_system.payment_agreement">
                                 <t t-set="sidebar" t-value="True"/>
                                 <t t-set="classes" t-value="'d-md-block d-none'"/>
                             </t>
                         </div>
                     </div>
                     <div class="col-md-8 p-4">
-                        <t t-call="payment_jetcheckout_system.payment_page_state">
+                        <t t-call="payment_jetcheckout_system.payment_state">
                             <t t-set="classes" t-value="'d-md-block d-none'"/>
                         </t>
                         <div t-if="len(payments) > 0" class="row justify-content-center flex-column">
@@ -86,14 +86,13 @@
                         </div>
                         <div t-if="len(payments) > 0" class="row justify-content-center">
                             <div class="justify-content-center mx-0 w-100 mb-n4">
-                                <input id="amount" type="hidden" name="amount" value="0"/>
-                                <input id="amount_installment" type="hidden" name="amount_installment" value="0"/>
-                                <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
-                                <input id="advance_discount" type="hidden" t-att-value="advance_discount"/>
-                                <input id="maximum_discount" type="hidden" t-att-value="maximum_discount"/>
-                                <input id="sibling_discount" type="hidden" t-att-value="sibling_discount"/>
+                                <input id="amount" type="hidden" name="amount" value="0" class="p_fields"/>
+                                <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']" class="p_fields"/>
+                                <input id="discountSingle" type="hidden" t-att-value="discount_single" class="p_fields"/>
+                                <input id="discountMaximum" type="hidden" t-att-value="discount_maximum" class="p_fields"/>
+                                <input id="discountSibling" type="hidden" t-att-value="discount_sibling" class="p_fields"/>
                                 <input id="order" type="hidden" value="0"/>
-                                <t t-call="payment_jetcheckout.jetcheckout_s2s_form">
+                                <t t-call="payment_jetcheckout.s2s">
                                     <t t-set="partner" t-value="partner"/>
                                 </t>
                             </div>
@@ -103,21 +102,21 @@
                                 <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
                             </div>
                         </div>
-                        <t t-call="payment_jetcheckout_system.payment_page_contact">
+                        <t t-call="payment_jetcheckout_system.payment_contact">
                             <t t-set="classes" t-value="'d-md-none d-block'"/>
                         </t>
-                        <t t-call="payment_jetcheckout_system.payment_page_agreements">
+                        <t t-call="payment_jetcheckout_system.payment_agreement">
                             <t t-set="sidebar" t-value="True"/>
                             <t t-set="classes" t-value="'d-md-none d-block'"/>
                         </t>
                     </div>
                 </div>
-                <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+                <t t-call="payment_jetcheckout_system.payment_footer"/>
             </div>
         </t>
     </template>
 
-    <template id="student_payment_table" name="Student Payment Table">
+    <template id="payment_table" name="Student Payment Table">
         <table t-if="vals" class="table table-bordered mb-0">
             <thead class="shadow">
                 <tr>
@@ -144,7 +143,7 @@
                     </t>
                 </tr>
                 <tr t-if="vals['siblings']" class="text-danger">
-                    <td class="text-right">Sibling Discount<span t-translation="off"> %<t t-esc="sibling_discount"/></span></td>
+                    <td class="text-right">Sibling Discount<span t-translation="off"> %<t t-esc="discount_sibling"/></span></td>
                     <t t-foreach="vals['siblings']" t-as="amount">
                         <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
                     </t>
@@ -169,8 +168,8 @@
                         <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
                     </t>
                 </tr>
-                <tr t-if="vals['advance_discount']" class="text-danger">
-                    <td class="text-right">Advance Payment Discount<span t-translation="off"> %<t t-esc="advance_discount"/></span></td>
+                <tr t-if="vals['discount_single']" class="text-danger">
+                    <td class="text-right">Single Payment Discount<span t-translation="off"> %<t t-esc="discount_single"/></span></td>
                     <t t-foreach="vals['discounts']" t-as="amount">
                         <td class="text-right"><t t-esc="amount['amount']" t-options="{'widget': 'monetary', 'display_currency': vals['currency']}"/></td>
                     </t>
@@ -189,7 +188,7 @@
 
     <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
         <xpath expr="//tr[@t-if='is_conveyance']" position="before">
-            <t t-call="payment_student.student_payment_table">
+            <t t-call="payment_student.payment_table">
                 <t t-set="vals" t-value="doc.jetcheckout_item_ids.get_student_payment_table()"/>
             </t>
         </xpath>

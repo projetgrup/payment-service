@@ -1,6 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="payment_jetcheckout.campaign_list">
+    <t t-name="paylox.installment.grid">
+        <main t-if="!error &amp;&amp; rows" class="row installment-table bg-white">
+            <t t-foreach="rows" t-as="row">
+                <div class="col-md-4 p-2">
+                    <div class="border">
+                        <table class="w-100">
+                            <colgroup>
+                                <col width="20%"/>
+                                <col width="40%"/>
+                                <col width="40%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="text-center">
+                                        <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
+                                        <span/>
+                                    </th>
+                                </tr>
+                                <tr class="font-weight-bold bottom-border">
+                                    <td></td>
+                                    <td class="text-center">Monthly Payment</td>
+                                    <td class="text-center">Total Payment</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-call="paylox.installment.line"/>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </main>
+        <main t-else="" class="text-center h2">
+            No installment table found
+        </main>
+    </t>
+
+    <t t-name="paylox.installment.line">
+        <t t-foreach="row.installments" t-as="r">
+            <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
+            <tr>
+                <td class="text-center">
+                    <span t-esc="r.id"/>
+                    <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="r.pdesc"/>
+                </td>
+                <td class="text-center side-border">
+                    <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
+                </td>
+                <td class="text-center">
+                    <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                </td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="paylox.installment.row">
+        <t t-if="type === 'installment'">
+            <t t-foreach="rows" t-as="r">
+                <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
+                <div t-attf-class="installment-row #{r.id === 1 ? 'installment-selected' : ''}">
+                    <div class="installment-cell">
+                        <div class="text-center">
+                            <input type="radio" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined"/>
+                            <span class="installment-radio"/>
+                        </div>
+                        <div>
+                            <span t-esc="r.id"/>
+                            <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="r.pdesc"/>
+                        </div>
+                    </div>
+                    <div t-if="!s2s" class="text-center side-border">
+                        <span t-esc="format.percentage(r.crate)"/>
+                    </div>
+                    <div class="text-center side-border">
+                        <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
+                    </div>
+                    <div class="text-center">
+                        <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-foreach="campaigns.installments.items()" t-as="row">
+                <div class="installment-row">
+                    <div class="text-center">
+                        <span t-esc="row[0]"/>
+                    </div>
+                    <t t-foreach="enumerate(campaigns['names'])" t-as="col">
+                        <t t-if="col[0] in row[1]">
+                            <t t-set="installment" t-value="row[1][col[0]]"/>
+                            <t t-set="customer_rate" t-value="installment['customer_rate']"/>
+                            <t t-set="installment_rate" t-value="installment['installment_rate']"/>
+                            <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
+                            <div class="campaign-cell text-center">
+                                <div class="d-inline position-relative">
+                                    <input type="radio" name="installment_radio" class="d-none" t-att-value="row[0]" t-att-data-value="row[0]" t-att-data-campaign="col[1]" t-att-data-amount="installment_amount"/>
+                                    <span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <span t-if="installment['plus_installment']" t-esc="'+%s' % installment['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" style="right: -20px;" t-att-title="installment['plus_installment_description']"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="paylox.installment.col">
+        <t t-if="type === 'installment'">
+            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
+            <div t-if="!s2s" class="text-center">Rate</div>
+            <div class="text-center">Monthly</div>
+            <div class="text-center">Total</div>
+        </t>
+        <t t-else="">
+            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
+            <t t-if="!cols.length">
+                <div class="text-center">Campaign</div>
+            </t>
+            <t t-else="">
+                <t t-foreach="cols" t-as="col">
+                    <div class="text-center" t-esc="col.name"/>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="paylox.campaigns">
         <table>
             <colgroup>
                 <col width="5px"/>

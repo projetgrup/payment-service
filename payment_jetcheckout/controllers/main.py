@@ -11,7 +11,6 @@ from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang, get_lang
 from odoo.tools.float_utils import float_compare, float_round
-from odoo.exceptions import ValidationError
 from odoo.addons.payment.controllers import portal
 
 _logger = logging.getLogger(__name__)
@@ -27,23 +26,97 @@ class PaymentPortal(portal.PaymentPortal):
         raise werkzeug.exceptions.NotFound
 
 
-class JetcheckoutController(http.Controller):
+class PayloxController(http.Controller):
 
     @staticmethod
-    def _jetcheckout_get_acquirer(acquirer=False, providers=None, limit=None):
+    def _get(key=None, default=None):
+        if not key:
+            if 'paylox' in request.session:
+                return request.session['paylox']
+            return None
+        try:
+            return request.session['paylox'][key]
+        except:
+            return default
+
+    @staticmethod
+    def _set(key, value):
+        try:
+            request.session['paylox'][key] = value
+        except:
+            try:
+                request.session['paylox'] = {key: value}
+            except:
+                pass
+
+    @staticmethod
+    def _del(key=None):
+        if not key and 'paylox' in request.session:
+            del request.session['paylox']
+        try:
+            del request.session['paylox'][key]
+        except:
+            pass
+
+    @staticmethod
+    def _get_acquirer(acquirer=False, providers=['jetcheckout'], limit=1):
+        if not acquirer:
+            acquirer = PayloxController._get('acquirer')
+            if acquirer:
+                return request.env['payment.acquirer'].sudo().browse(acquirer)
+
         if acquirer:
             if isinstance(acquirer, int):
                 return request.env['payment.acquirer'].sudo().browse(acquirer)
             else:
                 return acquirer
-        return request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
+        else:
+            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
+            PayloxController._set('acquirer', acquirer.id)
+            return acquirer
 
     @staticmethod
-    def _jetcheckout_get_partner(id=None):
+    def _get_campaigns(acquirer=None):
+        acquirer = acquirer or PayloxController._get_acquirer()
+        return request.env['payment.acquirer.jetcheckout.campaign'].sudo().search_read([('acquirer_id', '=', acquirer.id)], ['id', 'name'])
+
+    @staticmethod
+    def _get_campaign(partner=None, transaction=None):
+        campaign = PayloxController._get('campaign')
+        if not campaign:
+            campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
+            PayloxController._set('campaign', campaign)
+        return campaign
+
+    @staticmethod
+    def _get_currency():
+        cid = PayloxController._get('currency')
+        if not cid:
+            currency = request.env.company.currency_id
+            PayloxController._set('currency', currency.id)
+            return currency
+        else:
+            return request.env['res.currency'].sudo().browse(cid)
+
+    @staticmethod
+    def _get_partner(id=None):
         return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
 
     @staticmethod
-    def _jetcheckout_get_installment_description(installment):
+    def _get_type(t=None):
+        types = {1: 'installment', 2: 'campaign'}
+        type = PayloxController._get('type')
+        if not type:
+            type = request.env.company.payment_page_campaign_table_ok and 2 or 1
+            PayloxController._set('type', type)
+        return types[type] == t if t else types[type]
+
+    def _get_transaction(self):
+        return False
+
+
+    @staticmethod
+    def _get_installment_description(installment):
         if installment['plus_installment'] > 0:
             if installment['plus_installment_description']:
                 return '%s + %s (%s)' % (installment['installment_count'], installment['plus_installment'], installment['plus_installment_description'])
@@ -51,24 +124,26 @@ class JetcheckoutController(http.Controller):
                 return '%s + %s' % (installment['installment_count'], installment['plus_installment'])
         return '%s' % installment['installment_count']
 
-    def _jetcheckout_check_user(self):
+    def _check_user(self):
         return True
 
-    def _jetcheckout_tx_vals(self, **kwargs):
+    def _get_tx_vals(self, **kwargs):
         return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
 
     @staticmethod
-    def _jetcheckout_get_data(acquirer=False, company=False, partner=False, transaction=False, balance=True):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
+    def _prepare(acquirer=False, company=False, partner=False, transaction=False, balance=True):
+        acquirer = PayloxController._get_acquirer(acquirer=acquirer)
         company = company or request.env.company
         currency = transaction and transaction.currency_id or company.currency_id
         lang = get_lang(request.env)
 
+        user = request.env.user.share
         partner = partner or request.env.user.partner_id
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
-        campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
-        card_family = JetcheckoutController._jetcheckout_get_card_family(acquirer=acquirer, campaign=campaign)
+        type = PayloxController._get_type()
+        campaign = PayloxController._get_campaign(partner=partner, transaction=transaction)
+        card_family = PayloxController._get_card_family(acquirer=acquirer, campaign=campaign)
 
         vals = {
             'partner': partner_commercial,
@@ -76,7 +151,8 @@ class JetcheckoutController(http.Controller):
             'acquirer': acquirer,
             'company': company,
             'campaign': campaign,
-            'share': request.env.user.share,
+            'user': user,
+            'type': type,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
             'currency': {
@@ -103,95 +179,73 @@ class JetcheckoutController(http.Controller):
             })
         return vals
 
-    def _jetcheckout_get_installment_data(self, acquirer=False, **kwargs):
-        self._jetcheckout_check_user()
-        acquirer = self._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
-        currency = request.env.company.currency_id
-        bin_number = kwargs['cardnumber'][:6] if len(kwargs.get('cardnumber', [])) >= 6 else False
-        prefix = kwargs.get('prefix', '')
-        url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_jetcheckout_api_url(), prefix)
-        pid = 'partner' in kwargs and int(kwargs['partner']) or None
+    def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, campaign='', bin='', **kwargs):
+        self._check_user()
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        currency = self._get_currency()
+        type = self._get_type()
+        url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
-            "mode": acquirer._get_jetcheckout_env(),
+            "mode": acquirer._get_paylox_env(),
             "currency": currency.name,
             "language": "tr",
+            #"amount": int(float_round(amount, 2) * 100),
         }
-        if prefix:
-            data.update({"bin": bin_number})
+        if bin:
+            data.update({"bin": bin})
 
-        if not request.env.company.payment_page_campaign_table_ok:
-            data.update({"campaign_name": kwargs['campaign'] or acquirer._get_campaign_name(pid)})
+        if not type == 'campaign':
+            data.update({"campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))})
 
+        values = {'rows': [], 'type': type}
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            installments = []
-            campaigns = {
-                'index': -1,
-                'names': [],
-                'installments': {},
-            }
+
             if result['response_code'] == "00":
-                amount = kwargs.get('amount', 0)
-                amount_installment = kwargs.get('amount_installment', 0)
-                installment_options = result.get('installment_options', result.get('installments', []))
-
-                for options in installment_options:
-                    campaigns['index'] += 1
-                    campaigns['names'].append(options['campaign_name'])
-
+                rows = []
+                options = result.get('installment_options', result.get('installments', []))
+                for options in options:
+                    row = {
+                        'family': options.get('card_family', ''),
+                        'logo': options.get('card_family_logo', ''),
+                        'currency': options.get('currency', ''),
+                        'campaign': options.get('campaign_name', ''),
+                        'excluded': options.get('excluded_bins', []),
+                        'installments': [],
+                        'ids': []
+                    }
                     for installment in options['installments']:
-                        installment['installment_count'] = int(installment['installment_count'])
-                        installment['installment_desc'] = self._jetcheckout_get_installment_description(installment)
-                        if amount_installment > 0 and amount > 0 and installment['installment_count'] != 1:
-                            installment['installment_rate'] = (100 * amount_installment / amount) - 100
+                        if installment['installment_count'] in row['ids']:
+                            continue
+
+                        r = {
+                            'id': installment['installment_count'],
+                            'amount': installment['installment_amount'],
+                            'crate': installment['customer_rate'],
+                            'corate': installment['cost_rate'],
+                            'min': installment['min_amount'],
+                            'max': installment['max_amount'],
+                            'plus': installment['plus_installment'],
+                            'pdesc': installment['plus_installment_description'],
+                            'idesc': self._get_installment_description(installment),
+                            'count': installment['installment_count'] + installment['plus_installment']
+                        }
+                        row['ids'].append(r['id'])
+
+                        if rate > 0 and amount > 0 and installment['installment_count'] > 1:
+                            r['irate'] = (100 * amount / rate) - 100
                         else:
-                            installment['installment_rate'] = 0.0
-                        installment['total_installment'] = installment['installment_count'] + installment['plus_installment']
+                            r['irate'] = 0.0
 
-                        if installment['installment_count'] not in campaigns['installments']:
-                            campaigns['installments'][installment['installment_count']] = {campaigns['index']: installment}
-                        else:
-                            campaigns['installments'][installment['installment_count']][campaigns['index']] = installment
+                        row['installments'].append(r)
 
-                    options['installments'].sort(key=lambda x: x['installment_count'])
-                    installments.append(options)
-
-                keys = list(campaigns['installments'].keys())
-                keys.sort()
-                campaigns['installments'] = {k: campaigns['installments'][k] for k in keys}
-
-                values = {
-                    'company': request.env.company,
-                    'installments': installments,
-                    'campaigns': campaigns,
-                    'amount': amount,
-                    'currency': currency,
-                    's2s_form': kwargs.get('s2s', False)
-                }
+                    row['installments'].sort(key=lambda x: x['id'])
+                    rows.append(row)
+                values.update({'rows': rows})
             elif result['response_code'] == "00104":
-                values = {
-                    'company': request.env.company,
-                    'installments': [{
-                        "card_family": "",
-                        "card_family_logo": "",
-                        "installments": [{
-                            "installment_count": 1,
-                            "cost_rate": 0.0,
-                            "customer_rate": 0.0,
-                            "plus_installment": 0,
-                            "plus_installment_description": "",
-                            "total_installment": 1,
-                            "installment_rate": 0.0,
-                            "installment_desc": "1",
-                        }]
-                    }],
-                    'campaigns': campaigns,
-                    'amount': kwargs['amount'],
-                    'currency': currency,
-                    's2s_form': kwargs.get('s2s', False)
-                }
+                pass
             else:
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
         else:
@@ -199,15 +253,15 @@ class JetcheckoutController(http.Controller):
         return values
 
     @staticmethod
-    def _jetcheckout_get_campaigns(**kwargs):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+    def _get_campaignss(**kwargs):
+        acquirer = PayloxController._get_acquirer(acquirer=kwargs['acquirer'])
         currency = request.env.company.currency_id
-        url = '%s/api/v1/prepayment/installment_options' % acquirer._get_jetcheckout_api_url()
+        url = '%s/api/v1/prepayment/installment_options' % acquirer._get_paylox_api_url()
         data = {
             "application_key": acquirer.jetcheckout_api_key,
-            "mode": acquirer._get_jetcheckout_env(),
-            "language": "tr",
+            "mode": acquirer._get_paylox_env(),
             "currency": currency.name,
+            "language": "tr",
             "is_3d": True,
         }
 
@@ -230,17 +284,17 @@ class JetcheckoutController(http.Controller):
             return []
 
     @staticmethod
-    def _jetcheckout_get_card_family(**kwargs):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+    def _get_card_family(**kwargs):
+        acquirer = PayloxController._get_acquirer(acquirer=kwargs['acquirer'])
         currency = request.env.company.currency_id
-        url = '%s/api/v1/prepayment/installment_options' % acquirer._get_jetcheckout_api_url()
+        url = '%s/api/v1/prepayment/installment_options' % acquirer._get_paylox_api_url()
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
         data = {
             "application_key": acquirer.jetcheckout_api_key,
-            "mode": acquirer._get_jetcheckout_env(),
-            "language": "tr",
+            "mode": acquirer._get_paylox_env(),
             "currency": currency.name,
             "campaign_name": kwargs['campaign'] or acquirer._get_campaign_name(pid),
+            "language": "tr",
             "is_3d": True,
         }
 
@@ -262,9 +316,9 @@ class JetcheckoutController(http.Controller):
             return []
  
     @staticmethod
-    def _jetcheckout_get_bank_codes(**kwargs):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
-        url = '%s/api/v1/prepayment/bankcodes' % acquirer._get_jetcheckout_api_url()
+    def _get_bank_codes(**kwargs):
+        acquirer = PayloxController._get_acquirer(acquirer=kwargs['acquirer'])
+        url = '%s/api/v1/prepayment/bankcodes' % acquirer._get_paylox_api_url()
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "language": "tr",
@@ -283,10 +337,10 @@ class JetcheckoutController(http.Controller):
         except:
             return []
 
-    def _jetcheckout_get_transaction(self):
+    def _get_transaction(self):
         return False
 
-    def _jetcheckout_process(self, **kwargs):
+    def _process(self, **kwargs):
         if 'order_id' not in kwargs:
             return '/404', None, True
 
@@ -295,7 +349,7 @@ class JetcheckoutController(http.Controller):
             return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
-        tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query({
+        tx.with_context(domain=request.httprequest.referrer)._paylox_query({
             'successful': kwargs.get('response_code') == '00',
             'code': kwargs.get('response_code', ''),
             'message': kwargs.get('response_message', ''),
@@ -308,7 +362,7 @@ class JetcheckoutController(http.Controller):
         return url, tx, False
 
     @http.route(['/payment/callback'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
-    def jetcheckout_payment_callback(self, **kwargs):
+    def payment_callback(self, **kwargs):
         try:
             data = json.loads(request.httprequest.data) or {}
             if data.get('is_success'):
@@ -317,14 +371,14 @@ class JetcheckoutController(http.Controller):
                     ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
                 ], limit=1)
                 if tx:
-                    tx._jetcheckout_done_postprocess()
-                    #tx.with_context(domain=request.httprequest.referrer)._jetcheckout_query()
+                    tx._paylox_done_postprocess()
+                    # tx.with_context(domain=request.httprequest.referrer)._paylox_query() # enable this line to resend query
         except Exception as e:
             _logger.error('An error occured when processing payment callback: %s' % e)
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
-    def jetcheckout_payment_acquirer(self):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+    def payment_acquirer(self):
+        acquirer = self._get_acquirer()
         commission = request.env['ir.model.data'].sudo()._xmlid_to_res_id('payment_jetcheckout.product_commission')
         return {
             'id': acquirer.id,
@@ -335,120 +389,91 @@ class JetcheckoutController(http.Controller):
         }
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_type(self, acquirer=False):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=acquirer, providers=['jetcheckout'], limit=1)
+    def payment_card_type(self, acquirer=False):
+        acquirer = self._get_acquirer(acquirer=acquirer)
         if acquirer:
             return [{'id': icon.id, 'name': icon.name, 'src': icon.image} for icon in acquirer.payment_icon_ids]
         return []
 
     @http.route('/payment/card/family', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_family(self, **kwargs):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+    def payment_card_family(self, **kwargs):
+        acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
         if acquirer:
-            return self._jetcheckout_get_card_family(**kwargs)
+            return self._get_card_family(**kwargs)
         return []
  
     @http.route('/payment/card/banks', type='json', auth='user', website=True)
-    def jetcheckout_payment_card_banks(self, **kwargs):
-        acquirer = JetcheckoutController._jetcheckout_get_acquirer(acquirer=kwargs['acquirer'], providers=['jetcheckout'], limit=1)
+    def payment_card_banks(self, **kwargs):
+        acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
         if acquirer:
-            return self._jetcheckout_get_bank_codes(**kwargs)
+            return self._get_bank_codes(**kwargs)
         return []
 
     @http.route(['/pay'], type='http', auth='user', website=True)
-    def jetcheckout_payment_page(self, **kwargs):
-        values = self._jetcheckout_get_data()
+    def payment_page(self, **kwargs):
+        values = self._prepare()
         if not values['acquirer'].jetcheckout_payment_page:
             raise werkzeug.exceptions.NotFound()
-        return request.render('payment_jetcheckout.payment_page', values)
+        return request.render('payment_jetcheckout.page_payment', values)
 
     @http.route(['/payment/card/installments'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
-    def jetcheckout_get_installments(self, **kwargs):
-        values = self._jetcheckout_get_installment_data(**kwargs)
-        if 'error' in values:
-            return values
-
-        if kwargs.get('list'):
-            return values
-
-        return {'render': request.env['ir.ui.view']._render_template('payment_jetcheckout.installments', values)}
+    def get_installments(self, **kwargs):
+        return self._prepare_installment(**kwargs)
 
     @http.route(['/payment/card/campaigns'], type='json', auth='user', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
-    def jetcheckout_get_campaigns(self, **kwargs):
-        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+    def get_campaigns(self, **kwargs):
         campaigns = [{'id': 0, 'name': ''}]
-        campaigns.extend(request.env['payment.acquirer.jetcheckout.campaign'].sudo().search_read([('acquirer_id', '=', acquirer.id)], ['id', 'name']))
-        return {'campaigns': campaigns}
+        campaigns.extend(self._get_campaigns())
+        return campaigns
 
     @http.route(['/payment/card/installment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
-    def jetcheckout_get_installment(self, **kwargs):
-        values = self._jetcheckout_get_installment_data(**kwargs)
-        if 'error' in values or 'installments' not in values or not len(values['installments']):
+    def get_installment(self, **kwargs):
+        values = self._prepare_installment(**kwargs)
+        if 'error' in values or 'rows' not in values or not len(values['rows']):
             return values
 
-        installment = values['installments'][0]
-        installments = installment['installments']
-        request.session['__tx_installments'] = installments
-        values['installment'] = {'installments': installments}
-        res = {'card': installment['card_family'], 'logo': installment['card_family_logo']}
-
-        if kwargs.get('render'):
-            template = kwargs.get('template') or 'payment_jetcheckout.installment'
-            header = 'payment_jetcheckout.payment_table_header'
-            res.update({
-                'header': request.env['ir.ui.view']._render_template(header, values),
-                'render': request.env['ir.ui.view']._render_template(template, values),
-            })
-
-        if kwargs.get('list'):
-            res.update(values['installment'])
-
-        return res
+        row = values['rows'][0]
+        return {
+            'type': self._get_type(),
+            'cols': [],
+            'rows': row['installments'],
+            'family': row['family'],
+            'logo': row['logo'],
+        }
 
     @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
-    def jetcheckout_payment(self, **kwargs):
-        self._jetcheckout_check_user()
+    def payment(self, **kwargs):
+        self._check_user()
 
-        installment_count = int(kwargs.get('installment', 1))
-        installments = request.session.get('__tx_installments', [])
-        installment = None
-        for i in installments:
-            if i['installment_count'] == installment_count:
-                installment = i
-                break
-        if not installment:
-            raise ValidationError(_('An error occured. Please restart your payment transaction.'))
+        rows = kwargs['installment']['rows']
+        installment = int(kwargs['installment']['id'])
 
-        amount = float(kwargs.get('amount', 0))
-        amount_installment = float(kwargs.get('amount_installment', 0))
-        if amount_installment > 0 and installment['installment_count']  != 1:
-            amount = amount_installment
+        amount = float(kwargs['amount'])
+        rate = float(kwargs['discount']['single'])
+        if rate > 0 and installment == 1:
+            amount = amount * (100 - rate) / 100
 
-        installment_count = installment['installment_count'] + installment['plus_installment']
-        installment_plus = installment['plus_installment']
-        installment_desc = installment['installment_desc']
-        cost_rate = installment['cost_rate']
-        customer_rate = installment['customer_rate']
-        customer_amount = amount * customer_rate / 100
-        amount_total = float_round(amount + customer_amount, 2)
-        cost_amount = float_round(amount_total * cost_rate / 100, 2)
+        installment = next(filter(lambda x: x['id'] == installment, rows), None)
+        amount_customer = amount * installment['crate'] / 100
+        amount_total = float_round(amount + amount_customer, 2)
+        amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
         amount_integer = int(amount_total * 100)
 
-        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
-        pid = 'partner' in kwargs and int(kwargs['partner']) or None
-        partner = self._jetcheckout_get_partner(pid)
-        currency = request.env.company.currency_id
-        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['cardnumber']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        acquirer = self._get_acquirer()
+        currency = self._get_currency()
+        partner = self._get_partner(int(kwargs['partner']))
+        year = str(fields.Date.today().year)[:2]
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
-            "mode": acquirer._get_jetcheckout_env(),
-            "campaign_name": kwargs['campaign'] or '',
+            "mode": acquirer._get_paylox_env(),
+            "campaign_name": kwargs.get('campaign', ''),
             "amount": amount_integer,
             "currency": currency.name,
-            "installment_count": installment_count,
-            "card_number": str(kwargs['cardnumber']),
-            "expire_month": kwargs['expire_month'],
-            "expire_year": "20" + kwargs['expire_year'],
+            "installment_count": installment['count'],
+            "card_number": kwargs['card']['number'],
+            "expire_month": kwargs['card']['date'][:2],
+            "expire_year": year + kwargs['card']['date'][-2:],
             "is_3d": True,
             "hash_data": hash,
             "language": "tr",
@@ -458,45 +483,45 @@ class JetcheckoutController(http.Controller):
         sale_id = int(kwargs.get('order', 0))
         invoice_id = int(kwargs.get('invoice', 0))
 
-        tx = self._jetcheckout_get_transaction()
+        tx = self._get_transaction()
         vals = {
             'acquirer_id': acquirer.id,
             'callback_hash': hash,
             'amount': amount_total,
-            'fees': cost_amount,
+            'fees': amount_cost,
             'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-            'jetcheckout_campaign_name': kwargs['campaign'] or '',
-            'jetcheckout_card_name': kwargs['card_holder_name'],
-            'jetcheckout_card_number': ''.join([kwargs['cardnumber'][:6], '*'*6, kwargs['cardnumber'][-4:]]),
-            'jetcheckout_card_type': kwargs['card_type'].capitalize(),
-            'jetcheckout_card_family': kwargs['card_family'].capitalize(),
+            'jetcheckout_campaign_name': kwargs.get('campaign', ''),
+            'jetcheckout_card_name': kwargs['card']['holder'],
+            'jetcheckout_card_number': ''.join([kwargs['card']['number'][:6], '*'*6, kwargs['card']['number'][-4:]]),
+            'jetcheckout_card_type': kwargs['card']['type'].capitalize(),
+            'jetcheckout_card_family': kwargs['card']['family'].capitalize(),
             'jetcheckout_order_id': order_id,
             'jetcheckout_payment_amount': amount,
-            'jetcheckout_installment_count': installment_count,
-            'jetcheckout_installment_plus': installment_plus,
-            'jetcheckout_installment_description': installment_desc,
-            'jetcheckout_installment_amount': amount / installment_count if installment_count > 0 else amount,
-            'jetcheckout_commission_rate': cost_rate,
-            'jetcheckout_commission_amount': cost_amount,
-            'jetcheckout_customer_rate': customer_rate,
-            'jetcheckout_customer_amount': customer_amount,
+            'jetcheckout_installment_count': installment['count'],
+            'jetcheckout_installment_plus': installment['plus'],
+            'jetcheckout_installment_description': installment['idesc'],
+            'jetcheckout_installment_amount': amount / installment['count'] if installment['count'] > 0 else amount,
+            'jetcheckout_commission_rate': installment['corate'],
+            'jetcheckout_commission_amount': amount_cost,
+            'jetcheckout_customer_rate': installment['crate'],
+            'jetcheckout_customer_amount': amount_customer,
         }
 
         if tx:
-            vals.update(self._jetcheckout_tx_vals(**kwargs))
+            vals.update(self._get_tx_vals(**kwargs))
             tx.write(vals)
         else:
             vals.update({
                 'amount': amount_total,
-                'fees': cost_amount,
+                'fees': amount_cost,
                 'currency_id': currency.id,
                 'acquirer_id': acquirer.id,
                 'partner_id': partner.id,
                 'operation': 'online_direct',
             })
-            vals.update(self._jetcheckout_tx_vals(**kwargs))
+            vals.update(self._get_tx_vals(**kwargs))
             tx = request.env['payment.transaction'].sudo().create(vals)
 
         if sale_id:
@@ -529,9 +554,11 @@ class JetcheckoutController(http.Controller):
             })
         elif invoice_id:
             tx.invoice_ids = [(4, invoice_id)]
-        request.session['__tx_id'] = tx.id
 
-        url = '%s/api/v1/payment' % acquirer._get_jetcheckout_api_url()
+
+        self._set('tx', tx.id)
+
+        url = '%s/api/v1/payment' % acquirer._get_paylox_api_url()
         fullname = tx.partner_name.split(' ', 1)
         address = []
         if tx.partner_city:
@@ -540,14 +567,16 @@ class JetcheckoutController(http.Controller):
             address.append(tx.partner_state_id.name)
         if tx.partner_country_id:
             address.append(tx.partner_country_id.name)
-        success_url = '/payment/card/success' if 'success_url' not in kwargs or not kwargs['success_url'] else kwargs['success_url']
-        fail_url = '/payment/card/fail' if 'fail_url' not in kwargs or not kwargs['fail_url'] else kwargs['fail_url']
+
+        base_url = request.httprequest.host
+        success_url = '/payment/card/success' if 'successurl' not in kwargs or not kwargs['successurl'] else kwargs['successurl']
+        fail_url = '/payment/card/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
         data.update({
             "order_id": order_id,
-            "card_holder_name": kwargs['card_holder_name'],
-            "cvc": kwargs['cvc'],
-            "success_url": "https://%s%s" % (request.httprequest.host, success_url),
-            "fail_url": "https://%s%s" % (request.httprequest.host, fail_url),
+            "card_holder_name": kwargs['card']['holder'],
+            "cvc": kwargs['card']['code'],
+            "success_url": "https://%s%s" % (base_url, success_url),
+            "fail_url": "https://%s%s" % (base_url, fail_url),
             "customer":  {
                 "name": fullname[0],
                 "surname": fullname[-1],
@@ -598,87 +627,83 @@ class JetcheckoutController(http.Controller):
         return values
 
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_return(self, **kwargs):
+    def callback(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
-        url, tx, status = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._process(**kwargs)
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/shop', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_shop(self, **kwargs):
+    def shop(self, **kwargs):
         kwargs['result_url'] = '/shop/confirmation'
-        url, tx, status = self._jetcheckout_process(**kwargs)
-        if request.session.get('__tx_id'):
-            del request.session['__tx_id']
+        url, tx, status = self._process(**kwargs)
+        self._del()
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/order/<int:order>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_order(self, order, access_token, **kwargs):
+    def order(self, order, access_token, **kwargs):
         kwargs['result_url'] = '/my/orders/%s?access_token=%s' % (order, access_token)
-        url, tx, status = self._jetcheckout_process(**kwargs)
-        if request.session.get('__tx_id'):
-            del request.session['__tx_id']
+        url, tx, status = self._process(**kwargs)
+        self._del()
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/invoice/<int:invoice>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_invoice(self, invoice, access_token, **kwargs):
+    def invoice(self, invoice, access_token, **kwargs):
         kwargs['result_url'] = '/my/invoices/%s?access_token=%s' % (invoice, access_token)
-        url, tx, status = self._jetcheckout_process(**kwargs)
-        if request.session.get('__tx_id'):
-            del request.session['__tx_id']
+        url, tx, status = self._process(**kwargs)
+        self._del()
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/subscription/<int:subscription>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_subscription(self, subscription, access_token, **kwargs):
+    def subscription(self, subscription, access_token, **kwargs):
         kwargs['result_url'] = '/my/subscription/%s/%s' % (subscription, access_token)
-        url, tx, status = self._jetcheckout_process(**kwargs)
-        if request.session.get('__tx_id'):
-            del request.session['__tx_id']
+        url, tx, status = self._process(**kwargs)
+        self._del()
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def jetcheckout_custom(self, record, access_token, **kwargs):
+    def custom(self, record, access_token, **kwargs):
         kwargs['result_url'] = '/payment/confirmation'
-        url, tx, status = self._jetcheckout_process(**kwargs)
+        url, tx, status = self._process(**kwargs)
         url += '?tx_id=%s&access_token=%s' % (tx.id, access_token)
-        if request.session.get('__tx_id'):
-            del request.session['__tx_id']
+        self._del()
         return werkzeug.utils.redirect(url)
 
-    @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], csrf=False, website=True, sitemap=False)
-    def jetcheckout_result(self, **kwargs):
-        values = self._jetcheckout_get_data()
-        last_tx_id = request.session.get('__tx_id')
-        values['tx'] = request.env['payment.transaction'].sudo().browse(last_tx_id)
-        if last_tx_id:
-            del request.session['__tx_id']
-        return request.render('payment_jetcheckout.payment_page_result', values)
+    @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def result(self, **kwargs):
+        values = self._prepare()
+        tx = self._get('tx', 0)
+        values['tx'] = request.env['payment.transaction'].sudo().browse(tx)
+        self._del()
+        return request.render('payment_jetcheckout.page_result', values)
 
     @http.route(['/payment/card/terms'], type='json', auth='public', csrf=False, website=True)
-    def jetcheckout_terms(self, **kwargs):
-        acquirer = self._jetcheckout_get_acquirer(providers=['jetcheckout'], limit=1)
+    def terms(self, **kwargs):
+        acquirer = self._get_acquirer()
+        company = request.env.company
         domain = request.httprequest.referrer
         pid = 'partner' in kwargs and int(kwargs['partner']) or None
-        partner = self._jetcheckout_get_partner(pid)
-        return acquirer.sudo().with_context(domain=domain)._render_jetcheckout_terms(request.env.company.id, partner.id)
+        partner = self._get_partner(pid)
+        return acquirer.sudo().with_context(domain=domain)._render_paylox_terms(company.id, partner.id)
 
-    @http.route(['/payment/card/report/<string:name>/<string:order_id>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
-    def jetcheckout_report(self, name, order_id, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',order_id)], limit=1)
+    @http.route(['/payment/card/report/<string:name>/<string:order>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
+    def report(self, name, order, **kwargs):
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', order)], limit=1)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
-        #pdf = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_pdf([tx.id])[0]
-        #pdfhttpheaders = [
-        #    ('Content-Type', 'application/pdf'),
-        #    ('Content-Length', len(pdf)),
-        #]
+        # Use following lines to get pdf report
+        # pdf = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_pdf([tx.id])[0]
+        # pdfhttpheaders = [
+        #     ('Content-Type', 'application/pdf'),
+        #     ('Content-Length', len(pdf)),
+        # ]
         #return request.make_response(pdf, headers=pdfhttpheaders)
         html = request.env.ref('payment_jetcheckout.report_%s' % name).with_user(SUPERUSER_ID)._render_qweb_html([tx.id])[0]
         return request.make_response(html)
 
     @http.route(['/payment/card/transactions', '/payment/card/transactions/page/<int:page>'], type='http', auth='user', website=True)
-    def jetcheckout_transactions(self, page=0, tpp=20, **kwargs):
-        values = self._jetcheckout_get_data()
+    def transactions(self, page=0, tpp=20, **kwargs):
+        values = self._prepare()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
             ('partner_id', '=', values['partner'].id)
@@ -691,13 +716,18 @@ class JetcheckoutController(http.Controller):
             'txs': txs,
             'tpp': tpp,
         })
-        return request.render('payment_jetcheckout.payment_page_transaction', values)
+        return request.render('payment_jetcheckout.page_transaction', values)
 
     @http.route(['/payment/card/ledger', '/payment/card/ledger/page/<int:page>'], type='http', auth='user', website=True)
-    def jetcheckout_ledger(self, page=0, tpp=40, **kwargs):
-        values = self._jetcheckout_get_data()
+    def ledger(self, page=0, tpp=40, **kwargs):
+        values = self._prepare()
         partner = request.env.user.partner_id
-        aml_ids = request.env['account.move.line'].sudo().search([('company_id','=',values['company'].id),('partner_id','in',(partner.id, partner.commercial_partner_id.id)),('account_internal_type','in',('receivable','payable')),('parent_state','=','posted')])
+        aml_ids = request.env['account.move.line'].sudo().search([
+            ('company_id', '=', values['company'].id),
+            ('partner_id', 'in', (partner.id, partner.commercial_partner_id.id)),
+            ('account_internal_type', 'in', ('receivable', 'payable')),
+            ('parent_state', '=', 'posted')
+        ])
         pager = request.website.pager(url='/payment/card/ledger', total=len(aml_ids), page=page, step=tpp, scope=7, url_args=kwargs)
         offset = pager['offset']
         amls = aml_ids[offset: offset + tpp]
@@ -708,4 +738,4 @@ class JetcheckoutController(http.Controller):
             'tpp': tpp,
             'balance_sum': balance_sum,
         })
-        return request.render('payment_jetcheckout.payment_page_ledger', values)
+        return request.render('payment_jetcheckout.page_ledger', values)

@@ -12,8 +12,8 @@ class ReportCompanyHierarchy(models.AbstractModel):
 
     @api.model
     def _get_children(self, company, companies, child=None):
-        cids = [company.id]
         children = []
+        cids = [company.id]
 
         items = companies.filtered(lambda x: child and x.id != child.id and x.parent_id.id == company.id or x.parent_id.id == company.id).sorted(lambda x: x.name.lower())
         for item in items:
@@ -41,26 +41,31 @@ class ReportCompanyHierarchy(models.AbstractModel):
     def _get_data_line(self, lines, indent=0):
         html = []
         for line in lines:
-            html.append(self.env.ref('payment_jetcheckout_system.company_hierarchy_line')._render({'company': line[0], 'indent': indent, 'child': line[1] and True or False}))
+            html.append(self.env.ref('payment_jetcheckout_system.company_hierarchy_line')._render({
+                'company': line[0],
+                'indent': indent,
+                'child': bool(line[1])
+            }))
             if line[1]:
                 html.extend(self._get_data_line(line[1], indent=indent+1))
         return html
 
     @api.model
     def _get_data(self, name=False):
+        ids = []
         lines = []
 
         company_ids = self.env.context.get('allowed_company_ids') or self.env.companies.ids
         companies = self.env['res.company'].browse(company_ids).sorted(lambda x: x.name.lower())
-        ids = []
         if name:
             cids = self.env['res.company'].search([('id', 'in', company_ids), ('name', 'not ilike', f'%{name}%')], order='name')
             ids.extend(cids.ids)
+
         for company in companies:
             if company.id not in ids:
                 cids, children = self._get_children(company, companies)
                 pids, parent = self._get_parents(company, companies, company_ids, children, name)
                 lines.append(parent)
                 ids.extend(cids + pids)
-        data = self._get_data_line(lines)
-        return data
+
+        return self._get_data_line(lines)

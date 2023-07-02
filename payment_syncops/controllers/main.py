@@ -9,12 +9,12 @@ from odoo import http, fields, _
 from odoo.http import content_disposition, request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.tools.misc import xlsxwriter
-from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetController
+from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
-class PaymentSyncopsController(JetController):
+class PayloxSyncopsController(Controller):
 
-    def _jetcheckout_connector_auth(self, company, header):
+    def _connector_auth(self, company, header):
         code = header.split(' ', 1)[1]
         auth = base64.b64decode(code).decode('utf-8')
         username, password = auth.split(':', 1)
@@ -26,8 +26,8 @@ class PaymentSyncopsController(JetController):
             ('token', '=', password),
         ], limit=1)
         return connector
-    
-    def _jetcheckout_prepare_syncops_transactions(self, tx, tz=None):
+
+    def _connector_prepare_transactions(self, tx, tz=None):
         tz = tz or pytz.timezone('Europe/Istanbul')
         offset = tz.utcoffset(fields.Datetime.now())
         branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
@@ -69,9 +69,9 @@ class PaymentSyncopsController(JetController):
             })
         return values
  
-    def _jetcheckout_connector_get_partner_info(self, partner=None):
-        if '__jetcheckout_partner_connector' in request.session:
-            partner = request.session['__jetcheckout_partner_connector']
+    def _connector_get_partner(self, partner=None):
+        if self._get('syncops'):
+            partner = self._get('syncops')
             return {
                 'name': partner['name'],
                 'vat': partner['vat'],
@@ -87,7 +87,7 @@ class PaymentSyncopsController(JetController):
                 'connector': False,
             }
 
-    def _jetcheckout_connector_get_partner_balance(self, vat, ref, company=None):
+    def _connector_get_partner_balance(self, vat, ref, company=None):
         balances = []
         company = company or request.env.company
         company_id = company.sudo().partner_id.ref
@@ -114,7 +114,7 @@ class PaymentSyncopsController(JetController):
                 balances.append({'amount': amount, 'currency': currency, 'amount_total': amount_total, 'note': res.get('note', '')})
         return balances
 
-    def _jetcheckout_connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
+    def _connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
         company = company or request.env.company
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_ledger', params={
             'company_id': company.sudo().partner_id.ref,
@@ -160,22 +160,22 @@ class PaymentSyncopsController(JetController):
                 currencies[currency_name] = lines
         return currencies
 
-    def _jetcheckout_connector_can_show_partner_ledger(self, company=None):
+    def _connector_can_show_partner_ledger(self, company=None):
         company = company or request.env.company
         return request.env['syncops.connector'].sudo()._count('payment_get_partner_ledger', company=company)
 
-    def _jetcheckout_connector_can_show_partner_balance(self, balance):
+    def _connector_can_show_partner_balance(self, balance):
         return bool(balance)
 
-    def _jetcheckout_connector_can_access_partner_list(self, company=None):
+    def _connector_can_access_partner_list(self, company=None):
         user = request.env.user.sudo()
         company = company or request.env.company
         return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo()._count('payment_get_partner_list', company=company)
 
-    def _jetcheckout_tx_vals(self, **kwargs):
-        vals = super()._jetcheckout_tx_vals(**kwargs)
-        if '__jetcheckout_partner_connector' in request.session:
-            partner = request.session['__jetcheckout_partner_connector']
+    def _get_tx_vals(self, **kwargs):
+        vals = super()._get_tx_vals(**kwargs)
+        if self._get('syncops'):
+            partner = self._get('syncops')
             vals.update({
                 'jetcheckout_connector_partner_name': partner['name'],
                 'jetcheckout_connector_partner_vat': partner['vat'],
@@ -191,22 +191,21 @@ class PaymentSyncopsController(JetController):
             vals.update({
                 'jetcheckout_connector_ok': True,
             })
-
         return vals
 
-    def _jetcheckout_get_data(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
-        values = super()._jetcheckout_get_data(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
-        partner_connector = self._jetcheckout_connector_get_partner_info(partner)
-        values['balances'] = self._jetcheckout_connector_get_partner_balance(partner_connector['vat'], partner_connector['ref'], company)
-        values['show_balance'] = self._jetcheckout_connector_can_show_partner_balance(values['balances'])
-        values['show_ledger'] = self._jetcheckout_connector_can_show_partner_ledger(company)
-        values['show_partners'] = self._jetcheckout_connector_can_access_partner_list(company)
-        values['partner_connector'] = partner_connector
+    def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
+        values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
+        partner = self._connector_get_partne(partner)
+        values['balances'] = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
+        values['show_balance'] = self._connector_can_show_partner_balance(values['balances'])
+        values['show_ledger'] = self._connector_can_show_partner_ledger(company)
+        values['show_partners'] = self._connector_can_access_partner_list(company)
+        values['partner_connector'] = partner
         return values
 
     @http.route(['/my/payment/ledger'], type='http', auth='user', website=True)
-    def jetcheckout_portal_payment_page_ledger(self, **kwargs):
-        values = self._jetcheckout_get_data()
+    def page_syncops_ledger(self, **kwargs):
+        values = self._prepare()
         year = datetime.now().year
         date_start = datetime(year, 1, 1)
         date_end = datetime(year, 12, 31)
@@ -215,10 +214,10 @@ class PaymentSyncopsController(JetController):
             'date_end': date_end.strftime('%d-%m-%Y'),
             'date_format': 'DD-MM-YYYY'
         })
-        return request.render('payment_syncops.payment_page_ledger', values)
+        return request.render('payment_syncops.page_ledger', values)
 
     @http.route(['/my/payment/partners/ledger/list'], type='json', auth='user', website=True)
-    def jetcheckout_portal_payment_page_partners_ledger_list(self, **kwargs):
+    def page_syncops_ledger_list(self, **kwargs):
         date_start = kwargs.get('start')
         if not date_start:
             return {'error': _('Start date cannot be empty')}
@@ -231,7 +230,7 @@ class PaymentSyncopsController(JetController):
         if not date_format:
             return {'error': _('Date format cannot be empty')}
 
-        partner_connector = self._jetcheckout_connector_get_partner_info()
+        partner_connector = self._connector_get_partner()
         vat = partner_connector['vat']
         ref = partner_connector['ref']
         date_format = date_format.replace('DD', '%d').replace('MM', '%m').replace('YYYY', '%Y')
@@ -240,7 +239,7 @@ class PaymentSyncopsController(JetController):
         if date_start > date_end:
             return {'error': _('Start date cannot be later than end date')}
 
-        rows = self._jetcheckout_connector_get_partner_ledger(vat, ref, date_start, date_end)
+        rows = self._connector_get_partner_ledger(vat, ref, date_start, date_end)
         ledgers = []
         for key in rows.keys():
             ledgers.extend(rows[key])
@@ -250,8 +249,8 @@ class PaymentSyncopsController(JetController):
         }
 
     @http.route(['/my/payment/partners'], type='json', auth='user', website=True)
-    def jetcheckout_portal_payment_page_partners(self, **kwargs):
-        if not self._jetcheckout_connector_can_access_partner_list():
+    def page_syncops_partners(self, **kwargs):
+        if not self._connector_can_access_partner_list():
             return []
 
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={
@@ -262,48 +261,48 @@ class PaymentSyncopsController(JetController):
         return []
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
-    def jetcheckout_portal_payment_page_partners_select(self, **kwargs):
-        if not self._jetcheckout_connector_can_access_partner_list():
+    def page_syncops_partners_select(self, **kwargs):
+        if not self._connector_can_access_partner_list():
             return False
 
-        request.session['__jetcheckout_partner_connector'] = {
+        self._set('syncops', {
             'name': kwargs.get('company'),
             'vat': kwargs.get('vat'),
             'ref': kwargs.get('ref'),
-        }
+        })
 
-        balances = self._jetcheckout_connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
+        balances = self._connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
         return {
-            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_partner_balance', {
+            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_balance', {
                 'balances': balances,
-                'show_balance': self._jetcheckout_connector_can_show_partner_balance(balances),
-                'show_ledger': self._jetcheckout_connector_can_show_partner_ledger(),
+                'show_balance': self._connector_can_show_partner_balance(balances),
+                'show_ledger': self._connector_can_show_partner_ledger(),
             })
         }
 
     @http.route(['/my/payment/partners/reset'], type='json', auth='user', website=True)
-    def jetcheckout_portal_payment_page_partners_reset(self, **kwargs):
-        if '__jetcheckout_partner_connector' not in request.session:
+    def page_syncops_partners_reset(self, **kwargs):
+        if not self._get('syncops'):
             return False
 
-        del request.session['__jetcheckout_partner_connector']
+        self._del('syncops')
         partner = request.env.user.partner_id
         return {
             'name': partner.name,
             'campaign': partner.campaign_id.name,
-            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_partner_balance', {
-                'balances': self._jetcheckout_connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
+            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_balance', {
+                'balances': self._connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
             })
         }
 
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
-    def jetcheckout_syncops_transactions(self, **data):
+    def page_syncops_transactions(self, **data):
         headers = request.httprequest.headers
         if 'Authorization' not in headers:
             return Response('Access Denied', status=401)
 
         company = request.env.company
-        connector = self._jetcheckout_connector_auth(company, headers['Authorization'])
+        connector = self._connector_auth(company, headers['Authorization'])
         if not connector:
             return Response('Access Denied', status=401)
 
@@ -333,14 +332,14 @@ class PaymentSyncopsController(JetController):
 
             transactions = request.env['payment.transaction'].sudo().search(domain)
             for transaction in transactions:
-                values = self._jetcheckout_prepare_syncops_transactions(transaction)
+                values = self._connector_prepare_transactions(transaction)
                 response.append(values)
 
         headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
         return request.make_response(json.dumps(response), headers)
 
     @http.route(['/syncops/payment/transactions/xlsx'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
-    def jetcheckout_syncops_transactions_xlsx(self, **data):
+    def page_syncops_transactions_xlsx(self, **data):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet()
@@ -383,7 +382,7 @@ class PaymentSyncopsController(JetController):
         row = 0
         for transaction in transactions:
             row += 1
-            values = self._jetcheckout_prepare_syncops_transactions(transaction)
+            values = self._connector_prepare_transactions(transaction)
             for i, key in enumerate(headers.keys()):
                 worksheet.write(row, i, values[key])
         workbook.close()

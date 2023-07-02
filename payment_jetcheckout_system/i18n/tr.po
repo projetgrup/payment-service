@@ -1006,29 +1006,29 @@ msgid "January"
 msgstr "Ocak"
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__jetcheckout_branch_ids
-msgid "Jetcheckout Branch"
-msgstr "Jetcheckout Şube"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_branch_ids
+msgid "Paylox Branch"
+msgstr "Paylox Şube"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_branch
-msgid "Jetcheckout Company Branches"
-msgstr "Jetcheckout Şirket Şubeleri"
+msgid "Paylox Company Branches"
+msgstr "Paylox Şirket Şubeleri"
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_item_count
-msgid "Jetcheckout Item Count"
-msgstr "Jetcheckout Kalem Adedi"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_count
+msgid "Paylox Item Count"
+msgstr "Paylox Kalem Adedi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send
-msgid "Jetcheckout System Send"
-msgstr "Jetcheckout Sistem Gönderisi"
+msgid "Paylox System Send"
+msgstr "Paylox Sistem Gönderisi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send_type
-msgid "Jetcheckout System Send Types"
-msgstr "Jetcheckout Sistem Gönderi Türü"
+msgid "Paylox System Send Types"
+msgstr "Paylox Sistem Gönderi Türü"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0

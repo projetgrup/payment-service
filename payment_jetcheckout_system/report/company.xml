@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="company_hierarchy_line">
-        <div class="o_company_hierarchy_line d-flex justify-content-between mx-0 py-2 text-600 font-weight-bold position-relative" style="white-space: nowrap;" t-att-data-id="company.id" t-att-data-parent="company.parent_id.id" t-att-data-name="company.name">
+        <div class="o_company_hierarchy_line d-flex justify-content-between mx-0 py-2 text-600 font-weight-bold position-relative text-nowrap" t-att-data-id="company.id" t-att-data-parent="company.parent_id.id" t-att-data-name="company.name">
             <div class="align-self-center o_company_fold" t-attf-style="padding-left: #{1+indent*2}rem; min-width: 200px; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">
                 <i t-if="child" class="fa fa-caret-down ml-n3 my-1 position-absolute"/>
                 <t t-esc="company.name"/>

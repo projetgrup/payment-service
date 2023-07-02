@@ -5,45 +5,45 @@
     <field name="inherit_id" ref="payment.payment_transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr="//div[@name='button_box']" position="inside">
-            <field name="is_jetcheckout" invisible="1"/>
+            <field name="is_paylox" invisible="1"/>
             <field name="jetcheckout_payment_ok" invisible="1"/>
             <button type="object"
-                name="jetcheckout_payment"
+                name="paylox_payment"
                 class="oe_stat_button"
                 icon="fa-money"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_payment_ok', '=', False), ('state', '!=', 'done'), ('payment_id', '!=', False)]}">
+                attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('jetcheckout_payment_ok', '=', False), ('state', '!=', 'done'), ('payment_id', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Create</span><span class="o_stat_text">Payment</span>
                 </div>
             </button>
             <button type="object"
-                name="jetcheckout_cancel"
+                name="paylox_cancel"
                 class="oe_stat_button"
                 icon="fa-times"
                 groups="payment_jetcheckout.group_transaction_cancel"
-                attrs="{'invisible': ['|','|','|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}"
+                attrs="{'invisible': ['|','|','|',('is_paylox','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}"
                 confirm="Do you confirm cancelling transaction?">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Cancel</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
             <button type="object"
-                name="jetcheckout_refund"
+                name="paylox_refund"
                 class="oe_stat_button"
                 icon="fa-undo"
                 groups="payment_jetcheckout.group_transaction_refund"
-                attrs="{'invisible': ['|','|','|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}">
+                attrs="{'invisible': ['|','|','|',('is_paylox','=',False),('jetcheckout_order_id', '=', False),('source_transaction_id','!=',False),('state', 'in', ('draft','cancel','error','expired'))]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Refund</span><span class="o_stat_text">Transaction</span>
                 </div>
             </button>
             <button type="object"
-                name="jetcheckout_query"
+                name="paylox_query"
                 class="oe_stat_button"
                 icon="fa-search"
                 groups="base.group_user"
-                attrs="{'invisible': ['|',('is_jetcheckout','=',False),('jetcheckout_order_id', '=', False)]}">
+                attrs="{'invisible': ['|',('is_paylox','=',False),('jetcheckout_order_id', '=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
@@ -62,7 +62,7 @@
             <field name="jetcheckout_website_id" attrs="{'invisible': [('jetcheckout_website_id', '=', False)]}"/>
         </xpath>
         <xpath expr="//group[@name='transaction_partner']/.." position="after">
-            <group name="transaction_jetcheckout" attrs="{'invisible': [('is_jetcheckout', '=', False)]}">
+            <group name="transaction_jetcheckout" attrs="{'invisible': [('is_paylox', '=', False)]}">
                 <group>
                     <field name="jetcheckout_card_name"/>
                     <field name="jetcheckout_card_number"/>
@@ -97,7 +97,7 @@
                     <label class="o_settings_left_pane" for="jetcheckout_transaction_id" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <div class="o_row">
                         <field name="jetcheckout_transaction_id"/>
-                        <button name="action_jetcheckout_redirect_transaction" type="object" groups="base.group_system" attrs="{'invisible': [('jetcheckout_transaction_id', '=', False)]}">
+                        <button name="action_paylox_redirect_transaction" type="object" groups="base.group_system" attrs="{'invisible': [('jetcheckout_transaction_id', '=', False)]}">
                             <i class="fa fa-fw fa-external-link mr-2"/>
                             <span>Details</span>
                         </button>

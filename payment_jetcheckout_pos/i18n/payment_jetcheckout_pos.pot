@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_pos
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_pos.res_config_settings_view_form
-msgid "Accept payments with an Jetcheckout payment acquirer"
+msgid "Accept payments with an Paylox payment acquirer"
 msgstr ""
 
 #. module: payment_jetcheckout_pos
@@ -122,12 +122,12 @@ msgstr ""
 
 #. module: payment_jetcheckout_pos
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_pos.res_config_settings_view_form
-msgid "Jetcheckout"
+msgid "Paylox"
 msgstr ""
 
 #. module: payment_jetcheckout_pos
 #: model:ir.model.fields,field_description:payment_jetcheckout_pos.field_res_config_settings__module_pos_jetcheckout
-msgid "Jetcheckout Payment Terminal"
+msgid "Paylox Payment Terminal"
 msgstr ""
 
 #. module: payment_jetcheckout_pos
@@ -273,7 +273,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment_jetcheckout_pos.field_res_config_settings__module_pos_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_pos.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Jetcheckout. Set your Jetcheckout "
+"The transactions are processed by Paylox. Set your Paylox "
 "credentials on the related payment method."
 msgstr ""
 

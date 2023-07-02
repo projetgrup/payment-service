@@ -262,8 +262,8 @@ msgstr "ID"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model,name:payment_jetcheckout_api.model_payment_acquirer_jetcheckout_api
-msgid "Jetcheckout API"
-msgstr "Jetcheckout API"
+msgid "Paylox API"
+msgstr "Paylox API"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api____last_update

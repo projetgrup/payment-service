@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.http import route, request
-from odoo.addons.payment_jetcheckout_system.controllers.main import JetcheckoutSystemController as JetSystemController
 from odoo.addons.portal.controllers import portal
+from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -13,10 +13,10 @@ class CustomerPortal(portal.CustomerPortal):
         return super().home(**kwargs)
 
 
-class VendorPaymentController(JetSystemController):
+class PayloxSystemVendorController(Controller):
 
-    def _jetcheckout_tx_vals(self, **kwargs):
-        res = super()._jetcheckout_tx_vals(**kwargs)
+    def _get_tx_vals(self, **kwargs):
+        res = super()._get_tx_vals(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'vendor':
             ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
@@ -26,8 +26,8 @@ class VendorPaymentController(JetSystemController):
                     payment.paid_amount = payment.amount
         return res
 
-    #def _jetcheckout_system_page_values(self, company, system, partner, transaction):
-    #    res = super()._jetcheckout_system_page_values(company, system, partner, transaction)
+    #def _prepare_system(self, company, system, partner, transaction):
+    #    res = super()._prepare_system(company, system, partner, transaction)
     #    if system == 'vendor':
     #        pass
     #    return res

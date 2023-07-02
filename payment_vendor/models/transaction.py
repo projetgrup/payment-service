@@ -13,11 +13,11 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def _jetcheckout_done_postprocess(self):
-        super()._jetcheckout_done_postprocess()
-        self.jetcheckout_send_done_email()
+    def _paylox_done_postprocess(self):
+        super()._paylox_done_postprocess()
+        self._paylox_send_done_email()
 
-    def jetcheckout_send_done_email(self):
+    def _paylox_send_done_email(self):
         self.ensure_one()
         try:
             with self.env.cr.savepoint():
@@ -56,7 +56,7 @@ class PaymentTransaction(models.Model):
             _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))
 
     @api.model
-    def jetcheckout_send_daily_email(self):
+    def paylox_send_daily_email(self):
         users = self.env.ref('payment_vendor.group_vendor_manager').mapped('users')
         template = self.env.ref('payment_vendor.mail_transaction_daily')
         now = datetime.now()
@@ -122,3 +122,8 @@ class PaymentTransaction(models.Model):
                             })
                     except Exception as e:
                         _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
+
+    #TODO Remove
+    @api.model
+    def jetcheckout_send_daily_email(self):
+        self.paylox_send_daily_email()

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-    	<record id="jetcheckout_commission_invoice_key" model="ir.config_parameter">
-            <field name="key">payment_jetcheckout.commission_invoice</field>
+    	<record id="commission_invoice_key" model="ir.config_parameter">
+            <field name="key">paylox.invoice.commission</field>
             <field name="value">no</field><!-- no, draft, post -->
         </record>
 
         <record id="payment_method_jetcheckout" model="account.payment.method">
-            <field name="name">Jetcheckout</field>
+            <field name="name">Paylox</field>
             <field name="code">jetcheckout</field>
             <field name="payment_type">inbound</field>
         </record>
@@ -23,7 +23,7 @@
         </record>
 
         <record id="sequence_transaction" model="ir.sequence">
-            <field name="name">Jetcheckout sequence</field>
+            <field name="name">Paylox Sequence</field>
             <field name="code">payment.jetcheckout.transaction</field>
             <field name="prefix">JET/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
@@ -37,7 +37,7 @@
             <field name="name">Payment Transaction: Resync transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>
-            <field name="code">model.jetcheckout_resync()</field>
+            <field name="code">model.paylox_resync()</field>
             <field name="interval_number">1</field>
             <field name="active">True</field>
             <field name="interval_type">days</field>
@@ -49,7 +49,7 @@
             <field name="name">Payment Transaction: Expire outdated transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>
-            <field name="code">model.jetcheckout_expire()</field>
+            <field name="code">model.paylox_expire()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
@@ -62,15 +62,15 @@
             <field name="support_refund">partial</field>
             <field name="support_tokenization">False</field>
             <field name="allow_tokenization">False</field>
-            <field name="name">Jetcheckout</field>
+            <field name="name">Paylox</field>
             <field name="display_as">Credit Card</field>
             <field name="sequence">1</field>
             <field name="image_128" type="base64" file="payment_jetcheckout/static/src/img/icon.png"/>
             <field name="provider">jetcheckout</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="inline_form_view_id" ref="jetcheckout_s2s_form"/>
+            <field name="inline_form_view_id" ref="s2s"/>
             <field name="state">disabled</field>
-            <!--<field name="pre_msg"><![CDATA[<p>You will be redirected to Jetcheckout page for payment information.</p>]]></field>-->
+            <!--<field name="pre_msg"><![CDATA[<p>You will be redirected to Paylox page for payment information.</p>]]></field>-->
             <field name="pending_msg"><![CDATA[<p>Your payment is processed, but it's waiting confirmation.</p>]]></field>
             <field name="done_msg"><![CDATA[<p>Your payment is successfully processed. Thank you!</p>]]></field>
             <field name="auth_msg"><![CDATA[<p>Your payment is confirmed.</p>]]></field>
@@ -79,7 +79,7 @@
             <field name="jetcheckout_secret_key"></field>
             <field name="description" type="html">
                 <p>
-                    Jetcheckout Payment Gateway
+                    Paylox Payment Gateway
                 </p>
                 <ul class="list-inline">
                     <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>

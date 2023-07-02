@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
-# Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+# Part of Paylox License. See LICENSE file for full copyright and licensing details.
 # Set nginx settings to 'proxy_cookie_path / "/; secure; SameSite=none";'
 
 {
-    'name': 'Jetcheckout Payment Acquirer',
+    'name': 'Paylox Payment Acquirer',
     'version': '1.4',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
@@ -32,10 +32,11 @@
             'payment_jetcheckout/static/src/lib/imask.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
             'payment_jetcheckout/static/src/xml/templates.xml',
+            'payment_jetcheckout/static/src/js/tools.js',
             'payment_jetcheckout/static/src/js/cards.js',
             'payment_jetcheckout/static/src/js/framework.js',
             'payment_jetcheckout/static/src/js/form.js',
-            'payment_jetcheckout/static/src/js/widget.js',
+            'payment_jetcheckout/static/src/js/fields.js',
             'payment_jetcheckout/static/src/js/page.js',
         ],
         'web.assets_backend': [

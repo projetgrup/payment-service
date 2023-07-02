@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2022 Projet (https://www.jetcheckout.com)
-# Part of JetCheckout License. See LICENSE file for full copyright and licensing details.
+# Part of Paylox License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'jetCheckout Payment System',
-    'version': '1.4',
+    'name': 'Paylox Payment System',
+    'version': '1.3',
     'author': 'Projet',
     'website': 'https://www.jetcheckout.com',
     'license': 'LGPL-3',

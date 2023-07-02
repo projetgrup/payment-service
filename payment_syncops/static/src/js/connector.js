@@ -6,6 +6,7 @@ import rpc from 'web.rpc';
 import Dialog from 'web.Dialog';
 import framework from 'paylox.framework';
 import systemPage from 'paylox.system.page';
+import { format } from 'paylox.tools';
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -14,10 +15,11 @@ systemPage.include({
     events: _.extend({}, systemPage.prototype.events, {
         'click .o_connector_partner_get': '_onClickConnectorPartnerGet',
         'click .o_connector_partner_reset': '_onClickConnectorPartnerReset',
+        'click .o_connector_partner_ledger_date': '_onClickConnectorPartnerLedgerDate',
     }),
 
     xmlDependencies: (systemPage.prototype.xmlDependencies || []).concat(
-        ["/payment_syncops/static/src/xml/connector.xml"]
+        ['/payment_syncops/static/src/xml/connector.xml']
     ),
 
     init: function () {
@@ -26,9 +28,9 @@ systemPage.include({
         this.connector = {
             dateFormat: 'DD-MM-YYYY',
         };
-        this.connector.tools = {
-            formatDate: (date) => moment(date).format(self.connector.dateFormat),
-            formatCurrency: (amount, currency) => self.formatCurrency(amount, currency.position, currency.symbol, currency.precision),
+        this.connector.format = {
+            date: (date) => moment(date).format(self.connector.dateFormat),
+            currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.precision),
         };
         this.connector.partner = {
             page: 1,
@@ -37,7 +39,7 @@ systemPage.include({
             flist: [],
             filter: false,
             getRows: () => self.connector.partner.filter && self.connector.partner.flist || self.connector.partner.list,
-            lines: 'payment_syncops.partner_list_line',
+            lines: 'paylox.syncops.partner.list.line',
             $lines: () => $('.o_connector_partner_table tbody'),
         };
         this.connector.ledger = {
@@ -45,17 +47,15 @@ systemPage.include({
             pageSize: 10,
             list: [],
             getRows: () => self.connector.ledger.list,
-            lines: 'payment_syncops.partner_ledger_line',
+            lines: 'paylox.syncops.partner.ledger.line',
             $lines: () => $('.o_connector_partner_ledger_table tbody'),
         };
     },
 
     start: function () {
-        var self = this;
+        const self = this;
         return this._super.apply(this, arguments).then(function () {
-            let $ledger_button = $('.o_connector_partner_ledger_date');
-            if ($ledger_button.length) {
-                $ledger_button.click(self._onClickConnectorPartnerLedgerDate.bind(self));
+            if ($('.o_connector_partner_ledger_date').length) {
                 self._getConnectorPartnerLedgerList();
             }
         });
@@ -83,7 +83,7 @@ systemPage.include({
         const self = this;
         const popup = new Dialog(this, {
             title: _t('Select a partner'),
-            $content: qweb.render('payment_syncops.partner_list', {}),
+            $content: qweb.render('paylox.syncops.partner.list', {}),
             dialogClass: 'o_connector_partner_table'
         });
         popup.opened(function() {
@@ -180,7 +180,7 @@ systemPage.include({
                 title: _t('Error'),
                 message: _t('An error occured.'),
             });
-            const render = qweb.render('payment_syncops.partner_ledger_line', {ledgers: []});
+            const render = qweb.render('paylox.syncops.partner.ledger.line', {ledgers: []});
             $('.o_connector_partner_ledger_table tbody').html(render);
             framework.hideLoading();
         });
@@ -253,7 +253,7 @@ systemPage.include({
         connector.page = page;
         const pageSize = connector.pageSize || 5;
         const pages = this._getConnectorPages(connector);
-        const buttons = qweb.render('payment_syncops.pages', {pages: pages, page: page, type: type});
+        const buttons = qweb.render('paylox.syncops.pages', {pages: pages, page: page, type: type});
         $('.o_connector_pages').html(buttons);
 
         const firstLine = (page - 1) * pageSize;

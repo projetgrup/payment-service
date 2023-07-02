@@ -1,42 +1,52 @@
-odoo.define('payment_jetcheckout_system_otp.otp_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.system.otp.page **/
+'use strict';
 
-var config = require('web.config');
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
-var rpc = require('web.rpc');
-var framework = require('payment_jetcheckout.framework');
+import config from 'web.config';
+import core from 'web.core';
+import rpc from 'web.rpc';
+import publicWidget from 'web.public.widget';
+import framework from 'paylox.framework';
+import payloxPage from 'paylox.page';
 
-var _t = core._t;
+const _t = core._t;
 
-publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
+publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
     selector: '.oe_otp_form',
-    events: {},
+
+    init: function (parent, options) {
+        this._super(parent, options);
+        this.page = 0;
+        this.duration = 0;
+        this.interval = undefined;
+        this.next = new fields({
+            events: [['click', this._onSend]],
+        });
+        this.previous = new fields({
+            events: [['click', this._onSend]],
+        });
+        this.submit = new fields({
+            events: [['click', this._onSubmit]],
+        });
+        this.resend = new fields({
+            events: [['click', this._onResend]],
+        });
+        this.code = new fields({
+            events: [['change', this._onChangeCode]],
+        });
+        this.login = new fields();
+        this.card0 = new fields();
+        this.card1 = new fields();
+        this.id = new fields();
+        this.email = new fields();
+        this.phone = new fields();
+        this.ref = new fields();
+        this.countdown = new fields();
+    },
+
     start: function () {
-        var self = this;
+        const self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.page = 0;
-            self.duration = 0;
-            self.interval = undefined;
-            self.$next = document.getElementById('next');
-            self.$previous = document.getElementById('previous');
-            self.$card0 = document.getElementById('card0');
-            self.$card1 = document.getElementById('card1');
-            self.$validate = document.getElementById('submit');
-            self.$resend = document.getElementById('resend');
-            self.$login = document.getElementById('login');
-            self.$code = document.getElementById('code');
-            self.$id = document.getElementById('id');
-            self.$email = document.getElementById('email');
-            self.$phone = document.getElementById('phone');
-            self.$vat= document.getElementById('vat');
-            self.$ref= document.getElementById('ref');
-            self.$countdown = document.getElementById('countdown');
-            self.$next.addEventListener('click', self._onSend.bind(self));
-            self.$previous.addEventListener('click', self._onPrevious.bind(self));
-            self.$validate.addEventListener('click', self._onValidate.bind(self));
-            self.$resend.addEventListener('click', self._onResend.bind(self));
-            self.$code.addEventListener('change', self._onChangeField.bind(self));
+            payloxPage._start.apply(self);
         });
     },
 
@@ -49,49 +59,49 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
     _onSend: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();        
-        if (!this.$login.value) {
+        if (!this.login.value) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please enter your email address or phone number'),
             });
-            this.$login.focus();
+            this.login.$.focus();
             return;
         }
 
         framework.showLoading();
-        var self = this;
+        const self = this;
         rpc.query({
             route: '/otp/prepare',
             params: this._getParams(),
         }).then(function (result) {
-            self.$previous.classList.remove('d-none');
-            self.$validate.classList.remove('d-none');
-            self.$resend.classList.add('d-none');
             self.duration = 120;
-            self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
+            self.previous.$.removeClass('d-none');
+            self.submit.$.removeClass('d-none');
+            self.resend.$.addClass('d-none');
+            self.countdown.$.html(self.duration + ' ' + _t('seconds'));
             self.interval = setInterval(function() {
                 if (self.duration === 0) {
                     clearInterval(self.interval);
-                    self.$countdown.innerHTML = _t('expired');
-                    self.$validate.classList.add('d-none');
-                    self.$resend.classList.remove('d-none');
+                    self.countdown.html = _t('expired');
+                    self.submit.classList.addClass('d-none');
+                    self.resend.classList.addClass('d-none');
                     return;
                 }
                 self.duration -= 1;
-                self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
+                self.countdown.html = self.duration + ' ' + _t('seconds');
             }, 1000);
-            self.$id.value = result.id;
-            self.$email.innerHTML = result.email;
-            self.$phone.innerHTML = result.phone;
-            self.$vat.innerHTML = result.vat;
-            self.$ref.innerHTML = result.ref;
+            self.id.value = result.id;
+            self.email.html = result.email;
+            self.phone.html = result.phone;
+            self.vat.html = result.vat;
+            self.ref.html = result.ref;
             if (self.page !== 1) {
                 self.page = 1;
-                self.$next.classList.add('d-none');
-                self.$validate.classList.remove('d-none');
-                self.$card0.classList.add('fly-left');
-                self.$card1.classList.remove('fly-right');
+                self.next.$.addClass('d-none');
+                self.submit.$.removeClass('d-none');
+                self.card0.$.addClass('fly-left');
+                self.card1.$.removeClass('fly-right');
             }
             framework.hideLoading();
         }).guardedCatch(function (error) {
@@ -115,7 +125,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
         }
     },
 
-    _onValidate: function (ev) {
+    _onSubmit: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         
@@ -126,11 +136,11 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
                 title: _t('Warning'),
                 message: _t('Code must be 4 digits'),
             });
-            this.$code.focus();
+            this.code.$.focus();
             return;
         }
 
-        var self = this;
+        const self = this;
         framework.showLoading();
         rpc.query({
             route: '/otp/validate',
@@ -143,7 +153,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
                     message: result.error,
                 });
                 framework.hideLoading();
-                self.$code.focus();
+                self.code.$.focus();
             } else {
                 window.location = result.url;
             }
@@ -162,16 +172,15 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
 
     _getParams: function () {
         return {
-            login: this.$login.value,
-            code: this.$code.value,
-            id: this.$id.value,
+            login: this.login.value,
+            code: this.code.value,
+            id: this.id.value,
         }
     },
 
-    _onChangeField: function (ev) {
-        ev.target.classList.remove('border-danger');
-        const $label = document.querySelector('label[for=' + ev.target.attributes.id.value + ']');
-        $label.classList.remove('text-danger');
+    _onChangeCode: function (ev) {
+        $(ev.target).removeClass('border-danger');
+        const $label = $('label[for=' + $(ev.target).prop('id') + ']');
+        $label.removeClass('text-danger');
     },
-});
 });

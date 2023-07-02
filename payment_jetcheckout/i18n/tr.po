@@ -1438,8 +1438,8 @@ msgstr "Taksit Tablosu"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__is_jetcheckout
-msgid "Is Jetcheckout"
-msgstr "Jetcheckout İşlemi"
+msgid "Is Paylox"
+msgstr "Paylox İşlemi"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__program__jcb
@@ -1449,177 +1449,177 @@ msgstr "JCB"
 #. module: payment_jetcheckout
 #: model:account.payment.method,name:payment_jetcheckout.payment_method_jetcheckout
 #: model:payment.acquirer,name:payment_jetcheckout.payment_acquirer_jetcheckout
-msgid "Jetcheckout"
-msgstr "Jetcheckout"
+msgid "Paylox"
+msgstr "Paylox"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_bank
-msgid "Jetcheckout API Bank"
-msgstr "Jetcheckout API Banka"
+msgid "Paylox API Bank"
+msgstr "Paylox API Banka"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaign
-msgid "Jetcheckout API Campaign"
-msgstr "Jetcheckout API Kampanya"
+msgid "Paylox API Campaign"
+msgstr "Paylox API Kampanya"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns
-msgid "Jetcheckout API Campaigns"
-msgstr "Jetcheckout API Kampanyalar"
+msgid "Paylox API Campaigns"
+msgstr "Paylox API Kampanyalar"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_campaigns_line
-msgid "Jetcheckout API Campaigns Line"
-msgstr "Jetcheckout API Kampanyalar Satırı"
+msgid "Paylox API Campaigns Line"
+msgstr "Paylox API Kampanyalar Satırı"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_currency
-msgid "Jetcheckout API Currency"
-msgstr "Jetcheckout API Para Birimi"
+msgid "Paylox API Currency"
+msgstr "Paylox API Para Birimi"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_excluded
-msgid "Jetcheckout API Excluded Bins"
-msgstr "Jetcheckout Pos Harici Binler"
+msgid "Paylox API Excluded Bins"
+msgstr "Paylox Pos Harici Binler"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_family
-msgid "Jetcheckout API Family"
-msgstr "Jetcheckout API Kart Ailesi"
+msgid "Paylox API Family"
+msgstr "Paylox API Kart Ailesi"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_installment
-msgid "Jetcheckout API Installment"
-msgstr "Jetcheckout API Taksit"
+msgid "Paylox API Installment"
+msgstr "Paylox API Taksit"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_provider
-msgid "Jetcheckout API Provider"
-msgstr "Jetcheckout API Sağlayıcı"
+msgid "Paylox API Provider"
+msgstr "Paylox API Sağlayıcı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_api_key
-msgid "Jetcheckout Api Key"
-msgstr "Jetcheckout API Anahtarı"
+msgid "Paylox Api Key"
+msgstr "Paylox API Anahtarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_api_name
-msgid "Jetcheckout Api Name"
-msgstr "Jetcheckout API Adı"
+msgid "Paylox Api Name"
+msgstr "Paylox API Adı"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_application
-msgid "Jetcheckout Application"
-msgstr "Jetcheckout Uygulama"
+msgid "Paylox Application"
+msgstr "Paylox Uygulama"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_applications
-msgid "Jetcheckout Applications"
-msgstr "Jetcheckout Uygulamalar"
+msgid "Paylox Applications"
+msgstr "Paylox Uygulamalar"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_bank
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_bank_ids
-msgid "Jetcheckout Bank"
-msgstr "Jetcheckout Banka"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_bank_ids
+msgid "Paylox Bank"
+msgstr "Paylox Banka"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_campaign
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_campaign_ids
-msgid "Jetcheckout Campaign"
-msgstr "Jetcheckout Kampanya"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_campaign_ids
+msgid "Paylox Campaign"
+msgstr "Paylox Kampanya"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_api
-msgid "Jetcheckout Gateway Api"
-msgstr "Jetcheckout Geçit Api"
+msgid "Paylox Gateway Api"
+msgstr "Paylox Geçit Api"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_app
-msgid "Jetcheckout Gateway App"
-msgstr "Jetcheckout Geçit Uygulama"
+msgid "Paylox Gateway App"
+msgstr "Paylox Geçit Uygulama"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_gateway_database
-msgid "Jetcheckout Gateway Database"
-msgstr "Jetcheckout Geçit Veritabanı"
+msgid "Paylox Gateway Database"
+msgstr "Paylox Geçit Veritabanı"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_journal_ids
-msgid "Jetcheckout Journal"
-msgstr "Jetcheckout Yevmiye"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_journal_ids
+msgid "Paylox Journal"
+msgstr "Paylox Yevmiye"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_journal_line
-msgid "Jetcheckout Journal Item Lines"
-msgstr "Jetcheckout Yevmiye İkincil Satırları"
+msgid "Paylox Journal Item Lines"
+msgstr "Paylox Yevmiye İkincil Satırları"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_journal
-msgid "Jetcheckout Journal Items"
-msgstr "Jetcheckout Yevmiye Satırları"
+msgid "Paylox Journal Items"
+msgstr "Paylox Yevmiye Satırları"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_password
-msgid "Jetcheckout Password"
-msgstr "Jetcheckout Parola"
+msgid "Paylox Password"
+msgstr "Paylox Parola"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_pos
-msgid "Jetcheckout Pos"
-msgstr "Jetcheckout Pos"
+msgid "Paylox Pos"
+msgstr "Paylox Pos"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_poses
-msgid "Jetcheckout Poses"
-msgstr "Jetcheckout Poslar"
+msgid "Paylox Poses"
+msgstr "Paylox Poslar"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_refund
-msgid "Jetcheckout Refund"
-msgstr "Jetcheckout İade"
+msgid "Paylox Refund"
+msgstr "Paylox İade"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_secret_key
-msgid "Jetcheckout Secret Key"
-msgstr "Jetcheckout Gizli Anahtarı"
+msgid "Paylox Secret Key"
+msgstr "Paylox Gizli Anahtarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_signin
-msgid "Jetcheckout Signin"
-msgstr "Jetcheckout Giriş"
+msgid "Paylox Signin"
+msgstr "Paylox Giriş"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_status
-msgid "Jetcheckout Status"
-msgstr "Jetcheckout Durumu"
+msgid "Paylox Status"
+msgstr "Paylox Durumu"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_term
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_terms
-msgid "Jetcheckout Terms"
-msgstr "Jetcheckout Koşulları"
+msgid "Paylox Terms"
+msgstr "Paylox Koşulları"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_url
-msgid "Jetcheckout Url"
-msgstr "Jetcheckout Adresi"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_url
+msgid "Paylox Url"
+msgstr "Paylox Adresi"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_user_id
-msgid "Jetcheckout User"
-msgstr "Jetcheckout Kullanıcı"
+msgid "Paylox User"
+msgstr "Paylox Kullanıcı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_username
-msgid "Jetcheckout Username"
-msgstr "Jetcheckout Kullanıcı Adı"
+msgid "Paylox Username"
+msgstr "Paylox Kullanıcı Adı"
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid ""
-"Jetcheckout payment method has not been set yet on inbound payment methods "
+"Paylox payment method has not been set yet on inbound payment methods "
 "of journal %s."
 msgstr ""
 "jetcheckout ödeme metodu, %s yevmiyesi için gelen ödeme metodu olarak henüz "
@@ -2918,8 +2918,8 @@ msgstr "jetcheckout"
 #~ msgid "Straight"
 #~ msgstr "Tek Çekim"
 
-#~ msgid "You will be redirected to Jetcheckout page for payment information."
-#~ msgstr "Ödeme bilgisi için Jetcheckout sayfasına yönlendirileceksiniz."
+#~ msgid "You will be redirected to Paylox page for payment information."
+#~ msgstr "Ödeme bilgisi için Paylox sayfasına yönlendirileceksiniz."
 
 #~ msgid "Do you confirm refunding transaction?"
 #~ msgstr "İşlemin iadesini onaylıyor musunuz?"

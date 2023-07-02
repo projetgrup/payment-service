@@ -7,9 +7,9 @@ import hashlib
 from odoo import _, api, fields, models
 
 
-class PaymentAcquirerJetcheckoutApi(models.Model):
+class PaymentPayloxAPI(models.Model):
     _name = 'payment.acquirer.jetcheckout.api'
-    _description = 'Jetcheckout API'
+    _description = 'Paylox API'
 
     def _compute_name(self):
         for api in self:
