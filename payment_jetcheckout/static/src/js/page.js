@@ -16,7 +16,6 @@ const qweb = core.qweb;
 
 publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     selector: '.payment-card',
-    fieldsSelector: '.p_fields',
     jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
@@ -24,7 +23,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     init: function (parent, options) {
         this._super(parent, options);
         this.card = {
-            number: new fields({
+            number: new fields.string({
                 events: [
                     ['focus', this._onFocusCardFront],
                     ['accept', this._onAcceptCardNumber],
@@ -42,14 +41,14 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     }
                 }
             }),
-            date: new fields({
+            date: new fields.string({
                 events: [
                     ['focus', this._onFocusCardFront],
                     ['accept', this._onAcceptDate],
                 ],
                 mask: this._maskDate,
             }),
-            code: new fields({
+            code: new fields.string({
                 events: [
                     ['focus', this._onFocusCardBack],
                     ['accept', this._onAcceptCode],
@@ -58,24 +57,24 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     mask: '000[0]',
                 }
             }),
-            icon: new fields(),
-            logo: new fields(),
-            holder: new fields({
+            icon: new fields.string(),
+            logo: new fields.string(),
+            holder: new fields.string({
                 events: [
                     ['input', this._onInputHolder],
                     ['focus', this._onFocusCardFront],
                 ],
             }),
-            sample: new fields({
+            sample: new fields.string({
                 events: [['click', this._onClickCardSample]],
             }),
-            preview: new fields(),
+            preview: new fields.string(),
             type: '',
             family: '',
         };
         this.campaign = {
-            name: new fields(),
-            table: new fields({
+            name: new fields.string(),
+            table: new fields.string({
                 events: [['click', this._onClickCampaingTable]],
             }),
         }
@@ -88,56 +87,60 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             position: 'after',
             symbol: '', 
         },
-        this.amount = new fields({
+        this.amount = new fields.float({
             events: [
                 ['input', this._onInputAmount],
+                ['update', this._onUpdateAmount],
                 ['focus', this._onFocusCardFront],
             ],
             mask: this._maskAmount,
             default: 0,
         });
         this.installment = {
-            table: new fields({
+            table: new fields.string({
                 events: [['click', this._onClickInstallmentTable]],
             }),
-            row: new fields({
+            row: new fields.string({
                 events: [['click', this._onClickRow]],
             }),
-            rowempty: new fields(),
-            col: new fields(),
-            colempty: new fields(),
+            rowempty: new fields.string(),
+            col: new fields.string(),
+            colempty: new fields.string(),
         };
         this.terms = {
-            ok: new fields(),
-            all: new fields({
+            ok: new fields.boolean(),
+            all: new fields.string({
                 events: [['click', this._onClickPaymentTerms]],
             }),
         };
         this.discount = {
-            single: new fields({
+            single: new fields.float({
                 default: 0,
             }),
         };
         this.payment = {
-            button: new fields({
+            button: new fields.string({
                 events: [['click', this._onClickPaymentButton]],
             }),
-            form: new fields({
+            form: new fields.string({
                 events: [['click', this._onClickPaymentButton]],
             }),
-            order: new fields(),
-            invoice: new fields(),
-            subscription: new fields(),
-            successurl: new fields(),
-            failurl: new fields(),
+            successurl: new fields.string(),
+            failurl: new fields.string(),
+            s2s: new fields.boolean({
+                default: false,
+            }),
+            order: new fields.integer(),
+            invoice: new fields.integer(),
+            subscription: new fields.integer(),
         };
-        this.partner = new fields({
+        this.partner = new fields.integer({
             default: 0,
         });
     },
 
     _setCurrency: function () {
-        const currency = $('#currency');
+        const currency = $('[field=currency]');
         this.currency = {
             id: currency.data('id'),
             name: currency.data('name'),
@@ -182,29 +185,29 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _start: function (name) {
-        if (!name) {
-            name = this.fieldsSelector || '.p_fields';
-        }
-
+    _start: function () {
         const t = this;
-        this.$(name).each(function(i, e) {
-            const ids = e.id.replace(/([A-Z])/g, '.$1').toLowerCase().split('.');
+        $('[field]').each(function(_, e) {
+            const name = e.getAttribute('field');
+            const ids = name.split('.');
             if (!ids.length) {
                 return;
             }
-    
-            let i = 0;
-            let l = ids.length - 1;
-            let s = t;
-    
-            while (i < l) {
-                const id = ids[i];
-                s = s[id];
-                i++;
-            }
-            s[ids[l]].$ = $(e);
-            s[ids[l]].start(t);
+
+            try {
+                let i = 0;
+                let l = ids.length - 1;
+                let s = t;
+
+                while (i < l) {
+                    const id = ids[i];
+                    s = s[id];
+                    i++;
+                }
+
+                s[ids[l]].$ = s[ids[l]].$.add(e);
+                s[ids[l]].start(t, name);
+            } catch {}
         });
     },
  
@@ -252,19 +255,23 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _onAcceptDate: function () {
-        if (!this.card.date.value) {
-            document.getElementById('svgexpire').innerHTML = '01/25';
-        } else {
-            document.getElementById('svgexpire').innerHTML = this.card.date.value;
-        }
+        try {
+            if (!this.card.date.value) {
+                document.getElementById('svgexpire').innerHTML = '01/25';
+            } else {
+                document.getElementById('svgexpire').innerHTML = this.card.date.value;
+            }
+        } catch {}
     },
 
     _onAcceptCode: function () {
-        if (!this.card.code.value) {
-            document.getElementById('svgsecurity').innerHTML = '985';
-        } else {
-            document.getElementById('svgsecurity').innerHTML = this.card.code.value;
-        }
+        try {
+            if (!this.card.code.value) {
+                document.getElementById('svgsecurity').innerHTML = '985';
+            } else {
+                document.getElementById('svgsecurity').innerHTML = this.card.code.value;
+            }
+        } catch {}
     },
     
     _onClickCardSample: function () {
@@ -418,7 +425,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $rows.removeClass('installment-selected');
             $rows.find('input').prop({'checked': false});
 
-            const $el = $(ev.target).closest('div.installment-row');
+            const $el = $(ev.target).closest('div.installment-line');
             $el.addClass('installment-selected');
             $el.find('input').prop({'checked': true});
         } else if (this.row.$.data('type') === 'campaign') {
@@ -440,13 +447,15 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _onInputHolder: function () {
-        if (this.card.holder.value) {
-            document.getElementById('svgname').innerHTML = this.card.holder.value;
-            document.getElementById('svgnameback').innerHTML = this.card.holder.value;
-        } else {
-            document.getElementById('svgname').innerHTML = '';
-            document.getElementById('svgnameback').innerHTML = '';
-        }
+        try {
+            if (this.card.holder.value) {
+                document.getElementById('svgname').innerHTML = this.card.holder.value;
+                document.getElementById('svgnameback').innerHTML = this.card.holder.value;
+            } else {
+                document.getElementById('svgname').innerHTML = '';
+                document.getElementById('svgnameback').innerHTML = '';
+            }
+        } catch {}
     },
 
     _onInputAmount: function () {
@@ -455,10 +464,16 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 type: this.installment.type,
                 rows: this.installment.rows,
                 value: this.amount.value,
+                s2s: this.payment.s2s.value,
                 format: format,
                 ...this.currency,
             });
         }
+    },
+
+    _onUpdateAmount: function () {
+        this.amount._.updateValue();
+        this._onInputAmount();
     },
 
     _onFocusCardFront: function () {
@@ -529,6 +544,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 self.installment.col.html = qweb.render('paylox.installment.col', {
                                     type: result.type,
                                     cols: result.cols,
+                                    s2s: self.payment.s2s.value,
                                 });
                             }
                             self.installment.rowempty.$.addClass('d-none');
@@ -537,6 +553,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 type: result.type,
                                 rows: result.rows,
                                 value: self.amount.value,
+                                s2s: self.payment.s2s.value,
                                 format: format,
                                 ...self.currency,
                             });
@@ -671,7 +688,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             },
             amount: this.amount.value,
             discount: {
-                single: this.discount.single,
+                single: this.discount.single.value,
             },
             installment: {
                 id: parseInt($input.val()),

@@ -159,7 +159,7 @@ class PayloxApiController(Controller):
             providers=['transfer'],
             limit=1,
         )
-        values = self._jetcheckout_get_data(
+        values = self._prepare(
             acquirer=acquirer,
             company=tx.company_id,
             balance=False
@@ -190,7 +190,7 @@ class PayloxApiController(Controller):
             providers=['transfer'],
             limit=1,
         )
-        values = self._jetcheckout_get_data(
+        values = self._prepare(
             acquirer=acquirer,
             company=tx.company_id,
             balance=False

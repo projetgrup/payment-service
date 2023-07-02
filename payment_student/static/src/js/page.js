@@ -5,6 +5,7 @@ import core from 'web.core';
 import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
 import systemPage from 'paylox.system.page';
+import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
 const round_di = utils.round_decimals;
@@ -19,28 +20,21 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.discount = {
-            single: new fields({
+            single: new fields.float({
                 default: 0,
             }),
-            maximum: new fields({
+            maximum: new fields.float({
                 default: 0,
             }),
-            sibling: new fields({
+            sibling: new fields.float({
                 default: 0,
             }),
         };
     },
 
-    start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.pivot.html = $(qweb.render('paylox.student.table', {'table': false}));
-        });
-    },
-
     _onChangePaid: function () {
         const $item = $('input[type="checkbox"].payment-items:checked');
-        this.items.checked = !!$item.length;
+        this.payment.items.checked = !!$item.length;
 
         if (!this.amount.exist) {
             return
@@ -52,13 +46,14 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
         const bursaryIds = [];
         const students = [];
         const payments = [];
-        const bursaries = [];
-        const siblings = [];
         const discounts = [];
         const subpayments = [];
         const subsiblings = [];
         const subbursaries = [];
         const totals = [];
+
+        let bursaries = [];
+        let siblings = [];
 
         $item.each(function () {
             const $el = $(this);
@@ -70,27 +65,27 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
             if (!paymentIds.filter(x => x[0] === termId && x[1] === typeId).length) {
                 paymentIds.push([termId, typeId]);
                 payments.push({
-                    'term_id': termId,
-                    'type_id': typeId,
-                    'name': $el.data('term-name') + ' | ' + $el.data('type-name'),
-                    'amount': [],
+                    termId: termId,
+                    typeId: typeId,
+                    name: $el.data('term-name') + ' | ' + $el.data('type-name'),
+                    amount: [],
                 });
             }
 
             if (!bursaryIds.includes(bursaryId)) {
                 bursaryIds.push(bursaryId);
                 bursaries.push({
-                    'id': bursaryId,
-                    'name': $el.data('bursary-name'),
-                    'amount': [],
+                    id: bursaryId,
+                    name: $el.data('bursary-name'),
+                    amount: [],
                 });
             }
 
             if (!studentIds.includes(studentId)) {
                 studentIds.push(studentId);
                 students.push({
-                    'id': studentId,
-                    'name': $el.data('student-name'),
+                    id: studentId,
+                    name: $el.data('student-name'),
                 });
             }
         });
@@ -229,12 +224,12 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
             amount += e.amount;
         });
         totals.push({id: 0, amount: amount});
-        const amount_straight = amount;
 
         if (studentIds.length) {
-            this.pivot.html = $(qweb.render('paylox.student.table', {
+            this.payment.pivot.html = $(qweb.render('paylox.student.table', {
                 table: true,
                 format: format,
+                currency: this.currency,
                 students: students,
                 payments: payments,
                 bursaries: bursaries,
@@ -250,11 +245,11 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
                 hasBursary: bursaryIds.filter(s => s !== 0).length,
             }));
         } else {
-            this.pivot.html = $(qweb.render('paylox.student.table', {'table': false}));
+            this.payment.pivot.html = $(qweb.render('paylox.student.table', {'table': false}));
         };
 
-        const event = new Event('change');
-        this.amount.value = amount_straight;
+        const event = new Event('update');
+        this.amount.value = format.float(amount);
         this.amount.$[0].dispatchEvent(event);
     },
 

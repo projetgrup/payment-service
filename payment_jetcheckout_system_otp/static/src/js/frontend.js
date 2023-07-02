@@ -7,6 +7,7 @@ import rpc from 'web.rpc';
 import publicWidget from 'web.public.widget';
 import framework from 'paylox.framework';
 import payloxPage from 'paylox.page';
+import fields from 'paylox.fields';
 
 const _t = core._t;
 
@@ -18,47 +19,51 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         this.page = 0;
         this.duration = 0;
         this.interval = undefined;
-        this.next = new fields({
+        this.next = new fields.element({
             events: [['click', this._onSend]],
         });
-        this.previous = new fields({
-            events: [['click', this._onSend]],
+        this.previous = new fields.element({
+            events: [['click', this._onPrevious]],
         });
-        this.submit = new fields({
+        this.submit = new fields.element({
             events: [['click', this._onSubmit]],
         });
-        this.resend = new fields({
+        this.resend = new fields.element({
             events: [['click', this._onResend]],
         });
-        this.code = new fields({
+        this.code = new fields.string({
             events: [['change', this._onChangeCode]],
         });
-        this.login = new fields();
-        this.card0 = new fields();
-        this.card1 = new fields();
-        this.id = new fields();
-        this.email = new fields();
-        this.phone = new fields();
-        this.ref = new fields();
-        this.countdown = new fields();
+        this.login = new fields.string({
+            events: [['keyup', this._onKeyupLogin]],
+        });
+        this.card0 = new fields.element();
+        this.card1 = new fields.element();
+        this.id = new fields.string();
+        this.email = new fields.string();
+        this.phone = new fields.string();
+        this.vat = new fields.string();
+        this.ref = new fields.string();
+        this.countdown = new fields.string();
     },
 
     start: function () {
         const self = this;
         return this._super.apply(this, arguments).then(function () {
-            payloxPage._start.apply(self);
+            payloxPage.prototype._start.apply(self);
         });
     },
 
     _onPrevious: function (ev) {
         ev.stopPropagation();
-        ev.preventDefault();        
-        window.location.reload();    
+        ev.preventDefault();
+        window.location.reload();
     },
 
     _onSend: function (ev) {
         ev.stopPropagation();
-        ev.preventDefault();        
+        ev.preventDefault();
+
         if (!this.login.value) {
             this.displayNotification({
                 type: 'warning',
@@ -84,8 +89,8 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
                 if (self.duration === 0) {
                     clearInterval(self.interval);
                     self.countdown.html = _t('expired');
-                    self.submit.classList.addClass('d-none');
-                    self.resend.classList.addClass('d-none');
+                    self.submit.$.addClass('d-none');
+                    self.resend.$.addClass('d-none');
                     return;
                 }
                 self.duration -= 1;
@@ -121,7 +126,7 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (this.duration <= 0) {
-            this._onSend(ev)
+            this._onSend(ev);
         }
     },
 
@@ -130,7 +135,7 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         ev.preventDefault();
         
         const codeRegex = /^[0-9]\d{3}$/;
-        if (!codeRegex.test(this.$code.value)) {
+        if (!codeRegex.test(this.code.value)) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -170,17 +175,29 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         });
     },
 
+    _onChangeCode: function (ev) {
+        $(ev.target).removeClass('border-danger');
+        const $label = $('label[for=' + $(ev.target).prop('id') + ']');
+        $label.removeClass('text-danger');
+    },
+
+    _onKeyupCode: function (ev) {
+        if (ev.key === 'Enter') {
+            this._onSubmit(ev);
+        }
+    },
+
+    _onKeyupLogin: function (ev) {
+        if (ev.key === 'Enter') {
+            this._onSend(ev);
+        }
+    },
+
     _getParams: function () {
         return {
             login: this.login.value,
             code: this.code.value,
             id: this.id.value,
         }
-    },
-
-    _onChangeCode: function (ev) {
-        $(ev.target).removeClass('border-danger');
-        const $label = $('label[for=' + $(ev.target).prop('id') + ']');
-        $label.removeClass('text-danger');
     },
 });

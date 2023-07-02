@@ -1,14 +1,16 @@
 /** @odoo-module alias=paylox.fields **/
 'use strict';
 
-export default class {
+class fields {
     constructor(options) {
         Object.assign(this, options);
         this.$ = $();
         this._ = undefined;
+        this._name = undefined;
     }
 
-    async start(self) {
+    async start(self, name) {
+        this._name = name;
         if (this.mask) {
             if (this.mask instanceof Function) {
                 this.mask = this.mask.apply(self);
@@ -24,9 +26,9 @@ export default class {
                 }
             }
         }
-        //this.$.removeClass('p_fields');
+        //this.$.prop('field', undefined);
     }
- 
+
     get value() {
         if (this._) {
             return this._.typedValue;
@@ -42,7 +44,7 @@ export default class {
     get checked() {
         return this.$.is(':checked');
     }
- 
+
     set checked(v) {
         return this.$.prop('checked', v);
     }
@@ -58,4 +60,46 @@ export default class {
     get exist() {
         return !!this.$.length;
     }
+}
+
+class string extends fields {}
+
+class boolean extends fields {}
+
+class element extends fields {}
+
+class float extends fields {
+    get value() {
+        if (this._) {
+            return this._.typedValue;
+        } else {
+            return parseFloat(this.$ && this.$.val() || this.default || 0);
+        }
+    }
+
+    set value(v) {
+        this.$.val(v);
+    }
+}
+
+class integer extends float {
+    get value() {
+        if (this._) {
+            return this._.typedValue;
+        } else {
+            return parseInt(this.$ && this.$.val() || this.default || 0);
+        }
+    }
+
+    set value(v) {
+        this.$.val(v);
+    }
+}
+
+export default {
+    string: string,
+    boolean: boolean,
+    integer: integer,
+    float: float,
+    element: element,
 }

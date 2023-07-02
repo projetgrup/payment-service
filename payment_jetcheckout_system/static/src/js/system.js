@@ -5,18 +5,18 @@ import core from 'web.core';
 import rpc from 'web.rpc';
 import publicWidget from 'web.public.widget';
 import dialog from 'web.Dialog';
-import utils from 'web.utils';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
-const round_di = utils.round_decimals;
 const _t = core._t;
 
 payloxPage.include({
     init: function (parent, options) {
         this._super(parent, options);
-        this.system = new fields();
+        this.system = new fields.string({
+            default: false,
+        });
     },
 
     _getParams: function () {
@@ -25,7 +25,7 @@ payloxPage.include({
         if ($items.length) {
             const payment_ids = [];
             $items.each(function () { payment_ids.push(parseInt($(this).data('id'))); });
-            params['system'] = this.$system && this.$system.value || false;
+            params['system'] = this.system.value;
             params['payments'] = payment_ids;
         }
         return params;
@@ -67,54 +67,51 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             position: 'after',
             symbol: '', 
         },
-        this.amount = new fields({
+        this.amount = new fields.float({
             default: 0,
         });
-        this.discount = {
-            single: new fields({
-                default: 0,
-            }),
-        };
         this.payment = {
-            privacy: new fields({
+            privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
             }),
-            agreement: new fields({
+            agreement: new fields.element({
                 events: [['click', this._onClickAgreement]],
             }),
-            membership: new fields({
+            membership: new fields.element({
                 events: [['click', this._onClickMembership]],
             }),
-            contact: new fields({
+            contact: new fields.element({
                 events: [['click', this._onClickContact]],
             }),
-            item: new fields({
+            item: new fields.element({
                 events: [['change', this._onChangePaid]],
             }),
-            items: new fields({
+            items: new fields.element({
                 events: [['change', this._onChangePaidAll]],
             }),
-            tags: new fields({
+            tags: new fields.element({
                 events: [['click', this._onClickTag]],
             }),
-            pivot: new fields(),
+            pivot: new fields.element(),
         };
     },
  
     start: function () {
         const self = this;
         return this._super.apply(this, arguments).then(function () {
-            self._setCurrency();
-            payloxPage._start.apply(self);
-            self._onChangePaid();
+            payloxPage.prototype._setCurrency.apply(self);
+            payloxPage.prototype._start.apply(self);
+            if (self.payment.item.exist) {
+                self._onChangePaid();
+            }
         });
     },
 
     _onChangePaidAll: function (ev) {
-        if (this.items.checked) {
-            this.item.checked = true;
+        if (this.payment.items.checked) {
+            this.payment.item.checked = true;
         } else {
-            this.item.checked = false;
+            this.payment.item.checked = false;
         }
         this._onChangePaid();
     },
@@ -124,7 +121,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const pid = $button.data('id');
         $button.toggleClass('btn-light');
 
-        _.each(this.item.$, function(item) {
+        _.each(this.payment.item.$, function(item) {
             const $el = $(item);
             if ($el.data('type-id') === pid) {
                 if ($button.hasClass('btn-light')) {
@@ -140,6 +137,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 
     _onChangePaid: function (ev) {
+        if (!this.amount.exist) {
+            return;
+        }
+
         if (ev) {
             const $input = $(ev.currentTarget);
             const id = $input.data('id');
@@ -149,20 +150,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
         const $total = $('p.payment-amount-total');
         const $items = $('input[type="checkbox"].payment-items:checked');
-        this.items.checked = !!$items.length;
-
-        const $amount = this.amount.$;
-        if (!$amount.length) {
-            return;
-        }
+        this.payment.items.checked = !!$items.length;
 
         let amount = 0;
         $items.each(function() { amount += parseFloat($(this).data('amount'))});
+        
+        const event = new Event('update');
+        this.amount.value = format.float(amount);
+        this.amount.$[0].dispatchEvent(event);
 
-        const event = new Event('change');
-        $amount.val(amount);
-        $amount[0].dispatchEvent(event);
-        $total.html(format.currency(amount));
+        $total.html(format.currency(amount, this.currency.position, this.currency.symbol, this.currency.decimal));
     },
 
     _onClickPrivacy: function (ev) {
@@ -203,7 +200,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         ev.preventDefault();
         rpc.query({route: '/p/contact'}).then(function (content) {
             new dialog(this, {
-                title: _t('Contact'),
+                title: _t('Contact Information'),
                 $content: $('<div/>').html(content),
             }).open();
         });

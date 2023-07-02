@@ -13,7 +13,7 @@ class PayloxSystemStudentController(Controller):
             if ids:
                 payment_ids = request.env['payment.item'].sudo().browse(ids)
                 payment_table = payment_ids.get_student_payment_table()
-                amounts = payment_table['totals'] if int(kwargs.get('installment', 1)) == 1 else payment_table['subbursaries']
+                amounts = payment_table['totals'] if int(kwargs['installment']['id']) == 1 else payment_table['subbursaries']
 
                 students = {i: 0 for i in payment_ids.mapped('child_id').ids}
                 for payment in payment_ids:

@@ -2,7 +2,7 @@
 <odoo>
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
         <xpath expr="//div[@id='payment_card']/div" position="inside">
-            <input t-if="system" id="system" type="hidden" t-att-value="system" class="p_fields"/>
+            <input t-if="system" type="hidden" t-att-value="system" field="system"/>
         </xpath>
     </template>
 
@@ -69,26 +69,26 @@
             <div t-attf-class="row mx-0 table-responsive bg-white border card overflow-auto #{classes}">
                 <table class="table table-sm small mb-0">
                     <tr>
-                        <td><a id="privacy" href="#" class="p_fields d-block w-100">Privacy Policy</a></td>
+                        <td><a href="#" class="d-block w-100" field="payment.privacy">Privacy Policy</a></td>
                     </tr>
                     <tr>
-                        <td><a id="agreement" href="#" class="p_fields d-block w-100">Distant Sale Agreement</a></td>
+                        <td><a href="#" class="d-block w-100" field="payment.agreement">Distant Sale Agreement</a></td>
                     </tr>
                     <tr>
-                        <td><a id="membership" href="#" class="p_fields d-block w-100">Membership Agreement</a></td>
+                        <td><a href="#" class="d-block w-100" field="payment.membership">Membership Agreement</a></td>
                     </tr>
                     <tr>
-                        <td><a id="contact" href="#" class="p_fields d-block w-100">Contact Page</a></td>
+                        <td><a href="#" class="d-block w-100" field="payment.contact">Contact Page</a></td>
                     </tr>
                 </table>
             </div>
         </t>
         <t t-else="">
             <div class="row mx-5 my-3 justify-content-around">
-                <button id="privacy" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Privacy Policy</button>
-                <button id="agreement" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Distant Sale Agreement</button>
-                <button id="membership" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Membership Agreement</button>
-                <button id="contact" class="p_fields btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%">Contact Page</button>
+                <button class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%" field="payment.privacy">Privacy Policy</button>
+                <button class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%" field="payment.agreement">Distant Sale Agreement</button>
+                <button class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%" field="payment.membership">Membership Agreement</button>
+                <button class="btn btn-secondary bg-white text-primary m-2 w-md-auto" style="width: 100%" field="payment.contact">Contact Page</button>
             </div>
         </t>
     </template>
@@ -120,27 +120,29 @@
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
             </div>
-            <div class="payment-card payment-system row justify-content-center mx-0">
-                <t t-call="payment_jetcheckout.payment_sidebar">
-                    <t t-set="page" t-value="'payment'"/>
-                    <t t-set="no_payment_icons" t-value="True"/>
-                    <t t-set="no_card_preview" t-value="True"/>
-                    <t t-set="buttons">
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+            <div class="payment-system">
+                <div class="payment-card row justify-content-center mx-0">
+                    <t t-call="payment_jetcheckout.payment_sidebar">
+                        <t t-set="page" t-value="'payment'"/>
+                        <t t-set="no_payment_icons" t-value="True"/>
+                        <t t-set="no_card_preview" t-value="True"/>
+                        <t t-set="buttons">
+                            <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                        </t>
+                        <t t-call="payment_jetcheckout_system.payment_contact"/>
+                        <t t-set="labels"/>
                     </t>
-                    <t t-call="payment_jetcheckout_system.payment_contact"/>
-                    <t t-set="labels"/>
-                </t>
-                <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                    <t t-call="payment_jetcheckout.payment_form">
-                        <t t-set="no_smart_buttons" t-value="True"/>
-                    </t>
-                    <input id="paymentSuccessurl" type="hidden" t-att-value="success_url"/>
-                    <input id="paymentFailurl" type="hidden" t-att-value="fail_url"/>
+                    <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                        <t t-call="payment_jetcheckout.payment_form">
+                            <t t-set="no_smart_buttons" t-value="True"/>
+                        </t>
+                        <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                        <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                    </div>
                 </div>
+                <t t-call="payment_jetcheckout_system.payment_agreement"/>
+                <t t-call="payment_jetcheckout_system.payment_footer"/>
             </div>
-            <t t-call="payment_jetcheckout_system.payment_agreement"/>
-            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 
@@ -244,7 +246,7 @@
                         <table class="table table-borderless table-responsive-md w-100 table-fold small">
                             <thead>
                                 <tr class="font-weight-bold border shadow">
-                                    <th class="py-3">Date</th>
+                                    <th>Date</th>
                                     <th>Transaction</th>
                                     <th>Card Holder Name</th>
                                     <th>Card Number</th>
@@ -255,14 +257,14 @@
                             <tbody>
                                 <t t-foreach="txs" t-as="tx">
                                     <tr class="border row-view">
-                                        <td class="py-2"><span t-field="tx.create_date"/></td>
+                                        <td><span t-field="tx.create_date"/></td>
                                         <td><span t-field="tx.reference"/></td>
                                         <td><span t-field="tx.jetcheckout_card_name"/></td>
                                         <td><span t-field="tx.jetcheckout_card_number"/></td>
                                         <td class="text-right"><span t-field="tx.jetcheckout_payment_amount"/></td>
                                         <td class="border-right font-weight-bold text-center px-2"><span t-field="tx.state" t-attf-class="py-1 w-100 badge #{'badge-success' if tx.state == 'done' else 'badge-danger'}"/></td>
                                     </tr>
-                                    <tr class="border bg-100 row-fold">
+                                    <tr class="border shadow-lg row-fold">
                                         <td colspan="99">
                                             <table class="w-100">
                                                 <tr class="font-weight-bold border">

@@ -28,57 +28,54 @@
     <template id="s2s" name="Paylox S2S Form">
         <t t-if="order">
             <t t-set="data" t-value="order"/>
-            <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" value="/payment/card/shop"/>
-            <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" value="/payment/card/shop"/>
-            <input id="paymentOrder" type="hidden" class="p_fields" name="order_id" t-att-value="order.id"/>
+            <t t-set="success_url" t-value="'/payment/card/shop'"/>
+            <t t-set="fail_url" t-value="'/payment/card/shop'"/>
+            <input type="hidden" t-att-value="order.id" field="payment.order"/>
         </t>
         <t t-elif="sale_order and sale_order._name == 'sale.order'">
             <t t-set="data" t-value="sale_order"/>
-            <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
-            <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" t-att-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
-            <input id="paymentOrder" type="hidden" class="p_fields" name="order_id" t-att-value="sale_order.id"/>
+            <t t-set="success_url" t-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
+            <t t-set="fail_url" t-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
+            <input type="hidden" t-att-value="sale_order.id" field="payment.order"/>
         </t>
         <t t-elif="invoice and invoice._name == 'account.move'">
             <t t-set="data" t-value="invoice"/>
-            <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
-            <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" t-att-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
-            <input id="paymentInvoice" type="hidden" class="p_fields" name="invoice_id" t-att-value="invoice.id"/>
+            <t t-set="success_url" t-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
+            <t t-set="fail_url" t-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
+            <input type="hidden" t-att-value="invoice.id" field="payment.invoice"/>
         </t>
         <t t-elif="account and account._name == 'sale.subscription'">
             <t t-set="data" t-value="account"/>
-            <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
-            <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" t-att-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
-            <input id="paymentSubscription" type="hidden" class="p_fields" name="subscription_id" t-att-value="account.id"/>
+            <t t-set="success_url" t-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
+            <t t-set="fail_url" t-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
+            <input type="hidden" t-att-value="account.id" field="payment.subscription"/>
         </t>
         <t t-else="">
-            <t t-set="data" t-value="None"/>
             <t t-if="access_token">
-                <input id="amount" class="p_fields" type="hidden" t-att-value="amount"/>
-                <input id="currency" type="hidden" t-att-data-decimal="currency.decimal_places" data-separator="," data-thousand="." t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol"/>
-                <input id="paymentOrder" type="hidden" class="p_fields" name="order_id" t-att-value="sale_order_id"/>
-                <input id="paymentInvoice" type="hidden" class="p_fields" name="invoice_id" t-att-value="invoice_id"/>
-                <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" t-att-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
-                <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" t-att-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
-                <t t-set="no_button" t-value="True"/>
-                <t t-set="no_card_family" t-value="True"/>
-                <t t-set="no_loading" t-value="True"/>
+                <t t-set="datas" t-value="True"/>
+                <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
+                <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
+                <input type="hidden" t-att-value="sale_order_id" field="payment.order"/>
+                <input type="hidden" t-att-value="invoice_id" field="payment.invoice"/>
             </t>
-            <t t-else="">
-                <input id="paymentSuccessurl" type="hidden" class="p_fields" name="success_url" t-att-value="success_url"/>
-                <input id="paymentFailurl" type="hidden" class="p_fields" name="fail_url" t-att-value="fail_url"/>
-                <t t-set="no_button" t-value="False"/>
-                <t t-set="no_card_family" t-value="False"/>
-                <t t-set="no_loading" t-value="no_loading"/>
-            </t>
-            <input id="partner" type="hidden" class="p_fields" name="partner" t-att-value="partner and partner.id or partner_id"/>
+            <input type="hidden" name="partner" t-att-value="partner and partner.id or partner_id" field="partner"/>
         </t>
-        <t t-if="data">
-            <input id="amount" type="hidden" class="p_fields" t-att-value="data.amount_total if not account else data.recurring_total"/>
-            <input id="currency" type="hidden" t-att-data-decimal="data.currency_id.decimal_places" data-separator="," data-thousand="." t-att-data-name="data.currency_id.name" t-att-data-id="data.currency_id.id" t-att-data-position="data.currency_id.position" t-att-data-symbol="data.currency_id.symbol"/>
+
+        <t t-if="data or datas">
             <t t-set="no_button" t-value="True"/>
             <t t-set="no_card_family" t-value="True"/>
             <t t-set="no_loading" t-value="True"/>
         </t>
+
+        <t t-if="data">
+            <t t-set="amount" t-value="data.amount_total if not account else data.recurring_total"/>
+            <t t-set="no_card_family" t-value="data.currency_id"/>
+        </t>
+
+        <input type="hidden" t-att-value="amount" field="amount"/>
+        <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language and language.decimal_point or ','" t-att-data-thousand="language and language.thousands_sep or '.'" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+        <input type="hidden" name="success_url" t-att-value="success_url" field="payment.successurl"/>
+        <input type="hidden" name="fail_url" t-att-value="fail_url" field="payment.failurl"/>
         <div class="payment-card">
             <t t-call="payment_jetcheckout.payment_form">
                 <t t-set="s2s" t-value="True"/>
@@ -93,13 +90,13 @@
         <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
             <div>
                 <div t-if="page in ['payment', 'result']" class="px-3 py-4 bg-white card my-4 shadow">
-                    <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-name="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']"/>
+                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language and language.decimal_point or ','" t-att-data-thousand="language and language.thousands_sep or '.'" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <t t-if="page == 'payment'">
                         <div class="field-container">
-                            <input id="amount" type="text" inputmode="decimal" class="p_fields text-center border-primary" required="required"/>
+                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount"/>
                             <span class="bar-container"/>
-                            <span t-if="currency['position'] == 'before'" class="symbol symbol-before" t-esc="currency['symbol']"/>
-                            <span t-else="" class="symbol symbol-after" t-esc="currency['symbol']"/>
+                            <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                            <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
                             <label for="amount" class="text-primary"><span>Amount to Pay</span></label>
                         </div>
                     </t>
@@ -133,7 +130,7 @@
                         <span name="contact" t-esc="contact.name" class="text-600"/>
                     </t>
                     <t t-if="labels" t-raw="labels"/>
-                    <input id="partner" type="hidden" class="p_fields" name="partner" t-att-value="partner.id"/>
+                    <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
                     <t t-if="buttons" t-raw="buttons"/>
                 </div>
                 <div t-if="page == 'payment' and not no_card_preview" style="height: 200px;">
@@ -180,9 +177,9 @@
     </template>
 
     <template id="payment_preview" name="Paylox Card Preview">
-        <div id="cardSample" class="p_fields creditcard">
+        <div class="creditcard" field="card.sample">
             <div class="front">
-                <div id="cardPreview" class="p_fields"></div>
+                <div id="cardpreview" field="card.preview"></div>
                 <svg id="cardfront" x="0px" y="0px" viewBox="0 0 750 471" style="enable-background:new 0 0 750 471;" xml:space="preserve">
                     <g id="Front">
                         <g id="CardBackground">
@@ -270,7 +267,6 @@
 
     <template id="payment_form" name="Paylox Payment Form">
         <t t-call="payment_jetcheckout.payment_loading"/>
-        <t t-set="campaign" t-value="campaign or {}"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
                 <t t-set="page" t-value="'payment'"/>
@@ -285,32 +281,32 @@
                     </div>
                     <div class="payment-form-container payment-gradient border card">
                         <div class="field-container">
-                            <input id="cardHolder" type="text" class="p_fields" required="required"/>
+                            <input id="cardholder" type="text" required="required" field="card.holder"/>
                             <span class="bar-container"/>
-                            <label for="cardHolder"><span>Name</span></label>
+                            <label><span>Name</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardNumber" class="p_fields" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                            <input id="cardnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.number"/>
                             <span class="bar-container"/>
-                            <div id="cardLogo" class="p_fields" t-attf-class="#{'d-none' if no_card_family else 'overflow-hidden fade card flex-row'}"/>
-                            <svg id="cardIcon" class="p_fields" t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471"/>
-                            <label for="cardNumber"><span>Card Number</span></label>
+                            <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
+                            <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
+                            <label for="cardnumber"><span>Card Number</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardDate" class="p_fields" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required"/>
+                            <input id="carddate" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
                             <span class="bar-container"/>
-                            <label for="cardDate"><span>Expiration</span></label>
+                            <label for="carddate"><span>Expiration</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardCode" class="p_fields" inputmode="numeric" pattern="[0-9]*" type="text" required="required"/>
+                            <input id="cardcode" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.code"/>
                             <span class="bar-container"/>
-                            <label for="cardCode"><span t-if="s2s">CVC</span><span t-else="">Security Code</span></label>
+                            <label for="cardcode"><span t-if="s2s">CVC</span><span t-else="">Security Code</span></label>
                         </div>
                         <div t-if="not no_terms" class="field-container">
                             <div class="terms-container justify-content-end">
-                                <label id="termsAll" for="term" class="p_fields btn mb-0 cursor-pointer">Terms &amp; Conditions</label>
+                                <label for="term" class="btn mb-0 cursor-pointer" field="terms.all">Terms &amp; Conditions</label>
                                 <label class="switch mb-0">
-                                    <input id="termsOk" class="p_fields" type="checkbox"/>
+                                    <input id="term" type="checkbox" field="terms.ok"/>
                                     <span class="slider round fa"/>
                                 </label>
                             </div>
@@ -324,76 +320,77 @@
                     <div t-if="not s2s" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div t-if="type == 'installment'" id="installmentRows" class="payment-gradient border card p-3">
+                    <div t-if="type == 'installment'" class="installment-rows payment-gradient border card p-3">
                         <div>
-                            <div id="installmentColempty" class="p_fields font-weight-bold text-primary text-uppercase installment-row mb-2 installment-header">
+                            <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
                                 <t t-call="payment_jetcheckout.payment_installment_header"/>
                             </div>
-                            <div id="installmentCol" class="p_fields d-none font-weight-bold text-primary text-uppercase installment-row installment-header"/>
+                            <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div id="installmentRow" data-type="installment" class="p_fields d-none"/>
-                        <div id="installmentRowempty" class="p_fields text-muted small h-100 w-75 text-center mt72 mx-auto">
+                        <div class="d-none installment-row" data-type="installment" field="installment.row"/>
+                        <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
                         <div t-if="user" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'"/></div>
                         <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
-                                <div id="installmentTable" class="p_fields">
+                                <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
-                                <div t-if="user" id="campaignTable" class="p_fields mt-2">
+                                <div t-if="user" class="mt-2" field="campaign.table">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button id="paymentButton" class="p_fields align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100 text-overflow-ellipsis">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
                             </div>
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
-                            <div id="installmentTable" class="p_fields col-12 p-2">
+                            <div class="col-12 p-2" field="installment.table">
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                             <div class="d-none">
-                                <button id="paymentButton" class="p_fields payment_pay d-none"/>
+                                <button class="payment_pay d-none" field="payment.button"/>
                             </div>
                         </div>
-                        <input id="campaignName" class="p_fields" type="hidden" t-att-value="campaign or ''"/>
+                        <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
                     </div>
-                    <div t-else="" id="installmentCols" class="payment-gradient border card p-3">
+                    <div t-else="" class="installment-cols payment-gradient border card p-3">
                         <div>
-                            <div id="installmentColempty" class="p_fields font-weight-bold text-primary text-uppercase installment-row installment-col">
-                                <t t-call="payment_jetcheckout.payment_installment_header"/>
+                            <div class="font-weight-bold text-primary text-uppercase installment-line installment-col">
+                                <t t-call="payment_jetcheckout.payment_installment_header" field="installment.colempty"/>
                             </div>
-                            <div id="installmentCol" class="p_fields d-none font-weight-bold text-primary text-uppercase installment-row installment-col"/>
+                            <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-col" field="installment.col"/>
                         </div>
-                        <div id="installmentRow" data-type="campaign" class="p_fields d-none"/>
-                        <div id="installmentRowempty" class="p_fields text-muted small h-100 w-75 text-center mt72 mx-auto">
+                        <div data-type="campaign" class="d-none installment-row" field="installment.row"/>
+                        <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
                         <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
-                                <div id="installmentTable" class="p_fields">
+                                <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button id="paymentButton" class="p_fields align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100" style="text-overflow: ellipsis;">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100" style="text-overflow: ellipsis;" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
                             </div>
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
-                            <div id="installmentTable" class="p_fields col-12 p-2">
+                            <div class="col-12 p-2" field="installment.table">
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                             <div class="d-none">
-                                <button id="paymentButton" class="p_fields payment_pay d-none"/>
+                                <button class="payment_pay d-none" field="payment.button"/>
                             </div>
                         </div>
                         <input id="campaignName" type="hidden" t-att-value="campaign or ''"/>
                     </div>
                 </div>
+                <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
             </div>
             <div class="payment-installments row mx-0 d-none"/>
         </div>

@@ -121,7 +121,7 @@
         cursor: wait;
     }
 
-    #cardLogo {
+    .cclogo {
         height: 38px;
         position: absolute;
         right: 75px;
@@ -136,16 +136,16 @@
         }
     }
 
-    #installmentRows {
+    .installment-rows {
         background-color: #ffffff;
         color: #888888 !important;
         display: flex;
-        #installmentRow {
+        .installment-row {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
-        .installment-row {
+        .installment-line {
             display: flex;
             font-size: 12px;
             border-radius: 5px;
@@ -189,16 +189,16 @@
         }
     }
 
-    #installmentCols {
+    .installment-cols {
         background-color: #ffffff;
         color: #888888 !important;
         display: flex;
-        #installmentRow {
+        .installment-col {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
-        .installment-row {
+        .installment-line {
             display: flex;
             font-size: 12px;
             border-radius: 5px;
@@ -793,13 +793,13 @@
         overflow: hidden;
     }
 
-    #cardPreview {
+    #cardpreview {
         position: absolute;
         right: 15px;
         top: 20px;
     }
 
-    #cardPreview svg {
+    #cardpreview svg {
         width: 100px;
         max-height: 60px;
     }
@@ -1045,7 +1045,7 @@
             width: 50px !important;
             height: 30px !important;
         }
-        #cardLogo {
+        .cclogo {
             top: auto !important;
             bottom: -20px !important;
             width: 50px !important;
@@ -1055,19 +1055,19 @@
 
     .installment-container {
         &.lg {
-            display: none;
+            display: none !important;
         }
         &.sm {
-            display: flex;
+            display: flex !important;
         }
     }
 
     .campaign-container {
         &.lg {
-            display: none;
+            display: none !important;
         }
         &.sm {
-            display: flex;
+            display: flex !important;
         }
     }
 }

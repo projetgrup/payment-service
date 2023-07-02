@@ -135,7 +135,7 @@ class PayloxController(http.Controller):
         acquirer = PayloxController._get_acquirer(acquirer=acquirer)
         company = company or request.env.company
         currency = transaction and transaction.currency_id or company.currency_id
-        lang = get_lang(request.env)
+        language = get_lang(request.env)
 
         user = request.env.user.share
         partner = partner or request.env.user.partner_id
@@ -153,18 +153,10 @@ class PayloxController(http.Controller):
             'campaign': campaign,
             'user': user,
             'type': type,
+            'language': language,
+            'currency': currency,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
-            'currency': {
-                'self' : currency,
-                'id' : currency.id,
-                'name' : currency.name,
-                'decimal' : currency.decimal_places,
-                'symbol' : currency.symbol,
-                'position' : currency.position,
-                'separator' : lang.decimal_point,
-                'thousand' : lang.thousands_sep,
-            },
         }
         if balance:
             balance = partner_commercial.credit - partner_commercial.debit

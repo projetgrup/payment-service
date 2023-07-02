@@ -341,7 +341,7 @@ class Partner(models.Model):
 
     def action_payable(self):
         self.ensure_one()
-        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        system = self.company_id and self.company_id.system or self.system or self.env.context.get('active_system') or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.payable_ids.ids)]
         if self.parent_id:
@@ -352,7 +352,7 @@ class Partner(models.Model):
 
     def action_paid(self):
         self.ensure_one()
-        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        system = self.company_id and self.company_id.system or self.system or self.env.context.get('active_system') or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.paid_ids.ids)]
         if self.parent_id:

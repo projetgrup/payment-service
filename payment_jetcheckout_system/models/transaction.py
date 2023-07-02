@@ -25,7 +25,7 @@ class PaymentTransaction(models.Model):
 
     def action_items(self):
         self.ensure_one()
-        system = self.company_id.system
+        system = self.company_id.system or self.partner_id.system or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.jetcheckout_item_ids.ids)]
         action['context'] = {'create': False, 'edit': False, 'delete': False}

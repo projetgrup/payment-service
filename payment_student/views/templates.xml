@@ -22,7 +22,7 @@
                 <div class="row mx-0 my-4 card border shadow flex-row p-2">
                     <div class="col-md-4 p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <t t-call="payment_jetcheckout_system.payment_page_state">
+                            <t t-call="payment_jetcheckout_system.payment_state">
                                 <t t-set="classes" t-value="'d-md-none d-block'"/>
                             </t>
                             <div t-if="payments" class="row shadow p-3 bg-light small text-primary card card-header-tabs font-weight-bold">
@@ -34,7 +34,7 @@
                                         <tr>
                                             <td class="text-center">
                                                 <t t-foreach="payment_types" t-as="payment_type">
-                                                    <button class="btn btn-sm btn-success btn-payments" t-esc="payment_type.name" t-att-data-id="payment_type.id"/>
+                                                    <button class="btn btn-sm btn-success btn-payments" t-esc="payment_type.name" t-att-data-id="payment_type.id" field="payment.tags"/>
                                                 </t>
                                             </td>
                                         </tr>
@@ -45,7 +45,7 @@
                                                 <!--<td class="text-center"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>-->
                                                 <td class="border text-center">
                                                     <label class="switch" style="margin-bottom: 0;">
-                                                        <input type="checkbox" class="payment-items" t-att-data-id="payment.id" t-att-data-student-id="payment.child_id.id" t-att-data-student-name="payment.child_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment._is_student_sibling_paid()" checked="checked"/>
+                                                        <input type="checkbox" class="payment-items" t-att-data-id="payment.id" t-att-data-student-id="payment.child_id.id" t-att-data-student-name="payment.child_id.name" t-att-data-term-id="payment.term_id.id" t-att-data-term-name="payment.term_id.name" t-att-data-amount="payment.amount" t-att-data-type-id="payment.payment_type_id.id" t-att-data-type-name="payment.payment_type_id.name" t-att-data-bursary-id="payment.bursary_id.id" t-att-data-bursary-name="payment.bursary_id.name" t-att-data-bursary-amount="payment.bursary_id.percentage / -100" t-att-data-sibling-paid="payment._is_student_sibling_paid()" checked="checked" field="payment.item"/>
                                                         <span class="slider round fa"/>
                                                     </label>
                                                 </td>
@@ -58,7 +58,7 @@
                                             <td class="text-right"><em>Select All</em></td>
                                             <td class="text-center">
                                                 <label class="switch" style="margin-bottom: 0;">
-                                                    <input type="checkbox" class="payment-all-items" checked="checked"/>
+                                                    <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
                                                     <span class="slider round fa"/>
                                                 </label>
                                             </td>
@@ -82,17 +82,15 @@
                             <t t-set="classes" t-value="'d-md-block d-none'"/>
                         </t>
                         <div t-if="len(payments) > 0" class="row justify-content-center flex-column">
-                            <div class="bg-white border card table-responsive payment-pivot overflow-auto"/>
+                            <div class="bg-white border card table-responsive payment-pivot overflow-auto" field="payment.pivot"/>
                         </div>
                         <div t-if="len(payments) > 0" class="row justify-content-center">
                             <div class="justify-content-center mx-0 w-100 mb-n4">
-                                <input id="amount" type="hidden" name="amount" value="0" class="p_fields"/>
-                                <input id="currency" type="hidden" t-att-data-decimal="currency['decimal']" t-att-data-separator="currency['separator']" t-att-data-thousand="currency['thousand']" t-att-data-currency="currency['name']" t-att-data-id="currency['id']" t-att-data-position="currency['position']" t-att-data-symbol="currency['symbol']" class="p_fields"/>
-                                <input id="discountSingle" type="hidden" t-att-value="discount_single" class="p_fields"/>
-                                <input id="discountMaximum" type="hidden" t-att-value="discount_maximum" class="p_fields"/>
-                                <input id="discountSibling" type="hidden" t-att-value="discount_sibling" class="p_fields"/>
-                                <input id="order" type="hidden" value="0"/>
+                                <input type="hidden" t-att-value="discount_single" field="discount.single"/>
+                                <input type="hidden" t-att-value="discount_maximum" field="discount.maximum"/>
+                                <input type="hidden" t-att-value="discount_sibling" field="discount.sibling"/>
                                 <t t-call="payment_jetcheckout.s2s">
+                                    <t t-set="amount" t-value="amount or 0"/>
                                     <t t-set="partner" t-value="partner"/>
                                 </t>
                             </div>

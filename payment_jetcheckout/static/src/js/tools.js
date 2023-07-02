@@ -5,7 +5,7 @@ import utils from 'web.utils';
 
 const round_di = utils.round_decimals;
 
-function formatFloat(value, precision=false) {
+function formatFloat(value, precision=2) {
     const l10n = core._t.database.parameters;
     const formatted = _.str.sprintf('%.' + precision + 'f', round_di(value, precision) || 0).split('.');
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
@@ -21,7 +21,7 @@ function formatPercentage(value, position=false, precision=2) {
     }
 }
 
-function formatCurrency(value, position=false, symbol=false, precision=false) {
+function formatCurrency(value, position=false, symbol='', precision=2) {
     const amount = formatFloat(value, precision);
     if (position === 'after') {
         return amount + ' ' + symbol;

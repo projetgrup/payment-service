@@ -52,15 +52,16 @@ class PayloxSystemController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
-        if not status and tx.company_id.system:
+        if not status and (tx.company_id.system or tx.partner_id.system):
             status = True
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx, status
 
     def _prepare_system(self, company, system, partner, transaction):
         currency = company.currency_id
-        lang = get_lang(request.env)
+        language = get_lang(request.env)
         acquirer = self._get_acquirer()
+        type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
@@ -78,17 +79,10 @@ class PayloxSystemController(Controller):
             'tx': transaction,
             'system': system,
             'token': token,
+            'type': type,
+            'language': language,
+            'currency': currency,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
-            'currency': {
-                'self' : currency,
-                'id' : currency.id,
-                'name' : currency.name,
-                'decimal' : currency.decimal_places,
-                'symbol' : currency.symbol,
-                'position' : currency.position,
-                'separator' : lang.decimal_point,
-                'thousand' : lang.thousands_sep,
-            },
         }
 
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
@@ -158,8 +152,8 @@ class PayloxSystemController(Controller):
 
         values = self._prepare(partner=partner)
         values.update({
-            'fail_url': '/my/payment/success',
-            'success_url': '/my/payment/fail',
+            'success_url': '/my/payment/success',
+            'fail_url': '/my/payment/fail',
             'show_reset': True,
         })
 
@@ -167,7 +161,7 @@ class PayloxSystemController(Controller):
         # it could be there because of api module
         self._del('hash')
 
-        return request.render('payment_jetcheckout_system.page_portal', values)
+        return request.render('payment_jetcheckout_system.page_payment', values)
 
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def page_system_portal_return(self, **kwargs):
@@ -185,7 +179,7 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
     def page_system_transaction(self, page=0, tpp=20, **kwargs):
-        values = self._jetcheckout_get_data()
+        values = self._prepare()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
             ('partner_id', '=', values['partner'].id)

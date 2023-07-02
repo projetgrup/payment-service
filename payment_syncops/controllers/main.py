@@ -195,7 +195,7 @@ class PayloxSyncopsController(Controller):
 
     def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
         values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
-        partner = self._connector_get_partne(partner)
+        partner = self._connector_get_partner(partner)
         values['balances'] = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
         values['show_balance'] = self._connector_can_show_partner_balance(values['balances'])
         values['show_ledger'] = self._connector_can_show_partner_ledger(company)
