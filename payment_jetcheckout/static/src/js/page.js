@@ -71,6 +71,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             preview: new fields.string(),
             type: '',
             family: '',
+            bin: '',
         };
         this.campaign = {
             name: new fields.string(),
@@ -166,7 +167,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             mapToRadix: [this.currency.thousand],
         }
     },
- 
+
     _maskDate: function () {
         return {
            mask: 'MM{/}YY',
@@ -216,10 +217,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self._setCurrency();
             self._start();
-            const mask = self._maskAmount();
-            const amount = IMask.pipe(self.amount.$[0].value || '0', mask, IMask.PIPE_TYPE.MASKED, IMask.PIPE_TYPE.TYPED);
-            self.amount.value = IMask.pipe('' + amount, mask);
-            self.amount._.updateValue();
             framework.hideLoading();
         });
     },
@@ -233,7 +230,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this.card.icon.$.addClass('show');
         } else {
             this.card.icon.html = '';
-            this.card.icon.$.remove('show');
+            this.card.icon.$.removeClass('show');
         }
 
         if (this.card.sample.exist) {
@@ -312,10 +309,13 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
 
         if (this.terms.content) {
-            new dialog(this, {
+            const popup = new dialog(this, {
                 title: _t('Terms & Conditions'),
                 $content: $('<div/>').html(this.terms.content),
-            }).open();
+            });
+            popup.open().opened(function () {
+                popup.$modal.addClass('payment-page');
+            });
         }
     },
 
@@ -331,7 +331,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     partner: this.partner.value,
                     campaign: this.campaign.name.value,
                     amount: this.amount.value,
-                    rate: this.discount.single.value,
                 },
             }).then(function (result) {
                 if ('error' in result) {
@@ -356,7 +355,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
 
         if (this.installment.grid) {
-            new dialog(this, {
+            const popup = new dialog(this, {
                 title: _t('Installments Table'),
                 $content: qweb.render('paylox.installment.grid', {
                     value: this.amount.value,
@@ -364,10 +363,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     ...this.currency,
                     ...this.installment.grid,
                 }),
-            }).open().opened(function () {
-                $('.installment-table th > img').on('load', function () {
+            });
+            popup.open().opened(function () {
+                popup.$modal.addClass('payment-page');
+                $('.installment-table picture > img').on('load', function () {
                     $(this).removeClass('d-none');
-                    $('.installment-table th > span').remove();
+                    $('.installment-table picture').removeClass('placeholder');
                 });
             });
         }
@@ -396,7 +397,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
 
         if (this.campaign.list) {
-            new dialog(self, {
+            const popup = new dialog(self, {
                 title: _t('Campaigns Table'),
                 size: 'small',
                 buttons: [{
@@ -405,8 +406,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     close: true,
                 }],
                 $content: qweb.render('paylox.campaigns', { campaigns: this.campaign.list, current: this.campaign.name.value })
-            }).open().opened(function () {
-                const popup = this;
+            });
+
+            popup.open().opened(function () {
+                popup.$modal.addClass('payment-page');
                 const $button = $('.modal-body button.o_button_select_campaign');
                 $button.click(function(e) {
                     const campaign = e.currentTarget.dataset.name;
@@ -498,15 +501,16 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this.installment.colempty.$.removeClass('d-none');
             this.installment.col.$.addClass('d-none');
             this.installment.col.html = '';
+            this.installment.cols = [];
+
             this.installment.rowempty.$.removeClass('d-none');
             this.installment.row.$.addClass('d-none');
             this.installment.row.html = '';
-            this.installment.row.$.addClass('d-none');
+            this.installment.rows = [];
+
             this.card.logo.$.removeClass('show');
             this.card.family = '';
             this.card.bin = '';
-            this.installment.rows = [];
-            this.installment.cols = [];
         } else {
             if (this.card.sample.exist) {
                 document.getElementById('svgnumber').innerHTML = this.card.number._.value;
@@ -547,6 +551,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     s2s: self.payment.s2s.value,
                                 });
                             }
+                            self.installment.cols = result.cols;
+
+                            self.installment.type = result.type;
                             self.installment.rowempty.$.addClass('d-none');
                             self.installment.row.$.removeClass('d-none');
                             self.installment.row.html = qweb.render('paylox.installment.row', {
@@ -557,6 +564,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 format: format,
                                 ...self.currency,
                             });
+                            self.installment.rows = result.rows;
+
                             if (result.family) {
                                 self.card.logo.html = '<img src="' + result.logo + '" alt="' + result.family + '"/>';
                                 self.card.logo.$.addClass('show');
@@ -567,9 +576,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 self.card.family = '';
                             }
                             self.card.bin = bin;
-                            self.installment.type = result.type;
-                            self.installment.rows = result.rows;
-                            self.installment.cols = result.cols;
                         }
                     }).guardedCatch(function (error) {
                         self.displayNotification({
@@ -586,15 +592,17 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 this.installment.colempty.$.removeClass('d-none');
                 this.installment.col.$.addClass('d-none');
                 this.installment.col.html = '';
+                this.installment.cols = [];
+
                 this.installment.rowempty.$.removeClass('d-none');
                 this.installment.row.$.addClass('d-none');
                 this.installment.row.html = '';
+                this.installment.rows = [];
+
                 this.card.logo.html = '';
                 this.card.logo.$.removeClass('show');
                 this.card.bin = '';
                 this.card.family = '';
-                this.installment.rows = [];
-                this.installment.cols = [];
             }
         }
     },
@@ -652,7 +660,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.terms.ok.checked) {
+        } else if (this.terms.ok.exist && !this.terms.ok.checked) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),

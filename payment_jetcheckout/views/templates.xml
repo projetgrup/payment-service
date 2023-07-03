@@ -27,61 +27,97 @@
 
     <template id="s2s" name="Paylox S2S Form">
         <t t-if="order">
-            <t t-set="data" t-value="order"/>
+            <t t-set="model" t-value="order"/>
             <t t-set="success_url" t-value="'/payment/card/shop'"/>
             <t t-set="fail_url" t-value="'/payment/card/shop'"/>
-            <input type="hidden" t-att-value="order.id" field="payment.order"/>
+            <t t-set="amount" t-value="model.amount_total"/>
+            <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
+            <t t-set="currency" t-value="model.currency_id"/>
+            <t t-set="type" t-value="type or 'installment'"/>
+            <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="sale_order and sale_order._name == 'sale.order'">
-            <t t-set="data" t-value="sale_order"/>
-            <t t-set="success_url" t-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
-            <t t-set="fail_url" t-value="'/payment/card/order/%s/%s' % (sale_order.id, sale_order.access_token)"/>
-            <input type="hidden" t-att-value="sale_order.id" field="payment.order"/>
+            <t t-set="model" t-value="sale_order"/>
+            <t t-set="success_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
+            <t t-set="fail_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
+            <t t-set="amount" t-value="model.amount_total"/>
+            <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
+            <t t-set="currency" t-value="model.currency_id"/>
+            <t t-set="type" t-value="type or 'installment'"/>
+            <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="invoice and invoice._name == 'account.move'">
-            <t t-set="data" t-value="invoice"/>
-            <t t-set="success_url" t-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
-            <t t-set="fail_url" t-value="'/payment/card/invoice/%s/%s' % (invoice.id, invoice.access_token)"/>
-            <input type="hidden" t-att-value="invoice.id" field="payment.invoice"/>
+            <t t-set="model" t-value="invoice"/>
+            <t t-set="success_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
+            <t t-set="fail_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
+            <t t-set="amount" t-value="model.amount_total"/>
+            <t t-set="partner" t-value="model.partner_id"/>
+            <t t-set="currency" t-value="model.currency_id"/>
+            <t t-set="type" t-value="type or 'installment'"/>
+            <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
         </t>
         <t t-elif="account and account._name == 'sale.subscription'">
-            <t t-set="data" t-value="account"/>
-            <t t-set="success_url" t-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
-            <t t-set="fail_url" t-value="'/payment/card/subscription/%s/%s' % (account.id, account.uuid)"/>
-            <input type="hidden" t-att-value="account.id" field="payment.subscription"/>
+            <t t-set="model" t-value="account"/>
+            <t t-set="success_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
+            <t t-set="fail_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
+            <t t-set="amount" t-value="model.recurring_total"/>
+            <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
+            <t t-set="currency" t-value="model.currency_id"/>
+            <t t-set="type" t-value="type or 'installment'"/>
+            <input type="hidden" t-att-value="model.id" field="payment.subscription"/>
         </t>
         <t t-else="">
             <t t-if="access_token">
-                <t t-set="datas" t-value="True"/>
-                <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
-                <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (invoice_id or sale_order_id, access_token)"/>
-                <input type="hidden" t-att-value="sale_order_id" field="payment.order"/>
-                <input type="hidden" t-att-value="invoice_id" field="payment.invoice"/>
+                <t t-if="sale_order_id">
+                    <t t-set="model" t-value="request.env['sale.order'].browse(sale_order_id)"/>
+                    <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
+                    <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
+                    <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
+                    <t t-set="currency" t-value="model.currency_id"/>
+                    <t t-set="type" t-value="type or 'installment'"/>
+                    <input type="hidden" t-att-value="model.id" field="payment.order"/>
+                </t>
+                <t t-elif="invoice_id">
+                    <t t-set="model" t-value="request.env['account.invoice'].browse(invoice_id)"/>
+                    <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
+                    <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
+                    <t t-set="partner" t-value="model.partner_id"/>
+                    <t t-set="currency" t-value="model.currency_id"/>
+                    <t t-set="type" t-value="type or 'installment'"/>
+                    <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
+                </t>
             </t>
-            <input type="hidden" name="partner" t-att-value="partner and partner.id or partner_id" field="partner"/>
         </t>
 
-        <t t-if="data or datas">
+        <t t-if="model">
             <t t-set="no_button" t-value="True"/>
             <t t-set="no_card_family" t-value="True"/>
             <t t-set="no_loading" t-value="True"/>
         </t>
 
-        <t t-if="data">
-            <t t-set="amount" t-value="data.amount_total if not account else data.recurring_total"/>
-            <t t-set="no_card_family" t-value="data.currency_id"/>
+        <t t-if="not ok">
+            <t t-set="partner" t-value="partner.commercial_partner_id"/>
+            <t t-set="contact" t-value="partner.parent_id and partner"/>
+            <t t-set="company" t-value="company or acquirer.company_id or request.env.company"/>
+            <t t-set="currency" t-value="currency or company.currency_id"/>
+            <t t-set="user" t-value="not request.env.user.share"/>
+            <t t-set="type" t-value="type or 'installment'"/>
+            <t t-set="no_terms" t-value="not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms"/>
         </t>
 
-        <input type="hidden" t-att-value="amount" field="amount"/>
-        <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language and language.decimal_point or ','" t-att-data-thousand="language and language.thousands_sep or '.'" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+        <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+        <input type="hidden" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), currency.round(amount), grouping=True, monetary=True)" field="amount"/>
+        <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
         <input type="hidden" name="success_url" t-att-value="success_url" field="payment.successurl"/>
         <input type="hidden" name="fail_url" t-att-value="fail_url" field="payment.failurl"/>
+        <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
         <div class="payment-card">
             <t t-call="payment_jetcheckout.payment_form">
                 <t t-set="s2s" t-value="True"/>
                 <t t-set="no_button" t-value="no_button"/>
                 <t t-set="no_card_family" t-value="no_card_family"/>
                 <t t-set="no_loading" t-value="no_loading"/>
+                <t t-set="no_terms" t-value="no_terms"/>
             </t>
         </div>
     </template>
@@ -90,10 +126,11 @@
         <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
             <div>
                 <div t-if="page in ['payment', 'result']" class="px-3 py-4 bg-white card my-4 shadow">
-                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language and language.decimal_point or ','" t-att-data-thousand="language and language.thousands_sep or '.'" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                    <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <t t-if="page == 'payment'">
                         <div class="field-container">
-                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount"/>
+                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
                             <span class="bar-container"/>
                             <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                             <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
@@ -101,8 +138,8 @@
                         </div>
                     </t>
                     <t t-elif="page == 'result'">
-                        <button t-if="tx and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
-                        <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase payment_pay disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
+                        <button t-if="tx and tx.state == 'done'" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase disabled shadow" disabled="disabled"><i class="fa fa-check mr-2" t-translation="off"/>Success</button>
+                        <button t-else="" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase disabled shadow" disabled="disabled"><i class="fa fa-times mr-2" t-translation="off"/>Fail</button>
                     </t>
                     <div t-if="page == 'payment' and not no_payment_icons" class="mt-3">
                         <ul class="mb-0 text-center list-inline payment_icon_list">
@@ -286,14 +323,14 @@
                             <label><span>Name</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="cardnumber" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.number"/>
+                            <input id="cardnumber" inputmode="numeric" pattern="[0-9 ]*" type="text" required="required" field="card.number"/>
                             <span class="bar-container"/>
                             <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
                             <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
                             <label for="cardnumber"><span>Card Number</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="carddate" inputmode="numeric" pattern="[0-9]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
+                            <input id="carddate" inputmode="numeric" pattern="[0-9/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
                             <span class="bar-container"/>
                             <label for="carddate"><span>Expiration</span></label>
                         </div>
@@ -344,7 +381,7 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
                             </div>
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
@@ -352,7 +389,7 @@
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                             <div class="d-none">
-                                <button class="payment_pay d-none" field="payment.button"/>
+                                <button class="d-none" field="payment.button"/>
                             </div>
                         </div>
                         <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
@@ -376,7 +413,7 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden payment_pay shadow text-nowrap w-100" style="text-overflow: ellipsis;" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100" style="text-overflow: ellipsis;" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
                             </div>
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
@@ -384,7 +421,7 @@
                                 <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                             </div>
                             <div class="d-none">
-                                <button class="payment_pay d-none" field="payment.button"/>
+                                <button class="d-none" field="payment.button"/>
                             </div>
                         </div>
                         <input id="campaignName" type="hidden" t-att-value="campaign or ''"/>

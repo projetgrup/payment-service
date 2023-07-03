@@ -14,8 +14,9 @@
                             <thead>
                                 <tr>
                                     <th colspan="4" class="text-center">
-                                        <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
-                                        <span/>
+                                        <picture class="placeholder">
+                                            <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
+                                        </picture>
                                     </th>
                                 </tr>
                                 <tr class="font-weight-bold bottom-border">

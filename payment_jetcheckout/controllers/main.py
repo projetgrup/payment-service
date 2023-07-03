@@ -9,8 +9,9 @@ import logging
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
-from odoo.tools.misc import formatLang, get_lang
+from odoo.tools.misc import formatLang
 from odoo.tools.float_utils import float_compare, float_round
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal
 
 _logger = logging.getLogger(__name__)
@@ -131,21 +132,21 @@ class PayloxController(http.Controller):
         return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
 
     @staticmethod
-    def _prepare(acquirer=False, company=False, partner=False, transaction=False, balance=True):
+    def _prepare(acquirer=None, company=None, partner=None, currency=None, type=None, transaction=None, balance=True):
         acquirer = PayloxController._get_acquirer(acquirer=acquirer)
         company = company or request.env.company
-        currency = transaction and transaction.currency_id or company.currency_id
-        language = get_lang(request.env)
+        currency = currency or (transaction and transaction.currency_id) or company.currency_id
 
-        user = request.env.user.share
+        user = not request.env.user.share
         partner = partner or request.env.user.partner_id
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
-        type = PayloxController._get_type()
+        type = type or PayloxController._get_type()
         campaign = PayloxController._get_campaign(partner=partner, transaction=transaction)
         card_family = PayloxController._get_card_family(acquirer=acquirer, campaign=campaign)
 
-        vals = {
+        values = {
+            'ok': True,
             'partner': partner_commercial,
             'contact': partner_contact,
             'acquirer': acquirer,
@@ -153,7 +154,6 @@ class PayloxController(http.Controller):
             'campaign': campaign,
             'user': user,
             'type': type,
-            'language': language,
             'currency': currency,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
@@ -162,14 +162,14 @@ class PayloxController(http.Controller):
             balance = partner_commercial.credit - partner_commercial.debit
             balance_str = formatLang(request.env, abs(balance), currency_obj=currency)
             balance_sign = float_compare(balance, 0.0, precision_rounding=currency.rounding) < 0
-            vals.update({
+            values.update({
                 'balance': balance,
                 'partner_balance': balance_str,
                 'partner_balance_sign': balance_sign,
                 'partner_balance_sign_str': balance_sign and _('Credit')[0] or _('Debit')[0],
                 'partner_balance_sign_title': balance_sign and _('Credit') or _('Debit'),
             })
-        return vals
+        return values
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, campaign='', bin='', **kwargs):
         self._check_user()
@@ -353,21 +353,6 @@ class PayloxController(http.Controller):
         })
         return url, tx, False
 
-    @http.route(['/payment/callback'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
-    def payment_callback(self, **kwargs):
-        try:
-            data = json.loads(request.httprequest.data) or {}
-            if data.get('is_success'):
-                tx = request.env['payment.transaction'].sudo().search([
-                    ('jetcheckout_order_id', '=', data.get('order_id')),
-                    ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
-                ], limit=1)
-                if tx:
-                    tx._paylox_done_postprocess()
-                    # tx.with_context(domain=request.httprequest.referrer)._paylox_query() # enable this line to resend query
-        except Exception as e:
-            _logger.error('An error occured when processing payment callback: %s' % e)
-
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def payment_acquirer(self):
         acquirer = self._get_acquirer()
@@ -441,7 +426,7 @@ class PayloxController(http.Controller):
         installment = int(kwargs['installment']['id'])
 
         amount = float(kwargs['amount'])
-        rate = float(kwargs['discount']['single'])
+        rate = float(kwargs.get('discount', {}).get('single', 0))
         if rate > 0 and installment == 1:
             amount = amount * (100 - rate) / 100
 
@@ -619,46 +604,34 @@ class PayloxController(http.Controller):
         return values
 
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
-    def callback(self, **kwargs):
+    def finalize(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._process(**kwargs)
         return werkzeug.utils.redirect(url)
 
-    @http.route('/payment/card/shop', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def shop(self, **kwargs):
-        kwargs['result_url'] = '/shop/confirmation'
-        url, tx, status = self._process(**kwargs)
-        self._del()
-        return werkzeug.utils.redirect(url)
-
-    @http.route('/payment/card/order/<int:order>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def order(self, order, access_token, **kwargs):
-        kwargs['result_url'] = '/my/orders/%s?access_token=%s' % (order, access_token)
-        url, tx, status = self._process(**kwargs)
-        self._del()
-        return werkzeug.utils.redirect(url)
-
-    @http.route('/payment/card/invoice/<int:invoice>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def invoice(self, invoice, access_token, **kwargs):
-        kwargs['result_url'] = '/my/invoices/%s?access_token=%s' % (invoice, access_token)
-        url, tx, status = self._process(**kwargs)
-        self._del()
-        return werkzeug.utils.redirect(url)
-
-    @http.route('/payment/card/subscription/<int:subscription>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def subscription(self, subscription, access_token, **kwargs):
-        kwargs['result_url'] = '/my/subscription/%s/%s' % (subscription, access_token)
-        url, tx, status = self._process(**kwargs)
-        self._del()
-        return werkzeug.utils.redirect(url)
-
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
-    def custom(self, record, access_token, **kwargs):
+    def custom(self, **kwargs):
         kwargs['result_url'] = '/payment/confirmation'
         url, tx, status = self._process(**kwargs)
-        url += '?tx_id=%s&access_token=%s' % (tx.id, access_token)
+        token = payment_utils.generate_access_token(tx.partner_id.id, tx.amount, tx.currency_id.id)
+        url += '?tx_id=%s&access_token=%s' % (tx.id, token)
         self._del()
         return werkzeug.utils.redirect(url)
+
+    @http.route(['/payment/callback'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
+    def callback(self, **kwargs):
+        try:
+            data = json.loads(request.httprequest.data) or {}
+            if data.get('is_success'):
+                tx = request.env['payment.transaction'].sudo().search([
+                    ('jetcheckout_order_id', '=', data.get('order_id')),
+                    ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
+                ], limit=1)
+                if tx:
+                    tx._paylox_done_postprocess()
+                    # tx.with_context(domain=request.httprequest.referrer)._paylox_query() # enable this line to resend query
+        except Exception as e:
+            _logger.error('An error occured when processing payment callback: %s' % e)
 
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result(self, **kwargs):

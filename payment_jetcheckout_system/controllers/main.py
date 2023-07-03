@@ -6,7 +6,6 @@ from urllib.parse import urlparse
 from odoo import http, _
 from odoo.http import request
 from odoo.tools import html_escape
-from odoo.tools.misc import get_lang
 from odoo.exceptions import AccessError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
 
@@ -59,20 +58,20 @@ class PayloxSystemController(Controller):
 
     def _prepare_system(self, company, system, partner, transaction):
         currency = company.currency_id
-        language = get_lang(request.env)
         acquirer = self._get_acquirer()
         type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
         return {
+            'ok': True,
             'partner': partner,
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,
+            'user': not request.env.user.share,
             'acquirer': acquirer,
             'campaign': campaign,
-            'share': request.env.user.share,
             'card_family': card_family,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
@@ -80,7 +79,6 @@ class PayloxSystemController(Controller):
             'system': system,
             'token': token,
             'type': type,
-            'language': language,
             'currency': currency,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
         }

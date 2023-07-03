@@ -30,7 +30,6 @@ class PayloxApiController(Controller):
             raise ValidationError('%s (Error Code: %s)' % ('Server Error', '-1'))
 
     def _set_hash(self, raise_exception=True, **kwargs):
-        hash = request.session.get('__tx_hash')
         if '' in kwargs:
             hash = unquote(kwargs[''])
             self._set('hash', hash)
@@ -45,7 +44,7 @@ class PayloxApiController(Controller):
         return hash
 
     def _get_transaction(self):
-        hash = request.session.get('__tx_hash')
+        hash = self._get('hash')
         if not hash:
             return False
 
@@ -68,7 +67,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api(self, **kwargs):
-        hash = self._jetcheckout_set_hash(raise_exception=False, **kwargs)
+        hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
@@ -100,7 +99,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment/card'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_card(self, **kwargs):
-        hash = self._jetcheckout_set_hash(raise_exception=False, **kwargs)
+        hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
@@ -132,7 +131,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment/bank'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_bank(self, **kwargs):
-        hash = self._jetcheckout_set_hash(**kwargs)
+        hash = self._set_hash(**kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('state', '=', 'draft'),
             ('jetcheckout_api_hash', '!=', False),
@@ -173,7 +172,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment/bank/result'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_bank_result(self, **kwargs):
-        hash = self._jetcheckout_set_hash(**kwargs)
+        hash = self._set_hash(**kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('state', '=', 'pending'),
             ('jetcheckout_api_hash', '!=', False),
@@ -204,7 +203,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment/bank/confirm'], type='json', auth='public')
     def page_api_confirm(self, **kwargs):
-        hash = self._jetcheckout_set_hash(raise_exception=False, **kwargs)
+        hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('state', '=', 'draft'),
             ('jetcheckout_api_hash', '!=', False),
@@ -220,7 +219,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment/bank/return'], type='json', auth='public')
     def page_api_return(self, **kwargs):
-        hash = self._jetcheckout_set_hash(raise_exception=False, **kwargs)
+        hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash)
