@@ -64,7 +64,7 @@
                                     <li>Email Address:<span class="ml-2" t-translations="off" field="email"/></li>
                                     <li>Phone Number:<span class="ml-2" t-translations="off" field="phone"/></li>
                                     <li>Citizen Number:<span class="ml-2" t-translations="off" field="vat"/></li>
-                                    <li>Student Number:<span class="ml-2" t-translations="off" field="ref"/></li>
+                                    <li t-if="system == 'student'">Student Number:<span class="ml-2" t-translations="off" field="ref"/></li>
                                 </ul>
                             </div>
                         </div>

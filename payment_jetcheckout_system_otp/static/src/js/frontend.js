@@ -177,7 +177,7 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
 
     _onChangeCode: function (ev) {
         $(ev.target).removeClass('border-danger');
-        const $label = $('label[for=' + $(ev.target).prop('id') + ']');
+        const $label = $('label[for=code]');
         $label.removeClass('text-danger');
     },
 
