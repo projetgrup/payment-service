@@ -2,10 +2,10 @@
 import logging
 import pytz
 from datetime import datetime, timedelta
-from itertools import groupby
-from operator import itemgetter
 from urllib.parse import urlparse
+
 from odoo import models, api
+from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
 
@@ -76,9 +76,11 @@ class PaymentTransaction(models.Model):
                     id = int(params('paylox.sms.provider', '0'))
                     provider = self.env['sms.provider'].browse(id)
 
+                amount = formatLang(self.env, self.amount)
                 context = self.env.context.copy()
                 context.update({
                     'tx': self,
+                    'amount': amount,
                     'partner': commercial_partner,
                     'company': company,
                     'url': self.jetcheckout_website_id.domain,
@@ -87,7 +89,10 @@ class PaymentTransaction(models.Model):
 
                 messages = []
                 for partner in partners:
-                    context.update({'tz': partner.tz})
+                    context.update({
+                        'tz': partner.tz,
+                        'lang': partner.lang,
+                    })
                     body = template.with_context(context)._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
                     sms_values = {
                         'partner_id': partner.id,
