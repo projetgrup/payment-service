@@ -330,7 +330,7 @@
                             <label for="cardnumber"><span>Card Number</span></label>
                         </div>
                         <div class="field-container">
-                            <input id="carddate" inputmode="numeric" pattern="[0-9/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
+                            <input id="carddate" inputmode="numeric" pattern="[0-9\/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
                             <span class="bar-container"/>
                             <label for="carddate"><span>Expiration</span></label>
                         </div>
@@ -357,25 +357,25 @@
                     <div t-if="not s2s" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div t-if="type == 'installment'" class="installment-rows payment-gradient border card p-3">
+                    <div t-attf-class="payment-gradient border card p-3 #{'installment-rows' if not type or type == 'installment' else 'installment-cols' if type == 'campaign' else ''}">
                         <div>
                             <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
                                 <t t-call="payment_jetcheckout.payment_installment_header"/>
                             </div>
                             <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div class="d-none installment-row" data-type="installment" field="installment.row"/>
+                        <div class="d-none installment-row  overflow-auto" t-att-data-type="'installment' if not type or type == 'installment' else 'campaign' if type == 'campaign' else ''" field="installment.row"/>
                         <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
-                        <div t-if="user" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'"/></div>
+                        <div t-if="user and (not type or type == 'installment')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'"/></div>
                         <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
                                 <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
-                                <div t-if="user" class="mt-2" field="campaign.table">
+                                <div t-if="user and (not type or type == 'installment')" class="mt-2" field="campaign.table">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
                                 </div>
@@ -386,7 +386,7 @@
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
                             <div class="col-12 p-2" field="installment.table">
-                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
+                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"/>Installment Options</button>
                             </div>
                             <div class="d-none">
                                 <button class="d-none" field="payment.button"/>
@@ -394,47 +394,14 @@
                         </div>
                         <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
                     </div>
-                    <div t-else="" class="installment-cols payment-gradient border card p-3">
-                        <div>
-                            <div class="font-weight-bold text-primary text-uppercase installment-line installment-col">
-                                <t t-call="payment_jetcheckout.payment_installment_header" field="installment.colempty"/>
-                            </div>
-                            <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-col" field="installment.col"/>
-                        </div>
-                        <div data-type="campaign" class="d-none installment-row" field="installment.row"/>
-                        <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
-                            <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
-                        </div>
-                        <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
-                            <div class="col-xl-6 p-2">
-                                <div field="installment.table">
-                                    <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
-                                    <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 p-2">
-                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100" style="text-overflow: ellipsis;" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
-                            </div>
-                        </div>
-                        <div t-else="" class="row font-weight-bold text-uppercase">
-                            <div class="col-12 p-2" field="installment.table">
-                                <button class="installment-container btn btn-primary shadow w-100 text-nowrap overflow-hidden" style="text-overflow: ellipsis;"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
-                            </div>
-                            <div class="d-none">
-                                <button class="d-none" field="payment.button"/>
-                            </div>
-                        </div>
-                        <input id="campaignName" type="hidden" t-att-value="campaign or ''"/>
-                    </div>
                 </div>
                 <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
             </div>
-            <div class="payment-installments row mx-0 d-none"/>
         </div>
     </template>
 
     <template id="payment_installment_header" name="Paylox Installment Table Header">
-        <t t-if="not acquirer.company_id.payment_page_campaign_table_ok">
+        <t t-if="not type or type == 'installment'">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div t-if="not s2s" class="text-center">Rate</div>
             <div class="text-center">Monthly</div>
@@ -442,14 +409,7 @@
         </t>
         <t t-else="">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
-            <t t-if="not campaigns or campaigns['index'] &lt; 0">
-                <div class="text-center">Campaign</div>
-            </t>
-            <t t-else="">
-                <t t-foreach="campaigns['names']" t-as="campaign_name">
-                    <div class="text-center" t-esc="campaign_name"/>
-                </t>
-            </t>
+            <div class="text-center">Campaign</div>
         </t>
     </template>
 

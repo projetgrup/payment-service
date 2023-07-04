@@ -331,6 +331,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     partner: this.partner.value,
                     campaign: this.campaign.name.value,
                     amount: this.amount.value,
+                    rate: this.discount.single.value,
                 },
             }).then(function (result) {
                 if ('error' in result) {
@@ -431,13 +432,13 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             const $el = $(ev.target).closest('div.installment-line');
             $el.addClass('installment-selected');
             $el.find('input').prop({'checked': true});
-        } else if (this.row.$.data('type') === 'campaign') {
-            const $el = $(ev.target).closest('div.campaign-cell');
+        } else if (this.installment.row.$.data('type') === 'campaign') {
+            const $el = $(ev.target).closest('div.installment-cell');
             if (!$el.length) {
                 return;
             }
 
-            const $cells = this.installment.row.$.find('div.campaign-cell');
+            const $cells = this.installment.row.$.find('div.installment-cell');
             $cells.removeClass('installment-selected');
             $cells.find('input').prop({'checked': false});
 
@@ -445,7 +446,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             const $input = $el.find('input');
             $input.prop({'checked': true});
 
-            this.campaign.value = $input.data('campaign');
+            this.campaign.name.value = $input.data('campaign');
         }
     },
 
@@ -606,7 +607,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }
         }
     },
- 
+
     _getInstallmentInput: function () {
         return $('.installment-cell input:checked');
     },
@@ -699,7 +700,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 single: this.discount.single.value,
             },
             installment: {
-                id: parseInt($input.val()),
+                id: $input.data('id'),
+                index: $input.data('index'),
                 rows: this.installment.rows,
             },
             campaign: this.campaign.name.value,
@@ -711,7 +713,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             subscription: this.payment.subscription.value,
         }
     },
-    
+
     _onClickPaymentButton: async function () {
         const self = this;
         if (this._checkData()) {

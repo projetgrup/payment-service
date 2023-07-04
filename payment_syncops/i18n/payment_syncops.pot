@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:28+0000\n"
-"PO-Revision-Date: 2023-01-23 06:28+0000\n"
+"POT-Creation-Date: 2023-07-04 15:57+0000\n"
+"PO-Revision-Date: 2023-07-04 15:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Amount"
 msgstr ""
 
@@ -42,13 +42,13 @@ msgid "An error occured."
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Apply"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_partner_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
 msgid "Balance"
 msgstr ""
 
@@ -69,6 +69,11 @@ msgstr ""
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_name
 msgid "Connector Partner Name"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_ref
+msgid "Connector Partner Reference"
 msgstr ""
 
 #. module: payment_syncops
@@ -97,7 +102,7 @@ msgid "Connector Transactions"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Date"
 msgstr ""
 
@@ -108,12 +113,12 @@ msgid "Date format cannot be empty"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Description"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Due Date"
 msgstr ""
 
@@ -125,7 +130,7 @@ msgid "Email"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "End Date"
 msgstr ""
 
@@ -141,6 +146,11 @@ msgstr ""
 #: code:addons/payment_syncops/static/src/js/connector.js:0
 #, python-format
 msgid "Error"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
+msgid "Excel"
 msgstr ""
 
 #. module: payment_syncops
@@ -161,7 +171,7 @@ msgid "Mobile"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Name"
 msgstr ""
 
@@ -185,7 +195,7 @@ msgid "Partners"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Payment"
 msgstr ""
 
@@ -200,11 +210,13 @@ msgid "Process Connector"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner Name"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner VAT"
 msgstr ""
@@ -229,7 +241,7 @@ msgid "Search partner..."
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_partner_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
 msgid "See Ledger"
 msgstr ""
 
@@ -248,7 +260,7 @@ msgid "Select a partner"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Start Date"
 msgstr ""
 
@@ -285,7 +297,14 @@ msgid ""
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
+msgid ""
+"Total Debit &amp; Credit\n"
+"                        <i class=\"fa fa-info-circle text-white\"/>"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Type"
 msgstr ""
 

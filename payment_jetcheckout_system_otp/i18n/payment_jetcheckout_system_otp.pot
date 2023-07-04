@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-26 17:03+0000\n"
-"PO-Revision-Date: 2023-06-26 17:03+0000\n"
+"POT-Creation-Date: 2023-07-04 15:53+0000\n"
+"PO-Revision-Date: 2023-07-04 15:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,18 +21,18 @@ msgid "/my/payment"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "5301111111 (Phone number without leading zero)"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "<span>Code</span>"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
-msgid "<span>Email address or phone number or reference code</span>"
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
+msgid "<span>Email address, phone number or reference code</span>"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "ABC01 (Reference code)"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgid "An error occured. Please contact with your system administrator."
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Authentication"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgid "Authentication code is not correct. Please check and retype."
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Citizen Number:"
 msgstr ""
 
@@ -159,7 +159,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Credentials"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Email Address:"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Next"
 msgstr ""
 
@@ -254,7 +254,7 @@ msgid "Payment Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Phone Number:"
 msgstr ""
 
@@ -266,8 +266,9 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
-msgid "Please enter one of your email address or phone number."
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
+msgid ""
+"Please enter one of your email address, phone number or reference code."
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
@@ -278,27 +279,27 @@ msgid "Please enter your email address or phone number or reference code"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Previous"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Resend Code"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Sign Up"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Student Number:"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "Time left for entering authentication code is"
 msgstr ""
 
@@ -337,6 +338,6 @@ msgid "seconds"
 msgstr ""
 
 #. module: payment_jetcheckout_system_otp
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.otp_login_page
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_otp.page_otp
 msgid "test@test.com (Email address in regular format)"
 msgstr ""

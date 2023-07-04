@@ -202,7 +202,10 @@
         .installment-col {
             height: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+        }
+        .installment-row {
+            flex: 1;
         }
         .installment-line {
             display: flex;
@@ -222,19 +225,19 @@
                 flex: 1;
                 border-radius: 5px;
                 margin: 1px 5px;
-                &.campaign-cell {
+                &.installment-cell {
                     cursor: pointer;
                     transition: 0.2s all;
                 }
-                &.campaign-cell.installment-selected {
+                &.installment-cell.installment-selected {
                     background-color: theme-color('success');
                     color: #ffffff;
                     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
                 }
-                &.campaign-cell:hover {
+                &.installment-cell:hover {
                     background-color: #dddddd;
                 }
-                &.campaign-cell.installment-selected:hover {
+                &.installment-cell.installment-selected:hover {
                     background-color: darken(theme-color('success'), 10%);
                 }
             }

@@ -6,6 +6,7 @@ import uuid
 import base64
 import hashlib
 import logging
+from collections import OrderedDict
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.http import request
@@ -115,7 +116,6 @@ class PayloxController(http.Controller):
     def _get_transaction(self):
         return False
 
-
     @staticmethod
     def _get_installment_description(installment):
         if installment['plus_installment'] > 0:
@@ -190,52 +190,135 @@ class PayloxController(http.Controller):
         if not type == 'campaign':
             data.update({"campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))})
 
-        values = {'rows': [], 'type': type}
+        values = {
+            'cols': [],
+            'rows': [],
+            'campaign': '',
+            'family': '',
+            'logo': '', 
+            'currency': '',
+            'excluded': [],
+            'type': type,
+        }
+
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
 
             if result['response_code'] == "00":
-                rows = []
-                options = result.get('installment_options', result.get('installments', []))
-                for options in options:
-                    row = {
-                        'family': options.get('card_family', ''),
-                        'logo': options.get('card_family_logo', ''),
-                        'currency': options.get('currency', ''),
-                        'campaign': options.get('campaign_name', ''),
-                        'excluded': options.get('excluded_bins', []),
-                        'installments': [],
-                        'ids': []
-                    }
-                    for installment in options['installments']:
-                        if installment['installment_count'] in row['ids']:
-                            continue
-
-                        r = {
-                            'id': installment['installment_count'],
-                            'amount': installment['installment_amount'],
-                            'crate': installment['customer_rate'],
-                            'corate': installment['cost_rate'],
-                            'min': installment['min_amount'],
-                            'max': installment['max_amount'],
-                            'plus': installment['plus_installment'],
-                            'pdesc': installment['plus_installment_description'],
-                            'idesc': self._get_installment_description(installment),
-                            'count': installment['installment_count'] + installment['plus_installment']
+                if not bin or type == 'installment':
+                    rows = []
+                    options = result.get('installment_options', result.get('installments', []))
+                    for option in options:
+                        row = {
+                            'campaign': option.get('campaign_name', ''),
+                            'family': option.get('card_family', ''),
+                            'logo': option.get('card_family_logo', ''),
+                            'currency': option.get('currency', ''),
+                            'excluded': option.get('excluded_bins', []),
+                            'installments': [],
+                            'ids': [],
                         }
-                        row['ids'].append(r['id'])
+                        if bin:
+                            values.update({**row})
 
-                        if rate > 0 and amount > 0 and installment['installment_count'] > 1:
-                            r['irate'] = (100 * amount / rate) - 100
-                        else:
-                            r['irate'] = 0.0
+                        for installment in option['installments']:
+                            if installment['installment_count'] in row['ids']:
+                                continue
 
-                        row['installments'].append(r)
+                            r = {
+                                'id': installment['installment_count'],
+                                'amount': installment['installment_amount'],
+                                'crate': installment['customer_rate'],
+                                'corate': installment['cost_rate'],
+                                'min': installment['min_amount'],
+                                'max': installment['max_amount'],
+                                'plus': installment['plus_installment'],
+                                'pdesc': installment['plus_installment_description'],
+                                'idesc': self._get_installment_description(installment),
+                                'count': installment['installment_count'] + installment['plus_installment']
+                            }
+                            row['ids'].append(r['id'])
 
-                    row['installments'].sort(key=lambda x: x['id'])
-                    rows.append(row)
-                values.update({'rows': rows})
+                            if rate > 0 and installment['installment_count'] == 1:
+                                r['irate'] = -rate
+                            else:
+                                r['irate'] = 0.0
+
+                            row['installments'].append(r)
+
+                        row['installments'].sort(key=lambda x: x['id'])
+                        rows.append(row)
+                        if bin:
+                            values.update({'rows': row['installments']})
+
+                    if not bin:    
+                        values.update({'rows': rows})
+
+                elif bin and type == 'campaign':
+                    cols = []
+                    rows = []
+                    ids = OrderedDict()
+                    index = -1
+                    options = result.get('installment_options', result.get('installments', []))
+                    for option in options:
+                        row = {
+                            'campaign': option.get('campaign_name', ''),
+                            'family': option.get('card_family', ''),
+                            'logo': option.get('card_family_logo', ''),
+                            'currency': option.get('currency', ''),
+                            'excluded': option.get('excluded_bins', []),
+                            'installments': [],
+                            'ids': [],
+                        }
+                        if bin:
+                            values.update({
+                                'family': row['family'],
+                                'logo': row['logo'],
+                            })
+
+                        index += 1
+                        cols.append(row['campaign'])
+
+                        for installment in option['installments']:
+                            id = installment['installment_count']
+                            if id not in ids:
+                                ids[id] = OrderedDict()
+
+                            if index in ids[id]:
+                                continue
+
+                            r = {
+                                'id': id,
+                                'index': index,
+                                'campaign': row['campaign'],
+                                'amount': installment['installment_amount'],
+                                'crate': installment['customer_rate'],
+                                'corate': installment['cost_rate'],
+                                'min': installment['min_amount'],
+                                'max': installment['max_amount'],
+                                'plus': installment['plus_installment'],
+                                'pdesc': installment['plus_installment_description'],
+                                'idesc': self._get_installment_description(installment),
+                                'count': installment['installment_count'] + installment['plus_installment']
+                            }
+
+                            if rate > 0 and installment['installment_count'] == 1:
+                                r['irate'] = -rate
+                            else:
+                                r['irate'] = 0.0
+
+                            ids[id][index] = r
+
+                    idl = list(ids.keys())
+                    idl.sort()
+                    for i in idl:
+                        rows.append({
+                            'id': i,
+                            'ids': [ids[i].get(j, {'id': 0}) for j in range(index+1)]
+                        })
+                    values.update({'cols': cols, 'rows': rows})
+
             elif result['response_code'] == "00104":
                 pass
             else:
@@ -393,15 +476,15 @@ class PayloxController(http.Controller):
             raise werkzeug.exceptions.NotFound()
         return request.render('payment_jetcheckout.page_payment', values)
 
-    @http.route(['/payment/card/installments'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
-    def get_installments(self, **kwargs):
-        return self._prepare_installment(**kwargs)
-
     @http.route(['/payment/card/campaigns'], type='json', auth='user', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def get_campaigns(self, **kwargs):
         campaigns = [{'id': 0, 'name': ''}]
         campaigns.extend(self._get_campaigns())
         return campaigns
+
+    @http.route(['/payment/card/installments'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
+    def get_installments(self, **kwargs):
+        return self._prepare_installment(**kwargs)
 
     @http.route(['/payment/card/installment'], type='json', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, website=True)
     def get_installment(self, **kwargs):
@@ -409,13 +492,12 @@ class PayloxController(http.Controller):
         if 'error' in values or 'rows' not in values or not len(values['rows']):
             return values
 
-        row = values['rows'][0]
         return {
-            'type': self._get_type(),
-            'cols': [],
-            'rows': row['installments'],
-            'family': row['family'],
-            'logo': row['logo'],
+            'cols': values['cols'],
+            'rows': values['rows'],
+            'family': values['family'],
+            'logo': values['logo'],
+            'type': values['type'],
         }
 
     @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
@@ -423,7 +505,7 @@ class PayloxController(http.Controller):
         self._check_user()
 
         rows = kwargs['installment']['rows']
-        installment = int(kwargs['installment']['id'])
+        installment = kwargs['installment']['id']
 
         amount = float(kwargs['amount'])
         rate = float(kwargs.get('discount', {}).get('single', 0))
@@ -431,6 +513,10 @@ class PayloxController(http.Controller):
             amount = amount * (100 - rate) / 100
 
         installment = next(filter(lambda x: x['id'] == installment, rows), None)
+        if 'ids' in installment:
+            index = kwargs['installment']['index']
+            installment = next(filter(lambda x: x['index'] == index, installment['ids']), None)
+
         amount_customer = amount * installment['crate'] / 100
         amount_total = float_round(amount + amount_customer, 2)
         amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
@@ -439,12 +525,13 @@ class PayloxController(http.Controller):
         acquirer = self._get_acquirer()
         currency = self._get_currency()
         partner = self._get_partner(int(kwargs['partner']))
+        campaign = kwargs.get('campaign', '')
         year = str(fields.Date.today().year)[:2]
         hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
-            "campaign_name": kwargs.get('campaign', ''),
+            "campaign_name": campaign,
             "amount": amount_integer,
             "currency": currency.name,
             "installment_count": installment['count'],
@@ -469,7 +556,7 @@ class PayloxController(http.Controller):
             'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-            'jetcheckout_campaign_name': kwargs.get('campaign', ''),
+            'jetcheckout_campaign_name': campaign,
             'jetcheckout_card_name': kwargs['card']['holder'],
             'jetcheckout_card_number': ''.join([kwargs['card']['number'][:6], '*'*6, kwargs['card']['number'][-4:]]),
             'jetcheckout_card_type': kwargs['card']['type'].capitalize(),

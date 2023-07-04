@@ -54,6 +54,7 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
 
         let bursaries = [];
         let siblings = [];
+        let discount = 0;
 
         $item.each(function () {
             const $el = $(this);
@@ -199,6 +200,7 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
         discounts.forEach(function (e) {
             amount += e.amount;
         });
+        discount = amount;
         discounts.push({id: 0, amount: amount});
 
         amount = 0
@@ -249,7 +251,7 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
         };
 
         const event = new Event('update');
-        this.amount.value = format.float(amount);
+        this.amount.value = format.float(amount-discount);
         this.amount.$[0].dispatchEvent(event);
     },
 

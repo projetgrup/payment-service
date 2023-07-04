@@ -57,13 +57,13 @@
     </t>
 
     <t t-name="paylox.installment.row">
-        <t t-if="type === 'installment'">
+        <t t-if="!type || type === 'installment'">
             <t t-foreach="rows" t-as="r">
                 <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
                 <div t-attf-class="installment-line #{r.id === 1 ? 'installment-selected' : ''}">
                     <div class="installment-cell">
                         <div class="text-center">
-                            <input type="radio" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined"/>
+                            <input type="radio" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id"/>
                             <span class="installment-radio"/>
                         </div>
                         <div>
@@ -84,27 +84,21 @@
             </t>
         </t>
         <t t-else="">
-            <t t-foreach="campaigns.installments.items()" t-as="row">
+            <t t-foreach="rows" t-as="row">
                 <div class="installment-line">
-                    <div class="text-center">
-                        <span t-esc="row[0]"/>
+                    <div>
+                        <span t-esc="row.id"/>
                     </div>
-                    <t t-foreach="enumerate(campaigns['names'])" t-as="col">
-                        <t t-if="col[0] in row[1]">
-                            <t t-set="installment" t-value="row[1][col[0]]"/>
-                            <t t-set="customer_rate" t-value="installment['customer_rate']"/>
-                            <t t-set="installment_rate" t-value="installment['installment_rate']"/>
-                            <t t-set="installment_amount" t-value="amount * (1 + (customer_rate / 100)) * (1 + (installment_rate / 100))"/>
-                            <div class="campaign-cell text-center">
-                                <div class="d-inline position-relative">
-                                    <input type="radio" name="installment_radio" class="d-none" t-att-value="row[0]" t-att-data-value="row[0]" t-att-data-campaign="col[1]" t-att-data-amount="installment_amount"/>
-                                    <span t-esc="installment_amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                    <span t-if="installment['plus_installment']" t-esc="'+%s' % installment['plus_installment']" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" style="right: -20px;" t-att-title="installment['plus_installment_description']"/>
-                                </div>
+                    <t t-foreach="row.ids" t-as="r">
+                        <t t-if="r.id">
+                            <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
+                            <div t-attf-class="installment-cell text-center #{r.id === 1 &amp;&amp; r.index === 0 ? 'installment-selected' : ''}">
+                                <input class="d-none" type="radio" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
+                                <span t-esc="format.currency(val, position, symbol, decimal)"/>
                             </div>
                         </t>
                         <t t-else="">
-                            <div/>
+                            <div class="text-center"/>
                         </t>
                     </t>
                 </div>
@@ -113,7 +107,7 @@
     </t>
 
     <t t-name="paylox.installment.col">
-        <t t-if="type === 'installment'">
+        <t t-if="!type || type === 'installment'">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div t-if="!s2s" class="text-center">Rate</div>
             <div class="text-center">Monthly</div>
@@ -126,7 +120,7 @@
             </t>
             <t t-else="">
                 <t t-foreach="cols" t-as="col">
-                    <div class="text-center" t-esc="col.name"/>
+                    <div class="text-center" t-esc="col"/>
                 </t>
             </t>
         </t>

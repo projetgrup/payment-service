@@ -5,12 +5,14 @@ from odoo import fields, models, _
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _name = 'payment.transaction'
+    _inherit = ['payment.transaction', 'mail.thread']
 
     def _compute_item_count(self):
         for tx in self:
             tx.paylox_item_count = len(tx.jetcheckout_item_ids)
 
+    state = fields.Selection(tracking=True)
     system = fields.Selection(related='company_id.system')
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
     jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')

@@ -24,6 +24,11 @@
         <xpath expr="//field[@name='state_message']" position="after">
             <field name="jetcheckout_webhook_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('jetcheckout_webhook_ok', '=', False)]}"/>
         </xpath>
+        <xpath expr="//sheet" position="after">
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </xpath>
     </field>
     </record>
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-26 17:03+0000\n"
-"PO-Revision-Date: 2023-06-26 17:03+0000\n"
+"POT-Creation-Date: 2023-07-04 15:47+0000\n"
+"PO-Revision-Date: 2023-07-04 15:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 msgid ""
 "<span class=\"font-italic font-weight-light btn-sm\">Transaction is done, "
 "but a technical error occured and we couldn't record your payment. Please "
@@ -39,7 +39,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "<span class=\"font-weight-bold\">Message:</span>"
 msgstr ""
 
@@ -212,6 +212,11 @@ msgid "Acquirer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Active"
 msgstr ""
@@ -233,7 +238,7 @@ msgid "Administrator"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 msgid "Agreements"
 msgstr ""
 
@@ -274,6 +279,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Archived"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_attachment_count
+msgid "Attachment Count"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -342,12 +352,12 @@ msgid "Cannot duplicate configuration!"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Card Holder Name"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Card Number"
 msgstr ""
 
@@ -375,7 +385,7 @@ msgid "Code"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Commission Amount"
 msgstr ""
 
@@ -435,25 +445,29 @@ msgid "Confirm"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner
-#, python-format
 msgid "Contact"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Contact Information"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_contact_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Contact Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_state
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "Conveyance"
 msgstr ""
 
@@ -538,7 +552,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__date
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Date"
 msgstr ""
 
@@ -604,7 +618,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #, python-format
 msgid "Distant Sale Agreement"
 msgstr ""
@@ -628,7 +642,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
 msgid "Email"
 msgstr ""
 
@@ -658,6 +672,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__failed_message_ids
+msgid "Failed Messages"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -691,7 +710,13 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__follower_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_follower_ids
 msgid "Followers"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_partner_ids
+msgid "Followers (Partners)"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -744,6 +769,11 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Has No Payments"
 msgstr ""
@@ -787,6 +817,18 @@ msgid "Icon Preview"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_needaction
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_has_error
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_team_id
 msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
@@ -794,7 +836,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
 msgid ""
 "If you need assistance, you can contact with us by using one of the "
 "following methods."
@@ -821,7 +863,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__installment_count
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Installment Count"
 msgstr ""
 
@@ -835,6 +877,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__is_admin
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__is_admin
 msgid "Is Admin"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -865,31 +912,6 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "January"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_branch_ids
-msgid "Paylox Branch"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_branch
-msgid "Paylox Company Branches"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_count
-msgid "Paylox Item Count"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send
-msgid "Paylox System Send"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send_type
-msgid "Paylox System Send Types"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1031,6 +1053,11 @@ msgid "Mail To"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Make two factor authentication usage essential for users"
 msgstr ""
@@ -1056,7 +1083,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_membership_agreement
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 #, python-format
 msgid "Membership Agreement"
@@ -1070,6 +1097,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__message
 msgid "Message"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_ids
+msgid "Messages"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1154,6 +1191,31 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "November"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_unread_counter
+msgid "Number of unread messages"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1273,8 +1335,33 @@ msgid "Payable Items"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_branch_ids
+msgid "Paylox Branch"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_branch
+msgid "Paylox Company Branches"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_count
+msgid "Paylox Item Count"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send
+msgid "Paylox System Send"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send_type
+msgid "Paylox System Send Types"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment"
 msgstr ""
@@ -1296,7 +1383,7 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Payment Amount"
 msgstr ""
 
@@ -1392,17 +1479,17 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 msgid "Payment is not successful. Please try again later."
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 msgid "Payment is successful, but it will be processed later."
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 msgid "Payment is successful. Thank you."
 msgstr ""
 
@@ -1427,7 +1514,7 @@ msgid "Permissions"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
 msgid "Phone"
 msgstr ""
 
@@ -1483,7 +1570,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_privacy_policy
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_agreements
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 #, python-format
 msgid "Privacy Policy"
@@ -1512,9 +1599,9 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_state
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "Receipt"
 msgstr ""
 
@@ -1549,6 +1636,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "SMS"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_has_sms_error
+msgid "SMS Delivery error"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1780,8 +1872,13 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "State"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
+msgid "Status"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1982,7 +2079,7 @@ msgid "Today"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Transaction"
 msgstr ""
 
@@ -2017,8 +2114,8 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_transaction
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__transaction_ids
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_result
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 #, python-format
 msgid "Transactions"
 msgstr ""
@@ -2061,6 +2158,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Unfollow"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_unread_counter
+msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2153,8 +2260,18 @@ msgid "Website"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Website Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__website_message_ids
+msgid "Website communication history"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2209,7 +2326,7 @@ msgid "WhatsApp"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_contact
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
 msgid "Whatsapp"
 msgstr ""
 
@@ -2260,14 +2377,14 @@ msgid "Your account at {{ object.company_id.name }}"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_state
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid ""
 "Your transaction has been failed. Please try again. If this situation occurs"
 " anyway, please contact with system administation."
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_page_state
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "Your transaction has been succeeded. Thank you."
 msgstr ""
 

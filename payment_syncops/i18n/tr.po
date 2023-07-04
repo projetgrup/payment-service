@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-23 06:28+0000\n"
-"PO-Revision-Date: 2023-01-23 11:20+0300\n"
+"POT-Creation-Date: 2023-07-04 15:57+0000\n"
+"PO-Revision-Date: 2023-07-04 18:57+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,28 +15,28 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Connector</span><span class=\"o_stat_text"
-"\">Failed</span>"
+"<span class=\"o_stat_value\">Connector</span><span "
+"class=\"o_stat_text\">Failed</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Bağlayıcı</span><span class=\"o_stat_value"
-"\">Başarısız</span>"
+"<span class=\"o_stat_text\">Bağlayıcı</span><span "
+"class=\"o_stat_value\">Başarısız</span>"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
-"<span class=\"o_stat_value\">Connector</span><span class=\"o_stat_text"
-"\">Succeeded</span>"
+"<span class=\"o_stat_value\">Connector</span><span "
+"class=\"o_stat_text\">Succeeded</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Bağlayıcı</span><span class=\"o_stat_value"
-"\">Başarılı</span>"
+"<span class=\"o_stat_text\">Bağlayıcı</span><span "
+"class=\"o_stat_value\">Başarılı</span>"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Amount"
 msgstr "Tutar"
 
@@ -48,13 +48,13 @@ msgid "An error occured."
 msgstr "Bir hata meydana geldi."
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Apply"
 msgstr "Uygula"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_partner_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
 msgid "Balance"
 msgstr "Bakiye"
 
@@ -76,6 +76,11 @@ msgstr "Şirket"
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_name
 msgid "Connector Partner Name"
 msgstr "Bağlayıcı İş Ortağı Adı"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_ref
+msgid "Connector Partner Reference"
+msgstr "Bağlayıcı İş Ortağı Referansı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_vat
@@ -103,7 +108,7 @@ msgid "Connector Transactions"
 msgstr "Bağlayıcı İşlemleri"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Date"
 msgstr "Tarih"
 
@@ -114,12 +119,12 @@ msgid "Date format cannot be empty"
 msgstr "Tarih biçimi boş olamaz"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Description"
 msgstr "Açıklama"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Due Date"
 msgstr "Vade Tarihi"
 
@@ -131,7 +136,7 @@ msgid "Email"
 msgstr "Eposta"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "End Date"
 msgstr "Bitiş Tarihi"
 
@@ -147,6 +152,11 @@ msgstr "Bitiş tarihi boş olamaz"
 #, python-format
 msgid "Error"
 msgstr "Hata"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
+msgid "Excel"
+msgstr "Excel"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_search
@@ -166,7 +176,7 @@ msgid "Mobile"
 msgstr "Cep Telefonu"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Name"
 msgstr "Ad"
 
@@ -194,7 +204,7 @@ msgid "Partners"
 msgstr "İş Ortakları"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Payment"
 msgstr "Ödeme"
 
@@ -209,11 +219,13 @@ msgid "Process Connector"
 msgstr "Bağlayıcıyı Çalıştır"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner Name"
 msgstr "İlişkili İş Ortağı Adı"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner VAT"
 msgstr "İlişkili İş Ortağı Vergi No"
@@ -238,7 +250,7 @@ msgid "Search partner..."
 msgstr "İş Ortağı Ara..."
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_partner_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
 msgid "See Ledger"
 msgstr "Ekstreye Gözat"
 
@@ -257,7 +269,7 @@ msgid "Select a partner"
 msgstr "İş ortağı seçin"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
@@ -296,7 +308,16 @@ msgstr ""
 "%s"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
+msgid ""
+"Total Debit &amp; Credit\n"
+"                        <i class=\"fa fa-info-circle text-white\"/>"
+msgstr ""
+"Toplam Borç &amp; Alacak\n"
+"                        <i class=\"fa fa-info-circle text-white\"/>"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Type"
 msgstr "Tür"
 

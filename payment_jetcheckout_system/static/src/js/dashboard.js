@@ -19,6 +19,7 @@ odoo.define('payment_jetcheckout_system.DashboardController', function (require)
 
 const KanbanController = require('web.KanbanController');
 const core = require('web.core');
+
 const qweb = core.qweb;
 
 const DashboardController = KanbanController.extend({
@@ -27,8 +28,8 @@ const DashboardController = KanbanController.extend({
     }, KanbanController.prototype.events),
 
     willStart: function() {
-        var self = this;
-        var ready = this._rpc({
+        const self = this;
+        const ready = this._rpc({
             model: 'payment.acquirer',
             method: 'has_dashboard_button',
             args: [],
@@ -47,10 +48,19 @@ const DashboardController = KanbanController.extend({
     },
 
     _onClickPaymentPage: function () {
-        this.do_action({
-            type: 'ir.actions.act_url',
-            target: 'new',
-            url: '/my/payment',
+        const self = this;
+        this._rpc({
+            model: 'payment.dashboard',
+            method: 'get_url',
+            args: [],
+        }).then(function (url) {
+            self.do_action({
+                type: 'ir.actions.act_url',
+                target: 'new',
+                url: url + '/my/payment',
+            });
+        }).guardedCatch(function (error) {
+            console.error(error);
         });
     },
 });

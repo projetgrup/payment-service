@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 18:03+0000\n"
-"PO-Revision-Date: 2023-05-20 18:03+0000\n"
+"POT-Creation-Date: 2023-07-04 15:58+0000\n"
+"PO-Revision-Date: 2023-07-04 15:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<em>Select All</em>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_kanban
+msgid "<i class=\"fa fa-credit-card mr-2\"/>Payment Page"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_kanban
+msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
 msgstr ""
 
 #. module: payment_vendor
@@ -37,41 +47,41 @@ msgid ""
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Amount</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Date</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Due Date</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Residual</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
 "transaction related to you"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</strong>\n"
 "                                <strong class=\"text-primary font-weight-bold text-right z-index-1\">Amount</strong>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
 msgstr ""
 
@@ -224,15 +234,15 @@ msgid ""
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Amount"
 msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
 msgid "Authorized"
 msgstr ""
 
@@ -294,22 +304,22 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Date"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Description"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Document"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Due Date"
 msgstr ""
 
@@ -326,6 +336,18 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_ir_http
 msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_vendor
+#: model:sms.template,body:payment_vendor.sms_transaction_successful
+msgid ""
+"Hello {{ object.name }}, successful transaction information as "
+"follows.\\nTransaction Owner Company: {{ ctx['partner'].name or '' "
+"}}\\nTransaction Date: {{ format_datetime(ctx['tx'].last_state_change, "
+"ctx['tz'], 'd.MM.y H:mm:ss') }}\\nTransaction Amount: {{ "
+"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) "
+"or '' }}\\nInstallment Count: {{ "
+"ctx['tx'].jetcheckout_installment_description_long or '' }}"
 msgstr ""
 
 #. module: payment_vendor
@@ -410,7 +432,7 @@ msgid "Representatives"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Residual"
 msgstr ""
 
@@ -454,7 +476,6 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
-#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Settings"
 msgstr ""
 
@@ -484,6 +505,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:mail.template,name:payment_vendor.mail_transaction_successful
 msgid "Transaction: Successful Email"
+msgstr ""
+
+#. module: payment_vendor
+#: model:sms.template,name:payment_vendor.sms_transaction_successful
+msgid "Transaction: Successful Payment SMS"
 msgstr ""
 
 #. module: payment_vendor
