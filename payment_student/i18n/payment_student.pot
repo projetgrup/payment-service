@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-07 13:11+0000\n"
-"PO-Revision-Date: 2023-03-07 13:11+0000\n"
+"POT-Creation-Date: 2023-07-04 15:54+0000\n"
+"PO-Revision-Date: 2023-07-04 15:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "<em>Select All</em>"
 msgstr ""
 
@@ -26,7 +26,7 @@ msgid "<i class=\"fa fa-download mr-2\"/>Click here to get example template"
 msgstr ""
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
 "transaction related to you"
@@ -74,14 +74,6 @@ msgid "Advance Discount"
 msgstr ""
 
 #. module: payment_student
-#. openerp-web
-#: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
-#, python-format
-msgid "Advance Payment Discount"
-msgstr ""
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_advance_ids
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_advance_ids
 msgid "Advance Payment Discounts"
@@ -95,7 +87,7 @@ msgstr ""
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Amount To Pay"
 msgstr ""
@@ -383,13 +375,6 @@ msgid "Import Student"
 msgstr ""
 
 #. module: payment_student
-#. openerp-web
-#: code:addons/payment_student/static/src/js/import.js:0
-#, python-format
-msgid "Import Transaction"
-msgstr ""
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__installment
 msgid "Installment"
 msgstr ""
@@ -560,7 +545,7 @@ msgstr ""
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Payment Details"
 msgstr ""
@@ -733,7 +718,7 @@ msgstr ""
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_sibling_active
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_active
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Sibling Discount"
 msgstr ""
@@ -748,6 +733,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_sibling_rate
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_rate
 msgid "Sibling Discount Rate"
+msgstr ""
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
+#, python-format
+msgid "Single Payment Discount"
 msgstr ""
 
 #. module: payment_student
@@ -770,11 +763,12 @@ msgid "Student"
 msgstr ""
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "Student Name<br/>School | Class | Type"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_item__system__student
 #: model:ir.model.fields.selection,name:payment_student.selection__res_company__system__student
 #: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system__student
 #: model:ir.module.category,description:payment_student.module_category_student
@@ -799,12 +793,13 @@ msgstr ""
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Subtotal"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__system
 #: model:ir.model.fields,field_description:payment_student.field_res_company__system
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system
@@ -849,7 +844,7 @@ msgstr ""
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Total"
 msgstr ""
@@ -885,7 +880,7 @@ msgid "Websites"
 msgstr ""
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "Welcome"
 msgstr ""
 
@@ -895,7 +890,7 @@ msgid "Wizard"
 msgstr ""
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid ""
 "You can get payment amounts and applied discounts, which is calculated "
 "dynamically, with choosing student(s) of yours in the following table."

@@ -2,8 +2,8 @@
 "use strict";
 
 function showLoading() {
-    const $buttons = $('.payment_pay');
-    const $loading = $('.o_payment_loading');
+    const $buttons = $('[field="payment.button"]');
+    const $loading = $('.o_loading');
     if ($buttons.length) {
         $buttons.addClass('disabled');
         $buttons.prop('disabled', 'disabled');
@@ -14,8 +14,8 @@ function showLoading() {
 }
 
 function hideLoading() {
-    const $buttons = $('.payment_pay');
-    const $loading = $('.o_payment_loading');
+    const $buttons = $('[field="payment.button"]');
+    const $loading = $('.o_loading');
     if ($buttons.length) {
         $buttons.removeClass('disabled');
         $buttons.prop('disabled', false);

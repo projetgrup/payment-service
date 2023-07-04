@@ -24,7 +24,7 @@ async function setup() {
         page,
         {
             env: env,
-            target: document.querySelector('.payment-card'),
+            target: document.getElementById('payment'),
             props: {}
         }
     )

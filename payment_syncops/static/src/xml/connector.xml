@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <t t-name="payment_syncops.partner_list">
-        <main style="padding: 0 !important;">
+    <t t-name="paylox.syncops.partner.list">
+        <main class="p-0">
             <div class="bg-light d-flex justify-content-center py-3 text-center">
                 <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_partner_query" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
                 <button class="btn btn-warning shadow-sm o_connector_partner_search" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
@@ -33,7 +33,7 @@
         </main>
     </t>
 
-    <t t-name="payment_syncops.partner_ledger_line">
+    <t t-name="paylox.syncops.partner.ledger.line">
         <t t-if="rows.length">
             <t t-set="tools.currency" t-value=""/>
             <t t-foreach="rows" t-as="row">
@@ -64,7 +64,7 @@
         </t>
     </t>
 
-    <t t-name="payment_syncops.partner_list_line">
+    <t t-name="paylox.syncops.partner.list.line">
         <t t-if="rows.length">
             <t t-foreach="rows" t-as="partner">
                 <tr class="border">
@@ -91,7 +91,7 @@
         </t>
     </t>
 
-    <t t-name="payment_syncops.pages">
+    <t t-name="paylox.syncops.pages">
         <t t-foreach="pages" t-as="p">
             <t t-if="p === 0">
                 <button class="border border-primary btn btn-fill-primary disabled shadow-sm rounded-0" disabled="disabled">

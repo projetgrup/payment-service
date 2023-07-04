@@ -102,6 +102,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="notif_mail_success_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="notif_mail_success_ok"/>
+                                    <div class="text-muted">
+                                        Send email to transaction owner and its followers right after completing a transaction with success
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="o_setting_left_pane">
+                                    <field name="notif_sms_success_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="notif_sms_success_ok"/>
+                                    <div class="text-muted">
+                                        Send SMS to transaction owner and its followers right after completing a transaction with success
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

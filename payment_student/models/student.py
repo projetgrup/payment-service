@@ -2,11 +2,13 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 class StudentPaymentTable(models.TransientModel):
     _name = 'res.student.payment.table'
     _description = 'Payment Table'
 
     table = fields.Html(string='Payment Table', sanitize=False, readonly=True)
+
 
 class StudentDiscount(models.Model):
     _name = 'res.student.discount'
@@ -38,6 +40,7 @@ class StudentDiscount(models.Model):
             raise UserError(_('Installment must be higher than zero'))
         return super().write(vals)
 
+
 class StudentSchool(models.Model):
     _name = 'res.student.school'
     _description = 'Schools'
@@ -47,6 +50,7 @@ class StudentSchool(models.Model):
     name = fields.Char(required=True)
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
 
 class StudentClass(models.Model):
     _name = 'res.student.class'
@@ -58,6 +62,7 @@ class StudentClass(models.Model):
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
 
+
 class StudentTerm(models.Model):
     _name = 'res.student.term'
     _description = 'Terms'
@@ -67,6 +72,7 @@ class StudentTerm(models.Model):
     name = fields.Char(required=True)
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
 
 class StudentBursary(models.Model):
     _name = 'res.student.bursary'
@@ -86,6 +92,7 @@ class StudentBursary(models.Model):
             res.append((bursary.id, name))
         return res
 
+
 class StudentPaymentType(models.Model):
     _name = 'res.student.payment.type'
     _description = 'Payment Types'
@@ -95,6 +102,7 @@ class StudentPaymentType(models.Model):
     name = fields.Char(required=True)
     code = fields.Char()
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
 
 class StudentPaymentTemplate(models.Model):
     _name = 'res.student.payment.template'

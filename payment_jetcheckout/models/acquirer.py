@@ -4,18 +4,18 @@ from odoo.exceptions import UserError, ValidationError
 from .rpc import rpc
 
 
-class PaymentAcquirerJetcheckoutTerms(models.TransientModel):
+class PaymentPayloxTerms(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.term'
-    _description = 'Jetcheckout Terms'
+    _description = 'Paylox Terms'
 
     company_id = fields.Many2one('res.company')
     partner_id = fields.Many2one('res.partner')
     domain = fields.Char()
 
 
-class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
+class PaymentPayloxStatus(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.status'
-    _description = 'Jetcheckout Status'
+    _description = 'Paylox Status'
 
     date = fields.Datetime(readonly=True)
     vpos_id = fields.Integer(readonly=True)
@@ -39,9 +39,9 @@ class PaymentAcquirerJetcheckoutStatus(models.TransientModel):
     service_ref_id = fields.Char(readonly=True)
 
 
-class PaymentAcquirerJetcheckoutRefund(models.TransientModel):
+class PaymentPayloxRefund(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.refund'
-    _description = 'Jetcheckout Refund'
+    _description = 'Paylox Refund'
 
     transaction_id = fields.Many2one('payment.transaction', readonly=True)
     currency_id = fields.Many2one('res.currency', readonly=True)
@@ -51,13 +51,13 @@ class PaymentAcquirerJetcheckoutRefund(models.TransientModel):
     def confirm(self):
         if self.amount > self.total:
             raise UserError(_('Refund amount cannot be higher than total amount'))
-        self.transaction_id._jetcheckout_api_refund(amount=self.amount)
+        self.transaction_id._paylox_api_refund(amount=self.amount)
         return {'type': 'ir.actions.act_window_close'}
 
 
-class PaymentAcquirerJetcheckoutBank(models.Model):
+class PaymentPayloxBank(models.Model):
     _name = 'payment.acquirer.jetcheckout.bank'
-    _description = 'Jetcheckout Bank'
+    _description = 'Paylox Banks'
     _order = 'sequence'
 
     acquirer_id = fields.Many2one('payment.acquirer')
@@ -70,17 +70,17 @@ class PaymentAcquirerJetcheckoutBank(models.Model):
     color = fields.Char()
 
 
-class PaymentAcquirerJetcheckoutCampaign(models.Model):
+class PaymentPayloxCampaign(models.Model):
     _name = 'payment.acquirer.jetcheckout.campaign'
-    _description = 'Jetcheckout Campaign'
+    _description = 'Paylox Campaigns'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     name = fields.Char(required=True)
 
 
-class PaymentAcquirerJetcheckoutJournal(models.Model):
+class PaymentPayloxJournal(models.Model):
     _name = 'payment.acquirer.jetcheckout.journal'
-    _description = 'Jetcheckout Journal Items'
+    _description = 'Paylox Journals'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     name = fields.Char(required=True, readonly=True)
@@ -94,9 +94,9 @@ class PaymentAcquirerJetcheckoutJournal(models.Model):
     res_id = fields.Integer(readonly=True)
 
 
-class PaymentAcquirerJetcheckoutJournalLine(models.Model):
+class PaymentPayloxJournalLine(models.Model):
     _name = 'payment.acquirer.jetcheckout.journal.line'
-    _description = 'Jetcheckout Journal Item Lines'
+    _description = 'Paylox Journal Lines'
 
     line_id = fields.Many2one('payment.acquirer.jetcheckout.journal')
     name = fields.Char(required=True)
@@ -108,12 +108,12 @@ class PaymentAcquirerJetcheckoutJournalLine(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', readonly=True, default=lambda self: self.env.company.website_id)
 
 
-class PaymentAcquirerJetcheckout(models.Model):
+class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_jetcheckout_url(self):
+    def _get_paylox_url(self):
         for acq in self:
-            acq.jetcheckout_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', self.env.company.name)
+            acq.paylox_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', self.env.company.name)
 
     @api.onchange('display_icon')
     def _compute_display_icon(self):
@@ -130,23 +130,21 @@ class PaymentAcquirerJetcheckout(models.Model):
         :return: None
         """
         super()._compute_view_configuration_fields()
-        self.filtered(lambda acq: acq.provider == 'transfer').write({
-            'show_pre_msg': True,
-        })
+        self.filtered(lambda acq: acq.provider == 'transfer').write({'show_pre_msg': True})
 
     provider = fields.Selection(selection_add=[('jetcheckout', 'jetcheckout')], ondelete={'jetcheckout': 'set default'})
     display_icon = fields.Char(groups='base.group_user')
     display_icon_preview = fields.Html(compute='_compute_display_icon', groups='base.group_user', sanitize=False)
-    jetcheckout_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
+    paylox_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
     jetcheckout_gateway_api = fields.Char(groups='base.group_user', readonly=True)
     jetcheckout_gateway_app = fields.Char(groups='base.group_user', readonly=True)
     jetcheckout_gateway_database = fields.Char(groups='base.group_user', readonly=True)
     jetcheckout_payment_page = fields.Boolean('Show Payment Page')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
-    jetcheckout_url = fields.Char(compute='_get_jetcheckout_url')
-    jetcheckout_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
-    jetcheckout_campaign_ids = fields.One2many('payment.acquirer.jetcheckout.campaign', 'acquirer_id', groups='base.group_user')
+    paylox_url = fields.Char(compute='_get_paylox_url')
+    paylox_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
+    paylox_campaign_ids = fields.One2many('payment.acquirer.jetcheckout.campaign', 'acquirer_id', groups='base.group_user')
     jetcheckout_terms = fields.Html(required_if_provider='jetcheckout', groups='base.group_user', sanitize=False, sanitize_attributes=False, sanitize_form=False)
     jetcheckout_no_terms = fields.Boolean('Hide Terms')
     jetcheckout_username = fields.Char(readonly=True)
@@ -199,14 +197,14 @@ class PaymentAcquirerJetcheckout(models.Model):
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_jetcheckout.payment_method_jetcheckout').id
 
-    def _get_jetcheckout_api_url(self):
+    def _get_paylox_api_url(self):
         self.ensure_one()
         return self.jetcheckout_gateway_api or 'https://api.jetcheckout.com'
 
-    def _get_jetcheckout_env(self):
+    def _get_paylox_env(self):
         return 'P' if self.state == 'enabled' else 'T'
 
-    def _render_jetcheckout_terms(self, company, partner):
+    def _render_paylox_terms(self, company, partner):
         domain = self.env.context.get('domain', '')
         if domain:
             parts = domain.split('/')
@@ -219,7 +217,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         return self.env['mail.render.mixin']._render_template(self.jetcheckout_terms, 'payment.acquirer.jetcheckout.term', terms.ids, engine='inline_template')[terms.id]
 
     @api.model
-    def jetcheckout_s2s_form_process(self, kwargs):
+    def paylox_s2s_form_process(self, kwargs):
         partner_id = int(kwargs['partner_id'])
         domain = [
             ('jetcheckout_card_holder','=',kwargs.get('cc_holder_name')),
@@ -252,14 +250,14 @@ class PaymentAcquirerJetcheckout(models.Model):
             'name': 'XXXX-XXXX-XXXX-%s - %s' % (kwargs['cc_number'][-4:], kwargs['cc_holder_name'])
         })
 
-    def jetcheckout_s2s_form_validate(self, data):
+    def paylox_s2s_form_validate(self, data):
         self.ensure_one()
         for field_name in ['cc_number', 'cvc', 'cc_holder_name', 'cc_expiry', 'installment_id']:
             if not data.get(field_name):
                 return False
         return True
 
-    def action_jetcheckout_signin(self):
+    def action_paylox_signin(self):
         self.ensure_one()
         wizard = self.env['payment.acquirer.jetcheckout.signin'].create({'acquirer_id': self.id})
         action = self.env.ref('payment_jetcheckout.action_signin').sudo().read()[0]
@@ -267,7 +265,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         action['context'] = {'dialog_size': 'small'}
         return action
 
-    def action_jetcheckout_signup(self):
+    def action_paylox_signup(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
@@ -275,7 +273,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             'url': 'https://app.jetcheckout.com/web/signup'
         }
 
-    def action_jetcheckout_signout(self):
+    def action_paylox_signout(self):
         self.ensure_one()
         self.jetcheckout_username = False
         self.jetcheckout_password = False
@@ -285,12 +283,12 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.jetcheckout_gateway_api = False
         self.jetcheckout_gateway_app = False
         self.jetcheckout_campaign_id = False
-        self.jetcheckout_campaign_ids = [(5, 0, 0)]
-        self.jetcheckout_journal_ids = [(5, 0, 0)]
+        self.paylox_campaign_ids = [(5, 0, 0)]
+        self.paylox_journal_ids = [(5, 0, 0)]
 
-    def action_jetcheckout_campaign(self):
+    def action_paylox_campaign(self):
         self.ensure_one()
-        self._jetcheckout_api_vacuum()
+        self._paylox_api_vacuum()
         campaign = self.jetcheckout_campaign_id.name
         campaigns = self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', '=', self.id)])
         line_ids = [(0, 0, {
@@ -311,19 +309,19 @@ class PaymentAcquirerJetcheckout(models.Model):
         action['context'] = {'dialog_size': 'small', 'create': False, 'delete': False}
         return action
 
-    def action_jetcheckout_pos(self):
+    def action_paylox_pos(self):
         self.ensure_one()
         #pos = self.env['payment.acquirer.jetcheckout.api.poses'].create({'acquirer_id': self.id, 'application_id': self.jetcheckout_api_key})
-        self._jetcheckout_api_connect(pos=True)
+        self._paylox_api_connect(pos=True)
         action = self.env.ref('payment_jetcheckout.action_api_pos').sudo().read()[0]
         action['domain'] = [('acquirer_id', '=', self.id)]
         action['context'] = {'default_acquirer_id': self.id, 'pos': True}
         return action
 
-    def action_jetcheckout_application(self):
+    def action_paylox_application(self):
         self.ensure_one()
         #app = self.env['payment.acquirer.jetcheckout.api.applications'].create({'acquirer_id': self.id})
-        self._jetcheckout_api_connect()
+        self._paylox_api_connect()
         action = self.env.ref('payment_jetcheckout.action_api_application').sudo().read()[0]
         action['domain'] = [('acquirer_id', '=', self.id)]
         action['context'] = {'default_acquirer_id': self.id, 'application': True}
@@ -337,7 +335,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         database = self.jetcheckout_gateway_database or 'jetcheckout'
         return rpc.execute(url, database, self.jetcheckout_user_id, self.jetcheckout_password, *args)
 
-    def _jetcheckout_api_vacuum(self):
+    def _paylox_api_vacuum(self):
         self = self.with_context(no_sync=True)
         self.env['payment.acquirer.jetcheckout.api.application'].search([('acquirer_id', '=', self.id)]).unlink()
         self.env['payment.acquirer.jetcheckout.api.pos'].search([('acquirer_id', '=', self.id)]).unlink()
@@ -350,7 +348,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         self.env['payment.acquirer.jetcheckout.api.provider'].search([('acquirer_id', '=', self.id)]).unlink()
         self.env['payment.acquirer.jetcheckout.api.currency'].search([('acquirer_id', '=', self.id)]).unlink()
 
-    def _jetcheckout_api_create_currencies(self):
+    def _paylox_api_create_currencies(self):
         currency_table = self.env['payment.acquirer.jetcheckout.api.currency']
         currencies = self._rpc('res.currency', 'search_read', [])
         for currency in currencies:
@@ -361,7 +359,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             })
         return {item['res_id']: item['id'] for item in currency_table.search_read([], ['id', 'res_id'])}
 
-    def _jetcheckout_api_create_providers(self):
+    def _paylox_api_create_providers(self):
         providers = self._rpc('jet.payment.org', 'search_read', [])
         pos_infra_ids = [provider['virtual_pos_infraid'][0] for provider in providers]
         pos_infras = self._rpc('jet.virtual.pos.infra', 'search_read', [('id', 'in', pos_infra_ids)])
@@ -413,7 +411,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             provider_table.create(vals)
         return {item['res_id']: item['id'] for item in provider_table.search_read([], ['id', 'res_id'])}
 
-    def _jetcheckout_api_create_application(self, pos):
+    def _paylox_api_create_application(self, pos):
         application_table = self.env['payment.acquirer.jetcheckout.api.application']
         domain = [('user_id', '=', self.jetcheckout_user_id)]
         if pos:
@@ -436,7 +434,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             })
         return {item['res_id']: item['id'] for item in application_table.search_read([], ['id', 'res_id'])}
 
-    def _jetcheckout_api_create_pos(self, poses, apps, providers, currencies):
+    def _paylox_api_create_pos(self, poses, apps, providers, currencies):
         pos_ids = [pos['id'] for pos in poses]
         pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_families', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id', 'imported'])
         pos_price_ids = [price['id'] for price in pos_prices]
@@ -555,13 +553,13 @@ class PaymentAcquirerJetcheckout(models.Model):
                 }) for price in pos_prices if price['virtual_pos_id'][0] == pos['id']],
             })
 
-    def _jetcheckout_api_create(self, poses, pos):
-        currencies = self._jetcheckout_api_create_currencies()
-        providers = self._jetcheckout_api_create_providers()
-        apps = self._jetcheckout_api_create_application(pos)
-        self._jetcheckout_api_create_pos(poses, apps, providers, currencies)
+    def _paylox_api_create(self, poses, pos):
+        currencies = self._paylox_api_create_currencies()
+        providers = self._paylox_api_create_providers()
+        apps = self._paylox_api_create_application(pos)
+        self._paylox_api_create_pos(poses, apps, providers, currencies)
 
-    def _jetcheckout_api_read(self):
+    def _paylox_api_read(self):
         data = {}
         data['payment.acquirer.jetcheckout.api.pos'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.pos'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
         data['payment.acquirer.jetcheckout.api.provider'] = {item['id']: item['res_id'] for item in self.env['payment.acquirer.jetcheckout.api.provider'].search_read([('acquirer_id', '=', self.id)], ['id', 'res_id'])}
@@ -574,7 +572,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         data['acquirer'] = self
         return data
 
-    def _jetcheckout_api_sync_campaign(self, poses=None):
+    def _paylox_api_sync_campaign(self, poses=None):
         if not poses:
             poses = self.env['payment.acquirer.jetcheckout.api.application'].search([
                 ('application_id', '=', self.jetcheckout_api_key)
@@ -583,7 +581,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                 return
 
         api_campaigns_list = poses.filtered(lambda x: x.is_active).mapped('pos_price').filtered(lambda x: x.is_active).mapped('offer_name')
-        acq_campaigns_list = self.jetcheckout_campaign_ids.mapped('name')
+        acq_campaigns_list = self.paylox_campaign_ids.mapped('name')
         api_campaigns = set(api_campaigns_list)
         acq_campaigns = set(acq_campaigns_list)
         creates = []
@@ -606,7 +604,7 @@ class PaymentAcquirerJetcheckout(models.Model):
             'name': name,
         } for name in creates])
 
-    def _jetcheckout_api_upload_vals(self, vals, data, table):
+    def _paylox_api_upload_vals(self, vals, data, table):
         values = {}
         fields = table._fields.values()
         for field in fields:
@@ -615,11 +613,11 @@ class PaymentAcquirerJetcheckout(models.Model):
                     val_list = []
                     for val in vals[field.name]:
                         if val[0] == 0:
-                            v = self._jetcheckout_api_upload_vals(val[2], data, self.env[field.comodel_name])
+                            v = self._paylox_api_upload_vals(val[2], data, self.env[field.comodel_name])
                             val_list.append([0, 0, v])
                         elif val[0] == 1:
                             i = data[field.comodel_name][val[1]]
-                            v = self._jetcheckout_api_upload_vals(val[2], data, self.env[field.comodel_name])
+                            v = self._paylox_api_upload_vals(val[2], data, self.env[field.comodel_name])
                             val_list.append([1, i, v])
                         elif val[0] == 2:
                             i = data[field.comodel_name][val[1]]
@@ -634,8 +632,8 @@ class PaymentAcquirerJetcheckout(models.Model):
                     values.update({field.name: vals[field.name]})
         return values
 
-    def _jetcheckout_api_upload(self, vals, data, table):
-        vals = self._jetcheckout_api_upload_vals(vals, data, table)
+    def _paylox_api_upload(self, vals, data, table):
+        vals = self._paylox_api_upload_vals(vals, data, table)
         fields = table._fields.values()
         for field in fields:
             if field.name in vals:
@@ -649,7 +647,7 @@ class PaymentAcquirerJetcheckout(models.Model):
                         elif val[0] == 2:
                             self._rpc(name, 'unlink', val[1])
 
-    def _jetcheckout_api_connect(self, pos=None):
+    def _paylox_api_connect(self, pos=None):
         # Get all data
         domain = [('user_id', '=', self.jetcheckout_user_id)]
         if pos:
@@ -657,7 +655,7 @@ class PaymentAcquirerJetcheckout(models.Model):
         poses = self._rpc('jet.virtual.pos', 'search_read', domain)
 
         # Vacuum old data
-        self._jetcheckout_api_vacuum()
+        self._paylox_api_vacuum()
 
         # Create transient records
-        self._jetcheckout_api_create(poses, pos)
+        self._paylox_api_create(poses, pos)

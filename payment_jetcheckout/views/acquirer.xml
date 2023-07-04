@@ -7,8 +7,8 @@
         <xpath expr='//group[@name="acquirer"]' position="after">
             <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_api_key','!=',False)]}">
                 <div class="justify-content-center row">
-                    <button name="action_jetcheckout_signin" type="object" class="btn-primary mx-2 my-2" string="Sign in with an account"/>
-                    <button name="action_jetcheckout_signup" type="object" class="btn-primary mx-2 my-2" string="Create a new account"/>
+                    <button name="action_paylox_signin" type="object" class="btn-primary mx-2 my-2" string="Sign in with an account"/>
+                    <button name="action_paylox_signup" type="object" class="btn-primary mx-2 my-2" string="Create a new account"/>
                 </div>
             </group>
             <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_api_key','=',False)]}">
@@ -17,14 +17,14 @@
                         <span attrs="{'invisible': [('jetcheckout_username','=',False)]}">You are signed as <strong><field name="jetcheckout_username"/></strong></span>
                         <span attrs="{'invisible': [('jetcheckout_username','!=',False)]}">You are signed <strong>manually</strong></span>
                         <br/>
-                        <button name="action_jetcheckout_signout" type="object" class="btn-secondary my-2" string="Sign Out" icon="fa-sign-out"/>
+                        <button name="action_paylox_signout" type="object" class="btn-secondary my-2" string="Sign Out" icon="fa-sign-out"/>
                     </p>
                 </group>
                 <group string="Applications" attrs="{'invisible': [('jetcheckout_api_key','!=',False)]}">
                     <p class="text-center">
                         No application is selected
                         <br/>
-                        <button name="action_jetcheckout_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
+                        <button name="action_paylox_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
                     </p>
                 </group>
                 <group string="Applications" attrs="{'invisible': [('jetcheckout_api_key','=',False)]}">
@@ -34,9 +34,9 @@
                     <field name="jetcheckout_secret_key" string="Secret Key" password="True" readonly="1"/>
                     <field name="jetcheckout_gateway_api" string="API URL" placeholder="https://api.jetcheckout.com" attrs="{'invisible': [('jetcheckout_gateway_api','=',False)]}" readonly="1"/>
                     <div class="justify-content-center row" colspan="2" attrs="{'invisible': [('jetcheckout_username','=',False)]}">
-                        <button name="action_jetcheckout_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
-                        <button name="action_jetcheckout_pos" type="object" class="btn-secondary my-2" string="Virtual Pos" icon="fa-certificate"/>
-                        <button name="action_jetcheckout_campaign" type="object" class="btn-secondary my-2" string="Campaigns" icon="fa-star"/>
+                        <button name="action_paylox_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
+                        <button name="action_paylox_pos" type="object" class="btn-secondary my-2" string="Virtual Pos" icon="fa-certificate"/>
+                        <button name="action_paylox_campaign" type="object" class="btn-secondary my-2" string="Campaigns" icon="fa-star"/>
                     </div>
                 </group>
             </group>
@@ -51,7 +51,7 @@
         </xpath>
         <xpath expr='//page[@name="acquirer_credentials"]' position="after">
             <page name="methods" string="Methods" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
-                <field name="jetcheckout_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
+                <field name="paylox_journal_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree create="0" delete="0">
                         <field name="name"/>
                         <field name="journal_id" domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}"/>
@@ -98,7 +98,7 @@
                 </field>
             </page>
             <page string="Banks" attrs="{'invisible': [('provider', '!=', 'transfer')]}">
-                <field name="jetcheckout_bank_ids" nolabel="1" colspan="2">
+                <field name="paylox_bank_ids" nolabel="1" colspan="2">
                     <tree editable="bottom">
                         <field name="sequence" widget="handle"/>
                         <field name="logo" widget="image" class="oe_avatar text-center"/>

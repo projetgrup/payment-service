@@ -3,9 +3,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class PaymentAcquirerJetcheckoutSendType(models.Model):
+class PaymentPayloxSendType(models.Model):
     _name = 'payment.acquirer.jetcheckout.send.type'
-    _description = 'Jetcheckout System Send Types'
+    _description = 'Paylox System Send Types'
     _order = 'sequence'
     _mail_fields = {
         'subject': 'mail_subject',
@@ -176,9 +176,9 @@ class PaymentAcquirerJetcheckoutSendType(models.Model):
         return super().unlink()
 
 
-class PaymentAcquirerJetcheckoutSend(models.TransientModel):
+class PaymentPayloxSend(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.send'
-    _description = 'Jetcheckout System Send'
+    _description = 'Paylox System Send'
 
     def _compute_partner(self):
         for send in self:

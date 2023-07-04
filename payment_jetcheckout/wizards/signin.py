@@ -3,9 +3,9 @@ from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 from ..models.rpc import rpc
 
-class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
+class PaymentPayloxSignin(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.signin'
-    _description = 'Jetcheckout Signin'
+    _description = 'Paylox Signin'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     username = fields.Char('Username')
@@ -59,4 +59,4 @@ class PaymentAcquirerJetcheckoutSignin(models.TransientModel):
         })
 
         self.acquirer_id.write(vals)
-        return self.acquirer_id.action_jetcheckout_application()
+        return self.acquirer_id.action_paylox_application()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 18:03+0000\n"
-"PO-Revision-Date: 2023-05-20 21:25+0300\n"
+"POT-Creation-Date: 2023-07-04 15:58+0000\n"
+"PO-Revision-Date: 2023-07-04 19:05+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,12 +15,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<em>Select All</em>"
 msgstr "<em>Tümünü Seç</em>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_kanban
+msgid "<i class=\"fa fa-credit-card mr-2\"/>Payment Page"
+msgstr "<i class=\"fa fa-credit-card mr-2\"/>Ödeme Sayfası"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_kanban
+msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
+msgstr "<i class=\"fa fa-link mr-2\"/>Ödeme Linki"
 
 #. module: payment_vendor
 #: model:mail.template,body_html:payment_vendor.vendor_mail
@@ -52,27 +62,27 @@ msgstr ""
 "</p>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Amount</span>"
 msgstr "<span class=\"text-500\">Tutar</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Date</span>"
 msgstr "<span class=\"text-500\">Tarih</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Due Date</span>"
 msgstr "<span class=\"text-500\">Vade Tarihi</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Residual</span>"
 msgstr "<span class=\"text-500\">Kalan</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
 "transaction related to you"
@@ -81,7 +91,7 @@ msgstr ""
 "işlem yok"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</"
 "strong>\n"
@@ -94,7 +104,7 @@ msgstr ""
 "bold text-right z-index-1\">Tutar</strong>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
 msgstr "<strong class=\"text-primary font-weight-bold\">Bilgiler</strong>"
 
@@ -519,15 +529,15 @@ msgstr ""
 "</table>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Amount"
 msgstr "Tutar"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_search
 #: model_terms:ir.ui.view,arch_db:payment_vendor.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
 msgid "Authorized"
 msgstr "Yetkili"
 
@@ -589,22 +599,22 @@ msgid "Dashboard"
 msgstr "Panel"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Date"
 msgstr "Tarih"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Description"
 msgstr "Açıklama"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Document"
 msgstr "Belge"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Due Date"
 msgstr "Vade Tarihi"
 
@@ -622,6 +632,23 @@ msgstr "Eposta Şablonları"
 #: model:ir.model,name:payment_vendor.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
+
+#. module: payment_vendor
+#: model:sms.template,body:payment_vendor.sms_transaction_successful
+msgid ""
+"Hello {{ object.name }}, successful transaction information as follows."
+"\\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\\nTransaction "
+"Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:"
+"mm:ss') }}\\nTransaction Amount: {{ format_amount(ctx['tx']."
+"jetcheckout_payment_amount, ctx['tx'].currency_id) or '' }}\\nInstallment "
+"Count: {{ ctx['tx'].jetcheckout_installment_description_long or '' }}"
+msgstr ""
+"Merhaba {{ object.name }}, başarılı işlem bilgileri aşağıdaki gibidir."
+"\\nİşlem Geçen Firma: {{ ctx['partner'].name or '' }}\\nİşlem Tarihi: "
+"{{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:"
+"ss') }}\\nİşlem Tutarı: {{ format_amount(ctx['tx']."
+"jetcheckout_payment_amount, ctx['tx'].currency_id) or '' }}\\nTaksit Sayısı: "
+"{{ ctx['tx'].jetcheckout_installment_description_long or '' }}"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_integrations
@@ -705,7 +732,7 @@ msgid "Representatives"
 msgstr "Temsilciler"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Residual"
 msgstr "Kalan"
 
@@ -749,7 +776,6 @@ msgstr "Ödeme işlemleri için günlük rapor epostası gönder"
 #. module: payment_vendor
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
-#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Settings"
 msgstr "Ayarlar"
 
@@ -780,6 +806,11 @@ msgstr "Ödeme İşlemi: Günlük Rapor"
 #: model:mail.template,name:payment_vendor.mail_transaction_successful
 msgid "Transaction: Successful Email"
 msgstr "Ödeme İşlemi: Başarılı Epostası"
+
+#. module: payment_vendor
+#: model:sms.template,name:payment_vendor.sms_transaction_successful
+msgid "Transaction: Successful Payment SMS"
+msgstr "Ödeme İşlemi: Başarılı Ödeme SMS Mesajı"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_transaction

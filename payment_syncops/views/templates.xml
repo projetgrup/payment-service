@@ -12,7 +12,7 @@
         </xpath>
     </template>
 
-    <template id="payment_partner_balance" name="Payment System Page - syncOPS Partner Balance">
+    <template id="payment_balance" name="Payment System Page - syncOPS Partner Balance">
         <t t-if="show_balance">
             <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
                 <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
@@ -46,15 +46,15 @@
         </t>
     </template>
 
-    <template id="payment_page" name="Payment System Page - syncOPS" inherit_id="payment_jetcheckout_system.payment_page">
+    <template id="page_payment" name="Payment System Page - syncOPS" inherit_id="payment_jetcheckout_system.page_payment">
         <xpath expr="//t[@t-set='labels']" position="inside">
             <div class="o_connector_partner_balance">
-                <t t-call="payment_syncops.payment_partner_balance"/>
+                <t t-call="payment_syncops.payment_balance"/>
             </div>
         </xpath>
     </template>
 
-    <template id="payment_page_ledger" name="Payment System Page Ledger - syncOPS">
+    <template id="page_ledger" name="Payment System Page Ledger - syncOPS">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
@@ -74,7 +74,7 @@
                     <t t-set="no_card_preview" t-value="True"/>
                     <t t-set="labels">
                         <div class="o_connector_partner_balance">
-                            <t t-call="payment_syncops.payment_partner_balance"/>
+                            <t t-call="payment_syncops.payment_balance"/>
                         </div>
                         <div class="o_connector_partner_ledger_dates">
                             <label for="date_start" class="text-primary font-weight-bold mb-0 d-block mt-3">Start Date</label>
@@ -87,7 +87,7 @@
                         <a role="button" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_connector_partner_ledger_date" href="#"><i class="fa fa-calendar-check-o mr-2" t-translation="off"/>Apply</a>
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
-                    <t t-call="payment_jetcheckout_system.payment_page_contact"/>
+                    <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>
                 <div class="payment-card payment-system col-md-9 row justify-content-center mx-0 navbar-light">
                     <t t-call="payment_jetcheckout.payment_loading"/>
@@ -119,8 +119,8 @@
                     <div class="bg-light h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
                 </div>
             </div>
-            <t t-call="payment_jetcheckout_system.payment_page_agreements"/>
-            <t t-call="payment_jetcheckout_system.payment_page_footer"/>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 </odoo>

@@ -16,6 +16,8 @@ class Company(models.Model):
     tax_office = fields.Char()
     system = fields.Selection([])
     required_2fa = fields.Boolean('Two Factor Required')
+    notif_mail_success_ok = fields.Boolean('Send Successful Payment Transaction Email')
+    notif_sms_success_ok = fields.Boolean('Send Successful Payment Transaction SMS')
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
     notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')

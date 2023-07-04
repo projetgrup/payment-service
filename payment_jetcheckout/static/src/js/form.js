@@ -9,7 +9,7 @@ const paymentPaylox = {
         if (provider !== 'jetcheckout') {
             return this._super(...arguments);
         }
-        $('#payment_pay').trigger('click');
+        $('[field="payment.button"]').trigger('click');
         return Promise.resolve();
     },
 };

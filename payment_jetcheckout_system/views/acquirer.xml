@@ -6,7 +6,7 @@
     <field name="arch" type="xml">
         <xpath expr="//page[@name='methods']" position="after">
             <page name="branches" string="Branches" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
-                <field name="jetcheckout_branch_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
+                <field name="paylox_branch_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_website_id': website_id}">
                     <tree editable="bottom">
                         <field name="sequence" widget="handle"/>
                         <field name="name"/>
