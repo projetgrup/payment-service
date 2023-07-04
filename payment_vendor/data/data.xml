@@ -91,7 +91,7 @@
         <record id="sms_transaction_successful" model="sms.template">
             <field name="name">Transaction: Successful Payment SMS</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Hello {{ object.name }}, successful transaction information as follows.\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\nTransaction Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss') }}\nTransaction Amount: {{ format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or '' }}\nInstallment Count: {{ ctx['tx'].jetcheckout_installment_description_long or '' }}</field>
+            <field name="body">Hello {{ object.name }}, successful transaction information as follows.\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\nTransaction Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss') }}\nTransaction Amount: {{ ctx['amount'] }} {{ ctx['tx'].currency_id.name }}\nInstallment Count: {{ ctx['tx'].with_context(lang=ctx['lang']).jetcheckout_installment_description_long or '' }}</field>
             <field name="lang">{{ object.lang }}</field>
         </record>
 
