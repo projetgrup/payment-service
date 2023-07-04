@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
                 messages = []
                 for partner in partners:
                     context.update({'tz': partner.tz})
-                    body = template._render_field('body', [partner.id], set_lang=partner.lang, add_context=context)[partner.id]
+                    body = template.with_context(context)._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
                     sms_values = {
                         'partner_id': partner.id,
                         'body': body,
