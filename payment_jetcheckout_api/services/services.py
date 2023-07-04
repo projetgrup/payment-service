@@ -369,18 +369,18 @@ class PaymentAPIService(Component):
 
     def _cancel_transaction(self, tx):
         if not tx.state == 'cancel':
-            tx._jetcheckout_cancel()
+            tx._paylox_cancel()
 
     def _refund_transaction(self, tx, amount):
-        tx._jetcheckout_refund(amount)
+        tx._paylox_refund(amount)
 
     def _expire_transaction(self, tx):
-        tx._jetcheckout_expire()
+        tx._paylox_expire()
 
     def _delete_transaction(self, tx):
         tx.unlink()
 
     def _query_transaction(self, tx):
-        vals = tx._jetcheckout_query()
+        vals = tx._paylox_query()
         del vals['currency_id']
         return vals

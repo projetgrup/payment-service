@@ -2,9 +2,9 @@
 from odoo import fields, models, api
 
 
-class PaymentAcquirerJetcheckoutBranch(models.Model):
+class PaymentPayloxBranch(models.Model):
     _name = 'payment.acquirer.jetcheckout.branch'
-    _description = 'Jetcheckout Company Branches'
+    _description = 'Paylox Company Branches'
     _order = 'sequence, id'
 
     sequence = fields.Integer('Sequence', default=10)
@@ -17,10 +17,10 @@ class PaymentAcquirerJetcheckoutBranch(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', readonly=True)
 
 
-class PaymentAcquirerJetcheckout(models.Model):
+class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    jetcheckout_branch_ids = fields.One2many('payment.acquirer.jetcheckout.branch', 'acquirer_id', groups='base.group_user')
+    paylox_branch_ids = fields.One2many('payment.acquirer.jetcheckout.branch', 'acquirer_id', groups='base.group_user')
     jetcheckout_no_dashboard_button = fields.Boolean('Hide Dashboard Payment Button', groups='base.group_user')
 
     def _get_branch_line(self, name, user):

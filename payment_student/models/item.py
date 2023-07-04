@@ -125,10 +125,10 @@ class PaymentItem(models.Model):
             subbursaries.append({'id': student, 'amount': 0})
             totals.append({'id': student, 'amount': 0})
 
-        advance_discount = company.get_student_discount()
-        sibling_discount = 0
+        discount_single = company.get_student_discount()
+        discount_sibling = 0
         if len(siblings) > 1 or len(siblings) == 1 and any(line._is_student_sibling_paid() for line in self):
-            sibling_discount = company.student_discount_sibling_rate if company.student_discount_sibling_active else 0
+            discount_sibling = company.student_discount_sibling_rate if company.student_discount_sibling_active else 0
 
         for line in self:
             student_id = line.child_id.id
@@ -136,8 +136,8 @@ class PaymentItem(models.Model):
             term_id = line.term_id.id
             type_id = line.payment_type_id.id
             amount = line.amount
-            discount_amount = advance_discount / -100
-            sibling_amount = sibling_discount / -100
+            discount_amount = discount_single / -100
+            sibling_amount = discount_sibling / -100
             bursary_amount = line.bursary_id.percentage / -100
 
             if company.student_discount_sibling_maximum:
@@ -229,8 +229,8 @@ class PaymentItem(models.Model):
             'subsiblings': subsiblings,
             'subbursaries': subbursaries,
             'totals': totals,
-            'advance_discount': advance_discount,
-            'sibling_discount': sibling_discount,
+            'discount_single': discount_single,
+            'discount_sibling': discount_sibling,
             'has_payment': len(list(filter(lambda x: x != 0, payment_ids))) > 1,
             'has_bursary': len(list(filter(lambda x: x != 0, bursary_ids))) > 0,
             'currency': currency,

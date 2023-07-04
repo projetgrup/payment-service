@@ -4,14 +4,14 @@
     <field name="model">payment.transaction</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.transaction_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//button[@name='jetcheckout_payment']" position="before">
+        <xpath expr="//button[@name='paylox_payment']" position="before">
             <field name="jetcheckout_connector_ok" invisible="1"/>
             <button
                 style="pointer-events: none"
                 class="oe_stat_button"
                 icon="fa-chain"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '!=', False)]}">
+                attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Connector</span><span class="o_stat_text">Succeeded</span>
                 </div>
@@ -21,7 +21,7 @@
                 class="oe_stat_button"
                 icon="fa-unlink"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', ('is_jetcheckout', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}">
+                attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Connector</span><span class="o_stat_text">Failed</span>
                 </div>

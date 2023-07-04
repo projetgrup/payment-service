@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 
-class PaymentAcquirerJetcheckoutApiCampaigns(models.TransientModel):
+class PaymentPayloxCampaign(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.campaigns'
-    _description = 'Jetcheckout API Campaigns'
+    _description = 'Paylox Campaigns'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     line_ids = fields.One2many('payment.acquirer.jetcheckout.api.campaigns.line', 'parent_id')
 
 
-class PaymentAcquirerJetcheckoutApiCampaignsLine(models.TransientModel):
+class PaymentPayloxCampaignLine(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.campaigns.line'
-    _description = 'Jetcheckout API Campaigns Line'
+    _description = 'Paylox Campaign Lines'
     _order = 'name'
 
     acquirer_id = fields.Many2one('payment.acquirer')
@@ -24,9 +24,9 @@ class PaymentAcquirerJetcheckoutApiCampaignsLine(models.TransientModel):
         self.parent_id.acquirer_id.jetcheckout_campaign_id = self.campaign_id.id
 
 
-class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
+class PaymentPayloxApiCampaign(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.campaign'
-    _description = 'Jetcheckout API Campaign'
+    _description = 'Paylox API Campaigns'
     _remote_name = 'jet.pos.price'
 
     acquirer_id = fields.Many2one('payment.acquirer')
@@ -47,9 +47,9 @@ class PaymentAcquirerJetcheckoutApiCampaign(models.TransientModel):
     import_rates = fields.Boolean(related='virtual_pos_id.import_rates')
 
 
-class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
+class PaymentPayloxApiInstallment(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.installment'
-    _description = 'Jetcheckout API Installment'
+    _description = 'Paylox API Installments'
     _remote_name = 'jet.pos.price.line'
 
     @api.depends('fixed_customer_rate')
@@ -126,9 +126,9 @@ class PaymentAcquirerJetcheckoutApiInstallment(models.TransientModel):
                     self.customer_rate = customer_rate
 
 
-class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
+class PaymentPayloxApiFamily(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.family'
-    _description = 'Jetcheckout API Family'
+    _description = 'Paylox API Credit Card Family'
     _order = 'name'
     _remote_name = 'jet.card.family'
 
@@ -146,18 +146,18 @@ class PaymentAcquirerJetcheckoutApiFamily(models.TransientModel):
     preview = fields.Html(compute='_compute_preview', readonly=True, sanitize=False)
 
 
-class PaymentAcquirerJetcheckoutApiBank(models.TransientModel):
+class PaymentPayloxApiBank(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.bank'
-    _description = 'Jetcheckout API Bank'
+    _description = 'Paylox API Banks'
     _remote_name = 'jet.bank'
 
     acquirer_id = fields.Many2one('payment.acquirer')
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
 
-class PaymentAcquirerJetcheckoutApiExcluded(models.TransientModel):
+class PaymentPayloxApiExcluded(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.excluded'
-    _description = 'Jetcheckout API Excluded Bins'
+    _description = 'Paylox API Excluded Bins'
     _remote_name = 'jet.bin'
 
     acquirer_id = fields.Many2one('payment.acquirer')

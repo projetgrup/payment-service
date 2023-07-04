@@ -148,14 +148,40 @@ class Partner(models.Model):
             company = self.env['res.company'].sudo().browse(values['company_id'])
             if company and company.system:
                 values['system'] = company.system
-        return super().create(values)
+
+        res = super().create(values)
+
+        if 'user_id' in values:
+            if values['user_id']:
+                pid = self.env['res.users'].browse(values['user_id']).partner_id.id
+                res.message_subscribe([pid])
+
+        return res
 
     def write(self, values):
         if 'system' not in values and 'company_id' in values:
             company = self.env['res.company'].sudo().browse(values['company_id'])
             if company and company.system:
                 values['system'] = company.system
-        return super().write(values)
+
+        if 'user_id' in values:
+            users = []
+            for partner in self:
+                users.append((partner, partner.user_id.id))
+
+        res = super().write(values)
+
+        if 'user_id' in values:
+            for partner, uid in users:
+                if not values['user_id'] == uid:
+                    if uid:
+                        pid = self.env['res.users'].browse(uid).partner_id.id
+                        partner.message_unsubscribe([pid])
+                    if values['user_id']:
+                        pid = self.env['res.users'].browse(values['user_id']).partner_id.id
+                        partner.message_subscribe([pid])
+
+        return res
 
     def _get_name(self):
         system = self.env.context.get('active_system') or self.env.context.get('system')
@@ -315,7 +341,7 @@ class Partner(models.Model):
 
     def action_payable(self):
         self.ensure_one()
-        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        system = self.company_id and self.company_id.system or self.system or self.env.context.get('active_system') or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.payable_ids.ids)]
         if self.parent_id:
@@ -326,7 +352,7 @@ class Partner(models.Model):
 
     def action_paid(self):
         self.ensure_one()
-        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        system = self.company_id and self.company_id.system or self.system or self.env.context.get('active_system') or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.paid_ids.ids)]
         if self.parent_id:
@@ -421,3 +447,18 @@ class Partner(models.Model):
             'active_model': 'res.partner'
         }
         return action
+
+    def action_follower(self):
+        action = self.env.ref('payment_jetcheckout_system.action_partner_follower').sudo().read()[0]
+        action['context'] = {'default_company_id': self.env.company.id}
+        return action
+
+    def action_follow(self):
+        pid = self.env.user.partner_id.id
+        for partner in self:
+            partner.message_subscribe([pid])
+
+    def action_unfollow(self):
+        pid = self.env.user.partner_id.id
+        for partner in self:
+            partner.message_unsubscribe([pid])

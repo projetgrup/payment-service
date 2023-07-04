@@ -26,7 +26,7 @@
         </record>
 
         <record id="mail_transaction_successful" model="mail.template">
-            <field name="name">Transaction: Successful Email</field>
+            <field name="name">Transaction: Successful Payment Email</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="subject">{{ ctx['domain'] }} | Successful Transaction Notification</field>
             <field name="email_to">{{ object.email_formatted }}</field>
@@ -86,6 +86,13 @@
 </table></field>
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="sms_transaction_successful" model="sms.template">
+            <field name="name">Transaction: Successful Payment SMS</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="body">Hello {{ object.name }}, successful transaction information as follows.\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\nTransaction Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss') }}\nTransaction Amount: {{ format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or '' }}\nInstallment Count: {{ ctx['tx'].jetcheckout_installment_description_long or '' }}</field>
+            <field name="lang">{{ object.lang }}</field>
         </record>
 
         <record id="mail_transaction_daily" model="mail.template">
@@ -189,7 +196,7 @@
             <field name="name">Send daily report email of transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>
-            <field name="code">model.jetcheckout_send_daily_email()</field>
+            <field name="code">model.paylox_send_daily_email()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>

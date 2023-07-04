@@ -131,7 +131,7 @@ class VendorAPIService(Component):
     def _create_vendor(self, company, vendor):
         acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
         if hasattr(vendor, 'campaign') and vendor.campaign:
-            campaign = acquirer.jetcheckout_campaign_ids.filtered(lambda x: x.name == vendor.campaign)
+            campaign = acquirer.paylox_campaign_ids.filtered(lambda x: x.name == vendor.campaign)
             if len(campaign) > 1:
                 campaign = campaign[0]
         else:

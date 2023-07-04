@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-07 13:11+0000\n"
-"PO-Revision-Date: 2023-03-07 16:17+0300\n"
+"POT-Creation-Date: 2023-07-04 15:54+0000\n"
+"PO-Revision-Date: 2023-07-04 18:55+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,10 +15,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "<em>Select All</em>"
 msgstr "<em>Tümünü Seç</em>"
 
@@ -28,7 +28,7 @@ msgid "<i class=\"fa fa-download mr-2\"/>Click here to get example template"
 msgstr "<i class=\"fa fa-download mr-2\"/>Örnek şablon için buraya tıklayınız"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
 "transaction related to you"
@@ -65,8 +65,9 @@ msgstr ""
 "<p>\n"
 "    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
 "    <br/><br/>\n"
-"    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-out="
-"\"object._get_payment_terms()\"/> hizmetlerimizle ilgili kayıt ücretini \n"
+"    Okulda kayıtlı bulunan öğrenci veya öğrencileriniz için <t t-"
+"out=\"object._get_payment_terms()\"/> hizmetlerimizle ilgili kayıt "
+"ücretini \n"
 "    <t t-if=\"line\"><t t-out=\"line['month']\"/> dönemi içerisinde kredi "
 "kartınız ile online olarak <t t-out=\"line['installment']\"/> taksitle yada "
 "tek çekimde %<t t-out=\"line['percentage']\"/> indirim ile ödeyebilirsiniz.</"
@@ -104,14 +105,6 @@ msgid "Advance Discount"
 msgstr "Peşin İndirimi"
 
 #. module: payment_student
-#. openerp-web
-#: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
-#, python-format
-msgid "Advance Payment Discount"
-msgstr "Peşin Ödeme İndirimi"
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_advance_ids
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_advance_ids
 msgid "Advance Payment Discounts"
@@ -125,7 +118,7 @@ msgstr "Tutar"
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Amount To Pay"
 msgstr "Ödenecek Tutar"
@@ -415,13 +408,6 @@ msgid "Import Student"
 msgstr "Öğrenci İçe Aktar"
 
 #. module: payment_student
-#. openerp-web
-#: code:addons/payment_student/static/src/js/import.js:0
-#, python-format
-msgid "Import Transaction"
-msgstr ""
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__installment
 msgid "Installment"
 msgstr "Taksit"
@@ -591,7 +577,7 @@ msgstr "Ödeme Alıcıları"
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Payment Details"
 msgstr "Ödeme Detayları"
@@ -766,7 +752,7 @@ msgstr "Ayarlar"
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_sibling_active
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_active
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Sibling Discount"
 msgstr "Kardeş İndirimi"
@@ -782,6 +768,14 @@ msgstr "Maksimum Kardeş İndirimi"
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_rate
 msgid "Sibling Discount Rate"
 msgstr "Kardeş İndirimi Oranı"
+
+#. module: payment_student
+#. openerp-web
+#: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
+#, python-format
+msgid "Single Payment Discount"
+msgstr "Tek Çekim İndirimi"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
@@ -802,11 +796,12 @@ msgid "Student"
 msgstr "Öğrenci"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "Student Name<br/>School | Class | Type"
 msgstr "Öğrenci Adı<br/>Okul | Sınıf | Tür"
 
 #. module: payment_student
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_item__system__student
 #: model:ir.model.fields.selection,name:payment_student.selection__res_company__system__student
 #: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system__student
 #: model:ir.module.category,description:payment_student.module_category_student
@@ -829,12 +824,13 @@ msgstr "Öğrenciler"
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Subtotal"
 msgstr "Ara Toplam"
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__system
 #: model:ir.model.fields,field_description:payment_student.field_res_company__system
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system
@@ -881,7 +877,7 @@ msgstr ""
 #. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_student.student_payment_table
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_table
 #, python-format
 msgid "Total"
 msgstr "Genel Toplam"
@@ -917,7 +913,7 @@ msgid "Websites"
 msgstr "Websiteler"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid "Welcome"
 msgstr "Hoşgeldiniz"
 
@@ -927,7 +923,7 @@ msgid "Wizard"
 msgstr "Sihirbaz"
 
 #. module: payment_student
-#: model_terms:ir.ui.view,arch_db:payment_student.payment_page
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment
 msgid ""
 "You can get payment amounts and applied discounts, which is calculated "
 "dynamically, with choosing student(s) of yours in the following table."
@@ -935,6 +931,10 @@ msgstr ""
 "Aşağıdaki listelenmiş olan velisi olduğunuz öğrenci veya öğrencilerin "
 "seçimlerini yaparak dinamik olarak hesaplanmış olan ödenecek tutar ve "
 "uygulanan indirimleri görebilirsiniz."
+
+#, python-format
+#~ msgid "Advance Payment Discount"
+#~ msgstr "Peşin Ödeme İndirimi"
 
 #~ msgid "Notifications"
 #~ msgstr "Bildirimler"
@@ -1101,9 +1101,6 @@ msgstr ""
 
 #~ msgid "Sibling"
 #~ msgstr "Kardeş"
-
-#~ msgid "Sibling Payment Discount"
-#~ msgstr "Kardeş Ödeme İndirimi"
 
 #~ msgid "Siblings"
 #~ msgstr "Kardeşler"

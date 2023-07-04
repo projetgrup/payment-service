@@ -55,8 +55,8 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state_message': _('This transaction has been successfully posted to connector.')
             })
 
-    def _jetcheckout_done_postprocess(self):
-        super()._jetcheckout_done_postprocess()
+    def _paylox_done_postprocess(self):
+        super()._paylox_done_postprocess()
         if self.jetcheckout_connector_ok:
             self.write({
                 'jetcheckout_connector_state': True,

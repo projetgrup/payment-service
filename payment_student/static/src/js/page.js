@@ -5,6 +5,8 @@ import core from 'web.core';
 import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
 import systemPage from 'paylox.system.page';
+import fields from 'paylox.fields';
+import { format } from 'paylox.tools';
 
 const round_di = utils.round_decimals;
 const qweb = core.qweb;
@@ -12,92 +14,92 @@ const qweb = core.qweb;
 publicWidget.registry.payloxSystemStudent = systemPage.extend({
     selector: '.payment-student #wrapwrap',
     xmlDependencies: (systemPage.prototype.xmlDependencies || []).concat(
-        ["/payment_student/static/src/xml/templates.xml"]
+        ['/payment_student/static/src/xml/templates.xml']
     ),
 
     init: function() {
         this._super.apply(this, arguments);
-        this.rendered = false;
+        this.discount = {
+            single: new fields.float({
+                default: 0,
+            }),
+            maximum: new fields.float({
+                default: 0,
+            }),
+            sibling: new fields.float({
+                default: 0,
+            }),
+        };
     },
 
-    onChangePaid: function (ev) {
-        if(!this.rendered) {
-            this.$advance_discount = $('#advance_discount');
-            this.$maximum_discount = $('#maximum_discount').val();
-            this.$sibling_discount = $('#sibling_discount');
-            this.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
-            this.rendered = true;
-        }
+    _onChangePaid: function () {
+        const $item = $('input[type="checkbox"].payment-items:checked');
+        this.payment.items.checked = !!$item.length;
 
-        const $items = $('input[type="checkbox"].payment-items:checked');
-        if ($items.length) {
-            this.$items_all.prop('checked', true);
-        } else {
-            this.$items_all.prop('checked', false);
-        }
-
-        if (!this.$amount.length) {
+        if (!this.amount.exist) {
             return
         }
 
-        var self = this;
-        var student_ids = [];
-        var payment_ids = [];
-        var bursary_ids = [];
-        var students = [];
-        var payments = [];
-        var bursaries = [];
-        var siblings = [];
-        var discounts = [];
-        var subpayments = [];
-        var subsiblings = [];
-        var subbursaries = [];
-        var totals = [];
+        const self = this;
+        const studentIds = [];
+        const paymentIds = [];
+        const bursaryIds = [];
+        const students = [];
+        const payments = [];
+        const discounts = [];
+        const subpayments = [];
+        const subsiblings = [];
+        const subbursaries = [];
+        const totals = [];
 
-        $items.each(function () {
+        let bursaries = [];
+        let siblings = [];
+        let discount = 0;
+
+        $item.each(function () {
             const $el = $(this);
-            const student_id = parseInt($el.data('student-id')) || 0;
-            const bursary_id = parseInt($el.data('bursary-id')) || 0;
-            const term_id = parseInt($el.data('term-id')) || 0;
-            const type_id = parseInt($el.data('type-id')) || 0;
+            const studentId = parseInt($el.data('student-id')) || 0;
+            const bursaryId = parseInt($el.data('bursary-id')) || 0;
+            const termId = parseInt($el.data('term-id')) || 0;
+            const typeId = parseInt($el.data('type-id')) || 0;
 
-            if (!payment_ids.filter(x => x[0] === term_id && x[1] === type_id).length) {
-                payment_ids.push([term_id, type_id]);
+            if (!paymentIds.filter(x => x[0] === termId && x[1] === typeId).length) {
+                paymentIds.push([termId, typeId]);
                 payments.push({
-                    'term_id': term_id,
-                    'type_id': type_id,
-                    'name': $el.data('term-name') + ' | ' + $el.data('type-name'),
-                    'amount': [],
+                    termId: termId,
+                    typeId: typeId,
+                    name: $el.data('term-name') + ' | ' + $el.data('type-name'),
+                    amount: [],
                 });
             }
 
-            if (!bursary_ids.includes(bursary_id)) {
-                bursary_ids.push(bursary_id);
+            if (!bursaryIds.includes(bursaryId)) {
+                bursaryIds.push(bursaryId);
                 bursaries.push({
-                    'id': bursary_id,
-                    'name': $el.data('bursary-name'),
-                    'amount': [],
+                    id: bursaryId,
+                    name: $el.data('bursary-name'),
+                    amount: [],
                 });
             }
 
-            if (!student_ids.includes(student_id)) {
-                student_ids.push(student_id);
+            if (!studentIds.includes(studentId)) {
+                studentIds.push(studentId);
                 students.push({
-                    'id': student_id,
-                    'name': $el.data('student-name'),
+                    id: studentId,
+                    name: $el.data('student-name'),
                 });
             }
         });
 
-        student_ids.sort();
-        payment_ids.sort((x, y) => x[0] - y[0]);
-        bursary_ids.sort();
+        studentIds.sort();
+        paymentIds.sort((x, y) => x[0] - y[0]);
+        bursaryIds.sort();
         students.sort((x, y) => x.id - y.id);
-        payments.sort((x, y) => x.term_id - y.term_id);
-        payments.sort((x, y) => x.type_id - y.type_id);
+        payments.sort((x, y) => x.termId - y.termId);
+        payments.sort((x, y) => x.typeId - y.typeId);
         bursaries.sort((x, y) => x.id - y.id);
 
-        student_ids.forEach(function (student) {
+        studentIds.forEach(function (student) {
             payments.forEach(function (payment) {
                 payment.amount.push({id: student, amount: 0});
             });
@@ -112,57 +114,57 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
             totals.push({id: student, amount: 0});
         });
 
-        let advance_discount = parseFloat(this.$advance_discount.val()) || 0;
-        let sibling_discount = 0;
-        if (siblings.length > 1 || siblings.length === 1 && $items.filter('[data-sibling-paid="True"]').length) {
-            sibling_discount = parseFloat(this.$sibling_discount.val()) || 0;
+        let discountSingle = self.discount.single.value;
+        let discountSibling = 0;
+        if (siblings.length > 1 || siblings.length === 1 && $item.filter('[data-sibling-paid="True"]').length) {
+            discountSibling = self.discount.sibling.value;
         }
 
-        $items.each(function () {
+        $item.each(function () {
             const $el = $(this);
-            const student_id = parseInt($el.data('student-id')) || 0;
-            const bursary_id = parseInt($el.data('bursary-id')) || 0;
-            const term_id = parseInt($el.data('term-id')) || 0;
-            const type_id = parseInt($el.data('type-id')) || 0;
+            const studentId = parseInt($el.data('student-id')) || 0;
+            const bursaryId = parseInt($el.data('bursary-id')) || 0;
+            const termId = parseInt($el.data('term-id')) || 0;
+            const typeId = parseInt($el.data('type-id')) || 0;
             const amount = parseFloat($el.data('amount')) || 0;
-            const discount_amount = advance_discount / -100;
+            const amountDiscount = discountSingle / -100;
 
-            let sibling_amount = sibling_discount / -100;
-            let bursary_amount = parseFloat($el.data('bursary-amount')) || 0;
+            let amountSibling = discountSibling / -100;
+            let amountBursary = parseFloat($el.data('bursary-amount')) || 0;
 
-            if (self.$maximum_discount === '1') {
-                if (sibling_amount > bursary_amount) {
-                    sibling_amount = 0
+            if (self.discount.maximum.value == '1') {
+                if (amountSibling > amountBursary) {
+                    amountSibling = 0
                 } else {
-                    bursary_amount = 0
+                    amountBursary = 0
                 }
             }
 
-            const payment = payments.filter(t => t.term_id === term_id && t.type_id === type_id)[0];
-            const payment_item = payment.amount.filter(t => t.id === student_id)[0];
-            payment_item.amount += round_di(amount, self.precision);
+            const payment = payments.filter(t => t.termId === termId && t.typeId === typeId)[0];
+            const itemPayment = payment.amount.filter(t => t.id === studentId)[0];
+            itemPayment.amount += round_di(amount, self.currency.decimal);
 
-            const subpayment_item = subpayments.filter(s => s.id === student_id)[0];
-            subpayment_item.amount += round_di(amount, self.precision);
+            const itemSubpayment = subpayments.filter(s => s.id === studentId)[0];
+            itemSubpayment.amount += round_di(amount, self.currency.decimal);
 
-            const sibling_item = siblings.filter(s => s.id === student_id)[0];
-            sibling_item.amount = round_di(subpayment_item.amount * sibling_amount, self.precision);
+            const itemSibling = siblings.filter(s => s.id === studentId)[0];
+            itemSibling.amount = round_di(itemSubpayment.amount * amountSibling, self.currency.decimal);
 
-            const subsibling_item = subsiblings.filter(s => s.id === student_id)[0];
-            subsibling_item.amount = round_di(sibling_item.amount + subpayment_item.amount, self.precision);
+            const itemSubsibling = subsiblings.filter(s => s.id === studentId)[0];
+            itemSubsibling.amount = round_di(itemSibling.amount + itemSubpayment.amount, self.currency.decimal);
 
-            const bursary = bursaries.filter(b => b.id === bursary_id)[0];
-            const bursary_item = bursary.amount.filter(b => b.id === student_id)[0];
-            bursary_item.amount = round_di(subsibling_item.amount * bursary_amount, self.precision);
+            const bursary = bursaries.filter(b => b.id === bursaryId)[0];
+            const itemBursary = bursary.amount.filter(b => b.id === studentId)[0];
+            itemBursary.amount = round_di(itemSubsibling.amount * amountBursary, self.currency.decimal);
 
-            const subbursary_item = subbursaries.filter(s => s.id === student_id)[0];
-            subbursary_item.amount = round_di(bursary_item.amount + subsibling_item.amount, self.precision);
+            const itemSubbursary = subbursaries.filter(s => s.id === studentId)[0];
+            itemSubbursary.amount = round_di(itemBursary.amount + itemSubsibling.amount, self.currency.decimal);
 
-            const discount_item = discounts.filter(s => s.id === student_id)[0];
-            discount_item.amount = round_di(subbursary_item.amount * discount_amount, self.precision);
+            const itemDiscount = discounts.filter(s => s.id === studentId)[0];
+            itemDiscount.amount = round_di(itemSubbursary.amount * amountDiscount, self.currency.decimal);
 
-            const total_item = totals.filter(s => s.id === student_id)[0];
-            total_item.amount = round_di(discount_item.amount + subbursary_item.amount, self.precision);
+            const itemTotal = totals.filter(s => s.id === studentId)[0];
+            itemTotal.amount = round_di(itemDiscount.amount + itemSubbursary.amount, self.currency.decimal);
         });
 
         let amount = 0
@@ -198,6 +200,7 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
         discounts.forEach(function (e) {
             amount += e.amount;
         });
+        discount = amount;
         discounts.push({id: 0, amount: amount});
 
         amount = 0
@@ -217,42 +220,39 @@ publicWidget.registry.payloxSystemStudent = systemPage.extend({
             amount += e.amount;
         });
         subbursaries.push({id: 0, amount: amount});
-        const amount_installment = amount;
 
         amount = 0
         totals.forEach(function (e) {
             amount += e.amount;
         });
         totals.push({id: 0, amount: amount});
-        const amount_straight = amount;
 
-        if (student_ids.length) {
-            this.$pivot.html($(qweb.render('payment_student.pivot', {
-                'table': true,
-                'widget': this,
-                'students': students,
-                'payments': payments,
-                'bursaries': bursaries,
-                'siblings': siblings,
-                'discounts': discounts,
-                'subpayments': subpayments,
-                'subbursaries': subbursaries,
-                'subsiblings': subsiblings,
-                'totals': totals,
-                'advance_discount': advance_discount,
-                'sibling_discount': sibling_discount,
-                'has_payment': payment_ids.filter(s => s !== 0).length > 1,
-                'has_bursary': bursary_ids.filter(s => s !== 0).length,
-            })));
+        if (studentIds.length) {
+            this.payment.pivot.html = $(qweb.render('paylox.student.table', {
+                table: true,
+                format: format,
+                currency: this.currency,
+                students: students,
+                payments: payments,
+                bursaries: bursaries,
+                siblings: siblings,
+                discounts: discounts,
+                subpayments: subpayments,
+                subbursaries: subbursaries,
+                subsiblings: subsiblings,
+                totals: totals,
+                discountSingle: discountSingle,
+                discountSibling: discountSibling,
+                hasPayment: paymentIds.filter(s => s !== 0).length > 1,
+                hasBursary: bursaryIds.filter(s => s !== 0).length,
+            }));
         } else {
-            this.$pivot.html($(qweb.render('payment_student.pivot', {'table': false})));
+            this.payment.pivot.html = $(qweb.render('paylox.student.table', {'table': false}));
         };
 
-        const event = new Event('change');
-        this.$amount_installment.val(amount_installment);
-        this.$amount_installment[0].dispatchEvent(event);
-        this.$amount.val(amount_straight);
-        this.$amount[0].dispatchEvent(event);
+        const event = new Event('update');
+        this.amount.value = format.float(amount-discount);
+        this.amount.$[0].dispatchEvent(event);
     },
 
 });

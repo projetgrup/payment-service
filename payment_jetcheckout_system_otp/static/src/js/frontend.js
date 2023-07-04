@@ -1,97 +1,112 @@
-odoo.define('payment_jetcheckout_system_otp.otp_page', function (require) {
-"use strict";
+/** @odoo-module alias=paylox.system.otp.page **/
+'use strict';
 
-var config = require('web.config');
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
-var rpc = require('web.rpc');
-var framework = require('payment_jetcheckout.framework');
+import config from 'web.config';
+import core from 'web.core';
+import rpc from 'web.rpc';
+import publicWidget from 'web.public.widget';
+import framework from 'paylox.framework';
+import payloxPage from 'paylox.page';
+import fields from 'paylox.fields';
 
-var _t = core._t;
+const _t = core._t;
 
-publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
+publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
     selector: '.oe_otp_form',
-    events: {},
+
+    init: function (parent, options) {
+        this._super(parent, options);
+        this.page = 0;
+        this.duration = 0;
+        this.interval = undefined;
+        this.next = new fields.element({
+            events: [['click', this._onSend]],
+        });
+        this.previous = new fields.element({
+            events: [['click', this._onPrevious]],
+        });
+        this.submit = new fields.element({
+            events: [['click', this._onSubmit]],
+        });
+        this.resend = new fields.element({
+            events: [['click', this._onResend]],
+        });
+        this.code = new fields.string({
+            events: [['change', this._onChangeCode]],
+        });
+        this.login = new fields.string({
+            events: [['keyup', this._onKeyupLogin]],
+        });
+        this.card0 = new fields.element();
+        this.card1 = new fields.element();
+        this.id = new fields.string();
+        this.email = new fields.string();
+        this.phone = new fields.string();
+        this.vat = new fields.string();
+        this.ref = new fields.string();
+        this.countdown = new fields.string();
+    },
+
     start: function () {
-        var self = this;
+        const self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.page = 0;
-            self.duration = 0;
-            self.interval = undefined;
-            self.$next = document.getElementById('next');
-            self.$previous = document.getElementById('previous');
-            self.$card0 = document.getElementById('card0');
-            self.$card1 = document.getElementById('card1');
-            self.$validate = document.getElementById('submit');
-            self.$resend = document.getElementById('resend');
-            self.$login = document.getElementById('login');
-            self.$code = document.getElementById('code');
-            self.$id = document.getElementById('id');
-            self.$email = document.getElementById('email');
-            self.$phone = document.getElementById('phone');
-            self.$vat= document.getElementById('vat');
-            self.$ref= document.getElementById('ref');
-            self.$countdown = document.getElementById('countdown');
-            self.$next.addEventListener('click', self._onSend.bind(self));
-            self.$previous.addEventListener('click', self._onPrevious.bind(self));
-            self.$validate.addEventListener('click', self._onValidate.bind(self));
-            self.$resend.addEventListener('click', self._onResend.bind(self));
-            self.$code.addEventListener('change', self._onChangeField.bind(self));
+            payloxPage.prototype._start.apply(self);
         });
     },
 
     _onPrevious: function (ev) {
         ev.stopPropagation();
-        ev.preventDefault();        
-        window.location.reload();    
+        ev.preventDefault();
+        window.location.reload();
     },
 
     _onSend: function (ev) {
         ev.stopPropagation();
-        ev.preventDefault();        
-        if (!this.$login.value) {
+        ev.preventDefault();
+
+        if (!this.login.value) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
-                message: _t('Please enter your email address or phone number'),
+                message: _t('Please enter your email address or phone number or reference code'),
             });
-            this.$login.focus();
+            this.login.$.focus();
             return;
         }
 
         framework.showLoading();
-        var self = this;
+        const self = this;
         rpc.query({
             route: '/otp/prepare',
             params: this._getParams(),
         }).then(function (result) {
-            self.$previous.classList.remove('d-none');
-            self.$validate.classList.remove('d-none');
-            self.$resend.classList.add('d-none');
             self.duration = 120;
-            self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
+            self.previous.$.removeClass('d-none');
+            self.submit.$.removeClass('d-none');
+            self.resend.$.addClass('d-none');
+            self.countdown.$.html(self.duration + ' ' + _t('seconds'));
             self.interval = setInterval(function() {
                 if (self.duration === 0) {
                     clearInterval(self.interval);
-                    self.$countdown.innerHTML = _t('expired');
-                    self.$validate.classList.add('d-none');
-                    self.$resend.classList.remove('d-none');
+                    self.countdown.html = _t('expired');
+                    self.submit.$.addClass('d-none');
+                    self.resend.$.addClass('d-none');
                     return;
                 }
                 self.duration -= 1;
-                self.$countdown.innerHTML = self.duration + ' ' + _t('seconds');
+                self.countdown.html = self.duration + ' ' + _t('seconds');
             }, 1000);
-            self.$id.value = result.id;
-            self.$email.innerHTML = result.email;
-            self.$phone.innerHTML = result.phone;
-            self.$vat.innerHTML = result.vat;
-            self.$ref.innerHTML = result.ref;
+            self.id.value = result.id;
+            self.email.html = result.email;
+            self.phone.html = result.phone;
+            self.vat.html = result.vat;
+            self.ref.html = result.ref;
             if (self.page !== 1) {
                 self.page = 1;
-                self.$next.classList.add('d-none');
-                self.$validate.classList.remove('d-none');
-                self.$card0.classList.add('fly-left');
-                self.$card1.classList.remove('fly-right');
+                self.next.$.addClass('d-none');
+                self.submit.$.removeClass('d-none');
+                self.card0.$.addClass('fly-left');
+                self.card1.$.removeClass('fly-right');
             }
             framework.hideLoading();
         }).guardedCatch(function (error) {
@@ -111,26 +126,26 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (this.duration <= 0) {
-            this._onSend(ev)
+            this._onSend(ev);
         }
     },
 
-    _onValidate: function (ev) {
+    _onSubmit: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         
         const codeRegex = /^[0-9]\d{3}$/;
-        if (!codeRegex.test(this.$code.value)) {
+        if (!codeRegex.test(this.code.value)) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Code must be 4 digits'),
             });
-            this.$code.focus();
+            this.code.$.focus();
             return;
         }
 
-        var self = this;
+        const self = this;
         framework.showLoading();
         rpc.query({
             route: '/otp/validate',
@@ -143,7 +158,7 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
                     message: result.error,
                 });
                 framework.hideLoading();
-                self.$code.focus();
+                self.code.$.focus();
             } else {
                 window.location = result.url;
             }
@@ -160,18 +175,29 @@ publicWidget.registry.JetcheckoutOtpForm = publicWidget.Widget.extend({
         });
     },
 
-    _getParams: function () {
-        return {
-            login: this.$login.value,
-            code: this.$code.value,
-            id: this.$id.value,
+    _onChangeCode: function (ev) {
+        $(ev.target).removeClass('border-danger');
+        const $label = $('label[for=' + $(ev.target).prop('id') + ']');
+        $label.removeClass('text-danger');
+    },
+
+    _onKeyupCode: function (ev) {
+        if (ev.key === 'Enter') {
+            this._onSubmit(ev);
         }
     },
 
-    _onChangeField: function (ev) {
-        ev.target.classList.remove('border-danger');
-        const $label = document.querySelector('label[for=' + ev.target.attributes.id.value + ']');
-        $label.classList.remove('text-danger');
+    _onKeyupLogin: function (ev) {
+        if (ev.key === 'Enter') {
+            this._onSend(ev);
+        }
     },
-});
+
+    _getParams: function () {
+        return {
+            login: this.login.value,
+            code: this.code.value,
+            id: this.id.value,
+        }
+    },
 });

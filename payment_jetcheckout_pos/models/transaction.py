@@ -11,16 +11,16 @@ class PaymentTransaction(models.Model):
     pos_method_id = fields.Many2one('pos.payment.method', string='PoS Payment Method', readonly=True)
     pos_payment_id = fields.Many2one('pos.payment', string='PoS Payment', readonly=True)
 
-    def _jetcheckout_refund_postprocess_values(self, amount=0):
-        res = super()._jetcheckout_refund_postprocess_values(amount=amount)
+    def _paylox_refund_postprocess_values(self, amount=0):
+        res = super()._paylox_refund_postprocess_values(amount=amount)
         if self.env.context.get('method'):
             res['pos_method_id'] = self.env.context['method']
         return res
 
-    def _jetcheckout_api_refund(self, amount=0.0, **kwargs):
+    def _paylox_api_refund(self, amount=0.0, **kwargs):
         if self.env.context.get('skip_request'):
-            return self._jetcheckout_refund_postprocess(amount)
-        return super()._jetcheckout_api_refund(amount=amount, **kwargs)
+            return self._paylox_refund_postprocess(amount)
+        return super()._paylox_api_refund(amount=amount, **kwargs)
 
     def _prepare_pos_values(self, values={}):
         if 'pos_order_id' in values:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, _
 
-class PaymentTokenJetcheckout(models.Model):
+class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     jetcheckout_card_userkey = fields.Char('Credit Card User Key')

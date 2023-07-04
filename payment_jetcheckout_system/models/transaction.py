@@ -5,16 +5,18 @@ from odoo import fields, models, _
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
+    _name = 'payment.transaction'
+    _inherit = ['payment.transaction', 'mail.thread']
 
     def _compute_item_count(self):
         for tx in self:
-            tx.jetcheckout_item_count = len(tx.jetcheckout_item_ids)
+            tx.paylox_item_count = len(tx.jetcheckout_item_ids)
 
+    state = fields.Selection(tracking=True)
     system = fields.Selection(related='company_id.system')
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
     jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
-    jetcheckout_item_count = fields.Integer(compute='_compute_item_count')
+    paylox_item_count = fields.Integer(compute='_compute_item_count')
     jetcheckout_webhook_ok = fields.Boolean('Webhook Notification', readonly=True)
     jetcheckout_webhook_state = fields.Boolean('Webhook Notification State', readonly=True)
     jetcheckout_webhook_state_message = fields.Text('Webhook Notification State Message', readonly=True)
@@ -25,7 +27,7 @@ class PaymentTransaction(models.Model):
 
     def action_items(self):
         self.ensure_one()
-        system = self.company_id.system
+        system = self.company_id.system or self.partner_id.system or 'jetcheckout_system'
         action = self.env.ref('payment_%s.action_item' % system).sudo().read()[0]
         action['domain'] = [('id', 'in', self.jetcheckout_item_ids.ids)]
         action['context'] = {'create': False, 'edit': False, 'delete': False}
@@ -99,12 +101,12 @@ class PaymentTransaction(models.Model):
             }
         }
 
-    def _jetcheckout_cancel_postprocess(self):
-        super()._jetcheckout_cancel_postprocess()
+    def _paylox_cancel_postprocess(self):
+        super()._paylox_cancel_postprocess()
         self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
 
-    def _jetcheckout_done_postprocess(self):
-        super()._jetcheckout_done_postprocess()
+    def _paylox_done_postprocess(self):
+        super()._paylox_done_postprocess()
         self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
 
         webhooks = self.company_id.notif_webhook_ids
