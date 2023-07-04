@@ -423,12 +423,12 @@ class Partner(models.Model):
 
         params = self.env['ir.config_parameter'].sudo().get_param
         mail_template = self.env['mail.template'].sudo().search([('company_id', '=',company.id)], limit=1)
-        if not mail_template and params('jetcheckout.email.default'):
-            id = int(params('jetcheckout.email.template', '0'))
+        if not mail_template and params('paylox.email.default'):
+            id = int(params('paylox.email.template', '0'))
             mail_template = self.env['mail.template'].browse(id)
         sms_template = self.env['sms.template'].sudo().search([('company_id', '=', company.id)], limit=1)
-        if not sms_template and params('jetcheckout.sms.default'):
-            id = int(params('jetcheckout.sms.template', '0'))
+        if not sms_template and params('paylox.sms.default'):
+            id = int(params('paylox.sms.template', '0'))
             sms_template = self.env['sms.template'].browse(id)
  
         type_email = self.env.ref('payment_jetcheckout_system.send_type_email')

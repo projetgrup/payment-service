@@ -47,8 +47,8 @@ class PaymentPayloxSendType(models.Model):
                     message = _('There is not any outgoing mail server set')
             elif type.code == 'sms':
                 provider = self.env['sms.provider'].get(type.company_id.id)
-                if not provider and params('jetcheckout.sms.default'):
-                    id = int(params('jetcheckout.sms.provider', '0'))
+                if not provider and params('paylox.sms.default'):
+                    id = int(params('paylox.sms.provider', '0'))
                     provider = self.env['sms.provider'].browse(id)
 
                 if provider:
@@ -219,13 +219,13 @@ class PaymentPayloxSend(models.TransientModel):
 
         params = self.env['ir.config_parameter'].sudo().get_param
         mail_server = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1)
-        if not mail_server and params('jetcheckout.email.default'):
-            id = int(params('jetcheckout.email.server', '0'))
+        if not mail_server and params('paylox.email.default'):
+            id = int(params('paylox.email.server', '0'))
             mail_server = self.env['ir.mail_server'].browse(id)
 
         sms_provider = self.env['sms.provider'].get(company.id)
-        if not sms_provider and params('jetcheckout.sms.default'):
-            id = int(params('jetcheckout.sms.provider', '0'))
+        if not sms_provider and params('paylox.sms.default'):
+            id = int(params('paylox.sms.provider', '0'))
             sms_provider = self.env['sms.provider'].browse(id)
 
         email_from = user.email_formatted or mail_server.email_formatted

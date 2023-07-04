@@ -45,7 +45,7 @@
                         Transaction Owner Company : <t t-out="ctx['partner'].name or ''"/><br/>
                         Transaction Date : <t t-out="format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')">01.01.2023 00:00:00</t><br/>
                         Transaction Amount : <t t-out="format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''"/><br/>
-                        Installment Count : <t t-out="ctx['tx'].jetcheckout_installment_description_long or ''"/><br/><br/>
+                        Installment Count : <t t-out="ctx['tx'].with_context(lang=ctx['lang']).jetcheckout_installment_description_long or ''"/><br/><br/>
                         <div style="margin: 16px 0px 16px 0px; text-align: center;">
                             <a t-att-href="'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
                                 <strong>Receipt</strong>
