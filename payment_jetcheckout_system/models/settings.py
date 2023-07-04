@@ -55,10 +55,10 @@ class PaymentSettingsNotificationWebhook(models.Model):
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    payment_default_email_setting = fields.Boolean(string='Payment Default Email Settings', config_parameter='jetcheckout.email.default')
-    payment_default_email_server = fields.Many2one('ir.mail_server', string='Payment Default Email Server', config_parameter='jetcheckout.email.server')
-    payment_default_email_template = fields.Many2one('mail.template', string='Payment Default Email Template', config_parameter='jetcheckout.email.template')
-    payment_default_sms_setting = fields.Boolean(string='Payment Default SMS Settings', config_parameter='jetcheckout.sms.default')
-    payment_default_sms_provider = fields.Many2one('sms.provider', string='Payment Default SMS Provider', config_parameter='jetcheckout.sms.provider')
-    payment_default_sms_template = fields.Many2one('sms.template', string='Payment Default SMS Settings', config_parameter='jetcheckout.sms.template')
+    payment_default_email_setting = fields.Boolean(string='Payment Default Email Settings', config_parameter='paylox.email.default')
+    payment_default_email_server = fields.Many2one('ir.mail_server', string='Payment Default Email Server', config_parameter='paylox.email.server')
+    payment_default_email_template = fields.Many2one('mail.template', string='Payment Default Email Template', config_parameter='paylox.email.template')
+    payment_default_sms_setting = fields.Boolean(string='Payment Default SMS Settings', config_parameter='paylox.sms.default')
+    payment_default_sms_provider = fields.Many2one('sms.provider', string='Payment Default SMS Provider', config_parameter='paylox.sms.provider')
+    payment_default_sms_template = fields.Many2one('sms.template', string='Payment Default SMS Settings', config_parameter='paylox.sms.template')
  
