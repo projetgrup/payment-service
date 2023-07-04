@@ -14,7 +14,7 @@
                 <input type="hidden" value="0" field="id"/>
                 <button class="btn-primary bg-primary text-white position-absolute rounded-lg" field="next">Next<i class="fa fa-chevron-right ml-2" t-translations="off"/></button>
                 <button class="btn-secondary position-absolute d-none rounded-lg" field="previous"><i class="fa fa-chevron-left mr-2" t-translations="off"/>Previous</button>
-                <button class="btn-primary bg-primary text-white position-absolute d-none rounded-lg" field="submit">Sign Up<i class="fa fa-check ml-2" t-translations="off"/></button>
+                <button class="btn-primary bg-primary text-white position-absolute d-none rounded-lg" field="submit">Login<i class="fa fa-check ml-2" t-translations="off"/></button>
                 <div class="card-grid mt-lg-0 mt-5">
                     <div class="field-card" field="card0">
                         <div class="bar-caption font-weight-bold text-center w-100 h5 text-700 mb-4">Credentials</div>

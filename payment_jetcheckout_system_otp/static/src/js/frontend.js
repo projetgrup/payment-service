@@ -32,7 +32,7 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
             events: [['click', this._onResend]],
         });
         this.code = new fields.string({
-            events: [['change', this._onChangeCode]],
+            events: [['change', this._onChangeCode], ['keyup', this._onKeyupSubmit]],
         });
         this.login = new fields.string({
             events: [['keyup', this._onKeyupLogin]],
@@ -190,6 +190,12 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
     _onKeyupLogin: function (ev) {
         if (ev.key === 'Enter') {
             this._onSend(ev);
+        }
+    },
+
+    _onKeyupSubmit: function (ev) {
+        if (ev.key === 'Enter') {
+            this._onSubmit(ev);
         }
     },
 
