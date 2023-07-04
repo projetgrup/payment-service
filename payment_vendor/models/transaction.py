@@ -47,6 +47,7 @@ class PaymentTransaction(models.Model):
                 for partner in partners:
                     context.update({
                         'tz': partner.tz,
+                        'lang': partner.lang,
                     })
                     template.with_context(context).send_mail(partner.id, force_send=True, email_values={
                         'is_notification': True,
