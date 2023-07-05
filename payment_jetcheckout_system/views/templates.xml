@@ -95,18 +95,18 @@
 
     <template id="payment_state" name="Payment System Page Result">
         <t t-if="tx">
-            <div t-if="tx.state == 'error'" t-attf-class="row alert alert-danger text-center justify-content-center my-2 #{classes}">
+            <div t-if="tx.state == 'error'" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 my-2 #{classes}">
                 <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
                 <small class="d-block mt-1" t-esc="tx.state_message"/>
             </div>
-            <div t-elif="tx.state == 'done'" t-attf-class="row alert alert-success text-center justify-content-center my-2 #{classes}">
+            <div t-elif="tx.state == 'done'" t-attf-class="row alert alert-success text-center justify-content-center flex-column mt-4 my-2 #{classes}">
                 <div class="w-100">Your transaction has been succeeded. Thank you.</div>
                 <div class="row mt-2 justify-content-center">
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
                 </div>
             </div>
-            <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center my-2 #{classes}">
+            <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 my-2 #{classes}">
                 <div>Your transaction status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
                 <small class="d-block mt-1" t-esc="tx.state_message"/>
             </div>
