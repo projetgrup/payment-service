@@ -357,14 +357,14 @@
                     <div t-if="not s2s" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div t-attf-class="payment-gradient border card p-3 #{'installment-rows' if not type or type == 'installment' else 'installment-cols' if type == 'campaign' else ''}">
+                    <div t-attf-class="payment-gradient border card p-3 #{'installment-cols' if type == 'campaign' else 'installment-rows'}">
                         <div>
                             <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
                                 <t t-call="payment_jetcheckout.payment_installment_header"/>
                             </div>
                             <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div class="d-none installment-row  overflow-auto" t-att-data-type="'installment' if not type or type == 'installment' else 'campaign' if type == 'campaign' else ''" field="installment.row"/>
+                        <div class="d-none installment-row overflow-auto" t-att-data-type="'campaign' if type == 'campaign' else 'installment'" field="installment.row"/>
                         <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>

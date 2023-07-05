@@ -57,7 +57,28 @@
     </t>
 
     <t t-name="paylox.installment.row">
-        <t t-if="!type || type === 'installment'">
+        <t t-if="type === 'campaign'">
+            <t t-foreach="rows" t-as="row">
+                <div class="installment-line">
+                    <div>
+                        <span t-esc="row.id"/>
+                    </div>
+                    <t t-foreach="row.ids" t-as="r">
+                        <t t-if="r.id">
+                            <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
+                            <div t-attf-class="installment-cell text-center #{r.id === 1 &amp;&amp; r.index === 0 ? 'installment-selected' : ''}">
+                                <input class="d-none" type="radio" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
+                                <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="text-center"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
             <t t-foreach="rows" t-as="r">
                 <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
                 <div t-attf-class="installment-line #{r.id === 1 ? 'installment-selected' : ''}">
@@ -83,37 +104,10 @@
                 </div>
             </t>
         </t>
-        <t t-else="">
-            <t t-foreach="rows" t-as="row">
-                <div class="installment-line">
-                    <div>
-                        <span t-esc="row.id"/>
-                    </div>
-                    <t t-foreach="row.ids" t-as="r">
-                        <t t-if="r.id">
-                            <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-                            <div t-attf-class="installment-cell text-center #{r.id === 1 &amp;&amp; r.index === 0 ? 'installment-selected' : ''}">
-                                <input class="d-none" type="radio" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
-                                <span t-esc="format.currency(val, position, symbol, decimal)"/>
-                            </div>
-                        </t>
-                        <t t-else="">
-                            <div class="text-center"/>
-                        </t>
-                    </t>
-                </div>
-            </t>
-        </t>
     </t>
 
     <t t-name="paylox.installment.col">
-        <t t-if="!type || type === 'installment'">
-            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
-            <div t-if="!s2s" class="text-center">Rate</div>
-            <div class="text-center">Monthly</div>
-            <div class="text-center">Total</div>
-        </t>
-        <t t-else="">
+        <t t-if="type === 'campaign'">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <t t-if="!cols.length">
                 <div class="text-center">Campaign</div>
@@ -123,6 +117,12 @@
                     <div class="text-center" t-esc="col"/>
                 </t>
             </t>
+        </t>
+        <t t-else="">
+            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
+            <div t-if="!s2s" class="text-center">Rate</div>
+            <div class="text-center">Monthly</div>
+            <div class="text-center">Total</div>
         </t>
     </t>
 
