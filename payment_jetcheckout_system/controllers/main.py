@@ -165,7 +165,7 @@ class PayloxSystemController(Controller):
     def page_system_portal_return(self, **kwargs):
         kwargs['result_url'] = '/my/payment/result'
         url, tx, status = self._process(**kwargs)
-        if tx.jetcheckout_order_id:
+        if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
         return werkzeug.utils.redirect(url)
 
