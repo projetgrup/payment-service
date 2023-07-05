@@ -88,7 +88,7 @@ class PayloxSystemController(Controller):
         partner = self._get_parent(token)
         transaction = None
         if '' in kwargs:
-            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id','=',kwargs[''])], limit=1)
+            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
@@ -164,14 +164,18 @@ class PayloxSystemController(Controller):
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def page_system_portal_return(self, **kwargs):
         kwargs['result_url'] = '/my/payment/result'
-        self._process(**kwargs)
-        return werkzeug.utils.redirect(kwargs['result_url'])
+        url, tx, status = self._process(**kwargs)
+        if tx.jetcheckout_order_id:
+            url += '?=%s' % tx.jetcheckout_order_id
+        return werkzeug.utils.redirect(url)
 
     @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_system_result(self, **kwargs):
         values = self._prepare()
-        tx = self._get('tx', 0)
-        values['tx'] = request.env['payment.transaction'].sudo().browse(tx)
+        if '' in kwargs:
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+        else:
+            values['tx'] = request.env['payment.transaction'].sudo().browse(self._get('tx', 0))
         self._del()
         return request.render('payment_jetcheckout_system.page_result', values)
 

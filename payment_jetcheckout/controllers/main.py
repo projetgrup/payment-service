@@ -31,32 +31,31 @@ class PaymentPortal(portal.PaymentPortal):
 class PayloxController(http.Controller):
 
     @staticmethod
-    def _get(key=None, default=None):
-        if not key:
-            if 'paylox' in request.session:
-                return request.session['paylox']
-            return None
+    def _get(key, default=None):
         try:
-            return request.session['paylox'][key]
+            return request.session['_paylox_%s' % key]
         except:
             return default
 
     @staticmethod
     def _set(key, value):
         try:
-            request.session['paylox'][key] = value
+            request.session['_paylox_%s' % key] = value
         except:
-            try:
-                request.session['paylox'] = {key: value}
-            except:
-                pass
+            pass
 
     @staticmethod
     def _del(key=None):
-        if not key and 'paylox' in request.session:
-            del request.session['paylox']
         try:
-            del request.session['paylox'][key]
+            if not key:
+                ks = []
+                for k in request.session.keys():
+                    if k.startswith('_paylox'):
+                        ks.append(k)
+                for k in ks:
+                    del request.session[k]
+            else:
+                del request.session['_paylox_%s' % key]
         except:
             pass
 
@@ -694,6 +693,8 @@ class PayloxController(http.Controller):
     def finalize(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._process(**kwargs)
+        if tx.jetcheckout_order_id:
+            url += '?=%s' % tx.jetcheckout_order_id
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)
@@ -723,8 +724,10 @@ class PayloxController(http.Controller):
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result(self, **kwargs):
         values = self._prepare()
-        tx = self._get('tx', 0)
-        values['tx'] = request.env['payment.transaction'].sudo().browse(tx)
+        if '' in kwargs:
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+        else:
+            values['tx'] = request.env['payment.transaction'].sudo().browse(self._get('tx', 0))
         self._del()
         return request.render('payment_jetcheckout.page_result', values)
 

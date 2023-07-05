@@ -194,20 +194,24 @@
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                     <div class="px-3 py-4 bg-white card my-4 w-100">
-                        <h4 t-if="tx != False and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">
+                        <h4 t-if="tx and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">
                             <div class="text-center w-100">Payment is successful. Thank you.</div>
                             <div class="row w-100 mt-2">
                                 <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
                                 <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
                             </div>
                         </h4>
-                        <h4 t-elif="tx != False and tx.state == 'pending'" class="font-weight-bold m-3 p-3 text-center w-100">
+                        <h4 t-elif="tx and tx.state == 'pending'" class="font-weight-bold m-3 p-3 text-center w-100">
                             <div class="mb-3 text-center w-100">Payment is successful, but it will be processed later.</div>
                             <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
                         </h4>
+                        <h4 t-elif="not tx" class="font-weight-bold m-3 p-3 text-center w-100">
+                            <div class="mb-3 text-center w-100">Payment is not exist.</div>
+                            <span class="font-italic font-weight-light btn-sm">A technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                        </h4>
                         <h4 t-else="" class="font-weight-bold m-3 p-3 text-center w-100">
                             <div class="mb-3 text-center w-100">Payment is not successful. Please try again later.</div>
-                            <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
+                            <span class="font-italic font-weight-light btn-sm">A technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
                             <span t-esc="tx.state_message" class="font-italic font-weight-light btn-sm"/>
                         </h4>
                     </div>
