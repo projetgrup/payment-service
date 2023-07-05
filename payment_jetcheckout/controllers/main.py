@@ -6,6 +6,7 @@ import uuid
 import base64
 import hashlib
 import logging
+import re
 from collections import OrderedDict
 
 from odoo import fields, http, SUPERUSER_ID, _
@@ -327,7 +328,7 @@ class PayloxController(http.Controller):
         return values
 
     @staticmethod
-    def _get_campaignss(**kwargs):
+    def _get_campaigns_all(**kwargs):
         acquirer = PayloxController._get_acquirer(acquirer=kwargs['acquirer'])
         currency = request.env.company.currency_id
         url = '%s/api/v1/prepayment/installment_options' % acquirer._get_paylox_api_url()
@@ -693,7 +694,7 @@ class PayloxController(http.Controller):
     def finalize(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._process(**kwargs)
-        if tx.jetcheckout_order_id:
+        if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
         return werkzeug.utils.redirect(url)
 
@@ -725,9 +726,11 @@ class PayloxController(http.Controller):
     def result(self, **kwargs):
         values = self._prepare()
         if '' in kwargs:
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
         else:
-            values['tx'] = request.env['payment.transaction'].sudo().browse(self._get('tx', 0))
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
         self._del()
         return request.render('payment_jetcheckout.page_result', values)
 
