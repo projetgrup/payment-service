@@ -414,9 +414,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 const $button = $('.modal-body button.o_button_select_campaign');
                 $button.click(function(e) {
                     const campaign = e.currentTarget.dataset.name;
-                    $('span[id=campaign]').val(campaign || '-');
+                    $('span#campaign').html(campaign || '-');
                     self.campaign.name.value = campaign;
-                    self._getInstallment();
+                    self._getInstallment(true);
                     popup.destroy();
                 });
             });
@@ -492,8 +492,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _getInstallment: async function () {
+    _getInstallment: async function (force=false) {
         const self = this;
+        if (force) {
+            this.card.bin = '';
+        }
+ 
         if (!this.card.number.value) {
             if (self.card.sample.exist) {
                 document.getElementById('svgnumber').innerHTML = '0123 4567 8910 1112';
