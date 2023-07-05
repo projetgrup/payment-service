@@ -401,15 +401,15 @@
     </template>
 
     <template id="payment_installment_header" name="Paylox Installment Table Header">
-        <t t-if="not type or type == 'installment'">
+        <t t-if="type == 'campaign'">
+            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
+            <div class="text-center">Campaign</div>
+        </t>
+        <t t-else="">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div t-if="not s2s" class="text-center">Rate</div>
             <div class="text-center">Monthly</div>
             <div class="text-center">Total</div>
-        </t>
-        <t t-else="">
-            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
-            <div class="text-center">Campaign</div>
         </t>
     </template>
 
