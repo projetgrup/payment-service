@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import werkzeug
 import base64
+import re
 from urllib.parse import urlparse
 
 from odoo import http, _
@@ -88,7 +89,8 @@ class PayloxSystemController(Controller):
         partner = self._get_parent(token)
         transaction = None
         if '' in kwargs:
-            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
@@ -173,9 +175,11 @@ class PayloxSystemController(Controller):
     def page_system_result(self, **kwargs):
         values = self._prepare()
         if '' in kwargs:
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
         else:
-            values['tx'] = request.env['payment.transaction'].sudo().browse(self._get('tx', 0))
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
         self._del()
         return request.render('payment_jetcheckout_system.page_result', values)
 

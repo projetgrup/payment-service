@@ -6,6 +6,7 @@ import uuid
 import base64
 import hashlib
 import logging
+import re
 from collections import OrderedDict
 
 from odoo import fields, http, SUPERUSER_ID, _
@@ -725,9 +726,11 @@ class PayloxController(http.Controller):
     def result(self, **kwargs):
         values = self._prepare()
         if '' in kwargs:
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs[''])], limit=1)
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
         else:
-            values['tx'] = request.env['payment.transaction'].sudo().browse(self._get('tx', 0))
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
         self._del()
         return request.render('payment_jetcheckout.page_result', values)
 
