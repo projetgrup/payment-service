@@ -512,6 +512,7 @@ class PayloxController(http.Controller):
         if rate > 0 and installment == 1:
             amount = amount * (100 - rate) / 100
 
+        raise Exception(installment)
         installment = next(filter(lambda x: x['id'] == installment, rows), None)
         if 'ids' in installment:
             index = kwargs['installment']['index']
