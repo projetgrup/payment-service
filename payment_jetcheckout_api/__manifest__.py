@@ -5,6 +5,7 @@
     'name': 'Paylox Payment API',
     'version': '1.0',
     'author': 'Projet',
+    'sequence': 1454,
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
     'category': 'Accounting/Payment Acquirers',

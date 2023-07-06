@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="payment_sidebar" inherit_id="payment_jetcheckout.payment_sidebar">
-        <xpath expr="//span[@name='partner']" position="replace">
-            <span t-if="tx and tx.jetcheckout_api_ok" t-esc="tx.partner_name" class="text-600"/>
-            <span t-else="" name="partner" t-esc="partner.name" class="text-600"/>
-        </xpath>
-    </template>
-
     <template id="page_result" inherit_id="payment_jetcheckout.page_result">
         <xpath expr="//t[@t-set='title']" position="before">
             <t t-if="tx.jetcheckout_api_ok" t-set="no_footer" t-value="True"/>

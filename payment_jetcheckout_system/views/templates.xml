@@ -121,7 +121,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <div class="header row mx-0 card border p-2 px-lg-2">
+            <div class="header row mx-0 bg-white border p-2 px-lg-2">
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>

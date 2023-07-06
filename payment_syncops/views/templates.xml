@@ -7,9 +7,6 @@
                 <a role="button" t-attf-class="btn btn-sm float-right font-weight-bold text-primary o_connector_partner_reset #{'' if partner_connector['connector'] and show_reset else 'd-none'}" href="#"><i class="fa fa-undo mr-1" t-translation="off"/>Reset</a>
             </t>
         </xpath>
-        <xpath expr="//span[@name='partner']" position="attributes">
-            <attribute name="t-esc">partner_connector['name']</attribute>
-        </xpath>
     </template>
 
     <template id="payment_balance" name="Payment System Page - syncOPS Partner Balance">
@@ -32,12 +29,12 @@
             </div>
             <div>
                 <t t-foreach="balances" t-as="balance">
-                    <div t-attf-class="d-flex flex-row justify-content-between w-100 #{'text-danger' if balance['amount'] &lt; 0 else 'text-600'}">
+                    <div t-attf-class="d-flex flex-row justify-content-between w-100 #{'text-danger' if balance['value'] &lt; 0 else 'text-600'}">
                         <div>
-                            <span t-esc="balance['amount']" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                            <span t-esc="balance['amount']"/>
                         </div>
                         <div>
-                            <span t-esc="balance['amount_total']" t-options="{'widget': 'monetary', 'display_currency': balance['currency']}"/>
+                            <span t-esc="balance['amount_total']"/>
                             <i t-attf-class="fa fa-info-circle #{'' if balance['note'] else 'text-white'}" t-att-title="balance['note']"/>
                         </div>
                     </div>

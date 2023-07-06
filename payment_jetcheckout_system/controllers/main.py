@@ -67,6 +67,7 @@ class PayloxSystemController(Controller):
         return {
             'ok': True,
             'partner': partner,
+            'partner_name': partner.name,
             'company': company,
             'website': request.website,
             'footer': request.website.payment_footer,

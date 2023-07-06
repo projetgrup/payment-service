@@ -8,7 +8,7 @@ from datetime import datetime
 from odoo import http, fields, _
 from odoo.http import content_disposition, request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
-from odoo.tools.misc import xlsxwriter
+from odoo.tools.misc import xlsxwriter, formatLang
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
@@ -70,16 +70,16 @@ class PayloxSyncopsController(Controller):
         return values
  
     def _connector_get_partner(self, partner=None):
-        if self._get('syncops'):
-            partner = self._get('syncops')
+        data = self._get('syncops')
+        if data:
             return {
-                'name': partner['name'],
-                'vat': partner['vat'],
-                'ref': partner['ref'],
+                'name': data['name'],
+                'vat': data['vat'],
+                'ref': data['ref'],
                 'connector': True,
             }
         else:
-            partner = partner or request.env.user.sudo().partner_id
+            partner = partner and partner.commercial_partner_id or request.env.user.sudo().partner_id.commercial_partner_id
             return {
                 'name': partner.name,
                 'vat': partner.vat,
@@ -110,8 +110,21 @@ class PayloxSyncopsController(Controller):
 
                 amount = isinstance(res.get('amount'), float) and res['amount'] or 0
                 amount_total = isinstance(res.get('amount_total'), float) and res['amount_total'] or 0
+                balances.append({
+                    'value': amount,
+                    'amount': formatLang(request.env, amount, currency_obj=currency),
+                    'amount_total': formatLang(request.env, amount_total, currency_obj=currency),
+                    'note': res.get('note', ''),
+                })
 
-                balances.append({'amount': amount, 'currency': currency, 'amount_total': amount_total, 'note': res.get('note', '')})
+        if not balances:
+            balances.append({
+                'value': 0,
+                'amount': formatLang(request.env, 0, currency_obj=company.currency_id),
+                'amount_total': formatLang(request.env, 0, currency_obj=company.currency_id),
+                'note': '',
+            })
+
         return balances
 
     def _connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
@@ -164,8 +177,8 @@ class PayloxSyncopsController(Controller):
         company = company or request.env.company
         return request.env['syncops.connector'].sudo()._count('payment_get_partner_ledger', company=company)
 
-    def _connector_can_show_partner_balance(self, balance):
-        return bool(balance)
+    def _connector_can_show_partner_balance(self):
+        return True
 
     def _connector_can_access_partner_list(self, company=None):
         user = request.env.user.sudo()
@@ -196,11 +209,14 @@ class PayloxSyncopsController(Controller):
     def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
         values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
         partner = self._connector_get_partner(partner)
-        values['balances'] = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
-        values['show_balance'] = self._connector_can_show_partner_balance(values['balances'])
-        values['show_ledger'] = self._connector_can_show_partner_ledger(company)
-        values['show_partners'] = self._connector_can_access_partner_list(company)
-        values['partner_connector'] = partner
+        values.update({
+            'balances': self._connector_get_partner_balance(partner['vat'], partner['ref'], company),
+            'show_balance': self._connector_can_show_partner_balance(),
+            'show_ledger': self._connector_can_show_partner_ledger(company),
+            'show_partners': self._connector_can_access_partner_list(company),
+            'partner_connector': partner,
+            'partner_name': partner['name'],
+        })
         return values
 
     @http.route(['/my/payment/ledger'], type='http', auth='user', website=True)
@@ -273,11 +289,11 @@ class PayloxSyncopsController(Controller):
 
         balances = self._connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
         return {
-            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_balance', {
-                'balances': balances,
-                'show_balance': self._connector_can_show_partner_balance(balances),
-                'show_ledger': self._connector_can_show_partner_ledger(),
-            })
+            'name': kwargs.get('company'),
+            'campaign': kwargs.get('campaign'),
+            'balances': balances,
+            'show_balance': self._connector_can_show_partner_balance(),
+            'show_ledger': self._connector_can_show_partner_ledger(),
         }
 
     @http.route(['/my/payment/partners/reset'], type='json', auth='user', website=True)
@@ -286,13 +302,14 @@ class PayloxSyncopsController(Controller):
             return False
 
         self._del('syncops')
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.commercial_partner_id
+        balances = self._connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
         return {
             'name': partner.name,
             'campaign': partner.campaign_id.name,
-            'render': request.env['ir.ui.view']._render_template('payment_syncops.payment_balance', {
-                'balances': self._connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
-            })
+            'balances': balances,
+            'show_balance': self._connector_can_show_partner_balance(),
+            'show_ledger': self._connector_can_show_partner_ledger(),
         }
 
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
