@@ -34,14 +34,31 @@ class PayloxController(http.Controller):
     @staticmethod
     def _get(key, default=None):
         try:
-            return request.session['_paylox_%s' % key]
+            data = request.session['_paylox_%s' % key]
+            if data == '0d':
+                res = {}
+                for r, v in request.session.items():
+                    k = '_paylox_%s_' % key
+                    if r.startswith(k):
+                        res.update({r.replace(k, ''): v})
+
+                if not res:
+                    return data
+                return res
+            else:
+                return data
         except:
             return default
 
     @staticmethod
     def _set(key, value):
         try:
-            request.session['_paylox_%s' % key] = value
+            if isinstance(value, dict):
+                request.session['_paylox_%s' % key] = '0d'
+                for k, v in value.items():
+                    request.session['_paylox_%s_%s' % (key, k)] = v
+            else:
+                request.session['_paylox_%s' % key] = value
         except:
             pass
 
@@ -56,6 +73,14 @@ class PayloxController(http.Controller):
                 for k in ks:
                     del request.session[k]
             else:
+                data = request.session['_paylox_%s' % key]
+                if data == '0d':
+                    ks = []
+                    for k in request.session.keys():
+                        if k.startswith('_paylox_%s_' % key):
+                            ks.append(k)
+                    for k in ks:
+                        del request.session[k]
                 del request.session['_paylox_%s' % key]
         except:
             pass
@@ -148,6 +173,7 @@ class PayloxController(http.Controller):
         values = {
             'ok': True,
             'partner': partner_commercial,
+            'partner_name': partner_commercial.name,
             'contact': partner_contact,
             'acquirer': acquirer,
             'company': company,
