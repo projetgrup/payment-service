@@ -27,28 +27,28 @@ systemPage.include({
         const self = this;
         this.connector = {
             dateFormat: 'DD-MM-YYYY',
-        };
-        this.connector.format = {
-            date: (date) => moment(date).format(self.connector.dateFormat),
-            currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.precision),
-        };
-        this.connector.partner = {
-            page: 1,
-            pageSize: 5,
-            list: [],
-            flist: [],
-            filter: false,
-            getRows: () => self.connector.partner.filter && self.connector.partner.flist || self.connector.partner.list,
-            lines: 'paylox.syncops.partner.list.line',
-            $lines: () => $('.o_connector_partner_table tbody'),
-        };
-        this.connector.ledger = {
-            page: 1,
-            pageSize: 10,
-            list: [],
-            getRows: () => self.connector.ledger.list,
-            lines: 'paylox.syncops.partner.ledger.line',
-            $lines: () => $('.o_connector_partner_ledger_table tbody'),
+            format: {
+                date: (date) => moment(date).format(self.connector.dateFormat),
+                currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.precision),
+            },
+            partner: {
+                page: 1,
+                pageSize: 5,
+                list: [],
+                flist: [],
+                filter: false,
+                getRows: () => self.connector.partner.filter && self.connector.partner.flist || self.connector.partner.list,
+                lines: 'paylox.syncops.partner.list.line',
+                $lines: () => $('.o_connector_partner_table tbody'),
+            },
+            ledger: {
+                page: 1,
+                pageSize: 10,
+                list: [],
+                getRows: () => self.connector.ledger.list,
+                lines: 'paylox.syncops.partner.ledger.line',
+                $lines: () => $('.o_connector_partner_ledger_table tbody'),
+            }
         };
     },
 
@@ -259,7 +259,7 @@ systemPage.include({
         const firstLine = (page - 1) * pageSize;
         const lines = qweb.render(connector.lines, {
             rows: connector.getRows().slice(firstLine, firstLine + pageSize),
-            tools: this.connector.tools,
+            format: this.connector.format,
         });
         connector.$lines().html(lines);
     },
@@ -273,9 +273,14 @@ systemPage.include({
             route: '/my/payment/partners/reset',
         }).then(function (result) {
             if (!result) return false;
-            $('input#campaign').val(result.campaign || '');
+            $('span#campaign').html(result.campaign || '');
             $('label[for="partner"] + span').text(result.name);
-            $('.o_connector_partner_balance').html(result.render);
+            $('.o_connector_partner_balance').html(qweb.render('paylox.syncops.balance', {
+                balances: result.balances,
+                show_balance: result.show_balance,
+                show_ledger: result.show_ledger,
+                format,
+            }));
             $el.addClass('d-none');
         });
     },

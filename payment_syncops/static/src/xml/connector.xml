@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="paylox.syncops.partner.list">
-        <main class="p-0">
+        <main style="padding: 0 !important;">
             <div class="bg-light d-flex justify-content-center py-3 text-center">
                 <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_partner_query" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
                 <button class="btn btn-warning shadow-sm o_connector_partner_search" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
@@ -35,22 +35,22 @@
 
     <t t-name="paylox.syncops.partner.ledger.line">
         <t t-if="rows.length">
-            <t t-set="tools.currency" t-value=""/>
+            <t t-set="currency" t-value=""/>
             <t t-foreach="rows" t-as="row">
-                <tr t-if="tools.currency !== row.currency.name" class="border">
-                    <t t-set="tools.currency" t-value="row.currency.name"/>
+                <tr t-if="currency !== row.currency.name" class="border">
+                    <t t-set="currency" t-value="row.currency.name"/>
                     <td class="bg-primary-light font-italic pl-2 py-2" colspan="7">
-                        <span t-esc="tools.currency"/>
+                        <span t-esc="currency"/>
                     </td>
                 </tr>
                 <tr t-else="" class="border">
-                    <td class="py-2 pl-2"><span t-esc="tools.formatDate(row.date)"/></td>
-                    <td><span t-esc="tools.formatDate(row.due_date)"/></td>
+                    <td class="py-2 pl-2"><span t-esc="format.date(row.date)"/></td>
+                    <td><span t-esc="format.date(row.due_date)"/></td>
                     <td><span t-esc="row.name"/></td>
                     <td><span t-esc="row.type"/></td>
                     <td><span t-esc="row.description"/></td>
-                    <td class="text-right"><span t-esc="tools.formatCurrency(row.amount, row.currency)"/></td>
-                    <td class="border-right text-right pr-2"><span t-esc="tools.formatCurrency(row.balance, row.currency)"/></td>
+                    <td class="text-right"><span t-esc="format.currency(row.amount, row.currency)"/></td>
+                    <td class="border-right text-right pr-2"><span t-esc="format.currency(row.balance, row.currency)"/></td>
                 </tr>
             </t>
         </t>
@@ -103,6 +103,40 @@
                     <t t-esc="p"/>
                 </button>
             </t>
+        </t>
+    </t>
+ 
+    <t t-name="paylox.syncops.balance">
+        <t t-if="show_balance">
+            <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
+                <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
+                    <i class="fa fa-book mr-2" t-translation="off"/>See Ledger
+                </a>
+            </label>
+            <div>
+                <div class="d-flex flex-row justify-content-between w-100 text-primary font-weight-bold">
+                    <div>
+                        Balance
+                    </div>
+                    <div>
+                        Total Debit &amp; Credit
+                        <i class="fa fa-info-circle text-white"/>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <t t-foreach="balances" t-as="balance">
+                    <div t-attf-class="d-flex flex-row justify-content-between w-100 #{balance.value &lt; 0 ? 'text-danger' : 'text-600'}">
+                        <div>
+                            <span t-esc="balance.amount"/>
+                        </div>
+                        <div>
+                            <span t-esc="balance.amount_total"/>
+                            <i t-attf-class="fa fa-info-circle #{balance.note ? '' : 'text-white'}" t-att-title="balance.note || undefined"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
         </t>
     </t>
 </templates>
