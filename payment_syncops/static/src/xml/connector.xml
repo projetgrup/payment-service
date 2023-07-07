@@ -35,15 +35,15 @@
 
     <t t-name="paylox.syncops.partner.ledger.line">
         <t t-if="rows.length">
-            <t t-set="currency" t-value=""/>
+            <t t-set="currencyName" t-value=""/>
             <t t-foreach="rows" t-as="row">
-                <tr t-if="currency !== row.currency.name" class="border">
-                    <t t-set="currency" t-value="row.currency.name"/>
+                <tr t-if="currencyName !== row.currency.name" class="border">
+                    <t t-set="currencyName" t-value="row.currency.name"/>
                     <td class="bg-primary-light font-italic pl-2 py-2" colspan="7">
-                        <span t-esc="currency"/>
+                        <span t-esc="currencyName"/>
                     </td>
                 </tr>
-                <tr t-else="" class="border">
+                <tr class="border">
                     <td class="py-2 pl-2"><span t-esc="format.date(row.date)"/></td>
                     <td><span t-esc="format.date(row.due_date)"/></td>
                     <td><span t-esc="row.name"/></td>

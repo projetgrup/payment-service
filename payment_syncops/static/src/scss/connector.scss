@@ -1,6 +1,14 @@
-.o_connector_partner_table {
+.o_connector_pages {
     button.o_connector_button_page {
-        background-color: #fff;
+        background-color: #ffffff;
+        &:first-of-type {
+            border-top-left-radius: 5px !important;
+            border-bottom-left-radius: 5px !important;
+        }
+        &:last-of-type {
+            border-top-right-radius: 5px !important;
+            border-bottom-right-radius: 5px !important;
+        }
     }
 }
 
