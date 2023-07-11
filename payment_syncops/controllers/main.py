@@ -178,7 +178,8 @@ class PayloxSyncopsController(Controller):
         return request.env['syncops.connector'].sudo()._count('payment_get_partner_ledger', company=company)
 
     def _connector_can_show_partner_balance(self):
-        return True
+        company = company or request.env.company
+        return request.env['syncops.connector'].sudo()._count('payment_get_partner_balance', company=company)
 
     def _connector_can_access_partner_list(self, company=None):
         user = request.env.user.sudo()
