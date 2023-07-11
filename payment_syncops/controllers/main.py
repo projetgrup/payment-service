@@ -177,7 +177,7 @@ class PayloxSyncopsController(Controller):
         company = company or request.env.company
         return request.env['syncops.connector'].sudo()._count('payment_get_partner_ledger', company=company)
 
-    def _connector_can_show_partner_balance(self):
+    def _connector_can_show_partner_balance(self, company=None):
         company = company or request.env.company
         return request.env['syncops.connector'].sudo()._count('payment_get_partner_balance', company=company)
 
