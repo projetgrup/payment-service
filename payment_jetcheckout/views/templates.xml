@@ -78,7 +78,7 @@
                     <input type="hidden" t-att-value="model.id" field="payment.order"/>
                 </t>
                 <t t-elif="invoice_id">
-                    <t t-set="model" t-value="request.env['account.invoice'].browse(invoice_id)"/>
+                    <t t-set="model" t-value="request.env['account.move'].browse(invoice_id)"/>
                     <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_id"/>
