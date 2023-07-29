@@ -28,7 +28,7 @@ systemPage.include({
         this.connector = {
             dateFormat: 'DD-MM-YYYY',
             format: {
-                date: (date) => moment(date).format(self.connector.dateFormat),
+                date: (date) => date && moment(date).format(self.connector.dateFormat) || '',
                 currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.precision),
             },
             partner: {
