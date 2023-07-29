@@ -44,7 +44,7 @@
                     </td>
                 </tr>
                 <tr class="border">
-                    <td class="py-2 pl-2"><span t-esc="format.date(row.date)"/></td>
+                    <td class="pl-2"><span t-esc="format.date(row.date)"/></td>
                     <td><span t-esc="format.date(row.due_date)"/></td>
                     <td><span t-esc="row.name"/></td>
                     <td><span t-esc="row.type"/></td>
