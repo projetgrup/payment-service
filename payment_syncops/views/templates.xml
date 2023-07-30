@@ -113,7 +113,7 @@
                             <tbody/>
                         </table>
                     </div>
-                    <div class="bg-light h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
+                    <div class="h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
                 </div>
             </div>
             <t t-call="payment_jetcheckout_system.payment_agreement"/>
