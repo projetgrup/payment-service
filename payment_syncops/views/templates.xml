@@ -64,7 +64,7 @@
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
             </div>
-            <div class="payment-transaction row justify-content-center mx-0">
+            <div class="payment-system payment-transaction row justify-content-center mx-0">
                 <t t-call="payment_jetcheckout.payment_sidebar">
                     <t t-set="page" t-value="'ledger'"/>
                     <t t-set="no_payment_icons" t-value="True"/>
@@ -86,7 +86,7 @@
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>
-                <div class="payment-card payment-system col-md-9 row justify-content-center mx-0 navbar-light">
+                <div class="payment-card col-md-9 row justify-content-center mx-0 navbar-light">
                     <t t-call="payment_jetcheckout.payment_loading"/>
                     <div class="px-3 py-4 bg-white card my-4 w-100 o_connector_partner_ledger_table">
                         <table class="table table-borderless table-responsive-md w-100 table-fold small" style="table-layout: fixed;">
@@ -113,7 +113,7 @@
                             <tbody/>
                         </table>
                     </div>
-                    <div class="bg-light h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
+                    <div class="h-fit d-flex flex-row justify-content-center p-2 o_connector_pages"/>
                 </div>
             </div>
             <t t-call="payment_jetcheckout_system.payment_agreement"/>
