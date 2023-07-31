@@ -692,8 +692,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         const $input = this._getInstallmentInput();
         return {
             card: {
-                type: this.card.type,
-                family: this.card.family,
+                type: this.card.type || '',
+                family: this.card.family || '',
                 code: this.card.code.value,
                 holder: this.card.holder.value,
                 date: this.card.date.value,
