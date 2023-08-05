@@ -1,18 +1,30 @@
-.o_connector_pages {
-    button.o_connector_button_page {
-        background-color: #ffffff;
-        &:first-of-type {
-            border-top-left-radius: 5px !important;
-            border-bottom-left-radius: 5px !important;
-        }
-        &:last-of-type {
-            border-top-right-radius: 5px !important;
-            border-bottom-right-radius: 5px !important;
+.payment-system {
+    .o_connector_pages {
+        button.o_connector_button_page {
+            background-color: #ffffff;
+            &:first-of-type {
+                border-top-left-radius: 5px !important;
+                border-bottom-left-radius: 5px !important;
+            }
+            &:last-of-type {
+                border-top-right-radius: 5px !important;
+                border-bottom-right-radius: 5px !important;
+            }
         }
     }
-}
 
-div.dropdown-menu.bootstrap-datetimepicker-widget {
-    position: static !important;
-    width: 100% !important;
+    div.dropdown-menu.bootstrap-datetimepicker-widget {
+        position: static !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        margin-bottom: 1rem;
+        &:before, &:after {
+            display: none !important;
+        }
+
+        table td.active, table td.active:hover {
+            background-color: theme-color('primary') !important;
+        }
+    }
+
 }
