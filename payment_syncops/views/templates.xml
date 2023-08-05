@@ -74,9 +74,9 @@
                         </div>
                         <div class="o_connector_partner_ledger_dates">
                             <label for="date_start" class="text-primary font-weight-bold mb-0 d-block mt-3">Start Date</label>
-                            <input type="text" class="form-control datepicker-input" id="date_start" name="date_start" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_start" t-att-value="date_start"/>
+                            <input type="text" class="form-control datepicker-input" id="date_start" name="date_start" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_start" t-att-value="date_start" t-att-data-date-locale="date_locale"/>
                             <label for="date_end" class="text-primary font-weight-bold mb-0 d-block mt-3">End Date</label>
-                            <input type="text" class="form-control datepicker-input" id="date_end" name="date_end" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_end" t-att-value="date_end"/>
+                            <input type="text" class="form-control datepicker-input" id="date_end" name="date_end" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_end" t-att-value="date_end" t-att-data-date-locale="date_locale"/>
                         </div>
                     </t>
                     <t t-set="buttons">
