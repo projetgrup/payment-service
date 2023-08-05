@@ -155,7 +155,6 @@ class PayloxSystemController(Controller):
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
-            'show_reset': True,
         })
 
         # remove hash if exists

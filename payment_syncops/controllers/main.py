@@ -88,7 +88,7 @@ class PayloxSyncopsController(Controller):
             }
 
     def _connector_get_partner_balance(self, vat, ref, company=None):
-        balances = []
+        balances, show_total = [], False
         company = company or request.env.company
         company_id = company.sudo().partner_id.ref
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_balance', params={
@@ -111,10 +111,12 @@ class PayloxSyncopsController(Controller):
                 amount = isinstance(res.get('amount'), float) and res['amount'] or 0
                 amount_formatted = formatLang(request.env, amount, currency_obj=currency)
                 if 'amount_total' in res:
+                    show_total = True
                     amount_total = isinstance(res['amount_total'], float) and res['amount_total'] or 0
                     amount_total = formatLang(request.env, amount_total, currency_obj=currency)
                 else:
-                    amount_total = False
+                    amount_total = formatLang(request.env, 0, currency_obj=currency)
+
                 balances.append({
                     'value': amount,
                     'amount': amount_formatted,
@@ -125,14 +127,15 @@ class PayloxSyncopsController(Controller):
         if not balances:
             amount = 0
             amount_formatted = formatLang(request.env, 0, currency_obj=company.currency_id)
+            amount_total = formatLang(request.env, 0, currency_obj=company.currency_id)
             balances.append({
                 'value': amount,
                 'amount': amount_formatted,
-                'amount_total': False,
+                'amount_total': amount_total,
                 'note': '',
             })
 
-        return balances
+        return balances, show_total
 
     def _connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
         company = company or request.env.company
@@ -217,16 +220,24 @@ class PayloxSyncopsController(Controller):
     def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
         values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
         partner = self._connector_get_partner(partner)
-        balances = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
+        balances, show_total = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
+        show_balance = self._connector_can_show_partner_balance()
+        show_ledger = self._connector_can_show_partner_ledger()
+        show_partners = self._connector_can_access_partner_list(company)
+
         values.update({
             'balances': balances,
-            'show_balance': self._connector_can_show_partner_balance(),
-            'show_ledger': self._connector_can_show_partner_ledger(company),
-            'show_partners': self._connector_can_access_partner_list(company),
-            'show_total': any(balance['amount_total'] != False for balance in balances),
+            'show_total': show_total,
+            'show_balance': show_balance,
             'partner_connector': partner,
             'partner_name': partner['name'],
         })
+        if request.httprequest.path == '/my/payment':
+            values.update({
+                'show_ledger': show_ledger,
+                'show_partners': show_partners,
+                'show_reset': True,
+            })
         return values
 
     @http.route(['/my/payment/ledger'], type='http', auth='user', website=True)
@@ -240,6 +251,13 @@ class PayloxSyncopsController(Controller):
             'date_end': date_end.strftime('%d-%m-%Y'),
             'date_format': 'DD-MM-YYYY'
         })
+
+        if request.env.lang:
+            lang = request.env.lang
+            values.update({
+                'date_locale': lang[:2],
+            })
+
         return request.render('payment_syncops.page_ledger', values)
 
     @http.route(['/my/payment/partners/ledger/list'], type='json', auth='user', website=True)
@@ -297,31 +315,32 @@ class PayloxSyncopsController(Controller):
             'ref': kwargs.get('ref'),
         })
 
-        balances = self._connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
+        balances, show_total = self._connector_get_partner_balance(kwargs.get('vat'), kwargs.get('ref'))
+        show_balance = self._connector_can_show_partner_balance()
+        show_ledger = self._connector_can_show_partner_ledger()
         return {
             'name': kwargs.get('company'),
             'campaign': kwargs.get('campaign'),
             'balances': balances,
-            'show_balance': self._connector_can_show_partner_balance(),
-            'show_ledger': self._connector_can_show_partner_ledger(),
-            'show_total': any(balance['amount_total'] != False for balance in balances),
+            'show_total': show_total,
+            'show_balance': show_balance,
+            'show_ledger': show_ledger,
         }
 
     @http.route(['/my/payment/partners/reset'], type='json', auth='user', website=True)
     def page_syncops_partners_reset(self, **kwargs):
-        if not self._get('syncops'):
-            return False
-
         self._del('syncops')
         partner = request.env.user.partner_id.commercial_partner_id
-        balances = self._connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
+        balances, show_total = self._connector_get_partner_balance(vat=partner.vat, ref=partner.ref)
+        show_balance = self._connector_can_show_partner_balance()
+        show_ledger = self._connector_can_show_partner_ledger()
         return {
             'name': partner.name,
             'campaign': partner.campaign_id.name,
             'balances': balances,
-            'show_balance': self._connector_can_show_partner_balance(),
-            'show_ledger': self._connector_can_show_partner_ledger(),
-            'show_total': any(balance['amount_total'] != False for balance in balances),
+            'show_total': show_total,
+            'show_balance': show_balance,
+            'show_ledger': show_ledger,
         }
 
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
