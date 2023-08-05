@@ -107,7 +107,11 @@ systemPage.include({
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');
                     $('input#campaign').val($el.data('campaign') || '');
                     $('label[for="partner"] + span').text($el.data('company'));
-                    $('.o_connector_partner_balance').html(result.render);
+                    $('.o_connector_partner_balance').html(qweb.render('paylox.syncops.balance', {
+                        balances: result.balances,
+                        show_balance: result.show_balance,
+                        show_ledger: result.show_ledger,
+                    }));
                     $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
                     popup.destroy();
                 }).guardedCatch(function () {
@@ -150,7 +154,7 @@ systemPage.include({
         const self = this;
         const $date_start = $('#date_start');
         const $date_end = $('#date_end');
-        const format = $('#date_start').data('date-format')
+        const format = $('#date_start').data('date-format');
         framework.showLoading();
         rpc.query({
             route: '/my/payment/partners/ledger/list',
@@ -279,7 +283,6 @@ systemPage.include({
                 balances: result.balances,
                 show_balance: result.show_balance,
                 show_ledger: result.show_ledger,
-                format,
             }));
             $el.addClass('d-none');
         });

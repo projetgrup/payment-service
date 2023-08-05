@@ -118,7 +118,7 @@
                     <div>
                         Balance
                     </div>
-                    <div t-if="balances.some(balance => balance.amount_total !== false)">
+                    <div t-if="balances.some(function(balance){ return balance.amount_total !== false })">
                         Total Debit &amp; Credit
                         <i class="fa fa-info-circle text-white"/>
                     </div>
