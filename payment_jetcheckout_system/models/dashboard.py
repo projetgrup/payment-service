@@ -273,12 +273,7 @@ class PaymentDasboard(models.Model):
 
     @api.model    
     def get_url(self):
-        company_id = self.env.context.get('company') or self.env.company.id
-        website = self.env['website'].search([('company_id', '=', company_id)], limit=1)
-        url = website and website.domain or self.get_base_url() or ''
-        if url and url[-1] == '/':
-            url = url[:-1]
-        return url
+        return self.get_base_url()
 
     def action_transactions(self):
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
