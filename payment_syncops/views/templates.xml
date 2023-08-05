@@ -21,7 +21,7 @@
                     <div>
                         Balance
                     </div>
-                    <div>
+                    <div t-if="any(balance['amount_total'] != False for balance in balances)">
                         Total Debit &amp; Credit
                         <i class="fa fa-info-circle text-white"/>
                     </div>
@@ -33,9 +33,9 @@
                         <div>
                             <span t-esc="balance['amount']"/>
                         </div>
-                        <div>
+                        <div t-if="balance['amount_total'] != False">
                             <span t-esc="balance['amount_total']"/>
-                            <i t-attf-class="fa fa-info-circle #{'' if balance['note'] else 'text-white'}" t-att-title="balance['note']"/>
+                            <i t-attf-class="fa fa-info-circle #{'' if balance['note'] else 'text-white'}" t-att-title="balance['note'] or None"/>
                         </div>
                     </div>
                 </t>
