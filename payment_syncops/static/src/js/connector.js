@@ -111,6 +111,7 @@ systemPage.include({
                         balances: result.balances,
                         show_balance: result.show_balance,
                         show_ledger: result.show_ledger,
+                        show_total: result.show_total,
                     }));
                     $('.o_connector_partner_reset').prop({'disabled': false}).removeClass('d-none').removeClass('disabled');
                     popup.destroy();
@@ -283,6 +284,7 @@ systemPage.include({
                 balances: result.balances,
                 show_balance: result.show_balance,
                 show_ledger: result.show_ledger,
+                show_total: result.show_total,
             }));
             $el.addClass('d-none');
         });

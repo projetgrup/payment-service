@@ -118,9 +118,8 @@
                     <div>
                         Balance
                     </div>
-                    <div t-if="balances.some((balance) => { return balance.amount_total !== false })">
-                        Total Debit &amp; Credit
-                        <i class="fa fa-info-circle text-white"/>
+                    <div t-if="show_total">
+                        Total Debit &amp; Credit<i class="fa fa-info-circle text-white" t-translation="off"/>
                     </div>
                 </div>
             </div>
@@ -130,7 +129,7 @@
                         <div>
                             <span t-esc="balance.amount"/>
                         </div>
-                        <div t-if="balance.amount_total !== false">
+                        <div t-if="show_total">
                             <span t-esc="balance.amount_total"/>
                             <i t-attf-class="fa fa-info-circle #{balance.note ? '' : 'text-white'}" t-att-title="balance.note || undefined"/>
                         </div>
