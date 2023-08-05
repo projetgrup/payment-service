@@ -217,11 +217,13 @@ class PayloxSyncopsController(Controller):
     def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
         values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
         partner = self._connector_get_partner(partner)
+        balances = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
         values.update({
-            'balances': self._connector_get_partner_balance(partner['vat'], partner['ref'], company),
+            'balances': balances,
             'show_balance': self._connector_can_show_partner_balance(),
             'show_ledger': self._connector_can_show_partner_ledger(company),
             'show_partners': self._connector_can_access_partner_list(company),
+            'show_total': any(balance['amount_total'] != False for balance in balances),
             'partner_connector': partner,
             'partner_name': partner['name'],
         })
@@ -302,6 +304,7 @@ class PayloxSyncopsController(Controller):
             'balances': balances,
             'show_balance': self._connector_can_show_partner_balance(),
             'show_ledger': self._connector_can_show_partner_ledger(),
+            'show_total': any(balance['amount_total'] != False for balance in balances),
         }
 
     @http.route(['/my/payment/partners/reset'], type='json', auth='user', website=True)
@@ -318,6 +321,7 @@ class PayloxSyncopsController(Controller):
             'balances': balances,
             'show_balance': self._connector_can_show_partner_balance(),
             'show_ledger': self._connector_can_show_partner_ledger(),
+            'show_total': any(balance['amount_total'] != False for balance in balances),
         }
 
     @http.route(['/syncops/payment/transactions'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
