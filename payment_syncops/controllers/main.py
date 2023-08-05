@@ -109,19 +109,26 @@ class PayloxSyncopsController(Controller):
                     continue
 
                 amount = isinstance(res.get('amount'), float) and res['amount'] or 0
-                amount_total = isinstance(res.get('amount_total'), float) and res['amount_total'] or 0
+                amount_formatted = formatLang(request.env, amount, currency_obj=currency)
+                if 'amount_total' in res:
+                    amount_total = isinstance(res['amount_total'], float) and res['amount_total'] or 0
+                    amount_total = formatLang(request.env, amount_total, currency_obj=currency)
+                else:
+                    amount_total = False
                 balances.append({
                     'value': amount,
-                    'amount': formatLang(request.env, amount, currency_obj=currency),
-                    'amount_total': formatLang(request.env, amount_total, currency_obj=currency),
+                    'amount': amount_formatted,
+                    'amount_total': amount_total,
                     'note': res.get('note', ''),
                 })
 
         if not balances:
+            amount = 0
+            amount_formatted = formatLang(request.env, 0, currency_obj=company.currency_id)
             balances.append({
-                'value': 0,
-                'amount': formatLang(request.env, 0, currency_obj=company.currency_id),
-                'amount_total': formatLang(request.env, 0, currency_obj=company.currency_id),
+                'value': amount,
+                'amount': amount_formatted,
+                'amount_total': False,
                 'note': '',
             })
 
