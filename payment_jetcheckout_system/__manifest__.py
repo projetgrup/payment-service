@@ -43,8 +43,10 @@
             'payment_jetcheckout_system/static/src/xml/company.xml',
         ],
         'web.assets_backend': [
+            'payment_jetcheckout_system/static/src/js/partner.js',
             'payment_jetcheckout_system/static/src/js/dashboard.js',
             'payment_jetcheckout_system/static/src/js/company.js',
+            'payment_jetcheckout_system/static/src/scss/backend.scss',
             'payment_jetcheckout_system/static/src/scss/company.scss',
             'payment_jetcheckout_system/static/src/scss/send.scss',
         ],

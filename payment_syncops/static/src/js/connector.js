@@ -131,7 +131,7 @@ systemPage.include({
         var partners = partner.list;
         if (query) {
             let regex = new RegExp(query, 'i');
-            partners = partners.filter((p) => p.company_name.match(regex));
+            partners = partners.filter((p) => p.name.match(regex));
             partner.flist = partners;
             partner.filter = true;
         } else {
