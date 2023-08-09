@@ -19,28 +19,32 @@ class PaymentTransaction(models.Model):
 
     def action_process_connector(self):
         self.ensure_one()
-        if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
-            return
+        #if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
+        #    return
 
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
         result = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', params={
-            'account_code': ref,
+            'ref': ref,
             'vat': vat,
             'amount': self.amount,
-            'transaction_id': self.jetcheckout_transaction_id,
-            'pos_name': line and line.account_code or '',
+            'reference': self.reference,
+            'provider': self.acquirer_id.provider,
+            'currency_name': self.currency_id.name,
+            'company_id': self.company_id.partner_id.ref,
+            'account_code': line.account_code if line else '',
+            'state': 'refund' if self.source_transaction_id else self.state,
             'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
             'card_number': self.jetcheckout_card_number,
             'card_name': self.jetcheckout_card_name,
+            'transaction_id': self.jetcheckout_transaction_id,
             'installments': self.jetcheckout_installment_description,
-            'currency_name': self.currency_id.name,
             'amount_commission_cost': self.jetcheckout_commission_amount,
             'amount_customer_cost': self.jetcheckout_customer_amount,
             'amount_commission_rate': self.jetcheckout_commission_rate,
             'amount_customer_rate': self.jetcheckout_customer_rate,
-            'description': self.state_message
+            'description': self.state_message,
         }, company=self.company_id, message=True)
 
         state = result[0] == None
@@ -56,10 +60,32 @@ class PaymentTransaction(models.Model):
             })
 
     def _paylox_done_postprocess(self):
-        super()._paylox_done_postprocess()
+        res = super()._paylox_done_postprocess()
         if self.jetcheckout_connector_ok:
             self.write({
                 'jetcheckout_connector_state': True,
-                'jetcheckout_connector_state_message': _('This transaction has not been posted to connector yet.')
+                'jetcheckout_connector_state_message': _('Successful status of this transaction has not been posted to connector yet.')
             })
             self.action_process_connector()
+        return res
+
+    def _paylox_cancel_postprocess(self):
+        res = super()._paylox_cancel_postprocess()
+        if self.jetcheckout_connector_ok:
+            self.write({
+                'jetcheckout_connector_state': True,
+                'jetcheckout_connector_state_message': _('Cancelled status of this transaction has not been posted to connector yet.')
+            })
+            self.action_process_connector()
+        return res
+
+    def _paylox_refund_postprocess(self, amount=0):
+        res = super()._paylox_refund_postprocess(amount=amount)
+        if self.jetcheckout_connector_ok:
+            res.write({
+                'jetcheckout_connector_ok': True,
+                'jetcheckout_connector_state': True,
+                'jetcheckout_connector_state_message': _('Refunded status of this transaction has not been posted to connector yet.')
+            })
+            res.action_process_connector()
+        return res

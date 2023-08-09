@@ -5,17 +5,18 @@ const DashboardController = require('payment_jetcheckout_system.DashboardControl
 const KanbanView = require('web.KanbanView');
 const viewRegistry = require('web.view_registry');
 
-const DasboardView = KanbanView.extend({
+const DashboardView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
         Controller: DashboardController
     })
 });
 
-viewRegistry.add('account_dashboard_kanban', DasboardView);
+viewRegistry.add('account_dashboard_kanban', DashboardView);
 });
 
+
 odoo.define('payment_jetcheckout_system.DashboardController', function (require) {
-    "use strict";
+"use strict";
 
 const KanbanController = require('web.KanbanController');
 const core = require('web.core');
@@ -33,8 +34,8 @@ const DashboardController = KanbanController.extend({
             model: 'payment.acquirer',
             method: 'has_dashboard_button',
             args: [],
-        }).then(function (shown) {
-            self.dashboard_button_shown = shown;
+        }).then(function (show) {
+            self.show_button = show;
         }).guardedCatch(function (error) {
             console.error(error);
         });
@@ -42,7 +43,7 @@ const DashboardController = KanbanController.extend({
     },
 
     renderButtons: function () {
-        if (this.dashboard_button_shown) {
+        if (this.show_button) {
             this.$buttons = $(qweb.render('Dashboard.Buttons'));
         }
     },

@@ -49,7 +49,7 @@
     <field name="name">res.partner.payment.tree</field>
     <field name="model">res.partner</field>
     <field name="arch" type="xml">
-        <tree decoration-muted="active == False" sample="1">
+        <tree decoration-muted="active == False" js_class="system_partner" sample="1">
             <header>
                 <button name="action_send" type="object" string="Send" icon="fa-send"/>
                 <button name="action_follower" type="object" string="Add Followers" icon="fa-user-plus"/>

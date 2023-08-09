@@ -162,13 +162,13 @@ class PayloxSyncopsController(Controller):
                 continue
 
             lines = [{
-                'date': res['date'],
-                'due_date': res['due_date'],
-                'type': res['type'],
-                'name': res['name'],
-                'description': res['description'],
-                'amount': res['amount'],
-                'balance': res['balance'],
+                'date': res.get('date', ''),
+                'due_date': res.get('due_date', ''),
+                'type': res.get('type', ''),
+                'name': res.get('name', ''),
+                'description': res.get('description', ''),
+                'amount': res.get('amount', 0),
+                'balance': res.get('balance', 0),
                 'currency': {
                     'id' : currency.id,
                     'name' : currency.name,
@@ -185,16 +185,16 @@ class PayloxSyncopsController(Controller):
 
     def _connector_can_show_partner_ledger(self, company=None):
         company = company or request.env.company
-        return request.env['syncops.connector'].sudo()._count('payment_get_partner_ledger', company=company)
+        return request.env['syncops.connector'].sudo().count('payment_get_partner_ledger', company=company)
 
     def _connector_can_show_partner_balance(self, company=None):
         company = company or request.env.company
-        return request.env['syncops.connector'].sudo()._count('payment_get_partner_balance', company=company)
+        return request.env['syncops.connector'].sudo().count('payment_get_partner_balance', company=company)
 
     def _connector_can_access_partner_list(self, company=None):
         user = request.env.user.sudo()
         company = company or request.env.company
-        return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo()._count('payment_get_partner_list', company=company)
+        return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list', company=company)
 
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
