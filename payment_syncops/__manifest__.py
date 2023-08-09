@@ -24,9 +24,11 @@
     'assets': {
         'web.assets_qweb': [
             'payment_syncops/static/src/xml/partner.xml',
+            'payment_syncops/static/src/xml/item.xml',
         ],
         'web.assets_backend': [
             'payment_syncops/static/src/js/partner.js',
+            'payment_syncops/static/src/js/item.js',
         ],
         'web.assets_frontend': [
             'payment_syncops/static/src/xml/connector.xml',

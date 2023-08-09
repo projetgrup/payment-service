@@ -19,8 +19,8 @@ class PaymentTransaction(models.Model):
 
     def action_process_connector(self):
         self.ensure_one()
-        if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
-            return
+        #if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
+        #    return
 
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
@@ -79,10 +79,11 @@ class PaymentTransaction(models.Model):
             self.action_process_connector()
         return res
 
-    def _paylox_refund_postprocess(self):
-        res = super()._paylox_refund_postprocess()
-        if res.jetcheckout_connector_ok:
+    def _paylox_refund_postprocess(self, amount=0):
+        res = super()._paylox_refund_postprocess(amount=amount)
+        if self.jetcheckout_connector_ok:
             res.write({
+                'jetcheckout_connector_ok': True,
                 'jetcheckout_connector_state': True,
                 'jetcheckout_connector_state_message': _('Refunded status of this transaction has not been posted to connector yet.')
             })
