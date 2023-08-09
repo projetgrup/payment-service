@@ -28,17 +28,6 @@ class SyncopsConnector(models.Model):
                 raise UserError(_('This token is already exist. Please ensure that it is correct.'))
 
     @api.model
-    def _count(self, method, company=None):
-        if not company:
-            company = self.env.company
-
-        return self.search_count([
-            ('company_id', '=', company.id),
-            ('connected', '=', True),
-            ('method_ids.code', '=', method)
-        ])
-
-    @api.model
     def _find(self, method, company=None):
         if not company:
             company = self.env.company
@@ -168,6 +157,17 @@ class SyncopsConnector(models.Model):
         if 'username' in vals or 'token' in vals:
             self._connect()
         return res
+
+    @api.model
+    def count(self, method, company=None):
+        if not company:
+            company = self.env.company
+
+        return self.search_count([
+            ('company_id', '=', company.id),
+            ('connected', '=', True),
+            ('method_ids.code', '=', method)
+        ])
 
     def action_toggle_active(self):
         self.ensure_one()

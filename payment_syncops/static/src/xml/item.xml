@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="payment_syncops.item_button">
+		<button class="btn btn-secondary o_button_sync">Sync</button>
+    </t>
+</templates>
