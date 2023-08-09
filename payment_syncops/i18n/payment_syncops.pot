@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 09:57+0000\n"
-"PO-Revision-Date: 2023-08-09 09:57+0000\n"
+"POT-Creation-Date: 2023-08-09 16:01+0000\n"
+"PO-Revision-Date: 2023-08-09 16:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -71,11 +71,6 @@ msgid "City"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "Close"
-msgstr ""
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #, python-format
@@ -118,28 +113,6 @@ msgid "Connector Transactions"
 msgstr ""
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__count
-msgid "Count"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__create_uid
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__create_date
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__create_date
-msgid "Created on"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__currency_id
-msgid "Currency"
-msgstr ""
-
-#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Date"
 msgstr ""
@@ -153,12 +126,6 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Description"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__display_name
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__display_name
-msgid "Display Name"
 msgstr ""
 
 #. module: payment_syncops
@@ -209,35 +176,6 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__id
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__id
-msgid "ID"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard____last_update
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__write_uid
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__write_date
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__line_ids
-msgid "Lines"
-msgstr ""
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #, python-format
@@ -245,7 +183,6 @@ msgid "Mobile"
 msgstr ""
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Name"
 msgstr ""
@@ -272,11 +209,6 @@ msgstr ""
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_email
 msgid "Partner Email"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_name
-msgid "Partner Name"
 msgstr ""
 
 #. module: payment_syncops
@@ -312,11 +244,6 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 msgid "Phone"
-msgstr ""
-
-#. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "Please ensure the records to be synced"
 msgstr ""
 
 #. module: payment_syncops
@@ -417,8 +344,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/item.xml:0
 #: code:addons/payment_syncops/static/src/xml/partner.xml:0
-#: model:ir.actions.act_window,name:payment_syncops.action_sync
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #, python-format
 msgid "Sync"
 msgstr ""
@@ -455,7 +380,6 @@ msgid "Total Debit &amp; Credit"
 msgstr ""
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Type"
 msgstr ""
@@ -466,16 +390,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #, python-format
 msgid "VAT"
-msgstr ""
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__wizard_id
-msgid "Wizard"
-msgstr ""
-
-#. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "record(s) will be synced"
 msgstr ""
 
 #. module: payment_syncops

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 09:57+0000\n"
-"PO-Revision-Date: 2023-08-09 12:58+0300\n"
+"POT-Creation-Date: 2023-08-09 16:01+0000\n"
+"PO-Revision-Date: 2023-08-09 19:05+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -77,11 +77,6 @@ msgid "City"
 msgstr "Şehir"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "Close"
-msgstr "Kapat"
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #, python-format
@@ -124,28 +119,6 @@ msgid "Connector Transactions"
 msgstr "Bağlayıcı İşlemleri"
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__count
-msgid "Count"
-msgstr "Adet"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__create_uid
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__create_uid
-msgid "Created by"
-msgstr "Oluşturan"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__create_date
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__create_date
-msgid "Created on"
-msgstr "Oluşturma Tarihi"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__currency_id
-msgid "Currency"
-msgstr "Para Birimi"
-
-#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Date"
 msgstr "Tarih"
@@ -160,12 +133,6 @@ msgstr "Tarih biçimi boş olamaz"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Description"
 msgstr "Açıklama"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__display_name
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__display_name
-msgid "Display Name"
-msgstr "Görünen Ad"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
@@ -214,35 +181,6 @@ msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__id
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__id
-msgid "ID"
-msgstr "ID"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard____last_update
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "Son Düzenleme Tarihi"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__write_uid
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__write_uid
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__write_date
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__write_date
-msgid "Last Updated on"
-msgstr "Son Güncelleme Tarihi"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__line_ids
-msgid "Lines"
-msgstr "Satırlar"
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #, python-format
@@ -250,7 +188,6 @@ msgid "Mobile"
 msgstr "Cep Telefonu"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Name"
 msgstr "Ad"
@@ -282,11 +219,6 @@ msgstr "İş Ortağı Bakiye"
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_email
 msgid "Partner Email"
 msgstr "İş Ortağı Eposta"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_name
-msgid "Partner Name"
-msgstr "İş Ortağı Adı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_phone
@@ -322,11 +254,6 @@ msgstr "Ödeme İşlemi"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 msgid "Phone"
 msgstr "Telefon"
-
-#. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "Please ensure the records to be synced"
-msgstr "Lütfen eşlenecek kayıtlardan emin olunuz"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
@@ -426,8 +353,6 @@ msgstr "Bu işlemin başarılı durumu henüz bağlayıcıya gönderilmedi."
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/item.xml:0
 #: code:addons/payment_syncops/static/src/xml/partner.xml:0
-#: model:ir.actions.act_window,name:payment_syncops.action_sync
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #, python-format
 msgid "Sync"
 msgstr "Eşle"
@@ -466,7 +391,6 @@ msgid "Total Debit &amp; Credit"
 msgstr "Toplam Borç &amp; Alacak"
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Type"
 msgstr "Tür"
@@ -478,16 +402,6 @@ msgstr "Tür"
 #, python-format
 msgid "VAT"
 msgstr "Vergi No"
-
-#. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__wizard_id
-msgid "Wizard"
-msgstr "Sihirbaz"
-
-#. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
-msgid "record(s) will be synced"
-msgstr "kayıt eşlenecektir"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.company_hierarchy_line
@@ -503,6 +417,51 @@ msgstr "syncOPS Eşle Sihirbazı"
 #: model:ir.model,name:payment_syncops.model_syncops_sync_wizard_line
 msgid "syncOPS Sync Wizard Lines"
 msgstr "syncOPS Eşle Sihirbaz Satırları"
+
+#~ msgid "Close"
+#~ msgstr "Kapat"
+
+#~ msgid "Count"
+#~ msgstr "Adet"
+
+#~ msgid "Created by"
+#~ msgstr "Oluşturan"
+
+#~ msgid "Created on"
+#~ msgstr "Oluşturma Tarihi"
+
+#~ msgid "Currency"
+#~ msgstr "Para Birimi"
+
+#~ msgid "Display Name"
+#~ msgstr "Görünen Ad"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Son Düzenleme Tarihi"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Son Güncelleyen"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Son Güncelleme Tarihi"
+
+#~ msgid "Lines"
+#~ msgstr "Satırlar"
+
+#~ msgid "Partner Name"
+#~ msgstr "İş Ortağı Adı"
+
+#~ msgid "Please ensure the records to be synced"
+#~ msgstr "Lütfen eşlenecek kayıtlardan emin olunuz"
+
+#~ msgid "Wizard"
+#~ msgstr "Sihirbaz"
+
+#~ msgid "record(s) will be synced"
+#~ msgstr "kayıt eşlenecektir"
 
 #~ msgid ""
 #~ "Total Debit &amp; Credit\n"

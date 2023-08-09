@@ -14,8 +14,17 @@
         'views/config.xml',
         'views/syncops.xml',
         'wizards/log.xml',
+        'wizards/sync.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
     ],
+    'assets': {
+        'web.assets_qweb': [
+            'connector_syncops/static/src/xml/sync.xml',
+        ],
+        'web.assets_backend': [
+            'connector_syncops/static/src/js/sync.js',
+        ],
+    },
     'auto_install': False,
 }

@@ -1,15 +1,15 @@
-odoo.define('payment_syncops.PartnerController', function (require) {
+odoo.define('connector_syncops.SyncController', function (require) {
 "use strict";
 
-const PartnerController = require('payment_jetcheckout_system.PartnerController');
+const ListController = require('web.ListController');
 const core = require('web.core');
 
 const qweb = core.qweb;
 
-PartnerController.include({
+const SyncController = ListController.extend({
     events: _.extend({
         'click .o_button_sync': '_onClickSync',
-    }, PartnerController.prototype.events),
+    }, ListController.prototype.events),
 
     init: function () {
         this._super.apply(this, arguments);
@@ -28,31 +28,28 @@ PartnerController.include({
             console.error(error);
         });
 
-        const granted = this.getSession().user_has_group('payment_jetcheckout_system.group_system_manager').then(function (has_group) {
-            self.show_button = has_group && self.show_button;
-        });
-
-        return Promise.all([this._super.apply(this, arguments), shown, granted]);
+        return Promise.all([this._super.apply(this, arguments), shown]);
     },
 
     renderButtons: function () {
         this._super.apply(this, arguments);
         if (this.show_button) {
-            const $buttons = $(qweb.render('payment_syncops.partner_button'));
+            const $buttons = $(qweb.render('connector_syncops.sync_button'));
             this.$buttons.find('.o_list_export_xlsx').before($buttons);
         }
     },
 
     _onClickSync: function () {
-        return this.do_action('payment_syncops.action_sync', {
+        return this.do_action('connector_syncops.action_sync', {
             on_close: this.reload.bind(this, {}),
             additional_context: {
-                default_type: 'partner',
-                default_system: this.controlPanelProps.action.context.active_system,
+                ...this.controlPanelProps.action.context,
+                active_model: this.controlPanelProps.action.res_model,
             },
         });
     }
 });
 
+return SyncController;
 });
     
