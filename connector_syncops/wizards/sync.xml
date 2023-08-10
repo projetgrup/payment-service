@@ -12,16 +12,21 @@
                             <div class="mb-4"><i class="fa fa-2x fa-exclamation-circle"/></div>
                             <div class="mb-4">Please ensure the records to be synced</div>
                         </p>
-                        <p class="h5 text-700 text-center" colspan="2">
-                        <field name="count" readonly="1"/> record(s) will be synced
+                        <p class="h5 text-700 text-center mb-4" colspan="2">
+                            <field name="count" readonly="1"/> record(s) will be synced
                         </p>
+                        <div class="o_td_label"/>
+                        <div class="o_row" attrs="{'invisible': [('refresh', '=', False)]}">
+                            <label for="refresh" class="btn btn-secondary bg-100 rounded text-uppercase d-flex fa fa-refresh flex-grow-1 font-weight-bold justify-content-center py-2 text-warning" string="Refresh" style="gap: 5px;"/>
+                            <field name="refresh" context="{'recompute': True}" class="d-none"/>
+                        </div>
                         <field name="type" invisible="1"/>
                     </group>
                     <group class="table-p-0">
                         <field name="line_ids" mode="tree" nolabel="1" colspan="2" force_save="1" readonly="1">
                             <tree create="0" edit="0" delete="0">
                                 <field name="name" string="Name" required="1" force_save="1"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="currency_id" invisible="1" options="{'no_open': True, 'no_create': True}"/>
                             </tree>
                             <form create="0" edit="0" delete="0">
                                 <sheet>
@@ -34,7 +39,7 @@
                                     <group>
                                         <group name="credentials"/>
                                         <group name="information">
-                                            <field name="currency_id" invisible="1"/>
+                                            <field name="currency_id" invisible="1" options="{'no_open': True, 'no_create': True}"/>
                                         </group>
                                     </group>
                                 </sheet>

@@ -24,11 +24,6 @@ class PaymentItem(models.Model):
     def _onchange_parent_id(self):
         self.child_id = self.parent_id.child_ids and self.parent_id.child_ids[0].id if self.parent_id else False
 
-    @api.depends('child_id', 'parent_id', 'company_id')
-    def _compute_system(self):
-        for item in self:
-            item.system = item.company_id.system or item.parent_id.system or item.child_id.system
-
     @api.depends('amount', 'paid_amount')
     def _compute_residual(self):
         for item in self:
@@ -42,17 +37,19 @@ class PaymentItem(models.Model):
     due_date = fields.Date()
     file = fields.Binary()
     paid = fields.Boolean()
+    ref = fields.Char()
     description = fields.Char()
     is_admin = fields.Boolean(compute='_compute_is_admin')
     paid_amount = fields.Monetary(readonly=True)
     residual_amount = fields.Monetary(compute='_compute_residual', store=True, readonly=True)
     installment_count = fields.Integer(readonly=True)
     paid_date = fields.Datetime(readonly=True)
+    vat = fields.Char(related='parent_id.vat', string='VAT', store=True)
     campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
-    system = fields.Selection(selection=[], compute='_compute_system', store=True, readonly=True)
+    system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, readonly=True)
-    currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
+    currency_id = fields.Many2one('res.currency', readonly=True)
 
     def onchange(self, values, field_name, field_onchange):
         return super(PaymentItem, self.with_context(recursive_onchanges=False)).onchange(values, field_name, field_onchange)
@@ -76,7 +73,22 @@ class PaymentItem(models.Model):
         action = self.env.ref('payment_jetcheckout.report_conveyance').report_action(transaction_ids.ids)
         return action
 
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        if not res.system:
+            res.system = res.company_id.system or res.parent_id.system or res.child_id.system
+        if not res.currency_id:
+            res.currency_id = res.company_id.currency_id.id
+        return res
+
     def write(self, values):
         if 'paid' in values and not values['paid']:
             values['paid_amount'] = 0
-        return super().write(values)
+        res = super().write(values)
+        for item in self:
+            if not item.system:
+                item.system = item.company_id.system or item.parent_id.system or item.child_id.system
+            if not item.currency_id:
+                item.currency_id = item.company_id.currency_id.id
+        return res

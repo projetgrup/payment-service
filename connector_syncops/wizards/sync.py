@@ -12,8 +12,16 @@ class SyncopsSyncWizard(models.TransientModel):
             rec.count = len(rec.line_ids)
 
     type = fields.Char()
+    refresh = fields.Boolean()
     count = fields.Integer(compute='_compute_count')
     line_ids = fields.One2many('syncops.sync.wizard.line', 'wizard_id', 'Lines', readonly=True)
+
+    def onchange(self, values, field_name, field_onchange):
+        return super(SyncopsSyncWizard, self.with_context(recursive_onchanges=False)).onchange(values, field_name, field_onchange)
+
+    @api.onchange('refresh')
+    def onchange_refresh(self):
+        pass
 
     def confirm(self):
         return {'type': 'ir.actions.act_window_close'}

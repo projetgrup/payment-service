@@ -16,21 +16,6 @@ const SyncController = ListController.extend({
         this.show_button = true;
     },
 
-    willStart: function() {
-        const self = this;
-        const shown = this._rpc({
-            model: 'syncops.connector',
-            method: 'count',
-            args: ['payment_get_partner_list'],
-        }).then(function (show) {
-            self.show_button = !!show && self.show_button;
-        }).guardedCatch(function (error) {
-            console.error(error);
-        });
-
-        return Promise.all([this._super.apply(this, arguments), shown]);
-    },
-
     renderButtons: function () {
         this._super.apply(this, arguments);
         if (this.show_button) {
