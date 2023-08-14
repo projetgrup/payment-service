@@ -53,7 +53,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
         if self.type == 'partner':
             lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company_id': self.env.company.partner_id.ref,
+                'company_id': self.env.company.sudo().partner_id.ref,
             })
             if not lines:
                 lines = []
@@ -88,7 +88,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
             elif self.type_item_subtype == 'invoice':
                 params = {
-                    'company': self.env.company.partner_id.ref,
+                    'company': self.env.company.sudo().partner_id.ref,
                     'state': 'not_paid,posted'
                 }
                 if self.type_item_date_start:
