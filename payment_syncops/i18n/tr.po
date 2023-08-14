@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-14 18:46+0000\n"
-"PO-Revision-Date: 2023-08-14 21:49+0300\n"
+"POT-Creation-Date: 2023-08-14 20:41+0000\n"
+"PO-Revision-Date: 2023-08-14 23:43+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -18,21 +18,14 @@ msgstr ""
 "X-Generator: Poedit 3.3.1\n"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
+#: code:addons/payment_syncops/wizards/sync.py:0
+#, python-format
 msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
-"label=\"Arrow icon\" title=\"Arrow\"/>\n"
-"                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only text-"
-"primary\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': "
-"[('type_item_date_start', '=', False), ('type_item_date_end', '=', "
-"False)]}\"/>"
+"\"Get Invoice List\" method must be activated to get records by their "
+"invoice date range"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
-"label=\"Ok ikonu\" title=\"Ok\"/>\n"
-"                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only text-"
-"primary\" aria-label=\"Ok ikonu\" title=\"Ok\" attrs=\"{'invisible': "
-"[('type_item_date_start', '=', False), ('type_item_date_end', '=', "
-"False)]}\"/>"
+"Kayıtları fatura tarih aralığına göre getirmek için \"Fatura Listesini "
+"Getir\" metodu etkinleştirilmelidir"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
@@ -51,6 +44,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">Bağlayıcı</span><span "
 "class=\"o_stat_value\">Başarılı</span>"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
+msgid ""
+"<strong>Get Invoice List</strong> method must be activated to get records by "
+"their invoice date range"
+msgstr ""
+"Kayıtları fatura tarih aralığına göre getirmek için <strong>Fatura Listesini "
+"Getir</strong> metodu etkinleştirilmelidir"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
@@ -531,6 +533,21 @@ msgstr "syncOPS Eşle Sihirbazı"
 #: model:ir.model,name:payment_syncops.model_syncops_sync_wizard_line
 msgid "syncOPS Sync Wizard Lines"
 msgstr "syncOPS Eşle Sihirbaz Satırları"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
+#~ "label=\"Arrow icon\" title=\"Arrow\"/>\n"
+#~ "                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only "
+#~ "text-primary\" aria-label=\"Arrow icon\" title=\"Arrow\" "
+#~ "attrs=\"{'invisible': [('type_item_date_start', '=', False), "
+#~ "('type_item_date_end', '=', False)]}\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
+#~ "label=\"Ok ikonu\" title=\"Ok\"/>\n"
+#~ "                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only "
+#~ "text-primary\" aria-label=\"Ok ikonu\" title=\"Ok\" attrs=\"{'invisible': "
+#~ "[('type_item_date_start', '=', False), ('type_item_date_end', '=', "
+#~ "False)]}\"/>"
 
 #~ msgid "Close"
 #~ msgstr "Kapat"

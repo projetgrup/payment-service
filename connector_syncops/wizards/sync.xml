@@ -4,7 +4,7 @@
     <field name="name">syncops.sync.wizard.form</field>
     <field name="model">syncops.sync.wizard</field>
     <field name="arch" type="xml">
-        <form>
+        <form class="o_form_syncops_sync">
             <sheet>
                 <p class="d-flex mb-5">
                     <i class="fa fa-2x fa-info text-primary mr-3"/>
