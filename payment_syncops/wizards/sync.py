@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from odoo import fields, models, api, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
@@ -20,29 +19,55 @@ class SyncopsSyncWizard(models.TransientModel):
     system = fields.Char()
     type_item_date_start = fields.Date()
     type_item_date_end = fields.Date()
-    type_item_subtype = fields.Selection([
-        ('balance', 'Current Balances'),
-        ('invoice', 'Unpaid Invoices'),
-    ])
-    type_item_subtype_code = fields.Char()
-    type_item_subtype_state = fields.Text()
+    type_item_subtype = fields.Selection([('balance', 'Current Balances'), ('invoice', 'Unpaid Invoices')])
     type_item_subtype_ok = fields.Boolean(compute='_compute_type_item_subtype_ok')
 
-    @api.onchange('type_item_subtype', 'type_item_date_start', 'type_item_date_end')
-    def onchange_type_item(self):
-        if not self.type == 'item':
-            return
-        if not self.type_item_subtype_state:
-            return
-        state = json.loads(self.type_item_subtype_state)
-        if state['type'] != self.type_item_subtype or state['start'] != self.type_item_date_start or state['end'] != self.type_item_date_end:
-            self.refresh = True
-        else:
-            self.refresh = False
+    def _show_options(self):
+        res = super()._show_options()
+        if self.type == 'partner':
+            return False
+        elif self.type == 'item':
+            return True
+        return res
 
-    @api.onchange('refresh')
-    def onchange_refresh(self):
-        if self.env.context.get('recompute'):
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        res['system'] = self.env.context.get('active_system')
+
+        model = self.env.context.get('active_model')
+        if model == 'res.partner':
+            res['type'] = 'partner'
+        elif model == 'payment.item':
+            res['type'] = 'item'
+        else:
+            res['type'] = False
+
+        if res['type'] == 'item':
+            res['type_item_subtype'] = 'balance'
+
+        return res
+    
+    def confirm(self):
+        res = super().confirm()
+
+        if self.type == 'partner':
+            lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
+                'company_id': self.env.company.partner_id.ref,
+            })
+            if not lines:
+                lines = []
+
+            self.line_ids = [(0, 0, {
+                'name': line.get('name', False),
+                'partner_vat': line.get('vat', False),
+                'partner_ref': line.get('ref', False),
+                'partner_email': line.get('email', False),
+                'partner_phone': line.get('phone', False),
+            }) for line in lines]
+            res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
+
+        elif self.type == 'item':
             if self.type_item_subtype == 'balance':
                 params = {'company_id': self.env.company.partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
@@ -59,7 +84,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     'partner_mobile': line.get('mobile', False),
                     'partner_balance': line.get('balance', 0),
                 }) for line in lines]
-                self.type_item_subtype_code = 'balance'
+                res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_item_balance').id
 
             elif self.type_item_subtype == 'invoice':
                 params = {
@@ -90,173 +115,121 @@ class SyncopsSyncWizard(models.TransientModel):
                     'invoice_amount': line.get('amount', 0),
                     'invoice_currency': currencies.get(line.get('currency'), False),
                 }) for line in lines]
-                self.type_item_subtype_code = 'invoice'
-            
-            self.type_item_subtype_state = json.dumps({
-                'type': self.type_item_subtype,
-                'start': self.type_item_date_start and self.type_item_date_start.strftime(DF),
-                'end': self.type_item_date_end and self.type_item_date_end.strftime(DF),
-            })
+                res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_item_invoice').id
 
-    @api.model
-    def default_get(self, fields):
-        res = super().default_get(fields)
-        res['system'] = self.env.context.get('active_system')
-
-        model = self.env.context.get('active_model')
-        if model == 'res.partner':
-            res['type'] = 'partner'
-        elif model == 'payment.item':
-            res['type'] = 'item'
-        else:
-            res['type'] = False
-
-        if res['type'] == 'partner':
-            lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company_id': self.env.company.partner_id.ref,
-            })
-            if not lines:
-                lines = []
-
-            res['line_ids'] = [(0, 0, {
-                'name': line.get('name', False),
-                'partner_vat': line.get('vat', False),
-                'partner_ref': line.get('ref', False),
-                'partner_email': line.get('email', False),
-                'partner_phone': line.get('phone', False),
-            }) for line in lines]
-
-        elif res['type'] == 'item':
-            res['type_item_subtype'] = 'balance'
-            res['type_item_subtype_state'] = json.dumps({
-                'type': 'balance',
-                'start': False,
-                'end': False,
-            })
-            lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company_id': self.env.company.partner_id.ref,
-            })
-            if not lines:
-                lines = []
-
-            res['line_ids'] = [(0, 0, {
-                'name': line.get('name', False),
-                'partner_vat': line.get('vat', False),
-                'partner_ref': line.get('ref', False),
-                'partner_email': line.get('email', False),
-                'partner_phone': line.get('phone', False),
-                'partner_balance': line.get('balance', 0),
-            }) for line in lines]
         return res
 
-    def confirm(self):
-        company = self.env.company
-        partners_all = self.env['res.partner']
-        partners = partners_all.search_read([
-            ('company_id', '=', company.id),
-            ('vat', 'in', self.line_ids.mapped('partner_vat'))
-        ], ['id', 'vat'])
-        partners = {partner['vat']: partner['id'] for partner in partners}
-        if self.type == 'partner':
-            for line in self.line_ids.read():
-                if line['partner_vat'] in partners:
-                    partners_all.browse(partners[line['partner_vat']]).write({
-                        'name': line['name'],
-                        'ref': line['partner_ref'],
-                        'email': line['partner_email'],
-                        'phone': line['partner_phone'],
-                        'mobile': line['partner_phone'],
-                    })
-                else:
-                    partners_all.create({
-                        'system': self.system or company.system,
-                        'name': line['name'],
-                        'vat': line['partner_vat'],
-                        'ref': line['partner_ref'],
-                        'email': line['partner_email'],
-                        'phone': line['partner_phone'],
-                        'mobile': line['partner_phone'],
-                        'company_id': company.id,
-                    })
-        elif self.type == 'item':
-            items_all = self.env['payment.item']
-            if self.type_item_subtype == 'balance':
-                items = items_all.search_read([
-                    ('company_id', '=', company.id),
-                    ('paid', '=', False),
-                    ('vat', 'in', self.line_ids.mapped('partner_vat')),
-                    ('system', '=', self.system),
-                ], ['id', 'parent_id'])
-
-                items = {item['parent_id'][0]: item['id'] for item in items}
-                for line in self.line_ids.read():
-                    if line['partner_vat'] in partners and partners[line['partner_vat']] in items:
-                        items_all.browse(items[partners[line['partner_vat']]]).write({
-                            'amount': line['partner_balance'],
+    def sync(self):
+        res = super().sync()
+        wizard = self.browse(self.env.context.get('wizard_id', 0))
+        if wizard:
+            company = self.env.company
+            partners_all = self.env['res.partner']
+            partners = partners_all.search_read([
+                ('company_id', '=', company.id),
+                ('vat', 'in', wizard.line_ids.mapped('partner_vat'))
+            ], ['id', 'vat'])
+            partners = {partner['vat']: partner['id'] for partner in partners}
+            if wizard.type == 'partner':
+                for line in wizard.line_ids.read():
+                    if line['partner_vat'] in partners:
+                        partners_all.browse(partners[line['partner_vat']]).write({
+                            'name': line['name'],
+                            'ref': line['partner_ref'],
+                            'email': line['partner_email'],
+                            'phone': line['partner_phone'],
+                            'mobile': line['partner_phone'],
                         })
                     else:
-                        if line['partner_vat'] in partners:
-                            partner = partners_all.browse(partners[line['partner_vat']])
-                        else:
-                            partner = partners_all.create({
-                                'system': self.system or company.system,
-                                'name': line['name'],
-                                'vat': line['partner_vat'],
-                                'ref': line['partner_ref'],
-                                'email': line['partner_email'],
-                                'phone': line['partner_phone'],
-                                'mobile': line['partner_phone'],
-                                'company_id': company.id,
-                            })
-                        items_all.create({
-                            'system': self.system or company.system,
-                            'amount': line['partner_balance'],
-                            'parent_id': partner.id,
+                        partners_all.create({
+                            'system': wizard.system or company.system,
+                            'name': line['name'],
+                            'vat': line['partner_vat'],
+                            'ref': line['partner_ref'],
+                            'email': line['partner_email'],
+                            'phone': line['partner_phone'],
+                            'mobile': line['partner_phone'],
                             'company_id': company.id,
-                            'currency_id': line['currency_id'] and line['currency_id'][0] or company.currency_id.id,
                         })
-            elif self.type_item_subtype == 'invoice':
-                items = items_all.search_read([
-                    ('company_id', '=', company.id),
-                    ('paid', '=', False),
-                    ('vat', 'in', self.line_ids.mapped('partner_vat')),
-                    ('ref', 'in', self.line_ids.mapped('invoice_name')),
-                    ('system', '=', self.system),
-                ], ['id', 'parent_id', 'ref'])
+            elif wizard.type == 'item':
+                items_all = self.env['payment.item']
+                if wizard.type_item_subtype == 'balance':
+                    items = items_all.search_read([
+                        ('company_id', '=', company.id),
+                        ('paid', '=', False),
+                        ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
+                        ('system', '=', wizard.system),
+                    ], ['id', 'parent_id'])
 
-                items = {f"{item['parent_id'][0]}__{item['ref']}": item['id'] for item in items}
-                for line in self.line_ids.read():
-                    exist = line['partner_vat'] in partners
-                    key = f"{partners[line['partner_vat']]}__{line['invoice_name']}" if exist else None
-                    if exist and key in items:
-                        items_all.browse(items[key]).write({
-                            'amount': line['invoice_amount'],
-                        })
-                    else:
-                        if exist:
-                            partner = partners_all.browse(partners[line['partner_vat']])
-                        else:
-                            partner = partners_all.create({
-                                'system': self.system or company.system,
-                                'name': line['partner_name'],
-                                'vat': line['partner_vat'],
-                                'ref': line['partner_ref'],
-                                'email': line['partner_email'],
-                                'phone': line['partner_phone'],
-                                'mobile': line['partner_mobile'],
-                                'company_id': company.id,
+                    items = {item['parent_id'][0]: item['id'] for item in items}
+                    for line in wizard.line_ids.read():
+                        if line['partner_vat'] in partners and partners[line['partner_vat']] in items:
+                            items_all.browse(items[partners[line['partner_vat']]]).write({
+                                'amount': line['partner_balance'],
                             })
-                        items_all.create({
-                            'system': self.system or company.system,
-                            'amount': line['invoice_amount'],
-                            'description': line['invoice_name'],
-                            'date': line['invoice_date'],
-                            'ref': line['invoice_name'],
-                            'parent_id': partner.id,
-                            'company_id': company.id,
-                            'currency_id': line['invoice_currency'] and line['invoice_currency'][0] or company.currency_id.id,
-                        })
-        return super().confirm()
+                        else:
+                            if line['partner_vat'] in partners:
+                                partner = partners_all.browse(partners[line['partner_vat']])
+                            else:
+                                partner = partners_all.create({
+                                    'system': wizard.system or company.system,
+                                    'name': line['name'],
+                                    'vat': line['partner_vat'],
+                                    'ref': line['partner_ref'],
+                                    'email': line['partner_email'],
+                                    'phone': line['partner_phone'],
+                                    'mobile': line['partner_phone'],
+                                    'company_id': company.id,
+                                })
+                            items_all.create({
+                                'system': wizard.system or company.system,
+                                'amount': line['partner_balance'],
+                                'parent_id': partner.id,
+                                'company_id': company.id,
+                                'currency_id': line['currency_id'] and line['currency_id'][0] or company.currency_id.id,
+                            })
+                elif wizard.type_item_subtype == 'invoice':
+                    items = items_all.search_read([
+                        ('company_id', '=', company.id),
+                        ('paid', '=', False),
+                        ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
+                        ('ref', 'in', wizard.line_ids.mapped('invoice_name')),
+                        ('system', '=', wizard.system),
+                    ], ['id', 'parent_id', 'ref'])
+
+                    items = {f"{item['parent_id'][0]}__{item['ref']}": item['id'] for item in items}
+                    for line in wizard.line_ids.read():
+                        exist = line['partner_vat'] in partners
+                        key = f"{partners[line['partner_vat']]}__{line['invoice_name']}" if exist else None
+                        if exist and key in items:
+                            items_all.browse(items[key]).write({
+                                'amount': line['invoice_amount'],
+                            })
+                        else:
+                            if exist:
+                                partner = partners_all.browse(partners[line['partner_vat']])
+                            else:
+                                partner = partners_all.create({
+                                    'system': wizard.system or company.system,
+                                    'name': line['partner_name'],
+                                    'vat': line['partner_vat'],
+                                    'ref': line['partner_ref'],
+                                    'email': line['partner_email'],
+                                    'phone': line['partner_phone'],
+                                    'mobile': line['partner_mobile'],
+                                    'company_id': company.id,
+                                })
+                            items_all.create({
+                                'system': wizard.system or company.system,
+                                'amount': line['invoice_amount'],
+                                'description': line['invoice_name'],
+                                'date': line['invoice_date'],
+                                'ref': line['invoice_name'],
+                                'parent_id': partner.id,
+                                'company_id': company.id,
+                                'currency_id': line['invoice_currency'] and line['invoice_currency'][0] or company.currency_id.id,
+                            })
+        return res
 
 
 class SyncopsSyncWizardLine(models.TransientModel):

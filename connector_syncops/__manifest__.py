@@ -20,10 +20,12 @@
     ],
     'assets': {
         'web.assets_qweb': [
-            'connector_syncops/static/src/xml/sync.xml',
+            'connector_syncops/static/src/xml/button.xml',
+            'connector_syncops/static/src/xml/view.xml',
         ],
         'web.assets_backend': [
-            'connector_syncops/static/src/js/sync.js',
+            'connector_syncops/static/src/js/button.js',
+            'connector_syncops/static/src/js/view.js',
         ],
     },
     'auto_install': False,

@@ -1,4 +1,4 @@
-odoo.define('connector_syncops.SyncController', function (require) {
+odoo.define('connector_syncops.SyncButton', function (require) {
 "use strict";
 
 const ListController = require('web.ListController');
@@ -6,7 +6,7 @@ const core = require('web.core');
 
 const qweb = core.qweb;
 
-const SyncController = ListController.extend({
+const SyncButton = ListController.extend({
     events: _.extend({
         'click .o_button_sync': '_onClickSync',
     }, ListController.prototype.events),
@@ -35,6 +35,6 @@ const SyncController = ListController.extend({
     }
 });
 
-return SyncController;
+return SyncButton;
 });
     

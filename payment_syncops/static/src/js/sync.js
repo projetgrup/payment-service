@@ -3,9 +3,9 @@ odoo.define('payment_syncops.SyncController', function (require) {
 
 const PartnerController = require('payment_jetcheckout_system.PartnerController');
 const ItemController = require('payment_jetcheckout_system.ItemController');
-const SyncController = require('connector_syncops.SyncController');
+const SyncButton = require('connector_syncops.SyncButton');
 
-SyncController.include({
+SyncButton.include({
     willStart: function() {
         const self = this;
 
@@ -27,7 +27,7 @@ SyncController.include({
     },
 });
 
-PartnerController.include(SyncController.prototype);
-ItemController.include(SyncController.prototype);
+PartnerController.include(SyncButton.prototype);
+ItemController.include(SyncButton.prototype);
 
 });

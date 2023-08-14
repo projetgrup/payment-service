@@ -6,25 +6,41 @@ class SyncopsSyncWizard(models.TransientModel):
     _name = 'syncops.sync.wizard'
     _description = 'syncOPS Sync Wizard'
 
-    @api.depends('line_ids')
-    def _compute_count(self):
-        for rec in self:
-            rec.count = len(rec.line_ids)
-
     type = fields.Char()
-    refresh = fields.Boolean()
-    count = fields.Integer(compute='_compute_count')
-    line_ids = fields.One2many('syncops.sync.wizard.line', 'wizard_id', 'Lines', readonly=True)
+    line_ids = fields.One2many('syncops.sync.wizard.line', 'wizard_id', 'Lines')
 
-    def onchange(self, values, field_name, field_onchange):
-        return super(SyncopsSyncWizard, self.with_context(recursive_onchanges=False)).onchange(values, field_name, field_onchange)
-
-    @api.onchange('refresh')
-    def onchange_refresh(self):
-        pass
+    def _show_options(self):
+        return False
 
     def confirm(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sync'),
+            'domain': [('wizard_id', '=', self.id)],
+            'res_model': 'syncops.sync.wizard.line',
+            'context': {'dialog_size': 'large', 'wizard_id': self.id},
+            'view_mode': 'tree',
+            'target': 'new',
+        }
+
+    def sync(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.model
+    def action_sync(self):
+        wizard = self.create({})
+        if wizard._show_options():
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Sync'),
+                'res_id': wizard.id,
+                'res_model': 'syncops.sync.wizard',
+                'context': {'dialog_size': 'small'},
+                'view_mode': 'form',
+                'target': 'new',
+            }
+        else:
+            return wizard.confirm()
 
 
 class SyncopsSyncWizardLine(models.TransientModel):
@@ -35,3 +51,14 @@ class SyncopsSyncWizardLine(models.TransientModel):
     name = fields.Char(readonly=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+
+    def remove(self):
+        self.unlink()
+        return {'type': 'syncops.sync.wizard.reload'}
+
+
+class SyncopsSyncWizardReload(models.AbstractModel):
+    _name = 'syncops.sync.wizard.reload'
+
+    def _get_readable_fields(self):
+        return {}

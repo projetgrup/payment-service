@@ -1,56 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="form_sync" model="ir.ui.view">
+    <record id="form_wizard_sync" model="ir.ui.view">
     <field name="model">syncops.sync.wizard</field>
-    <field name="inherit_id" ref="connector_syncops.form_sync"/>
+    <field name="inherit_id" ref="connector_syncops.form_wizard_sync"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='count']/.." position="after">
-            <field name="type_item_subtype" string="Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('type_item_subtype_ok', '=', False)]}"/>
-            <label for="type_item_date_start" string="Dates" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
-            <div name="dates" class="o_row border-bottom mb-2" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}">
-                <field name="type_item_date_start" widget="daterange" class="text-center border-0" options='{"related_end_date": "type_item_date_end"}'/>
-                <i class="fa fa-long-arrow-right mx-2 oe_edit_only text-primary" aria-label="Arrow icon" title="Arrow"/>
-                <i class="fa fa-long-arrow-right mx-2 oe_read_only text-primary" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('type_item_date_start', '=', False), ('type_item_date_end', '=', False)]}"/>
-                <field name="type_item_date_end" widget="daterange" class="text-center border-0" options='{"related_start_date": "type_item_date_start"}'/>
-            </div>
-            <field name="type_item_subtype_ok" invisible="1"/>
-            <field name="type_item_subtype_code" invisible="1"/>
-            <field name="type_item_subtype_state" invisible="1"/>
-            <field name="system" invisible="1"/>
+        <xpath expr="//sheet" position="inside">
+            <group class="text-center">
+                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('type_item_subtype_ok', '=', False)]}"/>
+                <br colspan="2" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
+                <label for="type_item_date_start" string="Synchronization Date Range" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
+                <div name="dates" class="o_row border-bottom" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}">
+                    <field name="type_item_date_start" widget="daterange" class="text-center border-0" options='{"related_end_date": "type_item_date_end"}' placeholder="Start Date"/>
+                    <i class="fa fa-long-arrow-right mx-2 oe_edit_only text-primary" aria-label="Arrow icon" title="Arrow"/>
+                    <i class="fa fa-long-arrow-right mx-2 oe_read_only text-primary" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('type_item_date_start', '=', False), ('type_item_date_end', '=', False)]}"/>
+                    <field name="type_item_date_end" widget="daterange" class="text-center border-0" options='{"related_start_date": "type_item_date_start"}' placeholder="End Date"/>
+                </div>
+                <field name="type_item_subtype_ok" invisible="1"/>
+                <field name="system" invisible="1"/>
+            </group>
         </xpath>
-        <xpath expr="//field[@name='line_ids']/tree/field[@name='name']" position="before">
-            <field name="partner_id" readonly="1" force_save="1" invisible="1"/>
-            <field name="partner_name" readonly="1" force_save="1" invisible="1"/>
-            <field name="invoice_id" readonly="1" force_save="1" invisible="1"/>
-            <field name="partner_vat" string="VAT" force_save="1" attrs="{'column_invisible': [('parent.type', '=', 'item'), ('parent.type_item_subtype_code', '=', 'invoice')]}"/>
-            <field name="invoice_name" string="Document" force_save="1" attrs="{'column_invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
-            <field name="invoice_date" string="Date" force_save="1" attrs="{'column_invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
+    </field>
+    </record>
+ 
+    <record id="tree_wizard_sync_line_partner" model="ir.ui.view">
+    <field name="name">syncops.sync.wizard.line.partner</field>
+    <field name="model">syncops.sync.wizard.line</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="connector_syncops.tree_wizard_sync_line"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='name']" position="before">
+            <field name="partner_id" invisible="1"/>
+            <field name="partner_name" invisible="1"/>
+            <field name="partner_vat" string="VAT"/>
         </xpath>
-        <xpath expr="//field[@name='line_ids']/tree/field[@name='name']" position="after">
-            <field name="partner_ref" string="Reference" optional="hide" force_save="1" attrs="{'column_invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_email" string="Email" force_save="1" attrs="{'column_invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_phone" string="Phone" optional="hide" force_save="1" attrs="{'column_invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_mobile" string="Mobile" optional="hide" force_save="1" attrs="{'column_invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_balance" string="Balance" force_save="1" attrs="{'column_invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', 'not in', ('balance', '', False))]}"/>
-            <field name="invoice_amount" string="Amount" force_save="1" attrs="{'column_invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
-            <field name="invoice_currency" string="Currency" optional="hide" force_save="1" attrs="{'column_invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}" options="{'no_open': True, 'no_create': True}"/>
+        <xpath expr="//tree/field[@name='name']" position="after">
+            <field name="partner_ref" string="Reference" optional="hide"/>
+            <field name="partner_email" string="Email"/>
+            <field name="partner_phone" string="Phone" optional="hide"/>
+            <field name="partner_mobile" string="Mobile" optional="hide"/>
+            <field name="partner_balance" string="Balance"/>
         </xpath>
-        <xpath expr="//field[@name='line_ids']/form//group[@name='credentials']" position="inside">
-            <field name="partner_id" readonly="1" force_save="1" invisible="1"/>
-            <field name="partner_name" readonly="1" force_save="1" invisible="1"/>
-            <field name="invoice_id" readonly="1" force_save="1" invisible="1"/>
-            <field name="partner_vat" string="VAT" readonly="1" force_save="1"/>
-            <field name="partner_ref" string="Reference" readonly="1" force_save="1" attrs="{'invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="invoice_name" string="Document" force_save="1" attrs="{'invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
-            <field name="invoice_date" string="Date" force_save="1" attrs="{'invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
+    </field>
+    </record>
+
+    <record id="tree_wizard_sync_line_item_balance" model="ir.ui.view">
+    <field name="name">syncops.sync.wizard.line.item.balance</field>
+    <field name="model">syncops.sync.wizard.line</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="connector_syncops.tree_wizard_sync_line"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='name']" position="before">
+            <field name="partner_id" invisible="1"/>
+            <field name="partner_name" invisible="1"/>
+            <field name="invoice_id" invisible="1"/>
+            <field name="partner_vat" string="VAT"/>
         </xpath>
-        <xpath expr="//field[@name='line_ids']/form//group[@name='information']" position="inside">
-            <field name="partner_email" string="Email" readonly="1" force_save="1" attrs="{'invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_phone" string="Phone" readonly="1" force_save="1" attrs="{'invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_mobile" string="Mobile" readonly="1" force_save="1" attrs="{'invisible': [('parent.type', '!=', 'partner')]}"/>
-            <field name="partner_balance" string="Balance" force_save="1" attrs="{'invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', 'not in', ('balance', '', False))]}"/>
-            <field name="invoice_amount" string="Amount" force_save="1" attrs="{'invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}"/>
-            <field name="invoice_currency" string="Currency" force_save="1" attrs="{'invisible': ['|', ('parent.type', '!=', 'item'), ('parent.type_item_subtype_code', '!=', 'invoice')]}" options="{'no_open': True, 'no_create': True}"/>
+        <xpath expr="//tree/field[@name='name']" position="after">
+            <field name="partner_balance" string="Balance"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="tree_wizard_sync_line_item_invoice" model="ir.ui.view">
+    <field name="name">syncops.sync.wizard.line.item.invoice</field>
+    <field name="model">syncops.sync.wizard.line</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="connector_syncops.tree_wizard_sync_line"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='name']" position="before">
+            <field name="partner_id" invisible="1"/>
+            <field name="partner_name" invisible="1"/>
+            <field name="invoice_id" invisible="1"/>
+            <field name="invoice_name" string="Document"/>
+            <field name="invoice_date" string="Date"/>
+        </xpath>
+        <xpath expr="//tree/field[@name='name']" position="after">
+            <field name="invoice_amount" string="Amount"/>
+            <field name="invoice_currency" string="Currency" optional="hide" options="{'no_open': True, 'no_create': True}"/>
         </xpath>
     </field>
     </record>
