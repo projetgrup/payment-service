@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.exceptions import UserError
 
 
 class SyncopsSyncWizard(models.TransientModel):
@@ -87,6 +88,8 @@ class SyncopsSyncWizard(models.TransientModel):
                 res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_item_balance').id
 
             elif self.type_item_subtype == 'invoice':
+                if not self.type_item_subtype_ok:
+                    raise UserError(_('"Get Invoice List" method must be activated to get records by their invoice date range'))
                 params = {
                     'company': self.env.company.sudo().partner_id.ref,
                     'state': 'not_paid,posted'

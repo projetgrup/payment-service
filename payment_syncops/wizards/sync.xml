@@ -6,15 +6,20 @@
     <field name="arch" type="xml">
         <xpath expr="//sheet" position="inside">
             <group class="text-center">
-                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype_ok', '=', False)]}"/>
+                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('type', '!=', 'item')]}"/>
                 <br colspan="2" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
                 <label for="type_item_date_start" string="Synchronization Date Range" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
-                <div name="dates" class="o_row border-bottom" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}">
+                <div name="dates" class="o_row border-bottom" attrs="{'invisible': ['|', '|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice'), ('type_item_subtype_ok', '=', False)]}">
                     <field name="type_item_date_start" widget="daterange" class="text-center border-0" options='{"related_end_date": "type_item_date_end"}' placeholder="Start Date"/>
                     <i class="fa fa-long-arrow-right mx-2 oe_edit_only text-primary" aria-label="Arrow icon" title="Arrow"/>
                     <i class="fa fa-long-arrow-right mx-2 oe_read_only text-primary" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('type_item_date_start', '=', False), ('type_item_date_end', '=', False)]}"/>
                     <field name="type_item_date_end" widget="daterange" class="text-center border-0" options='{"related_start_date": "type_item_date_start"}' placeholder="End Date"/>
                 </div>
+                <div name="dates" class="o_row text-muted text-center" attrs="{'invisible': ['|', '|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice'), ('type_item_subtype_ok', '!=', False)]}">
+                    <strong>Get Invoice List</strong> method must be activated to get records by their invoice date range
+                </div>
+                
+                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': ['|', ('type', '!=', 'item')]}"/>
                 <field name="type_item_subtype_ok" invisible="1"/>
                 <field name="system" invisible="1"/>
             </group>
