@@ -6,6 +6,10 @@
     <field name="arch" type="xml">
         <form>
             <sheet>
+                <p class="d-flex mb-5">
+                    <i class="fa fa-2x fa-info mr-3"/>
+                    <span class="small">Please set correct options, then click confirm to get records to be synced.</span>
+                </p>
                 <field name="type" invisible="1"/>
             </sheet>
             <footer>

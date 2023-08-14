@@ -47,7 +47,7 @@ class SyncopsSyncWizard(models.TransientModel):
             res['type_item_subtype'] = 'balance'
 
         return res
-    
+
     def confirm(self):
         res = super().confirm()
 

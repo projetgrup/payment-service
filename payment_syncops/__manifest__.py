@@ -23,7 +23,7 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'payment_syncops/static/src/js/sync.js',
+            'payment_syncops/static/src/js/button.js',
         ],
         'web.assets_frontend': [
             'payment_syncops/static/src/xml/connector.xml',

@@ -29,5 +29,4 @@ SyncButton.include({
 
 PartnerController.include(SyncButton.prototype);
 ItemController.include(SyncButton.prototype);
-
 });

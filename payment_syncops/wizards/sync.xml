@@ -6,7 +6,7 @@
     <field name="arch" type="xml">
         <xpath expr="//sheet" position="inside">
             <group class="text-center">
-                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('type_item_subtype_ok', '=', False)]}"/>
+                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype_ok', '=', False)]}"/>
                 <br colspan="2" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
                 <label for="type_item_date_start" string="Synchronization Date Range" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
                 <div name="dates" class="o_row border-bottom" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}">
