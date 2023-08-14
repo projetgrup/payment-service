@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_wizard_sync" model="ir.ui.view">
+    <field name="name">syncops.sync.wizard.form</field>
+    <field name="model">syncops.sync.wizard</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <p class="d-flex mb-5">
+                    <i class="fa fa-2x fa-info mr-3"/>
+                    <span class="small">Please set correct options, then click confirm to get records to be synced.</span>
+                </p>
+                <field name="type" invisible="1"/>
+            </sheet>
+            <footer>
+                <button name="confirm" type="object" class="btn-primary" string="Confirm"/>
+                <button special="cancel" class="btn-secondary" string="Close"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="tree_wizard_sync_line" model="ir.ui.view">
+    <field name="name">syncops.sync.wizard.line.tree</field>
+    <field name="model">syncops.sync.wizard.line</field>
+    <field name="arch" type="xml">
+        <tree js_class="syncops_sync" create="0">
+            <header>
+                <button name="remove" type="object" string="Remove" icon="fa-trash"/>
+            </header>
+            <field name="name"/>
+            <field name="currency_id" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="action_sync" model="ir.actions.server">
+    <field name="name">Sync</field>
+    <field name="model_id" ref="connector_syncops.model_syncops_sync_wizard"/>
+    <field name="state">code</field>
+    <field name="code">action = model.action_sync()</field>
+    </record>
+</odoo>

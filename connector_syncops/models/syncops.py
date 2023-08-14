@@ -105,9 +105,10 @@ class SyncopsConnector(models.Model):
                         connector.write({
                             'connected': True,
                             'method_ids': [(5, 0, 0)] + [(0, 0, {
-                                'code': code,
-                                'name': name,
-                            }) for code, name in result['methods'].items()]
+                                'code': method['code'],
+                                'name': method['name'],
+                                'categ': method['category'],
+                            }) for method in result['methods']]
                         })
                         result[connector.id] = {
                             'type': 'info',
@@ -229,5 +230,6 @@ class SyncopsMethod(models.Model):
     _description = 'syncOPS Methods'
 
     connector_id = fields.Many2one('syncops.connector', 'Connector', index=True, ondelete='cascade')
-    name = fields.Char()
-    code = fields.Char()
+    name = fields.Char(string='Name')
+    code = fields.Char(string='Code')
+    categ = fields.Char(string='Category')
