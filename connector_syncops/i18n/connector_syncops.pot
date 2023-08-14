@@ -18,7 +18,7 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
 msgid ""
-"<i class=\"fa fa-2x fa-info mr-3\"/>\n"
+"<i class=\"fa fa-2x fa-info text-primary mr-3\"/>\n"
 "                    <span class=\"small\">Please set correct options, then click confirm to get records to be synced.</span>"
 msgstr ""
 
