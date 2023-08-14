@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="connector_syncops.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@class='o_cp_top_left']" position="replace">
+            <div class="o_cp_top_left">
+                <p class="h4 text-primary">
+                    <i class="fa fa-exclamation-circle mx-3" t-translation="off"/>Please ensure the records to be synced
+                </p>
+            </div>
+        </xpath>
+    </t>
+</templates>

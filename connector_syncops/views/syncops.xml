@@ -44,7 +44,25 @@
                     <group>
                         <label for="method_ids"/>
                         <div>
-                            <field name="method_ids" widget="many2many_tags" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>
+                            <!--<field name="method_ids" widget="many2many_tags" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>-->
+                            <field name="method_ids" nolabel="1" attrs="{'invisible': [('connected','=',False)]}">
+                                <tree>
+                                    <field name="categ"/>
+                                    <field name="name"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="categ"/>
+                                            </group>
+                                            <group>
+                                                <field name="name"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
                             <span class="text-muted" attrs="{'invisible': [('connected','!=',False)]}">Methods will be available after connection is successful</span>
                         </div>
                         <field name="active" invisible="1"/>

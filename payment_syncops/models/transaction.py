@@ -38,7 +38,7 @@ class PaymentTransaction(models.Model):
             'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
             'card_number': self.jetcheckout_card_number,
             'card_name': self.jetcheckout_card_name,
-            'transaction_id': self.jetcheckout_transaction_id,
+            'transaction_id': self.source_transaction_id.jetcheckout_transaction_id if self.source_transaction_id else self.jetcheckout_transaction_id,
             'installments': self.jetcheckout_installment_description,
             'amount_commission_cost': self.jetcheckout_commission_amount,
             'amount_customer_cost': self.jetcheckout_customer_amount,

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="connector_syncops.sync_button">
+        <button class="btn btn-secondary o_button_sync">Sync</button>
+    </t>
+
+    <t t-name="connector_syncops.sync_buttons">
+        <div class="d-flex" role="toolbar" aria-label="Main actions">
+            <button type="button" class="btn btn-primary o_list_button_sync" title="Sync" accesskey="s">
+                Sync
+            </button>
+            <button type="button" class="btn btn-secondary o_list_button_discard" title="Discard" accesskey="j">
+                Discard
+            </button>
+        </div>
+    </t>
+</templates>

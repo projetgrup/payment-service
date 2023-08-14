@@ -6,14 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-17 12:19+0000\n"
-"PO-Revision-Date: 2023-06-17 12:19+0000\n"
+"POT-Creation-Date: 2023-08-14 18:39+0000\n"
+"PO-Revision-Date: 2023-08-14 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
+msgid ""
+"<i class=\"fa fa-2x fa-info mr-3\"/>\n"
+"                    <span class=\"small\">Please set correct options, then click confirm to get records to be synced.</span>"
+msgstr ""
 
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
@@ -37,6 +44,18 @@ msgid "An error occured when connecting: %s"
 msgstr ""
 
 #. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "An error occured when connecting: %smessage"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__categ
+msgid "Category"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "Close"
 msgstr ""
@@ -49,12 +68,18 @@ msgstr ""
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__company_id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__company_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__company_id
 msgid "Company"
 msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model,name:connector_syncops.model_res_config_settings
 msgid "Config Settings"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
+msgid "Confirm"
 msgstr ""
 
 #. module: connector_syncops
@@ -93,6 +118,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -101,7 +128,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__currency_id
+msgid "Currency"
 msgstr ""
 
 #. module: connector_syncops
@@ -115,10 +149,20 @@ msgid "Date"
 msgstr ""
 
 #. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#, python-format
+msgid "Discard"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -172,6 +216,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__id
 msgid "ID"
 msgstr ""
 
@@ -180,6 +226,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -188,6 +236,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -196,7 +246,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__line_ids
+msgid "Lines"
 msgstr ""
 
 #. module: connector_syncops
@@ -209,6 +266,13 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.actions.act_window,help:connector_syncops.action_log
 msgid "Logs are listed here"
+msgstr ""
+
+#. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#, python-format
+msgid "Main actions"
 msgstr ""
 
 #. module: connector_syncops
@@ -229,6 +293,7 @@ msgstr ""
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__name
 msgid "Name"
 msgstr ""
 
@@ -287,8 +352,20 @@ msgid "Passive"
 msgstr ""
 
 #. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/view.xml:0
+#, python-format
+msgid "Please ensure the records to be synced"
+msgstr ""
+
+#. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "Please select a date range"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.tree_wizard_sync_line
+msgid "Remove"
 msgstr ""
 
 #. module: connector_syncops
@@ -371,6 +448,18 @@ msgid "Successful Requests"
 msgstr ""
 
 #. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#: code:addons/connector_syncops/wizards/sync.py:0
+#: code:addons/connector_syncops/wizards/sync.py:0
+#: model:ir.actions.server,name:connector_syncops.action_sync
+#, python-format
+msgid "Sync"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model,name:connector_syncops.model_syncops_log_wizard
 msgid "SyncOPS Log Wizard"
 msgstr ""
@@ -388,6 +477,11 @@ msgid "Token"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__type
+msgid "Type"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__username
 msgid "Username"
 msgstr ""
@@ -395,6 +489,11 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "View"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__wizard_id
+msgid "Wizard"
 msgstr ""
 
 #. module: connector_syncops
@@ -434,6 +533,21 @@ msgid "syncOPS Methods"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_sync_wizard
+msgid "syncOPS Sync Wizard"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_sync_wizard_line
+msgid "syncOPS Sync Wizard Lines"
+msgstr ""
+
+#. module: connector_syncops
 #: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
 msgid "syncOPS integrations are listed here"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_sync_wizard_reload
+msgid "syncops.sync.wizard.reload"
 msgstr ""
