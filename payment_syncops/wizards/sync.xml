@@ -18,8 +18,6 @@
                 <div name="dates" class="o_row text-muted text-center" attrs="{'invisible': ['|', '|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice'), ('type_item_subtype_ok', '!=', False)]}">
                     <strong>Get Invoice List</strong> method must be activated to get records by their invoice date range
                 </div>
-                
-                <field name="type_item_subtype" string="Synchronization Type" widget="radio" options="{'horizontal': True}" attrs="{'invisible': ['|', ('type', '!=', 'item')]}"/>
                 <field name="type_item_subtype_ok" invisible="1"/>
                 <field name="system" invisible="1"/>
             </group>
