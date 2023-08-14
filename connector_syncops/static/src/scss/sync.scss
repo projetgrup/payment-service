@@ -1,5 +1,16 @@
 .o_form_view {
-    .table-p-0 > tbody > tr > td {
-        padding: 0 !important;
+    &.o_form_syncops_sync {
+        table > tbody > tr {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            td.o_td_label {
+                border: none !important;
+            }
+        }
     }
 }

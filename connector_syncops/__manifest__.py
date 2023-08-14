@@ -24,6 +24,7 @@
             'connector_syncops/static/src/xml/view.xml',
         ],
         'web.assets_backend': [
+            'connector_syncops/static/src/scss/sync.scss',
             'connector_syncops/static/src/js/button.js',
             'connector_syncops/static/src/js/view.js',
         ],

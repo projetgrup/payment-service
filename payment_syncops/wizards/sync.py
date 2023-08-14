@@ -70,7 +70,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
         elif self.type == 'item':
             if self.type_item_subtype == 'balance':
-                params = {'company_id': self.env.company.partner_id.ref}
+                params = {'company_id': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
                     lines = []
