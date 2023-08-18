@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.exceptions import UserError
 
 
 class SyncopsSyncWizard(models.TransientModel):
@@ -47,13 +48,13 @@ class SyncopsSyncWizard(models.TransientModel):
             res['type_item_subtype'] = 'balance'
 
         return res
-    
+
     def confirm(self):
         res = super().confirm()
 
         if self.type == 'partner':
             lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company_id': self.env.company.partner_id.ref,
+                'company_id': self.env.company.sudo().partner_id.ref,
             })
             if not lines:
                 lines = []
@@ -69,7 +70,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
         elif self.type == 'item':
             if self.type_item_subtype == 'balance':
-                params = {'company_id': self.env.company.partner_id.ref}
+                params = {'company_id': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
                     lines = []
@@ -87,8 +88,10 @@ class SyncopsSyncWizard(models.TransientModel):
                 res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_item_balance').id
 
             elif self.type_item_subtype == 'invoice':
+                if not self.type_item_subtype_ok:
+                    raise UserError(_('"Get Invoice List" method must be activated to get records by their invoice date range'))
                 params = {
-                    'company': self.env.company.partner_id.ref,
+                    'company': self.env.company.sudo().partner_id.ref,
                     'state': 'not_paid,posted'
                 }
                 if self.type_item_date_start:

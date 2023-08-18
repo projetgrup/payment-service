@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 16:01+0000\n"
-"PO-Revision-Date: 2023-08-09 19:05+0300\n"
+"POT-Creation-Date: 2023-08-14 20:41+0000\n"
+"PO-Revision-Date: 2023-08-14 23:43+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.3.1\n"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/wizards/sync.py:0
+#, python-format
+msgid ""
+"\"Get Invoice List\" method must be activated to get records by their "
+"invoice date range"
+msgstr ""
+"Kayıtları fatura tarih aralığına göre getirmek için \"Fatura Listesini "
+"Getir\" metodu etkinleştirilmelidir"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
@@ -36,7 +46,17 @@ msgstr ""
 "class=\"o_stat_value\">Başarılı</span>"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
+msgid ""
+"<strong>Get Invoice List</strong> method must be activated to get records by "
+"their invoice date range"
+msgstr ""
+"Kayıtları fatura tarih aralığına göre getirmek için <strong>Fatura Listesini "
+"Getir</strong> metodu etkinleştirilmelidir"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_invoice
 msgid "Amount"
 msgstr "Tutar"
 
@@ -55,9 +75,10 @@ msgstr "Uygula"
 #. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 #, python-format
 msgid "Balance"
 msgstr "Bakiye"
@@ -119,7 +140,18 @@ msgid "Connector Transactions"
 msgstr "Bağlayıcı İşlemleri"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_invoice
+msgid "Currency"
+msgstr "Para Birimi"
+
+#. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__balance
+msgid "Current Balances"
+msgstr "Mevcut Bakiyeler"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_invoice
 msgid "Date"
 msgstr "Tarih"
 
@@ -135,6 +167,11 @@ msgid "Description"
 msgstr "Açıklama"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_invoice
+msgid "Document"
+msgstr "Belge"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Due Date"
 msgstr "Vade Tarihi"
@@ -142,12 +179,13 @@ msgstr "Vade Tarihi"
 #. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 #, python-format
 msgid "Email"
 msgstr "Eposta"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "End Date"
 msgstr "Bitiş Tarihi"
@@ -181,8 +219,34 @@ msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__invoice_id
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__invoice_amount
+msgid "Invoice Amount"
+msgstr "Fatura Tutarı"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__invoice_currency
+msgid "Invoice Currency"
+msgstr "Fatura Para Birimi"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__invoice_date
+msgid "Invoice Date"
+msgstr "Fatura Tarihi"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__invoice_name
+msgid "Invoice Name"
+msgstr "Fatura Adı"
+
+#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 #, python-format
 msgid "Mobile"
 msgstr "Cep Telefonu"
@@ -211,6 +275,11 @@ msgstr ""
 "deneyiniz."
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_id
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_balance
 msgid "Partner Balance"
 msgstr "İş Ortağı Bakiye"
@@ -219,6 +288,16 @@ msgstr "İş Ortağı Bakiye"
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_email
 msgid "Partner Email"
 msgstr "İş Ortağı Eposta"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_mobile
+msgid "Partner Mobile"
+msgstr "İş Ortağı Cep Telefonu"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_name
+msgid "Partner Name"
+msgstr "İş Ortağı Adı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_phone
@@ -251,7 +330,7 @@ msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 msgid "Phone"
 msgstr "Telefon"
 
@@ -261,7 +340,7 @@ msgid "Process Connector"
 msgstr "Bağlayıcıyı Çalıştır"
 
 #. module: payment_syncops
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 msgid "Reference"
 msgstr "Referans"
 
@@ -326,6 +405,7 @@ msgid "Select a partner"
 msgstr "İş ortağı seçin"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
@@ -356,6 +436,16 @@ msgstr "Bu işlemin başarılı durumu henüz bağlayıcıya gönderilmedi."
 #, python-format
 msgid "Sync"
 msgstr "Eşle"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
+msgid "Synchronization Date Range"
+msgstr "Eşleme Tarih Aralığı"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
+msgid "Synchronization Type"
+msgstr "Eşleme Türü"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__system
@@ -396,9 +486,35 @@ msgid "Type"
 msgstr "Tür"
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type_item_date_end
+msgid "Type Item Date End"
+msgstr "Tür Kalem Bitiş Tarihi"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type_item_date_start
+msgid "Type Item Date Start"
+msgstr "Tür Kalem Başlangıç Tarihi"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type_item_subtype
+msgid "Type Item Subtype"
+msgstr "Tür Kalem Alttür"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__type_item_subtype_ok
+msgid "Type Item Subtype Ok"
+msgstr "Tür Kalem Alttürdür"
+
+#. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__invoice
+msgid "Unpaid Invoices"
+msgstr "Ödenmemiş Faturalar"
+
+#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_syncops.form_sync
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 #, python-format
 msgid "VAT"
 msgstr "Vergi No"
@@ -418,6 +534,21 @@ msgstr "syncOPS Eşle Sihirbazı"
 msgid "syncOPS Sync Wizard Lines"
 msgstr "syncOPS Eşle Sihirbaz Satırları"
 
+#~ msgid ""
+#~ "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
+#~ "label=\"Arrow icon\" title=\"Arrow\"/>\n"
+#~ "                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only "
+#~ "text-primary\" aria-label=\"Arrow icon\" title=\"Arrow\" "
+#~ "attrs=\"{'invisible': [('type_item_date_start', '=', False), "
+#~ "('type_item_date_end', '=', False)]}\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"
+#~ "label=\"Ok ikonu\" title=\"Ok\"/>\n"
+#~ "                    <i class=\"fa fa-long-arrow-right mx-2 oe_read_only "
+#~ "text-primary\" aria-label=\"Ok ikonu\" title=\"Ok\" attrs=\"{'invisible': "
+#~ "[('type_item_date_start', '=', False), ('type_item_date_end', '=', "
+#~ "False)]}\"/>"
+
 #~ msgid "Close"
 #~ msgstr "Kapat"
 
@@ -429,9 +560,6 @@ msgstr "syncOPS Eşle Sihirbaz Satırları"
 
 #~ msgid "Created on"
 #~ msgstr "Oluşturma Tarihi"
-
-#~ msgid "Currency"
-#~ msgstr "Para Birimi"
 
 #~ msgid "Display Name"
 #~ msgstr "Görünen Ad"
@@ -450,9 +578,6 @@ msgstr "syncOPS Eşle Sihirbaz Satırları"
 
 #~ msgid "Lines"
 #~ msgstr "Satırlar"
-
-#~ msgid "Partner Name"
-#~ msgstr "İş Ortağı Adı"
 
 #~ msgid "Please ensure the records to be synced"
 #~ msgstr "Lütfen eşlenecek kayıtlardan emin olunuz"

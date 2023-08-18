@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 16:01+0000\n"
-"PO-Revision-Date: 2023-08-09 19:04+0300\n"
+"POT-Creation-Date: 2023-08-14 18:39+0000\n"
+"PO-Revision-Date: 2023-08-14 21:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.3.1\n"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
+msgid ""
+"<i class=\"fa fa-2x fa-info text-primary mr-3\"/>\n"
+"                    <span class=\"small\">Please set correct options, then "
+"click confirm to get records to be synced.</span>"
+msgstr ""
+"<i class=\"fa fa-2x fa-info text-primary mr-3\"/>\n"
+"                    <span class=\"small\">Lütfen doğru seçenekleri "
+"ayarlayın. sonra onayla butonu ile eşlenecek kayıtları getirin.</span>"
 
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
@@ -45,7 +56,12 @@ msgid "An error occured when connecting: %smessage"
 msgstr ""
 
 #. module: connector_syncops
-#: model_terms:ir.ui.view,arch_db:connector_syncops.form_sync
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__categ
+msgid "Category"
+msgstr "Kategori"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "Close"
 msgstr "Kapat"
@@ -66,6 +82,11 @@ msgstr "Şirket"
 #: model:ir.model,name:connector_syncops.model_res_config_settings
 msgid "Config Settings"
 msgstr "Yapılandırma"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.form_wizard_sync
+msgid "Confirm"
+msgstr "Onayla"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__connected
@@ -98,11 +119,6 @@ msgstr "Bağlantı başarılı"
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__connector_id
 msgid "Connector"
 msgstr "Bağlayıcı"
-
-#. module: connector_syncops
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__count
-msgid "Count"
-msgstr "Adet"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_uid
@@ -138,6 +154,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__date
 msgid "Date"
 msgstr "Tarih"
+
+#. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Vazgeç"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
@@ -250,6 +273,13 @@ msgid "Logs are listed here"
 msgstr "Günlükler burada listelenir"
 
 #. module: connector_syncops
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#, python-format
+msgid "Main actions"
+msgstr "Ana aksiyonlar"
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__message
 msgid "Message"
 msgstr "Mesaj"
@@ -268,7 +298,6 @@ msgstr "Metotlar"
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__name
-#: model_terms:ir.ui.view,arch_db:connector_syncops.form_sync
 msgid "Name"
 msgstr "Ad"
 
@@ -327,7 +356,9 @@ msgid "Passive"
 msgstr "Pasif"
 
 #. module: connector_syncops
-#: model_terms:ir.ui.view,arch_db:connector_syncops.form_sync
+#. openerp-web
+#: code:addons/connector_syncops/static/src/xml/view.xml:0
+#, python-format
 msgid "Please ensure the records to be synced"
 msgstr "Lütfen eşlenecek kayıtlardan emin olun"
 
@@ -335,6 +366,11 @@ msgstr "Lütfen eşlenecek kayıtlardan emin olun"
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "Please select a date range"
 msgstr "Lütfen bir tarih aralığı seçiniz"
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.tree_wizard_sync_line
+msgid "Remove"
+msgstr "Kaldır"
 
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_form
@@ -417,10 +453,9 @@ msgstr "Başarılı İstekler"
 
 #. module: connector_syncops
 #. openerp-web
-#: code:addons/connector_syncops/static/src/xml/item.xml:0
-#: code:addons/connector_syncops/static/src/xml/sync.xml:0
-#: model:ir.actions.act_window,name:connector_syncops.action_sync
-#: model_terms:ir.ui.view,arch_db:connector_syncops.form_sync
+#: code:addons/connector_syncops/static/src/xml/button.xml:0
+#: code:addons/connector_syncops/wizards/sync.py:0
+#: model:ir.actions.server,name:connector_syncops.action_sync
 #, python-format
 msgid "Sync"
 msgstr "Eşle"
@@ -469,11 +504,6 @@ msgid "You must specify a syncOPS endpoint URL address in settings"
 msgstr "Ayarlarda syncOPS uç nokta adresi belirtmelisiniz"
 
 #. module: connector_syncops
-#: model_terms:ir.ui.view,arch_db:connector_syncops.form_sync
-msgid "record(s) will be synced"
-msgstr "kayıt eşlenecektir"
-
-#. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
 msgid "syncOPS"
 msgstr "syncOPS"
@@ -517,6 +547,17 @@ msgstr "syncOPS Eşle Sihirbaz Satırları"
 #: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
 msgid "syncOPS integrations are listed here"
 msgstr "syncOPS entegrasyonları burada listelenir"
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_sync_wizard_reload
+msgid "syncops.sync.wizard.reload"
+msgstr ""
+
+#~ msgid "Count"
+#~ msgstr "Adet"
+
+#~ msgid "record(s) will be synced"
+#~ msgstr "kayıt eşlenecektir"
 
 #, python-format
 #~ msgid "An error occured when connecting: %sresponse_message"

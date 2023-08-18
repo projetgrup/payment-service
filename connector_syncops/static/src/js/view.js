@@ -9,7 +9,6 @@ const ListView = require('web.ListView');
 const viewRegistry = require('web.view_registry');
 const core = require('web.core');
 
-const _t = core._t;
 const qweb = core.qweb;
 
 
@@ -39,23 +38,22 @@ const SyncController = ListController.extend({
         return this._super.apply(this, arguments);
     },
 
-    _onSync: async function (ev) {
-        const node = $(ev.currentTarget);
+    _onSync: async function () {
         this._disableButtons();
         const state = this.model.get(this.handle);
- 
+        const model = 'syncops.sync.wizard'
         try {
             const actionData = Object.assign({}, {
                 type: 'object',
-                resModel: 'syncops.sync.wizard',
                 name: 'sync',
+                resModel: model,
                 resId: null,
                 resIds: null,
             });
 
             const recordData = {
                 context: state.getContext(),
-                model: 'syncops.sync.wizard',
+                model: model,
             };
             await this._executeButtonAction(actionData, recordData);
         } finally {
