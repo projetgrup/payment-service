@@ -28,12 +28,6 @@ const SyncController = ListController.extend({
         'click .o_button_import_transaction': '_onClickImportTransaction',
     }),
 
-    willStart: function() {
-        var self = this;
-        console.log(this);
-        return this._super.apply(this, arguments);
-    },
-
     renderButtons: function ($node) {
         if ($node && $node[0] && $node[0]['nodeName'] === 'FOOTER') {
             const $buttons = $(qweb.render('connector_syncops.sync_buttons', {widget: this}));
