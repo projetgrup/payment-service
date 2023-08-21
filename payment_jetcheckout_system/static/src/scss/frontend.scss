@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Delius';
+    src: url('../font/Delius.ttf') format('truetype');
+}
+
 .payment-page {
     .header {
         .o_company_logo {
@@ -6,7 +11,207 @@
             margin: 10px;
         }
     }
+
+    .header-dynamic {
+        height: 10vh !important;
+        border-width: 2px !important;
+    }
+
+    .payment-system {
+        height: 90vh !important;
+        max-width: 700px;
+        margin: 0 auto;
+
+        button {
+            padding: 1em;
+            border-radius: 10px !important;
+            border-bottom: 3px solid theme-color('primary');
+            color: theme-color('primary');
+            font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+
+            &.btn-navigation {
+                border: none;
+                color: #aaaaaa;
+                box-shadow: none;
+            }
+
+            &:hover {
+                box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+            }
+        }
+
+        .payment-card {
+            height: 100% !important;
+            border-width: 3px !important;
+
+            .payment-card-item {
+                position: absolute;
+                background-color: #ffffff;
+                //border: 2px solid #dddddd;
+                //border-radius: 10px;
+                height: 100%;
+                inset: 0;
+                transition: all 0.5s;
+                transform: translateX(100%);
+
+                &.slide:not(.show) {
+                    transform: translateX(-100%);
+                }
+
+                &.show {
+                    transform: translateX(0%);
+                }
+            }
+
+            [field="page.section.all"] {
+                position: absolute;
+                top: 0;
+                z-index: 9;
+                height: 4em;
+                width: 100%;
+                border-bottom: 2px dashed #dddddd;
+                border-radius: 0 0 10px 10px;
+                background-color: #ffffff;
+                display: flex;
+                transition: all 0.5s;
+                transform: translateY(-100%);
+
+                &.show {
+                    transform: translateY(0%);
+                }
+
+                > div {
+                    flex: 1;
+                    text-align: center;
+                    background-color: #eeeeee;
+                    color: #cccccc;
+                    font-weight: bold;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden;
+                    transition: all 0.5s;
+
+                    &:first-of-type {
+                        border-right: 2px dashed #dddddd;
+                    }
+
+                    &:last-of-type {
+                        border-left: 2px dashed #dddddd;
+                    }
+
+                    &.active {
+                        font-size: 1.25em;
+                        color: theme-color('primary');
+                    }
+                }
+            }
+
+            [field="page.loading"] {
+                transform: translateX(0%);
+                &:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    inset: 0;
+                    background: #eeeeee;
+                    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+                    border-radius: 5px;
+                    background-size: 200% 400%;
+                    animation: 1.5s shine linear infinite;
+                    transition: opacity 0.5s;
+                }
+            }
+
+            [field="page.welcome"] {
+                position: relative;
+                transform: translateX(0%);
+
+                .welcome-title {
+                    position: absolute;
+                    visibility: visible !important;
+                    top: 0;
+                    width: 90%;
+                    height: 100%;
+
+                    > div {
+                        height: 50%;
+                        overflow: hidden;
+                        position: absolute;
+                        width: 100%;
+
+                        div {
+                            position: absolute;
+                            text-align: center;
+                            width: 100%;
+                            font-size: 1.5em;
+                            padding: 0.5em 0;
+                            white-space: nowrap;
+                        }
+
+                        &.welcome-title-top {
+                            border-bottom: 5px solid #aaaaaa;
+                            top: 0;
+
+                            > div {
+                                width: 100%;
+                                animation: welcomeTopText 1s;
+                                animation-delay: 0.5s;
+                                animation-fill-mode: forwards;
+                                animation-timing-function: cubic-bezier(0.25,0.1,0.25,1);
+                                bottom: 0;
+                                transform: translate(0, 100%);
+                                font-family: Delius, sans-serif;
+                                text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+                                color: theme-color('primary');
+                                font-size: 4em;
+                            }
+                        }
+
+                        &.welcome-title-bottom {
+                            bottom: 0;
+
+                            > div {
+                                animation: welcomeBottomText 1s;
+                                animation-delay: 0.5s;
+                                animation-fill-mode: forwards;
+                                animation-timing-function: cubic-bezier(0.25,0.1,0.25,1);
+                                top: 0;
+                                transform: translate(0, -100%);
+                                font-size: 2em;
+
+                                &:nth-child(2) {
+                                    top: 4em;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            [field="page.amount"] {
+                padding-top: 6em !important;
+
+                input {
+                    transition: all 0.2s;
+                    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+                    &:hover {
+                        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+                    }
+                }
+            }
+        }
+
+    }
 }
+
 .oe_sign_form {
     max-width: 900px !important;
 
@@ -79,4 +284,18 @@
         }
     }
 
+}
+
+@keyframes shine {
+    to { background-position-x: -200%; }
+}
+
+@keyframes welcomeTopText {
+    0% { transform: translate3d(0, 100%, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes welcomeBottomText {
+    0% { transform: translate3d(0, -100%, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }

@@ -2,4 +2,76 @@
     .table-p-0 > tbody > tr > td {
         padding: 0 !important;
     }
+
+    .o_field_radio.o_field_radio_items {
+        flex-wrap: wrap;
+
+        .o_radio_item {
+            cursor: pointer;
+            color: #444444;
+            padding: 0;
+            margin: 2px 3px;
+            transition: all 0.2s;
+            background-color: #eeeeee;
+            height: 30px;
+
+            input {
+                z-index: initial;
+                opacity: initial;
+
+                &::before {
+                    content: "";
+                    font: normal normal normal 14px/1 FontAwesome;
+                    font-size: inherit;
+                    text-rendering: auto;
+                    -webkit-font-smoothing: antialiased;
+                    position: absolute;
+                    left: 0px;
+                    width: 32px;
+                    background-color: #dddddd;
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: #555555;
+                }
+            }
+
+            &:hover {
+                //background-color: #eeeeee;
+                box-shadow: 0 0 2px 2px #cccccc88;
+            }
+
+            input:checked + label {
+                color: theme-color('primary');
+            }
+
+            label {
+                cursor: pointer;
+                color: #444444;
+                text-align: center;
+                width: 100%;
+                margin: 0;
+                font-weight: 500;
+                padding: 5px 10px 5px 45px;
+
+                &::before, &::after {
+                    top: 10px;
+                    left: 25px;
+                }
+            }
+        }
+
+        &[name=payment_page_flow] .o_radio_item input {
+            &[data-value=static]::before {
+                content: "\f247";
+                padding-right: 3px;
+            }
+
+            &[data-value=dynamic]::before {
+                content: "\f248";
+                padding-right: 3px;
+            }
+        }
+    }
 }

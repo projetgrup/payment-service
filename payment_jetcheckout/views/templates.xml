@@ -27,7 +27,7 @@
 
     <template id="s2s" name="Paylox S2S Form">
         <t t-if="order">
-            <t t-set="model" t-value="order"/>
+            <t t-set="model" t-value="order.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/shop'"/>
             <t t-set="fail_url" t-value="'/payment/card/shop'"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -37,7 +37,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="sale_order and sale_order._name == 'sale.order'">
-            <t t-set="model" t-value="sale_order"/>
+            <t t-set="model" t-value="sale_order.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="fail_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -47,7 +47,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="invoice and invoice._name == 'account.move'">
-            <t t-set="model" t-value="invoice"/>
+            <t t-set="model" t-value="invoice.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="fail_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -57,7 +57,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
         </t>
         <t t-elif="account and account._name == 'sale.subscription'">
-            <t t-set="model" t-value="account"/>
+            <t t-set="model" t-value="account.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
             <t t-set="fail_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
             <t t-set="amount" t-value="model.recurring_total"/>
@@ -69,7 +69,7 @@
         <t t-else="">
             <t t-if="access_token">
                 <t t-if="sale_order_id">
-                    <t t-set="model" t-value="request.env['sale.order'].browse(sale_order_id)"/>
+                    <t t-set="model" t-value="request.env['sale.order'].sudo().browse(sale_order_id)"/>
                     <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
@@ -78,7 +78,7 @@
                     <input type="hidden" t-att-value="model.id" field="payment.order"/>
                 </t>
                 <t t-elif="invoice_id">
-                    <t t-set="model" t-value="request.env['account.move'].browse(invoice_id)"/>
+                    <t t-set="model" t-value="request.env['account.move'].sudo().browse(invoice_id)"/>
                     <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_id"/>

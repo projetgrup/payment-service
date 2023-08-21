@@ -121,34 +121,101 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <div class="header row mx-0 bg-white border p-2 px-lg-2">
-                <div>
-                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
-                </div>
-            </div>
-            <div class="payment-system">
-                <div class="payment-card row justify-content-center mx-0">
-                    <t t-call="payment_jetcheckout.payment_sidebar">
-                        <t t-set="page" t-value="'payment'"/>
-                        <t t-set="no_payment_icons" t-value="True"/>
-                        <t t-set="no_card_preview" t-value="True"/>
-                        <t t-set="buttons">
-                            <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
-                        </t>
-                        <t t-call="payment_jetcheckout_system.payment_contact"/>
-                        <t t-set="labels"/>
-                    </t>
-                    <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                        <t t-call="payment_jetcheckout.payment_form">
-                            <t t-set="no_smart_buttons" t-value="True"/>
-                        </t>
-                        <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
-                        <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-if="flow == 'dynamic'">
+                <div class="header header-dynamic row mx-0 bg-white border p-2 px-lg-2">
+                    <div>
+                        <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                     </div>
                 </div>
-                <t t-call="payment_jetcheckout_system.payment_agreement"/>
-                <t t-call="payment_jetcheckout_system.payment_footer"/>
-            </div>
+                <div class="payment-system payment-dynamic d-flex flex-column align-items-center p-3">
+                    <div class="payment-card card position-relative w-100">
+                        <div class="payment-card-section d-flex fade" field="page.section.all">
+                            <div field="page.section.amount">
+                                Amount
+                            </div>
+                            <div field="page.section.card">
+                                Credit Card
+                            </div>
+                            <div field="page.section.installment">
+                                Installment
+                            </div>
+                        </div>
+                        <div class="payment-card-item d-flex fade show p-3" field="page.loading">
+                            <div class="m-auto">
+                                <i class="fa fa-4x fa-circle-o-notch fa-spin text-primary"/>
+                            </div>
+                        </div>
+                        <div class="payment-card-item fade p-3" field="page.welcome">
+                            <div class="align-items-center d-flex flex-column justify-content-center pb-5">
+                                <div class="fade invisible">
+                                    <div class="welcome-title-top">
+                                        <div>Welcome</div>
+                                    </div>
+                                    <div class="welcome-title-bottom">
+                                        <div><t t-esc="contact and contact.name or partner.name"/></div>
+                                        <div class="fade">
+                                            <button class="btn" field="button.welcome.done">Proceed to payment<i class="fa fa-chevron-right" t-translation="off"/></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="payment-card-item fade invisible p-3" field="page.amount">
+                            <div class="d-flex flex-row justify-content-between mb-3 w-100">
+                                <button class="btn btn-navigation" field="button.amount.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
+                                <button class="btn btn-navigation" field="button.amount.next">Next<i class="fa fa-chevron-right" t-translation="off"/></button>
+                            </div>
+                            <div class="align-items-center d-flex flex-column justify-content-center pb-5">
+                                <div class="font-weight-bold h2 my-5 text-primary">
+                                    Amount to Pay
+                                </div>
+                                <div>
+                                    <div class="field-container">
+                                        <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
+                                        <span class="bar-container"/>
+                                        <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                        <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                    </div>
+                                </div>
+                                <div class="py-5">
+                                    <button class="btn" field="button.amount.done">Enter credit card details<i class="fa fa-2x fa-credit-card" t-translation="off"/></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="header row mx-0 bg-white border p-2 px-lg-2">
+                    <div>
+                        <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                    </div>
+                </div>
+                <div class="payment-system">
+                    <div class="payment-card row justify-content-center mx-0">
+                        <t t-call="payment_jetcheckout.payment_sidebar">
+                            <t t-set="page" t-value="'payment'"/>
+                            <t t-set="no_payment_icons" t-value="True"/>
+                            <t t-set="no_card_preview" t-value="True"/>
+                            <t t-set="buttons">
+                                <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                            </t>
+                            <t t-call="payment_jetcheckout_system.payment_contact"/>
+                            <t t-set="labels"/>
+                        </t>
+                        <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                            <t t-call="payment_jetcheckout.payment_form">
+                                <t t-set="no_smart_buttons" t-value="True"/>
+                            </t>
+                            <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                            <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>
     </template>
 

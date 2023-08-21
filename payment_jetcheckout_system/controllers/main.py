@@ -158,6 +158,7 @@ class PayloxSystemController(Controller):
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
+            'flow': values['company'].payment_page_flow,
         })
 
         # remove hash if exists

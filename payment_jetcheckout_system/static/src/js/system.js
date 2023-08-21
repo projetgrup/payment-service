@@ -207,4 +207,83 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
+    selector: '.payment-dynamic',
+    
+    init: function (parent, options) {
+        this._super(parent, options);
+        this.page = {
+            loading: new fields.element(),
+            welcome: new fields.element(),
+            amount: new fields.element(),
+            section: {
+                all: new fields.element(),
+                amount: new fields.element(),
+                card: new fields.element(),
+                installment: new fields.element(),
+            },
+        };
+
+        this.button = {
+            welcome: {
+                done: new fields.element({
+                    events: [['click', this._onClickWelcomeNext]],
+                }),
+            },
+            amount: {
+                prev: new fields.element({
+                    events: [['click', this._onClickAmountPrev]],
+                }),
+                next: new fields.element({
+                    events: [['click', this._onClickAmountNext]],
+                }),
+                done: new fields.element({
+                    events: [['click', this._onClickAmountNext]],
+                }),
+            },
+        };
+    },
+ 
+    start: function () {
+        const self = this;
+        return this._super.apply(this, arguments).then(function () {
+            payloxPage.prototype._start.apply(self);
+            self.page.loading.$.removeClass('show');
+            self.page.welcome.$.addClass('show');
+            self.page.welcome.$.find('.invisible').addClass('show welcome-title');
+            setTimeout(function() {
+                self.page.welcome.$.find('.fade').addClass('show');
+            }, 1500);
+            console.log(self);
+        });
+    },
+
+    _onClickWelcomeNext: function () {
+        const self = this;
+        this.page.welcome.$.addClass('slide').removeClass('show');
+        setTimeout(function() {
+            self.page.welcome.$.addClass('invisible');
+            self.page.section.all.$.addClass('show');
+            self.page.section.amount.$.addClass('active');
+            self.page.amount.$.addClass('slide show').removeClass('invisible');
+        }, 500);
+    },
+
+    _onClickAmountPrev: function () {
+        const self = this;
+        this.page.amount.$.removeClass('slide show');
+        this.page.section.all.$.removeClass('show');
+        self.page.section.amount.$.removeClass('active');
+        setTimeout(function() {
+            self.page.amount.$.addClass('invisible');
+            self.page.welcome.$.removeClass('slide invisible').addClass('show');
+        }, 500);
+    },
+
+    _onClickAmountNext: function () {
+        const self = this;
+        alert('test');
+    }
+});
+
 export default publicWidget.registry.payloxSystemPage;
