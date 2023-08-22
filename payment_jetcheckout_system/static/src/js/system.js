@@ -216,6 +216,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             loading: new fields.element(),
             welcome: new fields.element(),
             amount: new fields.element(),
+            card: new fields.element(),
+            installment: new fields.element(),
             section: {
                 all: new fields.element(),
                 amount: new fields.element(),
@@ -239,6 +241,28 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 }),
                 done: new fields.element({
                     events: [['click', this._onClickAmountNext]],
+                }),
+            },
+            card: {
+                prev: new fields.element({
+                    events: [['click', this._onClickCardPrev]],
+                }),
+                next: new fields.element({
+                    events: [['click', this._onClickCardNext]],
+                }),
+                done: new fields.element({
+                    events: [['click', this._onClickCardNext]],
+                }),
+            },
+            installment: {
+                prev: new fields.element({
+                    events: [['click', this._onClickInstallmentPrev]],
+                }),
+                next: new fields.element({
+                    events: [['click', this._onClickInstallmentNext]],
+                }),
+                done: new fields.element({
+                    events: [['click', this._onClickInstallmentNext]],
                 }),
             },
         };
@@ -282,8 +306,52 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     _onClickAmountNext: function () {
         const self = this;
+        this.page.amount.$.addClass('slide').removeClass('show');
+        setTimeout(function() {
+            self.page.amount.$.addClass('invisible');
+            self.page.section.amount.$.addClass('done');
+            self.page.section.card.$.addClass('active');
+            self.page.card.$.addClass('slide show').removeClass('invisible');
+        }, 500);
+    },
+
+    _onClickCardPrev: function () {
+        const self = this;
+        self.page.card.$.removeClass('slide show');
+        setTimeout(function() {
+            self.page.amount.$.removeClass('invisible slide').addClass('show');
+            self.page.section.card.$.removeClass('active');
+            self.page.section.amount.$.removeClass('done');
+            self.page.card.$.addClass('invisible');
+        }, 500);
+    },
+
+    _onClickCardNext: function () {
+        const self = this;
+        this.page.card.$.addClass('slide').removeClass('show');
+        setTimeout(function() {
+            self.page.card.$.addClass('invisible');
+            self.page.section.card.$.addClass('done');
+            self.page.section.installment.$.addClass('active');
+            self.page.installment.$.addClass('slide show').removeClass('invisible');
+        }, 500);
+    },
+
+    _onClickInstallmentPrev: function () {
+        const self = this;
+        self.page.installment.$.removeClass('slide show');
+        setTimeout(function() {
+            self.page.card.$.removeClass('invisible slide').addClass('show');
+            self.page.section.installment.$.removeClass('active');
+            self.page.section.card.$.removeClass('done');
+            self.page.installment.$.addClass('invisible');
+        }, 500);
+    },
+
+    _onClickInstallmentNext: function () {
+        const self = this;
         alert('test');
-    }
+    },
 });
 
 export default publicWidget.registry.payloxSystemPage;
