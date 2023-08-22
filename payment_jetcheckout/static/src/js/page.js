@@ -142,6 +142,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _setCurrency: function () {
         const currency = $('[field=currency]');
+        if (!currency.length) {
+            console.error('Currency field not found. Amount mask will not work.')
+        }
+
         this.currency = {
             id: currency.data('id'),
             name: currency.data('name'),

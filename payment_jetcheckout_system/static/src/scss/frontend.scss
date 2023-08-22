@@ -13,7 +13,7 @@
     }
 
     .payment-dynamic {
-        height: 60vh !important;
+        height: 80vh !important;
         max-width: 700px;
         margin: 0 auto;
 
@@ -33,6 +33,14 @@
                 border: none;
                 color: #aaaaaa;
                 box-shadow: none;
+            }
+
+            &.btn-done {
+                min-width: 300px;
+                display: flex;
+                justify-content: center;
+                background-color: theme-color('primary');
+                color: #ffffff;
             }
 
             &:hover {
@@ -82,8 +90,13 @@
                     margin: 1em 0;
                 }
             }
+ 
+            .payment-gradient {
+                height: 300px;
+                border-width: 2px !important;
+            }
 
-            [field="page.section.all"] {
+            /*[field="page.section.all"] {
                 position: absolute;
                 top: 0;
                 z-index: 9;
@@ -174,7 +187,7 @@
                         }
                     }
                 }
-            }
+            }*/
 
             [field="page.loading"] {
                 transform: translateX(0%);
@@ -254,9 +267,7 @@
                 }
             }
 
-            [field="page.amount"],  [field="page.card"],  [field="page.installment"] {
-                padding-top: 6em !important;
-
+            [field="page.amount"],  [field="page.card"] {
                 input {
                     transition: all 0.2s;
                     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);

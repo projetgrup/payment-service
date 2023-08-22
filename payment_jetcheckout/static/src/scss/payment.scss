@@ -434,7 +434,7 @@
             -moz-transition: 0.2s ease all;
             -webkit-transition: 0.2s ease all;
             span {
-                background: #fff;
+                background-image: linear-gradient(0deg, transparent 40%, rgb(255,255,255) 40%, rgb(255,255,255) 60%, transparent 100%);
                 padding: 0 5px;
             }
         }

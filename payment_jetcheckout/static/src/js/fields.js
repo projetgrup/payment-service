@@ -15,7 +15,11 @@ class fields {
             if (this.mask instanceof Function) {
                 this.mask = this.mask.apply(self);
             }
-            this._ = new IMask(this.$[0], this.mask);
+            try {
+                this._ = new IMask(this.$[0], this.mask);
+            } catch (error) {
+                console.error(error);
+            }
         }
         if (this.events) {
             for (const [e, f] of this.events) {

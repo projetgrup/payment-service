@@ -212,18 +212,33 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     
     init: function (parent, options) {
         this._super(parent, options);
+        this.currency = {
+            id: 0,
+            decimal: 2,
+            name: '',
+            separator: '.',
+            thousand: ',', 
+            position: 'after',
+            symbol: '', 
+        };
+        this.amount = new fields.float({
+            default: 0,
+        });
+        this.card = {
+            number: new fields.element(),
+        };
         this.page = {
             loading: new fields.element(),
             welcome: new fields.element(),
             amount: new fields.element(),
             card: new fields.element(),
             installment: new fields.element(),
-            section: {
+            /*section: {
                 all: new fields.element(),
                 amount: new fields.element(),
                 card: new fields.element(),
                 installment: new fields.element(),
-            },
+            },*/
         };
 
         this.button = {
@@ -271,6 +286,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     start: function () {
         const self = this;
         return this._super.apply(this, arguments).then(function () {
+            payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
             self.page.loading.$.removeClass('show');
             self.page.welcome.$.addClass('show');
@@ -287,8 +303,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.page.welcome.$.addClass('slide').removeClass('show');
         setTimeout(function() {
             self.page.welcome.$.addClass('invisible');
-            self.page.section.all.$.addClass('show');
-            self.page.section.amount.$.addClass('active');
+            /*self.page.section.all.$.addClass('show');
+            self.page.section.amount.$.addClass('active');*/
             self.page.amount.$.addClass('slide show').removeClass('invisible');
         }, 500);
     },
@@ -296,8 +312,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     _onClickAmountPrev: function () {
         const self = this;
         this.page.amount.$.removeClass('slide show');
-        this.page.section.all.$.removeClass('show');
-        self.page.section.amount.$.removeClass('active');
+        /*this.page.section.all.$.removeClass('show');
+        this.page.section.amount.$.removeClass('active');*/
         setTimeout(function() {
             self.page.amount.$.addClass('invisible');
             self.page.welcome.$.removeClass('slide invisible').addClass('show');
@@ -308,9 +324,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const self = this;
         this.page.amount.$.addClass('slide').removeClass('show');
         setTimeout(function() {
-            self.page.amount.$.addClass('invisible');
+            /*self.page.section.amount.$.find('.small').text(format.currency(self.amount.value || 0, self.currency.position, self.currency.symbol, self.currency.decimal));
             self.page.section.amount.$.addClass('done');
-            self.page.section.card.$.addClass('active');
+            self.page.section.card.$.addClass('active');*/
+            self.page.amount.$.addClass('invisible');
             self.page.card.$.addClass('slide show').removeClass('invisible');
         }, 500);
     },
@@ -319,9 +336,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const self = this;
         self.page.card.$.removeClass('slide show');
         setTimeout(function() {
+            /*self.page.section.card.$.removeClass('active');
+            self.page.section.amount.$.removeClass('done');*/
             self.page.amount.$.removeClass('invisible slide').addClass('show');
-            self.page.section.card.$.removeClass('active');
-            self.page.section.amount.$.removeClass('done');
             self.page.card.$.addClass('invisible');
         }, 500);
     },
@@ -330,9 +347,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const self = this;
         this.page.card.$.addClass('slide').removeClass('show');
         setTimeout(function() {
-            self.page.card.$.addClass('invisible');
+            /*self.page.section.card.$.find('.small').text(self.card.number.value || '**** **** **** ****');
             self.page.section.card.$.addClass('done');
-            self.page.section.installment.$.addClass('active');
+            self.page.section.installment.$.addClass('active');*/
+            self.page.card.$.addClass('invisible');
             self.page.installment.$.addClass('slide show').removeClass('invisible');
         }, 500);
     },
@@ -341,9 +359,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const self = this;
         self.page.installment.$.removeClass('slide show');
         setTimeout(function() {
+            /*self.page.section.installment.$.removeClass('active');
+            self.page.section.card.$.removeClass('done');*/
             self.page.card.$.removeClass('invisible slide').addClass('show');
-            self.page.section.installment.$.removeClass('active');
-            self.page.section.card.$.removeClass('done');
             self.page.installment.$.addClass('invisible');
         }, 500);
     },

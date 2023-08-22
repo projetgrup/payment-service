@@ -117,6 +117,7 @@
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
@@ -130,23 +131,23 @@
                 </div>
                 <div class="payment-system payment-dynamic d-flex flex-column align-items-center p-3">
                     <div class="payment-card card position-relative w-100">
-                        <div class="payment-card-section d-flex fade" field="page.section.all">
+                        <!--<div class="payment-card-section d-flex fade" field="page.section.all">
                             <div class="position-relative" field="page.section.amount">
                                 <div><i class="fa fa-tag fa-bounce-rotate"/></div>
                                 <div>Amount</div>
-                                <div class="small">125,00 ₺</div>
+                                <div class="small">0.00</div>
                             </div>
                             <div class="position-relative" field="page.section.card">
                                 <div><i class="fa fa-credit-card-alt fa-bounce-rotate"/></div>
                                 <div>Credit Card</div>
-                                <div class="small">1233 56** **** 8798</div>
+                                <div class="small">**** **** **** ****</div>
                             </div>
                             <div class="position-relative" field="page.section.installment">
                                 <div><i class="fa fa-money fa-bounce-rotate"/></div>
                                 <div>Installment</div>
                                 <div class="small">Single Payment</div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="payment-card-item d-flex fade show p-3" field="page.loading">
                             <div class="m-auto">
                                 <i class="fa fa-4x fa-circle-o-notch fa-rotate text-primary"/>
@@ -168,7 +169,7 @@
                                                 <span class="mt-3 text-primary font-weight-bold w-50 text-left">Contact</span>
                                                 <span class="w-50 text-left"><t t-esc="contact.name"/></span>
                                             </t>
-                                            <span class="fade mt-3">
+                                            <span class="fade mt-5">
                                                 <button class="btn m-auto" field="button.welcome.done">Proceed to payment<i class="fa fa-chevron-down fa-bounce" t-translation="off"/></button>
                                             </span>
                                         </div>
@@ -177,7 +178,7 @@
                             </div>
                         </div>
                         <div class="payment-card-item fade invisible p-3" field="page.amount">
-                            <div class="d-flex flex-row justify-content-between mb-n5 w-100">
+                            <div class="d-flex flex-row justify-content-between mb-5 w-100">
                                 <button class="btn btn-navigation" field="button.amount.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
                                 <button class="btn btn-navigation" field="button.amount.next">Next<i class="fa fa-chevron-right" t-translation="off"/></button>
                             </div>
@@ -190,10 +191,11 @@
                                 </div>
                                 <div>
                                     <div class="field-container">
-                                        <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
+                                        <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="amount"/>
                                         <span class="bar-container"/>
                                         <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                                         <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                        <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                                     </div>
                                 </div>
                                 <div class="py-5">
@@ -202,52 +204,76 @@
                             </div>
                         </div>
                         <div class="payment-card-item fade invisible p-3" field="page.card">
-                            <div class="d-flex flex-row justify-content-between mb-n5 w-100">
+                            <div class="d-flex flex-row w-100">
                                 <button class="btn btn-navigation" field="button.card.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
-                                <button class="btn btn-navigation" field="button.card.next">Next<i class="fa fa-chevron-right" t-translation="off"/></button>
                             </div>
                             <div class="align-items-center d-flex flex-column justify-content-center">
-                                <div>
+                                <div class="my-2">
                                     <img src="/payment_jetcheckout_system/static/src/img/credit.gif" class="payment-card-item-icon shadow m-0"/>
                                 </div>
-                                <div class="font-weight-bold h2 my-3 text-primary">
-                                    Credit Card
-                                </div>
-                                <div>
-                                    <div class="field-container">
-                                        <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
-                                        <span class="bar-container"/>
-                                        <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
-                                        <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                <div class="row my-2">
+                                    <div class="payment-table col-md-6">
+                                        <div class="payment-form-container payment-gradient border card">
+                                            <div class="field-container">
+                                                <input id="cardholder" type="text" required="required" field="card.holder"/>
+                                                <span class="bar-container"/>
+                                                <label><span>Card Holder Name</span></label>
+                                            </div>
+                                            <div class="field-container">
+                                                <input id="cardnumber" inputmode="numeric" pattern="[0-9 ]*" type="text" required="required" field="card.number"/>
+                                                <span class="bar-container"/>
+                                                <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
+                                                <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
+                                                <label for="cardnumber"><span>Card Number</span></label>
+                                            </div>
+                                            <div class="field-container">
+                                                <input id="carddate" inputmode="numeric" pattern="[0-9\/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
+                                                <span class="bar-container"/>
+                                                <label for="carddate"><span>Expiration</span></label>
+                                            </div>
+                                            <div class="field-container">
+                                                <input id="cardcode" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.code"/>
+                                                <span class="bar-container"/>
+                                                <label for="cardcode"><span>CVC</span></label>
+                                            </div>
+                                            <div t-if="not no_terms" class="field-container">
+                                                <div class="terms-container justify-content-end">
+                                                    <label for="term" class="btn mb-0 cursor-pointer" field="terms.all">Terms &amp; Conditions</label>
+                                                    <label class="switch mb-0">
+                                                        <input id="term" type="checkbox" field="terms.ok"/>
+                                                        <span class="slider round fa"/>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="payment-table col-md-6">
+                                        <div t-attf-class="payment-gradient p-2 border card #{'installment-cols' if type == 'campaign' else 'installment-rows'}">
+                                            <div>
+                                                <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
+                                                    <t t-call="payment_jetcheckout.payment_installment_header"/>
+                                                </div>
+                                                <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
+                                            </div>
+                                            <div class="d-none installment-row overflow-auto" t-att-data-type="'campaign' if type == 'campaign' else 'installment'" field="installment.row"/>
+                                            <div class="text-muted small h-100 w-75 text-center mt-5 mx-auto" field="installment.rowempty">
+                                                <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
+                                            </div>
+                                            <div class="row font-weight-bold text-uppercase">
+                                                <div class="col-12 p-2" field="installment.table">
+                                                    <button class="installment-container btn m-auto border-0 text-nowrap overflow-hidden text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"/>Installment Options</button>
+                                                </div>
+                                                <div class="d-none">
+                                                    <button class="d-none" field="payment.button"/>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
+                                            <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="py-5">
-                                    <button class="btn" field="button.card.done">Select an installment option<i class="fa fa-2x fa-money fa-bounce" t-translation="off"/></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="payment-card-item fade invisible p-3" field="page.installment">
-                            <div class="d-flex flex-row justify-content-between mb-n5 w-100">
-                                <button class="btn btn-navigation" field="button.installment.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
-                                <button class="btn btn-navigation" field="button.installment.next">Next<i class="fa fa-chevron-right" t-translation="off"/></button>
-                            </div>
-                            <div class="align-items-center d-flex flex-column justify-content-center">
-                                <div>
-                                    <img src="/payment_jetcheckout_system/static/src/img/installment.gif" class="payment-card-item-icon shadow m-0"/>
-                                </div>
-                                <div class="font-weight-bold h2 my-3 text-primary">
-                                    Installment
-                                </div>
-                                <div>
-                                    <div class="field-container">
-                                        <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
-                                        <span class="bar-container"/>
-                                        <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
-                                        <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
-                                    </div>
-                                </div>
-                                <div class="py-5">
-                                    <button class="btn" field="button.installment.done">Complete Payment<i class="fa fa-2x fa-check fa-bounce-rotate" t-translation="off"/></button>
+                                <div class="py-4">
+                                    <button class="btn btn-done" field="button.installment.done">Complete Payment<i class="fa fa-2x fa-check fa-bounce-rotate" t-translation="off"/></button>
                                 </div>
                             </div>
                         </div>
