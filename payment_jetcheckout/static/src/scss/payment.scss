@@ -147,6 +147,7 @@
         color: #888888 !important;
         display: flex;
         .installment-row {
+            padding-right: 5px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -305,7 +306,7 @@
     }
 
     .card {
-        border-radius: 10px !important;
+        border-radius: 5px !important;
     }
 
     /*.modal {
@@ -505,9 +506,9 @@
         .symbol {
             position: absolute;
             top: 3px;
-            padding: 10px 10px 10px 5px;
+            padding: 10px;
             font-size: 18px;
-            color: #ccc;
+            color: #cccccc;
         }
 
         .symbol-before {
@@ -722,7 +723,7 @@
 .payment-card {
     color: #707070;
     .card {
-        border-radius: 10px !important;
+        border-radius: 5px !important;
     }
 
     .payment_icon_list .list-inline-item{

@@ -130,7 +130,7 @@
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <t t-if="page == 'payment'">
                         <div class="field-container">
-                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
+                            <input id="amount" name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
                             <span class="bar-container"/>
                             <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                             <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>

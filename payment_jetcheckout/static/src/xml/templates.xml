@@ -42,7 +42,7 @@
         <t t-foreach="row.installments" t-as="r">
             <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
             <tr>
-                <td class="text-center">
+                <td class="text-center position-relative">
                     <span t-esc="r.id"/>
                     <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="r.pdesc"/>
                 </td>
@@ -87,7 +87,7 @@
                             <input type="radio" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id"/>
                             <span class="installment-radio"/>
                         </div>
-                        <div>
+                        <div class="position-relative">
                             <span t-esc="r.id"/>
                             <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="r.pdesc"/>
                         </div>

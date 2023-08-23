@@ -224,62 +224,42 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amount = new fields.float({
             default: 0,
         });
-        this.card = {
-            number: new fields.element(),
-        };
-        this.page = {
-            loading: new fields.element(),
-            welcome: new fields.element(),
-            amount: new fields.element(),
-            card: new fields.element(),
-            installment: new fields.element(),
-            /*section: {
-                all: new fields.element(),
+        this.wizard = {
+            partner: new fields.element(),
+            contact: new fields.element(),
+            page: {
+                loading: new fields.element(),
+                welcome: new fields.element(),
                 amount: new fields.element(),
-                card: new fields.element(),
-                installment: new fields.element(),
-            },*/
-        };
-
-        this.button = {
-            welcome: {
-                done: new fields.element({
-                    events: [['click', this._onClickWelcomeNext]],
-                }),
+                overlay: new fields.element(),
+                /*section: {
+                    all: new fields.element(),
+                    amount: new fields.element(),
+                    card: new fields.element(),
+                    installment: new fields.element(),
+                },*/
             },
-            amount: {
-                prev: new fields.element({
-                    events: [['click', this._onClickAmountPrev]],
-                }),
-                next: new fields.element({
-                    events: [['click', this._onClickAmountNext]],
-                }),
-                done: new fields.element({
-                    events: [['click', this._onClickAmountNext]],
-                }),
-            },
-            card: {
-                prev: new fields.element({
-                    events: [['click', this._onClickCardPrev]],
-                }),
-                next: new fields.element({
-                    events: [['click', this._onClickCardNext]],
-                }),
-                done: new fields.element({
-                    events: [['click', this._onClickCardNext]],
-                }),
-            },
-            installment: {
-                prev: new fields.element({
-                    events: [['click', this._onClickInstallmentPrev]],
-                }),
-                next: new fields.element({
-                    events: [['click', this._onClickInstallmentNext]],
-                }),
-                done: new fields.element({
-                    events: [['click', this._onClickInstallmentNext]],
-                }),
-            },
+            button: {
+                welcome: {
+                    done: new fields.element({
+                        events: [['click', this._onClickWelcomeNext]],
+                    }),
+                },
+                amount: {
+                    currency: new fields.element({
+                        events: [['click', this._onClickAmountCurrency]],
+                    }),
+                    prev: new fields.element({
+                        events: [['click', this._onClickAmountPrev]],
+                    }),
+                    next: new fields.element({
+                        events: [['click', this._onClickAmountNext]],
+                    }),
+                    done: new fields.element({
+                        events: [['click', this._onClickAmountNext]],
+                    }),
+                },
+            }
         };
     },
  
@@ -288,87 +268,108 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
-            self.page.loading.$.removeClass('show');
-            self.page.welcome.$.addClass('show');
-            self.page.welcome.$.find('.invisible').addClass('show welcome-title');
+            self.wizard.page.loading.$.removeClass('show');
+            self.wizard.page.welcome.$.addClass('show');
+            self.wizard.page.welcome.$.find('.invisible').addClass('show welcome-title');
             setTimeout(function() {
-                self.page.welcome.$.find('.fade').addClass('show');
+                self.wizard.page.welcome.$.find('.fade').addClass('show');
             }, 1500);
-            console.log(self);
         });
     },
 
-    _onClickWelcomeNext: function () {
-        const self = this;
-        this.page.welcome.$.addClass('slide').removeClass('show');
-        setTimeout(function() {
-            self.page.welcome.$.addClass('invisible');
-            /*self.page.section.all.$.addClass('show');
-            self.page.section.amount.$.addClass('active');*/
-            self.page.amount.$.addClass('slide show').removeClass('invisible');
-        }, 500);
+    _onPause: async function(time=0) {
+        await new Promise(resolve => setTimeout(resolve, time));
     },
 
-    _onClickAmountPrev: function () {
-        const self = this;
-        this.page.amount.$.removeClass('slide show');
-        /*this.page.section.all.$.removeClass('show');
-        this.page.section.amount.$.removeClass('active');*/
-        setTimeout(function() {
-            self.page.amount.$.addClass('invisible');
-            self.page.welcome.$.removeClass('slide invisible').addClass('show');
-        }, 500);
+    _onClickWelcomeNext: async function () {
+        this.wizard.page.welcome.$.addClass('slide').removeClass('show');
+
+        const element = $('label[for=partner]').closest('.card');
+        const offset = element.offset();
+        const overlay = this.wizard.page.overlay.$;
+        const position = {
+            top:  offset.top - overlay.offset().top - 24,
+            left: offset.left,
+            width: element.outerWidth(),
+            height: element.outerHeight(),
+        }
+
+        const $element = element.clone().addClass('payment-card-item-clone').attr('name', 'partner');
+        $element.css('width', position.width).css('height', position.height);
+        $element.find('span[name=partner]').html(this.wizard.partner.html);
+
+        overlay.append($element);
+        await this._onPause(250);
+        $element.addClass('show');
+        await this._onPause(1000);
+        $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
+
+        this.wizard.page.welcome.$.addClass('invisible');
+        //this.wizard.page.section.all.$.addClass('show');
+        //this.wizard.page.section.amount.$.addClass('active');
+        this.wizard.page.amount.$.addClass('slide show').removeClass('invisible');
     },
 
-    _onClickAmountNext: function () {
-        const self = this;
-        this.page.amount.$.addClass('slide').removeClass('show');
-        setTimeout(function() {
-            /*self.page.section.amount.$.find('.small').text(format.currency(self.amount.value || 0, self.currency.position, self.currency.symbol, self.currency.decimal));
-            self.page.section.amount.$.addClass('done');
-            self.page.section.card.$.addClass('active');*/
-            self.page.amount.$.addClass('invisible');
-            self.page.card.$.addClass('slide show').removeClass('invisible');
-        }, 500);
+    _onClickAmountCurrency: function (ev) {
+        if (ev.target.nodeName === 'LI') {
+            payloxPage.prototype._updateCurrency.call(this, ev.target);
+            payloxPage.prototype._setCurrency.apply(this);
+            const $symbol = $('.symbol');
+            $symbol.removeClass('symbol-after symbol-before').addClass('symbol-' + ev.target.dataset.position);
+            $symbol.text(ev.target.dataset.symbol);
+            this.wizard.button.amount.currency.$.find('span').text(ev.target.dataset.name);
+        }
     },
 
-    _onClickCardPrev: function () {
-        const self = this;
-        self.page.card.$.removeClass('slide show');
-        setTimeout(function() {
-            /*self.page.section.card.$.removeClass('active');
-            self.page.section.amount.$.removeClass('done');*/
-            self.page.amount.$.removeClass('invisible slide').addClass('show');
-            self.page.card.$.addClass('invisible');
-        }, 500);
+    _onClickAmountPrev: async function () {
+        this.wizard.page.amount.$.removeClass('slide show');
+        //this.wizard.page.section.all.$.removeClass('show');
+        //this.wizard.page.section.amount.$.removeClass('active');
+
+        const overlay = this.wizard.page.overlay.$;
+        const $element = overlay.find('[name=partner]');
+        $element.css('transform', '');
+        await this._onPause(1000);
+        $element.removeClass('show');
+        setTimeout(() => $element.remove(), 500);
+
+        this.wizard.page.amount.$.addClass('invisible');
+        this.wizard.page.welcome.$.removeClass('slide invisible').addClass('show');
     },
 
-    _onClickCardNext: function () {
-        const self = this;
-        this.page.card.$.addClass('slide').removeClass('show');
-        setTimeout(function() {
-            /*self.page.section.card.$.find('.small').text(self.card.number.value || '**** **** **** ****');
-            self.page.section.card.$.addClass('done');
-            self.page.section.installment.$.addClass('active');*/
-            self.page.card.$.addClass('invisible');
-            self.page.installment.$.addClass('slide show').removeClass('invisible');
-        }, 500);
-    },
+    _onClickAmountNext: async function () {
+        this.wizard.page.amount.$.addClass('slide').removeClass('show');
+ 
+        const element = $('label[for=amount]').closest('.card');
+        const offset = element.offset();
+        const overlay = this.wizard.page.overlay.$;
+        const position = {
+            top:  offset.top - overlay.offset().top - 24,
+            left: offset.left,
+            width: element.outerWidth(),
+            height: element.outerHeight(),
+        }
 
-    _onClickInstallmentPrev: function () {
-        const self = this;
-        self.page.installment.$.removeClass('slide show');
-        setTimeout(function() {
-            /*self.page.section.installment.$.removeClass('active');
-            self.page.section.card.$.removeClass('done');*/
-            self.page.card.$.removeClass('invisible slide').addClass('show');
-            self.page.installment.$.addClass('invisible');
-        }, 500);
-    },
+        const $element = element.clone().addClass('payment-card-item-clone').attr('name', 'amount');
+        $element.css('width', position.width).css('height', position.height);
+        $element.find('input[name=amount]').val(format.currency(amount, this.currency.position, this.currency.symbol, this.currency.decimal));
+        $element.find('input[name=amount] + span.symbol').removeClass('symbol-after symbol-before').addClass('symbol-' + this.currency.position).text(this.currency.symbol);
 
-    _onClickInstallmentNext: function () {
-        const self = this;
-        alert('test');
+        overlay.append($element);
+        await this._onPause(250);
+        $element.addClass('show');
+        await this._onPause(1000);
+        $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
+        await this._onPause(500);
+
+        const page = $('.payment-dynamic');    
+        overlay.css('opacity', '0');
+        page.css('opacity', '0');
+        //await this._onPause(500);
+        //overlay.addClass('invisible');
+        //page.addClass('invisible');
+        setTimeout(() => overlay.remove(), 500);
+        setTimeout(() => page.remove(), 500);
     },
 });
 

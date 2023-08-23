@@ -7,15 +7,15 @@
         }
     }
 
-    .header-dynamic {
-        height: 10vh !important;
-        border-width: 2px !important;
-    }
-
     .payment-dynamic {
-        height: 80vh !important;
-        max-width: 700px;
-        margin: 0 auto;
+        position: absolute;
+        display: flex;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 9;
+        transition: all 0.4s;
+        background-color: rgba(255, 255, 255, 0.05);
 
         button {
             padding: 1em;
@@ -46,11 +46,21 @@
             &:hover {
                 box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
             }
+ 
+            &:not(.btn-primary):hover {
+                border-bottom-width: 6px;
+            }
         }
 
-        .payment-card {
-            height: 100% !important;
-            border-width: 3px !important;
+        .col-md-3 > div {
+            position: absolute;
+            background-color: #ffffff;
+            inset: 0;
+            border-radius: 5px;
+            border: 1px dashed rgba(0, 0, 0, 0.125);
+        }
+
+        .col-md-9 > div {
 
             .fa-bounce {
                 animation: bounce 2s ease infinite;
@@ -88,6 +98,67 @@
                     border-radius: 50%;
                     opacity: 0.6;
                     margin: 1em 0;
+                }
+
+                .payment-card-item-amount {
+                    display: flex;
+                    flex-direction: row;
+
+                    button {
+                        border-radius: 0 5px 5px 0 !important;
+                        padding: 0 10px 0 15px;
+                        margin-left: -5px;
+                        position: relative;
+                        color: #ffffff;
+                        outline: none;
+                        
+                        > ul {
+                            visibility: hidden;
+                            transition: all 0.2s;
+                            position: absolute;
+                            overflow: hidden;
+                            background-color: #ffffff;
+                            color: theme-color('primary');
+                            border: 2px solid theme-color('primary');
+                            border-radius: 0 0 5px 5px;
+                            list-style: none;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            width: 100%;
+                            padding: 0;
+                            top: 50px;
+                            left: 0;
+                            max-height: 0;
+                            z-index: 1;
+                            opacity: 0;
+
+                            > li {
+                                padding: 5px 0;
+                                transition: all 0.2s;
+                                width: 100%;
+
+                                &:hover {
+                                    background-color: #eeeeee;
+                                }
+
+                                &:active {
+                                    background-color: #dddddd;
+                                }
+                            }
+                        }
+
+                        &:hover {
+                            border-radius: 0 5px 3px 0 !important;
+
+                            > ul {
+                                visibility: visible;
+                                opacity: 1;
+                                max-height: 100vh;
+                            }
+                        }
+                    }
+
                 }
             }
  
@@ -189,7 +260,7 @@
                 }
             }*/
 
-            [field="page.loading"] {
+            [field="wizard.page.loading"] {
                 transform: translateX(0%);
                 &:before {
                     content: '';
@@ -205,7 +276,7 @@
                 }
             }
 
-            [field="page.welcome"] {
+            [field="wizard.page.welcome"] {
                 position: relative;
                 transform: translateX(0%);
 
@@ -267,8 +338,8 @@
                 }
             }
 
-            [field="page.amount"],  [field="page.card"] {
-                input {
+            [field="wizard.page.amount"] {
+                input[type=text] {
                     transition: all 0.2s;
                     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 
@@ -278,8 +349,45 @@
                 }
             }
         }
-
     }
+
+    .payment-card-item-clone {
+        position: absolute;
+        pointer-events: none;
+        transition: all 0.4s;
+        z-index: 1;
+        opacity: 0;
+        transform: translate(200%, 200%);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+        &.show {
+            opacity: 1;
+            transform: translate(200%, 50%) scale(1.5);
+        }
+    }
+
+    [field="wizard.page.overlay"] {
+        position: absolute;
+        inset: 0;
+        width: 0;
+        height: 0;
+        z-index: 10;
+        transition: all 0.4s;
+    }
+
+    .payment-dynamic-placeholder {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .payment-dynamic-item-placeholder {
+        position: absolute;
+        z-index: 1;
+    }
+    
 }
 
 .oe_sign_form {
@@ -383,4 +491,15 @@
 @keyframes bounce-rotate {
 	0%, 20%, 50%, 80%, 100% {transform: rotate(0deg);}
 	40%, 60% {transform: rotate(20deg);}
+}
+
+@media (min-width: 768px) {
+    .payment-page {
+        .payment-card-item-clone {
+            transform: translate(225%, 200%);
+            &.show {
+                transform: translate(225%, 50%) scale(1.5);
+            }
+        }
+    }
 }

@@ -143,7 +143,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     _setCurrency: function () {
         const currency = $('[field=currency]');
         if (!currency.length) {
-            console.error('Currency field not found. Amount mask will not work.')
+            console.error('Currency field not found. Amount mask will not work.');
         }
 
         this.currency = {
@@ -155,6 +155,36 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             position: currency.data('position'),
             symbol: currency.data('symbol'),
         }
+    },
+
+    _updateCurrency: function ($currency) {
+        if (!$currency) {
+            $currency = $('[field=currency]');
+        } else if ($currency instanceof HTMLElement) {
+            $currency = $($currency);
+        } else if (!($currency instanceof jQuery)) {
+            console.error('Currency argument must be HTMLElement or jQuery object.');
+            return;
+        }
+
+        const currency = $('[field=currency]');
+        currency.data('id', $currency.data('id'));
+        currency.data('name', $currency.data('name'));
+        currency.data('decimal', $currency.data('decimal'));
+        currency.data('separator', $currency.data('separator'));
+        currency.data('thousand', $currency.data('thousand'));
+        currency.data('position', $currency.data('position'));
+        currency.data('symbol', $currency.data('symbol'));
+
+        currency.attr('data-id', $currency.data('id'));
+        currency.attr('data-name', $currency.data('name'));
+        currency.attr('data-decimal', $currency.data('decimal'));
+        currency.attr('data-separator', $currency.data('separator'));
+        currency.attr('data-thousand', $currency.data('thousand'));
+        currency.attr('data-position', $currency.data('position'));
+        currency.attr('data-symbol', $currency.data('symbol'));
+
+        currency.trigger('update');
     },
 
     _maskAmount: function () {
@@ -221,6 +251,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self._setCurrency();
             self._start();
+            const $currency = $('[field=currency]');
+            $currency.on('update', function () {
+                self._setCurrency();
+            });
             framework.hideLoading();
         });
     },
@@ -336,6 +370,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     campaign: this.campaign.name.value,
                     amount: this.amount.value,
                     rate: this.discount.single.value,
+                    currency: this.currency.id,
                 },
             }).then(function (result) {
                 if ('error' in result) {
@@ -536,6 +571,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             campaign: this.campaign.name.value,
                             amount: this.amount.value,
                             rate: this.discount.single.value,
+                            currency: this.currency.id,
                         },
                     }).then(function (result) {
                         if ('error' in result) {
@@ -704,6 +740,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 number: this.card.number.value,
             },
             amount: this.amount.value,
+            currency: this.currency.id,
             discount: {
                 single: this.discount.single.value,
             },
