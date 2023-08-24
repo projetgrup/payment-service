@@ -54,16 +54,41 @@
 
         .col-md-3 > div {
             position: absolute;
-            background-color: #ffffff;
             inset: 0;
             border-radius: 5px;
-            border: 1px dashed rgba(0, 0, 0, 0.125);
+
+            &.shine {
+                transform: translateX(0%);
+
+                &:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    inset: 0;
+                    background: #eeeeee;
+                    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+                    border-radius: 5px;
+                    background-size: 200% 400%;
+                    animation: 1.5s shine linear infinite;
+                    transition: opacity 0.5s;
+                }
+
+                &.transparent {
+                    &:before {
+                        opacity: 0;
+                    }
+                }
+            }
         }
 
         .col-md-9 > div {
 
             .fa-bounce {
                 animation: bounce 2s ease infinite;
+            }
+
+            .fa-bounce-horizontal {
+                animation: bounce-horizontal 2s ease infinite;
             }
 
             .fa-rotate {
@@ -90,6 +115,10 @@
 
                 &.show {
                     transform: translateY(0%);
+                }
+
+                &.blur {
+                    filter: blur(2px);
                 }
 
                 .payment-card-item-icon {
@@ -261,7 +290,9 @@
             }*/
 
             [field="wizard.page.loading"] {
+                z-index: 1;
                 transform: translateX(0%);
+
                 &:before {
                     content: '';
                     display: block;
@@ -274,15 +305,15 @@
                     animation: 1.5s shine linear infinite;
                     transition: opacity 0.5s;
                 }
+
+                &.transparent {
+                    opacity: 0.9;
+                }
             }
 
             [field="wizard.page.welcome"] {
-                position: relative;
-                transform: translateX(0%);
-
                 .welcome-title {
                     position: absolute;
-                    visibility: visible !important;
                     top: 0;
                     width: 90%;
                     height: 100%;
@@ -338,7 +369,7 @@
                 }
             }
 
-            [field="wizard.page.amount"] {
+            [field="wizard.page.login"], [field="wizard.page.amount"] {
                 input[type=text] {
                     transition: all 0.2s;
                     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -464,10 +495,6 @@
 
 }
 
-@keyframes shine {
-    to { background-position-x: -200%; }
-}
-
 @keyframes welcomeTopText {
     0% { transform: translate3d(0, 100%, 0); }
     100% { transform: translate3d(0, 0, 0); }
@@ -481,6 +508,10 @@
 @keyframes bounce {
 	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
 	40%, 60% {transform: translateY(-5px);}
+}
+@keyframes bounce-horizontal {
+	0%, 20%, 50%, 80%, 100% {transform: translateX(0);}
+	40%, 60% {transform: translateX(-5px);}
 }
 
 @keyframes rotate {

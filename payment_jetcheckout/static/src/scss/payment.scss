@@ -472,6 +472,10 @@
             width: 50%;
         }
 
+        > input.border-danger ~ .bar-container:before, > input.border-danger ~ .bar-container:after {
+            background: theme-color('danger');
+        }
+
         > .highlight-container {
             position: absolute;
             height: 50%; 
@@ -1095,4 +1099,4 @@
     to {
         background-position-x: -200%;
     }
-}  
+}

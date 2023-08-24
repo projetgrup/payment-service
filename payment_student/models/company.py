@@ -13,6 +13,11 @@ class ResCompany(models.Model):
     student_discount_sibling_maximum = fields.Boolean(string='Sibling Discount Maximum')
     student_discount_advance_ids = fields.One2many('res.student.discount', 'company_id', string='Advance Payment Discounts')
 
+    system_student_type = fields.Selection([
+        ('school', 'School'),
+        ('university', 'University'),
+    ])
+
     def _get_student_discount_line(self):
         today = date.today()
         return self.env['res.student.discount'].sudo().search([

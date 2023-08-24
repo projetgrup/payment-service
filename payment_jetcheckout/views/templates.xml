@@ -415,7 +415,7 @@
 
     <template id="payment_loading" name="Paylox Payment Loading">
         <div t-if="not no_loading" class="o_loading">
-            <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
+            <em class="fa fa-spin fa-circle-o-notch text-primary h1"/>
         </div>
     </template>
 

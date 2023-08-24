@@ -40,7 +40,7 @@ class PayloxSystemController(Controller):
 
     def _check_user(self):
         path = urlparse(request.httprequest.referrer).path
-        if '/my/payment' in path and not request.env.user.active:
+        if '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
             raise AccessError(_('Access Denied'))
         return super()._check_user()
 
@@ -155,10 +155,11 @@ class PayloxSystemController(Controller):
             return redirect
 
         values = self._prepare(partner=partner)
+        company = values['company'] or request.env.company
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
-            'flow': values['company'].payment_page_flow,
+            'flow': company.payment_page_flow,
         })
 
         # remove hash if exists

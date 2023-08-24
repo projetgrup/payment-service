@@ -566,7 +566,7 @@ class PayloxController(http.Controller):
         amount_integer = int(amount_total * 100)
 
         acquirer = self._get_acquirer()
-        currency = self._get_currency(kwargs('currency'), acquirer)
+        currency = self._get_currency(kwargs['currency'], acquirer)
         partner = self._get_partner(int(kwargs['partner']))
         campaign = kwargs.get('campaign', '')
         year = str(fields.Date.today().year)[:2]

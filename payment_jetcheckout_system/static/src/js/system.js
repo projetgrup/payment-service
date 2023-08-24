@@ -224,11 +224,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amount = new fields.float({
             default: 0,
         });
+        this.partner = new fields.integer({
+            default: 0,
+        });
         this.wizard = {
+            vat: new fields.element(),
             partner: new fields.element(),
-            contact: new fields.element(),
             page: {
                 loading: new fields.element(),
+                login: new fields.element(),
                 welcome: new fields.element(),
                 amount: new fields.element(),
                 overlay: new fields.element(),
@@ -240,7 +244,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 },*/
             },
             button: {
+                login: {
+                    done: new fields.element({
+                        events: [['click', this._onClickLoginNext]],
+                    }),
+                },
                 welcome: {
+                    prev: new fields.element({
+                        events: [['click', this._onClickWelcomePrev]],
+                    }),
                     done: new fields.element({
                         events: [['click', this._onClickWelcomeNext]],
                     }),
@@ -269,11 +281,12 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
             self.wizard.page.loading.$.removeClass('show');
-            self.wizard.page.welcome.$.addClass('show');
-            self.wizard.page.welcome.$.find('.invisible').addClass('show welcome-title');
+            self.wizard.page.login.$.addClass('show');
             setTimeout(function() {
-                self.wizard.page.welcome.$.find('.fade').addClass('show');
-            }, 1500);
+                self.wizard.vat.$.focus();
+                self.wizard.page.loading.$.addClass('invisible');
+            }, 500);
+            console.log(self.wizard.vat.value);
         });
     },
 
@@ -281,9 +294,62 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         await new Promise(resolve => setTimeout(resolve, time));
     },
 
-    _onClickWelcomeNext: async function () {
-        this.wizard.page.welcome.$.addClass('slide').removeClass('show');
+    _onClickLoginNext: async function () {
+        const self = this;
+        this.wizard.page.loading.$.removeClass('invisible').addClass('show transparent');
+        this.wizard.page.login.$.addClass('blur');
 
+        let partner = {};
+        try {
+            partner = await rpc.query({
+                route: '/my/payment/student/partners',
+                params: { vat: this.wizard.vat.value },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+
+        if (!partner.id) {
+            this.wizard.vat.$.addClass('border-danger');
+            this.wizard.page.login.$.find('div[name=welcome]').addClass('text-500');
+            this.wizard.page.login.$.find('div[name=vat]').addClass('text-danger').text(_t('This VAT seems invalid. Please try again.'));
+            this.wizard.button.login.done.$.addClass('border-danger text-danger');
+        } else {
+            this.partner.value = partner.id;
+            this.wizard.partner.html = partner.name || '';
+            $('span[name=partner]').text(partner.name || '');
+
+            this.wizard.vat.$.removeClass('border-danger');
+            this.wizard.page.login.$.find('div[name=welcome]').removeClass('text-500');
+            this.wizard.page.login.$.find('div[name=vat]').removeClass('text-danger').text(_t('Please enter your VAT number'));
+            this.wizard.button.login.done.$.removeClass('border-danger text-danger');
+
+            this.wizard.page.login.$.addClass('slide').removeClass('show');
+            self.wizard.page.welcome.$.removeClass('invisible').addClass('slide show');
+            self.wizard.page.welcome.$.find('.welcome-box').addClass('show welcome-title');
+            setTimeout(function() {
+                self.wizard.page.welcome.$.find('.fade').addClass('show');
+            }, 1500);
+        }
+        this.wizard.page.login.$.removeClass('blur');
+        this.wizard.page.loading.$.removeClass('show transparent');
+        setTimeout(function() {
+            self.wizard.page.loading.$.addClass('invisible');
+        }, 500);
+    },
+ 
+    _onClickWelcomePrev: async function () {
+        const self = this;
+        this.wizard.page.welcome.$.removeClass('slide show');
+        setTimeout(function() {
+            self.wizard.page.welcome.$.addClass('invisible');
+        }, 500);
+        this.wizard.page.welcome.$.find('.welcome-box').removeClass('show welcome-title');
+        this.wizard.page.welcome.$.find('.fade').removeClass('show');
+        this.wizard.page.login.$.removeClass('slide invisible').addClass('show');
+    },
+
+    _onClickWelcomeNext: async function () {
         const element = $('label[for=partner]').closest('.card');
         const offset = element.offset();
         const overlay = this.wizard.page.overlay.$;
@@ -301,8 +367,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         overlay.append($element);
         await this._onPause(250);
         $element.addClass('show');
-        await this._onPause(1000);
+        await this._onPause(750);
         $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
+        $('.payment-dynamic .col-md-3 .shine').addClass('transparent');
 
         this.wizard.page.welcome.$.addClass('invisible');
         //this.wizard.page.section.all.$.addClass('show');
@@ -314,7 +381,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         if (ev.target.nodeName === 'LI') {
             payloxPage.prototype._updateCurrency.call(this, ev.target);
             payloxPage.prototype._setCurrency.apply(this);
-            const $symbol = $('.symbol');
+            const $symbol = $('.payment-system .symbol');
             $symbol.removeClass('symbol-after symbol-before').addClass('symbol-' + ev.target.dataset.position);
             $symbol.text(ev.target.dataset.symbol);
             this.wizard.button.amount.currency.$.find('span').text(ev.target.dataset.name);
@@ -329,7 +396,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const overlay = this.wizard.page.overlay.$;
         const $element = overlay.find('[name=partner]');
         $element.css('transform', '');
-        await this._onPause(1000);
+        $('.payment-dynamic .col-md-3 .shine').removeClass('transparent');
+        await this._onPause(750);
+
         $element.removeClass('show');
         setTimeout(() => $element.remove(), 500);
 
@@ -343,6 +412,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const element = $('label[for=amount]').closest('.card');
         const offset = element.offset();
         const overlay = this.wizard.page.overlay.$;
+        const amount = this.amount.value;
         const position = {
             top:  offset.top - overlay.offset().top - 24,
             left: offset.left,
@@ -352,13 +422,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
         const $element = element.clone().addClass('payment-card-item-clone').attr('name', 'amount');
         $element.css('width', position.width).css('height', position.height);
-        $element.find('input[name=amount]').val(format.currency(amount, this.currency.position, this.currency.symbol, this.currency.decimal));
+        $element.find('input[name=amount]').val(format.float(amount));
         $element.find('input[name=amount] + span.symbol').removeClass('symbol-after symbol-before').addClass('symbol-' + this.currency.position).text(this.currency.symbol);
+
+        $('.payment-system input[name=amount]').val(format.float(amount)).change();
 
         overlay.append($element);
         await this._onPause(250);
         $element.addClass('show');
-        await this._onPause(1000);
+        await this._onPause(750);
         $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
         await this._onPause(500);
 

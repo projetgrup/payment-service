@@ -10,3 +10,19 @@
         }
     }
 }
+
+.o_form_view {
+    .o_field_radio.o_field_radio_items {
+        &[name=system_student_type] .o_radio_item input {
+            &[data-value=school]::before {
+                content: "\f015";
+                padding-right: 3px;
+            }
+
+            &[data-value=university]::before {
+                content: "\f19c";
+                padding-right: 3px;
+            }
+        }
+    }
+}

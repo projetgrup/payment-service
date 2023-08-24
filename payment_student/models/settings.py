@@ -10,3 +10,5 @@ class PaymentSettings(models.TransientModel):
     student_discount_sibling_rate = fields.Float(related='company_id.student_discount_sibling_rate', readonly=False)
     student_discount_sibling_maximum = fields.Boolean(related='company_id.student_discount_sibling_maximum', readonly=False)
     student_discount_advance_ids = fields.One2many(related='company_id.student_discount_advance_ids', readonly=False)
+
+    system_student_type = fields.Selection(related='company_id.system_student_type', readonly=False)
