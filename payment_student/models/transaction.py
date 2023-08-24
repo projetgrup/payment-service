@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-from odoo import models
+from odoo import models, fields
 
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    system_student_faculty_id = fields.Many2one('res.student.faculty', related='partner_id.system_student_faculty_id', store=True, readonly=True, ondelete='restrict')
+    system_student_department_id = fields.Many2one('res.student.department', related='partner_id.system_student_department_id', store=True, readonly=True, ondelete='restrict')
+    system_student_program_id = fields.Many2one('res.student.program', related='partner_id.system_student_program_id', store=True, readonly=True, ondelete='restrict')
 
     def _paylox_cancel_postprocess(self):
         super()._paylox_cancel_postprocess()

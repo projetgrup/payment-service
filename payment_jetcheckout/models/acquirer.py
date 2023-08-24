@@ -133,8 +133,11 @@ class PaymentAcquirer(models.Model):
         self.filtered(lambda acq: acq.provider == 'transfer').write({'show_pre_msg': True})
 
     provider = fields.Selection(selection_add=[('jetcheckout', 'jetcheckout')], ondelete={'jetcheckout': 'set default'})
+    currency_ids = fields.Many2many('res.currency', string='Currency')
+
     display_icon = fields.Char(groups='base.group_user')
     display_icon_preview = fields.Html(compute='_compute_display_icon', groups='base.group_user', sanitize=False)
+
     paylox_bank_ids = fields.One2many('payment.acquirer.jetcheckout.bank', 'acquirer_id', groups='base.group_user')
     jetcheckout_gateway_api = fields.Char(groups='base.group_user', readonly=True)
     jetcheckout_gateway_app = fields.Char(groups='base.group_user', readonly=True)

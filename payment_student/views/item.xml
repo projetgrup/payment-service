@@ -31,6 +31,27 @@
     </field>
     </record>
 
+    <record id="university_item_tree" model="ir.ui.view">
+    <field name="name">payment.item.student.university.tree</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Student</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="after">
+            <field name="system_student_faculty_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="system_student_department_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="system_student_program_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+            <field name="payment_type_id" required="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
+        </xpath>
+    </field>
+    </record>
+
     <record id="item_search" model="ir.ui.view">
     <field name="name">payment.item.student.search</field>
     <field name="model">payment.item</field>
@@ -54,6 +75,29 @@
             <filter string="Class" name="groupby_class" domain="[]" context="{'group_by':'class_id'}"/>
             <filter string="Term" name="groupby_term" domain="[]" context="{'group_by':'term_id'}"/>
             <filter string="Bursary" name="groupby_bursary" domain="[]" context="{'group_by':'bursary_id'}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="university_item_search" model="ir.ui.view">
+    <field name="name">payment.item.student.university.search</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Student</attribute>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="after">
+            <field name="system_student_faculty_id"/>
+            <field name="system_student_department_id"/>
+            <field name="system_student_program_id"/>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_parent"]' position="after">
+            <filter string="Faculty" name="groupby_student_faculty" domain="[]" context="{'group_by':'system_student_faculty_id'}"/>
+            <filter string="Department" name="groupby_student_department" domain="[]" context="{'group_by':'system_student_department_id'}"/>
+            <filter string="Program" name="groupby_student_program" domain="[]" context="{'group_by':'system_student_program_id'}"/>
         </xpath>
     </field>
     </record>

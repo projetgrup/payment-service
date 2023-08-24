@@ -5,6 +5,12 @@ term_user,term_user,model_res_student_term,base.group_user,1,0,0,0
 term_manager,term_manager,model_res_student_term,payment_student.group_student_manager,1,1,1,1
 bursary_user,bursary_user,model_res_student_bursary,base.group_user,1,0,0,0
 bursary_manager,bursary_manager,model_res_student_bursary,payment_student.group_student_manager,1,1,1,1
+faculty_user,faculty_user,model_res_student_faculty,base.group_user,1,0,0,0
+faculty_manager,faculty_manager,model_res_student_faculty,payment_student.group_student_manager,1,1,1,1
+department_user,department_user,model_res_student_department,base.group_user,1,0,0,0
+department_manager,department_manager,model_res_student_department,payment_student.group_student_manager,1,1,1,1
+program_user,program_user,model_res_student_program,base.group_user,1,0,0,0
+program_manager,program_manager,model_res_student_program,payment_student.group_student_manager,1,1,1,1
 class_user,class_user,model_res_student_class,base.group_user,1,0,0,0
 class_manager,class_manager,model_res_student_class,payment_student.group_student_manager,1,1,1,1
 payment_type_user,payment_type_user,model_res_student_payment_type,base.group_user,1,0,0,0

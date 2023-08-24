@@ -18,6 +18,17 @@
             <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager')), (4, ref('payment_student.group_student_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
+        <record model="res.groups" id="group_type_school">
+            <field name="name">School</field>
+            <field name="category_id" ref="module_category_student"/>
+        </record>
+        <record model="res.groups" id="group_type_university">
+            <field name="name">University</field>
+            <field name="category_id" ref="module_category_student"/>
+        </record>
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('payment_student.group_type_school')), (4, ref('payment_student.group_type_university'))]"/>
+        </record>
 
         <!-- rules -->
         <record id="discount_company_rule" model="ir.rule">
@@ -32,6 +43,33 @@
         <record id="school_company_rule" model="ir.rule">
             <field name="name">Access only related companies for schools</field>
             <field name="model_id" ref="payment_student.model_res_student_school"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="faculty_company_rule" model="ir.rule">
+            <field name="name">Access only related companies for faculties</field>
+            <field name="model_id" ref="payment_student.model_res_student_faculty"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="department_company_rule" model="ir.rule">
+            <field name="name">Access only related companies for departments</field>
+            <field name="model_id" ref="payment_student.model_res_student_department"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="program_company_rule" model="ir.rule">
+            <field name="name">Access only related companies for programs</field>
+            <field name="model_id" ref="payment_student.model_res_student_program"/>
             <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>

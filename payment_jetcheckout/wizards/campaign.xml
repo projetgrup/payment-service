@@ -145,15 +145,15 @@
             <field name="is_active"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div t-attf-class="oe_kanban_global_click d-flex mx-0 shadow-sm my-2 p-0 w-100 overflow-hidden #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
-                        <div t-attf-class="font-weight-bold text-center p-2 h-100 d-flex justify-content-center align-items-center border-right h5 shadow #{record.is_active.raw_value ? 'bg-success' : 'bg-100'}">
+                    <div t-attf-class="oe_kanban_global_click d-flex mx-0 shadow-sm p-0 w-100 overflow-hidden #{record.is_active.raw_value ? '' : 'text-400'}" style="padding: 0 !important">
+                        <div t-attf-class="font-weight-bold text-center p-1 h-100 d-flex justify-content-center align-items-center border-right h5 shadow #{record.is_active.raw_value ? 'bg-success' : 'bg-100'}">
                         </div>
-                        <div class="col-6 d-flex align-items-center font-weight-bold h-100 h4 justify-content-center p-2 shadow text-600 text-center">
+                        <div class="d-flex align-items-center font-weight-bold h-100 p-2 shadow text-600 text-center overflow-hidden text-nowrap" t-att-title="record.name.value" style="flex: 4;">
                             <t t-esc="record.name.value"/>
                         </div>
-                        <div class="col-6 d-flex align-items-center p-2 px-4 text-center" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            <button t-if="record.is_active.raw_value" class="btn text-uppercase bg-muted" disabled="disabled">Select</button>
-                            <button t-else="" name="select" type="object" class="btn btn-primary">Select</button>
+                        <div class="d-flex align-items-center text-center" style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <button t-if="record.is_active.raw_value" class="btn text-uppercase bg-muted h-100 w-100 rounded-0" disabled="disabled">Select</button>
+                            <button t-else="" name="select" type="object" class="btn btn-primary text-uppercase h-100 w-100 rounded-0">Select</button>
                         </div>
                     </div>
                 </t>

@@ -40,6 +40,45 @@
     </field>
     </record>
 
+    <record id="faculty_tree" model="ir.ui.view">
+    <field name="name">res.student.faculty.tree</field>
+    <field name="model">res.student.faculty</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="department_tree" model="ir.ui.view">
+    <field name="name">res.student.department.tree</field>
+    <field name="model">res.student.department</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="program_tree" model="ir.ui.view">
+    <field name="name">res.student.program.tree</field>
+    <field name="model">res.student.program</field>
+    <field name="arch" type="xml">
+        <tree editable="top" decoration-muted="active == False" sample="1">
+            <field name="name"/>
+            <field name="code"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
+            <field name="active" widget="boolean_toggle"/>
+        </tree>
+    </field>
+    </record>
+
     <record id="class_tree" model="ir.ui.view">
     <field name="name">res.student.class.tree</field>
     <field name="model">res.student.class</field>

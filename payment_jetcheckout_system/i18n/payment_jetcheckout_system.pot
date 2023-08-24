@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 08:54+0000\n"
-"PO-Revision-Date: 2023-07-05 08:54+0000\n"
+"POT-Creation-Date: 2023-08-24 22:42+0000\n"
+"PO-Revision-Date: 2023-08-24 22:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -280,6 +280,11 @@ msgid "Amount Average"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Amount to Pay"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Amount<br/>(All / Success)"
 msgstr ""
@@ -311,6 +316,11 @@ msgstr ""
 #: model:res.partner.category,name:payment_jetcheckout_system.categ_authorized
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Authorized"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Back"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -655,6 +665,11 @@ msgid "Due Date"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_flow__dynamic
+msgid "Dynamic"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
@@ -687,6 +702,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Enter credit card details"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -796,6 +816,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Has Payments"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Hello"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1255,6 +1280,11 @@ msgid "Own Partners Only"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Page Flow"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Page Footer"
 msgstr ""
@@ -1459,6 +1489,12 @@ msgid "Payment Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_flow
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_flow
+msgid "Payment Page Flow"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
@@ -1541,6 +1577,14 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+#, python-format
+msgid "Please enter your VAT number"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Please select at least one payment"
 msgstr ""
@@ -1602,6 +1646,11 @@ msgid "Privilege Type"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Proceed to payment"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Process Notifications"
 msgstr ""
@@ -1635,6 +1684,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_ir_rule
 msgid "Record Rule"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
+msgid "Ref"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1863,6 +1917,11 @@ msgid "Siblings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Sign In"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_sms
 msgid "Sms"
 msgstr ""
@@ -1892,8 +1951,18 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Specify page flow when getting payments"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "State"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_flow__static
+msgid "Static"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1954,6 +2023,13 @@ msgid "Term"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_item__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
@@ -2007,6 +2083,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Month"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "This VAT seems invalid. Please try again."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2230,6 +2313,11 @@ msgid "Users"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__vat
+msgid "VAT"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Vat"
@@ -2338,6 +2426,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Week 5"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Welcome"
 msgstr ""
 
 #. module: payment_jetcheckout_system

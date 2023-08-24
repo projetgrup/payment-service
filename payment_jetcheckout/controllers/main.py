@@ -116,7 +116,20 @@ class PayloxController(http.Controller):
         return campaign
 
     @staticmethod
-    def _get_currency():
+    def _get_currency(currency=None, acquirer=None):
+        if currency:
+            acquirer = acquirer or PayloxController._get_acquirer()
+            if acquirer.currency_ids:
+                if currency not in acquirer.currency_ids.ids:
+                    raise Exception(_('The currency is not available.'))
+                else:
+                    currency = request.env['res.currency'].sudo().browse(currency)
+                    PayloxController._set('currency', currency.id)
+                    return currency
+            else:
+                if currency != request.env.company.currency_id.id:
+                    raise Exception(_('The currency is not available.'))
+            
         cid = PayloxController._get('currency')
         if not cid:
             currency = request.env.company.currency_id
@@ -169,6 +182,9 @@ class PayloxController(http.Controller):
         type = type or PayloxController._get_type()
         campaign = PayloxController._get_campaign(partner=partner, transaction=transaction)
         card_family = PayloxController._get_card_family(acquirer=acquirer, campaign=campaign)
+        currencies = acquirer.currency_ids
+        if currencies and currency not in currencies:
+            currency = currencies[0]
 
         values = {
             'ok': True,
@@ -181,6 +197,7 @@ class PayloxController(http.Controller):
             'user': user,
             'type': type,
             'currency': currency,
+            'currencies': currencies,
             'card_family': card_family,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
         }
@@ -197,18 +214,18 @@ class PayloxController(http.Controller):
             })
         return values
 
-    def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, campaign='', bin='', **kwargs):
+    def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
         acquirer = self._get_acquirer(acquirer=acquirer)
-        currency = self._get_currency()
+        currency =  self._get_currency(currency, acquirer)
         type = self._get_type()
         url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
+            #"amount": int(float_round(amount, 2) * 100),
             "currency": currency.name,
             "language": "tr",
-            #"amount": int(float_round(amount, 2) * 100),
         }
         if bin:
             data.update({"bin": bin})
@@ -549,7 +566,7 @@ class PayloxController(http.Controller):
         amount_integer = int(amount_total * 100)
 
         acquirer = self._get_acquirer()
-        currency = self._get_currency()
+        currency = self._get_currency(kwargs['currency'], acquirer)
         partner = self._get_partner(int(kwargs['partner']))
         campaign = kwargs.get('campaign', '')
         year = str(fields.Date.today().year)[:2]

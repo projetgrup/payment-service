@@ -6,6 +6,8 @@ from odoo.exceptions import UserError
 class PaymentItem(models.Model):
     _inherit = 'payment.item'
 
+    system = fields.Selection(selection_add=[('student', 'Student Payment System')])
+
     school_id = fields.Many2one('res.student.school', related='child_id.school_id', store=True, readonly=True, ondelete='restrict')
     class_id = fields.Many2one('res.student.class', related='child_id.class_id', store=True, readonly=True, ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', related='child_id.bursary_id', store=True, readonly=True, ondelete='restrict')
@@ -13,7 +15,10 @@ class PaymentItem(models.Model):
     payment_type_id = fields.Many2one('res.student.payment.type', ondelete='restrict')
     bursary_amount = fields.Monetary(string='Bursary Discount', readonly=True)
     prepayment_amount = fields.Monetary(string='Prepayment Discount', readonly=True)
-    system = fields.Selection(selection_add=[('student', 'Student Payment System')])
+
+    system_student_faculty_id = fields.Many2one('res.student.faculty', related='parent_id.system_student_faculty_id', store=True, readonly=True, ondelete='restrict')
+    system_student_department_id = fields.Many2one('res.student.department', related='parent_id.system_student_department_id', store=True, readonly=True, ondelete='restrict')
+    system_student_program_id = fields.Many2one('res.student.program', related='parent_id.system_student_program_id', store=True, readonly=True, ondelete='restrict')
 
     @api.onchange('child_id','term_id','payment_type_id')
     def _onchange_student_id(self):

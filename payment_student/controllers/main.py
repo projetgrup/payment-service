@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.http import request
+from odoo.http import request, route
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
@@ -38,3 +38,88 @@ class PayloxSystemStudentController(Controller):
                 'discount_sibling': company.student_discount_sibling_rate if company.student_discount_sibling_active else 0,
             })
         return res
+
+    @route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
+    def page_system_portal(self, **kwargs):
+        company = request.env.company
+        if company.system == 'student' and company.payment_page_flow == 'dynamic':
+            partner = request.website.user_id.partner_id.sudo()
+            values = self._prepare(partner=partner)
+            values.update({
+                'success_url': '/my/payment/success',
+                'fail_url': '/my/payment/fail',
+                'flow': 'dynamic',
+            })
+
+            return request.render('payment_jetcheckout_system.page_payment', values)
+        return super().page_system_portal()
+
+    @route(['/my/payment/student/partners'], type='json', auth='public', website=True)
+    def page_student_partners(self, **kwargs):
+        result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs.get('vat')})
+        if not result == None and isinstance(result, list) and len(result) > 0:
+            company = request.env.company
+            if company.system_student_type == 'university':
+                res = result[0]
+                student = request.env['res.partner'].sudo().search([
+                    ('vat', '=', res.get('vat')),
+                    '|', ('company_id', '=', False),
+                    ('company_id', '=', company.id),
+                ])
+
+                faculty = False
+                if res.get('faculty_code'):
+                    faculty = request.env['res.student.faculty'].sudo().search([
+                        ('code', '=', res.get('faculty_code')),
+                    ])
+                    if not faculty and res.get('faculty_name'):
+                        faculty = request.env['res.student.faculty'].sudo().create({
+                            'name': res.get('faculty_name'),
+                            'code': res.get('faculty_code'),
+                            'company_id': company.id,
+                        })
+
+                department = False
+                if res.get('department_code'):
+                    department = request.env['res.student.department'].sudo().search([
+                        ('code', '=', res.get('department_code')),
+                    ])
+                    if not department and res.get('department_name'):
+                        department = request.env['res.student.department'].sudo().create({
+                            'name': res.get('department_name'),
+                            'code': res.get('department_code'),
+                            'company_id': company.id,
+                        })
+
+                program = False
+                if res.get('program_code'):
+                    program = request.env['res.student.program'].sudo().search([
+                        ('code', '=', res.get('program_code')),
+                    ])
+                    if not program and res.get('program_name'):
+                        program = request.env['res.student.program'].sudo().create({
+                            'name': res.get('program_name'),
+                            'code': res.get('program_code'),
+                            'company_id': company.id,
+                        })
+
+                values = {
+                    'system_student_faculty_id': faculty and faculty.id,
+                    'system_student_department_id': faculty and faculty.id,
+                    'system_student_program_id': program and program.id,
+                    'email': res.get('email'),
+                    'mobile': res.get('mobile'),
+                }
+                if student:
+                    student.write(values)
+                else:
+                    values.update({
+                        'name': ' '.join([res.get('name', ''), res.get('surname', '')]),
+                        'vat': res.get('vat'),
+                        'company_id': company.id,
+                        'system': 'student',
+                    })
+                    student = request.env['res.partner'].sudo().create(values)
+
+                return {'id': student.id, 'name': student.name}
+        return {}
