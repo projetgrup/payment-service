@@ -3,7 +3,7 @@
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Student Payment System',
-    'version': '1.1',
+    'version': '1.2',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -20,6 +20,7 @@
         'views/menu.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'views/transaction.xml',
         'wizards/student_import.xml',
     ],
     'assets': {

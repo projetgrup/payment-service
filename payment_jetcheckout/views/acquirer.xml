@@ -114,6 +114,9 @@
                 <field name="jetcheckout_terms" nolabel="1" colspan="2" widget="html" options="{'style-inline': true, 'codeview': true}"/>
             </page>
         </xpath>
+        <xpath expr='//field[@name="country_ids"]' position="before">
+            <field name="currency_ids" widget="many2many_tags" placeholder="Select currencies. Leave empty to use default." options="{'no_open': True, 'no_create': True}"/>
+        </xpath>
         <xpath expr='//field[@name="pre_msg"]' position="attributes">
             <attribute name="widget">html</attribute>
             <attribute name="options">{'style-inline': true, 'codeview': true}</attribute>

@@ -27,7 +27,7 @@
 
     <template id="s2s" name="Paylox S2S Form">
         <t t-if="order">
-            <t t-set="model" t-value="order"/>
+            <t t-set="model" t-value="order.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/shop'"/>
             <t t-set="fail_url" t-value="'/payment/card/shop'"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -37,7 +37,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="sale_order and sale_order._name == 'sale.order'">
-            <t t-set="model" t-value="sale_order"/>
+            <t t-set="model" t-value="sale_order.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="fail_url" t-value="'/payment/card/order/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -47,7 +47,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="invoice and invoice._name == 'account.move'">
-            <t t-set="model" t-value="invoice"/>
+            <t t-set="model" t-value="invoice.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="fail_url" t-value="'/payment/card/invoice/%s/%s' % (model.id, model.access_token)"/>
             <t t-set="amount" t-value="model.amount_total"/>
@@ -57,7 +57,7 @@
             <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
         </t>
         <t t-elif="account and account._name == 'sale.subscription'">
-            <t t-set="model" t-value="account"/>
+            <t t-set="model" t-value="account.sudo()"/>
             <t t-set="success_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
             <t t-set="fail_url" t-value="'/payment/card/subscription/%s/%s' % (model.id, model.uuid)"/>
             <t t-set="amount" t-value="model.recurring_total"/>
@@ -69,7 +69,7 @@
         <t t-else="">
             <t t-if="access_token">
                 <t t-if="sale_order_id">
-                    <t t-set="model" t-value="request.env['sale.order'].browse(sale_order_id)"/>
+                    <t t-set="model" t-value="request.env['sale.order'].sudo().browse(sale_order_id)"/>
                     <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
@@ -78,7 +78,7 @@
                     <input type="hidden" t-att-value="model.id" field="payment.order"/>
                 </t>
                 <t t-elif="invoice_id">
-                    <t t-set="model" t-value="request.env['account.move'].browse(invoice_id)"/>
+                    <t t-set="model" t-value="request.env['account.move'].sudo().browse(invoice_id)"/>
                     <t t-set="success_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_id"/>
@@ -130,7 +130,7 @@
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <t t-if="page == 'payment'">
                         <div class="field-container">
-                            <input id="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
+                            <input id="amount" name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
                             <span class="bar-container"/>
                             <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                             <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
@@ -160,10 +160,10 @@
                     </div>
                 </div>
                 <div class="px-3 py-4 bg-white card my-4">
-                    <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
+                    <label name="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
                     <span name="partner" class="text-600"><t t-esc="partner_name or '-'"/></span>
                     <t t-if="contact">
-                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
+                        <label name="contact" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
                         <span name="contact" class="text-600"><t t-esc="contact.name or '-'"/></span>
                     </t>
                     <t t-if="labels" t-raw="labels"/>
@@ -320,7 +320,7 @@
                         <div class="field-container">
                             <input id="cardholder" type="text" required="required" field="card.holder"/>
                             <span class="bar-container"/>
-                            <label><span>Name</span></label>
+                            <label for="cardholder"><span>Name</span></label>
                         </div>
                         <div class="field-container">
                             <input id="cardnumber" inputmode="numeric" pattern="[0-9 ]*" type="text" required="required" field="card.number"/>
@@ -415,7 +415,7 @@
 
     <template id="payment_loading" name="Paylox Payment Loading">
         <div t-if="not no_loading" class="o_loading">
-            <i class="fa fa-spin fa-circle-o-notch text-primary h1"/>
+            <em class="fa fa-spin fa-circle-o-notch text-primary h1"/>
         </div>
     </template>
 

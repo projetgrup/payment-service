@@ -14,11 +14,24 @@ class Partner(models.Model):
             else:
                 partner.school_ids = [(6, 0, partner.mapped('child_ids.school_id').ids)]
 
+    def _compute_system_student_type(self):
+        for partner in self:
+            company = partner.company_id or self.env.company
+            partner.system_student_type = company.system_student_type
+
     system = fields.Selection(selection_add=[('student', 'Student Payment System')])
     school_id = fields.Many2one('res.student.school', ondelete='restrict')
     class_id = fields.Many2one('res.student.class', ondelete='restrict')
     bursary_id = fields.Many2one('res.student.bursary', ondelete='restrict')
     school_ids = fields.Many2many('res.student.school', string='Schools', compute='_compute_schools', store=True, readonly=True)
+
+    system_student_type = fields.Selection([
+        ('school', 'School'),
+        ('university', 'University'),
+    ], compute='_compute_system_student_type')
+    system_student_faculty_id = fields.Many2one('res.student.faculty', string='Faculty', ondelete='restrict')
+    system_student_department_id = fields.Many2one('res.student.department', string='Department', ondelete='restrict')
+    system_student_program_id = fields.Many2one('res.student.program', string='Program', ondelete='restrict')
 
     @api.model
     def create(self, vals):

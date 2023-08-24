@@ -11,6 +11,6 @@ class IrUiMenu(models.Model):
         return super().load_web_menus(debug)
 
     def get_user_roots(self):
-        if not self.env.uid == SUPERUSER_ID and self.env.context.get('system'):
+        if not self.env.user.has_group('base.group_system') and self.env.context.get('system'):
             return self.env.ref('base.menu_board_root')
         return super().get_user_roots()

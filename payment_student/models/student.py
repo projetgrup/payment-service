@@ -63,6 +63,39 @@ class StudentClass(models.Model):
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
 
 
+class StudentFaculty(models.Model):
+    _name = 'res.student.faculty'
+    _description = 'Faculties'
+    _order = 'name'
+
+    active = fields.Boolean(default=True)
+    name = fields.Char(required=True)
+    code = fields.Char()
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
+
+class StudentDepartment(models.Model):
+    _name = 'res.student.department'
+    _description = 'Departments'
+    _order = 'name'
+
+    active = fields.Boolean(default=True)
+    name = fields.Char(required=True)
+    code = fields.Char()
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
+
+class StudentProgram(models.Model):
+    _name = 'res.student.program'
+    _description = 'Programs'
+    _order = 'name'
+
+    active = fields.Boolean(default=True)
+    name = fields.Char(required=True)
+    code = fields.Char()
+    company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, domain=[('system','=','student')])
+
+
 class StudentTerm(models.Model):
     _name = 'res.student.term'
     _description = 'Terms'
