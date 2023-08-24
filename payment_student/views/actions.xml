@@ -51,6 +51,27 @@
     <field name="domain">['|',('active','=',False),('active','=',True)]</field>
     </record>
 
+    <record id="action_faculty" model="ir.actions.act_window">
+    <field name="name">Faculties</field>
+    <field name="res_model">res.student.faculty</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_department" model="ir.actions.act_window">
+    <field name="name">Departments</field>
+    <field name="res_model">res.student.department</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
+    <record id="action_program" model="ir.actions.act_window">
+    <field name="name">Programs</field>
+    <field name="res_model">res.student.program</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">['|',('active','=',False),('active','=',True)]</field>
+    </record>
+
     <record id="action_class" model="ir.actions.act_window">
     <field name="name">Classes</field>
     <field name="res_model">res.student.class</field>

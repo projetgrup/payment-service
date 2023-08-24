@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 15:54+0000\n"
-"PO-Revision-Date: 2023-07-04 15:54+0000\n"
+"POT-Creation-Date: 2023-08-24 01:41+0000\n"
+"PO-Revision-Date: 2023-08-24 01:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,10 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__active
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__active
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__active
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__active
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__active
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__active
 #: model_terms:ir.ui.view,arch_db:payment_student.bursary_search
@@ -150,7 +153,10 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__code
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__code
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__code
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__code
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__code
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__code
 msgid "Code"
@@ -171,9 +177,12 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__company_id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__company_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__company_id
 msgid "Company"
@@ -219,10 +228,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_uid
 msgid "Created by"
@@ -233,10 +245,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__create_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__create_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__create_date
 msgid "Created on"
@@ -276,6 +291,13 @@ msgid "Define discounts when processing payment items with straight payments"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_department
+#: model:ir.model,name:payment_student.model_res_student_department
+#: model:ir.ui.menu,name:payment_student.menu_department
+msgid "Departments"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__percentage
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__percentage
 msgid "Discount (%)"
@@ -303,10 +325,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__display_name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__display_name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__display_name
 msgid "Display Name"
@@ -333,6 +358,13 @@ msgid "End Date"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_faculty
+#: model:ir.model,name:payment_student.model_res_student_faculty
+#: model:ir.ui.menu,name:payment_student.menu_faculty
+msgid "Faculties"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import__file
 msgid "File"
 msgstr ""
@@ -352,10 +384,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__id
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__id
 msgid "ID"
@@ -387,14 +422,22 @@ msgid "Installment must be higher than zero"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_integrations
+msgid "Integration Settings"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import____last_update
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type____last_update
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school____last_update
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term____last_update
 msgid "Last Modified on"
@@ -405,10 +448,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_uid
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_uid
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_uid
 msgid "Last Updated by"
@@ -419,10 +465,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_table__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__write_date
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__write_date
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__write_date
 msgid "Last Updated on"
@@ -456,7 +505,10 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_department__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_faculty__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_type__name
+#: model:ir.model.fields,field_description:payment_student.field_res_student_program__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__name
 msgid "Name"
@@ -643,6 +695,13 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__prepayment_amount
 msgid "Prepayment Discount"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.actions.act_window,name:payment_student.action_program
+#: model:ir.model,name:payment_student.model_res_student_program
+#: model:ir.ui.menu,name:payment_student.menu_program
+msgid "Programs"
 msgstr ""
 
 #. module: payment_student
@@ -894,4 +953,9 @@ msgstr ""
 msgid ""
 "You can get payment amounts and applied discounts, which is calculated "
 "dynamically, with choosing student(s) of yours in the following table."
+msgstr ""
+
+#. module: payment_student
+#: model:ir.ui.menu,name:payment_student.menu_syncops_connector
+msgid "syncOPS Integrations"
 msgstr ""

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import requests
 import logging
+import traceback
 
 from odoo import models, api, fields, _
 from odoo.exceptions import RedirectWarning, ValidationError, UserError
 
 _logger = logging.getLogger(__name__)
+
 
 class SyncopsConnector(models.Model):
     _name = 'syncops.connector'
@@ -136,6 +138,7 @@ class SyncopsConnector(models.Model):
                         'message': _('An error occured when connecting: %s' % response.reason)
                     }
             except Exception as e:
+                _logger.error(traceback.format_exc())
                 connector.write({
                     'connected': False,
                     'method_ids': [(5, 0, 0)],
