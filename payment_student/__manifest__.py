@@ -20,6 +20,7 @@
         'views/menu.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'views/transaction.xml',
         'wizards/student_import.xml',
     ],
     'assets': {

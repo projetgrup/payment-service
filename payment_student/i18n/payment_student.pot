@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 01:41+0000\n"
-"PO-Revision-Date: 2023-08-24 01:41+0000\n"
+"POT-Creation-Date: 2023-08-24 22:42+0000\n"
+"PO-Revision-Date: 2023-08-24 22:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -205,11 +205,13 @@ msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.actions.act_window,help:payment_student.action_parent
+#: model_terms:ir.actions.act_window,help:payment_student.action_university_parent
 msgid "Create a parent"
 msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.actions.act_window,help:payment_student.action_parent
+#: model_terms:ir.actions.act_window,help:payment_student.action_university_parent
 msgid "Create a parent and link it to any student you want"
 msgstr ""
 
@@ -259,6 +261,7 @@ msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.actions.act_window,help:payment_student.action_item
+#: model_terms:ir.actions.act_window,help:payment_student.action_university_item
 msgid "Created payments are listed here"
 msgstr ""
 
@@ -288,6 +291,15 @@ msgstr ""
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
 msgid "Define discounts when processing payment items with straight payments"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__system_student_department_id
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_department_id
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_department_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_department_id
+#: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
+msgid "Department"
 msgstr ""
 
 #. module: payment_student
@@ -362,6 +374,15 @@ msgstr ""
 #: model:ir.model,name:payment_student.model_res_student_faculty
 #: model:ir.ui.menu,name:payment_student.menu_faculty
 msgid "Faculties"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__system_student_faculty_id
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_faculty_id
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_faculty_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_faculty_id
+#: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
+msgid "Faculty"
 msgstr ""
 
 #. module: payment_student
@@ -546,6 +567,7 @@ msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.actions.act_window,help:payment_student.action_item
+#: model_terms:ir.actions.act_window,help:payment_student.action_university_item
 msgid "No payments yet"
 msgstr ""
 
@@ -559,6 +581,11 @@ msgstr ""
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "No term found with code \"%s\" for student \"%s\""
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
+msgid "Options"
 msgstr ""
 
 #. module: payment_student
@@ -677,7 +704,9 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_item
+#: model:ir.actions.act_window,name:payment_student.action_university_item
 #: model:ir.ui.menu,name:payment_student.menu_payment
+#: model:ir.ui.menu,name:payment_student.menu_university_payment
 msgid "Payments"
 msgstr ""
 
@@ -695,6 +724,15 @@ msgstr ""
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__prepayment_amount
 msgid "Prepayment Discount"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__system_student_program_id
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_program_id
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_program_id
+#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_program_id
+#: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
+msgid "Program"
 msgstr ""
 
 #. module: payment_student
@@ -735,6 +773,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__school
+#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__school
+#: model:res.groups,name:payment_student.group_type_school
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "School"
@@ -803,6 +844,11 @@ msgid "Single Payment Discount"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
+msgid "Specify student system type"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
 msgid "Start Date"
 msgstr ""
@@ -818,6 +864,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
+#: model_terms:ir.ui.view,arch_db:payment_student.university_item_tree
 msgid "Student"
 msgstr ""
 
@@ -842,7 +890,9 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_child
+#: model:ir.actions.act_window,name:payment_student.action_university_parent
 #: model:ir.ui.menu,name:payment_student.menu_child
+#: model:ir.ui.menu,name:payment_student.menu_university_parent
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
 msgid "Students"
 msgstr ""
@@ -863,6 +913,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system
 msgid "System"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_type
+#: model:ir.model.fields,field_description:payment_student.field_res_company__system_student_type
+#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_type
+#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_type
+msgid "System Student Type"
 msgstr ""
 
 #. module: payment_student
@@ -914,11 +972,24 @@ msgid "Transactions"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.settings_form
+msgid "Type"
+msgstr ""
+
+#. module: payment_student
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__university
+#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__university
+#: model:res.groups,name:payment_student.group_type_university
+msgid "University"
+msgstr ""
+
+#. module: payment_student
 #: model:res.groups,name:payment_student.group_student_user
 msgid "User"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model,name:payment_student.model_res_users
 #: model:ir.ui.menu,name:payment_student.menu_user
 msgid "Users"
 msgstr ""

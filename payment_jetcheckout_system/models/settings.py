@@ -28,7 +28,7 @@ class PaymentSettings(models.TransientModel):
         }
 
     def execute(self):
-        return self.refresh()
+        return self.next()
 
     def cancel(self):
         return self.refresh()

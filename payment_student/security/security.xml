@@ -18,6 +18,17 @@
             <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager')), (4, ref('payment_student.group_student_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
+        <record model="res.groups" id="group_type_school">
+            <field name="name">School</field>
+            <field name="category_id" ref="module_category_student"/>
+        </record>
+        <record model="res.groups" id="group_type_university">
+            <field name="name">University</field>
+            <field name="category_id" ref="module_category_student"/>
+        </record>
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('payment_student.group_type_school')), (4, ref('payment_student.group_type_university'))]"/>
+        </record>
 
         <!-- rules -->
         <record id="discount_company_rule" model="ir.rule">

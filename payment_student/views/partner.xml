@@ -35,6 +35,16 @@
     </field>
     </record>
 
+    <record id="university_parent_tree" model="ir.ui.view">
+    <field name="name">res.student.university.parent.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+    </field>
+    </record>
+
     <record id="child_kanban" model="ir.ui.view">
     <field name="name">res.student.kanban</field>
     <field name="model">res.partner</field>
@@ -60,13 +70,10 @@
         <xpath expr='//field[@name="mobile"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="replace"/>
         <xpath expr='//field[@name="company_id"]' position="before">
-            <field name="school_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', 'not in', (False, 'school'))]}"/>
-            <field name="class_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', 'not in', (False, 'school'))]}"/>
-            <field name="system_student_faculty_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
-            <field name="system_student_department_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
-            <field name="system_student_program_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
+            <field name="school_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="class_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
             <field name="ref"/>
-            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', 'not in', (False, 'school'))]}"/>
+            <field name="bursary_id" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>
             <field name="system_student_type" invisible="1"/>
         </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
@@ -108,25 +115,42 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="parent_id"]' position="replace"/>
-        <xpath expr='//field[@name="email"]' position="attributes">
+        <xpath expr="//field[@name='parent_id']" position="replace"/>
+        <xpath expr="//field[@name='email']" position="attributes">
             <attribute name="required">1</attribute>
         </xpath>
-        <xpath expr='//field[@name="mobile"]' position="before">
+        <xpath expr="//field[@name='mobile']" position="before">
             <field name="school_ids" widget="many2many_tags" attrs="{'invisible': [('system_student_type', 'not in', (False, 'school'))]}"/>
-            <field name="system_student_faculty_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
-            <field name="system_student_department_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
-            <field name="system_student_program_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('system_student_type', '!=', 'university')]}"/>
             <field name="system_student_type" invisible="1"/>
         </xpath>
-        <xpath expr='//page[@name="siblings"]' position="replace"/>
-        <xpath expr='//field[@name="child_ids"]' position="attributes">
+        <xpath expr="//page[@name='siblings']" position="replace"/>
+        <xpath expr="//field[@name='child_ids']" position="attributes">
             <attribute name="context">{'kanban_view_ref' : 'payment_student.child_kanban', 'form_view_ref' : 'payment_student.child_basic', 'active_child': 1, 'default_is_company': False, 'default_parent_id': active_id, 'default_lang': lang}</attribute>
         </xpath>
-        <xpath expr='//page[@name="children"]' position="attributes">
+        <xpath expr="//page[@name='children']" position="attributes">
             <attribute name="string">Children</attribute>
-            <attribute name="attrs">{'invisible': [('system_student_type', 'not in', (False, 'school'))]}</attribute>
         </xpath>
+    </field>
+    </record>
+
+    <record id="university_parent_form" model="ir.ui.view">
+    <field name="name">res.student.university.parent.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='parent_id']" position="replace"/>
+        <xpath expr="//field[@name='email']" position="attributes">
+            <attribute name="required">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='mobile']" position="before">
+            <field name="system_student_faculty_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="system_student_department_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="system_student_program_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
+            <field name="system_student_type" invisible="1"/>
+        </xpath>
+        <xpath expr="//page[@name='siblings']" position="replace"/>
+        <xpath expr="//page[@name='children']" position="replace"/>
     </field>
     </record>
 
@@ -164,12 +188,29 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="vat"]' position="after">
+        <xpath expr="//field[@name='vat']" position="after">
             <field name="mobile"/>
         </xpath>
-        <xpath expr='//group' position="after">
+        <xpath expr="//group" position="after">
             <searchpanel>
                 <field name="school_ids" select="multi" icon="fa-tag" enable_counters="1"/>
+            </searchpanel>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="university_parent_search" model="ir.ui.view">
+    <field name="name">res.student.university.parent.search</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='vat']" position="after">
+            <field name="mobile"/>
+        </xpath>
+        <xpath expr="//group" position="after">
+            <searchpanel>
+                <field name="system_student_faculty_id" icon="fa-institution" enable_counters="1"/>
             </searchpanel>
         </xpath>
     </field>

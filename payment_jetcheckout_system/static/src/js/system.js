@@ -221,15 +221,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             position: 'after',
             symbol: '', 
         };
-        this.amount = new fields.float({
-            default: 0,
-        });
         this.partner = new fields.integer({
             default: 0,
         });
         this.wizard = {
             vat: new fields.element(),
             partner: new fields.element(),
+            amount: new fields.float({
+                default: 0,
+                mask: payloxPage.prototype._maskAmount.bind(this),
+            }),
             page: {
                 loading: new fields.element(),
                 login: new fields.element(),
@@ -280,13 +281,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
-            self.wizard.page.loading.$.removeClass('show');
+
+            self.wizard.vat.value = '';
             self.wizard.page.login.$.addClass('show');
+            self.wizard.page.loading.$.removeClass('show');
             setTimeout(function() {
                 self.wizard.vat.$.focus();
                 self.wizard.page.loading.$.addClass('invisible');
             }, 500);
-            console.log(self.wizard.vat.value);
         });
     },
 
@@ -350,7 +352,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 
     _onClickWelcomeNext: async function () {
-        const element = $('label[for=partner]').closest('.card');
+        this.wizard.page.welcome.$.addClass('slide').removeClass('show');
+
+        const element = $('label[name=partner]').closest('.card');
         const offset = element.offset();
         const overlay = this.wizard.page.overlay.$;
         const position = {
@@ -365,16 +369,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         $element.find('span[name=partner]').html(this.wizard.partner.html);
 
         overlay.append($element);
-        await this._onPause(250);
+        await this._onPause(100);
         $element.addClass('show');
         await this._onPause(750);
         $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
         $('.payment-dynamic .col-md-3 .shine').addClass('transparent');
 
-        this.wizard.page.welcome.$.addClass('invisible');
+        setTimeout(() => this.wizard.page.welcome.$.addClass('invisible'), 500);
         //this.wizard.page.section.all.$.addClass('show');
         //this.wizard.page.section.amount.$.addClass('active');
-        this.wizard.page.amount.$.addClass('slide show').removeClass('invisible');
+        this.wizard.page.amount.$.removeClass('invisible').addClass('slide show');
     },
 
     _onClickAmountCurrency: function (ev) {
@@ -403,16 +407,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         setTimeout(() => $element.remove(), 500);
 
         this.wizard.page.amount.$.addClass('invisible');
-        this.wizard.page.welcome.$.removeClass('slide invisible').addClass('show');
+        this.wizard.page.welcome.$.removeClass('invisible').addClass('show');
     },
 
     _onClickAmountNext: async function () {
         this.wizard.page.amount.$.addClass('slide').removeClass('show');
- 
+
         const element = $('label[for=amount]').closest('.card');
         const offset = element.offset();
         const overlay = this.wizard.page.overlay.$;
-        const amount = this.amount.value;
+        const amount = this.wizard.amount.value;
         const position = {
             top:  offset.top - overlay.offset().top - 24,
             left: offset.left,
@@ -422,18 +426,18 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
         const $element = element.clone().addClass('payment-card-item-clone').attr('name', 'amount');
         $element.css('width', position.width).css('height', position.height);
+        $element.find('input[name=amount]').removeAttr('id');
         $element.find('input[name=amount]').val(format.float(amount));
         $element.find('input[name=amount] + span.symbol').removeClass('symbol-after symbol-before').addClass('symbol-' + this.currency.position).text(this.currency.symbol);
 
-        $('.payment-system input[name=amount]').val(format.float(amount)).change();
-
         overlay.append($element);
-        await this._onPause(250);
+        await this._onPause(100);
         $element.addClass('show');
         await this._onPause(750);
         $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
         await this._onPause(500);
 
+        $('.payment-system .payment-card input[name=amount]').val(format.float(amount)).change().trigger('update');
         const page = $('.payment-dynamic');    
         overlay.css('opacity', '0');
         page.css('opacity', '0');

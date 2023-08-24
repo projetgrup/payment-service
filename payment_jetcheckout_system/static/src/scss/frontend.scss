@@ -126,7 +126,7 @@
                     border: 4px solid #000000;
                     border-radius: 50%;
                     opacity: 0.6;
-                    margin: 1em 0;
+                    //margin: 1em 0;
                 }
 
                 .payment-card-item-amount {
@@ -137,9 +137,11 @@
                         border-radius: 0 5px 5px 0 !important;
                         padding: 0 10px 0 15px;
                         margin-left: -5px;
+                        width: 75px;
                         position: relative;
                         color: #ffffff;
                         outline: none;
+                        justify-content: center;
                         
                         > ul {
                             visibility: hidden;

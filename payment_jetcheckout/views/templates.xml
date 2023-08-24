@@ -160,10 +160,10 @@
                     </div>
                 </div>
                 <div class="px-3 py-4 bg-white card my-4">
-                    <label for="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
+                    <label name="partner" class="text-primary font-weight-bold mb-0 d-block">Partner</label>
                     <span name="partner" class="text-600"><t t-esc="partner_name or '-'"/></span>
                     <t t-if="contact">
-                        <label for="contact.id" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
+                        <label name="contact" class="text-primary font-weight-bold mt-2 mb-0 d-block">Contact</label>
                         <span name="contact" class="text-600"><t t-esc="contact.name or '-'"/></span>
                     </t>
                     <t t-if="labels" t-raw="labels"/>
@@ -320,7 +320,7 @@
                         <div class="field-container">
                             <input id="cardholder" type="text" required="required" field="card.holder"/>
                             <span class="bar-container"/>
-                            <label><span>Name</span></label>
+                            <label for="cardholder"><span>Name</span></label>
                         </div>
                         <div class="field-container">
                             <input id="cardnumber" inputmode="numeric" pattern="[0-9 ]*" type="text" required="required" field="card.number"/>

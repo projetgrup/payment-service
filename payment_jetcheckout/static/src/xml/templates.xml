@@ -67,7 +67,7 @@
                         <t t-if="r.id">
                             <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
                             <div t-attf-class="installment-cell text-center #{r.id === 1 &amp;&amp; r.index === 0 ? 'installment-selected' : ''}">
-                                <input class="d-none" type="radio" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
+                                <input class="d-none" type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
                                 <span t-esc="format.currency(val, position, symbol, decimal)"/>
                             </div>
                         </t>
@@ -84,7 +84,7 @@
                 <div t-attf-class="installment-line #{r.id === 1 ? 'installment-selected' : ''}">
                     <div class="installment-cell">
                         <div class="text-center">
-                            <input type="radio" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id"/>
+                            <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id"/>
                             <span class="installment-radio"/>
                         </div>
                         <div class="position-relative">
