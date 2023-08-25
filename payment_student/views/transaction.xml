@@ -5,9 +5,9 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.transaction_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="partner_ref"]' position="after">
-            <field name="system_student_faculty_id" optional="hide" groups="payment_student.group_type_university"/>
-            <field name="system_student_department_id" optional="hide" groups="payment_student.group_type_university"/>
-            <field name="system_student_program_id" optional="hide" groups="payment_student.group_type_university"/>
+            <field name="system_student_faculty_id" optional="hide" groups="payment_student.group_subsystem_university"/>
+            <field name="system_student_department_id" optional="hide" groups="payment_student.group_subsystem_university"/>
+            <field name="system_student_program_id" optional="hide" groups="payment_student.group_subsystem_university"/>
         </xpath>
     </field>
     </record>
@@ -17,9 +17,9 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.transaction_search"/>
     <field name="arch" type="xml">
         <xpath expr="//group" position="inside">
-            <field name="system_student_faculty_id" groups="payment_student.group_type_university"/>
-            <field name="system_student_department_id" groups="payment_student.group_type_university"/>
-            <field name="system_student_program_id" groups="payment_student.group_type_university"/>
+            <field name="system_student_faculty_id" groups="payment_student.group_subsystem_university"/>
+            <field name="system_student_department_id" groups="payment_student.group_subsystem_university"/>
+            <field name="system_student_program_id" groups="payment_student.group_subsystem_university"/>
         </xpath>
     </field>
     </record>

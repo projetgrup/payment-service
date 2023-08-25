@@ -12,13 +12,13 @@
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <label for="system_student_type" string="Type"/>
+                            <label for="system_student_subsystem" string="Type"/>
                             <div class="text-muted">
-                                Specify student system type
+                                Specify student subsystem
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <field name="system_student_type" class="ml-3 w-100 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
+                                    <field name="system_student_subsystem" class="ml-3 w-100 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
                                 </div>
                             </div>
                         </div>

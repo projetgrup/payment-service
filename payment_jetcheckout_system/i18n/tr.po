@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 22:42+0000\n"
-"PO-Revision-Date: 2023-08-25 01:50+0300\n"
+"POT-Creation-Date: 2023-08-25 22:26+0000\n"
+"PO-Revision-Date: 2023-08-26 01:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
@@ -1360,6 +1360,11 @@ msgid "Name"
 msgstr "Ad"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
+msgid "New Payment"
+msgstr "Yeni Ödeme"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "No Sent Email"
 msgstr "Eposta Gönderilmedi"
@@ -1751,7 +1756,7 @@ msgstr "Telefon"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 #, python-format
 msgid "Please enter your VAT number"
@@ -2152,6 +2157,11 @@ msgid "Status"
 msgstr "Durumu"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__subsystem
+msgid "Subsystem"
+msgstr "Altsistem"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Success Transactions"
 msgstr "Başarılı İşlemler"
@@ -2272,7 +2282,7 @@ msgstr "Bu Ay"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
-#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #, python-format
 msgid "This VAT seems invalid. Please try again."
 msgstr "TC kimlik numarası yanlış görünüyor. Lütfen tekrar deneyiniz."

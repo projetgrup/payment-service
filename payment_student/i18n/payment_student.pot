@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 22:42+0000\n"
-"PO-Revision-Date: 2023-08-24 22:42+0000\n"
+"POT-Creation-Date: 2023-08-25 22:25+0000\n"
+"PO-Revision-Date: 2023-08-25 22:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -298,6 +298,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_department_id
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_department_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_department_id
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 msgid "Department"
 msgstr ""
@@ -351,6 +352,7 @@ msgstr ""
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__parent_email
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 msgid "Email"
 msgstr ""
 
@@ -381,6 +383,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_faculty_id
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_faculty_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_faculty_id
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 msgid "Faculty"
 msgstr ""
@@ -711,6 +714,11 @@ msgid "Payments"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "Phone"
+msgstr ""
+
+#. module: payment_student
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "Please create \"%s\" column"
@@ -773,9 +781,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__school
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__school
-#: model:res.groups,name:payment_student.group_type_school
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_settings__system_student_subsystem__student_school
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__subsystem__student_school
+#: model:res.groups,name:payment_student.group_subsystem_school
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "School"
@@ -845,7 +853,7 @@ msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
-msgid "Specify student system type"
+msgid "Specify student subsystem"
 msgstr ""
 
 #. module: payment_student
@@ -861,11 +869,13 @@ msgid "Start date cannot be higher than end date"
 msgstr ""
 
 #. module: payment_student
+#: code:addons/payment_student/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_tree
+#, python-format
 msgid "Student"
 msgstr ""
 
@@ -898,6 +908,11 @@ msgid "Students"
 msgstr ""
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_company__subsystem
+msgid "Subsystem"
+msgstr ""
+
+#. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: code:addons/payment_student/static/src/xml/templates.xml:0
@@ -916,11 +931,8 @@ msgid "System"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_company__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_type
-msgid "System Student Type"
+#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_subsystem
+msgid "System Student Subsystem"
 msgstr ""
 
 #. module: payment_student
@@ -977,9 +989,9 @@ msgid "Type"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__university
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__university
-#: model:res.groups,name:payment_student.group_type_university
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_settings__system_student_subsystem__student_university
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__subsystem__student_university
+#: model:res.groups,name:payment_student.group_subsystem_university
 msgid "University"
 msgstr ""
 
@@ -989,7 +1001,6 @@ msgid "User"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model,name:payment_student.model_res_users
 #: model:ir.ui.menu,name:payment_student.menu_user
 msgid "Users"
 msgstr ""

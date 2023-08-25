@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 22:42+0000\n"
-"PO-Revision-Date: 2023-08-25 01:44+0300\n"
+"POT-Creation-Date: 2023-08-25 22:25+0000\n"
+"PO-Revision-Date: 2023-08-26 01:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.page_payment
@@ -332,6 +332,7 @@ msgstr "Peşin ödenen ödeme kalemlerini işlerken indirimler tanımlayın"
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_department_id
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_department_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_department_id
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 msgid "Department"
 msgstr "Bölüm"
@@ -384,6 +385,7 @@ msgstr "Görünen Ad"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__parent_email
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 msgid "Email"
 msgstr "Eposta"
 
@@ -414,6 +416,7 @@ msgstr "Fakülteler"
 #: model:ir.model.fields,field_description:payment_student.field_payment_transaction__system_student_faculty_id
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_faculty_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_faculty_id
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 msgid "Faculty"
 msgstr "Fakülte"
@@ -743,6 +746,11 @@ msgid "Payments"
 msgstr "Ödemeler"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment_student
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "Please create \"%s\" column"
@@ -805,9 +813,9 @@ msgstr "ÖTS"
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__school
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__school
-#: model:res.groups,name:payment_student.group_type_school
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_settings__system_student_subsystem__student_school
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__subsystem__student_school
+#: model:res.groups,name:payment_student.group_subsystem_school
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "School"
@@ -879,8 +887,8 @@ msgstr "Tek Çekim İndirimi"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
-msgid "Specify student system type"
-msgstr "Öğrenci sistem türünü belirtin"
+msgid "Specify student subsystem"
+msgstr "Öğrenci altsistemini belirtin"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
@@ -894,11 +902,13 @@ msgid "Start date cannot be higher than end date"
 msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
 
 #. module: payment_student
+#: code:addons/payment_student/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_tree
+#, python-format
 msgid "Student"
 msgstr "Öğrenci"
 
@@ -931,6 +941,11 @@ msgid "Students"
 msgstr "Öğrenciler"
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_res_company__subsystem
+msgid "Subsystem"
+msgstr "Altsistem"
+
+#. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_table
@@ -947,12 +962,9 @@ msgid "System"
 msgstr "Sistem"
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_company__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_type
-msgid "System Student Type"
-msgstr "Sistem Öğrenci Türü"
+#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_subsystem
+msgid "System Student Subsystem"
+msgstr "Sistem Öğrenci Altsistemi"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__term_id
@@ -1010,9 +1022,9 @@ msgid "Type"
 msgstr "Tür"
 
 #. module: payment_student
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__university
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__university
-#: model:res.groups,name:payment_student.group_type_university
+#: model:ir.model.fields.selection,name:payment_student.selection__payment_settings__system_student_subsystem__student_university
+#: model:ir.model.fields.selection,name:payment_student.selection__res_company__subsystem__student_university
+#: model:res.groups,name:payment_student.group_subsystem_university
 msgid "University"
 msgstr "Üniversite"
 
@@ -1022,7 +1034,6 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: payment_student
-#: model:ir.model,name:payment_student.model_res_users
 #: model:ir.ui.menu,name:payment_student.menu_user
 msgid "Users"
 msgstr "Kullanıcılar"
@@ -1188,9 +1199,6 @@ msgstr "syncOPS Entegrasyonu"
 #, python-format
 #~ msgid "Payment table cannot be related to more than one company"
 #~ msgstr "Ödeme tablosu birden fazla şirketle ilişkili olamaz"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
 
 #, python-format
 #~ msgid "Please create a company payment settings to contine"

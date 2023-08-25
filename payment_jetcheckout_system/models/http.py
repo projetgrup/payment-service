@@ -24,11 +24,11 @@ class Http(models.AbstractModel):
                 request.env.cr.execute(query)
                 cids = request.cr.fetchone()
 
-            query = f"""SELECT system FROM res_company WHERE id={cids[0]}"""
+            query = f"""SELECT system, subsystem FROM res_company WHERE id={cids[0]}"""
             request.env.cr.execute(query)
 
             context = dict(request.context)
-            context['system'] = request.cr.fetchone()[0]
+            context['system'], context['subsystem'] = request.cr.fetchone()
             request.context = frozendict(context)
 
     def webclient_rendering_context(self):
