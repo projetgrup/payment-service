@@ -325,6 +325,7 @@ class Partner(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         system = self.env.context.get('active_system') or self.env.context.get('system')
+        subsystem = self.env.context.get('active_subsystem')
         if system:
             child = self.env.context.get('active_child', False)
             if child:

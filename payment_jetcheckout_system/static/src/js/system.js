@@ -207,7 +207,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
+publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
     selector: '.payment-dynamic',
     
     init: function (parent, options) {

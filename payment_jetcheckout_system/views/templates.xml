@@ -218,7 +218,7 @@
                                         </div>
                                         <div class="payment-card-item-amount">
                                             <div class="field-container">
-                                                <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="wizard.amount"/>
+                                                <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="wizard.amount"/>
                                                 <span class="bar-container"/>
                                                 <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                                                 <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
