@@ -325,19 +325,36 @@ class Partner(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         system = self.env.context.get('active_system') or self.env.context.get('system')
-        subsystem = self.env.context.get('active_subsystem')
+        subsystem = self.env.context.get('active_subsystem') or self.env.context.get('subsystem')
         if system:
+            if subsystem:
+                subsystem = subsystem.replace('%s_' % system, '') + '_'
+            else:
+                subsystem = ''
+
             child = self.env.context.get('active_child', False)
             if child:
                 if view_type == 'form':
-                    view_id = self.env.ref('payment_%s.child_form' % system).id
+                    try:
+                        view_id = self.env.ref('payment_%s.%schild_form' % (system, subsystem)).id
+                    except:
+                        view_id = self.env.ref('payment_%s.child_form' % (system,)).id
                 elif view_type == 'tree':
-                    view_id = self.env.ref('payment_%s.child_tree' % system).id
+                    try:
+                        view_id = self.env.ref('payment_%s.%schild_tree' % (system, subsystem)).id
+                    except:
+                        view_id = self.env.ref('payment_%s.child_tree' % (system,)).id
             else:
                 if view_type == 'form':
-                    view_id = self.env.ref('payment_%s.parent_form' % system).id
+                    try:
+                        view_id = self.env.ref('payment_%s.%sparent_form' % (system, subsystem)).id
+                    except:
+                        view_id = self.env.ref('payment_%s.parent_form' % (system,)).id
                 elif view_type == 'tree':
-                    view_id = self.env.ref('payment_%s.parent_tree' % system).id
+                    try:
+                        view_id = self.env.ref('payment_%s.%sparent_tree' % (system, subsystem)).id
+                    except:
+                        view_id = self.env.ref('payment_%s.parent_tree' % (system,)).id
         return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def action_payable(self):

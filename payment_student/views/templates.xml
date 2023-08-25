@@ -184,6 +184,21 @@
         </table>
     </template>
 
+    <template id="page_payment_subsystem_university" inherit_id="payment_jetcheckout_system.page_payment">
+        <xpath expr="//t[@t-set='labels']" position="inside">
+            <t t-if="flow == 'dynamic' and system == 'student' and subsystem == 'student_university'">
+                <label name="faculty" class="text-primary font-weight-bold mb-0 d-block">Faculty</label>
+                <span name="faculty" class="text-600" t-esc="partner and partner.system_student_faculty_id.name or '-'"/>
+                <label name="department" class="text-primary font-weight-bold mb-0 d-block">Department</label>
+                <span name="department" class="text-600" t-esc="partner and partner.system_student_department_id.name or '-'"/>
+                <label name="phone" class="text-primary font-weight-bold mb-0 d-block">Phone</label>
+                <span name="phone" class="text-600" t-esc="partner and partner.phone or '-'"/>
+                <label name="email" class="text-primary font-weight-bold mb-0 d-block">Email</label>
+                <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
         <xpath expr="//tr[@t-if='is_conveyance']" position="before">
             <t t-call="payment_student.payment_table">

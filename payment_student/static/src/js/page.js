@@ -5,11 +5,24 @@ import core from 'web.core';
 import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
 import systemPage from 'paylox.system.page';
+import systemFlow from 'paylox.system.page.flow';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
 const round_di = utils.round_decimals;
 const qweb = core.qweb;
+
+systemFlow.dynamic.include({
+    _queryPartnerPostprocess: function (partner) {
+        this._super(partner);
+        if (this.system.value === 'student' && this.subsystem.value === 'student_university') {
+            $('.payment-system span[name=faculty]').text(partner.faculty || '-');
+            $('.payment-system span[name=department]').text(partner.department || '-');
+            $('.payment-system span[name=phone]').text(partner.phone || '-');
+            $('.payment-system span[name=email]').text(partner.email || '-');
+        }
+    },
+});
 
 publicWidget.registry.payloxSystemStudent = systemPage.extend({
     selector: '.payment-student #wrapwrap',

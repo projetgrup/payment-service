@@ -805,9 +805,7 @@ msgstr "ÖTS"
 #: model:ir.model.fields,field_description:payment_student.field_res_partner__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__school_id
 #: model:ir.model.fields,field_description:payment_student.field_res_users__school_id
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__school
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__school
-#: model:res.groups,name:payment_student.group_type_school
+#: model:res.groups,name:payment_student.group_subsystem_school
 #: model_terms:ir.ui.view,arch_db:payment_student.child_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "School"
@@ -879,8 +877,8 @@ msgstr "Tek Çekim İndirimi"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
-msgid "Specify student system type"
-msgstr "Öğrenci sistem türünü belirtin"
+msgid "Specify student subsystem"
+msgstr "Öğrenci altsistemini belirtin"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_start
@@ -947,14 +945,6 @@ msgid "System"
 msgstr "Sistem"
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_settings__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_company__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_partner__system_student_type
-#: model:ir.model.fields,field_description:payment_student.field_res_users__system_student_type
-msgid "System Student Type"
-msgstr "Sistem Öğrenci Türü"
-
-#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__term_id
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_term
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__term_id
@@ -1010,9 +1000,7 @@ msgid "Type"
 msgstr "Tür"
 
 #. module: payment_student
-#: model:ir.model.fields.selection,name:payment_student.selection__res_company__system_student_type__university
-#: model:ir.model.fields.selection,name:payment_student.selection__res_partner__system_student_type__university
-#: model:res.groups,name:payment_student.group_type_university
+#: model:res.groups,name:payment_student.group_subsystem_university
 msgid "University"
 msgstr "Üniversite"
 

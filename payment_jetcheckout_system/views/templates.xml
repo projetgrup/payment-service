@@ -3,6 +3,7 @@
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
         <xpath expr="//div[@id='payment_card']/div" position="inside">
             <input t-if="system" type="hidden" t-att-value="system" field="system"/>
+            <input t-if="subsystem" type="hidden" t-att-value="subsystem" field="subsystem"/>
         </xpath>
     </template>
 
@@ -104,6 +105,7 @@
                 <div class="row mt-2 justify-content-center">
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                    <div class="m-1" style="width:200px;"><a href="/my/payment" class="btn btn-secondary btn-block font-weight-bold text-uppercase"><i class="fa fa-money mr-2" t-translation="off"/>New Payment</a></div>
                 </div>
             </div>
             <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 my-2 #{classes}">
@@ -251,7 +253,7 @@
                         <t t-set="page" t-value="'payment'"/>
                         <t t-set="no_payment_icons" t-value="True"/>
                         <t t-set="no_card_preview" t-value="True"/>
-                        <t t-if="flow != 'dynamic'" t-set="buttons">
+                        <t t-if="not no_sidebar_buttons" t-set="buttons">
                             <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
                         </t>
                         <t t-call="payment_jetcheckout_system.payment_contact"/>

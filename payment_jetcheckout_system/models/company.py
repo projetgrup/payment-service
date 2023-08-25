@@ -15,6 +15,7 @@ class Company(models.Model):
 
     tax_office = fields.Char()
     system = fields.Selection([])
+    subsystem = fields.Selection([])
     required_2fa = fields.Boolean('Two Factor Required')
     notif_mail_success_ok = fields.Boolean('Send Successful Payment Transaction Email')
     notif_sms_success_ok = fields.Boolean('Send Successful Payment Transaction SMS')
@@ -46,4 +47,50 @@ class Company(models.Model):
                     })
             else:
                 del vals['system']
-        return super().write(vals)
+
+        res = super().write(vals)
+        if 'subsystem' in vals:
+            self._update_subsystem()
+        return res
+
+    def _update_subsystem(self, users=None):
+        for company in self:
+            values = []
+            if company.system:
+                if company.subsystem:
+                    active_ids = self.env['ir.model.data'].sudo().search_read([
+                        ('model', '=', 'res.groups'),
+                        ('module', '=', 'payment_%s' % company.system),
+                        ('name', '=', 'group_subsystem_%s' % company.subsystem)
+                    ], ['id'], limit=1)
+                    values.extend([(4, active_id['id']) for active_id in active_ids])
+
+                    inactive_ids = self.env['ir.model.data'].sudo().search_read([
+                        ('model', '=', 'res.groups'),
+                        ('module', '=', 'payment_%s' % company.system),
+                        ('name', '!=', 'group_subsystem_%s' % company.subsystem)
+                    ], ['id'])
+                    values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+
+                else:
+                    inactive_ids = self.env['ir.model.data'].sudo().search_read([
+                        ('model', '=', 'res.groups'),
+                        ('module', '=', 'payment_%s' % company.system),
+                        ('name', 'like', 'group_subsystem_%')
+                    ], ['id'])
+                    values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+            else:
+                inactive_ids = self.env['ir.model.data'].sudo().search_read([
+                    ('model', '=', 'res.groups'),
+                    ('module', 'like', 'payment_%'),
+                    ('name', 'like', 'group_subsystem_%')
+                ], ['id'])
+                values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+
+            if values:
+                if not users:
+                    users = self.env['res.users'].sudo().with_context(active_test=False).search([
+                        ('share', '=', False),
+                        ('company_id', '=', company.id),
+                    ])
+                users.write({'groups_id': values})
