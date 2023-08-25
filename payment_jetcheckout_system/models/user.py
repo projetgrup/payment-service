@@ -197,7 +197,7 @@ class Users(models.Model):
         values = super(Users, self).default_get(fields)
         system = self.env.company.system
         if system:
-            template = self.sudo().search([('login','=',system),('active','=',False)], limit=1)
+            template = self.sudo().search([('login', '=', system), ('active', '=', False)], limit=1)
             if template:
                 values['notification_type'] = template.notification_type
                 values['action_id'] = template.action_id
