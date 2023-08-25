@@ -159,6 +159,8 @@ class PayloxSystemController(Controller):
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
+            'system': company.system,
+            'subsystem': company.subsystem,
             'flow': company.payment_page_flow,
         })
 
@@ -219,3 +221,7 @@ class PayloxSystemController(Controller):
             return request.render('payment_jetcheckout_system.page_login', {'token': token})
         else:
             return werkzeug.utils.redirect('/p/%s' % token)
+
+    @http.route(['/my/payment/query/partner'], type='json', auth='public', website=True)
+    def page_system_query_partner(self, **kwargs):
+        return {}

@@ -205,18 +205,25 @@ class Users(models.Model):
                 values['tz'] = template.tz
         return values
 
-    def write(self, vals):
-        users = super(Users, self).write(vals)
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        res.company_id._update_subsystem()
+        return res
+
+    def write(self, values):
+        res = super(Users, self).write(values)
         for user in self:
-            system = user.company_id.system
-            if 'company_id' in vals:
-                user.partner_id.company_id = system and user.company_id.id or False
-        return users
+            if 'company_id' in values:
+                user.company_id._update_subsystem()
+                user.partner_id.company_id = user.company_id.system and user.company_id.id or False
+        return res
 
     def context_get(self):
         ctx = super(Users, self).context_get()
         context = dict(ctx)
         context['system'] = self.env.context.get('system')
+        context['subsystem'] = self.env.context.get('subsystem')
         return frozendict(context)
 
     def action_reset_password(self):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import _
 from odoo.http import request, route
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
@@ -42,24 +43,28 @@ class PayloxSystemStudentController(Controller):
     @route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
         company = request.env.company
-        if company.system == 'student' and company.payment_page_flow == 'dynamic':
-            partner = request.website.user_id.partner_id.sudo()
+        if company.system == 'student':
+            partner = request.website.user_id.partner_id.sudo() if company.payment_page_flow == 'dynamic' else None
             values = self._prepare(partner=partner)
             values.update({
+                'no_sidebar_buttons': True,
+                'partner_label': _('Student'),
                 'success_url': '/my/payment/success',
                 'fail_url': '/my/payment/fail',
-                'flow': 'dynamic',
+                'system': company.system,
+                'subsystem': company.subsystem,
+                'flow': company.payment_page_flow,
             })
-
+            
             return request.render('payment_jetcheckout_system.page_payment', values)
         return super().page_system_portal()
 
-    @route(['/my/payment/student/partners'], type='json', auth='public', website=True)
-    def page_student_partners(self, **kwargs):
-        result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs.get('vat')})
-        if not result == None and isinstance(result, list) and len(result) > 0:
-            company = request.env.company
-            if company.system_student_type == 'university':
+    @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
+    def page_system_query_partner(self, **kwargs):
+        company = request.env.company
+        if company.system == 'student' and company.subsystem == 'student_university':
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs.get('vat')})
+            if not result == None and isinstance(result, list) and len(result) > 0:
                 res = result[0]
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', res.get('vat')),
@@ -121,5 +126,15 @@ class PayloxSystemStudentController(Controller):
                     })
                     student = request.env['res.partner'].sudo().create(values)
 
-                return {'id': student.id, 'name': student.name}
-        return {}
+                return {
+                    'id': student.id,
+                    'name': student.name,
+                    'faculty': faculty and faculty.name,
+                    'department': department and department.name,
+                    'program': program and program.name,
+                    'phone': student.mobile,
+                    'email': student.email,
+                }
+
+            return {}
+        return super().page_system_query_partner(**kwargs)

@@ -53,6 +53,7 @@
         ],
         'web.assets_frontend': [
             'payment_jetcheckout_system/static/src/js/system.js',
+            'payment_jetcheckout_system/static/src/js/flow.js',
             'payment_jetcheckout_system/static/src/scss/frontend.scss',
         ],
     },
