@@ -1,17 +1,16 @@
 /** @odoo-module **/
 
 import core from 'web.core';
-import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
+import session from 'web.session';
+import AbstractAction from 'web.AbstractAction';
+import { SwitchCompanyMenu } from '@web/webclient/switch_company_menu/switch_company_menu';
 
-var AbstractAction = require('web.AbstractAction');
-var session = require('web.session');
+const QWeb = core.qweb;
+const _t = core._t;
 
-var QWeb = core.qweb;
-var _t = core._t;
+SwitchCompanyMenu.template = 'system.SwitchCompanyMenu';
 
-SwitchCompanyMenu.template = "system.SwitchCompanyMenu";
-
-var CompanyHierarchy = AbstractAction.extend({
+const CompanyHierarchy = AbstractAction.extend({
     hasControlPanel: true,
     events: {
         'click .o_company_fold': '_onClickFold',
