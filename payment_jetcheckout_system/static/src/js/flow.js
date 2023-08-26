@@ -119,9 +119,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
                 route: '/my/payment/query/partner',
                 params: { vat: this.wizard.vat.value },
             });
-        } catch (error) {
-            console.error(error);
-        }
+        } catch {}
 
         if (!partner.id) {
             this.wizard.vat.$.addClass('border-danger');
