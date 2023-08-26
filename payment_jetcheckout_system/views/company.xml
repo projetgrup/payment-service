@@ -13,6 +13,7 @@
         <xpath expr='//group[@name="social_media"]' position="before">
             <group name="settings" string="Settings">
                 <field name="system" attrs="{'readonly': [('is_admin', '=', False)]}"/>
+                <field name="subsystem" attrs="{'invisible': [('is_admin', '=', False)], 'readonly': [('is_admin', '=', False)]}" groups="base.group_no_one"/>
                 <field name="parent_id" options="{'no_create': True}"/>
                 <field name="is_admin" invisible="1"/>
             </group>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 22:25+0000\n"
-"PO-Revision-Date: 2023-08-26 01:27+0300\n"
+"POT-Creation-Date: 2023-08-26 17:24+0000\n"
+"PO-Revision-Date: 2023-08-26 20:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Department:"
+msgstr ""
+"<br/>\n"
+"                Bölüm:"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Faculty:"
+msgstr ""
+"<br/>\n"
+"                Fakülte:"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Program:"
+msgstr ""
+"<br/>\n"
+"                Program:"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.page_payment
@@ -400,6 +427,11 @@ msgid "Email Templates"
 msgstr "Eposta Şablonları"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Email:"
+msgstr "Eposta:"
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_end
 msgid "End Date"
 msgstr "Bitiş Tarihi"
@@ -452,6 +484,11 @@ msgstr "HTTP Routing"
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__id
 msgid "ID"
 msgstr "ID"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "ID Number:"
+msgstr "TCKN:"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.import_form
@@ -751,6 +788,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Phone:"
+msgstr "Telefon:"
+
+#. module: payment_student
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "Please create \"%s\" column"
@@ -850,6 +892,11 @@ msgstr ""
 "arasındaki maksimum oranı seç"
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Service Charge"
+msgstr "Hizmet Bedeli"
+
+#. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_settings
 #: model:ir.ui.menu,name:payment_student.menu_settings
 msgid "Settings"
@@ -906,6 +953,7 @@ msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_tree
 #, python-format

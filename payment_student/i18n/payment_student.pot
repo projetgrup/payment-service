@@ -6,14 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 22:25+0000\n"
-"PO-Revision-Date: 2023-08-25 22:25+0000\n"
+"POT-Creation-Date: 2023-08-26 17:24+0000\n"
+"PO-Revision-Date: 2023-08-26 17:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Department:"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Faculty:"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid ""
+"<br/>\n"
+"                Program:"
+msgstr ""
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.page_payment
@@ -367,6 +388,11 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Email:"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_res_student_discount__date_end
 msgid "End Date"
 msgstr ""
@@ -418,6 +444,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_res_student_school__id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_term__id
 msgid "ID"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "ID Number:"
 msgstr ""
 
 #. module: payment_student
@@ -719,6 +750,11 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Phone:"
+msgstr ""
+
+#. module: payment_student
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "Please create \"%s\" column"
@@ -816,6 +852,11 @@ msgid ""
 msgstr ""
 
 #. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
+msgid "Service Charge"
+msgstr ""
+
+#. module: payment_student
 #: model:ir.actions.act_window,name:payment_student.action_settings
 #: model:ir.ui.menu,name:payment_student.menu_settings
 msgid "Settings"
@@ -873,6 +914,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_search
 #: model_terms:ir.ui.view,arch_db:payment_student.university_item_tree
 #, python-format

@@ -13,6 +13,7 @@
         'data/data.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
+        'report/report.xml',
         'views/item.xml',
         'views/student.xml',
         'views/partner.xml',
