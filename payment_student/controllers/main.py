@@ -70,7 +70,7 @@ class PayloxSystemStudentController(Controller):
                     ('vat', '=', res.get('vat')),
                     '|', ('company_id', '=', False),
                     ('company_id', '=', company.id),
-                ])
+                ], limit=1)
 
                 faculty = False
                 if res.get('faculty_code'):
@@ -88,7 +88,7 @@ class PayloxSystemStudentController(Controller):
                 if res.get('department_code'):
                     department = request.env['res.student.department'].sudo().search([
                         ('code', '=', res.get('department_code')),
-                    ])
+                    ], limit=1)
                     if not department and res.get('department_name'):
                         department = request.env['res.student.department'].sudo().create({
                             'name': res.get('department_name'),
@@ -100,7 +100,7 @@ class PayloxSystemStudentController(Controller):
                 if res.get('program_code'):
                     program = request.env['res.student.program'].sudo().search([
                         ('code', '=', res.get('program_code')),
-                    ])
+                    ], limit=1)
                     if not program and res.get('program_name'):
                         program = request.env['res.student.program'].sudo().create({
                             'name': res.get('program_name'),
