@@ -198,12 +198,4 @@
             </t>
         </xpath>
     </template>
-
-    <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
-        <xpath expr="//tr[@t-if='is_conveyance']" position="before">
-            <t t-call="payment_student.payment_table">
-                <t t-set="vals" t-value="doc.jetcheckout_item_ids.get_student_payment_table()"/>
-            </t>
-        </xpath>
-    </template>
 </odoo>

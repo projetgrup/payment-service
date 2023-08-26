@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
+        <xpath expr="//t[@t-set='company']" position="after">
+            <t t-set="system_student_school" t-value="company.system == 'student' and company.subsystem in (False, 'student_school')"/>
+            <t t-set="system_student_university" t-value="company.system == 'student' and company.subsystem == 'student_university'"/>
+        </xpath>
+        <xpath expr="//span[@name='partner_name']" position="before">
+            <span t-if="system_student_university" name="system_student_name" style="width: 322px; display: block; color: #000000;">Student</span>
+        </xpath>
+        <xpath expr="//span[@name='partner_name']" position="attributes">
+            <attribute name="t-else"> </attribute>
+        </xpath>
+        <xpath expr="//span[@name='partner_vat']" position="before">
+            <span t-if="system_student_university" name="system_student_vat" style="font-size:14px;color: #000000;display:block;width:322px;">ID Number: <span t-field="doc.partner_vat"/></span>
+        </xpath>
+        <xpath expr="//span[@name='partner_vat']" position="attributes">
+            <attribute name="t-else"> </attribute>
+        </xpath>
+        <xpath expr="//span[@name='partner_vat']" position="after">
+            <t t-if="system_student_university">
+                <span name="system_student_email" style="font-size:14px;color: #000000;display:block;width:322px;">Email: <span t-field="doc.partner_email"/></span>
+                <span name="system_student_phone" style="font-size:14px;color: #000000;display:block;width:322px;">Phone: <span t-field="doc.partner_phone"/></span>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='receipt_id']" position="inside">
+            <t t-if="system_student_university">
+                <br/>
+                Faculty: <strong style="color: #ff6b6b;"><span t-esc="doc.partner_id.system_student_faculty_id.name or '-'"/></strong>
+                <br/>
+                Department: <strong style="color: #ff6b6b;"><span t-esc="doc.partner_id.system_student_department_id.name or '-'"/></strong>
+                <br/>
+                Program: <strong style="color: #ff6b6b;"><span t-esc="doc.partner_id.system_student_program_id.name or '-'"/></strong>
+            </t>
+        </xpath>
+        <xpath expr="//tr[@t-if='is_conveyance']" position="before">
+            <t t-if="system_student_school" t-call="payment_student.payment_table">
+                <t t-set="vals" t-value="doc.jetcheckout_item_ids.get_student_payment_table()"/>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='commission_amount']" position="before">
+            <td t-if="system_student_university" name="system_student_commission_amount" width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Service Charge</td>
+        </xpath>
+        <xpath expr="//td[@name='commission_amount']" position="attributes">
+            <attribute name="t-else"> </attribute>
+        </xpath>
+    </template>
+</odoo>

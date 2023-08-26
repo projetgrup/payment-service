@@ -58,17 +58,19 @@ class Company(models.Model):
             values = []
             if company.system:
                 if company.subsystem:
+                    system = company.system
+                    subsystem = company.subsystem.replace('%s_' % system, '')
                     active_ids = self.env['ir.model.data'].sudo().search_read([
                         ('model', '=', 'res.groups'),
-                        ('module', '=', 'payment_%s' % company.system),
-                        ('name', '=', 'group_subsystem_%s' % company.subsystem)
+                        ('module', '=', 'payment_%s' % system),
+                        ('name', '=', 'group_subsystem_%s' % subsystem)
                     ], ['id'], limit=1)
                     values.extend([(4, active_id['id']) for active_id in active_ids])
 
                     inactive_ids = self.env['ir.model.data'].sudo().search_read([
                         ('model', '=', 'res.groups'),
-                        ('module', '=', 'payment_%s' % company.system),
-                        ('name', '!=', 'group_subsystem_%s' % company.subsystem)
+                        ('module', '=', 'payment_%s' % system),
+                        ('name', '!=', 'group_subsystem_%s' % subsystem)
                     ], ['id'])
                     values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
 
