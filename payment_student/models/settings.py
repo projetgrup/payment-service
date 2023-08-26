@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields, api
 from .company import SUBSYSTEMS
 
 
 class PaymentSettings(models.TransientModel):
     _inherit = 'payment.settings'
 
+    @api.depends('company_id')
     def _compute_system_student_subsystem(self):
         for setting in self:
             setting.system_student_subsystem = setting.company_id.system == 'student' and setting.company_id.subsystem
