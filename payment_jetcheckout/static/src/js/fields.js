@@ -72,6 +72,21 @@ class boolean extends fields {}
 
 class element extends fields {}
 
+class selection extends fields {
+    async start() {
+        super.start(...arguments);
+        this.$.select2({
+            placeholder: this.$.attr('placeholder'),
+        });
+    }
+
+    get value() {
+        let value = this.$.val();
+        if ($.isNumeric(value)) return parseFloat(value);
+        return value;
+    }
+}
+
 class float extends fields {
     get value() {
         if (this._) {
@@ -105,5 +120,6 @@ export default {
     boolean: boolean,
     integer: integer,
     float: float,
+    selection: selection,
     element: element,
 }

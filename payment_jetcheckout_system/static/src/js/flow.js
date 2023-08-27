@@ -13,7 +13,7 @@ const _t = core._t;
 
 publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
     selector: '.payment-dynamic',
-    
+
     init: function (parent, options) {
         this._super(parent, options);
         this.currency = {
@@ -44,6 +44,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             page: {
                 loading: new fields.element(),
                 login: new fields.element(),
+                register: new fields.element(),
                 welcome: new fields.element(),
                 amount: new fields.element(),
                 overlay: new fields.element(),
@@ -54,10 +55,24 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
                     installment: new fields.element(),
                 },*/
             },
+            register: {
+                name: new fields.element(),
+                vat: new fields.element(),
+                email: new fields.element(),
+                phone: new fields.element(),
+            },
             button: {
                 login: {
                     done: new fields.element({
                         events: [['click', this._onClickLoginNext]],
+                    }),
+                },
+                register: {
+                    prev: new fields.element({
+                        events: [['click', this._onClickRegisterPrev]],
+                    }),
+                    done: new fields.element({
+                        events: [['click', this._onClickRegisterNext]],
                     }),
                 },
                 welcome: {
@@ -115,6 +130,24 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
 
         let partner = {};
         try {
+            if (this.wizard.vat.value === '11111111111') {
+                await this._onPause(500);
+                this.wizard.vat.$.removeClass('border-danger');
+                this.wizard.page.login.$.find('div[name=welcome]').removeClass('text-500');
+                this.wizard.page.login.$.find('div[name=vat]').removeClass('text-danger').text(_t('Please enter your VAT number'));
+                this.wizard.button.login.done.$.removeClass('border-danger text-danger');
+
+                this.wizard.page.login.$.addClass('slide').removeClass('show');
+                self.wizard.page.register.$.removeClass('invisible').addClass('slide show');
+
+                this.wizard.page.login.$.removeClass('blur');
+                this.wizard.page.loading.$.removeClass('show transparent');
+                setTimeout(function() {
+                    self.wizard.page.loading.$.addClass('invisible');
+                }, 500);
+                return;
+            }
+
             partner = await rpc.query({
                 route: '/my/payment/query/partner',
                 params: { vat: this.wizard.vat.value },
@@ -138,13 +171,78 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.button.login.done.$.removeClass('border-danger text-danger');
 
             this.wizard.page.login.$.addClass('slide').removeClass('show');
+            this.wizard.page.loading.$.removeClass('show transparent');
+            self.wizard.page.welcome.$.removeClass('invisible').addClass('slide show');
+            self.wizard.page.welcome.$.find('.welcome-box').addClass('show welcome-title');
+            setTimeout(function() {
+                self.wizard.page.welcome.$.find('.fade').addClass('show');
+                self.wizard.page.login.$.removeClass('blur');
+                self.wizard.page.loading.$.addClass('invisible');
+            }, 1500);
+        }
+        this.wizard.page.login.$.removeClass('blur');
+        this.wizard.page.loading.$.removeClass('show transparent');
+        setTimeout(function() {
+            self.wizard.page.loading.$.addClass('invisible');
+        }, 500);
+    },
+ 
+    _onClickRegisterPrev: async function () {
+        const self = this;
+        this.wizard.page.register.$.removeClass('slide show');
+        setTimeout(function() {
+            self.wizard.page.register.$.addClass('invisible');
+        }, 500);
+        this.wizard.page.login.$.removeClass('slide invisible').addClass('show');
+    },
+
+    _onClickRegisterNext: async function () {
+        const self = this;
+        this.wizard.page.loading.$.removeClass('invisible').addClass('show transparent');
+        this.wizard.page.register.$.addClass('blur');
+ 
+        let partner = {};
+        try {
+            const params = {};
+            for (const field of Object.keys(this.wizard.register)) {
+                params[field] = this.wizard.register[field].value;
+            }
+            partner = await rpc.query({
+                route: '/my/payment/create/partner',
+                params: params,
+            });
+        } catch {}
+
+        if (!partner.id) {
+            this.wizard.register.name.$.addClass('border-danger');
+            this.wizard.register.vat.$.addClass('border-danger');
+            this.wizard.register.email.$.addClass('border-danger');
+            this.wizard.register.phone.$.addClass('border-danger');
+            this.wizard.page.register.$.find('div[name=title]').addClass('text-500');
+            this.wizard.page.register.$.find('div[name=text]').addClass('text-danger').text(partner.error || _t('An error occured. Please try again.'));
+            this.wizard.button.register.done.$.addClass('border-danger text-danger');
+        } else {
+            this.partner.value = partner.id;
+            this.wizard.partner.html = partner.name || '-';
+            $('.payment-system span[name=partner]').text(partner.name || '-');
+            this._queryPartnerPostprocess(partner);
+
+            this.wizard.register.name.$.removeClass('border-danger');
+            this.wizard.register.vat.$.removeClass('border-danger');
+            this.wizard.register.email.$.removeClass('border-danger');
+            this.wizard.register.phone.$.removeClass('border-danger');
+            this.wizard.page.register.$.find('div[name=title]').removeClass('text-500');
+            this.wizard.page.register.$.find('div[name=text]').removeClass('text-danger').text(_t('Please enter your VAT number'));
+            this.wizard.button.register.done.$.removeClass('border-danger text-danger');
+
+            this.wizard.page.register.$.addClass('slide').removeClass('show');
             self.wizard.page.welcome.$.removeClass('invisible').addClass('slide show');
             self.wizard.page.welcome.$.find('.welcome-box').addClass('show welcome-title');
             setTimeout(function() {
                 self.wizard.page.welcome.$.find('.fade').addClass('show');
             }, 1500);
         }
-        this.wizard.page.login.$.removeClass('blur');
+        this.wizard.page.register.$.removeClass('blur');
         this.wizard.page.loading.$.removeClass('show transparent');
         setTimeout(function() {
             self.wizard.page.loading.$.addClass('invisible');

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from odoo import http, _
 from odoo.http import request
 from odoo.tools import html_escape
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
 
 
@@ -225,3 +225,19 @@ class PayloxSystemController(Controller):
     @http.route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_query_partner(self, **kwargs):
         return {}
+
+    @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
+    def page_system_create_partner(self, **kwargs):
+        company = request.env.company
+        values = {**kwargs}
+        values.update({
+            'company_id': company.id,
+            'system': company.system,
+        })
+        try:
+            partner = request.env['res.partner'].sudo().create(values)
+            return partner.read([value for value in kwargs.keys()])[0] or {}
+        except UserError as e:
+            return {'error': str(e)}
+        except:
+            pass

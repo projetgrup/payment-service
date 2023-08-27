@@ -68,6 +68,7 @@ class PayloxSystemStudentController(Controller):
                 res = result[0]
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', res.get('vat')),
+                    ('email', '=', res.get('email')),
                     '|', ('company_id', '=', False),
                     ('company_id', '=', company.id),
                 ])
@@ -116,7 +117,7 @@ class PayloxSystemStudentController(Controller):
                     'mobile': res.get('mobile'),
                 }
                 if student:
-                    student.write(values)
+                    student.sudo().with_context(skip_student_vat_check=True).write(values)
                 else:
                     values.update({
                         'name': ' '.join([res.get('name', ''), res.get('surname', '')]),
@@ -124,17 +125,25 @@ class PayloxSystemStudentController(Controller):
                         'company_id': company.id,
                         'system': 'student',
                     })
-                    student = request.env['res.partner'].sudo().create(values)
+                    student = request.env['res.partner'].sudo().with_context(skip_student_vat_check=True).create(values)
 
                 return {
                     'id': student.id,
                     'name': student.name,
-                    'faculty': faculty and faculty.name,
-                    'department': department and department.name,
-                    'program': program and program.name,
+                    'system_student_faculty_id': faculty and faculty.name,
+                    'system_student_department_id': department and department.name,
+                    'system_student_program_id': program and program.name,
                     'phone': student.mobile,
                     'email': student.email,
                 }
 
             return {}
         return super().page_system_query_partner(**kwargs)
+
+
+    #@route(['/my/payment/create/partner'], type='json', auth='public', website=True)
+    #def page_system_create_partner(self, **kwargs):
+    #    company = request.env.company
+    #    if company.system == 'student' and company.subsystem == 'student_university':
+    #        return {}
+    #    return super().page_system_create_partner(**kwargs)

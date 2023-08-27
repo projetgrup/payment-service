@@ -197,5 +197,41 @@
                 <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
             </t>
         </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
+            <t t-if="flow == 'dynamic' and system == 'student' and subsystem == 'student_university'">
+                <div class="d-flex flex-column" style="gap:1em">
+                    <div class="field-container">
+                        <select class="text-center border-primary" required="required" field="wizard.register.system_student_faculty_id" placeholder="Select a faculty">
+                            <option/>
+                            <t t-foreach="company.env['res.student.faculty'].sudo().search_read([])" t-as="faculty">
+                                <option t-att-value="faculty['id']" t-esc="faculty['name']"/>
+                            </t>
+                        </select>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>Faculty</span></label>
+                    </div>
+                    <div class="field-container">
+                        <select class="text-center border-primary" required="required" field="wizard.register.system_student_department_id" placeholder="Select a department">
+                            <option/>
+                            <t t-foreach="company.env['res.student.department'].sudo().search_read([])" t-as="department">
+                                <option t-att-value="department['id']" t-esc="department['name']"/>
+                            </t>
+                        </select>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>Department</span></label>
+                    </div>
+                    <div class="field-container">
+                        <select class="text-center border-primary" required="required" field="wizard.register.system_student_program_id" placeholder="Select a program">
+                            <option/>
+                            <t t-foreach="company.env['res.student.program'].sudo().search_read([])" t-as="program">
+                                <option t-att-value="program['id']" t-esc="program['name']"/>
+                            </t>
+                        </select>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>Program</span></label>
+                    </div>
+                </div>
+            </t>
+        </xpath>
     </template>
 </odoo>

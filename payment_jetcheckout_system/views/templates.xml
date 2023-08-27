@@ -132,7 +132,7 @@
             </div>
             <div class="payment-system position-relative overflow-hidden">
                 <t t-if="flow == 'dynamic'">
-                    <div class="payment-dynamic navbar-light pt-4">
+                    <div name="wizard" class="payment-dynamic navbar-light pt-4">
                         <div class="col-md-3 d-flex navbar-light">
                             <div class="mx-2 shine navbar-light"/>
                         </div>
@@ -179,6 +179,49 @@
                                         </div>
                                         <div class="py-5">
                                             <button class="btn px-4" field="wizard.button.login.done">Sign In<em class="fa fa-2x fa-sign-in fa-bounce-horizontal" t-translation="off"/></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div name="register" class="payment-card-item fade p-3" field="wizard.page.register">
+                                    <div class="d-flex flex-row w-100 position-absolute" style="z-index:2">
+                                        <button class="btn btn-navigation" field="wizard.button.register.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
+                                    </div>
+                                    <div class="align-items-center d-flex flex-column justify-content-center">
+                                        <!--<div class="bg-white">
+                                            <img src="/payment_jetcheckout_system/static/src/img/money.gif" class="payment-card-item-icon shadow m-0"/>
+                                        </div>-->
+                                        <div name="title" class="font-weight-bold h2 my-3 text-primary">
+                                            Register
+                                        </div>
+                                        <div name="text" class="font-weight-bold text-primary my-3">
+                                            Please fill the required fields
+                                        </div>
+                                        <div name="fields" class="d-flex" style="gap:1em">
+                                            <div class="d-flex flex-column" style="gap:1em">
+                                                <div class="field-container">
+                                                    <input name="name" type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
+                                                    <span class="bar-container"/>
+                                                    <label for="amount" class="text-primary"><span>Name</span></label>
+                                                </div>
+                                                <div class="field-container">
+                                                    <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
+                                                    <span class="bar-container"/>
+                                                    <label for="amount" class="text-primary"><span>VAT</span></label>
+                                                </div>
+                                                <div class="field-container">
+                                                    <input name="email" type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>
+                                                    <span class="bar-container"/>
+                                                    <label for="email" class="text-primary"><span>Email</span></label>
+                                                </div>
+                                                <div class="field-container">
+                                                    <input name="phone" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.phone"/>
+                                                    <span class="bar-container"/>
+                                                    <label for="phone" class="text-primary"><span>Phone</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="py-5">
+                                            <button class="btn px-4" field="wizard.button.register.done">Sign Up<em class="fa fa-2x fa-sign-out fa-bounce-horizontal" t-translation="off"/></button>
                                         </div>
                                     </div>
                                 </div>
