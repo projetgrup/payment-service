@@ -132,7 +132,7 @@ class PayloxSystemStudentController(Controller):
                     student = request.env['res.partner'].sudo().with_context(skip_student_vat_check=True).create(values)
 
             else:
-                student = self.search([('vat', '=', kwargs['vat']), ('company_id', '=', company.id)], limit=1)
+                student = request.env['res.partner'].sudo().search([('vat', '=', kwargs['vat']), ('company_id', '=', company.id)], limit=1)
 
             if student:
                 return {
