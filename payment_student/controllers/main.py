@@ -62,7 +62,7 @@ class PayloxSystemStudentController(Controller):
 
     @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_query_partner(self, **kwargs):
-        if kwargs.get('vat'):
+        if not kwargs.get('vat'):
             raise UserError(_('No ID Number has been entered'))
 
         company = request.env.company
