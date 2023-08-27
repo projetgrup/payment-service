@@ -64,31 +64,31 @@ class Company(models.Model):
                         ('model', '=', 'res.groups'),
                         ('module', '=', 'payment_%s' % system),
                         ('name', '=', 'group_subsystem_%s' % subsystem)
-                    ], ['id'], limit=1)
-                    values.extend([(4, active_id['id']) for active_id in active_ids])
+                    ], ['res_id'], limit=1)
+                    values.extend([(4, active_id['res_id']) for active_id in active_ids])
 
                     inactive_ids = self.env['ir.model.data'].sudo().search_read([
                         ('model', '=', 'res.groups'),
                         ('module', '=', 'payment_%s' % system),
                         ('name', 'like', 'group_subsystem_%'),
                         ('name', '!=', 'group_subsystem_%s' % subsystem),
-                    ], ['id'])
-                    values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+                    ], ['res_id'])
+                    values.extend([(3, inactive_id['res_id']) for inactive_id in inactive_ids])
 
                 else:
                     inactive_ids = self.env['ir.model.data'].sudo().search_read([
                         ('model', '=', 'res.groups'),
                         ('module', '=', 'payment_%s' % company.system),
                         ('name', 'like', 'group_subsystem_%')
-                    ], ['id'])
-                    values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+                    ], ['res_id'])
+                    values.extend([(3, inactive_id['res_id']) for inactive_id in inactive_ids])
             else:
                 inactive_ids = self.env['ir.model.data'].sudo().search_read([
                     ('model', '=', 'res.groups'),
                     ('module', 'like', 'payment_%'),
                     ('name', 'like', 'group_subsystem_%')
-                ], ['id'])
-                values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
+                ], ['res_id'])
+                values.extend([(3, inactive_id['res_id']) for inactive_id in inactive_ids])
 
             if values:
                 if not users:
