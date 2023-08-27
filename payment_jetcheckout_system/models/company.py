@@ -70,7 +70,8 @@ class Company(models.Model):
                     inactive_ids = self.env['ir.model.data'].sudo().search_read([
                         ('model', '=', 'res.groups'),
                         ('module', '=', 'payment_%s' % system),
-                        ('name', '!=', 'group_subsystem_%s' % subsystem)
+                        ('name', 'like', 'group_subsystem_%'),
+                        ('name', '!=', 'group_subsystem_%s' % subsystem),
                     ], ['id'])
                     values.extend([(3, inactive_id['id']) for inactive_id in inactive_ids])
 
