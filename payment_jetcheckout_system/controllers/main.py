@@ -235,6 +235,12 @@ class PayloxSystemController(Controller):
             'system': company.system,
         })
         try:
+            if 'vat' not in values:
+                raise UserError(_('Please enter ID number'))
+            else:
+                student = request.env['res.partner'].sudo().search([('vat', '=', values['vat']), ('company_id', '=', company.id)], limit=1)
+                if student:
+                    raise UserError(_('There is already a student with the same ID Number'))
             partner = request.env['res.partner'].sudo().create(values)
             return partner.read([value for value in kwargs.keys()])[0] or {}
         except UserError as e:
