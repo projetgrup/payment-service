@@ -199,24 +199,24 @@
                                         <div name="fields" class="d-flex" style="gap:1em">
                                             <div class="d-flex flex-column" style="gap:1em">
                                                 <div class="field-container">
-                                                    <input name="name" type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
+                                                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
                                                     <span class="bar-container"/>
-                                                    <label for="amount" class="text-primary"><span>Name</span></label>
+                                                    <label class="text-primary"><span>Name</span></label>
                                                 </div>
                                                 <div class="field-container">
-                                                    <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
+                                                    <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
                                                     <span class="bar-container"/>
-                                                    <label for="amount" class="text-primary"><span>ID Number</span></label>
+                                                    <label class="text-primary"><span>ID Number</span></label>
                                                 </div>
                                                 <div class="field-container">
-                                                    <input name="email" type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>
+                                                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>
                                                     <span class="bar-container"/>
-                                                    <label for="email" class="text-primary"><span>Email</span></label>
+                                                    <label class="text-primary"><span>Email</span></label>
                                                 </div>
                                                 <div class="field-container">
-                                                    <input name="phone" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.phone"/>
+                                                    <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.phone"/>
                                                     <span class="bar-container"/>
-                                                    <label for="phone" class="text-primary"><span>Phone</span></label>
+                                                    <label class="text-primary"><span>Phone</span></label>
                                                 </div>
                                             </div>
                                         </div>
