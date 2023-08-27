@@ -206,7 +206,7 @@
                                                 <div class="field-container">
                                                     <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
                                                     <span class="bar-container"/>
-                                                    <label for="amount" class="text-primary"><span>VAT</span></label>
+                                                    <label for="amount" class="text-primary"><span>ID Number</span></label>
                                                 </div>
                                                 <div class="field-container">
                                                     <input name="email" type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>

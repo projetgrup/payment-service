@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-26 17:23+0000\n"
-"PO-Revision-Date: 2023-08-27 20:29+0300\n"
+"POT-Creation-Date: 2023-08-27 19:57+0000\n"
+"PO-Revision-Date: 2023-08-27 23:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -124,6 +124,26 @@ msgid ""
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Ara\" title=\"Ara\"/></span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Email</span>"
+msgstr "<span>Eposta</span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>ID Number</span>"
+msgstr "<span>TCKN</span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Name</span>"
+msgstr "<span>Adı</span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Phone</span>"
+msgstr "<span>Telefon</span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -448,6 +468,13 @@ msgstr "Ödenecek Tutar"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Amount<br/>(All / Success)"
 msgstr "Tutar<br/>(Tümü / Başarılı)"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
+#, python-format
+msgid "An error occured. Please try again."
+msgstr "Bir hata meydana geldi. Lütfen tekrar deneyiniz."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -1755,12 +1782,23 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Please enter ID number"
+msgstr "Lütfen TCKN giriniz"
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 #, python-format
 msgid "Please enter your VAT number"
 msgstr "Lütfen TC kimlik numaranızı giriniz"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Please fill the required fields"
+msgstr "Lütfen zorunlu alanları doldurunuz"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -1870,6 +1908,11 @@ msgstr "Kayıt Kuralı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
 msgid "Ref"
 msgstr "Referans"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Register"
+msgstr "Kaydol"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
@@ -2106,6 +2149,11 @@ msgid "Sign In"
 msgstr "Giriş Yap"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Sign Up"
+msgstr "Kaydol"
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_sms
 msgid "Sms"
 msgstr "Sms"
@@ -2260,6 +2308,12 @@ msgid ""
 msgstr ""
 "Portal kullanıcısına gönderilecek eposta için şablon \"Portal: Kullanıcı "
 "Portal Davet Şablonu\" bulunamadı."
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "There is already a student with the same ID Number"
+msgstr "Aynı TCKN numarasına sahip olan başka bir öğrenci zaten mevcut"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
@@ -2725,11 +2779,6 @@ msgstr "kayıt seçildi"
 #, python-format
 #~ msgid "An error occured."
 #~ msgstr "Bir hata meydana geldi."
-
-#, python-format
-#~ msgid "An error occured. Please contact with your system administrator."
-#~ msgstr ""
-#~ "Bir hata meydana geldi. Lütfen sistem yöneticisi ile iletişime geçiniz."
 
 #, python-format
 #~ msgid "Code must be 6 digits"

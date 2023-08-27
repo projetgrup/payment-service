@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import _
 from odoo.http import request, route
+from odoo.exceptions import UserError
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
@@ -61,9 +62,12 @@ class PayloxSystemStudentController(Controller):
 
     @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_query_partner(self, **kwargs):
+        if kwargs.get('vat'):
+            raise UserError(_('No ID Number has been entered'))
+
         company = request.env.company
         if company.system == 'student' and company.subsystem == 'student_university':
-            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs.get('vat')})
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs['vat']})
             if not result == None and isinstance(result, list) and len(result) > 0:
                 res = result[0]
                 student = request.env['res.partner'].sudo().search([
@@ -121,18 +125,22 @@ class PayloxSystemStudentController(Controller):
                 else:
                     values.update({
                         'name': ' '.join([res.get('name', ''), res.get('surname', '')]),
-                        'vat': res.get('vat'),
+                        'vat': kwargs['vat'],
                         'company_id': company.id,
                         'system': 'student',
                     })
                     student = request.env['res.partner'].sudo().with_context(skip_student_vat_check=True).create(values)
 
+            else:
+                student = request.env['res.partner'].sudo().search([('vat', '=', kwargs['vat']), ('company_id', '=', company.id)], limit=1)
+
+            if student:
                 return {
                     'id': student.id,
                     'name': student.name,
-                    'system_student_faculty_id': faculty and faculty.name,
-                    'system_student_department_id': department and department.name,
-                    'system_student_program_id': program and program.name,
+                    'system_student_faculty_id': student.system_student_faculty_id.name,
+                    'system_student_department_id': student.system_student_department_id.name,
+                    'system_student_program_id': student.system_student_program_id.name,
                     'phone': student.mobile,
                     'email': student.email,
                 }
