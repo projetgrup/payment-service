@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-26 17:23+0000\n"
-"PO-Revision-Date: 2023-08-26 17:23+0000\n"
+"POT-Creation-Date: 2023-08-27 19:57+0000\n"
+"PO-Revision-Date: 2023-08-27 19:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,6 +102,26 @@ msgstr ""
 msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Email</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>ID Number</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Name</span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "<span>Phone</span>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -287,6 +307,13 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Amount<br/>(All / Success)"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
+#, python-format
+msgid "An error occured. Please try again."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1580,11 +1607,24 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Please enter ID number"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 #, python-format
 msgid "Please enter your VAT number"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Please fill the required fields"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1694,6 +1734,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
 msgid "Ref"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Register"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1927,6 +1972,11 @@ msgid "Sign In"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+msgid "Sign Up"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_sms
 msgid "Sms"
 msgstr ""
@@ -2074,6 +2124,12 @@ msgstr ""
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "There is already a student with the same ID Number"
 msgstr ""
 
 #. module: payment_jetcheckout_system
