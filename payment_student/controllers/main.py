@@ -115,7 +115,7 @@ class PayloxSystemStudentController(Controller):
 
                 values = {
                     'system_student_faculty_id': faculty and faculty.id,
-                    'system_student_department_id': faculty and faculty.id,
+                    'system_student_department_id': department and department.id,
                     'system_student_program_id': program and program.id,
                     'email': res.get('email'),
                     'mobile': res.get('mobile'),
