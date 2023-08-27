@@ -13,11 +13,19 @@ const round_di = utils.round_decimals;
 const qweb = core.qweb;
 
 systemFlow.dynamic.include({
+    init: function() {
+        this._super.apply(this, arguments);
+        Object.assign(this.wizard.register, {
+            system_student_faculty_id: new fields.selection(),
+            system_student_department_id: new fields.selection(),
+            system_student_program_id: new fields.selection(),
+        });
+    },
     _queryPartnerPostprocess: function (partner) {
         this._super(partner);
         if (this.system.value === 'student' && this.subsystem.value === 'student_university') {
-            $('.payment-system span[name=faculty]').text(partner.faculty || '-');
-            $('.payment-system span[name=department]').text(partner.department || '-');
+            $('.payment-system span[name=faculty]').text(Array.isArray(partner.system_student_faculty_id) ? partner.system_student_faculty_id[1] : partner.system_student_faculty_id || '-');
+            $('.payment-system span[name=department]').text(Array.isArray(partner.system_student_department_id) ? partner.system_student_department_id[1] : partner.system_student_department_id || '-');
             $('.payment-system span[name=phone]').text(partner.phone || '-');
             $('.payment-system span[name=email]').text(partner.email || '-');
         }

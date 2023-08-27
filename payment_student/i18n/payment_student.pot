@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-26 17:24+0000\n"
-"PO-Revision-Date: 2023-08-26 17:24+0000\n"
+"POT-Creation-Date: 2023-08-27 17:26+0000\n"
+"PO-Revision-Date: 2023-08-27 17:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,21 @@ msgstr ""
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.import_form
 msgid "<i class=\"fa fa-download mr-2\"/>Click here to get example template"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "<span>Department</span>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "<span>Faculty</span>"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "<span>Program</span>"
 msgstr ""
 
 #. module: payment_student
@@ -842,6 +857,21 @@ msgstr ""
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.settings_form
 msgid "Select Maximum Discount"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "Select a department"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "Select a faculty"
+msgstr ""
+
+#. module: payment_student
+#: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
+msgid "Select a program"
 msgstr ""
 
 #. module: payment_student
