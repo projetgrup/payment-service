@@ -120,6 +120,14 @@ class PayloxSystemStudentController(Controller):
                     'email': res.get('email'),
                     'mobile': res.get('mobile'),
                 }
+
+                if not values.get('email'):
+                    email = company.email
+                    if not email or '@' not in email:
+                        email = 'vat@paylox.io'
+                    name, domain = email.rsplit('@', 1)
+                    values['email'] = '%s@%s' % (kwargs['vat'], domain)
+
                 if student:
                     student.sudo().with_context(skip_student_vat_check=True).write(values)
                 else:
