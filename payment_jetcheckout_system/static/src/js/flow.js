@@ -28,6 +28,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         this.partner = new fields.integer({
             default: 0,
         });
+        this.vat = new fields.string();
         this.system = new fields.string({
             default: false,
         });
@@ -107,7 +108,12 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
 
-            self.wizard.vat.value = '';
+            if (window.location.search) {
+                window.history.replaceState(null, '', window.location.pathname);
+            } else {
+                self.wizard.vat.value = '';
+            }
+
             self.wizard.page.login.$.addClass('show');
             self.wizard.page.loading.$.removeClass('show');
             setTimeout(function() {
@@ -161,6 +167,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.button.login.done.$.addClass('border-danger text-danger');
         } else {
             this.partner.value = partner.id;
+            this.vat.value = this.wizard.vat.value;
             this.wizard.partner.html = partner.name || '-';
             $('.payment-system span[name=partner]').text(partner.name || '-');
             this._queryPartnerPostprocess(partner);
@@ -223,6 +230,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.button.register.done.$.addClass('border-danger text-danger');
         } else {
             this.partner.value = partner.id;
+            this.vat.value = this.wizard.register.vat.value;
             this.wizard.partner.html = partner.name || '-';
             $('.payment-system span[name=partner]').text(partner.name || '-');
             this._queryPartnerPostprocess(partner);

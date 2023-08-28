@@ -56,10 +56,9 @@ class PayloxApiController(Controller):
         if not tx:
             raise ValidationError(_('An error occured. Please restart your payment transaction.'))
         return tx
- 
-    def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
-        values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
-        partner = self._connector_get_partner(partner)
+
+    def _prepare(self, transaction=None, partner=None, **kwargs):
+        values = super()._prepare(transaction=transaction, partner=partner, **kwargs)
         if transaction and transaction.jetcheckout_api_ok:
             values.update({
                 'partner_name': transaction.partner_name,

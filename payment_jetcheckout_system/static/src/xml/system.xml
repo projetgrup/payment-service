@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="paylox.system.link">
+        <div class="bg-info-light mb-2 mt-3 overflow-hidden p-2 shadow-sm small text-monospace text-wrap" style="word-break:break-all">
+            <span t-esc="link"/>
+        </div>
+        <div class="text-center small">
+            <span>Payment link has been copied to clipboard</span>
+        </div>
+    </t>
+</templates>

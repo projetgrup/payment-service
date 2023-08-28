@@ -217,8 +217,8 @@ class PayloxSyncopsController(Controller):
             })
         return vals
 
-    def _prepare(self, acquirer=False, company=False, partner=False, transaction=False, balance=True):
-        values = super()._prepare(acquirer=acquirer, company=company, partner=partner, transaction=transaction, balance=balance)
+    def _prepare(self, company=None, partner=None, **kwargs):
+        values = super()._prepare(company=company, partner=partner, **kwargs)
         partner = self._connector_get_partner(partner)
         balances, show_total = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
         show_balance = self._connector_can_show_partner_balance()

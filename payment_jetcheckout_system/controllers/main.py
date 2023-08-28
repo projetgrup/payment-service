@@ -142,27 +142,53 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
-        if request.env.user.has_group('base.group_public'):
-            raise werkzeug.exceptions.NotFound()
+        if not kwargs.get('values', {}).get('no_redirect'):
+            if request.env.user.has_group('base.group_public'):
+                raise werkzeug.exceptions.NotFound()
 
-        if request.httprequest.method == 'POST' and 'pid' in kwargs:
-            partner = self._get_parent(kwargs['pid'])
-        else:
             partner = request.env.user.partner_id
+            redirect = self._check_redirect(partner)
+            if redirect:
+                return redirect
 
-        redirect = self._check_redirect(partner)
-        if redirect:
-            return redirect
+        company = request.env.company
+        if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', kwargs['currency'])], limit=1)
+        else:
+            currency = None
 
-        values = self._prepare(partner=partner)
-        company = values['company'] or request.env.company
+        if 'pid' in kwargs:
+            partner = self._get_parent(kwargs['pid'])
+        elif 'vat' in kwargs and isinstance(kwargs['vat'], str) and 9 < len(kwargs['vat']) < 14:
+            partner = request.env['res.partner'].sudo().search([
+                ('vat', '=', kwargs['vat']),
+                ('company_id', '=', company.id),
+                ('system', '=', company.system)
+            ])
+            if len(partner) != 1:
+                partner = None
+        elif company.payment_page_flow == 'dynamic':
+            partner = request.website.user_id.partner_id.sudo()
+        else:
+            partner = None
+
+        values = self._prepare(partner=partner, company=company, currency=currency)
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
             'system': company.system,
             'subsystem': company.subsystem,
             'flow': company.payment_page_flow,
+            'vat': kwargs.get('vat'),
         })
+
+        if 'values' in kwargs and isinstance(kwargs['values'], dict):
+            values.update({**kwargs['values']})
+
+        try:
+            values.update({'amount': float(kwargs['amount'])})
+        except:
+            pass
 
         # remove hash if exists
         # it could be there because of api module
