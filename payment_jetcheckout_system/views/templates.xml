@@ -7,6 +7,15 @@
         </xpath>
     </template>
 
+    <template id="payment_sidebar" inherit_id="payment_jetcheckout.payment_sidebar">
+        <xpath expr="//input[@field='amount']" position="attributes">
+            <attribute name="t-att-value">language.format('%.{0}f'.format(currency.decimal_places), amount or 0, grouping=True, monetary=True)</attribute>
+        </xpath>
+        <xpath expr="//input[@field='partner']" position="after">
+            <input type="hidden" name="vat" t-att-value="vat" field="vat"/>
+        </xpath>
+    </template>
+
     <template id="payment_footer" name="Payment System Page Footer">
         <div class="row mx-0 flex-column">
             <div class="row mx-0 mt-4 pb-1 border-bottom">
@@ -57,6 +66,11 @@
                     <td class="text-right text-nowrap"><i class="fa fa-envelope mr-2" t-translation="off"/></td>
                     <td class="text-nowrap">Email</td>
                     <td class="text-nowrap"><a t-esc="company.email" t-attf-href="mailto:#{company.email}"/></td>
+                </tr>
+                <tr>
+                    <td class="text-right text-nowrap"><i class="fa fa-link mr-2" t-translation="off"/></td>
+                    <td class="text-nowrap">Link</td>
+                    <td class="text-nowrap"><a href="#" field="payment.link">Get payment link</a></td>
                 </tr>
             </table>
         </div>
@@ -173,7 +187,7 @@
                                         </div>
                                         <div>
                                             <div class="field-container">
-                                                <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.vat"/>
+                                                <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.vat" t-att-value="vat"/>
                                                 <span class="bar-container"/>
                                             </div>
                                         </div>
@@ -263,7 +277,7 @@
                                         </div>
                                         <div class="payment-card-item-amount">
                                             <div class="field-container">
-                                                <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="wizard.amount"/>
+                                                <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None" field="wizard.amount"/>
                                                 <span class="bar-container"/>
                                                 <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                                                 <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
