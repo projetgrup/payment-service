@@ -5,11 +5,13 @@ import core from 'web.core';
 import rpc from 'web.rpc';
 import publicWidget from 'web.public.widget';
 import dialog from 'web.Dialog';
+import utils from 'web.utils';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
 const _t = core._t;
+const qweb = core.qweb;
 
 payloxPage.include({
     init: function (parent, options) {
@@ -55,7 +57,8 @@ payloxPage.include({
 
 publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',
-    
+    xmlDependencies: ['/payment_jetcheckout_system/static/src/xml/system.xml'],
+
     init: function (parent, options) {
         this._super(parent, options);
         this.currency = {
@@ -70,6 +73,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amount = new fields.float({
             default: 0,
         });
+        this.vat = new fields.string();
         this.payment = {
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
@@ -91,6 +95,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }),
             tags: new fields.element({
                 events: [['click', this._onClickTag]],
+            }),
+            link: new fields.element({
+                events: [['click', this._onClickLink]],
             }),
             pivot: new fields.element(),
         };
@@ -203,6 +210,35 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 title: _t('Contact Information'),
                 $content: $('<div/>').html(content),
             }).open();
+        });
+    },
+
+    _onClickLink: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const params = [
+            ['amount', this.amount.value],
+            ['currency', this.currency.name],
+            ['vat', this.vat.value],
+        ];
+
+        let link = window.location.href;
+        for (let i=0; i<params.length; i++) {
+            if (!i) {
+                link += '?';
+            } else {
+                link += '&';
+            }
+            link += params[i][0] + '=' + params[i][1];
+        }
+        navigator.clipboard.writeText(link);
+
+        const content = qweb.render('paylox.system.link', { link });
+        this.displayNotification({
+            type: 'info',
+            title: _t('Payment link is ready'),
+            message: utils.Markup(content),
+            sticky: true,
         });
     },
 });

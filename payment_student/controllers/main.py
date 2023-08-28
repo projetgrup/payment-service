@@ -43,22 +43,13 @@ class PayloxSystemStudentController(Controller):
 
     @route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
-        company = request.env.company
-        if company.system == 'student':
-            partner = request.website.user_id.partner_id.sudo() if company.payment_page_flow == 'dynamic' else None
-            values = self._prepare(partner=partner)
-            values.update({
+        if request.env.company.system == 'student':
+            values = {
+                'no_redirect': True,
                 'no_sidebar_buttons': True,
                 'partner_label': _('Student'),
-                'success_url': '/my/payment/success',
-                'fail_url': '/my/payment/fail',
-                'system': company.system,
-                'subsystem': company.subsystem,
-                'flow': company.payment_page_flow,
-            })
-            
-            return request.render('payment_jetcheckout_system.page_payment', values)
-        return super().page_system_portal()
+            }
+        return super().page_system_portal(values=values, **kwargs)
 
     @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_query_partner(self, **kwargs):

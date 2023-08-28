@@ -169,9 +169,8 @@ class PayloxController(http.Controller):
     def _get_tx_vals(self, **kwargs):
         return {'jetcheckout_payment_ok': kwargs.get('payment_ok', True)}
 
-    @staticmethod
-    def _prepare(acquirer=None, company=None, partner=None, currency=None, type=None, transaction=None, balance=True):
-        acquirer = PayloxController._get_acquirer(acquirer=acquirer)
+    def _prepare(self, acquirer=None, company=None, partner=None, currency=None, type=None, transaction=None, balance=True):
+        acquirer = self._get_acquirer(acquirer=acquirer)
         company = company or request.env.company
         currency = currency or (transaction and transaction.currency_id) or company.currency_id
 
@@ -179,9 +178,9 @@ class PayloxController(http.Controller):
         partner = partner or request.env.user.partner_id
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
-        type = type or PayloxController._get_type()
-        campaign = PayloxController._get_campaign(partner=partner, transaction=transaction)
-        card_family = PayloxController._get_card_family(acquirer=acquirer, campaign=campaign)
+        type = type or self._get_type()
+        campaign = self._get_campaign(partner=partner, transaction=transaction)
+        card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
         if currencies and currency not in currencies:
             currency = currencies[0]
