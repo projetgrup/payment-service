@@ -63,10 +63,9 @@ class PayloxSystemStudentController(Controller):
                 res = result[0]
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', res.get('vat')),
-                    ('email', '=', res.get('email')),
                     '|', ('company_id', '=', False),
                     ('company_id', '=', company.id),
-                ])
+                ], limit=1)
 
                 faculty = False
                 if res.get('faculty_code'):
@@ -104,6 +103,13 @@ class PayloxSystemStudentController(Controller):
                             'company_id': company.id,
                         })
 
+                if not res.get('email'):
+                    email = company.email
+                    if not email or '@' not in email:
+                        email = 'vat@paylox.io'
+                    name, domain = email.rsplit('@', 1)
+                    res['email'] = '%s@%s' % (kwargs['vat'], domain)
+
                 values = {
                     'system_student_faculty_id': faculty and faculty.id,
                     'system_student_department_id': department and department.id,
@@ -111,13 +117,6 @@ class PayloxSystemStudentController(Controller):
                     'email': res.get('email'),
                     'mobile': res.get('mobile'),
                 }
-
-                if not values.get('email'):
-                    email = company.email
-                    if not email or '@' not in email:
-                        email = 'vat@paylox.io'
-                    name, domain = email.rsplit('@', 1)
-                    values['email'] = '%s@%s' % (kwargs['vat'], domain)
 
                 if student:
                     student.sudo().with_context(skip_student_vat_check=True).write(values)
