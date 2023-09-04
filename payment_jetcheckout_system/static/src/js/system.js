@@ -177,16 +177,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 method: 'get_due',
                 args: [ids],
             }).then(function (result) {
-                $('#campaign').text(result.campaign);
-                self.campaign.name.value = result.campaign;
                 self.payment.due.date.html = result.date;
                 self.payment.due.days.html = result.days;
+                self.campaign.name.value = result.campaign;
+                self.campaign.name.$.trigger('change');
             });
         }
 
         let amount = 0;
         $items.each(function() { amount += parseFloat($(this).data('amount'))});
-        
+
         const event = new Event('update');
         this.amount.value = format.float(amount);
         this.amount.$[0].dispatchEvent(event);

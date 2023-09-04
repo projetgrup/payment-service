@@ -74,7 +74,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             bin: '',
         };
         this.campaign = {
-            name: new fields.string(),
+            name: new fields.string({
+                events: [['change', this._onChangeCampaign]],
+            }),
             table: new fields.string({
                 events: [['click', this._onClickCampaingTable]],
             }),
@@ -313,7 +315,13 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }
         } catch {}
     },
-    
+
+    _onChangeCampaign: function (ev) {
+        const campaign = $(ev.currentTarget).val();
+        $('span#campaign').html(campaign || '-');
+        this._getInstallment(true);
+    },
+
     _onClickCardSample: function () {
         if (this.card.sample.$.hasClass('flipped')) {
             this._onFocusCardFront();
@@ -458,9 +466,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 const $button = $('.modal-body button.o_button_select_campaign');
                 $button.click(function(e) {
                     const campaign = e.currentTarget.dataset.name;
-                    $('span#campaign').html(campaign || '-');
                     self.campaign.name.value = campaign;
-                    self._getInstallment(true);
+                    self.campaign.name.$.trigger('change');
                     popup.destroy();
                 });
             });
@@ -491,6 +498,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $input.prop({'checked': true});
 
             this.campaign.name.value = $input.data('campaign');
+            this.campaign.name.$.trigger('change');
         }
     },
 
