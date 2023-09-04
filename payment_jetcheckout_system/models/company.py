@@ -17,11 +17,19 @@ class Company(models.Model):
     system = fields.Selection([])
     subsystem = fields.Selection([])
     required_2fa = fields.Boolean('Two Factor Required')
-    notif_mail_success_ok = fields.Boolean('Send Successful Payment Transaction Email')
-    notif_sms_success_ok = fields.Boolean('Send Successful Payment Transaction SMS')
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
+
+    notif_mail_success_ok = fields.Boolean('Send Successful Payment Transaction Email')
+    notif_sms_success_ok = fields.Boolean('Send Successful Payment Transaction SMS')
     notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')
+
+    payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues')
+    payment_page_due_ok = fields.Boolean(string='Payment Page Due')
+    payment_page_due_base = fields.Selection([
+        ('date_due', 'Due Date'),
+        ('date_document', 'Document Date'),
+    ], string='Payment Page Due Base Date', default='date_due')
     payment_page_flow = fields.Selection([
         ('static', 'Static'),
         ('dynamic', 'Dynamic'),

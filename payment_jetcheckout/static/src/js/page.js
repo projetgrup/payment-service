@@ -78,7 +78,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             table: new fields.string({
                 events: [['click', this._onClickCampaingTable]],
             }),
-        }
+        };
         this.currency = {
             id: 0,
             decimal: 2,
@@ -222,6 +222,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _start: function () {
         const t = this;
+        const z = [];
         $('[field]').each(function(_, e) {
             const name = e.getAttribute('field');
             const ids = name.split('.');
@@ -241,9 +242,13 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 }
 
                 s[ids[l]].$ = s[ids[l]].$.add(e);
-                s[ids[l]].start(t, name);
+                z.push([s[ids[l]], t, name]);
             } catch {}
         });
+
+        for (const a of z) {
+            a[0].start(a[1], a[2]);
+        };
     },
  
     start: function () {

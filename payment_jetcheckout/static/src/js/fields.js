@@ -10,6 +10,10 @@ class fields {
     }
 
     async start(self, name) {
+        if (this._name) {
+            return;
+        }
+
         this._name = name;
         if (this.mask) {
             if (this.mask instanceof Function) {
