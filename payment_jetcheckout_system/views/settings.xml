@@ -77,6 +77,51 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_due_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_due_ids" string="Average Dues"/>
+                                    <div class="text-muted">
+                                        Specify different campaings per average due dates on payment page
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_due_base" string="Base Date" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_due_base" widget="radio" options="{'horizontal': True}"/>
+                                        </div>
+                                        <div class="mt16">
+                                            <field name="payment_page_due_ids" class="w-100">
+                                                <tree editable="bottom">
+                                                    <field name="due" decoration-bf="1"/>
+                                                    <field name="unit" string=" " width="0.2" decoration-bf="1"/>
+                                                    <field name="tolerance"/>
+                                                    <field name="round" widget="boolean_toggle"/>
+                                                    <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                                    <field name="campaign_ids" invisible="1"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name="due"/>
+                                                                <field name="tolerance"/>
+                                                                <field name="unit"/>
+                                                                <field name="round" widget="boolean_toggle"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                                                <field name="campaign_ids" invisible="1"/>
+                                                            </group>
+                                                        </group>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">

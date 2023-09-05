@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from odoo import models, fields, api
+from odoo.tools.misc import get_lang
 
 
 class PaymentItem(models.Model):
@@ -29,12 +31,22 @@ class PaymentItem(models.Model):
         for item in self:
             item.residual_amount = item.amount - item.paid_amount
 
+    @api.depends('amount', 'date', 'due_date')
+    def _compute_due_amount(self):
+        today = fields.Date.today()
+        base = self.env.company.payment_page_due_base
+        for item in self:
+            date = item.date if base == 'date_document' else item.due_date
+            diff = date - today
+            item.due_amount = item.amount * diff.days
+
     name = fields.Char(compute='_compute_name')
     child_id = fields.Many2one('res.partner', ondelete='restrict')
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
     amount = fields.Monetary()
     date = fields.Date()
     due_date = fields.Date()
+    due_amount = fields.Float(compute='_compute_due_amount')
     file = fields.Binary()
     paid = fields.Boolean()
     ref = fields.Char()
@@ -92,3 +104,33 @@ class PaymentItem(models.Model):
             if not item.currency_id:
                 item.currency_id = item.company_id.currency_id.id
         return res
+
+    def get_due(self):
+        self = self.filtered(lambda x: not x.paid)
+
+        today = fields.Date.today()
+        total = sum(self.mapped('residual_amount'))
+        amount = 0
+        days = 0
+        date = False
+        campaign = '-'
+
+        company = self.env.company
+        lang = get_lang(self.env)
+        if company.payment_page_due_ok:
+            base = company.payment_page_due_base
+            for item in self:
+                date = item.date if base == 'date_document' else item.due_date
+                diff = date - today
+                amount += item.residual_amount * diff.days
+
+            days = amount/total if total else 0
+            date = (today + timedelta(days=days)).strftime(lang.date_format)
+            campaign = company.payment_page_due_ids.get_campaign(days)
+
+        return {
+            'amount': amount,
+            'days': days,
+            'date': date,
+            'campaign': campaign,
+        }
