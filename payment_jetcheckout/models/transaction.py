@@ -45,7 +45,7 @@ class PaymentTransaction(models.Model):
             tx.jetcheckout_payment_paid = tx.jetcheckout_payment_amount + tx.jetcheckout_customer_amount
             tx.jetcheckout_payment_net = tx.jetcheckout_payment_paid - tx.jetcheckout_commission_amount
             tx.jetcheckout_fund_amount = tx.jetcheckout_payment_amount - tx.jetcheckout_payment_net
-            tx.jetcheckout_fund_rate = tx.jetcheckout_fund_amount/tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0
+            tx.jetcheckout_fund_rate = 100 * tx.jetcheckout_fund_amount / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0
 
     @api.model
     def _get_default_partner_country_id(self):
