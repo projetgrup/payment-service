@@ -64,22 +64,29 @@
         <xpath expr="//group[@name='transaction_partner']/.." position="after">
             <group name="transaction_jetcheckout" attrs="{'invisible': [('is_paylox', '=', False)]}">
                 <group>
-                    <field name="jetcheckout_card_name"/>
-                    <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_payment_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <field name="jetcheckout_installment_description" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <label for="jetcheckout_commission_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
-                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
-                        %<field name="jetcheckout_commission_rate"/>
-                    </div>
-                    <field name="jetcheckout_commission_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
                     <label for="jetcheckout_customer_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
                         %<field name="jetcheckout_customer_rate"/>
                     </div>
                     <field name="jetcheckout_customer_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_payment_paid"/>
+                    <label for="jetcheckout_commission_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
+                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
+                        %<field name="jetcheckout_commission_rate"/>
+                    </div>
+                    <field name="jetcheckout_commission_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
+                    <field name="jetcheckout_payment_net"/>
+                    <field name="jetcheckout_fund_amount"/>
+                    <label for="jetcheckout_fund_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
+                        %<field name="jetcheckout_fund_rate"/>
+                    </div>
+                    <field name="jetcheckout_installment_description" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                 </group>
                 <group>
+                    <field name="jetcheckout_card_name"/>
+                    <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>
                     <label for="jetcheckout_vpos_name"/>
@@ -142,6 +149,17 @@
         </xpath>
         <xpath expr='//field[@name="partner_id"]' position="after">
             <field name="partner_vat" optional="hide"/>
+        </xpath>
+        <xpath expr='//field[@name="amount"]' position="after">
+            <field name="jetcheckout_payment_amount" optional="hide"/>
+            <field name="jetcheckout_customer_rate" string="Customer Rate (%)" optional="hide"/>
+            <field name="jetcheckout_customer_amount" optional="hide"/>
+            <field name="jetcheckout_payment_paid" optional="hide"/>
+            <field name="jetcheckout_commission_rate" string="Cost Rate (%)" optional="hide"/>
+            <field name="jetcheckout_commission_amount" optional="hide"/>
+            <field name="jetcheckout_payment_net" optional="hide"/>
+            <field name="jetcheckout_fund_amount" optional="hide"/>
+            <field name="jetcheckout_fund_rate" string="Fund Rate (%)" optional="hide"/>
         </xpath>
         <xpath expr='//field[@name="fees"]' position="replace">
             <field name="fees" invisible="1"/>

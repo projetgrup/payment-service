@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 15:27+0000\n"
-"PO-Revision-Date: 2023-07-04 18:45+0300\n"
+"POT-Creation-Date: 2023-09-05 11:10+0000\n"
+"PO-Revision-Date: 2023-09-05 14:20+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -279,10 +279,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid ""
-"<span style=\"width: 322px; display: block; color: #000000;\">Partner</span>"
+"<span name=\"partner_name\" class=\"d-block\" style=\"width: 322px; color: "
+"#000000;\">Partner</span>"
 msgstr ""
-"<span style=\"width: 322px; display: block; color: #000000;\">İş Ortağı</"
-"span>"
+"<span name=\"partner_name\" class=\"d-block\" style=\"width: 322px; color: "
+"#000000;\">İş Ortağı</span>"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
@@ -482,6 +483,21 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_net
+msgid "Amount Net"
+msgstr "Ele Geçecek Tutar"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_paid
+msgid "Amount Paid"
+msgstr "Ödenen Tutar"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_amount
+msgid "Amount to Pay"
+msgstr "Ödenecek Tutar"
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
@@ -643,6 +659,8 @@ msgstr "Müşteri Oranlarını Hesapla"
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaigns_line__campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__campaign_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaign_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_installment_header
 #, python-format
@@ -809,7 +827,6 @@ msgstr "Komisyon"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission_amount
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_amount
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Commission Amount"
@@ -817,7 +834,6 @@ msgstr "Komisyon Tutarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission_rate
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_rate
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Commission Rate"
 msgstr "Komisyon Oranı"
@@ -872,9 +888,20 @@ msgid "Cost"
 msgstr "Maliyet Oranı"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_amount
+msgid "Cost Amount"
+msgstr "Maliyet Tutarı"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__cost_rate
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_commission_rate
 msgid "Cost Rate"
 msgstr "Maliyet Oranı"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
+msgid "Cost Rate (%)"
+msgstr "Maliyet Oranı (%)"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
@@ -1015,6 +1042,7 @@ msgid "Credit-Business"
 msgstr "Credit-Business"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__currency_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal_line__currency_id
@@ -1037,6 +1065,11 @@ msgid "Customer Address"
 msgstr "Müşteri Adresi"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_amount
+msgid "Customer Amount"
+msgstr "Müşteri Yansıtılan Tutar"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__customer_city
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_provider__customer_city
 msgid "Customer City"
@@ -1044,13 +1077,11 @@ msgstr "Müşteri Şehir"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__customer_amount
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_amount
 msgid "Customer Commission Amount"
 msgstr "Müşteri Komisyon Tutarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__customer_rate
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_rate
 msgid "Customer Commission Rate"
 msgstr "Müşteri Komisyon Oranı"
 
@@ -1104,8 +1135,14 @@ msgstr "Müşteri Posta Kodu"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_customer_rate
 msgid "Customer Rate"
 msgstr "Müşteri Oranı"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
+msgid "Customer Rate (%)"
+msgstr "Müşteri Oranı (%)"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__customer_rate_active
@@ -1280,6 +1317,21 @@ msgstr "İlk Seçim Kriteri"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__fixed_customer_rate
 msgid "Fixed Customer Rate"
 msgstr "Sabit Müşteri Oranı"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_fund_amount
+msgid "Fund Amount"
+msgstr "Fonlanan Tutar"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_fund_rate
+msgid "Fund Rate"
+msgstr "Fonlanan Tutar"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
+msgid "Fund Rate (%)"
+msgstr "Fonlanan Oran (%)"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__gateway_app
@@ -1974,7 +2026,6 @@ msgid "Payment Acquirers"
 msgstr "Ödeme Alıcıları"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_amount
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payment Amount"
@@ -2199,12 +2250,6 @@ msgid "Plus Installment Description"
 msgstr "Artı Taksit Açıklaması"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__campaign_id
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__campaign_id
-msgid "PoS Campaign"
-msgstr "PoS Kampanya"
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__pos_price_id
 msgid "Pos Price"
 msgstr "Pos Fiyat"
@@ -2386,6 +2431,11 @@ msgid "Select"
 msgstr "Seç"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
+msgid "Select currencies. Leave empty to use default."
+msgstr "Para birimleri seçin. Varsayılanı kullanmak için boş bırakın."
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__sequence
 msgid "Sequence"
 msgstr "Sıra"
@@ -2527,6 +2577,12 @@ msgstr "Test"
 #: model:ir.model.fields,help:payment_jetcheckout.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr "Bu ödeme yöntemi ile kullanılacak Ödeme Servisi Sağlayıcısı"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "The currency is not available."
+msgstr "Para birimi mevcut değil."
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,help:payment_jetcheckout.field_payment_acquirer_jetcheckout_journal__currency_id
@@ -2856,6 +2912,9 @@ msgstr "https://app.jetcheckout.com"
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer__provider__jetcheckout
 msgid "jetcheckout"
 msgstr "jetcheckout"
+
+#~ msgid "PoS Campaign"
+#~ msgstr "PoS Kampanya"
 
 #, python-format
 #~ msgid "An error occured. Please restart your payment transaction."
