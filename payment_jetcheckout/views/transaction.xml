@@ -64,27 +64,27 @@
         <xpath expr="//group[@name='transaction_partner']/.." position="after">
             <group name="transaction_jetcheckout" attrs="{'invisible': [('is_paylox', '=', False)]}">
                 <group>
-                    <field name="jetcheckout_payment_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_payment_amount" class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <label for="jetcheckout_customer_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
-                        %<field name="jetcheckout_customer_rate"/>
+                    <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
+                        <field name="jetcheckout_customer_rate" class="pr-1"/>%
                     </div>
-                    <field name="jetcheckout_customer_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <field name="jetcheckout_payment_paid"/>
+                    <field name="jetcheckout_customer_amount" class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+                    <field name="jetcheckout_payment_paid" class="mr-5 float-right"/>
                     <label for="jetcheckout_commission_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
-                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
-                        %<field name="jetcheckout_commission_rate"/>
+                    <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
+                        <field name="jetcheckout_commission_rate" class="pr-1"/>%
                     </div>
-                    <field name="jetcheckout_commission_amount" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
-                    <field name="jetcheckout_payment_net"/>
-                    <field name="jetcheckout_fund_amount"/>
+                    <field name="jetcheckout_commission_amount" class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
+                    <field name="jetcheckout_payment_net" class="mr-5 float-right"/>
+                    <field name="jetcheckout_fund_amount" class="mr-5 float-right"/>
                     <label for="jetcheckout_fund_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <div class="o_row" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
-                        %<field name="jetcheckout_fund_rate"/>
+                    <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}">
+                        <field name="jetcheckout_fund_rate" class="pr-1"/>%
                     </div>
-                    <field name="jetcheckout_installment_description" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                 </group>
                 <group>
+                    <field name="jetcheckout_installment_description_long" string="Installment" class="font-weight-bold text-primary" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <field name="jetcheckout_card_name"/>
                     <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_card_type"/>
