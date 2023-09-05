@@ -20,12 +20,12 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _compute_is_paylox(self):
-        for rec in self:
-            rec.is_paylox = rec.acquirer_id.provider == 'jetcheckout'
+        for tx in self:
+            tx.is_paylox = tx.acquirer_id.provider == 'jetcheckout'
 
     def _calc_installment_description_long(self):
-        for rec in self:
-            desc = rec.jetcheckout_installment_description
+        for tx in self:
+            desc = tx.jetcheckout_installment_description
             desc_long = ''
             try:
                 installment = int(desc)
@@ -37,7 +37,15 @@ class PaymentTransaction(models.Model):
                     desc_long = _('%s installment') % desc
             except:
                 desc_long = desc
-            rec.jetcheckout_installment_description_long = desc_long
+            tx.jetcheckout_installment_description_long = desc_long
+
+    @api.depends('jetcheckout_payment_amount', 'jetcheckout_customer_amount', 'jetcheckout_commission_amount')
+    def _compute_amounts(self):
+        for tx in self:
+            tx.jetcheckout_payment_paid = tx.jetcheckout_payment_amount + tx.jetcheckout_customer_amount
+            tx.jetcheckout_payment_net = tx.jetcheckout_payment_paid - tx.jetcheckout_commission_amount
+            tx.jetcheckout_fund_amount = tx.jetcheckout_payment_amount - tx.jetcheckout_payment_net
+            tx.jetcheckout_fund_rate = tx.jetcheckout_fund_amount/tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0
 
     @api.model
     def _get_default_partner_country_id(self):
@@ -61,17 +69,24 @@ class PaymentTransaction(models.Model):
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
-    jetcheckout_payment_amount = fields.Monetary('Payment Amount', readonly=True, copy=False)
+    jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
+    jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)
+    jetcheckout_payment_net = fields.Monetary('Amount Net', compute='_compute_amounts', readonly=True, copy=False, store=True)
+
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
     jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)
     jetcheckout_installment_description = fields.Char('Installment Description', readonly=True, copy=False)
     jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True, copy=False)
-    jetcheckout_commission_rate = fields.Float('Commission Rate', readonly=True, copy=False)
-    jetcheckout_commission_amount = fields.Monetary('Commission Amount', readonly=True, copy=False)
-    jetcheckout_customer_rate = fields.Float('Customer Commission Rate', readonly=True, copy=False)
-    jetcheckout_customer_amount = fields.Monetary('Customer Commission Amount', readonly=True, copy=False)
+
+    jetcheckout_commission_rate = fields.Float('Cost Rate', readonly=True, copy=False)
+    jetcheckout_commission_amount = fields.Monetary('Cost Amount', readonly=True, copy=False)
+    jetcheckout_customer_rate = fields.Float('Customer Rate', readonly=True, copy=False)
+    jetcheckout_customer_amount = fields.Monetary('Customer Amount', readonly=True, copy=False)
+    jetcheckout_fund_rate = fields.Float('Fund Rate', compute='_compute_amounts', readonly=True, copy=False, store=True)
+    jetcheckout_fund_amount = fields.Monetary('Fund Amount', compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
 
