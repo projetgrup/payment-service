@@ -6,10 +6,15 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="payments" t-value="partner.payable_ids"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
+            <t t-set="due" t-value="payments.get_due()"/>
+            <t t-set="due_amount" t-value="due['amount']"/>
+            <t t-set="due_days" t-value="due['days']"/>
+            <t t-set="due_date" t-value="due['date']"/>
+            <t t-set="due_campaign" t-value="due['campaign']"/>
             <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
             <div class="header row mx-0 card border p-2 px-lg-2">
                 <div>
@@ -111,7 +116,8 @@
                                 </tbody>
                                 <tfoot class="shadow bg-light">
                                     <tr>
-                                        <td class="text-right" colspan="6"><em>Select All</em></td>
+                                        <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
+                                        <td class="text-right" colspan="4"><em>Select All</em></td>
                                         <td class="text-center">
                                             <label class="switch mb-0">
                                                 <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
@@ -128,6 +134,7 @@
                             <t t-set="amount" t-value="amount or 0"/>
                             <t t-set="no_border" t-value="True"/>
                             <t t-set="partner" t-value="partner"/>
+                            <t t-if="due_campaign" t-set="campaign" t-value="due_campaign"/>
                         </t>
                     </div>
                     <div t-else="" class="row justify-content-center flex-column">

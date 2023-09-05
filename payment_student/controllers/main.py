@@ -43,6 +43,7 @@ class PayloxSystemStudentController(Controller):
 
     @route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
+        values = {}
         if request.env.company.system == 'student':
             values = {
                 'no_redirect': True,

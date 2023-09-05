@@ -61,6 +61,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        this.ready = false;
         this.currency = {
             id: 0,
             decimal: 2,
@@ -74,6 +75,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             default: 0,
         });
         this.vat = new fields.string();
+        this.campaign = {
+            name: new fields.string(),
+        };
         this.payment = {
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
@@ -100,6 +104,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickLink]],
             }),
             pivot: new fields.element(),
+            due: {
+                date: new fields.element(),
+                days: new fields.element(),
+            },
         };
     },
  
@@ -110,6 +118,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._start.apply(self);
             if (self.payment.item.exist) {
                 self._onChangePaid();
+                self.ready = true;
             }
         });
     },
@@ -159,9 +168,25 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const $items = $('input[type="checkbox"].payment-items:checked');
         this.payment.items.checked = !!$items.length;
 
+        if (this.ready && this.payment.due.days.exist) {
+            const self = this;
+            const $ids = $('td input[field="payment.item"]:checked');
+            const ids = $ids.map(function() { return $(this).data('id'); }).get();
+            rpc.query({
+                model: 'payment.item',
+                method: 'get_due',
+                args: [ids],
+            }).then(function (result) {
+                self.payment.due.date.html = result.date;
+                self.payment.due.days.html = result.days;
+                self.campaign.name.value = result.campaign;
+                self.campaign.name.$.trigger('change');
+            });
+        }
+
         let amount = 0;
         $items.each(function() { amount += parseFloat($(this).data('amount'))});
-        
+
         const event = new Event('update');
         this.amount.value = format.float(amount);
         this.amount.$[0].dispatchEvent(event);
