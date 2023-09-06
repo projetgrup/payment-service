@@ -100,8 +100,8 @@ class PaymentSettingsDue(models.Model):
         for due in self:
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             if due.due - due.tolerance >= float_round(day, precision_digits=0, rounding_method=rounding_method):
-                return due.campaign_id.name or '-'
-        return '-'
+                return due.campaign_id.name or ''
+        return ''
 
 
 class ResConfigSettings(models.TransientModel):
