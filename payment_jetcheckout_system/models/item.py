@@ -113,7 +113,7 @@ class PaymentItem(models.Model):
         amount = 0
         days = 0
         date = False
-        campaign = '-'
+        campaign = ''
 
         company = self.env.company
         lang = get_lang(self.env)
