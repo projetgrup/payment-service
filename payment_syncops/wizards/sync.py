@@ -148,13 +148,13 @@ class SyncopsSyncWizard(models.TransientModel):
                 for line in wizard.line_ids.read():
                     if line['partner_user_email'] in users:
                         user = users_all.browse(users[line['partner_user_email']])
-                        user.write({
+                        user.with_context(mail_create_nolog=True).write({
                             'name': line['partner_user_name'],
                             'phone': line['partner_user_phone'],
                             'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
                         })
                     elif line['partner_user_email']:
-                        user = users_all.create({
+                        user = users_all.with_context(mail_create_nolog=True).create({
                             'system': wizard.system or company.system,
                             'name': line['partner_user_name'],
                             'login': line['partner_user_email'],
