@@ -65,6 +65,11 @@ class SyncopsSyncWizard(models.TransientModel):
                 'partner_ref': line.get('ref', False),
                 'partner_email': line.get('email', False),
                 'partner_phone': line.get('phone', False),
+                'partner_mobile': line.get('mobile', False),
+                'partner_user_name': line.get('user_name', False),
+                'partner_user_email': line.get('user_email', False),
+                'partner_user_phone': line.get('user_phone', False),
+                'partner_user_mobile': line.get('user_mobile', False),
             }) for line in lines]
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
@@ -128,33 +133,62 @@ class SyncopsSyncWizard(models.TransientModel):
         if wizard:
             company = self.env.company
             partners_all = self.env['res.partner']
+            users_all = self.env['res.users']
             partners = partners_all.search_read([
                 ('company_id', '=', company.id),
                 ('vat', 'in', wizard.line_ids.mapped('partner_vat'))
             ], ['id', 'vat'])
+            users = users_all.search_read([
+                ('company_id', '=', company.id),
+                ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
+            ], ['id', 'email'])
             partners = {partner['vat']: partner['id'] for partner in partners}
+            users = {user['email']: user['id'] for user in users}
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
+                    if line['partner_user_email'] in users:
+                        user = users_all.browse(users[line['partner_user_email']])
+                        user.write({
+                            'name': line['partner_user_name'],
+                            'phone': line['partner_user_phone'],
+                            'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                        })
+                    elif line['partner_user_email']:
+                        user = users_all.create({
+                            'system': wizard.system or company.system,
+                            'name': line['partner_user_name'],
+                            'login': line['partner_user_email'],
+                            'email': line['partner_user_email'],
+                            'phone': line['partner_user_phone'],
+                            'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                            'company_id': company.id,
+                            'privilege': 'user',
+                        })
+                    else:
+                        user = None
+
                     if line['partner_vat'] in partners:
-                        partners_all.browse(partners[line['partner_vat']]).write({
+                        partner = partners_all.browse(partners[line['partner_vat']])
+                        partner.write({
                             'name': line['name'],
                             'ref': line['partner_ref'],
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
-                            'mobile': line['partner_phone'],
+                            'mobile': line['partner_mobile'] or line['partner_phone'],
                         })
                     else:
-                        partners_all.create({
+                        partner = partners_all.create({
                             'system': wizard.system or company.system,
                             'name': line['name'],
                             'vat': line['partner_vat'],
                             'ref': line['partner_ref'],
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
-                            'mobile': line['partner_phone'],
+                            'mobile': line['partner_mobile'] or line['partner_phone'],
+                            'user_id': user and user.id,
                             'company_id': company.id,
                         })
-            elif wizard.type == 'item':
+
                 items_all = self.env['payment.item']
                 if wizard.type_item_subtype == 'balance':
                     items = items_all.search_read([
@@ -246,6 +280,10 @@ class SyncopsSyncWizardLine(models.TransientModel):
     partner_phone = fields.Char(readonly=True)
     partner_mobile = fields.Char(readonly=True)
     partner_balance = fields.Monetary(readonly=True)
+    partner_user_name = fields.Char(string='Partner Salesperson Name', readonly=True)
+    partner_user_email = fields.Char(string='Partner Salesperson Email', readonly=True)
+    partner_user_phone = fields.Char(string='Partner Salesperson Phone', readonly=True)
+    partner_user_mobile = fields.Char(string='Partner Salesperson Mobile', readonly=True)
     invoice_id = fields.Char(readonly=True)
     invoice_name = fields.Char(readonly=True)
     invoice_date = fields.Date(readonly=True)
