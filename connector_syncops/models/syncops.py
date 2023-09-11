@@ -4,6 +4,7 @@ import logging
 import traceback
 
 from odoo import models, api, fields, _
+from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.exceptions import RedirectWarning, ValidationError, UserError
 
 _logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class SyncopsConnector(models.Model):
     username = fields.Char(string='Username', required=True)
     token = fields.Char(string='Token', required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='cascade', required=True, readonly=True)
-    method_ids = fields.One2many('syncops.method', 'connector_id', string='Methods', readonly=True)
+    line_ids = fields.One2many('syncops.connector.line', 'connector_id', string='Lines', readonly=True)
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
 
@@ -37,8 +38,18 @@ class SyncopsConnector(models.Model):
         return self.search([
             ('company_id', '=', company.id),
             ('connected', '=', True),
-            ('method_ids.code', '=', method)
+            ('line_ids.code', '=', method)
         ], limit=1)
+
+    @api.model
+    def _defaults(self, connector, method, io='input'):
+        defaults = self.env['syncops.connector.line.default'].sudo().search([
+            ('connector_id', '=', connector.id),
+            ('method', '=', method),
+            ('io', '=', io),
+            ('type', 'in', ('const', 'code')),
+        ])
+        return {default.name: default._value() for default in defaults}
 
     @api.model
     def _execute(self, method, params={}, company=None, message=None):
@@ -56,6 +67,9 @@ class SyncopsConnector(models.Model):
             url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
             if not url:
                 raise ValidationError(_('No syncOPS endpoint URL found'))
+
+            defaults = self._defaults(connector, method)
+            params.update(defaults)
 
             url += '/api/v1/execute'
             response = requests.post(url, json={
@@ -84,7 +98,7 @@ class SyncopsConnector(models.Model):
         if not url:
             self.write({
                 'connected': False,
-                'method_ids': [(5, 0, 0)],
+                'line_ids': [(5, 0, 0)],
             })
             if not no_commit:
                 self.env.cr.commit()
@@ -106,11 +120,29 @@ class SyncopsConnector(models.Model):
                     if result['status'] == 0:
                         connector.write({
                             'connected': True,
-                            'method_ids': [(5, 0, 0)] + [(0, 0, {
-                                'code': method['code'],
+                            'line_ids': [(5, 0, 0)] + [(0, 0, {
+                                'res_id': method['id'],
                                 'name': method['name'],
-                                'categ': method['category'],
-                            }) for method in result['methods']]
+                                'code': method['code'],
+                                'method': method['method'],
+                                'category': method['category'],
+                                'input_ids': [(0, 0, {
+                                    'res_id': line['id'],
+                                    'input': line['input'],
+                                    'input_type': line['input_type'],
+                                    'output': line['output'],
+                                    'output_type': line['output_type'],
+                                    'name': line['name'],
+                                }) for line in method['inputs']],
+                                'output_ids': [(0, 0, {
+                                    'res_id': line['id'],
+                                    'input': line['input'],
+                                    'input_type': line['input_type'],
+                                    'output': line['output'],
+                                    'output_type': line['output_type'],
+                                    'name': line['name'],
+                                }) for line in method['outputs']],
+                            }) for method in result['methods']],
                         })
                         result[connector.id] = {
                             'type': 'info',
@@ -120,7 +152,7 @@ class SyncopsConnector(models.Model):
                     else:
                         connector.write({
                             'connected': False,
-                            'method_ids': [(5, 0, 0)],
+                            'line_ids': [(5, 0, 0)],
                         })
                         result[connector.id] = {
                             'type': 'danger',
@@ -130,7 +162,7 @@ class SyncopsConnector(models.Model):
                 else:
                     connector.write({
                         'connected': False,
-                        'method_ids': [(5, 0, 0)],
+                        'line_ids': [(5, 0, 0)],
                     })
                     result[connector.id] = {
                         'type': 'danger',
@@ -141,7 +173,7 @@ class SyncopsConnector(models.Model):
                 _logger.error(traceback.format_exc())
                 connector.write({
                     'connected': False,
-                    'method_ids': [(5, 0, 0)],
+                    'line_ids': [(5, 0, 0)],
                 })
                 result[connector.id] = {
                     'type': 'danger',
@@ -170,7 +202,7 @@ class SyncopsConnector(models.Model):
         return self.search_count([
             ('company_id', '=', company.id),
             ('connected', '=', True),
-            ('method_ids.code', '=', method)
+            ('line_ids.code', '=', method)
         ])
 
     def action_toggle_active(self):
@@ -196,6 +228,142 @@ class SyncopsConnector(models.Model):
         action = self.env.ref('connector_syncops.action_log_wizard').sudo().read()[0]
         action['context'] = {'dialog_size': 'small', 'create': False, 'delete': False, 'default_connector_id': self.id}
         return action
+
+
+class SyncopsConnectorLine(models.Model):
+    _name = 'syncops.connector.line'
+    _description = 'syncOPS Connector Line'
+
+    connector_id = fields.Many2one('syncops.connector', 'Connector', index=True, ondelete='cascade')
+    res_id = fields.Integer(string='Remote ID', readonly=True)
+    name = fields.Char(string='Method', readonly=True)
+    code = fields.Char(string='Code', readonly=True)
+    category = fields.Char(string='Category', readonly=True)
+    method = fields.Boolean(string='State', readonly=True)
+    input_ids = fields.One2many('syncops.connector.line.input', 'line_id', 'Inputs', readonly=True)
+    output_ids = fields.One2many('syncops.connector.line.output', 'line_id', 'Outputs', readonly=True)
+
+
+class SyncopsConnectorLineIO(models.AbstractModel):
+    _name = 'syncops.connector.line.io'
+    _description = 'syncOPS Connector Line IO'
+
+    def _compute_direction(self):
+        for line in self:
+            line.direction = '→'
+
+    def _compute_default(self):
+        for line in self:
+            connector = line.line_id.connector_id
+            io = line._name.rsplit('.', 1)[-1]
+            name = getattr(line, io)
+            method = line.line_id.code
+            default = self.env['syncops.connector.line.default'].search([
+                ('connector_id', '=', connector.id),
+                ('name', '=', name),
+                ('method', '=', method),
+                ('io', '=', io),
+            ], limit=1)
+            if default:
+                line.default_ok = default.type in ('const', 'code')
+                line.default_type = default.type
+                line.default_const = default.const
+                line.default_code = default.code
+            else:
+                line.default_ok = False
+                line.default_type = 'none'
+                line.default_const = False
+                line.default_code = False
+
+    line_id = fields.Many2one('syncops.connector.line', ondelete='cascade')
+    res_id = fields.Integer(string='Remote ID', readonly=True)
+    input = fields.Char('Input', readonly=True)
+    input_type = fields.Char('Input Type', readonly=True)
+    output = fields.Char('Output', readonly=True)
+    output_type = fields.Char('Output Type', readonly=True)
+    name = fields.Char('Description', readonly=True)
+    direction = fields.Char(compute='_compute_direction', readonly=True)
+    default_ok = fields.Boolean(compute='_compute_default')
+    default_type = fields.Selection([
+        ('none', 'None'),
+        ('const', 'Constant'),
+        ('code', 'Code'),
+    ], compute='_compute_default')
+    default_const = fields.Char(compute='_compute_default')
+    default_code = fields.Text(compute='_compute_default')
+
+    def action_default(self):
+        connector = self.line_id.connector_id
+        io = self._name.rsplit('.', 1)[-1]
+        name = getattr(self, io)
+        method = self.line_id.code
+        default = self.env['syncops.connector.line.default'].search([
+            ('connector_id', '=', connector.id),
+            ('name', '=', name),
+            ('method', '=', method),
+            ('io', '=', io),
+        ], limit=1)
+        if not default:
+            default = self.env['syncops.connector.line.default'].create({
+                'connector_id': connector.id,
+                'name': name,
+                'method': method,
+                'io': io,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Set Default'),
+            'res_id': default.id,
+            'res_model': 'syncops.connector.line.default',
+            'context': {'dialog_size': 'small'},
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+
+class SyncopsConnectorLineInput(models.Model):
+    _name = 'syncops.connector.line.input'
+    _inherit = 'syncops.connector.line.io'
+
+
+class SyncopsConnectorLineOutput(models.Model):
+    _name = 'syncops.connector.line.output'
+    _inherit = 'syncops.connector.line.io'
+
+
+class SyncopsConnectorLineDefault(models.Model):
+    _name = 'syncops.connector.line.default'
+    _description = 'syncOPS Connector Line Defaults'
+
+    connector_id = fields.Many2one('syncops.connector', ondelete='cascade')
+    name = fields.Char()
+    method = fields.Char()
+    io = fields.Selection([
+        ('input', 'Input'),
+        ('output', 'Output'),
+    ])
+    type = fields.Selection([
+        ('none', 'None'),
+        ('const', 'Constant'),
+        ('code', 'Code'),
+    ], default='none')
+    const = fields.Char()
+    code = fields.Text()
+
+    def _value(self):
+        if self.type == 'const':
+            return self.const
+        elif self.type == 'code':
+            return self.code
+        return
+
+    @api.constrains('code')
+    def _check_code(self):
+        for line in self.sudo().filtered('code'):
+            msg = test_python_expr(expr=line.code.strip(), mode='exec')
+            if msg:
+                raise ValidationError(msg)
+
 
 class SyncopsLog(models.TransientModel):
     _name = 'syncops.log'
@@ -226,13 +394,3 @@ class SyncopsLog(models.TransientModel):
 
     def name_get(self):
         return [(log.id, 'Log #%s' % log.id) for log in self]
-
-
-class SyncopsMethod(models.Model):
-    _name = 'syncops.method'
-    _description = 'syncOPS Methods'
-
-    connector_id = fields.Many2one('syncops.connector', 'Connector', index=True, ondelete='cascade')
-    name = fields.Char(string='Name')
-    code = fields.Char(string='Code')
-    categ = fields.Char(string='Category')
