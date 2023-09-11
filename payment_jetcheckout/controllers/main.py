@@ -198,7 +198,8 @@ class PayloxController(http.Controller):
             'currency': currency,
             'currencies': currencies,
             'card_family': card_family,
-            'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
+            'no_terms': acquirer.jetcheckout_no_terms,
+            'no_smart_buttons': acquirer.jetcheckout_no_smart_buttons,
         }
         if balance:
             balance = partner_commercial.credit - partner_commercial.debit
