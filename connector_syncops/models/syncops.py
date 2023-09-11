@@ -43,8 +43,10 @@ class SyncopsConnector(models.Model):
 
     @api.model
     def _defaults(self, connector, method, io='input'):
+        names = getattr(connector.line_ids, '%s_ids' % io).mapped(io)
         defaults = self.env['syncops.connector.line.default'].sudo().search([
             ('connector_id', '=', connector.id),
+            ('name', 'in', names),
             ('method', '=', method),
             ('io', '=', io),
             ('type', 'in', ('const', 'code')),
