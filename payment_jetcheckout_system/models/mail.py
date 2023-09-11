@@ -52,3 +52,25 @@ class MailServer(models.Model):
         if self.env.company.system:
             res['company_id'] = self.env.company.id
         return res
+
+
+class MailThread(models.AbstractModel):
+    _inherit = 'mail.thread'
+
+    @api.model
+    def create(self, values):
+        company = self.env.company
+        if company.system:
+            self = self.with_context(mail_notracking=True)
+        return super(MailThread, self).create(values)
+
+    def write(self, values):
+        company = self.env.company
+        if company.system:
+            self = self.with_context(mail_notracking=True)
+        return super(MailThread, self).write(values)
+
+    def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
+        if self.env.context.get('mail_notracking'):
+            return []
+        return super(MailThread, self)._message_auto_subscribe_followers(updated_values, default_subtype_ids)
