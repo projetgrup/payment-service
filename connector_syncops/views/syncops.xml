@@ -8,7 +8,7 @@
             <field name="name"/>
             <field name="username"/>
             <field name="token"/>
-            <field name="method_ids" widget="many2many_tags"/>
+            <field name="line_ids"/>
             <field name="connected"/>
             <field name="active" widget="boolean_toggle"/>
             <field name="company_id" groups="base.group_multi_company" optional="hide"/>
@@ -42,32 +42,173 @@
                         <field name="company_id" groups="base.group_multi_company" readonly="1" force_save="1"/>
                     </group>
                     <group>
-                        <label for="method_ids"/>
-                        <div>
-                            <!--<field name="method_ids" widget="many2many_tags" nolabel="1" attrs="{'invisible': [('connected','=',False)]}"/>-->
-                            <field name="method_ids" nolabel="1" attrs="{'invisible': [('connected','=',False)]}">
+                        <div colspan="2" attrs="{'invisible': [('connected', '=', False)]}">
+                            <field name="line_ids" nolabel="1" attrs="{'invisible': [('connected','=',False)]}">
                                 <tree>
-                                    <field name="categ"/>
+                                    <field name="category" decoration-bf="1"/>
                                     <field name="name"/>
+                                    <field name="input_ids"/>
+                                    <field name="output_ids"/>
+                                    <field name="method" invisible="1"/>
                                 </tree>
-                                <form>
+                                <form class="o_form_syncops_connector">
                                     <sheet>
                                         <group>
                                             <group>
-                                                <field name="categ"/>
+                                                <div class="text-600 d-flex" colspan="2">
+                                                    <div class="text-center px-4">
+                                                        <i class="fa fa-info text-primary h1"/>
+                                                    </div>
+                                                    <div class="d-flex flex-column">
+                                                        <div style="font-size: 0.9rem">
+                                                            <p>Inputs and outputs are listed below. If you want to assign a default value, you can use edit buttons placed end of the lines.</p>
+                                                            <p>Default values are linked to input value for inputs and output value for outputs. Values can be left as it is, they can be set as a constant or they can run a python code.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </group>
-                                            <group>
-                                                <field name="name"/>
+                                            <group class="o_config_connector">
+                                                <div class="o_td_label">
+                                                    <div class="o_config_type o_config_method">Method</div>
+                                                </div>
+                                                <div class="o_row">
+                                                    <field name="name" nolabel="1" class="border-0" placeholder="Please select a method..."/>
+                                                </div>
+                                                <div name="config" colspan="2"/>
+                                                <field name="method" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Inputs">
+                                                <field name="input_ids" nolabel="1" colspan="2"/>
+                                            </group>
+                                            <group string="Outputs">
+                                                <field name="output_ids" nolabel="1" colspan="2"/>
                                             </group>
                                         </group>
                                     </sheet>
                                 </form>
                             </field>
-                            <span class="text-muted" attrs="{'invisible': [('connected','!=',False)]}">Methods will be available after connection is successful</span>
                         </div>
+                        <label for="line_ids" attrs="{'invisible': [('connected', '!=', False)]}"/>
+                        <span class="text-muted" attrs="{'invisible': [('connected', '!=', False)]}">Methods will be available after connection is successful</span>
                         <field name="active" invisible="1"/>
                         <field name="connected" invisible="1" force_save="1"/>
                     </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="connector_line_input_tree" model="ir.ui.view">
+    <field name="name">syncops.connector.line.input.tree</field>
+    <field name="model">syncops.connector.line.input</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="input" decoration-bf="1"/>
+            <field name="direction" string="→" decoration-bf="1" attrs="{'column_invisible': [('parent.method', '!=', False)]}"/>
+            <field name="output" decoration-bf="1" attrs="{'column_invisible': [('parent.method', '!=', False)]}"/>
+            <button name="action_default" type="object" icon="fa-edit" attrs="{'invisible': [('default_ok', '=', False)]}"/>
+            <button name="action_default" type="object" icon="fa-edit" attrs="{'invisible': [('default_ok', '!=', False)]}" class="text-300"/>
+            <field name="default_ok" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="connector_line_input_form" model="ir.ui.view">
+    <field name="name">syncops.connector.line.input.form</field>
+    <field name="model">syncops.connector.line.input</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <separator string="Input"/>
+                        <field name="input" string="Value"/>
+                        <field name="input_type" string="Type"/>
+                        <separator string="Output" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                        <field name="output" string="Value" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                        <field name="output_type" string="Type" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                    </group>
+                    <group string="Defaults">
+                        <field name="default_type" widget="radio" options="{'horizontal': True}" class="justify-content-around mb-3" nolabel="1" colspan="2"/>
+                        <field name="default_const" attrs="{'invisible': [('default_type', '!=', 'const')]}" class="text-center font-weight-bold d-block" placeholder="Enter a constant value..." nolabel="1" colspan="2"/>
+                        <field name="default_code" attrs="{'invisible': [('default_type', '!=', 'code')]}" nolabel="1" colspan="2" widget="ace" options="{'mode': 'python'}"/>
+                        <button name="action_default" type="object" icon="fa-edit" string="Set Defaults" class="btn-secondary d-flex mx-auto align-items-center text-uppercase mt-3" style="gap:5px"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="connector_line_output_tree" model="ir.ui.view">
+    <field name="name">syncops.connector.line.output.tree</field>
+    <field name="model">syncops.connector.line.output</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="input" decoration-bf="1" attrs="{'column_invisible': [('parent.method', '!=', False)]}"/>
+            <field name="direction" string="→" decoration-bf="1" attrs="{'column_invisible': [('parent.method', '!=', False)]}"/>
+            <field name="output" decoration-bf="1"/>
+            <button name="action_default" type="object" icon="fa-edit" attrs="{'invisible': [('default_ok', '=', False)]}"/>
+            <button name="action_default" type="object" icon="fa-edit" attrs="{'invisible': [('default_ok', '!=', False)]}" class="text-300"/>
+            <field name="default_ok" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="connector_line_output_form" model="ir.ui.view">
+    <field name="name">syncops.connector.line.output.form</field>
+    <field name="model">syncops.connector.line.output</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <separator string="Input" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                        <field name="input" string="Value" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                        <field name="input_type" string="Type" attrs="{'invisible': [('parent.method', '!=', False)]}"/>
+                        <separator string="Output"/>
+                        <field name="output" string="Value"/>
+                        <field name="output_type" string="Type"/>
+                    </group>
+                    <group string="Defaults">
+                        <field name="default_type" widget="radio" options="{'horizontal': True}" class="justify-content-around mb-3" nolabel="1" colspan="2"/>
+                        <field name="default_const" attrs="{'invisible': [('default_type', '!=', 'const')]}" class="text-center font-weight-bold d-block" placeholder="Enter a constant value..." nolabel="1" colspan="2"/>
+                        <field name="default_code" attrs="{'invisible': [('default_type', '!=', 'code')]}" nolabel="1" colspan="2" widget="ace" options="{'mode': 'python'}"/>
+                        <button name="action_default" type="object" icon="fa-edit" string="Set Defaults" class="btn-secondary d-flex mx-auto align-items-center text-uppercase mt-3" style="gap:5px"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="connector_line_default_form" model="ir.ui.view">
+    <field name="name">syncops.connector.line.default.form</field>
+    <field name="model">syncops.connector.line.default</field>
+    <field name="arch" type="xml">
+        <form create="0">
+            <sheet>
+                <group>
+                    <field name="type" widget="radio" options="{'horizontal': True}" class="justify-content-between mb-3" nolabel="1" colspan="2"/>
+                    <field name="const" attrs="{'invisible': [('type', '!=', 'const')]}" class="text-center font-weight-bold d-block" placeholder="Enter a constant value..." nolabel="1" colspan="2"/>
+                    <field name="code" attrs="{'invisible': [('type', '!=', 'code')]}" placeholder="Enter python code..." nolabel="1" colspan="2" widget="ace" options="{'mode': 'python'}"/>
                 </group>
             </sheet>
         </form>
