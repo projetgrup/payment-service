@@ -154,16 +154,21 @@ class SyncopsSyncWizard(models.TransientModel):
                             'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
                         })
                     elif line['partner_user_email']:
-                        user = users_all.with_context(mail_create_nolog=True).create({
-                            'system': wizard.system or company.system,
-                            'name': line['partner_user_name'],
-                            'login': line['partner_user_email'],
-                            'email': line['partner_user_email'],
-                            'phone': line['partner_user_phone'],
-                            'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
-                            'company_id': company.id,
-                            'privilege': 'user',
-                        })
+                        user = users_all.search([
+                            ('company_id', '=', company.id),
+                            ('email', '=', line['partner_user_email']),
+                        ], limit=1)
+                        if not user:
+                            user = users_all.with_context(mail_create_nolog=True).create({
+                                'system': wizard.system or company.system,
+                                'name': line['partner_user_name'],
+                                'login': line['partner_user_email'],
+                                'email': line['partner_user_email'],
+                                'phone': line['partner_user_phone'],
+                                'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                                'company_id': company.id,
+                                'privilege': 'user',
+                            })
                     else:
                         user = None
 
