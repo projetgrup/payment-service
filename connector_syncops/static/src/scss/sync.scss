@@ -13,4 +13,129 @@
             }
         }
     }
+
+    &.o_form_syncops_connector {
+        .o_config_connector {
+            .bg-200 {
+                background-color: #dddddd !important;
+            }
+    
+            .bg-100 {
+                background-color: #eeeeee !important;
+            }
+    
+            .o_config_type {
+                height: 30px;
+                padding-left: 20px;
+                font-weight: 500;
+                background-color: rgba(theme-color('primary'), 0.8);
+                position: relative;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex: 1 1 auto;
+    
+                &::before {
+                    content: "";
+                    font: normal normal normal 14px/1 FontAwesome;
+                    font-size: inherit;
+                    text-rendering: auto;
+                    -webkit-font-smoothing: antialiased;
+                    position: absolute;
+                    left: 0px;
+                    width: 32px;
+                    background-color: theme-color('primary');
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: #ffffff;
+                }
+    
+                &.o_config_method::before {
+                    content: "\f024";
+                }
+            }
+    
+            .o_td_label {
+                padding-right: 5px !important;
+    
+                > div {
+                    height: 30px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+    
+                label {
+                    margin: 0;
+                }
+            }
+     
+            .o_td_label + td {
+                .o_row {
+                    width: 100% !important;
+                    height: 30px;
+                    margin: 0;
+                    font-weight: 500;
+                    font-size: 14px;
+                    color: theme-color('primary');
+                    border-bottom: 2px solid theme-color('primary');
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    
+                    .o_input_dropdown {
+                        .o_input {
+                            height: 30px;
+                            font-weight: 500;
+                            font-size: 14px;
+                            margin-top: 5px;
+                            color: theme-color('primary');
+                            background: transparent;
+                            border: none;
+                            text-align: center;
+                        }
+    
+                        .o_dropdown_button {
+                            margin-top: 10px;
+                        }
+                    }
+        
+                    span {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    
+        .o_config_connector_table_header {
+            td {
+                height: 30px;
+                border-top-color: #eeeeee;
+                box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+                vertical-align: middle;
+            }
+        }
+    
+        .o_config_connector_table_option {
+            > td:nth-child(1) {
+                width: 10%;
+                vertical-align: middle;
+            }
+    
+            > td:nth-child(2) {
+                width: 45%;
+                vertical-align: middle;
+            }
+    
+            > td:nth-child(3) {
+                width: 45%;
+                vertical-align: middle;
+            }
+        }
+    }    
 }
