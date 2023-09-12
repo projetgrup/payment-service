@@ -45,7 +45,7 @@ class SyncopsSyncWizard(models.TransientModel):
             res['type'] = False
 
         if res['type'] == 'item':
-            res['type_item_subtype'] = 'balance'
+            res['type_item_subtype'] = self.env.company.syncops_sync_item_subtype or 'balance'
 
         return res
 
@@ -75,6 +75,7 @@ class SyncopsSyncWizard(models.TransientModel):
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
         elif self.type == 'item':
+            self.env.company.syncops_sync_item_subtype = self.type_item_subtype
             if self.type_item_subtype == 'balance':
                 params = {'company_id': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
@@ -118,6 +119,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     'partner_email': line.get('email', False),
                     'partner_phone': line.get('phone', False),
                     'partner_mobile': line.get('mobile', False),
+                    'invoice_id': line.get('id', False),
                     'invoice_name': line.get('name', False),
                     'invoice_date': line.get('date', False),
                     'invoice_amount': line.get('amount', 0),
@@ -136,13 +138,16 @@ class SyncopsSyncWizard(models.TransientModel):
             users_all = self.env['res.users']
             partners = partners_all.search_read([
                 ('company_id', '=', company.id),
-                ('vat', 'in', wizard.line_ids.mapped('partner_vat'))
-            ], ['id', 'vat'])
+                '|',
+                ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
+                ('ref', 'in', wizard.line_ids.mapped('partner_ref')),
+            ], ['id', 'vat', 'ref'])
             users = users_all.search_read([
                 ('company_id', '=', company.id),
                 ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
             ], ['id', 'email'])
-            partners = {partner['vat']: partner['id'] for partner in partners}
+            vats = {partner['vat']: partner['id'] for partner in partners}
+            refs = {partner['ref']: partner['id'] for partner in partners}
             users = {user['email']: user['id'] for user in users}
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
@@ -172,10 +177,11 @@ class SyncopsSyncWizard(models.TransientModel):
                     else:
                         user = None
 
-                    if line['partner_vat'] in partners:
-                        partner = partners_all.browse(partners[line['partner_vat']])
+                    if line['partner_vat'] in vats:
+                        partner = partners_all.browse(vats[line['partner_vat']])
                         partner.write({
                             'name': line['name'],
+                            'vat': line['partner_vat'],
                             'ref': line['partner_ref'],
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
@@ -193,7 +199,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'user_id': user and user.id,
                             'company_id': company.id,
                         })
-
+            else:
                 items_all = self.env['payment.item']
                 if wizard.type_item_subtype == 'balance':
                     items = items_all.search_read([
@@ -205,13 +211,13 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     items = {item['parent_id'][0]: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        if line['partner_vat'] in partners and partners[line['partner_vat']] in items:
-                            items_all.browse(items[partners[line['partner_vat']]]).write({
+                        if line['partner_vat'] in vats and vats[line['partner_vat']] in items:
+                            items_all.browse(items[vats[line['partner_vat']]]).write({
                                 'amount': line['partner_balance'],
                             })
                         else:
-                            if line['partner_vat'] in partners:
-                                partner = partners_all.browse(partners[line['partner_vat']])
+                            if line['partner_vat'] in vats:
+                                partner = partners_all.browse(vats[line['partner_vat']])
                             else:
                                 partner = partners_all.create({
                                     'system': wizard.system or company.system,
@@ -231,25 +237,28 @@ class SyncopsSyncWizard(models.TransientModel):
                                 'currency_id': line['currency_id'] and line['currency_id'][0] or company.currency_id.id,
                             })
                 elif wizard.type_item_subtype == 'invoice':
-                    items = items_all.search_read([
+                    domain = [
                         ('company_id', '=', company.id),
-                        ('paid', '=', False),
-                        ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
-                        ('ref', 'in', wizard.line_ids.mapped('invoice_name')),
                         ('system', '=', wizard.system),
-                    ], ['id', 'parent_id', 'ref'])
+                        ('paid', '=', False),
+                        ('ref', '!=', False),
+                    ]
+                    partner_ctx = self.env.context.get('partner')
+                    if partner_ctx:
+                        domain.append(('parent_id', '=', partner_ctx.id))
 
-                    items = {f"{item['parent_id'][0]}__{item['ref']}": item['id'] for item in items}
+                    items_all.search(domain + [('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
+                    items = items_all.search_read(domain, ['id', 'ref'])
+
+                    items = {item['ref']: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        exist = line['partner_vat'] in partners
-                        key = f"{partners[line['partner_vat']]}__{line['invoice_name']}" if exist else None
-                        if exist and key in items:
-                            items_all.browse(items[key]).write({
-                                'amount': line['invoice_amount'],
-                            })
+                        pid = vats.get(line['partner_vat']) or refs.get(line['partner_ref'])
+                        key = line['invoice_id'] if pid else None
+                        if pid and key in items:
+                            items_all.browse(items[key]).write({'amount': line['invoice_amount']})
                         else:
-                            if exist:
-                                partner = partners_all.browse(partners[line['partner_vat']])
+                            if pid:
+                                partner = partners_all.browse(pid)
                             else:
                                 partner = partners_all.create({
                                     'system': wizard.system or company.system,
@@ -258,7 +267,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'ref': line['partner_ref'],
                                     'email': line['partner_email'],
                                     'phone': line['partner_phone'],
-                                    'mobile': line['partner_mobile'],
+                                    'mobile': line['partner_mobile'] or line['partner_phone'],
                                     'company_id': company.id,
                                 })
                             items_all.create({
@@ -266,7 +275,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                 'amount': line['invoice_amount'],
                                 'description': line['invoice_name'],
                                 'date': line['invoice_date'],
-                                'ref': line['invoice_name'],
+                                'ref': line['invoice_id'],
                                 'parent_id': partner.id,
                                 'company_id': company.id,
                                 'currency_id': line['invoice_currency'] and line['invoice_currency'][0] or company.currency_id.id,
