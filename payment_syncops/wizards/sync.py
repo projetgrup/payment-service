@@ -12,8 +12,8 @@ class SyncopsSyncWizard(models.TransientModel):
         for rec in self:
             if rec.type == 'item':
                 access_partner_list = self.env['syncops.connector'].count('payment_get_partner_list')
-                access_invoice_list = self.env['syncops.connector'].count('payment_get_invoice_list')
-                rec.type_item_subtype_ok = access_partner_list and access_invoice_list
+                access_unreconciled_list = self.env['syncops.connector'].count('payment_get_unreconciled_list')
+                rec.type_item_subtype_ok = access_partner_list and access_unreconciled_list
             else:
                 rec.type_item_subtype_ok = False
 
@@ -54,7 +54,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
         if self.type == 'partner':
             lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company_id': self.env.company.sudo().partner_id.ref,
+                'company': self.env.company.sudo().partner_id.ref,
             })
             if not lines:
                 lines = []
@@ -70,6 +70,7 @@ class SyncopsSyncWizard(models.TransientModel):
                 'partner_user_email': line.get('user_email', False),
                 'partner_user_phone': line.get('user_phone', False),
                 'partner_user_mobile': line.get('user_mobile', False),
+                'partner_balance': line.get('balance', 0),
             }) for line in lines]
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
@@ -94,17 +95,16 @@ class SyncopsSyncWizard(models.TransientModel):
 
             elif self.type_item_subtype == 'invoice':
                 if not self.type_item_subtype_ok:
-                    raise UserError(_('"Get Invoice List" method must be activated to get records by their invoice date range'))
+                    raise UserError(_('"Get Unreconciled Records List" method must be activated to get records by their date range'))
                 params = {
                     'company': self.env.company.sudo().partner_id.ref,
-                    'state': 'not_paid,posted'
                 }
                 if self.type_item_date_start:
                     params.update({'date_start': self.type_item_date_start.strftime(DF)})
                 if self.type_item_date_end:
                     params.update({'date_end': self.type_item_date_end.strftime(DF)})
 
-                lines = self.env['syncops.connector']._execute('payment_get_invoice_list', params=params)
+                lines = self.env['syncops.connector']._execute('payment_get_unreconciled_list', params=params)
                 if lines == None:
                     lines = []
 

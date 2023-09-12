@@ -2,6 +2,7 @@
 import requests
 import logging
 import traceback
+from datetime import datetime
 
 from odoo import models, api, fields, _
 from odoo.tools.safe_eval import safe_eval, test_python_expr
@@ -42,8 +43,8 @@ class SyncopsConnector(models.Model):
         ], limit=1)
 
     @api.model
-    def _defaults(self, connector, method, io='input'):
-        names = getattr(connector.line_ids, '%s_ids' % io).mapped(io)
+    def _defaults(self, connector, method, io, values):
+        names = getattr(connector.line_ids, '%s_ids' % io).mapped('input')
         defaults = self.env['syncops.connector.line.default'].sudo().search([
             ('connector_id', '=', connector.id),
             ('name', 'in', names),
@@ -51,7 +52,7 @@ class SyncopsConnector(models.Model):
             ('io', '=', io),
             ('type', 'in', ('const', 'code')),
         ])
-        return {default.name: default._value() for default in defaults}
+        return {default.name: default._value(values) for default in defaults}
 
     @api.model
     def _execute(self, method, params={}, company=None, message=None):
@@ -70,7 +71,7 @@ class SyncopsConnector(models.Model):
             if not url:
                 raise ValidationError(_('No syncOPS endpoint URL found'))
 
-            defaults = self._defaults(connector, method)
+            defaults = self._defaults(connector, method, 'input', params)
             params.update(defaults)
 
             url += '/api/v1/execute'
@@ -258,7 +259,7 @@ class SyncopsConnectorLineIO(models.AbstractModel):
         for line in self:
             connector = line.line_id.connector_id
             io = line._name.rsplit('.', 1)[-1]
-            name = getattr(line, io)
+            name = getattr(line, 'input')
             method = line.line_id.code
             default = self.env['syncops.connector.line.default'].search([
                 ('connector_id', '=', connector.id),
@@ -297,7 +298,7 @@ class SyncopsConnectorLineIO(models.AbstractModel):
     def action_default(self):
         connector = self.line_id.connector_id
         io = self._name.rsplit('.', 1)[-1]
-        name = getattr(self, io)
+        name = getattr(self, 'input')
         method = self.line_id.code
         default = self.env['syncops.connector.line.default'].search([
             ('connector_id', '=', connector.id),
@@ -352,11 +353,13 @@ class SyncopsConnectorLineDefault(models.Model):
     const = fields.Char()
     code = fields.Text()
 
-    def _value(self):
+    def _value(self, values={}):
         if self.type == 'const':
             return self.const
         elif self.type == 'code':
-            return self.code
+            context = {**values, 'datetime': datetime}
+            safe_eval(self.code.strip(), context, mode='exec', nocopy=True)
+            return context.get('self')
         return
 
     @api.constrains('code')

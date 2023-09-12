@@ -5,6 +5,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     jetcheckout_connector_ok = fields.Boolean('Connector Transaction', readonly=True)
+    jetcheckout_connector_ref = fields.Char('Connector Reference', readonly=True)
     jetcheckout_connector_state = fields.Boolean('Connector State', readonly=True)
     jetcheckout_connector_partner_name = fields.Char('Connector Partner Name', readonly=True)
     jetcheckout_connector_partner_vat = fields.Char('Connector Partner VAT', readonly=True)
@@ -38,6 +39,7 @@ class PaymentTransaction(models.Model):
             'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
             'card_number': self.jetcheckout_card_number,
             'card_name': self.jetcheckout_card_name,
+            'order_id': self.source_transaction_id.jetcheckout_order_id if self.source_transaction_id else self.jetcheckout_order_id,
             'transaction_id': self.source_transaction_id.jetcheckout_transaction_id if self.source_transaction_id else self.jetcheckout_transaction_id,
             'installments': self.jetcheckout_installment_description,
             'amount_commission_cost': self.jetcheckout_commission_amount,
@@ -47,14 +49,15 @@ class PaymentTransaction(models.Model):
             'description': self.state_message,
         }, company=self.company_id, message=True)
 
-        state = result[0] == None
-        if state:
+        if result[0] == None:
             self.write({
+                'jetcheckout_connector_ref': False,
                 'jetcheckout_connector_state': True,
                 'jetcheckout_connector_state_message': _('This transaction has not been successfully posted to connector.\n%s') % result[1]
             })
         else:
             self.write({
+                'jetcheckout_connector_ref': result[0] and result[0][0].get('ref', False),
                 'jetcheckout_connector_state': False,
                 'jetcheckout_connector_state_message': _('This transaction has been successfully posted to connector.')
             })

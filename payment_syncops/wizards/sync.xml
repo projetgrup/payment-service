@@ -7,7 +7,7 @@
         <xpath expr="//sheet" position="inside">
             <group class="text-center">
                 <label for="type_item_subtype" string="Synchronization Type" attrs="{'invisible': [('type', '!=', 'item')]}" colspan="2"/>
-                <field name="type_item_subtype" nolabel="1" widget="radio" class="align-items-baseline d-flex px-5" attrs="{'invisible': [('type', '!=', 'item')]}" colspan="2"/>
+                <field name="type_item_subtype" nolabel="1" widget="radio" class="align-items-baseline d-flex" style="padding-left:25%" attrs="{'invisible': [('type', '!=', 'item')]}" colspan="2"/>
                 <br colspan="2" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}"/>
                 <label for="type_item_date_start" string="Synchronization Date Range" attrs="{'invisible': ['|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice')]}" colspan="2"/>
                 <div name="dates" class="d-flex flex-column px-5" attrs="{'invisible': ['|', '|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice'), ('type_item_subtype_ok', '=', False)]}" colspan="2">
@@ -15,7 +15,7 @@
                     <field name="type_item_date_end" class="text-center" placeholder="End Date"/>
                 </div>
                 <div name="dates" class="text-muted text-center" attrs="{'invisible': ['|', '|', ('type', '!=', 'item'), ('type_item_subtype', '!=', 'invoice'), ('type_item_subtype_ok', '!=', False)]}" colspan="2">
-                    <strong>Get Invoice List</strong> method must be activated to get records by their invoice date range
+                    <strong>Get Unreconciled Records List</strong> method must be activated to get records by their date range
                 </div>
                 <field name="type_item_subtype_ok" invisible="1"/>
                 <field name="system" invisible="1"/>
