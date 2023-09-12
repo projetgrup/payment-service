@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-14 18:39+0000\n"
-"PO-Revision-Date: 2023-08-14 18:39+0000\n"
+"POT-Creation-Date: 2023-09-12 21:19+0000\n"
+"PO-Revision-Date: 2023-09-12 21:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,9 +25,8 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
 msgid ""
-"<span class=\"text-muted\" attrs=\"{'invisible': "
-"[('connected','!=',False)]}\">Methods will be available after connection is "
-"successful</span>"
+"<span class=\"text-muted\" attrs=\"{'invisible': [('connected', '!=', "
+"False)]}\">Methods will be available after connection is successful</span>"
 msgstr ""
 
 #. module: connector_syncops
@@ -50,7 +49,7 @@ msgid "An error occured when connecting: %smessage"
 msgstr ""
 
 #. module: connector_syncops
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__categ
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__category
 msgid "Category"
 msgstr ""
 
@@ -61,7 +60,12 @@ msgid "Close"
 msgstr ""
 
 #. module: connector_syncops
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__code
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__code
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__code
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_default__type__code
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_input__default_type__code
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_io__default_type__code
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_output__default_type__code
 msgid "Code"
 msgstr ""
 
@@ -106,18 +110,35 @@ msgid "Connection is succesful"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__connector_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__connector_id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__connector_id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__connector_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__connector_id
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__connector_id
 msgid "Connector"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__const
+msgid "Const"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_default__type__const
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_input__default_type__const
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_io__default_type__const
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_output__default_type__const
+msgid "Constant"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__create_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_uid
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__create_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__create_uid
 msgid "Created by"
@@ -125,9 +146,12 @@ msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__create_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__create_date
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__create_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__create_date
 msgid "Created on"
@@ -149,6 +173,62 @@ msgid "Date"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__default_code
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__default_code
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__default_code
+msgid "Default Code"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__default_const
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__default_const
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__default_const
+msgid "Default Const"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__default_ok
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__default_ok
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__default_ok
+msgid "Default Ok"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__default_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__default_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__default_type
+msgid "Default Type"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid ""
+"Default values are linked to input values for inputs and outputs. Values can"
+" be left as it is, they can be set as a constant or they can run a python "
+"code."
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Defaults"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__name
+msgid "Description"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__direction
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__direction
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__direction
+msgid "Direction"
+msgstr ""
+
+#. module: connector_syncops
 #. openerp-web
 #: code:addons/connector_syncops/static/src/xml/button.xml:0
 #: code:addons/connector_syncops/static/src/xml/button.xml:0
@@ -158,9 +238,12 @@ msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__display_name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__display_name
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__display_name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__display_name
 msgid "Display Name"
@@ -174,6 +257,18 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.res_config_settings_view_form
 msgid "Endpoint URL"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_default_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Enter a constant value..."
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_default_form
+msgid "Enter python code..."
 msgstr ""
 
 #. module: connector_syncops
@@ -213,19 +308,60 @@ msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__id
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__id
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__id
 msgid "ID"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__input
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__input
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__input
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_default__io__input
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Input"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__input_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__input_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__input_type
+msgid "Input Type"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__input_ids
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Inputs"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid ""
+"Inputs and outputs are listed below. If you want to assign a default value, "
+"you can use edit buttons placed end of the lines."
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__io
+msgid "Io"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input____last_update
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard____last_update
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard____last_update
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line____last_update
 msgid "Last Modified on"
@@ -233,9 +369,12 @@ msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__write_uid
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_uid
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__write_uid
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__write_uid
 msgid "Last Updated by"
@@ -243,15 +382,26 @@ msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__write_date
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__write_date
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__write_date
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__line_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__line_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__line_id
+msgid "Line"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__line_ids
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__line_ids
 msgid "Lines"
 msgstr ""
@@ -281,18 +431,16 @@ msgid "Message"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__method
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__method_name
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
 msgid "Method"
 msgstr ""
 
 #. module: connector_syncops
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__method_ids
-msgid "Methods"
-msgstr ""
-
-#. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__name
-#: model:ir.model.fields,field_description:connector_syncops.field_syncops_method__name
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__name
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__name
 msgid "Name"
 msgstr ""
@@ -327,8 +475,39 @@ msgid "No syncOPS integrations yet"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_default__type__none
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_input__default_type__none
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_io__default_type__none
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_output__default_type__none
+msgid "None"
+msgstr ""
+
+#. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
 msgid "Not Connected"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__output
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__output
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__output
+#: model:ir.model.fields.selection,name:connector_syncops.selection__syncops_connector_line_default__io__output
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Output"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__output_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__output_type
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__output_type
+msgid "Output Type"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__output_ids
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Outputs"
 msgstr ""
 
 #. module: connector_syncops
@@ -361,6 +540,19 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.ui.view,arch_db:connector_syncops.log_wizard_form
 msgid "Please select a date range"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_form
+msgid "Please select a method..."
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__res_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_input__res_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_io__res_id
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_output__res_id
+msgid "Remote ID"
 msgstr ""
 
 #. module: connector_syncops
@@ -409,6 +601,18 @@ msgid "Response Message"
 msgstr ""
 
 #. module: connector_syncops
+#: code:addons/connector_syncops/models/syncops.py:0
+#, python-format
+msgid "Set Default"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Set Defaults"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.actions.act_window,name:connector_syncops.action_syncops_config_settings
 msgid "Settings"
 msgstr ""
@@ -425,6 +629,7 @@ msgid "Start date must be before end date"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line__method
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__state
 msgid "State"
 msgstr ""
@@ -477,13 +682,22 @@ msgid "Token"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector_line_default__type
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard__type
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
 msgid "Type"
 msgstr ""
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_connector__username
 msgid "Username"
+msgstr ""
+
+#. module: connector_syncops
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_input_form
+#: model_terms:ir.ui.view,arch_db:connector_syncops.connector_line_output_form
+msgid "Value"
 msgstr ""
 
 #. module: connector_syncops
@@ -508,6 +722,21 @@ msgid "syncOPS"
 msgstr ""
 
 #. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector_line
+msgid "syncOPS Connector Line"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector_line_default
+msgid "syncOPS Connector Line Defaults"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector_line_io
+msgid "syncOPS Connector Line IO"
+msgstr ""
+
+#. module: connector_syncops
 #: model:ir.model,name:connector_syncops.model_syncops_connector
 msgid "syncOPS Connectors"
 msgstr ""
@@ -528,11 +757,6 @@ msgid "syncOPS Logs"
 msgstr ""
 
 #. module: connector_syncops
-#: model:ir.model,name:connector_syncops.model_syncops_method
-msgid "syncOPS Methods"
-msgstr ""
-
-#. module: connector_syncops
 #: model:ir.model,name:connector_syncops.model_syncops_sync_wizard
 msgid "syncOPS Sync Wizard"
 msgstr ""
@@ -545,6 +769,16 @@ msgstr ""
 #. module: connector_syncops
 #: model_terms:ir.actions.act_window,help:connector_syncops.action_connector
 msgid "syncOPS integrations are listed here"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector_line_input
+msgid "syncops.connector.line.input"
+msgstr ""
+
+#. module: connector_syncops
+#: model:ir.model,name:connector_syncops.model_syncops_connector_line_output
+msgid "syncops.connector.line.output"
 msgstr ""
 
 #. module: connector_syncops

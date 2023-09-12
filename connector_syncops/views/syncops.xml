@@ -62,7 +62,7 @@
                                                     <div class="d-flex flex-column">
                                                         <div style="font-size: 0.9rem">
                                                             <p>Inputs and outputs are listed below. If you want to assign a default value, you can use edit buttons placed end of the lines.</p>
-                                                            <p>Default values are linked to input value for inputs and output value for outputs. Values can be left as it is, they can be set as a constant or they can run a python code.</p>
+                                                            <p>Default values are linked to input values for inputs and outputs. Values can be left as it is, they can be set as a constant or they can run a python code.</p>
                                                         </div>
                                                     </div>
                                                 </div>
