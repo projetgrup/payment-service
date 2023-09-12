@@ -75,7 +75,7 @@ class SyncopsSyncWizard(models.TransientModel):
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
         elif self.type == 'item':
-            self.env.company.syncops_sync_item_subtype = self.type_item_subtype
+            self.env.company.write({'syncops_sync_item_subtype': self.type_item_subtype})
             if self.type_item_subtype == 'balance':
                 params = {'company_id': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
@@ -122,6 +122,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     'invoice_id': line.get('id', False),
                     'invoice_name': line.get('name', False),
                     'invoice_date': line.get('date', False),
+                    'invoice_due_date': line.get('due_date', False),
                     'invoice_amount': line.get('amount', 0),
                     'invoice_currency': currencies.get(line.get('currency'), False),
                 }) for line in lines]
@@ -146,8 +147,8 @@ class SyncopsSyncWizard(models.TransientModel):
                 ('company_id', '=', company.id),
                 ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
             ], ['id', 'email'])
-            vats = {partner['vat']: partner['id'] for partner in partners}
-            refs = {partner['ref']: partner['id'] for partner in partners}
+            vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
+            refs = {partner['ref']: partner['id'] for partner in partners if partner['ref']}
             users = {user['email']: user['id'] for user in users}
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
@@ -275,6 +276,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                 'amount': line['invoice_amount'],
                                 'description': line['invoice_name'],
                                 'date': line['invoice_date'],
+                                'due_date': line['invoice_due_date'],
                                 'ref': line['invoice_id'],
                                 'parent_id': partner.id,
                                 'company_id': company.id,
@@ -301,5 +303,6 @@ class SyncopsSyncWizardLine(models.TransientModel):
     invoice_id = fields.Char(readonly=True)
     invoice_name = fields.Char(readonly=True)
     invoice_date = fields.Date(readonly=True)
+    invoice_due_date = fields.Date(readonly=True)
     invoice_amount = fields.Monetary(readonly=True, currency_field='invoice_currency')
     invoice_currency = fields.Many2one('res.currency', readonly=True)

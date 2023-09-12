@@ -357,7 +357,11 @@ class SyncopsConnectorLineDefault(models.Model):
         if self.type == 'const':
             return self.const
         elif self.type == 'code':
-            context = {**values, 'datetime': datetime}
+            context = {
+                'env': self.env,
+                'datetime': datetime,
+                **values
+            }
             safe_eval(self.code.strip(), context, mode='exec', nocopy=True)
             return context.get('self')
         return

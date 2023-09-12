@@ -79,6 +79,7 @@
             <field name="invoice_id" invisible="1"/>
             <field name="invoice_name" string="Document"/>
             <field name="invoice_date" string="Date"/>
+            <field name="invoice_due_date" string="Due Date"/>
         </xpath>
         <xpath expr="//tree/field[@name='name']" position="after">
             <field name="invoice_amount" string="Amount"/>
