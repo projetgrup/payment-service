@@ -26,8 +26,14 @@ class PayloxSystemVendorController(Controller):
                     payment.paid_amount = payment.amount
         return res
 
-    #def _prepare_system(self, company, system, partner, transaction):
-    #    res = super()._prepare_system(company, system, partner, transaction)
-    #    if system == 'vendor':
-    #        pass
-    #    return res
+    def _prepare_system(self, company, system, partner, transaction):
+        res = super()._prepare_system(company, system, partner, transaction)
+        if system == 'vendor':
+            wizard = request.env['syncops.sync.wizard'].create({
+                'type': 'item',
+                'system': 'vendor',
+                'type_item_subtype': company.syncops_sync_item_subtype,
+            })
+            wizard.with_context(partner=partner).confirm()
+            wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
+        return res
