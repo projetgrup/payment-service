@@ -29,7 +29,7 @@ class PayloxSystemVendorController(Controller):
     def _prepare_system(self, company, system, partner, transaction):
         res = super()._prepare_system(company, system, partner, transaction)
         if system == 'vendor':
-            wizard = request.env['syncops.sync.wizard'].create({
+            wizard = request.env['syncops.sync.wizard'].sudo().create({
                 'type': 'item',
                 'system': 'vendor',
                 'type_item_subtype': company.syncops_sync_item_subtype,
