@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 21:19+0000\n"
-"PO-Revision-Date: 2023-09-13 00:21+0300\n"
+"POT-Creation-Date: 2023-09-13 09:14+0000\n"
+"PO-Revision-Date: 2023-09-13 12:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -258,6 +258,11 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_sync_wizard_line__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
+
+#. module: connector_syncops
+#: model:ir.model.fields,field_description:connector_syncops.field_syncops_log__duration
+msgid "Duration"
+msgstr "Süre"
 
 #. module: connector_syncops
 #: model:ir.model.fields,field_description:connector_syncops.field_syncops_log_wizard__date_end
