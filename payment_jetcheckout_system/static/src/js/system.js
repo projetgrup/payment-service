@@ -173,9 +173,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             const $ids = $('td input[field="payment.item"]:checked');
             const ids = $ids.map(function() { return $(this).data('id'); }).get();
             rpc.query({
-                model: 'payment.item',
-                method: 'get_due',
-                args: [ids],
+                route: '/p/due',
+                params: { ids }
             }).then(function (result) {
                 self.payment.due.date.html = result.date;
                 self.payment.due.days.html = result.days;

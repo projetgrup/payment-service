@@ -140,6 +140,11 @@ class PayloxSystemController(Controller):
     def page_system_contact_page(self):
         return request.website.payment_contact_page
 
+    @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
+    def page_system_due(self, ids):
+        items = request.env['payment.item'].sudo().browse(ids)
+        return items.get_due()
+
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
         if not kwargs.get('values', {}).get('no_redirect'):
