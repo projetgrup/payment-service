@@ -8,7 +8,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="payments" t-value="partner.payable_ids"/>
+            <t t-set="payments" t-value="partner.payable_ids.sorted('date')"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
             <t t-set="due" t-value="payments.get_due()"/>
             <t t-set="due_amount" t-value="due['amount']"/>
@@ -82,7 +82,7 @@
                         <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
                             <table class="table table-sm sidebar-table mb-0 text-700">
                                 <thead>
-                                    <tr class="shadow-sm font-weight-bold">
+                                    <tr class="shadow-sm font-weight-bold bg-white">
                                         <th class="px-2">Date</th>
                                         <th class="px-2">Due Date</th>
                                         <th class="px-2">Description</th>
