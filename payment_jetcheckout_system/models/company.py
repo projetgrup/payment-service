@@ -30,6 +30,9 @@ class Company(models.Model):
         ('date_due', 'Due Date'),
         ('date_document', 'Document Date'),
     ], string='Payment Page Due Base Date', default='date_due')
+    payment_page_due_hide_payment_ok = fields.Boolean(string='Payment Page Due Hide Payment Form')
+    payment_page_due_hide_payment_message = fields.Text(string='Payment Page Due Hide Payment Message', translate=True)
+
     payment_page_flow = fields.Selection([
         ('static', 'Static'),
         ('dynamic', 'Dynamic'),

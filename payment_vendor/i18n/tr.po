@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-04 13:11+0000\n"
-"PO-Revision-Date: 2023-09-04 16:15+0300\n"
+"POT-Creation-Date: 2023-09-13 16:32+0000\n"
+"PO-Revision-Date: 2023-09-13 19:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -54,7 +54,7 @@ msgstr ""
 "    İncelemek ve Online Ödeme için <a t-att-href=\"object."
 "_get_payment_url()\" style=\"color:#3079ed;\">tıklayınız.</a>\n"
 "    <br/><br/>\n"
-"    Sağlıklı bir yıl dileriz.\n"
+"    İyi günler dileriz.\n"
 "    <br/><br/>\n"
 "    Saygılarımızla...\n"
 "    <br/><br/>\n"
@@ -877,6 +877,11 @@ msgstr "Bayi Tahsilat Sistemi"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Vendors"
 msgstr "Bayiler"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "Warning"
+msgstr "Uyarı"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_websites

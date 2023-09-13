@@ -114,6 +114,8 @@ class PaymentItem(models.Model):
         days = 0
         date = False
         campaign = ''
+        hide_payment = False
+        hide_payment_message = ''
 
         company = self.env.company
         lang = get_lang(self.env)
@@ -134,10 +136,15 @@ class PaymentItem(models.Model):
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
             days, campaign = company.payment_page_due_ids.get_campaign(days)
+            if days == False:
+                hide_payment = True
+                hide_payment_message = company.payment_page_due_hide_payment_message
 
         return {
             'amount': amount,
             'days': days,
             'date': date,
             'campaign': campaign,
+            'hide_payment': hide_payment,
+            'hide_payment_message': hide_payment_message,
         }
