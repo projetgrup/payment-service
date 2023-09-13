@@ -104,6 +104,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickLink]],
             }),
             pivot: new fields.element(),
+            priority: new fields.element(),
             due: {
                 date: new fields.element(),
                 days: new fields.element(),
@@ -120,9 +121,34 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._start.apply(self);
             if (self.payment.item.exist) {
                 self._onChangePaid();
+                self.payment.priority = self.payment.priority.exist;
+                self._applyPriority();
                 self.ready = true;
+                console.log(self.payment.item);
             }
         });
+    },
+
+    _applyPriority: function () {
+        if (this.payment.priority) {
+            const items = this.payment.item.$;
+            items.parent().addClass('disabled');
+
+            const checks = items.filter(function() {
+                const $this = $(this);
+                return $this.hasClass('input-switch') && $this.is(':checked');
+            });
+            const last = checks.last();
+
+            const unchecks = items.filter(function() {
+                const $this = $(this);
+                return $this.hasClass('input-switch') && !$this.is(':checked');
+            });
+            const first = unchecks.first();
+
+            $('input[type="checkbox"][data-id="' + last.data('id') + '"].payment-items').parent().removeClass('disabled');
+            $('input[type="checkbox"][data-id="' + first.data('id') + '"].payment-items').parent().removeClass('disabled');
+        }
     },
 
     _onChangePaidAll: function (ev) {
@@ -194,6 +220,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             });
         }
 
+        this._applyPriority();
+ 
         let amount = 0;
         $items.each(function() { amount += parseFloat($(this).data('amount'))});
 
