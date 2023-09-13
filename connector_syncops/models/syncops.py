@@ -389,6 +389,7 @@ class SyncopsLog(models.TransientModel):
     state = fields.Selection([('error', 'Error'), ('success', 'Success')], string='State', readonly=True, copy=False)
     status = fields.Boolean(string='Success', readonly=True, copy=False)
     message = fields.Text(string='Message', readonly=True, copy=False)
+    duration = fields.Float(string='Duration', digits=(16, 2), readonly=True, copy=False)
     request_method = fields.Selection([
         ('post', 'POST'),
         ('get', 'GET'),
