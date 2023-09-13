@@ -84,7 +84,8 @@ class Partner(models.Model):
 
     @api.constrains('vat', 'email')
     def _check_student_vals(self):
-        if self.env.user.has_group('payment_student.group_student_user') and not self.env.context.get('skip_student_vat_check'):
+        system = self.env.context.get('active_system') or self.env.context.get('system')
+        if system == 'student' and self.env.user.has_group('payment_student.group_student_user') and not self.env.context.get('skip_student_vat_check'):
             for line in self:
                 if line.vat and not line.is_company:
                     student = self.search([('id','!=',line.id),('vat','=',line.vat),('company_id','=',line.company_id.id)], limit=1)
