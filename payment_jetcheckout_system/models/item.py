@@ -120,15 +120,20 @@ class PaymentItem(models.Model):
         if company.payment_page_due_ok:
             base = company.payment_page_due_base
             for item in self:
-                date = item.date if base == 'date_document' else item.due_date
+                if base == 'date_document':
+                    date = item.date
+                    sign = -1
+                else:
+                    date = item.due_date
+                    sign = 1
                 if not date:
                     date = today
                 diff = date - today
-                amount += item.residual_amount * diff.days
+                amount += item.residual_amount * diff.days * sign
 
-            days = round(amount/total, 1) if total else 0
+            days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
-            campaign = company.payment_page_due_ids.get_campaign(days)
+            days, campaign = company.payment_page_due_ids.get_campaign(days)
 
         return {
             'amount': amount,
