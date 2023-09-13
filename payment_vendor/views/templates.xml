@@ -18,6 +18,7 @@
             <t t-set="due_hide_payment" t-value="due['hide_payment']"/>
             <t t-set="due_hide_payment_message" t-value="due['hide_payment_message']"/>
             <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
+            <t t-set="prioritize" t-value="company.payment_page_item_priority and request.env.user.payment_page_item_priority if user else company.payment_page_item_priority"/>
             <div class="header row mx-0 card border p-2 px-lg-2">
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
@@ -55,83 +56,83 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="payments" class="row bg-white mx-0 px-3 w-100">
-                        <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
-                            <t t-foreach="payments" t-as="payment">
-                                <div class="card shadow-sm w-100 text-700 position-relative">
-                                    <div class="p-2 text-center"><span t-field="payment.date"/><span class="text-500">Date</span></div>
-                                    <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
-                                    <div class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
-                                    <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
-                                    <div class="p-2 text-center bg-200 border-top">
-                                        <span t-if="payment.description" t-field="payment.description"/>
-                                        <span t-else="" class="text-500">Description</span>
-                                        <div class="payment-kanban-pdf position-absolute">
-                                            <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
-                                                <button type="submit" class="btn btn-danger px-2 py-0 fa fa-file-pdf-o"/>
-                                            </form>
+                    <t t-if="payments">
+                        <div class="row bg-white mx-0 px-3 w-100">
+                            <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
+                                <t t-foreach="payments" t-as="payment">
+                                    <div class="card shadow-sm w-100 text-700 position-relative">
+                                        <div class="p-2 text-center"><span t-field="payment.date"/><span class="text-500">Date</span></div>
+                                        <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
+                                        <div class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
+                                        <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
+                                        <div class="p-2 text-center bg-200 border-top">
+                                            <span t-if="payment.description" t-field="payment.description"/>
+                                            <span t-else="" class="text-500">Description</span>
+                                            <div class="payment-kanban-pdf position-absolute">
+                                                <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                    <button type="submit" class="btn btn-danger px-2 py-0 fa fa-file-pdf-o"/>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="payment-kanban-checkbox position-absolute">
+                                            <label t-attf-class="checkmark #{'disabled' if prioritize else ''}">
+                                                <input type="checkbox" class="payment-items input-checkmark" t-att-data-id="payment.id" data-amount="0" checked="checked" field="payment.item"/>
+                                                <span><i class="fa fa-check"/></span>
+                                            </label>
                                         </div>
                                     </div>
-                                    <div class="payment-kanban-checkbox position-absolute">
-                                        <label>
-                                            <input type="checkbox" class="payment-items" t-att-data-id="payment.id" data-amount="0" checked="checked" field="payment.item"/>
-                                            <span><i class="fa fa-check"/></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                        <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
-                            <table class="table table-sm sidebar-table mb-0 text-700">
-                                <thead>
-                                    <tr class="shadow-sm font-weight-bold bg-white">
-                                        <th class="px-2">Date</th>
-                                        <th class="px-2">Due Date</th>
-                                        <th class="px-2">Description</th>
-                                        <th class="text-right px-2">Amount</th>
-                                        <th class="text-right px-2">Residual</th>
-                                        <th class="text-center px-2">Document</th>
-                                        <th/>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="payments" t-as="payment">
+                                </t>
+                            </div>
+                            <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
+                                <table class="table table-sm sidebar-table mb-0 text-700">
+                                    <thead>
+                                        <tr class="shadow-sm font-weight-bold bg-white">
+                                            <th class="px-2">Date</th>
+                                            <th class="px-2">Due Date</th>
+                                            <th class="px-2">Description</th>
+                                            <th class="text-right px-2">Amount</th>
+                                            <th class="text-right px-2">Residual</th>
+                                            <th class="text-center px-2">Document</th>
+                                            <th/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="payments" t-as="payment">
+                                            <tr>
+                                                <td class="px-2"><span t-field="payment.date"/></td>
+                                                <td class="px-2"><span t-field="payment.due_date"/></td>
+                                                <td class="px-2"><span t-field="payment.description"/></td>
+                                                <td class="text-right px-2"><span t-field="payment.amount"/></td>
+                                                <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
+                                                <td class="text-center">
+                                                    <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                        <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
+                                                    </form>
+                                                </td>
+                                                <td class="text-center">
+                                                    <label t-attf-class="switch mb-0 #{'disabled' if prioritize else ''}">
+                                                        <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.amount" checked="checked" field="payment.item"/>
+                                                        <span class="slider round fa"/>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot class="shadow bg-light">
                                         <tr>
-                                            <td class="px-2"><span t-field="payment.date"/></td>
-                                            <td class="px-2"><span t-field="payment.due_date"/></td>
-                                            <td class="px-2"><span t-field="payment.description"/></td>
-                                            <td class="text-right px-2"><span t-field="payment.amount"/></td>
-                                            <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
-                                            <td class="text-center">
-                                                <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
-                                                    <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
-                                                </form>
-                                            </td>
+                                            <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
+                                            <td class="text-right" colspan="4"><em>Select All</em></td>
                                             <td class="text-center">
                                                 <label class="switch mb-0">
-                                                    <input type="checkbox" class="payment-items" t-att-data-id="payment.id" t-att-data-amount="payment.amount" checked="checked" field="payment.item"/>
+                                                    <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
                                                     <span class="slider round fa"/>
                                                 </label>
                                             </td>
                                         </tr>
-                                    </t>
-                                </tbody>
-                                <tfoot class="shadow bg-light">
-                                    <tr>
-                                        <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
-                                        <td class="text-right" colspan="4"><em>Select All</em></td>
-                                        <td class="text-center">
-                                            <label class="switch mb-0">
-                                                <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
-                                                <span class="slider round fa"/>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <t t-if="payments">
                         <div t-attf-class="justify-content-center mx-0 w-100 #{'d-none' if due_hide_payment else ''}" t-att-field="'payment.due.payment' if company.payment_page_due_hide_payment_ok else None">
                             <t t-call="payment_jetcheckout.s2s">
                                 <t t-set="amount" t-value="amount or 0"/>
@@ -145,6 +146,7 @@
                                 <strong class="h4"><i class="fa fa-warning mr-2" t-translation="off"/>Warning</strong><br/><p t-esc="due_hide_payment_message"/>
                             </div>
                         </div>
+                        <input t-if="prioritize" type="hidden" field="payment.priority"/>
                     </t>
                     <t t-else="">
                         <div class="row justify-content-center flex-column">

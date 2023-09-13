@@ -420,6 +420,16 @@
         position: absolute;
         z-index: 1;
     }
+
+    label.switch.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    label.checkmark.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
     
 }
 
