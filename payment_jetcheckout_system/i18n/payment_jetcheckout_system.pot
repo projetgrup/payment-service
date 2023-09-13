@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 21:10+0000\n"
-"PO-Revision-Date: 2023-09-12 21:10+0000\n"
+"POT-Creation-Date: 2023-09-13 16:32+0000\n"
+"PO-Revision-Date: 2023-09-13 16:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -766,6 +766,11 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_mail_thread
+msgid "Email Thread"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
@@ -901,6 +906,11 @@ msgid "Hide Dashboard Payment Button"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Hide Payment Form"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__hours
 msgid "Hour"
 msgstr ""
@@ -939,6 +949,11 @@ msgstr ""
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_has_error
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_transaction__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "If due date is out of the list, hide payment form"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1217,6 +1232,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__message
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Message"
 msgstr ""
 
@@ -1584,6 +1600,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_base
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_base
 msgid "Payment Page Due Base Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_hide_payment_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_hide_payment_ok
+msgid "Payment Page Due Hide Payment Form"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_hide_payment_message
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_hide_payment_message
+msgid "Payment Page Due Hide Payment Message"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2278,6 +2306,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #, python-format
 msgid "This feature is going to be implemented soon"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "This message will be displayed instead of payment form..."
 msgstr ""
 
 #. module: payment_jetcheckout_system

@@ -11,7 +11,7 @@
 <p>
     <strong>Dear <i t-out="object.name"/></strong>,
     <br/><br/>
-    If you want to view and pay online, <a t-att-href="object._get_payment_url()" style="color:#3079ed;">click here.</a>
+    If you want to view and pay online, <a t-att-href="object._get_payment_url()" style="color:#3079ed;font-weight:bold;">click here.</a>
     <br/><br/>
     Have a nice day.
     <br/><br/>
