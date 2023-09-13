@@ -189,7 +189,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
                             'mobile': line['partner_mobile'] or line['partner_phone'],
-                            'user_id': user and user.id,
+                            'user_id': user and user.id or partner.user_id.id,
                         })
                     else:
                         partner = partners_all.create({
