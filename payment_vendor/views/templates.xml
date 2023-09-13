@@ -132,7 +132,7 @@
                         </div>
                     </div>
                     <t t-if="payments">
-                        <div t-attf-class="justify-content-center mx-0 w-100 #{'d-none' if due_hide_payment else ''}" field="payment.form">
+                        <div t-attf-class="justify-content-center mx-0 w-100 #{'d-none' if due_hide_payment else ''}" t-att-field="'payment.due.payment' if company.payment_page_due_hide_payment_ok else None">
                             <t t-call="payment_jetcheckout.s2s">
                                 <t t-set="amount" t-value="amount or 0"/>
                                 <t t-set="no_border" t-value="True"/>
@@ -140,7 +140,7 @@
                                 <t t-if="due_campaign" t-set="campaign" t-value="due_campaign"/>
                             </t>
                         </div>
-                        <div t-attf-class="row justify-content-center flex-column m-3 #{'d-none' if not due_hide_payment else ''}" field="payment.due.hidepayment">
+                        <div t-if="company.payment_page_due_hide_payment_ok" t-attf-class="row justify-content-center flex-column m-3 #{'d-none' if not due_hide_payment else ''}" field="payment.due.warning">
                             <div class="bg-100 border card overflow-auto p-4 shadow table-responsive text-600 text-center">
                                 <strong class="h4"><i class="fa fa-warning mr-2" t-translation="off"/>Warning</strong><br/><p t-esc="due_hide_payment_message"/>
                             </div>
