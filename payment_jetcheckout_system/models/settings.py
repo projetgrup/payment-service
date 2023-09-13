@@ -40,13 +40,13 @@ class PaymentSettings(models.TransientModel):
         return self.refresh()
 
     def refresh(self):
-        actions = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
+        actions = self.env['ir.actions.act_window'].sudo().search([('res_model', '=', self._name)], limit=1)
         if actions:
             return actions.read()[0]
         return {}
 
     def name_get(self):
-        action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
+        action = self.env['ir.actions.act_window'].sudo().search([('res_model', '=', self._name)], limit=1)
         name = action.name or self._name
         return [(record.id, name) for record in self]
 
@@ -99,9 +99,12 @@ class PaymentSettingsDue(models.Model):
     def get_campaign(self, day):
         for due in self:
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
-            if due.due - due.tolerance >= float_round(day, precision_digits=0, rounding_method=rounding_method):
-                return due.campaign_id.name or ''
-        return ''
+            days = float_round(day, precision_digits=0, rounding_method=rounding_method)
+            if due.due - due.tolerance >= days:
+                return days, due.campaign_id.name or ''
+        
+        days = float_round(day, precision_digits=0)
+        return days, ''
 
 
 class ResConfigSettings(models.TransientModel):
