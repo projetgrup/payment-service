@@ -121,6 +121,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="o_setting_left_pane" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
+                                    <field name="payment_page_due_hide_payment_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
+                                    <label for="payment_page_due_hide_payment_ok" string="Hide Payment Form"/>
+                                    <div class="text-muted">
+                                        If due date is out of the list, hide payment form
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': ['|', ('payment_page_due_hide_payment_ok', '=', False), ('payment_page_due_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_due_hide_payment_message" string="Message" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_due_hide_payment_message" class="flex-fill" placeholder="This message will be displayed instead of payment form..."/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

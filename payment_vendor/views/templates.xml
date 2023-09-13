@@ -15,6 +15,8 @@
             <t t-set="due_days" t-value="due['days']"/>
             <t t-set="due_date" t-value="due['date']"/>
             <t t-set="due_campaign" t-value="due['campaign']"/>
+            <t t-set="due_hide_payment" t-value="due['hide_payment']"/>
+            <t t-set="due_hide_payment_message" t-value="due['hide_payment_message']"/>
             <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
             <div class="header row mx-0 card border p-2 px-lg-2">
                 <div>
@@ -129,19 +131,28 @@
                             </table>
                         </div>
                     </div>
-                    <div t-if="payments" class="justify-content-center mx-0 w-100">
-                        <t t-call="payment_jetcheckout.s2s">
-                            <t t-set="amount" t-value="amount or 0"/>
-                            <t t-set="no_border" t-value="True"/>
-                            <t t-set="partner" t-value="partner"/>
-                            <t t-if="due_campaign" t-set="campaign" t-value="due_campaign"/>
-                        </t>
-                    </div>
-                    <div t-else="" class="row justify-content-center flex-column">
-                        <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
-                            <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
+                    <t t-if="payments">
+                        <div t-attf-class="justify-content-center mx-0 w-100 #{'d-none' if due_hide_payment else ''}" field="payment.form">
+                            <t t-call="payment_jetcheckout.s2s">
+                                <t t-set="amount" t-value="amount or 0"/>
+                                <t t-set="no_border" t-value="True"/>
+                                <t t-set="partner" t-value="partner"/>
+                                <t t-if="due_campaign" t-set="campaign" t-value="due_campaign"/>
+                            </t>
                         </div>
-                    </div>
+                        <div t-attf-class="row justify-content-center flex-column m-3 #{'d-none' if not due_hide_payment else ''}" field="payment.due.hidepayment">
+                            <div class="bg-100 border card overflow-auto p-4 shadow table-responsive text-600 text-center">
+                                <strong class="h4"><i class="fa fa-warning mr-2" t-translation="off"/>Warning</strong><br/><p t-esc="due_hide_payment_message"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="row justify-content-center flex-column">
+                            <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
+                                <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
+                            </div>
+                        </div>
+                    </t>
                 </div>
                 <t t-call="payment_jetcheckout_system.payment_agreement"/>
                 <t t-call="payment_jetcheckout_system.payment_footer"/>

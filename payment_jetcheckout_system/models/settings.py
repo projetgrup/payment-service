@@ -16,6 +16,8 @@ class PaymentSettings(models.TransientModel):
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)
     payment_page_due_ids = fields.One2many(related='company_id.payment_page_due_ids', readonly=False)
     payment_page_due_base = fields.Selection(related='company_id.payment_page_due_base', readonly=False)
+    payment_page_due_hide_payment_ok = fields.Boolean(related='company_id.payment_page_due_hide_payment_ok', readonly=False)
+    payment_page_due_hide_payment_message = fields.Text(related='company_id.payment_page_due_hide_payment_message', readonly=False)
 
     notif_mail_success_ok = fields.Boolean(related='company_id.notif_mail_success_ok', readonly=False)
     notif_sms_success_ok = fields.Boolean(related='company_id.notif_sms_success_ok', readonly=False)
@@ -102,7 +104,10 @@ class PaymentSettingsDue(models.Model):
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)
             if due.due - due.tolerance >= days:
                 return int(days), due.campaign_id.name or ''
-        
+        else:
+            if self.env.company.payment_page_due_hide_payment_ok:
+                return False, False
+
         days = float_round(day, precision_digits=0)
         return int(days), ''
 
