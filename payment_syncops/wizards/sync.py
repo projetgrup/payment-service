@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SyncopsSyncWizard(models.TransientModel):
@@ -56,6 +56,8 @@ class SyncopsSyncWizard(models.TransientModel):
             lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
                 'company': self.env.company.sudo().partner_id.ref,
             })
+            if lines == None:
+                raise ValidationError(_('An error occured. Please try again.'))
             if not lines:
                 lines = []
 
@@ -77,7 +79,7 @@ class SyncopsSyncWizard(models.TransientModel):
         elif self.type == 'item':
             self.env.company.write({'syncops_sync_item_subtype': self.type_item_subtype})
             if self.type_item_subtype == 'balance':
-                params = {'company_id': self.env.company.sudo().partner_id.ref}
+                params = {'company': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
                     lines = []
@@ -187,6 +189,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
                             'mobile': line['partner_mobile'] or line['partner_phone'],
+                            'user_id': user and user.id,
                         })
                     else:
                         partner = partners_all.create({
