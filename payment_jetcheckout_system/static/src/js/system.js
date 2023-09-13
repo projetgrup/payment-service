@@ -104,11 +104,11 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickLink]],
             }),
             pivot: new fields.element(),
-            form: new fields.element(),
             due: {
                 date: new fields.element(),
                 days: new fields.element(),
-                hidepayment: new fields.element(),
+                payment: new fields.element(),
+                warning: new fields.element(),
             },
         };
     },
@@ -183,13 +183,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 self.campaign.name.value = result.campaign;
                 self.campaign.name.$.trigger('change');
                 if (result.hide_payment) {
-                    self.payment.due.hidepayment.$.removeClass('d-none');
-                    self.payment.due.hidepayment.$.find('p').text(result.hide_payment_message);
-                    self.payment.form.$.addClass('d-none');
+                    self.payment.due.warning.$.removeClass('d-none');
+                    self.payment.due.warning.$.find('p').text(result.hide_payment_message);
+                    self.payment.due.payment.$.addClass('d-none');
                 } else {
-                    self.payment.due.hidepayment.$.addClass('d-none');
-                    self.payment.due.hidepayment.$.find('p').text('');
-                    self.payment.form.$.removeClass('d-none');
+                    self.payment.due.warning.$.addClass('d-none');
+                    self.payment.due.warning.$.find('p').text('');
+                    self.payment.due.payment.$.removeClass('d-none');
                 }
             });
         }

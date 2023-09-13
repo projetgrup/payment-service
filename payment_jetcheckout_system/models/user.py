@@ -169,6 +169,8 @@ class Users(models.Model):
     group_create_partner = fields.Boolean(string='Create Partners', compute='_compute_group_create_partner', inverse='_set_group_create_partner')
     group_show_payment_link = fields.Boolean(string='Show Payment Link', compute='_compute_group_show_payment_link', inverse='_set_group_show_payment_link')
 
+    payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
+
     def _check_token(self, token):
         id, token = self.partner_id._resolve_token(token)
         if not self.partner_id.id == id or not self.partner_id.access_token == token:

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-13 16:32+0000\n"
-"PO-Revision-Date: 2023-09-13 16:32+0000\n"
+"POT-Creation-Date: 2023-09-13 18:16+0000\n"
+"PO-Revision-Date: 2023-09-13 18:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1377,6 +1377,11 @@ msgid "Only Own Partners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
+msgid "Other"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:res.groups,name:payment_jetcheckout_system.group_system_own_partner
 msgid "Own Partners Only"
 msgstr ""
@@ -1627,6 +1632,13 @@ msgid "Payment Page Flow"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_priority
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_priority
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_page_item_priority
+msgid "Payment Page Items Priority"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
@@ -1792,6 +1804,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Preview"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
+msgid "Prioritize Payment Items"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1968,6 +1986,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_token
 msgid "Security Token"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Select payment items one by one according to their dates"
 msgstr ""
 
 #. module: payment_jetcheckout_system
