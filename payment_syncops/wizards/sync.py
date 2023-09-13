@@ -134,6 +134,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
     def sync(self):
         res = super().sync()
+        self = self.sudo()
         wizard = self.browse(self.env.context.get('wizard_id', 0))
         if wizard:
             company = self.env.company
