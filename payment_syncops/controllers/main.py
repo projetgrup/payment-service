@@ -99,11 +99,6 @@ class PayloxSyncopsController(Controller):
         if result:
             for res in result:
                 currency_name = res.get('currency_name', '')
-
-                # Following two lines are for compatibility purposes
-                if currency_name == 'TRL':
-                    currency_name = 'TRY'
-
                 currency = request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', currency_name)], limit=1)
                 if not currency:
                     continue
@@ -152,11 +147,6 @@ class PayloxSyncopsController(Controller):
         currencies = {}
         for res in result:
             currency_name = res['currency_name']
-
-            # Following two lines are for compatibility purposes
-            if currency_name == 'TRL':
-                currency_name = 'TRY'
-
             currency = request.env['res.currency'].sudo().with_context(active_test=False).search([('name', '=', currency_name)], limit=1)
             if not currency:
                 continue
@@ -298,7 +288,7 @@ class PayloxSyncopsController(Controller):
             return []
 
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={
-            'company_id': request.env.company.sudo().partner_id.ref,
+            'company': request.env.company.sudo().partner_id.ref,
         })
         if not result == None:
             return result
