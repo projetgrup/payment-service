@@ -12,6 +12,7 @@ class PaymentSettings(models.TransientModel):
     required_2fa = fields.Boolean(related='company_id.required_2fa', readonly=False)
 
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
+    payment_page_item_priority = fields.Boolean(related='company_id.payment_page_item_priority', readonly=False)
     payment_page_campaign_table_ok = fields.Boolean(related='company_id.payment_page_campaign_table_ok', readonly=False)
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)
     payment_page_due_ids = fields.One2many(related='company_id.payment_page_due_ids', readonly=False)
@@ -103,13 +104,10 @@ class PaymentSettingsDue(models.Model):
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)
             if due.due - due.tolerance >= days:
-                return int(days), due.campaign_id.name or ''
-        else:
-            if self.env.company.payment_page_due_hide_payment_ok:
-                return False, False
+                return int(days), due.campaign_id.name or '', False
 
         days = float_round(day, precision_digits=0)
-        return int(days), ''
+        return int(days), '', self.env.company.payment_page_due_hide_payment_ok
 
 
 class ResConfigSettings(models.TransientModel):

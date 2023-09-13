@@ -68,12 +68,12 @@
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="payment_page_campaign_table_ok"/>
+                                    <field name="payment_page_item_priority"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
+                                    <label for="payment_page_item_priority" string="Prioritize Payment Items"/>
                                     <div class="text-muted">
-                                        Use campaign table instead of installment table on payment page
+                                        Select payment items one by one according to their dates
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +134,19 @@
                                             <label for="payment_page_due_hide_payment_message" string="Message" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_due_hide_payment_message" class="flex-fill" placeholder="This message will be displayed instead of payment form..."/>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_campaign_table_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
+                                    <div class="text-muted">
+                                        Use campaign table instead of installment table on payment page
                                     </div>
                                 </div>
                             </div>

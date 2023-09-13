@@ -135,9 +135,8 @@ class PaymentItem(models.Model):
 
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
-            days, campaign = company.payment_page_due_ids.get_campaign(days)
-            if days == False:
-                hide_payment = True
+            days, campaign, hide_payment = company.payment_page_due_ids.get_campaign(days)
+            if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
 
         return {
