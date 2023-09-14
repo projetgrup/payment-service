@@ -97,6 +97,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             items: new fields.element({
                 events: [['change', this._onChangePaidAll]],
             }),
+            itemsBtn: new fields.element({
+                events: [['click', this._onChangePaidAllBtn]],
+            }),
             tags: new fields.element({
                 events: [['click', this._onClickTag]],
             }),
@@ -151,12 +154,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         }
     },
 
+    _onChangePaidAllBtn: function (ev) {
+        const $input = $(ev.currentTarget).find('input')
+        $input.prop('checked', !$input.prop('checked'));
+        $input.trigger('change');
+    },
+
     _onChangePaidAll: function (ev) {
-        if (this.payment.items.checked) {
-            this.payment.item.checked = true;
-        } else {
-            this.payment.item.checked = false;
-        }
+        const checked = $(ev.currentTarget).is(':checked');
+        this.payment.items.checked = checked;
+        this.payment.item.checked = checked;
         this._onChangePaid();
     },
 
