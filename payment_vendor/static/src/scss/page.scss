@@ -196,6 +196,25 @@
                 border-radius: 0;
             }
         }
+ 
+        .payment-all-items-btn {
+            &:hover {
+                label {
+                    > span i {
+                        color: #6acd9c !important;
+                    }
+    
+                    input:checked ~ span {
+                        border-right-color: #cd5c5c !important;
+    
+                        i {
+                            color: #ffffff !important;
+                        }
+                    }
+                }
+            }
+        }
+
 
         @include media-breakpoint-up(md) {
             display: none;
