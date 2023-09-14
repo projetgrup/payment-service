@@ -82,6 +82,20 @@
                                         </div>
                                     </div>
                                 </t>
+                                <div class="btn d-block card shadow-sm w-100 text-700 position-relative p-0 overflow-hidden payment-all-items-btn" field="payment.itemsBtn">
+                                    <div class="p-2 text-center border-0">
+                                        <span class="text-600 font-weight-bold">Select All</span>
+                                    </div>
+                                    <div class="payment-kanban-checkbox position-absolute border-0">
+                                        <label class="checkmark">
+                                            <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
+                                            <span><i class="fa fa-check"/></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="d-block mt-2 text-600 text-center">
+                                    <em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
+                                </div>
                             </div>
                             <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
                                 <table class="table table-sm sidebar-table mb-0 text-700">
