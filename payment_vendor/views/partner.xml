@@ -135,6 +135,9 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
     <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="before">
+            <field name="ref"/>
+        </xpath>
         <xpath expr='//field[@name="vat"]' position="after">
             <field name="mobile"/>
             <field name="user_id"/>
