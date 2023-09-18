@@ -63,7 +63,7 @@
                                     <div class="card shadow-sm w-100 text-700 position-relative">
                                         <div class="p-2 text-center"><span t-field="payment.date"/><span class="text-500">Date</span></div>
                                         <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
-                                        <div class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
+                                        <div t-if="company.payment_page_due_base == 'date_due'" class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
                                         <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
                                         <div class="p-2 text-center bg-200 border-top">
                                             <span t-if="payment.description" t-field="payment.description"/>
@@ -102,7 +102,7 @@
                                     <thead>
                                         <tr class="shadow-sm font-weight-bold bg-white">
                                             <th class="px-2">Date</th>
-                                            <th class="px-2">Due Date</th>
+                                            <th t-if="company.payment_page_due_base == 'date_due'" class="px-2">Due Date</th>
                                             <th class="px-2">Description</th>
                                             <th class="text-right px-2">Amount</th>
                                             <th class="text-right px-2">Residual</th>
@@ -114,7 +114,7 @@
                                         <t t-foreach="payments" t-as="payment">
                                             <tr>
                                                 <td class="px-2"><span t-field="payment.date"/></td>
-                                                <td class="px-2"><span t-field="payment.due_date"/></td>
+                                                <td t-if="company.payment_page_due_base == 'date_due'" class="px-2"><span t-field="payment.due_date"/></td>
                                                 <td class="px-2"><span t-field="payment.description"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.amount"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
