@@ -65,7 +65,7 @@
                                         <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
                                         <div t-if="company.payment_page_due_base == 'date_due'" class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
                                         <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
-                                        <div class="p-2 text-center bg-200 border-top">
+                                        <div class="align-items-center bg-200 d-flex justify-content-center p-2 text-center">
                                             <span t-if="payment.description" t-field="payment.description"/>
                                             <span t-else="" class="text-500">Description</span>
                                             <div class="payment-kanban-pdf position-absolute">
@@ -135,7 +135,7 @@
                                     <tfoot class="shadow bg-light">
                                         <tr>
                                             <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
-                                            <td class="text-right" colspan="4"><em>Select All</em></td>
+                                            <td class="text-right" t-att-colspan="company.payment_page_due_base == 'date_due' and '4' or '3'"><em>Select All</em></td>
                                             <td class="text-center">
                                                 <label class="switch mb-0">
                                                     <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
