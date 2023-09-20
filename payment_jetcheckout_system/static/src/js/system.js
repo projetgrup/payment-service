@@ -123,11 +123,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
             if (self.payment.item.exist) {
-                self._onChangePaid();
                 self.payment.priority = self.payment.priority.exist;
-                self._applyPriority();
+                self._onChangePaid();
                 self.ready = true;
-                console.log(self.payment.item);
             }
         });
     },
