@@ -161,6 +161,14 @@ class Users(models.Model):
             group = self.env.ref('payment_jetcheckout_system.group_show_payment_link')
             group.sudo().write({'users': [(code, user.id)]})
 
+    def _compute_payment_page_item_priority(self):
+        for user in self:
+            user.payment_page_item_priority_selection = user.payment_page_item_priority and 'ok' or 'no'
+
+    def _set_payment_page_item_priority(self):
+        for user in self:
+            user.payment_page_item_priority = user.payment_page_item_priority_selection == 'ok'
+
     privilege = fields.Selection([('user','User'),('admin','Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
     group_transaction_commission = fields.Boolean(string='Transaction Commissions', compute='_compute_group_transaction_commission', inverse='_set_group_transaction_commission')
     group_transaction_cancel = fields.Boolean(string='Transaction Cancel', compute='_compute_group_transaction_cancel', inverse='_set_group_transaction_cancel')
@@ -170,6 +178,10 @@ class Users(models.Model):
     group_show_payment_link = fields.Boolean(string='Show Payment Link', compute='_compute_group_show_payment_link', inverse='_set_group_show_payment_link')
 
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
+    payment_page_item_priority_selection = fields.Selection([
+        ('no', 'All items can be selected'),
+        ('ok', 'Items can be selected respectively'),
+    ], string='Payment Page Items Priority Selection', compute='_compute_payment_page_item_priority', inverse='_set_payment_page_item_priority')
 
     def _check_token(self, token):
         id, token = self.partner_id._resolve_token(token)
