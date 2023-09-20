@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-13 18:16+0000\n"
-"PO-Revision-Date: 2023-09-13 18:16+0000\n"
+"POT-Creation-Date: 2023-09-20 20:45+0000\n"
+"PO-Revision-Date: 2023-09-20 20:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -280,6 +280,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "All Times"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__payment_page_item_priority_selection__no
+msgid "All items can be selected"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1037,6 +1042,11 @@ msgid "Items To Pay"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__payment_page_item_priority_selection__ok
+msgid "Items can be selected respectively"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "January"
@@ -1636,6 +1646,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_priority
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_page_item_priority
 msgid "Payment Page Items Priority"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_page_item_priority_selection
+msgid "Payment Page Items Priority Selection"
 msgstr ""
 
 #. module: payment_jetcheckout_system

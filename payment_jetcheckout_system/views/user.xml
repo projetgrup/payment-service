@@ -108,7 +108,8 @@
                         <field name="group_transaction_refund"/>
                     </group>
                     <group string="Other" name="other">
-                        <field name="payment_page_item_priority" string="Prioritize Payment Items"/>
+                        <field name="payment_page_item_priority" invisible="1"/>
+                        <field name="payment_page_item_priority_selection" string="Prioritize Payment Items" widget="radio"/>
                     </group>
                 </group>
             </sheet>
