@@ -188,8 +188,8 @@ class PayloxSyncopsController(Controller):
 
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
-        if self._get('syncops'):
-            partner = self._get('syncops')
+        partner = self._get('syncops')
+        if partner and request.httprequest.path == '/my/payment':
             vals.update({
                 'jetcheckout_connector_partner_name': partner['name'],
                 'jetcheckout_connector_partner_vat': partner['vat'],

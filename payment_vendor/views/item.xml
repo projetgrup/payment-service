@@ -27,6 +27,12 @@
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="string">Vendor</attribute>
         </xpath>
+        <xpath expr='//filter[@name="groupby_child"]' position="attributes">
+            <attribute name="string">Authorized</attribute>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
     </field>
     </record>
 </odoo>

@@ -245,14 +245,13 @@ class SyncopsSyncWizard(models.TransientModel):
                     domain = [
                         ('company_id', '=', company.id),
                         ('system', '=', wizard.system),
-                        ('paid', '=', False),
                         ('ref', '!=', False),
                     ]
                     partner_ctx = self.env.context.get('partner')
                     if partner_ctx:
                         domain.append(('parent_id', '=', partner_ctx.id))
 
-                    items_all.search(domain + [('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
+                    items_all.search(domain + [('paid', '=', False), ('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
                     items = items_all.search_read(domain, ['id', 'ref'])
 
                     items = {item['ref']: item['id'] for item in items}
@@ -260,7 +259,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         pid = vats.get(line['partner_vat']) or refs.get(line['partner_ref'])
                         key = line['invoice_id'] if pid else None
                         if pid and key in items:
-                            items_all.browse(items[key]).write({'amount': line['invoice_amount']})
+                            items_all.search([('id', '=', items[key]), ('paid', '=', False)]).write({'amount': line['invoice_amount']})
                         else:
                             if pid:
                                 partner = partners_all.browse(pid)
