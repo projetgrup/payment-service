@@ -57,6 +57,7 @@ payloxPage.include({
 
 publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',
+    jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
     xmlDependencies: ['/payment_jetcheckout_system/static/src/xml/system.xml'],
 
     init: function (parent, options) {
@@ -71,8 +72,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             position: 'after',
             symbol: '', 
         },
-        this.amount = new fields.float({
-            default: 0,
+        this.amount = new fields.string({
+            default: '0',
         });
         this.vat = new fields.string();
         this.campaign = {
@@ -284,8 +285,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     _onClickLink: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        const amount = IMask.pipe(
+            this.amount.value,
+            payloxPage.prototype._maskAmount.apply(this),
+            IMask.PIPE_TYPE.MASKED,
+            IMask.PIPE_TYPE.TYPED
+        ); 
         const params = [
-            ['amount', this.amount.value],
+            ['amount', amount],
             ['currency', this.currency.name],
             ['vat', this.vat.value],
         ];

@@ -194,13 +194,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             mask: Number,
             min: 0,
             signed: false,
-            padFractionalZeros: true,
             normalizeZeros: true,
+            padFractionalZeros: true,
             scale: this.currency.decimal,
-            thousandsSeparator: this.currency.thousand,
             radix: this.currency.separator,
-            scale: this.currency.decimal,
             mapToRadix: [this.currency.thousand],
+            thousandsSeparator: this.currency.thousand,
         }
     },
 
