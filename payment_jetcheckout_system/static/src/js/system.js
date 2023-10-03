@@ -62,7 +62,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
-        this.ready = false;
         this.currency = {
             id: 0,
             decimal: 2,
@@ -126,7 +125,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             if (self.payment.item.exist) {
                 self.payment.priority = self.payment.priority.exist;
                 self._onChangePaid();
-                self.ready = true;
             }
         });
     },
@@ -202,7 +200,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const $items = $('input[type="checkbox"].payment-items:checked');
         this.payment.items.checked = !!$items.length;
 
-        if (this.ready && this.payment.due.days.exist) {
+        if (this.payment.due.days.exist) {
             const self = this;
             const $ids = $('td input[field="payment.item"]:checked');
             const ids = $ids.map(function() { return $(this).data('id'); }).get();
