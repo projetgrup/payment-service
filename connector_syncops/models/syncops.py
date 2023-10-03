@@ -44,7 +44,8 @@ class SyncopsConnector(models.Model):
 
     @api.model
     def _defaults(self, connector, method, io, values):
-        names = getattr(connector.line_ids, '%s_ids' % io).mapped('input')
+        lines = connector.line_ids.filtered(lambda x: x.code == method)
+        names = getattr(lines, '%s_ids' % io).mapped('input')
         defaults = self.env['syncops.connector.line.default'].sudo().search([
             ('connector_id', '=', connector.id),
             ('name', 'in', names),
@@ -377,7 +378,7 @@ class SyncopsConnectorLineDefault(models.Model):
 class SyncopsLog(models.TransientModel):
     _name = 'syncops.log'
     _description = 'syncOPS Logs'
-    _order = 'id DESC'
+    _order = 'date DESC'
 
     connector_id = fields.Many2one('syncops.connector', readonly=True, copy=False, index=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', readonly=True, copy=False, ondelete='cascade')

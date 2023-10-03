@@ -59,4 +59,5 @@ class PaymentPayloxSignin(models.TransientModel):
         })
 
         self.acquirer_id.write(vals)
+        self.env.cr.commit()
         return self.acquirer_id.action_paylox_application()

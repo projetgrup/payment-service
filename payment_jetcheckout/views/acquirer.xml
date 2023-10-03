@@ -5,13 +5,13 @@
     <field name="inherit_id" ref="payment.payment_acquirer_form"/>
     <field name="arch" type="xml">
         <xpath expr='//group[@name="acquirer"]' position="after">
-            <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_api_key','!=',False)]}">
+            <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_username','!=',False)]}">
                 <div class="justify-content-center row">
                     <button name="action_paylox_signin" type="object" class="btn-primary mx-2 my-2" string="Sign in with an account"/>
                     <button name="action_paylox_signup" type="object" class="btn-primary mx-2 my-2" string="Create a new account"/>
                 </div>
             </group>
-            <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_api_key','=',False)]}">
+            <group attrs="{'invisible': ['|',('provider', '!=', 'jetcheckout'),('jetcheckout_username','=',False)]}">
                 <group string="Credentials">
                     <p class="text-center">
                         <span attrs="{'invisible': [('jetcheckout_username','=',False)]}">You are signed as <strong><field name="jetcheckout_username"/></strong></span>
@@ -21,7 +21,7 @@
                     </p>
                 </group>
                 <group string="Applications" attrs="{'invisible': [('jetcheckout_api_key','!=',False)]}">
-                    <p class="text-center">
+                    <p class="text-center" colspan="2">
                         No application is selected
                         <br/>
                         <button name="action_paylox_application" type="object" class="btn-secondary my-2" string="Applications" icon="fa-list-ol"/>
