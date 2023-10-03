@@ -49,10 +49,20 @@
                             <div class="border card info-card p-4 h-100 justify-content-end">
                                 <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
                                 <strong class="text-primary font-weight-bold z-index-1 flex-fill">Payment</strong>
-                                <strong class="text-primary font-weight-bold text-right z-index-1">Amount</strong>
-                                <p class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
-                                    <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                </p>
+                                <strong class="text-primary font-weight-bold text-right z-index-1 mt-3">Amount</strong>
+                                <div class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
+                                    <t t-if="company.payment_page_amount_editable">
+                                        <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+                                        <div>
+                                            <span t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                            <input type="text" name="amount" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), currency.round(amount), grouping=True, monetary=True)" field="payment.amount"/>
+                                            <span t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </t>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -76,7 +86,7 @@
                                         </div>
                                         <div class="payment-kanban-checkbox position-absolute">
                                             <label t-attf-class="checkmark #{'disabled' if prioritize else ''}">
-                                                <input type="checkbox" class="payment-items input-checkmark" t-att-data-id="payment.id" data-amount="0" checked="checked" field="payment.item"/>
+                                                <input type="checkbox" class="payment-items input-checkmark" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-paid="payment.residual_amount" checked="checked" field="payment.item"/>
                                                 <span><i class="fa fa-check"/></span>
                                             </label>
                                         </div>
@@ -106,6 +116,7 @@
                                             <th class="px-2">Description</th>
                                             <th class="text-right px-2">Amount</th>
                                             <th class="text-right px-2">Residual</th>
+                                            <th class="text-right px-2">Paid</th>
                                             <th class="text-center px-2">Document</th>
                                             <th/>
                                         </tr>
@@ -118,6 +129,7 @@
                                                 <td class="px-2"><span t-field="payment.description"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.amount"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
+                                                <td class="text-right px-2"><span t-field="payment.residual_amount" class="payment-amount-paid"/></td>
                                                 <td class="text-center">
                                                     <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
                                                         <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
@@ -125,7 +137,7 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <label t-attf-class="switch mb-0 #{'disabled' if prioritize else ''}">
-                                                        <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" checked="checked" field="payment.item"/>
+                                                        <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-paid="payment.residual_amount" checked="checked" field="payment.item"/>
                                                         <span class="slider round fa"/>
                                                     </label>
                                                 </td>
@@ -135,7 +147,7 @@
                                     <tfoot class="shadow bg-light">
                                         <tr>
                                             <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
-                                            <td class="text-right" t-att-colspan="company.payment_page_due_base == 'date_due' and '4' or '3'"><em>Select All</em></td>
+                                            <td class="text-right" t-att-colspan="company.payment_page_due_base == 'date_due' and '5' or '4'"><em>Select All</em></td>
                                             <td class="text-center">
                                                 <label class="switch mb-0">
                                                     <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>

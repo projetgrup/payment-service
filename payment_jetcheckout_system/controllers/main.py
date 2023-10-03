@@ -141,9 +141,11 @@ class PayloxSystemController(Controller):
         return request.website.payment_contact_page
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
-    def page_system_due(self, ids):
+    def page_system_due(self, items):
+        ids = [i[0] for i in items]
+        amounts = dict(items)
         items = request.env['payment.item'].sudo().browse(ids)
-        return items.get_due()
+        return items.with_context(amounts=amounts).get_due()
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):

@@ -34,6 +34,7 @@ class Company(models.Model):
     payment_page_due_hide_payment_message = fields.Text(string='Payment Page Due Hide Payment Message', translate=True)
 
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
+    payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')
     payment_page_flow = fields.Selection([
         ('static', 'Static'),
         ('dynamic', 'Dynamic'),

@@ -26,11 +26,37 @@ class PaymentItem(models.Model):
     def _onchange_parent_id(self):
         self.child_id = self.parent_id.child_ids and self.parent_id.child_ids[0].id if self.parent_id else False
 
-    @api.depends('amount', 'paid_amount', 'paid')
-    def _compute_residual(self):
+    @api.depends('residual_amount')
+    def _compute_paid(self):
         for item in self:
-            paid = item.paid_amount if item.paid else 0
-            residual = item.amount - paid
+            if item.residual_amount:
+                item.paid = False
+                item.paid_date = False
+                item.installment_count = False
+            else:
+                item.paid = True
+                transactions = item.transaction_ids.filtered(lambda x: x.state == 'done')
+                if transactions:
+                    transaction = transactions[0]
+                    item.paid_date = transaction.last_state_change
+                    item.installment_count = transaction.jetcheckout_installment_count
+                else:
+                    item.paid_date = False
+                    item.installment_count = False
+
+    @api.depends('transaction_ids.state')
+    def _compute_paid_amount(self):
+        for item in self:
+            items = self.env['payment.transaction.item'].sudo().search([
+                ('item_id', '=', item.id),
+                ('transaction_id.state', '=', 'done'),
+            ])
+            item.paid_amount = sum(items.mapped('amount'))
+
+    @api.depends('amount', 'paid_amount')
+    def _compute_residual_amount(self):
+        for item in self:
+            residual = item.amount - item.paid_amount
             item.residual_amount = residual if residual > 0 else 0
 
     @api.depends('amount', 'date', 'due_date')
@@ -45,21 +71,25 @@ class PaymentItem(models.Model):
     name = fields.Char(compute='_compute_name')
     child_id = fields.Many2one('res.partner', ondelete='restrict')
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
+    vat = fields.Char(related='parent_id.vat', string='VAT', store=True)
+    campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
+
     amount = fields.Monetary()
     date = fields.Date()
     due_date = fields.Date()
     due_amount = fields.Float(compute='_compute_due_amount')
+
     file = fields.Binary()
-    paid = fields.Boolean()
     ref = fields.Char()
     description = fields.Char()
+
+    paid = fields.Boolean(compute='_compute_paid', store=True, readonly=True)
+    paid_amount = fields.Monetary(compute='_compute_paid_amount', store=True, readonly=True)
+    residual_amount = fields.Monetary(compute='_compute_residual_amount', store=True, readonly=True)
+    installment_count = fields.Integer(compute='_compute_paid', store=True, readonly=True)
+    paid_date = fields.Datetime(compute='_compute_paid', store=True, readonly=True)
     is_admin = fields.Boolean(compute='_compute_is_admin')
-    paid_amount = fields.Monetary(readonly=True)
-    residual_amount = fields.Monetary(compute='_compute_residual', store=True, readonly=True)
-    installment_count = fields.Integer(readonly=True)
-    paid_date = fields.Datetime(readonly=True)
-    vat = fields.Char(related='parent_id.vat', string='VAT', store=True)
-    campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
+
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
     system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, readonly=True)
@@ -97,8 +127,6 @@ class PaymentItem(models.Model):
         return res
 
     def write(self, values):
-        if 'paid' in values and not values['paid']:
-            values['paid_amount'] = 0
         res = super().write(values)
         for item in self:
             if not item.system:
@@ -110,8 +138,12 @@ class PaymentItem(models.Model):
     def get_due(self):
         self = self.filtered(lambda x: not x.paid)
 
+        amounts = self.env.context.get('amounts', {})
+        total = 0
+        for item in self:
+            total += amounts.get(item.id, item.residual_amount)
+
         today = fields.Date.today()
-        total = sum(self.mapped('residual_amount'))
         amount = 0
         days = 0
         date = False
@@ -129,7 +161,8 @@ class PaymentItem(models.Model):
                 if not date:
                     date = today
                 diff = date - today
-                amount += item.residual_amount * diff.days
+                residual = amounts.get(item.id, item.residual_amount)
+                amount += residual * diff.days
 
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
