@@ -125,7 +125,7 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <label t-attf-class="switch mb-0 #{'disabled' if prioritize else ''}">
-                                                        <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.amount" checked="checked" field="payment.item"/>
+                                                        <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" checked="checked" field="payment.item"/>
                                                         <span class="slider round fa"/>
                                                     </label>
                                                 </td>

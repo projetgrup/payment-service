@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
 import random
+import logging
 import urllib.request
 
+from odoo import _
 from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
+
 
 class rpc():
 
@@ -19,7 +24,8 @@ class rpc():
         req = urllib.request.Request(url=url, data=json.dumps(data).encode(), headers={"Content-Type":"application/json"})
         reply = json.loads(urllib.request.urlopen(req).read().decode('UTF-8'))
         if reply.get("error"):
-            raise ValidationError(reply["error"]["data"]["message"])
+            _logger.error(reply["error"]["data"]["debug"])
+            raise ValidationError(_('An error occured. %s') % reply["error"]["data"]["message"])
         return reply.get("result")
 
     @classmethod

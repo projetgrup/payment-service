@@ -26,10 +26,12 @@ class PaymentItem(models.Model):
     def _onchange_parent_id(self):
         self.child_id = self.parent_id.child_ids and self.parent_id.child_ids[0].id if self.parent_id else False
 
-    @api.depends('amount', 'paid_amount')
+    @api.depends('amount', 'paid_amount', 'paid')
     def _compute_residual(self):
         for item in self:
-            item.residual_amount = item.amount - item.paid_amount
+            paid = item.paid_amount if item.paid else 0
+            residual = item.amount - paid
+            item.residual_amount = residual if residual > 0 else 0
 
     @api.depends('amount', 'date', 'due_date')
     def _compute_due_amount(self):
