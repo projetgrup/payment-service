@@ -29,8 +29,8 @@ payloxPage.include({
             const items = [];
             $items.each(function () {
                 const $this = $(this);
-                const id = $this.data('id');
-                const amount = $this.data('paid');
+                const id = parseInt($this.data('id'));
+                const amount = parseFloat($this.data('paid'));
                 payments.push(id);
                 items.push([id, amount]);
             });
@@ -258,9 +258,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             const $switches = $('input[type="checkbox"].payment-items.input-switch');
             $switches.each(function () {
                 const $this = $(this);
-                $this.data('paid', $this.is(':checked') ? $this.data('amount') : 0);
+                $this.data('paid', $this.is(':checked') ? parseFloat($this.data('amount')) : 0);
                 const $paid = $this.closest('tr').find('.payment-amount-paid');
-                $paid.html(format.currency($this.data('paid'), currency.position, currency.symbol, currency.decimal));
+                $paid.html(format.currency(parseFloat($this.data('paid')), currency.position, currency.symbol, currency.decimal));
             });
         } else if (ev && ev.allTarget) {
             const $inputs = $('input.input-switch');
@@ -280,7 +280,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             const self = this;
             const items = $items.map(function() {
                 const $this = $(this);
-                return [[$this.data('id'), $this.data('paid')]];
+                return [[parseInt($this.data('id')), parseFloat($this.data('paid'))]];
             }).get();
             rpc.query({
                 route: '/p/due',
