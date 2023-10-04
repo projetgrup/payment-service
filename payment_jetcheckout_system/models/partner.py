@@ -195,6 +195,9 @@ class Partner(models.Model):
         self._portal_ensure_token()
         return '%s-%x' % (self.access_token, self.id * PRIMEFACTOR)
 
+    def _get_companies(self):
+        return self.search([('vat', '!=', False), ('vat', '=', self.vat)]).mapped('company_id')
+
     @api.model
     def _resolve_token(self, token):
         try:

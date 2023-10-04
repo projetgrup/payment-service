@@ -73,11 +73,13 @@ class PayloxSystemController(Controller):
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
+        companies = partner._get_companies()
         return {
             'ok': True,
             'partner': partner,
             'partner_name': partner.name,
             'company': company,
+            'companies': companies,
             'website': request.website,
             'footer': request.website.payment_footer,
             'user': not request.env.user.share,
@@ -151,6 +153,41 @@ class PayloxSystemController(Controller):
     @http.route(['/p/contact'], type='json', auth='public', website=True, csrf=False)
     def page_system_contact_page(self):
         return request.website.payment_contact_page
+
+    @http.route(['/p/company'], type='json', auth='public', website=True, csrf=False)
+    def page_system_company(self, cid):
+        if cid == request.env.company.id:
+            return False
+
+        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            return False
+
+        website = request.env['website'].sudo().search([
+            ('domain', 'like', '%%%s%%' % request.httprequest.host),
+            ('company_id', '=', cid)
+        ], limit=1)
+        if not website:
+            return False
+
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            return False
+
+        partner = request.env['res.partner'].sudo().search([
+            ('vat', '=', partner.vat),
+            ('company_id', '=', cid),
+        ], limit=1)
+        if not partner:
+            return False
+
+        website._force()
+        return partner._get_token()
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
     def page_system_due(self, items):
