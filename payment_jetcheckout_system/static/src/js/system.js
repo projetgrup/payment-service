@@ -98,6 +98,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 mask: payloxPage.prototype._maskAmount.bind(this),
                 default: 0,
             }),
+            company: new fields.element({
+                events: [['click', this._onClickCompany]],
+            }),
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
             }),
@@ -320,6 +323,18 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         } else {
             $total.html(format.currency(amount, currency.position, currency.symbol, currency.decimal));
         }
+    },
+
+    _onClickCompany: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const $button = $(ev.currentTarget);
+        const cid = $button.data('id');
+        rpc.query({route: '/p/company', params: { cid }}).then(function (token) {
+            if (token) {
+                window.location.assign('/p/' + token);
+            }
+        });
     },
 
     _onClickPrivacy: function (ev) {
