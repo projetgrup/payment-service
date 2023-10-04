@@ -19,9 +19,21 @@
             <t t-set="due_hide_payment_message" t-value="due['hide_payment_message']"/>
             <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
             <t t-set="prioritize" t-value="company.payment_page_item_priority and request.env.user.payment_page_item_priority if user else company.payment_page_item_priority"/>
-            <div class="header row mx-0 card border p-2 px-lg-2">
+            <div class="header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+                <div t-if="len(companies) > 1" class="d-flex flex-wrap h-fit" style="gap: 5px;">
+                    <t t-foreach="companies" t-as="c">
+                        <button t-attf-class="btn btn-secondary d-flex flex-nowrap flex-row p-1 rounded-pill align-items-center #{'bg-primary text-white' if c.id == company.id else 'bg-primary-light'}" style="gap: 5px;" t-att-data-id="c.id" field="payment.company">
+                            <div class="align-items-center bg-white d-flex justify-content-center overflow-hidden rounded-circle" style="width: 32px; height: 32px; padding: 2px;">
+                                <img t-att-src="'/web/image/res.company/%s/logo' % c.id" t-att-alt="c.name" class="w-100"/>
+                            </div>
+                            <div class="align-items-center d-flex flex-fill justify-content-center small text-nowrap" style="text-overflow: ellipsis; max-width: 200px;">
+                                <t t-esc="c.name"/>
+                            </div>
+                        </button>
+                    </t>
                 </div>
             </div>
             <div class="px-lg-5 mx-xl-auto mw-xl-128">

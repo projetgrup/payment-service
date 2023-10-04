@@ -61,22 +61,22 @@
             color: #888888;
 
             div {
-                max-width: 250px;
                 float: right;
                 display: flex;
                 overflow: hidden;
                 flex-direction: row;
                 justify-content: end;
+                max-width: 250px;
                 border-bottom: 2px solid #cccccc;
 
                 input {
-                    max-width: 200px;
                     border: none;
                     outline: none;
                     background: none;
                     color: #888888;
                     font-weight: bold;
                     text-align: right;
+                    max-width: 200px;
 
                     animation: cursor-blink 1.5s steps(2) infinite;
                     background-size: 1px 1.2em;
