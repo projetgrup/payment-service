@@ -120,6 +120,6 @@ class PaymentTransactionItem(models.Model):
     _name = 'payment.transaction.item'
     _description = 'Payment Transaction Items'
 
-    transaction_id = fields.Many2one('payment.transaction', required=True)
-    item_id = fields.Many2one('payment.item', required=True)
+    transaction_id = fields.Many2one('payment.transaction', required=True, ondelete='cascade')
+    item_id = fields.Many2one('payment.item', required=True, ondelete='cascade')
     amount = fields.Float()

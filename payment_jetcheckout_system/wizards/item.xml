@@ -30,7 +30,7 @@
                 </group>
             </sheet>
             <footer>
-                <button name="confirm" type="object" string="Confirm" class="btn-primary" icon="fa-check"/>
+                <button name="confirm" type="object" string="Continue" class="btn-primary" icon="fa-chevron-right"/>
                 <button name="send" type="object" string="Send" class="btn-primary" icon="fa-send"/>
                 <button special="cancel" string="Cancel" icon="fa-times"/>
             </footer>

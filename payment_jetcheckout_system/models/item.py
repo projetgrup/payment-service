@@ -51,7 +51,9 @@ class PaymentItem(models.Model):
                 ('item_id', '=', item.id),
                 ('transaction_id.state', '=', 'done'),
             ])
-            item.paid_amount = sum(items.mapped('amount'))
+            amount = item.amount
+            paid = sum(items.mapped('amount'))
+            item.paid_amount = amount if paid > amount else paid
 
     @api.depends('amount', 'paid_amount')
     def _compute_residual_amount(self):
