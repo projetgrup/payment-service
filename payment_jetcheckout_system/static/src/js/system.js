@@ -159,7 +159,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         inputs.each(function () {
             const input = $(this);
             const paid = input.closest('tr').find('.payment-amount-paid');
-            const residual = input.data('amount');
+            const residual = parseFloat(input.data('amount'));
             if (amount < 0) {
                 amount = 0;
             }
@@ -179,7 +179,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this._onChangePaid({
             allTarget: true,
         });
-        //const amounts = inputs.map(function() { return $(this).data('amount'); }).get();
+        //const amounts = inputs.map(function() { return parseFloat($(this).data('amount')); }).get();
     },
 
     _onUpdateAmount: function () {
@@ -203,8 +203,8 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             });
             const first = unchecks.first();
 
-            $('input[type="checkbox"][data-id="' + last.data('id') + '"].payment-items').parent().removeClass('disabled');
-            $('input[type="checkbox"][data-id="' + first.data('id') + '"].payment-items').parent().removeClass('disabled');
+            $('input[type="checkbox"][data-id="' + parseInt(last.data('id')) + '"].payment-items').parent().removeClass('disabled');
+            $('input[type="checkbox"][data-id="' + parseInt(first.data('id')) + '"].payment-items').parent().removeClass('disabled');
         }
     },
 
@@ -223,7 +223,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     _onClickTag: function (ev) {
         const $button = $(ev.currentTarget);
-        const pid = $button.data('id');
+        const pid = parseInt($button.data('id'));
         $button.toggleClass('btn-light');
 
         _.each(this.payment.item.$, function(item) {
@@ -249,7 +249,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const currency = this.currency;
         if (ev && ev.currentTarget) {
             const $input = $(ev.currentTarget);
-            const id = $input.data('id');
+            const id = parseInt($input.data('id'));
             const checked = $input.prop('checked');
 
             const $inputs = $('input[type="checkbox"][data-id="' + id + '"].payment-items');
@@ -266,7 +266,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             const $inputs = $('input.input-switch');
             $inputs.each(function () {
                 const $input = $(this);
-                const id = $input.data('id');
+                const id = parseInt($input.data('id'));
                 const checked = $input.prop('checked');
                 $('input[type="checkbox"][data-id="' + id + '"].payment-items').prop('checked', checked);
             });
@@ -305,7 +305,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this._applyPriority();
  
         let amount = 0;
-        $items.each(function() { amount += $(this).data('paid')});
+        $items.each(function() { amount += parseFloat($(this).data('paid')); });
 
         const event = new Event('update');
         this.amount.value = format.float(amount);
