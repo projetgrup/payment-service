@@ -218,7 +218,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const checked = $(ev.currentTarget).is(':checked');
         this.payment.items.checked = checked;
         this.payment.item.checked = checked;
-        this._onChangePaid();
+        this._onChangePaid(ev);
     },
 
     _onClickTag: function (ev) {
@@ -312,7 +312,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amount.$[0].dispatchEvent(event);
 
         if (this.amountEditable) {
-            if (ev && ev.allTarget) return;
+            if (ev && ev.allTarget) {
+                return;
+            }
             this.payment.amount.value = format.float(amount, currency.decimal);
             this.payment.amount.$[0].dispatchEvent(event);
         } else {
