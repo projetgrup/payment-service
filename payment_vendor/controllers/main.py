@@ -19,11 +19,8 @@ class PayloxSystemVendorController(Controller):
         res = super()._get_tx_vals(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'vendor':
-            ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
-            if ids:
-                payment_ids = request.env['payment.item'].sudo().browse(ids)
-                for payment in payment_ids:
-                    payment.paid_amount = payment.amount
+            items = kwargs.get('items', [])
+            res['paylox_transaction_item_ids'] = [(0, 0, {'item_id': i[0], 'amount': i[1]}) for i in items]
         return res
 
     def _prepare_system(self, company, system, partner, transaction):

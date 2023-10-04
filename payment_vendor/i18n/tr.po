@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-13 16:32+0000\n"
-"PO-Revision-Date: 2023-09-13 19:34+0300\n"
+"POT-Creation-Date: 2023-10-03 16:28+0000\n"
+"PO-Revision-Date: 2023-10-03 19:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -83,6 +83,11 @@ msgstr "<span class=\"text-500\">Kalan</span>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
+msgstr "<span class=\"text-600 font-weight-bold\">Tümünü Seç</span>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
 "transaction related to you"
@@ -96,12 +101,12 @@ msgid ""
 "<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</"
 "strong>\n"
 "                                <strong class=\"text-primary font-weight-"
-"bold text-right z-index-1\">Amount</strong>"
+"bold text-right z-index-1 mt-3\">Amount</strong>"
 msgstr ""
 "<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Ödeme</"
 "strong>\n"
 "                                <strong class=\"text-primary font-weight-"
-"bold text-right z-index-1\">Tutar</strong>"
+"bold text-right z-index-1 mt-3\">Tutar</strong>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -529,6 +534,11 @@ msgstr ""
 "</table>"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Allow dealers to edit payable amount on payment link"
+msgstr "Bayilerin ödeme linkindeki ödenebilir tutarı düzenlemesine izin verin"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Amount"
 msgstr "Tutar"
@@ -629,6 +639,11 @@ msgid "Due Date"
 msgstr "Vade Tarihi"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Editable Payment Amount"
+msgstr "Düzenlenebilir Ödeme Tutarı"
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_mail
 msgid "Email Settings"
 msgstr "Eposta Ayarları"
@@ -687,14 +702,14 @@ msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
-msgid "No setting found"
-msgstr "Ayar bulunamadı"
-
-#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Other"
 msgstr "Diğer"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "Paid"
+msgstr "Ödenecek"
 
 #. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.vendor_mail
@@ -829,11 +844,6 @@ msgid "Transactions"
 msgstr "İşlemler"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
-msgid "Try searching for another keyword"
-msgstr "Başka bir şey aramayı deneyin"
-
-#. module: payment_vendor
 #: model:res.groups,name:payment_vendor.group_vendor_user
 msgid "User"
 msgstr "Kullanıcı"
@@ -909,6 +919,12 @@ msgstr ""
 #: model:mail.template,subject:payment_vendor.mail_transaction_successful
 msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
 msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid "No setting found"
+#~ msgstr "Ayar bulunamadı"
+
+#~ msgid "Try searching for another keyword"
+#~ msgstr "Başka bir şey aramayı deneyin"
 
 #~ msgid "Database Settings"
 #~ msgstr "Veritabanı Ayarları"

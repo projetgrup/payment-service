@@ -32,7 +32,13 @@ class PayloxSystemController(Controller):
         if not id or not token:
             raise werkzeug.exceptions.NotFound()
 
-        partner = request.env['res.partner'].sudo().search([('id', '=', id), ('access_token', '=', token)], limit=1)
+        websites = request.env['website'].sudo().search([('domain', 'like', '%%%s%%' % request.httprequest.host)])
+        companies = websites.mapped('company_id')
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', 'in', companies.ids),
+        ], limit=1)
         if not partner:
             raise werkzeug.exceptions.NotFound()
 
@@ -100,7 +106,13 @@ class PayloxSystemController(Controller):
 
         company = partner.company_id or request.website.company_id or request.env.company
         if not company == request.env.company:
-            raise werkzeug.exceptions.NotFound()
+            website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
+            if not website:
+                raise werkzeug.exceptions.NotFound()
+
+            website._force()
+            return request.redirect(request.httprequest.url)
+
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._prepare_system(company, system, partner, transaction)
         return request.render('payment_%s.page_payment' % system, values)
@@ -141,9 +153,11 @@ class PayloxSystemController(Controller):
         return request.website.payment_contact_page
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
-    def page_system_due(self, ids):
+    def page_system_due(self, items):
+        ids = [i[0] for i in items]
+        amounts = dict(items)
         items = request.env['payment.item'].sudo().browse(ids)
-        return items.get_due()
+        return items.with_context(amounts=amounts).get_due()
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):

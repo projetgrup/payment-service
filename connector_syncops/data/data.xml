@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="parameter_url" model="ir.config_parameter">
+            <field name="key">syncops.url</field>
+            <field name="value">https://syncops.io</field>
+        </record>
+    </data>
+</odoo>

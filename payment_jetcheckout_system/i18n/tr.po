@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 20:45+0000\n"
-"PO-Revision-Date: 2023-09-20 23:47+0300\n"
+"POT-Creation-Date: 2023-10-04 10:27+0000\n"
+"PO-Revision-Date: 2023-10-04 13:28+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -455,6 +455,7 @@ msgstr "İzin Verilen Şirketler"
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__amount
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__amount
 #, python-format
 msgid "Amount"
 msgstr "Tutar"
@@ -730,6 +731,7 @@ msgstr "İş Ortağı Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
@@ -744,6 +746,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_date
 msgid "Created on"
 msgstr "Oluşturma Tarihi"
 
@@ -856,6 +859,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
 
@@ -1094,6 +1098,7 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__id
 msgid "ID"
 msgstr "ID"
 
@@ -1200,6 +1205,11 @@ msgid "Is Portal"
 msgstr "Portal Kullanıcısı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__item_id
+msgid "Item"
+msgstr "Kalem"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paid_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paid_count
 msgid "Items Paid"
@@ -1250,6 +1260,7 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme Tarihi"
 
@@ -1271,6 +1282,7 @@ msgstr "Geçen Ay"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
@@ -1285,6 +1297,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme Tarihi"
 
@@ -1811,6 +1824,12 @@ msgid "Payment Page Dues"
 msgstr "Ödeme Sayfası Vadeler"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_amount_editable
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_amount_editable
+msgid "Payment Page Editable Amount"
+msgstr "Ödeme Sayfası Düzenlenebilir Tutar"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_flow
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_flow
 msgid "Payment Page Flow"
@@ -1867,6 +1886,11 @@ msgstr "Ödeme Sistemi Teknik"
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemleri"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_transaction_item
+msgid "Payment Transaction Items"
+msgstr "Ödeme İşlemleri Kalemleri"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
@@ -2612,6 +2636,7 @@ msgid "Tolerance"
 msgstr "Tolerans"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__transaction_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Transaction"
 msgstr "İşlem"
@@ -2637,6 +2662,11 @@ msgstr "Başarılı İşlem"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__transaction_failed_count
 msgid "Transaction Failed"
 msgstr "Başarısız İşlem"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_transaction_item_ids
+msgid "Transaction Items"
+msgstr "İşlemleri Kalemleri"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_transaction_refund

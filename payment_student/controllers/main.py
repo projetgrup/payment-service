@@ -11,6 +11,7 @@ class PayloxSystemStudentController(Controller):
         res = super()._get_tx_vals(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'student':
+            items = []
             ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
             if ids:
                 payment_ids = request.env['payment.item'].sudo().browse(ids)
@@ -21,14 +22,22 @@ class PayloxSystemStudentController(Controller):
                 for payment in payment_ids:
                     sid = payment.child_id.id
                     students[sid] += payment.amount
+
                 for payment in payment_ids:
                     sid = payment.child_id.id
                     first_amount = students[sid]
                     last_amount = list(filter(lambda x: x['id'] == sid, amounts))[0]['amount']
                     rate = last_amount / first_amount if first_amount != 0 else 1
-                    payment.paid_amount = payment.amount * rate
-                    payment.bursary_amount = payment.amount * payment.bursary_id.percentage / 100 if payment.bursary_id else 0
-                    payment.prepayment_amount = payment.amount - payment.paid_amount - payment.bursary_amount
+                    amount = payment.amount * rate
+                    bursary_amount = payment.amount * payment.bursary_id.percentage / 100 if payment.bursary_id else 0
+                    prepayment_amount = payment.amount - amount - bursary_amount
+                    items.append((0, 0, {
+                        'amount': amount,
+                        'bursary_amount': bursary_amount,
+                        'prepayment_amount': prepayment_amount,
+                    }))
+
+                res['paylox_transaction_item_ids'] = items
         return res
 
     def _prepare_system(self, company, system, partner, transaction):
