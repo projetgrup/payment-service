@@ -15,8 +15,10 @@ class PaymentTransaction(models.Model):
     state = fields.Selection(tracking=True)
     system = fields.Selection(related='company_id.system')
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
-    jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
     paylox_item_count = fields.Integer(compute='_compute_item_count')
+    paylox_transaction_item_ids = fields.One2many('payment.transaction.item', 'transaction_id', string='Transaction Items')
+
+    jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
     jetcheckout_webhook_ok = fields.Boolean('Webhook Notification', readonly=True)
     jetcheckout_webhook_state = fields.Boolean('Webhook Notification State', readonly=True)
     jetcheckout_webhook_state_message = fields.Text('Webhook Notification State Message', readonly=True)
@@ -101,14 +103,8 @@ class PaymentTransaction(models.Model):
             }
         }
 
-    def _paylox_cancel_postprocess(self):
-        super()._paylox_cancel_postprocess()
-        self.mapped('jetcheckout_item_ids').write({'paid': False, 'paid_date': False, 'paid_amount': 0, 'installment_count': 0})
-
     def _paylox_done_postprocess(self):
         super()._paylox_done_postprocess()
-        self.mapped('jetcheckout_item_ids').write({'paid': True, 'paid_date': datetime.now(), 'installment_count': self.jetcheckout_installment_count})
-
         webhooks = self.company_id.notif_webhook_ids
         if webhooks:
             self.write({
@@ -118,3 +114,12 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_webhook_state_message': _('This transaction has not been notified yet.')
             })
             self.action_process_notification_webhook()
+
+
+class PaymentTransactionItem(models.Model):
+    _name = 'payment.transaction.item'
+    _description = 'Payment Transaction Items'
+
+    transaction_id = fields.Many2one('payment.transaction', required=True, ondelete='cascade')
+    item_id = fields.Many2one('payment.item', required=True, ondelete='cascade')
+    amount = fields.Float()

@@ -6,6 +6,21 @@ from odoo.exceptions import UserError
 class PaymentItem(models.Model):
     _inherit = 'payment.item'
 
+    @api.depends('transaction_ids.state')
+    def _compute_paid_amount(self):
+        super()._compute_paid_amount()
+        for item in self:
+            if item.system == 'student':
+                items = self.env['payment.transaction.item'].sudo().search([
+                    ('item_id', '=', item.id),
+                    ('transaction_id.state', '=', 'done'),
+                ])
+                item.bursary_amount = sum(items.mapped('bursary_amount'))
+                item.prepayment_amount = sum(items.mapped('prepayment_amount'))
+            else:
+                item.bursary_amount = 0
+                item.prepayment_amount = 0
+
     system = fields.Selection(selection_add=[('student', 'Student Payment System')])
 
     school_id = fields.Many2one('res.student.school', related='child_id.school_id', store=True, readonly=True, ondelete='restrict')
@@ -13,8 +28,8 @@ class PaymentItem(models.Model):
     bursary_id = fields.Many2one('res.student.bursary', related='child_id.bursary_id', store=True, readonly=True, ondelete='restrict')
     term_id = fields.Many2one('res.student.term', ondelete='restrict')
     payment_type_id = fields.Many2one('res.student.payment.type', ondelete='restrict')
-    bursary_amount = fields.Monetary(string='Bursary Discount', readonly=True)
-    prepayment_amount = fields.Monetary(string='Prepayment Discount', readonly=True)
+    bursary_amount = fields.Monetary(string='Bursary Discount', compute='_compute_paid_amount', store=True, readonly=True)
+    prepayment_amount = fields.Monetary(string='Prepayment Discount', compute='_compute_paid_amount', store=True, readonly=True)
 
     system_student_faculty_id = fields.Many2one('res.student.faculty', related='parent_id.system_student_faculty_id', store=True, readonly=True, ondelete='restrict')
     system_student_department_id = fields.Many2one('res.student.department', related='parent_id.system_student_department_id', store=True, readonly=True, ondelete='restrict')

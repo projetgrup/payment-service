@@ -11,6 +11,7 @@
     'sequence': 1071,
     'depends': ['base'],
     'data': [
+        'data/data.xml',
         'views/config.xml',
         'views/syncops.xml',
         'wizards/log.xml',

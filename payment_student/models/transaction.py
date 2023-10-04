@@ -44,3 +44,10 @@ class PaymentTransaction(models.Model):
                 }
             } for item in self.jetcheckout_item_ids]
         return data
+
+
+class PaymentTransactionItem(models.Model):
+    _inherit = 'payment.transaction.item'
+
+    bursary_amount = fields.Float()
+    prepayment_amount = fields.Float()

@@ -13,8 +13,8 @@
             <field name="due_date" optional="hide"/>
             <field name="description" optional="hide"/>
             <field name="file" optional="hide"/>
-            <field name="paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
-            <field name="paid_amount" string="Paid"/>
+            <field name="paid"/>
+            <field name="paid_amount" string="Paid" attrs="{'readonly': [('is_admin', '=', False)]}"/>
             <field name="residual_amount" string="Residual"/>
             <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>

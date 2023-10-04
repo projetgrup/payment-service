@@ -48,12 +48,56 @@
 
         .info-icon {
             right: 40px;
-            top: 40px;
+            top: 20px;
             font-size: 2rem;
             color: #edf2f7;
 
             @include media-breakpoint-down(sm) {
                 display: none;
+            }
+        }
+
+        .payment-amount-total {
+            color: #888888;
+
+            div {
+                max-width: 250px;
+                float: right;
+                display: flex;
+                overflow: hidden;
+                flex-direction: row;
+                justify-content: end;
+                border-bottom: 2px solid #cccccc;
+
+                input {
+                    max-width: 200px;
+                    border: none;
+                    background: none;
+                    color: #888888;
+                    font-weight: bold;
+                    text-align: right;
+
+                    animation: cursor-blink 1.5s steps(2) infinite;
+                    background-size: 1px 1.2em;
+                    background-repeat: no-repeat;
+                    background-position: right 0 center;
+                    background-image: linear-gradient(#888888, #888888);
+
+                    &:focus {
+                        background-image:none;
+                    }
+
+                }
+
+                span {
+                    max-width: 45px;
+                    margin-left: 5px;
+                    user-select: none;
+                }
+
+                @keyframes cursor-blink {
+                  0% { background-size: 0 1.2em; }
+                }
             }
         }
     }

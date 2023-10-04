@@ -23,23 +23,31 @@ payloxPage.include({
 
     _getParams: function () {
         const params = this._super.apply(this, arguments);
-        const $items = $('input[type="checkbox"].payment-items:checked');
+        const $items = $('input.input-switch:checked');
         if ($items.length) {
-            const payment_ids = [];
-            $items.each(function () { payment_ids.push(parseInt($(this).data('id'))); });
+            const payments = [];
+            const items = [];
+            $items.each(function () {
+                const $this = $(this);
+                const id = $this.data('id');
+                const amount = $this.data('paid');
+                payments.push(id);
+                items.push([id, amount]);
+            });
             params['system'] = this.system.value;
-            params['payments'] = payment_ids;
+            params['payments'] = payments;
+            params['items'] = items;
         }
         return params;
     },
 
     _checkData: function () {
-        var $items = $('input[type="checkbox"].payment-items');
+        var $items = $('input.input-switch');
         if (!$items.length) {
             return this._super.apply(this, arguments);
         }
 
-        var $items = $('input[type="checkbox"].payment-items:checked');
+        var $items = $('input.input-switch:checked');
         if (!$items.length) {
             this.displayNotification({
                 type: 'warning',
@@ -62,6 +70,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        this.ready = false;
         this.currency = {
             id: 0,
             decimal: 2,
@@ -70,8 +79,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             thousand: ',', 
             position: 'after',
             symbol: '', 
-        },
-        this.amount = new fields.string({
+        };
+        this.amountEditable = false;
+        this.itemPriority = false;
+        this.amount = new fields.float({
             default: '0',
         });
         this.vat = new fields.string();
@@ -79,6 +90,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             name: new fields.string(),
         };
         this.payment = {
+            amount: new fields.float({
+                events: [
+                    ['input', this._onInputAmount],
+                    ['update', this._onUpdateAmount],
+                ],
+                mask: payloxPage.prototype._maskAmount.bind(this),
+                default: 0,
+            }),
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
             }),
@@ -123,14 +142,52 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
             if (self.payment.item.exist) {
-                self.payment.priority = self.payment.priority.exist;
+                self.itemPriority = self.payment.priority.exist;
+                self.amountEditable = self.payment.amount.exist;
+
+                self.ready = self.payment.item.$.filter(':not(:checked)').length > 0;
                 self._onChangePaid();
+                self.ready = true;
             }
         });
     },
 
+    _onInputAmount: function () {
+        const currency = this.currency;
+        const inputs = $('input.input-switch');
+        let amount = this.payment.amount.value;
+        inputs.each(function () {
+            const input = $(this);
+            const paid = input.closest('tr').find('.payment-amount-paid');
+            const residual = input.data('amount');
+            if (amount < 0) {
+                amount = 0;
+            }
+
+            const value = residual > amount ? amount : residual;
+            if (amount > 0) {
+                paid.html(format.currency(value, currency.position, currency.symbol, currency.decimal));
+                input.prop('checked', true);
+                input.data('paid', value);
+                amount -= residual;
+            } else {
+                paid.html(format.currency(0, currency.position, currency.symbol, currency.decimal));
+                input.prop('checked', false);
+                input.data('paid', 0);
+            }
+        });
+        this._onChangePaid({
+            allTarget: true,
+        });
+        //const amounts = inputs.map(function() { return $(this).data('amount'); }).get();
+    },
+
+    _onUpdateAmount: function () {
+        this.payment.amount._.updateValue();
+    },
+
     _applyPriority: function () {
-        if (this.payment.priority) {
+        if (this.itemPriority) {
             const items = this.payment.item.$;
             items.parent().addClass('disabled');
 
@@ -152,7 +209,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 
     _onChangePaidAllBtn: function (ev) {
-        const $input = $(ev.currentTarget).find('input')
+        const $input = $(ev.currentTarget).find('input');
         $input.prop('checked', !$input.prop('checked'));
         $input.trigger('change');
     },
@@ -189,24 +246,45 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             return;
         }
 
-        if (ev) {
+        const currency = this.currency;
+        if (ev && ev.currentTarget) {
             const $input = $(ev.currentTarget);
             const id = $input.data('id');
             const checked = $input.prop('checked');
-            $('input[type="checkbox"][data-id="' + id + '"].payment-items').prop('checked', checked);
+
+            const $inputs = $('input[type="checkbox"][data-id="' + id + '"].payment-items');
+            $inputs.each(function () { $(this).prop('checked', checked); });
+
+            const $switches = $('input[type="checkbox"].payment-items.input-switch');
+            $switches.each(function () {
+                const $this = $(this);
+                $this.data('paid', $this.is(':checked') ? $this.data('amount') : 0);
+                const $paid = $this.closest('tr').find('.payment-amount-paid');
+                $paid.html(format.currency($this.data('paid'), currency.position, currency.symbol, currency.decimal));
+            });
+        } else if (ev && ev.allTarget) {
+            const $inputs = $('input.input-switch');
+            $inputs.each(function () {
+                const $input = $(this);
+                const id = $input.data('id');
+                const checked = $input.prop('checked');
+                $('input[type="checkbox"][data-id="' + id + '"].payment-items').prop('checked', checked);
+            });
         }
 
-        const $total = $('p.payment-amount-total');
-        const $items = $('input[type="checkbox"].payment-items:checked');
+        const $total = $('div.payment-amount-total');
+        const $items = $('input.input-switch:checked');
         this.payment.items.checked = !!$items.length;
 
-        if (this.payment.due.days.exist) {
+        if (this.ready && this.payment.due.days.exist) {
             const self = this;
-            const $ids = $('td input[field="payment.item"]:checked');
-            const ids = $ids.map(function() { return $(this).data('id'); }).get();
+            const items = $items.map(function() {
+                const $this = $(this);
+                return [[$this.data('id'), $this.data('paid')]];
+            }).get();
             rpc.query({
                 route: '/p/due',
-                params: { ids }
+                params: { items }
             }).then(function (result) {
                 self.payment.due.date.html = result.date;
                 self.payment.due.days.html = result.days;
@@ -227,13 +305,19 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this._applyPriority();
  
         let amount = 0;
-        $items.each(function() { amount += parseFloat($(this).data('amount'))});
+        $items.each(function() { amount += $(this).data('paid')});
 
         const event = new Event('update');
         this.amount.value = format.float(amount);
         this.amount.$[0].dispatchEvent(event);
 
-        $total.html(format.currency(amount, this.currency.position, this.currency.symbol, this.currency.decimal));
+        if (this.amountEditable) {
+            if (ev && ev.allTarget) return;
+            this.payment.amount.value = format.float(amount, currency.decimal);
+            this.payment.amount.$[0].dispatchEvent(event);
+        } else {
+            $total.html(format.currency(amount, currency.position, currency.symbol, currency.decimal));
+        }
     },
 
     _onClickPrivacy: function (ev) {

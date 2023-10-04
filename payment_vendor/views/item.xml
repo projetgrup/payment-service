@@ -21,15 +21,12 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
     <field name="arch" type="xml">
-        <xpath expr='//field[@name="child_id"]' position="attributes">
-            <attribute name="string">Authorized</attribute>
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace">
+            <field name="parent_id" string="Vendor"/>
+            <field name="child_id" string="Authorized"/>
         </xpath>
-        <xpath expr='//field[@name="parent_id"]' position="attributes">
-            <attribute name="string">Vendor</attribute>
-        </xpath>
-        <xpath expr='//filter[@name="groupby_child"]' position="attributes">
-            <attribute name="string">Authorized</attribute>
-        </xpath>
+        <xpath expr='//filter[@name="groupby_child"]' position="replace"/>
         <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
             <attribute name="string">Vendor</attribute>
         </xpath>
