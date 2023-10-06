@@ -66,6 +66,10 @@ class Company(models.Model):
             self._update_subsystem()
         return res
 
+    @api.onchange('system')
+    def onchange_system(self):
+        self.subsystem = False
+
     def _update_subsystem(self, users=None):
         for company in self:
             values = []
