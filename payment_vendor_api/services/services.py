@@ -118,16 +118,16 @@ class VendorAPIService(Component):
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
             acquirer = self._get_acquirer(company)
-            for pair in params.campaigns:
+            for campaign in params.campaigns:
                 vat, ref = None, None
-                if hasattr(pair, 'vat') and pair.vat:
-                    vat = pair.vat
-                if hasattr(pair, 'ref') and pair.ref:
-                    ref = pair.ref
+                if hasattr(campaign.partner, 'vat') and campaign.partner.vat:
+                    vat = campaign.partner.vat
+                if hasattr(campaign.partner, 'ref') and campaign.partner.ref:
+                    ref = campaign.partner.ref
                 if not vat and not ref:
                     return Response("One of VAT or Reference information must be sent with campaign name", status=400, mimetype="application/json")
 
-                vendor = self._get_vendor(company, pair)
+                vendor = self._get_vendor(company, campaign.partner)
                 if not vendor:
                     if vat:
                         postfix = 'VAT %s' % vat
@@ -137,7 +137,7 @@ class VendorAPIService(Component):
                         postfix = 'given pairs'
                     return Response("Partner cannot be found with %s" % postfix, status=404, mimetype="application/json")
 
-                campaign = self._get_campaign(acquirer, pair.campaign)
+                campaign = self._get_campaign(acquirer, campaign.name)
                 if not campaign:
                     return Response("Campaign name cannot be found for partner %s" % vendor.name, status=404, mimetype="application/json")
 
