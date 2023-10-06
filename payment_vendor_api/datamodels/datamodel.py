@@ -54,6 +54,7 @@ class VendorPaymentResult(Datamodel):
     vat = fields.String(required=True, metadata={"title": "Vendor VAT", "description": "VAT number of related vendor", "example": "12345678912"})
     link = fields.String(metadata={"title": "Vendor Payment Link", "description": "Payment Link URL address of related vendor", "example": "https://yourdomain.com/p/8850dd69-4496-45b2-bc13-9b47ad939d81"})
 
+
 class VendorPaymentOutput(Datamodel):
     class Meta:
         ordered = True
@@ -62,6 +63,35 @@ class VendorPaymentOutput(Datamodel):
     _inherit = "payment.output"
 
     result = fields.List(NestedModel("vendor.payment.result"), required=True, metadata={"title": "Result", "description": "Detailed result for related request"})
+
+
+class VendorCampaignItem(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "vendor.campaign.item"
+
+    vat = fields.String(required=False, allow_none=False, metadata={"title": "Dealer VAT", "description": "VAT number of related dealer", "example": "12345678912"})
+    ref = fields.String(required=False, allow_none=False, metadata={"title": "Dealer Reference", "description": "Reference of related dealer", "example": "D123456789"})
+    campaign = fields.String(required=True, allow_none=False, metadata={"title": "Campaign Name", "description": "Name of campaign to be used", "example": "Standard"})
+
+
+class VendorCampaignUpdate(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "vendor.campaign.update"
+    _inherit = "payment.credential.hash"
+
+    campaigns = fields.List(NestedModel("vendor.campaign.item"), required=True, allow_none=False, metadata={"title": "Campaign List", "description": "List of partner-campaign pairs"})
+
+
+class VendorCampaignOutput(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "vendor.campaign.output"
+    _inherit = "payment.output"
 
 
 class VendorPaymentItemWebhook(Datamodel):
