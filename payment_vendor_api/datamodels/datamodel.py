@@ -65,15 +65,24 @@ class VendorPaymentOutput(Datamodel):
     result = fields.List(NestedModel("vendor.payment.result"), required=True, metadata={"title": "Result", "description": "Detailed result for related request"})
 
 
+class VendorCampaignPartner(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "vendor.campaign.partner"
+
+    vat = fields.String(required=False, allow_none=False, metadata={"title": "Dealer VAT", "description": "VAT number of related partner", "example": "12345678912"})
+    ref = fields.String(required=False, allow_none=False, metadata={"title": "Dealer Reference", "description": "Reference of related partner", "example": "D123456789"})
+
+
 class VendorCampaignItem(Datamodel):
     class Meta:
         ordered = True
 
     _name = "vendor.campaign.item"
 
-    vat = fields.String(required=False, allow_none=False, metadata={"title": "Dealer VAT", "description": "VAT number of related dealer", "example": "12345678912"})
-    ref = fields.String(required=False, allow_none=False, metadata={"title": "Dealer Reference", "description": "Reference of related dealer", "example": "D123456789"})
-    campaign = fields.String(required=True, allow_none=False, metadata={"title": "Campaign Name", "description": "Name of campaign to be used", "example": "Standard"})
+    partner = NestedModel("vendor.campaign.partner", required=True, metadata={"title": "Partner Information", "description": "Either VAT or Reference must be provided"})
+    name = fields.String(required=True, allow_none=False, metadata={"title": "Campaign Name", "description": "Name of campaign to be used", "example": "Standard"})
 
 
 class VendorCampaignUpdate(Datamodel):
