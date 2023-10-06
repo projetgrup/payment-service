@@ -8,6 +8,7 @@ import dialog from 'web.Dialog';
 import utils from 'web.utils';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
+import framework from 'paylox.framework';
 import { format } from 'paylox.tools';
 
 const _t = core._t;
@@ -101,6 +102,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             company: new fields.element({
                 events: [['click', this._onClickCompany]],
             }),
+            tag: new fields.element({
+                events: [['click', this._onClickTag]],
+            }),
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
             }),
@@ -123,7 +127,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [['click', this._onChangePaidAllBtn]],
             }),
             tags: new fields.element({
-                events: [['click', this._onClickTag]],
+                events: [['click', this._onClickTags]],
             }),
             link: new fields.element({
                 events: [['click', this._onClickLink]],
@@ -224,26 +228,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this._onChangePaid(ev);
     },
 
-    _onClickTag: function (ev) {
-        const $button = $(ev.currentTarget);
-        const pid = parseInt($button.data('id'));
-        $button.toggleClass('btn-light');
-
-        _.each(this.payment.item.$, function(item) {
-            const $el = $(item);
-            if ($el.data('type-id') === pid) {
-                if ($button.hasClass('btn-light')) {
-                    $el.prop('checked', false);
-                    $el.closest('tr').addClass('d-none');
-                } else {
-                    $el.prop('checked', true);
-                    $el.closest('tr').removeClass('d-none');
-                }
-            }
-        });
-        this._onChangePaid();
-    },
-
     _onChangePaid: function (ev) {
         if (!this.amount.exist) {
             return;
@@ -332,9 +316,44 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const cid = $button.data('id');
         rpc.query({route: '/p/company', params: { cid }}).then(function (token) {
             if (token) {
+                framework.showLoading();
                 window.location.assign('/p/' + token);
             }
         });
+    },
+
+    _onClickTag: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const $button = $(ev.currentTarget);
+        const tid = $button.data('id');
+        rpc.query({route: '/p/tag', params: { tid }}).then(function (token) {
+            if (token) {
+                framework.showLoading();
+                window.location.assign('/p/' + token);
+            }
+
+        });
+    },
+
+    _onClickTags: function (ev) {
+        const $button = $(ev.currentTarget);
+        const pid = parseInt($button.data('id'));
+        $button.toggleClass('btn-light');
+
+        _.each(this.payment.item.$, function(item) {
+            const $el = $(item);
+            if ($el.data('type-id') === pid) {
+                if ($button.hasClass('btn-light')) {
+                    $el.prop('checked', false);
+                    $el.closest('tr').addClass('d-none');
+                } else {
+                    $el.prop('checked', true);
+                    $el.closest('tr').removeClass('d-none');
+                }
+            }
+        });
+        this._onChangePaid();
     },
 
     _onClickPrivacy: function (ev) {
