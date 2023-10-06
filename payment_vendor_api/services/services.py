@@ -95,6 +95,60 @@ class VendorAPIService(Component):
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
 
+    @restapi.method(
+        [(["/campaign/update"], "PATCH")],
+        input_param=Datamodel("vendor.campaign.update"),
+        output_param=Datamodel("vendor.campaign.output"),
+        auth="public",
+        tags=['Update Campaigns']
+    )
+    def update_campaign(self, params):
+        """
+        Update Campaigns
+        """
+        try:
+            company = self.env.company
+
+            api = self._get_api(company, params.apikey)
+            if not api:
+                return Response("Application key is not matched", status=401, mimetype="application/json")
+
+            hash = self._get_hash(api, params.hash, 0)
+            if not hash:
+                return Response("Hash is not matched", status=401, mimetype="application/json")
+
+            acquirer = self._get_acquirer(company)
+            for pair in params.campaigns:
+                vat, ref = None, None
+                if hasattr(pair, 'vat') and pair.vat:
+                    vat = pair.vat
+                if hasattr(pair, 'ref') and pair.ref:
+                    ref = pair.ref
+                if not vat and not ref:
+                    return Response("One of VAT or Reference information must be sent with campaign name", status=400, mimetype="application/json")
+
+                vendor = self._get_vendor(company, pair)
+                if not vendor:
+                    if vat:
+                        postfix = 'VAT %s' % vat
+                    elif ref:
+                        postfix = 'Reference %s' % ref
+                    else:
+                        postfix = 'given pairs'
+                    return Response("Partner cannot be found with %s" % postfix, status=404, mimetype="application/json")
+
+                campaign = self._get_campaign(acquirer, pair.campaign)
+                if not campaign:
+                    return Response("Campaign name cannot be found for partner %s" % vendor.name, status=404, mimetype="application/json")
+
+                vendor.campaign_id = campaign.id
+
+            ResponseOk = self.env.datamodels["vendor.campaign.output"]
+            return ResponseOk(**RESPONSE[200])
+        except Exception as e:
+            _logger.error(e)
+            return Response("Server Error", status=500, mimetype="application/json")
+
     @restapi.webhook(
         input_param=Datamodel("vendor.payment.item.webhook"),
         tags=['Webhook Methods']
@@ -121,11 +175,20 @@ class VendorAPIService(Component):
             return False
         return hash
 
+    def _get_acquirer(self, company):
+        return self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
+
     def _get_vendor(self, company, vendor):
         return self.env['res.partner'].sudo().search([
             ('is_company', '=', True),
             ('company_id', '=', company.id),
             ('vat', '=', vendor.vat)
+        ], limit=1)
+
+    def _get_campaign(self, acquirer, campaign):
+        return self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
+            ('acquirer_id', '=', acquirer.id),
+            ('name', '=', campaign),
         ], limit=1)
 
     def _create_vendor(self, company, vendor):
