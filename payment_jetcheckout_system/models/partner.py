@@ -198,6 +198,9 @@ class Partner(models.Model):
     def _get_companies(self):
         return self.search([('vat', '!=', False), ('vat', '=', self.vat)]).mapped('company_id')
 
+    def _get_tags(self):
+        return self.search([('vat', '!=', False), ('vat', '=', self.vat), ('company_id', '=', self.env.company.id)]).mapped('category_id')
+
     @api.model
     def _resolve_token(self, token):
         try:

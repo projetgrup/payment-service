@@ -147,7 +147,6 @@ class SyncopsSyncWizard(models.TransientModel):
                 ('ref', 'in', wizard.line_ids.mapped('partner_ref')),
             ], ['id', 'vat', 'ref'])
             users = users_all.search_read([
-                ('company_id', '=', company.id),
                 ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
             ], ['id', 'email'])
             vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
@@ -161,13 +160,17 @@ class SyncopsSyncWizard(models.TransientModel):
                             'name': line['partner_user_name'],
                             'phone': line['partner_user_phone'],
                             'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                            'company_ids': [(4, company.id)],
                         })
                     elif line['partner_user_email']:
-                        user = users_all.search([
-                            ('company_id', '=', company.id),
+                        user = users_all.sudo().search([
                             ('email', '=', line['partner_user_email']),
                         ], limit=1)
-                        if not user:
+                        if user:
+                            user.with_context(mail_create_nolog=True).write({
+                                'company_ids': [(4, company.id)],
+                            })
+                        else:
                             user = users_all.with_context(mail_create_nolog=True).create({
                                 'system': wizard.system or company.system,
                                 'name': line['partner_user_name'],

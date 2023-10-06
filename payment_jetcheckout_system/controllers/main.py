@@ -74,10 +74,12 @@ class PayloxSystemController(Controller):
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
         companies = partner._get_companies()
+        tags = partner._get_tags()
         return {
             'ok': True,
             'partner': partner,
             'partner_name': partner.name,
+            'tags': tags,
             'company': company,
             'companies': companies,
             'website': request.website,
@@ -187,6 +189,34 @@ class PayloxSystemController(Controller):
             return False
 
         website._force()
+        return partner._get_token()
+
+    @http.route(['/p/tag'], type='json', auth='public', website=True, csrf=False)
+    def page_system_tag(self, tid):
+        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            return False
+
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            return False
+
+        if tid in partner.category_id.ids:
+            return False
+
+        partner = request.env['res.partner'].sudo().search([
+            ('vat', '=', partner.vat),
+            ('category_id', 'in', [tid]),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            return False
+
         return partner._get_token()
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
