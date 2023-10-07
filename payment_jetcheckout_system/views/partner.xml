@@ -85,6 +85,7 @@
                 <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
                 <field name="is_portal" invisible="1"/>
                 <field name="is_internal" invisible="1"/>
+                <field name="is_company" invisible="1"/>
                 <field name="users_id" invisible="1"/>
             </header>
             <sheet>
