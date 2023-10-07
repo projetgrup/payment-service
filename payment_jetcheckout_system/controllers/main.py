@@ -68,7 +68,7 @@ class PayloxSystemController(Controller):
 
     def _prepare_system(self, company, system, partner, transaction):
         currency = company.currency_id
-        acquirer = self._get_acquirer()
+        acquirer = self._get_acquirer(False)
         type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
@@ -190,6 +190,10 @@ class PayloxSystemController(Controller):
 
         website._force()
         return partner._get_token()
+
+    @http.route(['/p/company/<int:id>/logo'], type='http', auth='public')
+    def page_system_company_image(self, id):
+        return request.env['ir.http'].sudo()._content_image(xmlid=None, model='res.company', res_id=id, field='logo', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
 
     @http.route(['/p/tag'], type='json', auth='public', website=True, csrf=False)
     def page_system_tag(self, tid):
