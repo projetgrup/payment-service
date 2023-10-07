@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-04 10:27+0000\n"
-"PO-Revision-Date: 2023-10-04 13:28+0300\n"
+"POT-Creation-Date: 2023-10-07 12:24+0000\n"
+"PO-Revision-Date: 2023-10-07 15:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -669,11 +669,6 @@ msgstr "Şirket Hiyerarşisi"
 #: model:ir.model,name:payment_jetcheckout_system.model_res_config_settings
 msgid "Config Settings"
 msgstr "Yapılandırma Ayarları"
-
-#. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
-msgid "Confirm"
-msgstr "Onayla"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner
@@ -2788,6 +2783,11 @@ msgid "Vat"
 msgstr "Vergi No"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
+msgid "View"
+msgstr "Görüntüle"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
 msgid "Virtual Pos Settings"
 msgstr "Sanal Pos Ayarları"
@@ -2985,6 +2985,9 @@ msgstr "e.g. eposta@sirketiniz.com"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#~ msgid "Confirm"
+#~ msgstr "Onayla"
 
 #~ msgid "Url"
 #~ msgstr "Url"
