@@ -179,11 +179,12 @@ class VendorAPIService(Component):
         return self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
 
     def _get_vendor(self, company, vendor):
-        return self.env['res.partner'].sudo().search([
-            ('is_company', '=', True),
-            ('company_id', '=', company.id),
-            ('vat', '=', vendor.vat)
-        ], limit=1)
+        domain = [('is_company', '=', True), ('company_id', '=', company.id)]
+        if hasattr(vendor.vat) and vendor.vat:
+            domain.append(('vat', '=', vendor.vat))
+        if hasattr(vendor.ref) and vendor.ref:
+            domain.append(('ref', '=', vendor.ref))
+        return self.env['res.partner'].sudo().search(domain, limit=1)
 
     def _get_campaign(self, acquirer, campaign):
         return self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
