@@ -96,7 +96,7 @@ class VendorAPIService(Component):
             return Response("Server Error", status=500, mimetype="application/json")
 
     @restapi.method(
-        [(["/campaign/update"], "PATCH")],
+        [(["/campaign/update"], "PUT")],
         input_param=Datamodel("vendor.campaign.update"),
         output_param=Datamodel("vendor.campaign.output"),
         auth="public",
