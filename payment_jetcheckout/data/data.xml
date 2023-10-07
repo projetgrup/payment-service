@@ -42,7 +42,7 @@
             <field name="active">True</field>
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
-            <field name="nextcall" eval="(DateTime.now() + relativedelta(hours=1, minute=0)).strftime('%Y-%m-%d 01:00:00')" />
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')" />
         </record>
 
         <record id="cron_resync_transaction" model="ir.cron">
@@ -54,7 +54,7 @@
             <field name="active">True</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1)).strftime('%Y-%m-%d 01:00:00')" />
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1)).strftime('%Y-%m-%d 01:00:00')"/>
         </record>
 
         <record id="cron_expire_transaction" model="ir.cron">
