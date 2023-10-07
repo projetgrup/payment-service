@@ -86,8 +86,8 @@ class PayloxController(http.Controller):
             pass
 
     @staticmethod
-    def _get_acquirer(acquirer=False, providers=['jetcheckout'], limit=1):
-        if not acquirer:
+    def _get_acquirer(acquirer=None, providers=['jetcheckout'], limit=1):
+        if acquirer == None:
             acquirer = PayloxController._get('acquirer')
             if acquirer:
                 return request.env['payment.acquirer'].sudo().browse(acquirer)
