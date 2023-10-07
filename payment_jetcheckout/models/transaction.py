@@ -501,21 +501,24 @@ class PaymentTransaction(models.Model):
         Use this function in case of emergency when transaction records are corrupted.
         It requests data from payment service and resync related transactions.
         """
-        date_start = datetime.strptime(date_start, DF).date() if date_start else date.today() - relativedelta(days=1)
-        date_end = datetime.strptime(date_end, DF).date() if date_end else date.today()
-
         tz = pytz.timezone('Europe/Istanbul')
         offset = tz.utcoffset(fields.Datetime.now())
+        if date_start is not False:
+            date_start = datetime.strptime(date_start, DF).date() if date_start else date.today() - relativedelta(days=1)
+            date_start = datetime.combine(date_start, datetime.min.time()) + offset
 
-        date_start = datetime.combine(date_start, datetime.min.time()) + offset
-        date_end = datetime.combine(date_end, datetime.min.time()) + offset
+        if date_start is not False:
+            date_end = datetime.strptime(date_end, DF).date() if date_end else date.today()
+            date_end = datetime.combine(date_end, datetime.min.time()) + offset
 
         domain = [
             ('acquirer_id.provider', '=', 'jetcheckout'),
             ('source_transaction_id', '=', False),
-            ('create_date', '>=', date_start.strftime(DTF)),
-            ('create_date', '<=', date_end.strftime(DTF)),
         ]
+        if date_start:
+            domain.append(('create_date', '>=', date_start.strftime(DTF)))
+        if date_end:
+            domain.append(('create_date', '<=', date_end.strftime(DTF)))
         if companies:
             domain.append(('company_id', 'in', companies))
         if states:

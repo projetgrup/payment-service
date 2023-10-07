@@ -33,6 +33,18 @@
             <field name="padding">6</field>
         </record>
 
+        <record id="cron_query_pending_transaction" model="ir.cron">
+            <field name="name">Payment Transaction: Query pending transactions</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="state">code</field>
+            <field name="code">model.paylox_resync(date_start=False, date_end=False, states=['pending'])</field>
+            <field name="interval_number">30</field>
+            <field name="active">True</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(hours=1, minute=0)).strftime('%Y-%m-%d 01:00:00')" />
+        </record>
+
         <record id="cron_resync_transaction" model="ir.cron">
             <field name="name">Payment Transaction: Resync transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>

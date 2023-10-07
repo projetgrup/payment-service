@@ -84,7 +84,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amountEditable = false;
         this.itemPriority = false;
         this.amount = new fields.float({
-            default: '0',
+            default: 0,
         });
         this.vat = new fields.string();
         this.campaign = {
@@ -403,12 +403,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     _onClickLink: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const amount = IMask.pipe(
-            this.amount.value,
-            payloxPage.prototype._maskAmount.apply(this),
-            IMask.PIPE_TYPE.MASKED,
-            IMask.PIPE_TYPE.TYPED
-        ); 
+        const amount = parseFloat(this.amount.$.data('value') || 0);
         const params = [
             ['amount', amount],
             ['currency', this.currency.name],

@@ -198,7 +198,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             padFractionalZeros: true,
             scale: this.currency.decimal,
             radix: this.currency.separator,
-            mapToRadix: [this.currency.thousand],
+            mapToRadix: [],
             thousandsSeparator: this.currency.thousand,
         }
     },
@@ -528,6 +528,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _onUpdateAmount: function () {
         this.amount._.updateValue();
+        this.amount.$.data('value', this.amount.value);
         this._onInputAmount();
     },
 
