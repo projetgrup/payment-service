@@ -180,9 +180,9 @@ class VendorAPIService(Component):
 
     def _get_vendor(self, company, vendor):
         domain = [('is_company', '=', True), ('company_id', '=', company.id)]
-        if hasattr(vendor.vat) and vendor.vat:
+        if hasattr(vendor, 'vat') and vendor.vat:
             domain.append(('vat', '=', vendor.vat))
-        if hasattr(vendor.ref) and vendor.ref:
+        if hasattr(vendor, 'ref') and vendor.ref:
             domain.append(('ref', '=', vendor.ref))
         return self.env['res.partner'].sudo().search(domain, limit=1)
 
