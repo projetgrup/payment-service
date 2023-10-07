@@ -206,6 +206,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'mobile': line['partner_mobile'] or line['partner_phone'],
                             'user_id': user and user.id,
                             'company_id': company.id,
+                            'is_company': True,
                         })
             else:
                 items_all = self.env['payment.item']
@@ -236,6 +237,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'phone': line['partner_phone'],
                                     'mobile': line['partner_phone'],
                                     'company_id': company.id,
+                                    'is_company': True,
                                 })
                             items_all.create({
                                 'system': wizard.system or company.system,
@@ -276,6 +278,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'phone': line['partner_phone'],
                                     'mobile': line['partner_mobile'] or line['partner_phone'],
                                     'company_id': company.id,
+                                    'is_company': True,
                                 })
                             items_all.create({
                                 'system': wizard.system or company.system,

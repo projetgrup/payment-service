@@ -149,6 +149,9 @@ class Partner(models.Model):
             if company and company.system:
                 values['system'] = company.system
 
+        if 'is_company' not in values:
+            values['is_company'] = True
+
         res = super().create(values)
 
         if 'user_id' in values:
