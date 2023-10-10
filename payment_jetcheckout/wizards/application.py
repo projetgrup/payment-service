@@ -2,6 +2,7 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
+
 class PaymentPayloxApiApplication(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.application'
     _description = 'Paylox API Application'
@@ -78,7 +79,7 @@ class PaymentPayloxApiApplication(models.TransientModel):
     def create(self, vals):
         res = super().create(vals)
         if 'res_id' not in vals:
-            id = res.acquirer_id._rpc(res._remote_name, 'create', vals)
+            id = res.acquirer_id._rpc(res, 'create', vals)
             res.write({'res_id': id})
         return res
 
@@ -86,7 +87,8 @@ class PaymentPayloxApiApplication(models.TransientModel):
         res = super().write(vals)
         if 'res_id' not in vals:
             for app in self:
-                app.acquirer_id._rpc(app._remote_name, 'write', app.res_id, vals)
+                app.acquirer_id._rpc(app, 'write', app.res_id, vals)
+                app.acquirer_id._paylox_api_sync_campaign()
 
         if 'name' in vals:
             for app in self:
@@ -94,7 +96,6 @@ class PaymentPayloxApiApplication(models.TransientModel):
                     app.acquirer_id.jetcheckout_api_name = vals['name']
                     break
 
-        self.acquirer_id._paylox_api_sync_campaign()
         return res
 
     def unlink(self):

@@ -144,6 +144,11 @@
         <xpath expr="//tree" position="attributes">
             <attribute name="js_class">transaction_buttons</attribute>
         </xpath>
+        <xpath expr="//tree//field" position="before">
+            <header>
+                <button name="action_payment" type="object" string="Payment"/>
+            </header>
+        </xpath>
         <xpath expr='//field[@name="partner_name"]' position="replace">
             <field name="partner_name" invisible="1"/>
         </xpath>
@@ -167,6 +172,26 @@
             <field name="jetcheckout_installment_description_long" string="Installment" decoration-info="jetcheckout_installment_count == 1" widget="badge"/>
             <field name="jetcheckout_card_family" optional="hide"/>
             <field name="jetcheckout_transaction_id" optional="hide"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="payment_transaction_search" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="payment.payment_transaction_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[last()]" position="after">
+            <field name="jetcheckout_transaction_id" optional="hide" string="TransactionID"/>
+        </xpath>
+        <xpath expr="//group" position="before">
+            <separator/>
+            <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+            <filter string="Pending" name="state_pending" domain="[('state', '=', 'pending')]"/>
+            <filter string="Done" name="state_done" domain="[('state', '=', 'done')]"/>
+            <filter string="Error" name="state_error" domain="[('state', '=', 'error')]"/>
+            <filter string="Cancel" name="state_cancel" domain="[('state', '=', 'cancel')]"/>
+            <separator/>
         </xpath>
     </field>
     </record>

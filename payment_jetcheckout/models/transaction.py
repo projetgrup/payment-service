@@ -291,6 +291,10 @@ class PaymentTransaction(models.Model):
             self.env.cr.rollback()
             _logger.error('Confirming order for transaction %s is failed\n%s' % (self.reference, e))
 
+    def action_payment(self):
+        for tx in self:
+            tx.paylox_payment()
+
     def paylox_payment(self):
         self.ensure_one()
         if not self.jetcheckout_payment_ok:
