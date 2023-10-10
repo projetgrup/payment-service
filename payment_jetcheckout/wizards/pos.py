@@ -108,7 +108,7 @@ class PaymentPayloxApiPos(models.TransientModel):
     def create(self, vals):
         res = super().create(vals)
         if 'res_id' not in vals:
-            id = res.acquirer_id._rpc(res._remote_name, 'create', vals)
+            id = res.acquirer_id._rpc(res, 'create', vals)
             res.write({'res_id': id})
         return res
 
@@ -116,10 +116,10 @@ class PaymentPayloxApiPos(models.TransientModel):
         res = super().write(vals)
         if 'res_id' not in vals:
             for pos in self:
-                pos.acquirer_id._rpc(pos._remote_name, 'write', pos.res_id, vals)
-            self.acquirer_id._paylox_api_sync_campaign()
+                pos.acquirer_id._rpc(pos, 'write', pos.res_id, vals)
+                pos.acquirer_id._paylox_api_sync_campaign()
         return res
- 
+
     def unlink(self):
         if not self.env.context.get('no_sync'):
             for pos in self:

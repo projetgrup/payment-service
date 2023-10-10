@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-05 11:10+0000\n"
-"PO-Revision-Date: 2023-09-05 11:10+0000\n"
+"POT-Creation-Date: 2023-10-10 07:28+0000\n"
+"PO-Revision-Date: 2023-10-10 07:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -440,6 +440,12 @@ msgid "An error occured."
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/rpc.py:0
+#, python-format
+msgid "An error occured. %s"
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
@@ -651,6 +657,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_applications_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_campaigns_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_poses_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
 #, python-format
 msgid "Cancel"
 msgstr ""
@@ -1176,7 +1183,13 @@ msgid "Domain"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
+msgid "Done"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__draft
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
 msgid "Draft"
 msgstr ""
 
@@ -1205,6 +1218,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__error
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
 #, python-format
 msgid "Error"
 msgstr ""
@@ -1286,6 +1300,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_ir_http
 msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_no_smart_buttons
+msgid "Hide Smart Buttons"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1380,6 +1399,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_installment_header
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 #, python-format
 msgid "Installment"
 msgstr ""
@@ -1948,6 +1968,7 @@ msgstr ""
 #. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.portal_button
 #, python-format
 msgid "Payment"
@@ -2027,6 +2048,13 @@ msgid "Payment Transaction: Fix corrupted transactions"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.actions.server,name:payment_jetcheckout.cron_resync_pending_transaction_ir_actions_server
+#: model:ir.cron,cron_name:payment_jetcheckout.cron_resync_pending_transaction
+#: model:ir.cron,name:payment_jetcheckout.cron_resync_pending_transaction
+msgid "Payment Transaction: Resync pending transactions"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.actions.server,name:payment_jetcheckout.cron_resync_transaction_ir_actions_server
 #: model:ir.cron,cron_name:payment_jetcheckout.cron_resync_transaction
 #: model:ir.cron,name:payment_jetcheckout.cron_resync_transaction
@@ -2061,6 +2089,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__pending
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
 msgid "Pending"
 msgstr ""
 
@@ -2649,6 +2678,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:res.groups,name:payment_jetcheckout.group_transaction_refund
 msgid "Transaction refund"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
+msgid "TransactionID"
 msgstr ""
 
 #. module: payment_jetcheckout

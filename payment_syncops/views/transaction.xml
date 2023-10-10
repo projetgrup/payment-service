@@ -52,10 +52,8 @@
             <field name="jetcheckout_connector_partner_name" string="Related Partner Name" optional="hide"/>
             <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" optional="hide"/>
         </xpath>
-        <xpath expr="//tree//field" position="before">
-            <header>
-                <button name="action_syncops_xlsx" type="object" string="Excel"/>
-            </header>
+        <xpath expr="//header" position="inside">
+            <button name="action_syncops_xlsx" type="object" string="Excel"/>
         </xpath>
     </field>
     </record>
@@ -65,11 +63,12 @@
     <field name="inherit_id" ref="payment.payment_transaction_search"/>
     <field name="priority" eval="15"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='partner_name']" position="after">
+        <xpath expr="//group" position="before">
             <separator/>
             <filter string="Connector Transactions" name="connector_ok" domain="[('jetcheckout_connector_ok', '=', True)]"/>
             <separator/>
             <filter string="Failed Connector Transactions" name="connector_state" domain="[('jetcheckout_connector_ok', '=', True), ('jetcheckout_connector_state', '=', True)]"/>
+            <separator/>
         </xpath>
     </field>
     </record>
