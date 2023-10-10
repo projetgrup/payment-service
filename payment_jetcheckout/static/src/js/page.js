@@ -634,6 +634,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 self.card.family = '';
                             }
                             self.card.bin = bin;
+                            self.campaign.name.value = result.campaign;
+                            $('span#campaign').html(self.campaign.name.value || '-');
                         }
                     }).guardedCatch(function (error) {
                         self.displayNotification({
