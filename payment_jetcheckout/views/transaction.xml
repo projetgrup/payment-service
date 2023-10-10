@@ -157,6 +157,7 @@
             <field name="partner_vat" optional="hide"/>
         </xpath>
         <xpath expr='//field[@name="amount"]' position="after">
+            <field name="jetcheckout_vpos_name" optional="hide"/>
             <field name="jetcheckout_payment_amount" optional="hide"/>
             <field name="jetcheckout_customer_rate" string="Customer Rate (%)" optional="hide"/>
             <field name="jetcheckout_customer_amount" optional="hide"/>

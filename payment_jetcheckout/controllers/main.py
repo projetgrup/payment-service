@@ -216,6 +216,11 @@ class PayloxController(http.Controller):
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
+        if not request.env.user.has_group('base.group_user'):
+            client = self._get_partner(int(partner))
+            if client and client.campaign_id:
+                campaign = client.campaign_id.name
+
         acquirer = self._get_acquirer(acquirer=acquirer)
         currency =  self._get_currency(currency, acquirer)
         type = self._get_type()
@@ -536,6 +541,7 @@ class PayloxController(http.Controller):
             return values
 
         return {
+            'campaign': values['campaign'],
             'cols': values['cols'],
             'rows': values['rows'],
             'family': values['family'],
@@ -568,9 +574,9 @@ class PayloxController(http.Controller):
         acquirer = self._get_acquirer()
         currency = self._get_currency(kwargs['currency'], acquirer)
         partner = self._get_partner(int(kwargs['partner']))
-        campaign = not request.env.user.has_group('base.group_user') and partner.campaign_id.name or kwargs.get('campaign', '')
-        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        campaign = kwargs.get('campaign', '')
         year = str(fields.Date.today().year)[:2]
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
