@@ -503,7 +503,7 @@ class PaymentTransaction(models.Model):
     def paylox_resync_pending(self):
         date = datetime.now() - relativedelta(minutes=30)
         domain = [
-            ('state', '=', 'pending')
+            ('state', '=', 'pending'),
             ('source_transaction_id', '=', False),
             ('acquirer_id.provider', '=', 'jetcheckout'),
             ('create_date', '<=', date)

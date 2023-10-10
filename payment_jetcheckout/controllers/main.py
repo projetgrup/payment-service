@@ -568,9 +568,9 @@ class PayloxController(http.Controller):
         acquirer = self._get_acquirer()
         currency = self._get_currency(kwargs['currency'], acquirer)
         partner = self._get_partner(int(kwargs['partner']))
-        campaign = kwargs.get('campaign', '')
-        year = str(fields.Date.today().year)[:2]
+        campaign = not request.env.user.has_group('base.group_user') and partner.campaign_id.name or kwargs.get('campaign', '')
         hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        year = str(fields.Date.today().year)[:2]
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),

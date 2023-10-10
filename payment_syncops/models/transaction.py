@@ -57,7 +57,7 @@ class PaymentTransaction(models.Model):
             })
         else:
             self.write({
-                'jetcheckout_connector_ref': result[0] and result[0][0].get('ref', False),
+                'jetcheckout_connector_ref': result[0] and result[0][0].get('ref', False) or False,
                 'jetcheckout_connector_state': False,
                 'jetcheckout_connector_state_message': _('This transaction has been successfully posted to connector.')
             })
