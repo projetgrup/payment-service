@@ -89,6 +89,7 @@
                     <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>
+                    <field name="jetcheckout_campaign_name"/>
                     <label for="jetcheckout_vpos_name"/>
                     <div class="o_row">
                         <field name="jetcheckout_vpos_name"/>
