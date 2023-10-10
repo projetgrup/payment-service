@@ -221,12 +221,12 @@ class Users(models.Model):
 
     @api.model
     def create(self, values):
-        res = super().create(values)
+        res = super(Users, self.sudo()).create(values)
         res.company_id._update_subsystem()
         return res
 
     def write(self, values):
-        res = super(Users, self).write(values)
+        res = super(Users, self.sudo()).write(values)
         for user in self:
             if 'company_id' in values:
                 user.company_id._update_subsystem()
