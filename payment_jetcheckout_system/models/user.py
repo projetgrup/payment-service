@@ -221,12 +221,18 @@ class Users(models.Model):
 
     @api.model
     def create(self, values):
-        res = super(Users, self.sudo()).create(values)
+        if not self.env.user.has_group('base.group_erp_manager') and self.env.user.has_group('payment_jetcheckout_system.group_system_manager'):
+            self = self.sudo()
+
+        res = super(Users, self).create(values)
         res.company_id._update_subsystem()
         return res
 
     def write(self, values):
-        res = super(Users, self.sudo()).write(values)
+        if not self.env.user.has_group('base.group_erp_manager') and self.env.user.has_group('payment_jetcheckout_system.group_system_manager'):
+            self = self.sudo()
+
+        res = super(Users, self).write(values)
         for user in self:
             if 'company_id' in values:
                 user.company_id._update_subsystem()
