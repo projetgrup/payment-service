@@ -230,8 +230,16 @@ class PayloxSystemController(Controller):
         items = request.env['payment.item'].sudo().browse(ids)
         return items.with_context(amounts=amounts).get_due()
 
+    def _check_payment_page(self, items):
+        if not request.env.company.payment_page_ok:
+            raise werkzeug.exceptions.NotFound()
+        if not request.env.user.share and not request.env.user.payment_page_ok:
+            raise werkzeug.exceptions.NotFound()
+
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
+        self._check_payment_page()
+
         if not kwargs.get('values', {}).get('no_redirect'):
             if request.env.user.has_group('base.group_public'):
                 raise werkzeug.exceptions.NotFound()
@@ -288,6 +296,8 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def page_system_portal_return(self, **kwargs):
+        self._check_payment_page()
+
         kwargs['result_url'] = '/my/payment/result'
         url, tx, status = self._process(**kwargs)
         if not status and tx.jetcheckout_order_id:
@@ -296,6 +306,8 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_system_result(self, **kwargs):
+        self._check_payment_page()
+
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
@@ -308,6 +320,8 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
     def page_system_transaction(self, page=0, tpp=20, **kwargs):
+        self._check_payment_page()
+
         values = self._prepare()
         tx_ids = request.env['payment.transaction'].sudo().search([
             ('acquirer_id', '=', values['acquirer'].id),
@@ -325,6 +339,8 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_login(self, token, **kwargs):
+        self._check_payment_page()
+
         partner = self._get_parent(token)
         redirect = self._check_redirect(partner)
         if redirect:
@@ -340,10 +356,13 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_query_partner(self, **kwargs):
+        self._check_payment_page()
         return {}
 
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
     def page_system_create_partner(self, **kwargs):
+        self._check_payment_page()
+
         company = request.env.company
         values = {**kwargs}
         values.update({

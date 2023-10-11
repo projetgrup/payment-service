@@ -79,9 +79,9 @@
                 <button name="action_share_payment_link" type="object" string="Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
                 <button name="action_share_payment_page" type="object" string="Payment Page" class="oe_highlight" attrs="{'invisible': [('is_portal', '=', False)]}"/>
                 <button name="action_send" type="object" string="Send Message" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
-                <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled"/>
-                <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
-                <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled"/>
+                <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_grant_partner"/>
+                <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_grant_partner"/>
+                <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_grant_partner"/>
                 <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
                 <field name="is_portal" invisible="1"/>
                 <field name="is_internal" invisible="1"/>
