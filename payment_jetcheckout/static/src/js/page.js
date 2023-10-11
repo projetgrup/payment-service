@@ -80,6 +80,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             table: new fields.string({
                 events: [['click', this._onClickCampaingTable]],
             }),
+            locked: false,
         };
         this.currency = {
             id: 0,
@@ -315,7 +316,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         } catch {}
     },
 
-    _onChangeCampaign: function (ev) {
+    _onChangeCampaign: function (ev, { locked }) {
+        this.campaign.locked = locked;
         const campaign = $(ev.currentTarget).val();
         $('span#campaign').html(campaign || '-');
         this._getInstallment(true);
@@ -634,8 +636,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 self.card.family = '';
                             }
                             self.card.bin = bin;
-                            self.campaign.name.value = result.campaign;
-                            $('span#campaign').html(self.campaign.name.value || '-');
+                            if (!self.campaign.locked) {
+                                self.campaign.name.value = result.campaign;
+                                $('span#campaign').html(self.campaign.name.value || '-');
+                            }
                         }
                     }).guardedCatch(function (error) {
                         self.displayNotification({
