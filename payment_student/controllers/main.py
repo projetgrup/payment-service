@@ -32,6 +32,7 @@ class PayloxSystemStudentController(Controller):
                     bursary_amount = payment.amount * payment.bursary_id.percentage / 100 if payment.bursary_id else 0
                     prepayment_amount = payment.amount - amount - bursary_amount
                     items.append((0, 0, {
+                        'item_id': payment.id,
                         'amount': amount,
                         'bursary_amount': bursary_amount,
                         'prepayment_amount': prepayment_amount,
