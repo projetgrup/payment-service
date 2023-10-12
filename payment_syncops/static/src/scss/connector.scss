@@ -1,4 +1,21 @@
-.payment-system {
+.payment-page {
+    .o_connector_partner_loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        background: #ffffffaa;
+        transition: all 0.2s;
+        inset: 0;
+        opacity: 0;
+        visibility: hidden;
+
+        &.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
     .o_connector_pages {
         button.o_connector_button_page {
             background-color: #ffffff;

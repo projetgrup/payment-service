@@ -11,7 +11,7 @@
 
     <template id="payment_balance" name="Payment System Page - syncOPS Partner Balance">
         <t t-if="show_balance">
-            <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
+            <label name="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
                 <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
                     <i class="fa fa-book mr-2" t-translation="off"/>See Ledger
                 </a>

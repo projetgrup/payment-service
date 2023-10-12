@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="paylox.syncops.partner.list">
-        <main style="padding: 0 !important;">
+        <main style="padding: 0 !important;" class="position-relative">
+            <div class="o_connector_partner_loading">
+                <i class="fa fa-4x fa-spin fa-circle-o-notch text-primary"/>
+            </div>
             <div class="bg-light d-flex justify-content-center py-3 text-center">
-                <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_partner_query" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;"/>
+                <input type="text" placeholder="Search partner..." class="form-control shadow-sm o_connector_partner_query" style="border-radius: 5px 0 0 5px; width: 50%; max-width: 400px;" t-att-value="partner.search"/>
                 <button class="btn btn-warning shadow-sm o_connector_partner_search" style="border-radius: 0 5px 5px 0; height: 34px;"><i class="fa fa-search mr-2" t-translation="off"/>Search</button>
             </div>
             <div class="table-responsive">
@@ -58,7 +61,7 @@
             <tr>
                 <td colspan="7" class="p-5 text-center">
                     <i class="fa fa-search-minus h1 text-muted" style="font-size: 3rem;"/>
-                    <span class="d-block h4 mt-4 text-muted">No records found. If you think that it is an error, please try again.</span>
+                    <span class="d-block h4 mt-4 text-muted">No records found</span>
                 </td>
             </tr>
         </t>
@@ -85,7 +88,7 @@
             <tr>
                 <td colspan="6" class="text-center">
                     <i class="fa fa-search-minus h1 text-muted" style="font-size: 3rem;"/>
-                    <span class="d-block h2 mt-4 text-muted">No partners found. If you think that it is an error, please try again.</span>
+                    <span class="d-block h2 mt-4 text-muted">No partners found</span>
                 </td>
             </tr>
         </t>
@@ -94,12 +97,12 @@
     <t t-name="paylox.syncops.pages">
         <t t-foreach="pages" t-as="p">
             <t t-if="p === 0">
-                <button class="border border-primary btn btn-fill-primary disabled shadow-sm rounded-0" disabled="disabled">
+                <button class="border border-primary btn btn-fill-primary disabled shadow-sm" disabled="disabled">
                     ...
                 </button>
             </t>
             <t t-else="">
-                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page rounded-0' || 'btn-outline-primary btn shadow-sm o_connector_button_page rounded-0'" t-att-data-page="p" t-att-data-type="type">
+                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page' || 'btn-outline-primary btn shadow-sm o_connector_button_page'" t-att-data-page="p" t-att-data-type="type">
                     <t t-esc="p"/>
                 </button>
             </t>
@@ -108,7 +111,7 @@
  
     <t t-name="paylox.syncops.balance">
         <t t-if="show_balance">
-            <label for="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
+            <label name="balance" class="text-primary font-weight-bold mt-3 mb-0 d-block">
                 <a t-if="show_ledger" role="button" class="btn btn-sm float-right font-weight-bold text-primary" href="/my/payment/ledger">
                     <i class="fa fa-book mr-2" t-translation="off"/>See Ledger
                 </a>
