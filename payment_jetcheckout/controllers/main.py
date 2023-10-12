@@ -569,7 +569,7 @@ class PayloxController(http.Controller):
         amount_customer = amount * installment['crate'] / 100
         amount_total = float_round(amount + amount_customer, 2)
         amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
-        amount_integer = int(amount_total * 100)
+        amount_integer = round(amount_total * 100)
 
         acquirer = self._get_acquirer()
         currency = self._get_currency(kwargs['currency'], acquirer)
