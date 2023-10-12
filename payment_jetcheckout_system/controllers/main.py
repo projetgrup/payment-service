@@ -230,7 +230,7 @@ class PayloxSystemController(Controller):
         items = request.env['payment.item'].sudo().browse(ids)
         return items.with_context(amounts=amounts).get_due()
 
-    def _check_payment_page(self, items):
+    def _check_payment_page(self):
         if not request.env.company.payment_page_ok:
             raise werkzeug.exceptions.NotFound()
         if not request.env.user.share and not request.env.user.payment_page_ok:
