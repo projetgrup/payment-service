@@ -71,7 +71,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
-        this.ready = false;
         this.currency = {
             id: 0,
             decimal: 2,
@@ -151,10 +150,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             if (self.payment.item.exist) {
                 self.itemPriority = self.payment.priority.exist;
                 self.amountEditable = self.payment.amount.exist;
-
-                self.ready = self.payment.item.$.filter(':not(:checked)').length > 0;
                 self._onChangePaid();
-                self.ready = true;
             }
         });
     },
@@ -263,7 +259,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         const $items = $('input.input-switch:checked');
         this.payment.items.checked = !!$items.length;
 
-        if (this.ready && this.payment.due.days.exist) {
+        if (this.payment.due.days.exist) {
             const self = this;
             const items = $items.map(function() {
                 const $this = $(this);
@@ -276,7 +272,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 self.payment.due.date.html = result.date;
                 self.payment.due.days.html = result.days;
                 self.campaign.name.value = result.campaign;
-                self.campaign.name.$.trigger('change');
+                self.campaign.name.$.trigger('change', [{ locked: true }]);
                 if (result.hide_payment) {
                     self.payment.due.warning.$.removeClass('d-none');
                     self.payment.due.warning.$.find('p').text(result.hide_payment_message);

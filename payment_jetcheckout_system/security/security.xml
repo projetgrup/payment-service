@@ -15,6 +15,10 @@
             <field name="name">Create Partners</field>
             <field name="category_id" ref="module_category_system_technical"/>
         </record>
+        <record model="res.groups" id="group_system_grant_partner">
+            <field name="name">Grant Partners</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
         <record model="res.groups" id="group_show_payment_link">
             <field name="name">Show Payment Link</field>
             <field name="category_id" ref="module_category_system_technical"/>
@@ -33,7 +37,7 @@
         <record model="res.groups" id="group_system_manager">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_system"/>
-            <field name="implied_ids" eval="[(4, ref('group_system_user')), (4, ref('group_system_create_partner')), (4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_commission'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_system_user')), (4, ref('group_system_create_partner')), (4, ref('group_system_grant_partner')), (4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_commission'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
     </data>
