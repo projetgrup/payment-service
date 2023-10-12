@@ -27,6 +27,18 @@ class PayloxSystemController(Controller):
                 raise werkzeug.exceptions.NotFound()
         return False
 
+    def _check_user(self):
+        path = urlparse(request.httprequest.referrer).path
+        if '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
+            raise AccessError(_('Access Denied'))
+        return super()._check_user()
+
+    def _check_payment_page(self):
+        if not request.env.company.payment_page_ok:
+            raise werkzeug.exceptions.NotFound()
+        if not request.env.user.share and not request.env.user.payment_page_ok:
+            raise werkzeug.exceptions.NotFound()
+
     def _get_parent(self, token):
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -35,20 +47,13 @@ class PayloxSystemController(Controller):
         websites = request.env['website'].sudo().search([('domain', 'like', '%%%s%%' % request.httprequest.host)])
         companies = websites.mapped('company_id')
         partner = request.env['res.partner'].sudo().search([
-            ('id', '=', id),
-            ('access_token', '=', token),
-            ('company_id', 'in', companies.ids),
+            ('id', '=', id), ('access_token', '=', token),
+            '|',('company_id', '=', False), ('company_id', 'in', companies.ids),
         ], limit=1)
         if not partner:
             raise werkzeug.exceptions.NotFound()
 
         return partner
-
-    def _check_user(self):
-        path = urlparse(request.httprequest.referrer).path
-        if '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
-            raise AccessError(_('Access Denied'))
-        return super()._check_user()
 
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
@@ -229,12 +234,6 @@ class PayloxSystemController(Controller):
         amounts = dict(items)
         items = request.env['payment.item'].sudo().browse(ids)
         return items.with_context(amounts=amounts).get_due()
-
-    def _check_payment_page(self):
-        if not request.env.company.payment_page_ok:
-            raise werkzeug.exceptions.NotFound()
-        if not request.env.user.share and not request.env.user.payment_page_ok:
-            raise werkzeug.exceptions.NotFound()
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
