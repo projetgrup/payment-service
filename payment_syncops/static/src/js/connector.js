@@ -34,6 +34,7 @@ systemPage.include({
             partner: {
                 page: 1,
                 pageSize: 5,
+                search: '',
                 list: [],
                 flist: [],
                 filter: false,
@@ -61,13 +62,21 @@ systemPage.include({
         });
     },
 
+    _showLoading: function() {
+        $('.o_connector_partner_loading').addClass('show');
+    },
+
+    _hideLoading: function() {
+        $('.o_connector_partner_loading').removeClass('show');
+    },
+
     _onClickConnectorPartnerGet: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         framework.showLoading();
         if (!this.connector.partner.list.length) {
             const self = this;
-            rpc.query({route: '/my/payment/partners'}).then(function (partners) {
+            rpc.query({ route: '/my/payment/partners' }).then(function (partners) {
                 self._getConnectorPartners(partners);
             });
         } else {
@@ -83,7 +92,7 @@ systemPage.include({
         const self = this;
         const popup = new Dialog(this, {
             title: _t('Select a partner'),
-            $content: qweb.render('paylox.syncops.partner.list', {}),
+            $content: qweb.render('paylox.syncops.partner.list', { partner }),
             dialogClass: 'o_connector_partner_table'
         });
         popup.opened(function() {
@@ -106,7 +115,7 @@ systemPage.include({
                 }).then(function (result) {
                     $el.prop({'disabled': 'disabled'}).addClass('disabled');
                     $('input#campaign').val($el.data('campaign') || '');
-                    $('label[for="partner"] + span').text($el.data('company'));
+                    $('span[name=partner]').text($el.data('company'));
                     $('.o_connector_partner_balance').html(qweb.render('paylox.syncops.balance', {
                         balances: result.balances,
                         show_balance: result.show_balance,
@@ -128,17 +137,34 @@ systemPage.include({
         if (ev.key && ev.key !== 'Enter') return;
         const query = $('.o_connector_partner_query').val();
         const partner = this.connector.partner;
-        var partners = partner.list;
+        partner.search = query;
         if (query) {
-            let regex = new RegExp(query, 'i');
-            partners = partners.filter((p) => p.name.match(regex));
-            partner.flist = partners;
-            partner.filter = true;
+            const self = this;
+            self._showLoading();
+            rpc.query({
+                route: '/my/payment/partners',
+                params: { search: query }
+            }).then(function (partners) {
+                partner.list = partners;
+                partner.flist = [];
+                partner.filter = false;
+                self._renderConnectorPages('partner');
+                self._hideLoading();
+            }).guardedCatch(function (error) {
+                self._hideLoading();
+            });
+
+            //let regex = new RegExp(query, 'i');
+            //partners = partners.filter((p) => p.name.match(regex));
+            //partner.flist = partners;
+            //partner.filter = true;
+            //this._renderConnectorPages('partner');
         } else {
+            partner.list = [];
             partner.flist = [];
             partner.filter = false;
+            this._renderConnectorPages('partner');
         }
-        this._renderConnectorPages('partner');
     },
 
     _onClickConnectorPage: function (ev) {
@@ -279,7 +305,7 @@ systemPage.include({
         }).then(function (result) {
             if (!result) return false;
             $('span#campaign').html(result.campaign || '');
-            $('label[for="partner"] + span').text(result.name);
+            $('span[name=partner]').text(result.name);
             $('.o_connector_partner_balance').html(qweb.render('paylox.syncops.balance', {
                 balances: result.balances,
                 show_balance: result.show_balance,

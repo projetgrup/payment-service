@@ -4,6 +4,7 @@ import json
 import base64
 import pytz
 from datetime import datetime
+from urllib.parse import urlparse
 
 from odoo import http, fields, _
 from odoo.exceptions import ValidationError
@@ -187,10 +188,21 @@ class PayloxSyncopsController(Controller):
         company = company or request.env.company
         return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list', company=company)
 
+    def _connector_can_access_partner_list_search(self, company=None):
+        user = request.env.user.sudo()
+        company = company or request.env.company
+        return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list_search', company=company)
+
+    def _connector_can_access_partner_list_page(self, company=None):
+        user = request.env.user.sudo()
+        company = company or request.env.company
+        return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list_page', company=company)
+
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
         partner = self._get('syncops')
-        if request.httprequest.path == '/my/payment':
+        path = urlparse(request.httprequest.referrer).path
+        if path == '/my/payment':
             if partner:
                 vals.update({
                     'jetcheckout_connector_partner_name': partner['name'],
@@ -288,14 +300,35 @@ class PayloxSyncopsController(Controller):
 
     @http.route(['/my/payment/partners'], type='json', auth='user', website=True)
     def page_syncops_partners(self, **kwargs):
-        if not self._connector_can_access_partner_list():
-            return []
+        if self._connector_can_access_partner_list_page():
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list_page', params={
+                'company': request.env.company.sudo().partner_id.ref,
+                'search': kwargs.get('search', False),
+                'page': kwargs.get('page', 1),
+                'size': 20,
+            })
+            if not result == None:
+                return result
 
-        result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={
-            'company': request.env.company.sudo().partner_id.ref,
-        })
-        if not result == None:
-            return result
+        elif self._connector_can_access_partner_list_search():
+            search =  kwargs.get('search', False)
+            if not search:
+                return []
+
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list_search', params={
+                'company': request.env.company.sudo().partner_id.ref,
+                'search': search,
+            })
+            if not result == None:
+                return result
+
+        elif self._connector_can_access_partner_list():
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={
+                'company': request.env.company.sudo().partner_id.ref,
+            })
+            if not result == None:
+                return result
+
         return []
 
     @http.route(['/my/payment/partners/select'], type='json', auth='user', website=True)
