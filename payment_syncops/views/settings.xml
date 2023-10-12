@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.otp.form</field>
+    <field name="model">payment.settings</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@data-key='general_settings']" position="after">
+            <div class="app_settings_block" data-string="syncOPS" string="syncOPS" data-key="connector_syncops">
+                <h2>syncOPS</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_payment_page_partner_required"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_payment_page_partner_required" string="Partner Selection Required"/>
+                            <div class="text-muted">
+                                Make partner choice required on payment page for the company
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

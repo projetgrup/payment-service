@@ -6,6 +6,7 @@ import pytz
 from datetime import datetime
 
 from odoo import http, fields, _
+from odoo.exceptions import ValidationError
 from odoo.http import content_disposition, request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.tools.misc import xlsxwriter, formatLang
@@ -189,12 +190,15 @@ class PayloxSyncopsController(Controller):
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
         partner = self._get('syncops')
-        if partner and request.httprequest.path == '/my/payment':
-            vals.update({
-                'jetcheckout_connector_partner_name': partner['name'],
-                'jetcheckout_connector_partner_vat': partner['vat'],
-                'jetcheckout_connector_partner_ref': partner['ref'],
-            })
+        if request.httprequest.path == '/my/payment':
+            if partner:
+                vals.update({
+                    'jetcheckout_connector_partner_name': partner['name'],
+                    'jetcheckout_connector_partner_vat': partner['vat'],
+                    'jetcheckout_connector_partner_ref': partner['ref'],
+                })
+            elif request.env.company._check_syncops_payment_page_partner_required():
+                raise ValidationError(_('Please select a partner'))
 
         connector = request.env['syncops.connector'].sudo().search_count([
             ('company_id', '=', request.env.company.id),

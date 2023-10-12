@@ -20,7 +20,10 @@ class PayloxSystemVendorController(Controller):
         system = kwargs.get('system', request.env.company.system)
         if system == 'vendor':
             items = kwargs.get('items', [])
-            res['paylox_transaction_item_ids'] = [(0, 0, {'item_id': i[0], 'amount': i[1]}) for i in items]
+            res['paylox_transaction_item_ids'] = [(0, 0, {
+                'item_id': id,
+                'amount': amount
+            }) for id, amount in items]
         return res
 
     def _prepare_system(self, company, system, partner, transaction):

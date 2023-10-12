@@ -151,7 +151,7 @@ class SyncopsSyncWizard(models.TransientModel):
             ], ['id', 'email'])
             vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
             refs = {partner['ref']: partner['id'] for partner in partners if partner['ref']}
-            users = {user['email']: user['id'] for user in users}
+            users = {user['email']: user['id'] for user in users if user['email']}
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
                     if line['partner_user_email'] in users:

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 21:10+0000\n"
-"PO-Revision-Date: 2023-09-13 00:25+0300\n"
+"POT-Creation-Date: 2023-10-11 11:05+0000\n"
+"PO-Revision-Date: 2023-10-11 14:14+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -66,6 +66,12 @@ msgstr "Tutar"
 #, python-format
 msgid "An error occured."
 msgstr "Bir hata meydana geldi."
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/wizards/sync.py:0
+#, python-format
+msgid "An error occured. Please try again."
+msgstr "Bir hata meydana geldi. Lütfen daha sonra tekrar deneyiniz."
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
@@ -260,6 +266,11 @@ msgid "Invoice Name"
 msgstr "Fatura Adı"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Make partner choice required on payment page for the company"
+msgstr "Ödeme sayfasında şirket için iş ortağı seçimini zorunlu hale getirin"
+
+#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
@@ -346,6 +357,11 @@ msgid "Partner Salesperson Phone"
 msgstr "İş Ortağı Satış Personeli Telefon"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Partner Selection Required"
+msgstr "İş Ortağı Seçimi Zorunlu"
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_vat
 msgid "Partner Vat"
 msgstr "İş Ortağı VKN"
@@ -361,6 +377,11 @@ msgid "Payment"
 msgstr "Ödeme"
 
 #. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_payment_settings
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
+
+#. module: payment_syncops
 #: model:ir.model,name:payment_syncops.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
@@ -369,6 +390,12 @@ msgstr "Ödeme İşlemi"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/controllers/main.py:0
+#, python-format
+msgid "Please select a partner"
+msgstr "Bir iş ortağı seçiniz"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
@@ -509,6 +536,12 @@ msgid "Synchronization Type"
 msgstr "Eşleme Türü"
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_partner_required
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_partner_required
+msgid "Syncops Payment Page Partner Required"
+msgstr "Syncops Ödeme Sayfası İş Ortağı Zorunlu"
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_sync_item_subtype
 msgid "Syncops Sync Item Subtype"
 msgstr "Syncops Eşleme Kalem Alttür"
@@ -584,6 +617,11 @@ msgstr "Ödenmemiş Faturalar"
 #, python-format
 msgid "VAT"
 msgstr "Vergi No"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "syncOPS"
+msgstr "syncOPS"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.company_hierarchy_line
