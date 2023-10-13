@@ -15,12 +15,14 @@ class Partner(models.Model):
         for partner in self:
             acquirers = self._get_acquirers(partner)
             partner.acquirer_ids = [(6, 0, acquirers.ids)]
-   
+
     def _default_campaign_id(self):
         partner = False
-        active_id = self.env.context.get('active_id')
-        if active_id:
-            partner = self.browse(active_id)
+        model = self.env.context.get('active_model')
+        if model == 'res.partner':
+            pid = self.env.context.get('active_id')
+            if pid:
+                partner = self.browse(pid)
 
         acquirers = self._get_acquirers(partner, limit=1)
         if acquirers:
