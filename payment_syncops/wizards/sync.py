@@ -73,7 +73,7 @@ class SyncopsSyncWizard(models.TransientModel):
                 'partner_user_phone': line.get('user_phone', False),
                 'partner_user_mobile': line.get('user_mobile', False),
                 'partner_balance': line.get('balance', 0),
-            }) for line in lines]
+            }) for line in lines if line.get('balance', 0) > 0]
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
         elif self.type == 'item':
