@@ -32,15 +32,15 @@ class SyncopsConnector(models.Model):
                 raise UserError(_('This token is already exist. Please ensure that it is correct.'))
 
     @api.model
-    def _find(self, method, company=None):
+    def _find(self, method=None, company=None):
         if not company:
             company = self.env.company
+        
+        domain = [('company_id', '=', company.id), ('connected', '=', True)]
+        if method:
+            domain += [('line_ids.code', '=', method)]
 
-        return self.search([
-            ('company_id', '=', company.id),
-            ('connected', '=', True),
-            ('line_ids.code', '=', method)
-        ], limit=1)
+        return self.search(domain, limit=1)
 
     @api.model
     def _defaults(self, connector, method, io, values):
@@ -56,7 +56,7 @@ class SyncopsConnector(models.Model):
         return {default.name: default._value(values) for default in defaults}
 
     @api.model
-    def _execute(self, method, params={}, company=None, message=None):
+    def _execute(self, method, ref='', params={}, company=None, message=None):
         result = []
         try:
             if not company:
@@ -80,6 +80,7 @@ class SyncopsConnector(models.Model):
                 'username': connector.username,
                 'token': connector.token,
                 'method': method,
+                'ref': ref,
                 'params': params,
             })
             if response.status_code == 200:

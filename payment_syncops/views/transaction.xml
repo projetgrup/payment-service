@@ -7,7 +7,8 @@
         <xpath expr="//button[@name='paylox_payment']" position="before">
             <field name="jetcheckout_connector_ok" invisible="1"/>
             <button
-                style="pointer-events: none"
+                name="action_check_connector"
+                type="object"
                 class="oe_stat_button"
                 icon="fa-chain"
                 groups="base.group_user"
@@ -17,7 +18,8 @@
                 </div>
             </button>
             <button
-                style="pointer-events: none"
+                name="action_check_connector"
+                type="object"
                 class="oe_stat_button"
                 icon="fa-unlink"
                 groups="base.group_user"
@@ -35,7 +37,7 @@
             <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
             <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_name', '=', False)]}"/>
             <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_vat', '=', False)]}"/>
-            <field name="jetcheckout_connector_ref" string="Related Reference" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="base.group_no_one"/>
+            <field name="jetcheckout_connector_payment_ref" string="Related Reference" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="base.group_no_one"/>
             <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='state_message']" position="after">
