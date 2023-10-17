@@ -316,7 +316,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         } catch {}
     },
 
-    _onChangeCampaign: function (ev, { locked }) {
+    _onChangeCampaign: function (ev, { locked }={}) {
         this.campaign.locked = locked;
         const campaign = $(ev.currentTarget).val();
         $('span#campaign').html(campaign || '-');
