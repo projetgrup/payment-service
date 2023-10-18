@@ -91,6 +91,9 @@ class PaymentTransaction(models.Model):
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
+        if not line or line.account_code:
+            raise UserError(_('There is no account line for this provider'))
+
         result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', ref=str(self.id), params={
             'id': self.id,
             'ref': ref,
@@ -101,7 +104,7 @@ class PaymentTransaction(models.Model):
             'provider': self.acquirer_id.provider,
             'currency_name': self.currency_id.name,
             'company_id': self.company_id.partner_id.ref,
-            'account_code': line.account_code if line else '',
+            'account_code': line.account_code,
             'state': 'refund' if self.source_transaction_id else self.state,
             'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
             'card_number': self.jetcheckout_card_number or '',

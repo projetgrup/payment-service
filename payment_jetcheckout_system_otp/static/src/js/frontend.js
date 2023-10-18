@@ -37,6 +37,11 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         this.login = new fields.string({
             events: [['keyup', this._onKeyupLogin]],
         });
+        this.payment = {
+            company: new fields.element({
+                events: [['click', this._onClickCompany]],
+            }),
+        };
         this.card0 = new fields.element();
         this.card1 = new fields.element();
         this.id = new fields.string();
@@ -51,6 +56,19 @@ publicWidget.registry.PayloxSystemOtp = publicWidget.Widget.extend({
         const self = this;
         return this._super.apply(this, arguments).then(function () {
             payloxPage.prototype._start.apply(self);
+        });
+    },
+
+    _onClickCompany: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const $button = $(ev.currentTarget);
+        const cid = $button.data('id');
+        rpc.query({route: '/otp/company', params: { cid }}).then(function (confirmed) {
+            if (confirmed) {
+                framework.showLoading();
+                window.location.reload();
+            }
         });
     },
 
