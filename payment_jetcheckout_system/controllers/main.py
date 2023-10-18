@@ -172,7 +172,7 @@ class PayloxSystemController(Controller):
             return False
 
         website = request.env['website'].sudo().search([
-            ('domain', 'like', '%%%s%%' % request.httprequest.host),
+            ('domain', '=', request.website.domain),
             ('company_id', '=', cid)
         ], limit=1)
         if not website:
