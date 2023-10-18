@@ -84,8 +84,8 @@ class PaymentTransaction(models.Model):
 
     def action_process_connector(self):
         self.ensure_one()
-        #if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
-        #    return
+        if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
+            return
 
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
