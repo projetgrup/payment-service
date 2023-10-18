@@ -91,7 +91,7 @@ class PaymentTransaction(models.Model):
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
-        if not line or line.account_code:
+        if not line or not line.account_code:
             raise UserError(_('There is no account line for this provider'))
 
         result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', ref=str(self.id), params={
