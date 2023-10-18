@@ -9,7 +9,7 @@ class PayloxSystemOtpController(Controller):
     @http.route('/otp', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_otp(self, **kwargs):
         company = request.env.company
-        companies = request.env['website'].sudo().search([('domain', '=', request.website.domain)])
+        companies = request.env['website'].sudo().search([('domain', '=', request.website.domain)]).mapped('company_id')
         system = company.system
         values = {
             'company': company,
