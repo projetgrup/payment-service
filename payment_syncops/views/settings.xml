@@ -21,6 +21,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_cron_sync_partner"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_cron_sync_partner" string="Sync Partners Automatically"/>
+                            <div class="text-muted">
+                                Run a cronjob and sync partner list every day
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

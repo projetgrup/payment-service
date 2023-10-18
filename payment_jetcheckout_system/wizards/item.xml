@@ -30,9 +30,16 @@
                 </group>
             </sheet>
             <footer>
-                <button name="confirm" type="object" string="View" class="btn-primary" icon="fa-globe"/>
-                <button name="send" type="object" string="Send" class="btn-primary" icon="fa-send"/>
-                <button special="cancel" string="Cancel" icon="fa-times"/>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button name="confirm" type="object" string="View" class="btn-primary mr-1" icon="fa-globe"/>
+                        <button name="send" type="object" string="Send" class="btn-primary mr-1" icon="fa-send"/>
+                        <button special="cancel" string="Cancel" icon="fa-times"/>
+                    </div>
+                    <div>
+                        <field name="url" widget="CopyClipboardChar" class="h-100 d-flex align-items-center p-2" options="{'string': 'Copy'}"/>
+                    </div>
+                </div>
             </footer>
         </form>
     </field>

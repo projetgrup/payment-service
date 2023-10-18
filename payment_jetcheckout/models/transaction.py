@@ -512,7 +512,7 @@ class PaymentTransaction(models.Model):
         txs = self.sudo().search(domain)
         for tx in txs:
             try:
-                tx._jetcheckout_query()
+                tx._paylox_query()
                 self.env.cr.commit()
             except:
                 self.env.cr.rollback()

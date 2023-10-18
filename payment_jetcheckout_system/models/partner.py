@@ -430,7 +430,10 @@ class Partner(models.Model):
 
     def action_redirect_payment_link(self):
         self.ensure_one()
-        wizard = self.env['payment.item.wizard'].create({'partner_id': self.id})
+        wizard = self.env['payment.item.wizard'].create({
+            'partner_id': self.id,
+            'url': self._get_payment_url(),
+        })
         action = self.sudo().env.ref('payment_jetcheckout_system.action_item_wizard').sudo().read()[0]
         action['res_id'] = wizard.id
         return action
