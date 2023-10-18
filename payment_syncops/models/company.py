@@ -5,6 +5,7 @@ from odoo import models, fields
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    syncops_cron_sync_partner = fields.Boolean()
     syncops_sync_item_subtype = fields.Char()
     syncops_payment_page_partner_required = fields.Boolean()
 

@@ -7,6 +7,7 @@ class PaymentItemWizard(models.TransientModel):
     _description = 'Payment Items Wizard'
 
     partner_id = fields.Many2one('res.partner', readonly=True)
+    url = fields.Char(readonly=True)
     line_ids = fields.One2many('payment.item', related='partner_id.payable_ids', readonly=False)
 
     def write(self, values):

@@ -9,12 +9,15 @@ class PayloxSystemOtpController(Controller):
     @http.route('/otp', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_otp(self, **kwargs):
         company = request.env.company
+        companies = request.env['website'].sudo().search([('domain', '=', request.website.domain)])
         system = company.system
         values = {
             'company': company,
+            'companies': companies,
             'website': request.website,
             'footer': request.website.payment_footer,
             'system': system,
+            'tags': [],
         }
         return request.render('payment_jetcheckout_system_otp.page_otp', values)
 
@@ -93,6 +96,22 @@ LIMIT 1
             'vat': vat,
             'ref': ref,
         }
+
+
+    @http.route(['/otp/company'], type='json', auth='public', website=True, csrf=False)
+    def page_system_otp_company(self, cid):
+        if cid == request.env.company.id:
+            return False
+
+        website = request.env['website'].sudo().search([
+            ('domain', 'like', '%%%s%%' % request.httprequest.host),
+            ('company_id', '=', cid)
+        ], limit=1)
+        if not website:
+            return False
+
+        website._force()
+        return True
 
     @http.route(['/otp/validate'], type='json', auth='public', sitemap=False, website=True)
     def page_system_otp_validate(self, **kwargs):
