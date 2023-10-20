@@ -81,6 +81,19 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_page_advance_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_advance_ok" string="Activate Advance Payments"/>
+                                    <div class="text-muted">
+                                        Allow partners to make advance payments on payment page
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_due_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -123,15 +136,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="o_setting_left_pane" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_due_hide_payment_ok"/>
                                 </div>
-                                <div class="o_setting_right_pane" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
-                                    <label for="payment_page_due_hide_payment_ok" string="Hide Payment Form"/>
+                                <div class="o_setting_right_pane">
+                                <label for="payment_page_due_hide_payment_ok" string="Hide Payment Form"/>
                                     <div class="text-muted">
                                         If due date is out of the list, hide payment form
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': ['|', ('payment_page_due_hide_payment_ok', '=', False), ('payment_page_due_ok', '=', False)]}">
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_due_hide_payment_ok', '=', False)]}">
                                         <div class="row mt16">
                                             <label for="payment_page_due_hide_payment_message" string="Message" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_due_hide_payment_message" class="flex-fill" placeholder="This message will be displayed instead of payment form..."/>

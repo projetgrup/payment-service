@@ -4,7 +4,7 @@ import base64
 import re
 from urllib.parse import urlparse
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.tools import html_escape
 from odoo.exceptions import AccessError, UserError
@@ -234,6 +234,65 @@ class PayloxSystemController(Controller):
         amounts = dict(items)
         items = request.env['payment.item'].sudo().browse(ids)
         return items.with_context(amounts=amounts).get_due()
+
+    @http.route(['/p/advance/add'], type='json', auth='public', website=True, csrf=False)
+    def page_system_advance_add(self, amount):
+        if not request.env.company.payment_page_advance_ok:
+            raise
+
+        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            raise
+
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            raise
+
+        item = request.env['payment.item'].sudo().search([
+            ('advance', '=', True),
+            ('parent_id', '=', partner.id),
+            ('paid', '=', False)
+        ])
+        if item:
+            item.write({
+                'date': fields.Date.today(),
+                'amount': item.amount + amount,
+            })
+        else:
+            request.env['payment.item'].sudo().create({
+                'parent_id': partner.id,
+                'amount': amount,
+                'advance': True,
+                'description': _('Advance Payment'),
+            })
+        return True
+
+    @http.route(['/p/advance/remove'], type='json', auth='public', website=True, csrf=False)
+    def page_system_advance_remove(self, pid):
+        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            raise
+
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            raise
+
+        request.env['payment.item'].sudo().search([
+            ('id', '=', pid),
+            ('parent_id', '=', partner.id),
+            ('paid_amount', '=', 0)
+        ]).unlink()
+        return True
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_portal(self, **kwargs):
