@@ -77,6 +77,7 @@ class PaymentItem(models.Model):
     campaign_id = fields.Many2one(related='parent_id.campaign_id', string='Campaign')
 
     amount = fields.Monetary()
+    advance = fields.Boolean()
     date = fields.Date()
     due_date = fields.Date()
     due_amount = fields.Float(compute='_compute_due_amount')
@@ -120,6 +121,13 @@ class PaymentItem(models.Model):
         return action
 
     @api.model
+    def default_get(self, field):
+        res = super().default_get(field)
+        res['date'] = fields.Date.today()
+        res['due_date'] = fields.Date.today()
+        return res
+
+    @api.model
     def create(self, values):
         res = super().create(values)
         if not res.system:
@@ -150,6 +158,8 @@ class PaymentItem(models.Model):
         days = 0
         date = False
         campaign = ''
+        advance_amount = 0
+        advance_campaign = ''
         hide_payment = False
         hide_payment_message = ''
 
@@ -168,15 +178,25 @@ class PaymentItem(models.Model):
 
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
-            days, campaign, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
+            days, campaign, advance, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
+
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
+
+            if advance:
+                due = advance.due + advance.tolerance
+                if advance.round:
+                    due -= 0.49
+                advance_amount = (sign * amount / due) - total if due else 0
+                advance_campaign = advance.campaign_id.name
 
         return {
             'amount': amount,
             'days': days,
             'date': date,
             'campaign': campaign,
+            'advance_amount': advance_amount,
+            'advance_campaign': advance_campaign,
             'hide_payment': hide_payment,
             'hide_payment_message': hide_payment_message,
         }

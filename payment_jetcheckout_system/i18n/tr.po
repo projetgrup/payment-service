@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 11:05+0000\n"
-"PO-Revision-Date: 2023-10-11 14:07+0300\n"
+"POT-Creation-Date: 2023-10-19 12:58+0000\n"
+"PO-Revision-Date: 2023-10-19 16:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -412,6 +412,11 @@ msgid "Action Needed"
 msgstr "Eylem Gerekli"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Activate Advance Payments"
+msgstr "Avans Ödemelerini Etkinleştir"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Active"
 msgstr "Aktif"
@@ -433,6 +438,17 @@ msgid "Administrator"
 msgstr "Yönetici"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__advance
+msgid "Advance"
+msgstr "Avans"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Advance Payment"
+msgstr "Avans Ödemesi"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 msgid "Agreements"
 msgstr "Sözleşmeler"
@@ -446,6 +462,11 @@ msgstr "Tüm Zamanlar"
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__payment_page_item_priority_selection__no
 msgid "All items can be selected"
 msgstr "Tüm kalemler seçilebilir"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Allow partners to make advance payments on payment page"
+msgstr "İş ortaklarının ödeme sayfasında avans ödeme yapmalarına izin verin"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -478,6 +499,7 @@ msgstr "Tutar<br/>(Tümü / Başarılı)"
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "An error occured. Please try again."
 msgstr "Bir hata meydana geldi. Lütfen tekrar deneyiniz."
@@ -601,6 +623,17 @@ msgstr "Çocuk"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Children"
 msgstr "Çocuklar"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid ""
+"Click here for getting <span class=\"text-primary\">%s</span> campaign by "
+"adding <span class=\"text-primary\">%s</span> advance payment"
+msgstr ""
+"<span class=\"text-primary\">%s</span> kampanyasından yararlanmak adına "
+"<span class=\"text-primary\">%s</span> avans ödemesi eklemek için tıklayın"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
@@ -947,6 +980,13 @@ msgstr "Epostalar %s üzerinden gönderilecektir"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 msgid "Enter credit card details"
 msgstr "Kredi kartı bilgilerini girin"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Error"
+msgstr "Hata"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__failed_message_ids
@@ -1802,6 +1842,12 @@ msgstr "Ödeme Sayfası"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_page_ok
 msgid "Payment Page Active"
 msgstr "Ödeme Sayfası Aktif"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_advance_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_advance_ok
+msgid "Payment Page Advance"
+msgstr "Ödeme Sayfası Avans"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_ok
@@ -2748,6 +2794,11 @@ msgid "Unread Messages Counter"
 msgstr "Okunmamış Mesajlar Sayacı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__url
+msgid "Url"
+msgstr "Url"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Use campaign table instead of installment table on payment page"
 msgstr "Ödeme sayfasında taksit tablosu yerine kampanya tablosu kullanın"
@@ -3001,9 +3052,6 @@ msgstr "kayıt seçildi"
 
 #~ msgid "Confirm"
 #~ msgstr "Onayla"
-
-#~ msgid "Url"
-#~ msgstr "Url"
 
 #~ msgid "Payment System: Own Partners Only"
 #~ msgstr "Ödeme Sistemi: Sadece Kendi İş Ortakları"

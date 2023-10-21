@@ -76,12 +76,15 @@
                                         <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
                                         <div t-if="company.payment_page_due_base == 'date_due'" class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
                                         <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
-                                        <div class="align-items-center bg-200 d-flex justify-content-center p-2 text-center">
+                                        <div class="align-items-center bg-100 d-flex flex-column justify-content-center p-2 text-center">
                                             <span t-if="payment.description" t-field="payment.description"/>
                                             <span t-else="" class="text-500">Description</span>
+                                            <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
+                                                <i class="fa fa-times mr-1" t-translation="off"/>Remove
+                                            </button>
                                             <div class="payment-kanban-pdf position-absolute">
                                                 <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
-                                                    <button type="submit" class="btn btn-danger px-2 py-0 fa fa-file-pdf-o"/>
+                                                    <button type="submit" class="btn text-danger px-2 py-0 fa fa-file-pdf-o"/>
                                                 </form>
                                             </div>
                                         </div>
@@ -105,7 +108,10 @@
                                     </div>
                                 </div>
                                 <div class="d-block mt-2 text-600 text-center">
-                                    <em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
+                                    <div t-if="company.payment_page_due_ok" class="d-flex flex-column border-0">
+                                        <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
+                                        <em t-if="company.payment_page_advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
+                                    </div>
                                 </div>
                             </div>
                             <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
@@ -135,6 +141,9 @@
                                                     <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
                                                         <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
                                                     </form>
+                                                    <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
+                                                        <i class="fa fa-times mr-1" t-translation="off"/>Remove Advance
+                                                    </button>
                                                 </td>
                                                 <td class="text-center">
                                                     <label t-attf-class="switch mb-0 #{'disabled' if prioritize else ''}">
@@ -147,9 +156,14 @@
                                     </tbody>
                                     <tfoot class="shadow bg-light">
                                         <tr>
-                                            <td class="text-left" colspan="2"><em t-if="company.payment_page_due_ok">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em></td>
-                                            <td class="text-right" t-att-colspan="company.payment_page_due_base == 'date_due' and '5' or '4'"><em>Select All</em></td>
-                                            <td class="text-center">
+                                            <td class="text-left" colspan="5">
+                                                <div t-if="company.payment_page_due_ok" class="d-flex flex-wrap" style="gap: 5px;">
+                                                    <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
+                                                    <em t-if="company.payment_page_advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
+                                                </div>
+                                            </td>
+                                            <td class="text-right align-middle" t-att-colspan="company.payment_page_due_base == 'date_due' and '2' or '1'"><em>Select All</em></td>
+                                            <td class="text-center align-middle">
                                                 <label class="switch mb-0">
                                                     <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
                                                     <span class="slider round fa"/>

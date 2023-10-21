@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 11:05+0000\n"
-"PO-Revision-Date: 2023-10-11 14:14+0300\n"
+"POT-Creation-Date: 2023-10-21 07:17+0000\n"
+"PO-Revision-Date: 2023-10-21 10:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -131,9 +131,9 @@ msgid "Connector Partner VAT"
 msgstr "Bağlayıcı İş Ortağı Vergi No"
 
 #. module: payment_syncops
-#: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_ref
-msgid "Connector Reference"
-msgstr "Bağlayıcı Referansı"
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_payment_ref
+msgid "Connector Payment Reference"
+msgstr "Bağlayıcı Ödeme Referansı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_state
@@ -154,6 +154,11 @@ msgstr "Bağlayıcı İşlemi"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_search
 msgid "Connector Transactions"
 msgstr "Bağlayıcı İşlemleri"
+
+#. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_res_partner
+msgid "Contact"
+msgstr "Yetkili"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_invoice
@@ -284,22 +289,36 @@ msgid "Name"
 msgstr "Ad"
 
 #. module: payment_syncops
-#. openerp-web
-#: code:addons/payment_syncops/static/src/xml/connector.xml:0
+#: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
-msgid "No partners found. If you think that it is an error, please try again."
-msgstr ""
-"İş ortağı bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar "
-"deneyiniz."
+msgid "No log found"
+msgstr "Günlük bulunamadı"
 
 #. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/connector.xml:0
 #, python-format
-msgid "No records found. If you think that it is an error, please try again."
-msgstr ""
-"Kayıt bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar "
-"deneyiniz."
+msgid "No partners found"
+msgstr "İş ortağı bulunamadı"
+
+#. module: payment_syncops
+#. openerp-web
+#: code:addons/payment_syncops/static/src/xml/connector.xml:0
+#, python-format
+msgid "No records found"
+msgstr "Kayıt bulunamadı"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/transaction.py:0
+#, python-format
+msgid "No syncOPS connector found"
+msgstr "syncOPS bağlayıcı bulunamadı"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/transaction.py:0
+#, python-format
+msgid "No syncOPS endpoint URL found"
+msgstr "syncOPS uç nokta adresi bulunamadı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_id
@@ -372,6 +391,13 @@ msgid "Partners"
 msgstr "İş Ortakları"
 
 #. module: payment_syncops
+#: model:ir.actions.server,name:payment_syncops.cron_sync_ir_actions_server
+#: model:ir.cron,cron_name:payment_syncops.cron_sync
+#: model:ir.cron,name:payment_syncops.cron_sync
+msgid "Partners: Sync"
+msgstr "İş Ortakları: Eşle"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Payment"
 msgstr "Ödeme"
@@ -390,6 +416,13 @@ msgstr "Ödeme İşlemi"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/transaction.py:0
+#, python-format
+msgid "Please save transaction before checking connector logs"
+msgstr ""
+"Bağlayıcı günlüklerini kontrol etmeden önce lütfen ödeme işlemini kaydedin"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/controllers/main.py:0
@@ -435,6 +468,11 @@ msgstr "İlgili Referans"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_sidebar
 msgid "Reset"
 msgstr "Sıfırla"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Run a cronjob and sync partner list every day"
+msgstr "Planlanmış işlem çalıştırın ve iş ortakları listesini her gün eşleyin"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
@@ -526,6 +564,11 @@ msgid "Sync"
 msgstr "Eşle"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Partners Automatically"
+msgstr "İş Ortaklarını Otomatik Olarak Eşle"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 msgid "Synchronization Date Range"
 msgstr "Eşleme Tarih Aralığı"
@@ -534,6 +577,12 @@ msgstr "Eşleme Tarih Aralığı"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 msgid "Synchronization Type"
 msgstr "Eşleme Türü"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_partner
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_partner
+msgid "Syncops Cron Sync Partner"
+msgstr "Syncops İş Ortağı Eşle Zamanlayıcısı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_partner_required
@@ -550,6 +599,12 @@ msgstr "Syncops Eşleme Kalem Alttür"
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard__system
 msgid "System"
 msgstr "Sistem"
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/transaction.py:0
+#, python-format
+msgid "There is no account line for this provider"
+msgstr "Bu ödeme alıcı için bir hesap satırı yok"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/transaction.py:0
@@ -637,6 +692,23 @@ msgstr "syncOPS Eşle Sihirbazı"
 #: model:ir.model,name:payment_syncops.model_syncops_sync_wizard_line
 msgid "syncOPS Sync Wizard Lines"
 msgstr "syncOPS Eşle Sihirbaz Satırları"
+
+#~ msgid "Connector Reference"
+#~ msgstr "Bağlayıcı Referansı"
+
+#, python-format
+#~ msgid ""
+#~ "No partners found. If you think that it is an error, please try again."
+#~ msgstr ""
+#~ "İş ortağı bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen "
+#~ "tekrar deneyiniz."
+
+#, python-format
+#~ msgid ""
+#~ "No records found. If you think that it is an error, please try again."
+#~ msgstr ""
+#~ "Kayıt bulunamadı. Bunun bir hata olduğunu düşünüyorsanız, lütfen tekrar "
+#~ "deneyiniz."
 
 #~ msgid ""
 #~ "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only text-primary\" aria-"

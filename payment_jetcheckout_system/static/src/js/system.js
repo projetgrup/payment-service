@@ -139,6 +139,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 payment: new fields.element(),
                 warning: new fields.element(),
             },
+            advance: {
+                amount: 0,
+                add: new fields.element({
+                    events: [['click', this._onClickAdvanceAdd]],
+                }),
+                remove: new fields.element({
+                    events: [['click', this._onClickAdvanceRemove]],
+                }),
+            }
         };
     },
  
@@ -269,6 +278,17 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 route: '/p/due',
                 params: { items }
             }).then(function (result) {
+                if (result.advance_amount) {
+                    self.payment.advance.add.html = _.str.sprintf(
+                        _t('Click here for getting <span class="text-primary">%s</span> campaign by adding <span class="text-primary">%s</span> advance payment'),
+                        result.advance_campaign,
+                        format.currency(result.advance_amount, currency.position, currency.symbol, currency.decimal)
+                    );
+                    self.payment.advance.amount = result.advance_amount;
+                } else {
+                    self.payment.advance.add.html = '';
+                    self.payment.advance.amount = 0;
+                }
                 self.payment.due.date.html = result.date;
                 self.payment.due.days.html = result.days;
                 self.campaign.name.value = result.campaign;
@@ -303,6 +323,48 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         } else {
             $total.html(format.currency(amount, currency.position, currency.symbol, currency.decimal));
         }
+    },
+
+    _onClickAdvanceAdd: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        framework.showLoading();
+        const self = this;
+        rpc.query({
+            route: '/p/advance/add',
+            params: { amount: this.payment.advance.amount }
+        }).then(function () {
+            window.location.reload();
+        }).guardedCatch(function(error) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please try again.'),
+                sticky: false,
+            });
+            framework.hideLoading();
+        });
+    },
+
+    _onClickAdvanceRemove: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        framework.showLoading();
+        const self = this;
+        rpc.query({
+            route: '/p/advance/remove',
+            params: { pid: $(ev.currentTarget).data('id') }
+        }).then(function () {
+            window.location.reload();
+        }).guardedCatch(function(error) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please try again.'),
+                sticky: false,
+            });
+            framework.hideLoading();
+        });
     },
 
     _onClickCompany: function (ev) {
