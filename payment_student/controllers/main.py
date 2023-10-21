@@ -52,7 +52,7 @@ class PayloxSystemStudentController(Controller):
         return res
 
     @route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
-    def page_system_portal(self, **kwargs):
+    def page_system_payment(self, **kwargs):
         values = {}
         if request.env.company.system == 'student':
             values = {
@@ -60,10 +60,10 @@ class PayloxSystemStudentController(Controller):
                 'no_sidebar_buttons': True,
                 'partner_label': _('Student'),
             }
-        return super().page_system_portal(values=values, **kwargs)
+        return super().page_system_payment(values=values, **kwargs)
 
     @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
-    def page_system_query_partner(self, **kwargs):
+    def page_system_payment_query_partner(self, **kwargs):
         if not kwargs.get('vat'):
             raise UserError(_('No ID Number has been entered'))
 
@@ -155,12 +155,12 @@ class PayloxSystemStudentController(Controller):
                 }
 
             return {}
-        return super().page_system_query_partner(**kwargs)
+        return super().page_system_payment_query_partner(**kwargs)
 
 
     #@route(['/my/payment/create/partner'], type='json', auth='public', website=True)
-    #def page_system_create_partner(self, **kwargs):
+    #def page_system_payment_create_partner(self, **kwargs):
     #    company = request.env.company
     #    if company.system == 'student' and company.subsystem == 'student_university':
     #        return {}
-    #    return super().page_system_create_partner(**kwargs)
+    #    return super().page_system_payment_create_partner(**kwargs)

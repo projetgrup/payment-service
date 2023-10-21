@@ -104,7 +104,7 @@ class PayloxSystemController(Controller):
         }
 
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
-    def page_system_payment(self, token, **kwargs):
+    def page_system_link(self, token, **kwargs):
         partner = self._get_parent(token)
         transaction = None
         if '' in kwargs:
@@ -127,7 +127,7 @@ class PayloxSystemController(Controller):
         return request.render('payment_%s.page_payment' % system, values)
 
     @http.route('/p/<token>/<int:pid>', type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
-    def page_system_payment_file(self, token, pid, **kwargs):
+    def page_system_link_file(self, token, pid, **kwargs):
         partner = self._get_parent(token)
         payment = request.env['payment.item'].sudo().browse(pid)
         if not payment.parent_id.id == partner.id or payment.paid:
@@ -146,23 +146,23 @@ class PayloxSystemController(Controller):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)
-    def page_system_privacy_policy(self):
+    def page_system_link_privacy_policy(self):
         return request.website.payment_privacy_policy
 
     @http.route(['/p/agreement'], type='json', auth='public', website=True, csrf=False)
-    def page_system_sale_agreement(self):
+    def page_system_link_sale_agreement(self):
         return request.website.payment_sale_agreement
 
     @http.route(['/p/membership'], type='json', auth='public', website=True, csrf=False)
-    def page_system_membership_agreement(self):
+    def page_system_link_membership_agreement(self):
         return request.website.payment_membership_agreement
 
     @http.route(['/p/contact'], type='json', auth='public', website=True, csrf=False)
-    def page_system_contact_page(self):
+    def page_system_link_contact_page(self):
         return request.website.payment_contact_page
 
     @http.route(['/p/company'], type='json', auth='public', website=True, csrf=False)
-    def page_system_company(self, cid):
+    def page_system_link_company(self, cid):
         if cid == request.env.company.id:
             return False
 
@@ -187,6 +187,7 @@ class PayloxSystemController(Controller):
             return False
 
         partner = request.env['res.partner'].sudo().search([
+            ('vat', '!=', False),
             ('vat', '=', partner.vat),
             ('company_id', '=', cid),
         ], limit=1)
@@ -197,11 +198,11 @@ class PayloxSystemController(Controller):
         return partner._get_token()
 
     @http.route(['/p/company/<int:id>/logo'], type='http', auth='public')
-    def page_system_company_image(self, id):
+    def page_system_link_company_image(self, id):
         return request.env['ir.http'].sudo()._content_image(xmlid=None, model='res.company', res_id=id, field='logo', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
 
     @http.route(['/p/tag'], type='json', auth='public', website=True, csrf=False)
-    def page_system_tag(self, tid):
+    def page_system_link_tag(self, tid):
         token = request.httprequest.referrer.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -219,6 +220,7 @@ class PayloxSystemController(Controller):
             return False
 
         partner = request.env['res.partner'].sudo().search([
+            ('vat', '!=', False),
             ('vat', '=', partner.vat),
             ('category_id', 'in', [tid]),
             ('company_id', '=', request.env.company.id),
@@ -229,14 +231,14 @@ class PayloxSystemController(Controller):
         return partner._get_token()
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
-    def page_system_due(self, items):
+    def page_system_link_due(self, items):
         ids = [i[0] for i in items]
         amounts = dict(items)
         items = request.env['payment.item'].sudo().browse(ids)
         return items.with_context(amounts=amounts).get_due()
 
     @http.route(['/p/advance/add'], type='json', auth='public', website=True, csrf=False)
-    def page_system_advance_add(self, amount):
+    def page_system_link_advance_add(self, amount):
         if not request.env.company.payment_page_advance_ok:
             raise
 
@@ -273,7 +275,7 @@ class PayloxSystemController(Controller):
         return True
 
     @http.route(['/p/advance/remove'], type='json', auth='public', website=True, csrf=False)
-    def page_system_advance_remove(self, pid):
+    def page_system_link_advance_remove(self, pid):
         token = request.httprequest.referrer.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -294,8 +296,54 @@ class PayloxSystemController(Controller):
         ]).unlink()
         return True
 
+    @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
+    def page_system_advance(self, **kwargs):
+        self._check_payment_page()
+
+        if not kwargs.get('values', {}).get('no_redirect'):
+            if request.env.user.has_group('base.group_public'):
+                raise werkzeug.exceptions.NotFound()
+
+            partner = request.env.user.partner_id
+            redirect = self._check_redirect(partner)
+            if redirect:
+                return redirect
+
+        company = request.env.company
+        if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', kwargs['currency'])], limit=1)
+        else:
+            currency = None
+
+        partner = request.env.user.partner_id if request.env.user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+
+        values = self._prepare(partner=partner, company=company, currency=currency)
+        values.update({
+            'success_url': '/my/payment/success',
+            'fail_url': '/my/payment/fail',
+            'system': company.system,
+            'subsystem': company.subsystem,
+            'vat': kwargs.get('vat'),
+            'flow': 'dynamic',
+            'advance': True,
+        })
+
+        if 'values' in kwargs and isinstance(kwargs['values'], dict):
+            values.update({**kwargs['values']})
+
+        try:
+            values.update({'amount': float(kwargs['amount'])})
+        except:
+            pass
+
+        # remove hash if exists
+        # it could be there because of api module
+        self._del('hash')
+
+        return request.render('payment_jetcheckout_system.page_payment', values)
+
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
-    def page_system_portal(self, **kwargs):
+    def page_system_payment(self, **kwargs):
         self._check_payment_page()
 
         if not kwargs.get('values', {}).get('no_redirect'):
@@ -317,6 +365,7 @@ class PayloxSystemController(Controller):
             partner = self._get_parent(kwargs['pid'])
         elif 'vat' in kwargs and isinstance(kwargs['vat'], str) and 9 < len(kwargs['vat']) < 14:
             partner = request.env['res.partner'].sudo().search([
+                ('vat', '!=', False),
                 ('vat', '=', kwargs['vat']),
                 ('company_id', '=', company.id),
                 ('system', '=', company.system)
@@ -353,7 +402,7 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_payment', values)
 
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
-    def page_system_portal_return(self, **kwargs):
+    def page_system_payment_return(self, **kwargs):
         self._check_payment_page()
 
         kwargs['result_url'] = '/my/payment/result'
@@ -363,7 +412,7 @@ class PayloxSystemController(Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
-    def page_system_result(self, **kwargs):
+    def page_system_payment_result(self, **kwargs):
         self._check_payment_page()
 
         values = self._prepare()
@@ -377,7 +426,7 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_result', values)
 
     @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
-    def page_system_transaction(self, page=0, tpp=20, **kwargs):
+    def page_system_payment_transaction(self, page=0, tpp=20, **kwargs):
         self._check_payment_page()
 
         values = self._prepare()
@@ -396,7 +445,7 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_transaction', values)
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
-    def page_system_login(self, token, **kwargs):
+    def page_system_payment_login(self, token, **kwargs):
         self._check_payment_page()
 
         partner = self._get_parent(token)
@@ -413,12 +462,34 @@ class PayloxSystemController(Controller):
             return werkzeug.utils.redirect('/p/%s' % token)
 
     @http.route(['/my/payment/query/partner'], type='json', auth='public', website=True)
-    def page_system_query_partner(self, **kwargs):
+    def page_system_payment_query_partner(self, **kwargs):
         self._check_payment_page()
+
+        partner = request.env['res.partner'].sudo().search([
+            ('vat', '!=', False),
+            ('vat', '=', kwargs.get('vat')),
+            ('company_id', '=', request.env.company.id),
+        ], limit=1)
+        if not partner:
+            return {
+                'vat': '11111111111',
+            }
+        else:
+            return partner.read([
+                'id',
+                'vat',
+                'name',
+                'phone',
+                'email',
+                'city',
+                'street',
+                'country_id',
+                'state_id',
+            ])[0]
         return {}
 
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
-    def page_system_create_partner(self, **kwargs):
+    def page_system_payment_create_partner(self, **kwargs):
         self._check_payment_page()
 
         company = request.env.company
@@ -431,7 +502,11 @@ class PayloxSystemController(Controller):
             if not values.get('vat'):
                 raise UserError(_('Please enter ID number'))
             else:
-                student = request.env['res.partner'].sudo().search([('vat', '=', values['vat']), ('company_id', '=', company.id)], limit=1)
+                student = request.env['res.partner'].sudo().search([
+                    ('vat', '!=', False),
+                    ('vat', '=', values['vat']),
+                    ('company_id', '=', company.id)
+                ], limit=1)
                 if student:
                     raise UserError(_('There is already a student with the same ID Number'))
 

@@ -41,6 +41,7 @@ class Company(models.Model):
         ('dynamic', 'Dynamic'),
     ], string='Payment Page Flow', default='static')
     payment_page_ok = fields.Boolean(string='Payment Page Active', default=True)
+    payment_advance_ok = fields.Boolean(string='Payment Advance Active')
 
     @api.model
     def create(self, vals):
