@@ -651,7 +651,7 @@ class PayloxController(http.Controller):
                     "amount": line.price_total,
                     "is_physical": line.product_id.type == 'product',
                     "category": line.product_id.categ_id.name,
-                } for line in sale_order_id.order_line],
+                } for line in sale_order_id.order_line if line.price_total > 0],
                 "billing_address": {
                     "contactName": billing_partner_id.name,
                     "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),

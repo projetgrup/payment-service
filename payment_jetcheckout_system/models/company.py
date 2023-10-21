@@ -24,8 +24,9 @@ class Company(models.Model):
     notif_sms_success_ok = fields.Boolean('Send Successful Payment Transaction SMS')
     notif_webhook_ids = fields.One2many('payment.settings.notification.webhook', 'company_id', 'Webhook URLs')
 
-    payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues')
+    payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')
+    payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues')
     payment_page_due_base = fields.Selection([
         ('date_due', 'Due Date'),
         ('date_document', 'Document Date'),
