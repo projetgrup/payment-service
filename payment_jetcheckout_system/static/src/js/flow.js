@@ -35,6 +35,9 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         this.subsystem = new fields.string({
             default: false,
         });
+        this.advance = new fields.boolean({
+            default: false,
+        });
         this.wizard = {
             vat: new fields.element(),
             partner: new fields.element(),
@@ -129,6 +132,25 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
 
     _queryPartnerPostprocess: function(partner) {},
 
+    _queryPartnerNew: async function() {
+        await this._onPause(500);
+        this.wizard.vat.$.removeClass('border-danger');
+        this.wizard.page.login.$.find('div[name=welcome]').removeClass('text-500');
+        this.wizard.page.login.$.find('div[name=vat]').removeClass('text-danger').text(_t('Please enter your VAT number'));
+        this.wizard.button.login.done.$.removeClass('border-danger text-danger');
+
+        this.wizard.page.login.$.addClass('slide').removeClass('show');
+        this.wizard.page.register.$.removeClass('invisible').addClass('slide show');
+
+        this.wizard.page.login.$.removeClass('blur');
+        this.wizard.page.loading.$.removeClass('show transparent');
+
+        const self = this;
+        setTimeout(function() {
+            self.wizard.page.loading.$.addClass('invisible');
+        }, 500);
+    },
+
     _onClickLoginNext: async function () {
         const self = this;
         this.wizard.page.loading.$.removeClass('invisible').addClass('show transparent');
@@ -137,20 +159,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         let partner = {};
         try {
             if (this.wizard.vat.value === '11111111111') {
-                await this._onPause(500);
-                this.wizard.vat.$.removeClass('border-danger');
-                this.wizard.page.login.$.find('div[name=welcome]').removeClass('text-500');
-                this.wizard.page.login.$.find('div[name=vat]').removeClass('text-danger').text(_t('Please enter your VAT number'));
-                this.wizard.button.login.done.$.removeClass('border-danger text-danger');
-
-                this.wizard.page.login.$.addClass('slide').removeClass('show');
-                self.wizard.page.register.$.removeClass('invisible').addClass('slide show');
-
-                this.wizard.page.login.$.removeClass('blur');
-                this.wizard.page.loading.$.removeClass('show transparent');
-                setTimeout(function() {
-                    self.wizard.page.loading.$.addClass('invisible');
-                }, 500);
+                await this._queryPartnerNew()
                 return;
             }
 
@@ -158,6 +167,10 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
                 route: '/my/payment/query/partner',
                 params: { vat: this.wizard.vat.value },
             });
+            if (partner.vat === '11111111111') {
+                await this._queryPartnerNew()
+                return;
+            }
         } catch {}
 
         if (!partner.id) {

@@ -2,6 +2,7 @@
 <odoo>
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
         <xpath expr="//div[@id='payment_card']/div" position="inside">
+            <input t-if="advance" type="hidden" t-att-value="advance" field="advance"/>
             <input t-if="system" type="hidden" t-att-value="system" field="system"/>
             <input t-if="subsystem" type="hidden" t-att-value="subsystem" field="subsystem"/>
         </xpath>

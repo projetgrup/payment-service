@@ -396,7 +396,7 @@
     .field-container {
         position: relative;
 
-        > input {
+        > input, > textarea {
             -webkit-box-sizing: border-box;
             min-height: 50px;
             box-sizing: border-box;
@@ -404,19 +404,19 @@
             padding: 10px 10px 10px 15px;
             display: block;
             width: 100%;
-            color: #999;
-            border: 2px solid #ddd;
+            color: #999999;
+            border: 2px solid #dddddd;
             border-radius: 5px;
             box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
         }
 
-        > input:focus {
+        > input:focus, > textarea:focus {
             outline: none;
             border-color: theme-color('primary');
         }
 
-        > input::placeholder {
-            color: #ccc;
+        > input::placeholder, > textarea::placeholder {
+            color: #cccccc;
         }
 
         > label {
@@ -468,11 +468,11 @@
             right: 50%; 
         }
 
-        > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after {
+        > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after, > textarea:focus ~ .bar-container:before, > textarea:focus ~ .bar-container:after {
             width: 50%;
         }
 
-        > input.border-danger ~ .bar-container:before, > input.border-danger ~ .bar-container:after {
+        > input.border-danger ~ .bar-container:before, > input.border-danger ~ .bar-container:after, > textarea.border-danger ~ .bar-container:before, > textarea.border-danger ~ .bar-container:after {
             background: theme-color('danger');
         }
 
@@ -486,7 +486,7 @@
             opacity: 0.5;
         }
 
-        > input:focus ~ .highlight-container {
+        > input:focus ~ .highlight-container, > textarea:focus ~ .highlight-container  {
             -webkit-animation: inputHighlighter 0.3s ease;
             -moz-animation: inputHighlighter 0.3s ease;
             animation: inputHighlighter 0.3s ease;
@@ -542,11 +542,11 @@
     }
 
     .field-container.is-invalid {
-        > input {
+        > input, > textarea {
             border-color: theme-color('danger');
         }
     
-        > input:focus {
+        > input:focus, > textarea:focus {
             outline: none;
             border-color: theme-color('danger');
         }
@@ -727,7 +727,7 @@
         //box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
         border: 2px solid #ddd;
         border-radius: 5px;
-        width: 235px;
+        //width: 235px;
         min-height: 50px;
         display: flex;
         align-items: center;
