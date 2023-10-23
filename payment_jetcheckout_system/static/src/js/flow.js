@@ -168,7 +168,8 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
                 params: { vat: this.wizard.vat.value },
             });
             if (partner.vat === '11111111111') {
-                await this._queryPartnerNew()
+                this.wizard.register.vat.value = this.wizard.vat.value;
+                await this._queryPartnerNew();
                 return;
             }
         } catch {}
