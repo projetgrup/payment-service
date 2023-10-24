@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-21 08:41+0000\n"
-"PO-Revision-Date: 2023-10-21 11:43+0300\n"
+"POT-Creation-Date: 2023-10-24 13:24+0000\n"
+"PO-Revision-Date: 2023-10-24 16:31+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -87,6 +87,21 @@ msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
 msgstr "<span class=\"text-600 font-weight-bold\">Tümünü Seç</span>"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>Address</span>"
+msgstr "<span>Adres</span>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>City</span>"
+msgstr "<span>İlçe</span>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>State</span>"
+msgstr "<span>Şehir</span>"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
@@ -137,9 +152,9 @@ msgid ""
 "><br/>\n"
 "                        Transaction Owner Company : <t t-"
 "out=\"ctx['partner'].name or ''\"/><br/>\n"
-"                        Transaction Date : <t t-"
-"out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:"
-"ss')\">01.01.2023 00:00:00</t><br/>\n"
+"                        Transaction Date : <t t-out=\"ctx['tx']."
+"last_state_change.strftime('%d.%m.%Y %H:%M:%S')\">01.01.2022 00:00:00</t><br/"
+">\n"
 "                        Transaction Amount : <t t-"
 "out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx']."
 "currency_id) or ''\"/><br/>\n"
@@ -567,6 +582,11 @@ msgid "Campaign"
 msgstr "Kampanya"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "City"
+msgstr "İlçe"
+
+#. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_res_company
 #: model:ir.ui.menu,name:payment_vendor.menu_company
 msgid "Companies"
@@ -592,6 +612,11 @@ msgstr "Yetkili"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Contacts"
 msgstr "Yetkililer"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Country"
+msgstr "Ülke"
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_parent
@@ -642,6 +667,11 @@ msgstr "Vade Tarihi"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Editable Payment Amount"
 msgstr "Düzenlenebilir Ödeme Tutarı"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Email"
+msgstr "Eposta"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_mail
@@ -753,6 +783,11 @@ msgid "Payments"
 msgstr "Ödemeler"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Remove"
 msgstr "Kaldır"
@@ -803,6 +838,11 @@ msgid "Sales Teams"
 msgstr "Satış Ekipleri"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Select a state"
+msgstr "Bir il seçin"
+
+#. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
 #: model:ir.cron,cron_name:payment_vendor.crom_transaction_daily
 #: model:ir.cron,name:payment_vendor.crom_transaction_daily
@@ -814,6 +854,16 @@ msgstr "Ödeme işlemleri için günlük rapor epostası gönder"
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
 msgid "Settings"
 msgstr "Ayarlar"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "State"
+msgstr "Şehir"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Street"
+msgstr "Adres"
 
 #. module: payment_vendor
 #: model:ir.model.fields,field_description:payment_vendor.field_payment_item__system
@@ -941,9 +991,6 @@ msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
 
 #~ msgid "External Databases"
 #~ msgstr "Harici Veritabanları"
-
-#~ msgid "Email"
-#~ msgstr "Eposta"
 
 #~ msgid "Messages"
 #~ msgstr "Mesajlar"
