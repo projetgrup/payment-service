@@ -240,7 +240,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.register.email.$.addClass('border-danger').siblings('label').addClass('text-danger');
             this.wizard.register.phone.$.addClass('border-danger').siblings('label').addClass('text-danger');
             this.wizard.page.register.$.find('div[name=title]').addClass('text-500');
-            this.wizard.page.register.$.find('div[name=text]').addClass('text-danger').text(partner.error || _t('An error occured. Please try again.'));
+            this.wizard.page.register.$.find('div[name=text]').addClass('text-danger').html(partner.error || _t('An error occured. Please try again.'));
             this.wizard.button.register.done.$.addClass('border-danger text-danger');
         } else {
             this.partner.value = partner.id;
