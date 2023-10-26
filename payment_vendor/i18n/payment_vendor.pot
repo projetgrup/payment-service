@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0-20230407\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-21 08:41+0000\n"
-"PO-Revision-Date: 2023-10-21 08:41+0000\n"
+"POT-Creation-Date: 2023-10-24 13:24+0000\n"
+"PO-Revision-Date: 2023-10-24 13:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,21 @@ msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>Address</span>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>City</span>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>State</span>"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid ""
 "<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
@@ -104,7 +119,7 @@ msgid ""
 "                        Hello <strong t-out=\"object.name or ''\">Marc Demo</strong>,<br/><br/>\n"
 "                        Successful transaction information as follows.<br/><br/>\n"
 "                        Transaction Owner Company : <t t-out=\"ctx['partner'].name or ''\"/><br/>\n"
-"                        Transaction Date : <t t-out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')\">01.01.2023 00:00:00</t><br/>\n"
+"                        Transaction Date : <t t-out=\"ctx['tx'].last_state_change.strftime('%d.%m.%Y %H:%M:%S')\">01.01.2022 00:00:00</t><br/>\n"
 "                        Transaction Amount : <t t-out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''\"/><br/>\n"
 "                        Installment Count : <t t-out=\"ctx['tx'].jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -272,6 +287,11 @@ msgid "Campaign"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "City"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_res_company
 #: model:ir.ui.menu,name:payment_vendor.menu_company
 msgid "Companies"
@@ -296,6 +316,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_vendor.action_child
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Contacts"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Country"
 msgstr ""
 
 #. module: payment_vendor
@@ -346,6 +371,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Editable Payment Amount"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Email"
 msgstr ""
 
 #. module: payment_vendor
@@ -452,6 +482,11 @@ msgid "Payments"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Phone"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Remove"
 msgstr ""
@@ -502,6 +537,11 @@ msgid "Sales Teams"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Select a state"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
 #: model:ir.cron,cron_name:payment_vendor.crom_transaction_daily
 #: model:ir.cron,name:payment_vendor.crom_transaction_daily
@@ -512,6 +552,16 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
 msgid "Settings"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "State"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Street"
 msgstr ""
 
 #. module: payment_vendor

@@ -505,7 +505,7 @@ class PayloxSystemController(Controller):
                 name, domain = email.rsplit('@', 1)
                 values['email'] = '%s@%s' % (values['vat'], domain)
 
-            partner = request.env['res.partner'].sudo().create(values)
+            partner = request.env['res.partner'].sudo().with_context(no_vat_validation=True).create(values)
             return partner.read([value for value in kwargs.keys()])[0] or {}
         except UserError as e:
             return {'error': str(e)}
