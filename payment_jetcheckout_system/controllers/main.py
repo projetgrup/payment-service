@@ -304,15 +304,6 @@ class PayloxSystemController(Controller):
     def page_system_advance(self, **kwargs):
         self._check_advance_page()
 
-        if not kwargs.get('values', {}).get('no_redirect'):
-            if request.env.user.has_group('base.group_public'):
-                raise werkzeug.exceptions.NotFound()
-
-            partner = request.env.user.partner_id
-            redirect = self._check_redirect(partner)
-            if redirect:
-                return redirect
-
         company = request.env.company
         if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
             currency = request.env['res.currency'].sudo().search([('name', '=', kwargs['currency'])], limit=1)
@@ -486,6 +477,9 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
     def page_system_payment_create_partner(self, **kwargs):
+        if request.env.user.has_group('base.group_public'):
+            return {'error': _('Only registered users can create partners.<br/>Please contact with your system administrator.')}
+
         company = request.env.company
         values = {**kwargs}
         values.update({
@@ -496,12 +490,12 @@ class PayloxSystemController(Controller):
             if not values.get('vat'):
                 raise UserError(_('Please enter ID number'))
             else:
-                student = request.env['res.partner'].sudo().search([
+                partner = request.env['res.partner'].sudo().search([
                     ('vat', '!=', False),
                     ('vat', '=', values['vat']),
                     ('company_id', '=', company.id)
                 ], limit=1)
-                if student:
+                if partner:
                     raise UserError(_('There is already a partner with the same ID Number'))
 
             if not values.get('email'):
