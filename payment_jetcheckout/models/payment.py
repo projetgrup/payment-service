@@ -104,23 +104,24 @@ class AccountPayment(models.Model):
 
     def _paylox_post(self, line, commission, ip_address):
         self.move_id._post(soft=False)
-        if commission > 0:
-            product = self.env.ref('payment_jetcheckout.product_commission')
-            order_vals = {
-                'partner_id': self.partner_id.id,
-                'order_line': [(0, 0, {
-                    'product_id': product.id,
-                    'price_unit': commission
-                })]
-            }
-            order = self.env['sale.order'].sudo().create(order_vals)
-            order.action_confirm()
+        if not self.env.context.get('no_commission'):
+            if commission > 0:
+                product = self.env.ref('payment_jetcheckout.product_commission')
+                order_vals = {
+                    'partner_id': self.partner_id.id,
+                    'order_line': [(0, 0, {
+                        'product_id': product.id,
+                        'price_unit': commission
+                    })]
+                }
+                order = self.env['sale.order'].sudo().create(order_vals)
+                order.action_confirm()
 
-            parameter = self.env['ir.config_parameter'].sudo().get_param('paylox.invoice.commission', 'no')
-            if parameter == 'draft' or parameter == 'post':
-                moves = order._create_invoices()
-                if parameter == 'post':
-                    moves.sudo().action_post()
+                parameter = self.env['ir.config_parameter'].sudo().get_param('paylox.invoice.commission', 'no')
+                if parameter == 'draft' or parameter == 'post':
+                    moves = order._create_invoices()
+                    if parameter == 'post':
+                        moves.sudo().action_post()
 
         if not self.env.context.get('no_terms'):
             self._paylox_generate_terms(line, ip_address)
