@@ -160,6 +160,7 @@
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="s2s" t-value="True"/>
+            <t t-set="dynamic" t-value="flow == 'dynamic'"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
@@ -171,11 +172,8 @@
                 </div>
             </div>
             <div class="payment-system position-relative overflow-hidden">
-                <t t-if="flow == 'dynamic'">
-                    <div name="wizard" class="payment-dynamic navbar-light pt-4">
-                        <div class="col-md-3 d-flex navbar-light">
-                            <div class="mx-2 shine navbar-light"/>
-                        </div>
+                <t t-if="dynamic">
+                    <div name="wizard" class="payment-dynamic navbar-light pt-4 flex-wrap flex-row-reverse">
                         <div class="col-md-9 d-flex navbar-light">
                             <div class="card position-relative w-100">
                                 <!--<div class="payment-card-section d-flex fade" field="wizard.page.section.all">
@@ -328,10 +326,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-3 d-flex navbar-light">
+                            <div class="mx-2 shine navbar-light"/>
+                        </div>
                     </div>
                     <div field="wizard.page.overlay"/>
                 </t>
-                <div class="payment-card row justify-content-center mx-0">
+                <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
+                    <t t-if="dynamic">
+                        <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                            <t t-call="payment_jetcheckout.payment_form">
+                                <t t-set="no_smart_buttons" t-value="True"/>
+                            </t>
+                            <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                            <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        </div>
+                    </t>
                     <t t-call="payment_jetcheckout.payment_sidebar">
                         <t t-set="page" t-value="'payment'"/>
                         <t t-set="no_payment_icons" t-value="True"/>
@@ -342,13 +352,15 @@
                         <t t-call="payment_jetcheckout_system.payment_contact"/>
                         <t t-set="labels"/>
                     </t>
-                    <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                        <t t-call="payment_jetcheckout.payment_form">
-                            <t t-set="no_smart_buttons" t-value="True"/>
-                        </t>
-                        <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
-                        <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
-                    </div>
+                    <t t-if="not dynamic">
+                        <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                            <t t-call="payment_jetcheckout.payment_form">
+                                <t t-set="no_smart_buttons" t-value="True"/>
+                            </t>
+                            <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                            <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        </div>
+                    </t>
                 </div>
             </div>
             <t t-call="payment_jetcheckout_system.payment_agreement"/>

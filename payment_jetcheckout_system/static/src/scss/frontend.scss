@@ -14,8 +14,9 @@
         height: 100%;
         width: 100%;
         z-index: 9;
+        row-gap: 5px;
         transition: all 0.4s;
-        background-color: rgba(255, 255, 255, 0.05);
+        //background-color: rgba(255, 255, 255, 0.05);
 
         button {
             padding: 1em;
@@ -122,6 +123,7 @@
                 }
 
                 .payment-card-item-icon {
+                    width: 150px;
                     width: 150px;
                     border: 4px solid #000000;
                     border-radius: 50%;
@@ -332,7 +334,7 @@
                             width: 100%;
                             font-size: 1.5em;
                             padding: 0.5em 0;
-                            white-space: nowrap;
+                            text-wrap: balance;
                         }
 
                         span {
@@ -390,19 +392,19 @@
         transition: all 0.4s;
         z-index: 1;
         opacity: 0;
-        transform: translate(200%, 200%);
+        transform: translate(calc(100vw - 200%), 100vh);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 
         &.show {
             opacity: 1;
-            transform: translate(200%, 50%) scale(1.5);
+            transform: translate(calc(100vw - 200%), 10vh) scale(1.2);
         }
     }
 
     [field="wizard.page.overlay"] {
         position: absolute;
-        inset: 0;
-        width: 0;
+        top: 0;
+        width: 100%;
         height: 0;
         z-index: 10;
         transition: all 0.4s;
@@ -535,12 +537,11 @@
 	40%, 60% {transform: rotate(20deg);}
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     .payment-page {
         .payment-card-item-clone {
-            transform: translate(225%, 200%);
             &.show {
-                transform: translate(225%, 50%) scale(1.5);
+                transform: translate(5%, 10vh) scale(1.1);
             }
         }
     }
