@@ -459,6 +459,16 @@ class PaymentTransaction(models.Model):
 
     def paylox_query(self):
         self.ensure_one()
+        if (not self.jetcheckout_order_id):
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'payment.acquirer.jetcheckout.prestatus',
+                'context': {'default_tx_id': self.id},
+                'name': _('%s Transaction Status') % self.reference,
+                'view_mode': 'form',
+                'target': 'new',
+            }
+
         values = self._paylox_query()
         status = self.env['payment.acquirer.jetcheckout.status'].create(values)
         return {
