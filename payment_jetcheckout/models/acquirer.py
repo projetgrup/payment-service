@@ -13,6 +13,22 @@ class PaymentPayloxTerms(models.TransientModel):
     domain = fields.Char()
 
 
+class PaymentPayloxPrestatus(models.TransientModel):
+    _name = 'payment.acquirer.jetcheckout.prestatus'
+    _description = 'Paylox Pre-Status'
+
+    tx_id = fields.Many2one('payment.transaction', required=True)
+    order_id = fields.Char(required=True, string='Order Reference')
+    transaction_id = fields.Char(required=True, string='Transaction ID')
+
+    def confirm(self):
+        self.tx_id.write({
+            'jetcheckout_order_id': self.order_id,
+            'jetcheckout_transaction_id': self.transaction_id,
+        })
+        return self.tx_id.paylox_query()
+
+
 class PaymentPayloxStatus(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.status'
     _description = 'Paylox Status'

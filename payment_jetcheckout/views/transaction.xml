@@ -43,7 +43,7 @@
                 class="oe_stat_button"
                 icon="fa-search"
                 groups="base.group_user"
-                attrs="{'invisible': ['|',('is_paylox','=',False),('jetcheckout_order_id', '=', False)]}">
+                attrs="{'invisible': [('is_paylox', '=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Query</span><span class="o_stat_text">Transaction</span>
                 </div>
