@@ -271,9 +271,19 @@ class PaymentDasboard(models.Model):
         self.env.cr.execute(query, (dates['start'], dates['end'], companies))
         return self.env.cr.dictfetchall()
 
+    @api.model
+    def has_button(self):
+        return self.env.company.payment_dashboard_button_ok
+
     @api.model    
-    def get_url(self):
-        return self.get_base_url()
+    def get_button_url(self):
+        url = self.env.company.payment_dashboard_button_url
+        if url:
+            if url[0] == '/':
+                return self.get_base_url() + url
+            else:
+                return url
+        return self.get_base_url() + '/my/payment'
 
     def action_transactions(self):
         action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]

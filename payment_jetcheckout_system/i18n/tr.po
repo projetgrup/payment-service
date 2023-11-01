@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-21 13:37+0000\n"
-"PO-Revision-Date: 2023-10-21 16:40+0300\n"
+"POT-Creation-Date: 2023-11-01 06:58+0000\n"
+"PO-Revision-Date: 2023-11-01 10:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -25,6 +25,11 @@ msgid ""
 msgstr ""
 ". Lütfen tekrar deneyiniz. Bu durum tekrar gerçekleşirse, sistem yönetimi "
 "ile iletişime geçiniz."
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "/my/payment"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
@@ -806,9 +811,21 @@ msgstr "Müşteri Portal Adresi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_dashboard
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
 msgid "Dashboard"
 msgstr "Panel"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_dashboard_button_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_dashboard_button_ok
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Dashboard Payment Button"
+msgstr "Panel Ödeme Butonu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_dashboard_button_url
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_dashboard_button_url
+msgid "Dashboard Payment Button URL"
+msgstr "Panel Ödeme Butonu URL"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__data
@@ -1629,6 +1646,16 @@ msgid "Only Own Partners"
 msgstr "Sadece Kendi İş Ortakları"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid ""
+"Only registered users can create partners.<br/>Please contact with your "
+"system administrator."
+msgstr ""
+"Sadece kayıtlı kullanıcılar iş ortağı oluşturabilir<br/>Lütfen sistem "
+"yöneticisi ile iletişime geçiniz."
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Other"
 msgstr "Diğer"
@@ -2127,6 +2154,15 @@ msgid "Provider"
 msgstr "Sağlayıcı"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Put a payment button at the top of the dashboard page in order to "
+"redirecting user to payment page"
+msgstr ""
+"Panel sayfası üzerine bir ödeme butonu koyun ve kullanıcıları ödeme "
+"sayfasına yönlendirin"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_kanban
 msgid "Re-Invite"
@@ -2495,11 +2531,6 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
-msgid "Tax Office"
-msgstr "Vergi Dairesi"
-
-#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_telegram
 msgid "Telegram"
 msgstr "Telegram"
@@ -2571,8 +2602,8 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #, python-format
-msgid "There is already a student with the same ID Number"
-msgstr "Aynı TCKN numarasına sahip olan başka bir öğrenci zaten mevcut"
+msgid "There is already a partner with the same ID Number"
+msgstr "Aynı TCKN numarasına sahip olan başka bir iş ortağı zaten mevcut"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
@@ -2780,6 +2811,7 @@ msgstr "Türler"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__url
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "URL"
 msgstr "URL"
 
@@ -2858,6 +2890,11 @@ msgstr "TCKN"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Vat"
 msgstr "Vergi No"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
+msgid "Vergi Dairesi"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
@@ -3062,6 +3099,9 @@ msgstr "e.g. eposta@sirketiniz.com"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#~ msgid "Tax Office"
+#~ msgstr "Vergi Dairesi"
 
 #~ msgid "Page Flow"
 #~ msgstr "Sayfa Akışı"
