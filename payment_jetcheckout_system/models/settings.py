@@ -11,6 +11,9 @@ class PaymentSettings(models.TransientModel):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     required_2fa = fields.Boolean(related='company_id.required_2fa', readonly=False)
 
+    payment_dashboard_button_ok = fields.Boolean(related='company_id.payment_dashboard_button_ok', readonly=False)
+    payment_dashboard_button_url = fields.Char(related='company_id.payment_dashboard_button_url', readonly=False)
+
     payment_advance_ok = fields.Boolean(related='company_id.payment_advance_ok', readonly=False)
     payment_page_ok = fields.Boolean(related='company_id.payment_page_ok', readonly=False)
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
