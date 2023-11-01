@@ -179,6 +179,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_dashboard_button_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_dashboard_button_ok" string="Dashboard Payment Button"/>
+                                    <div class="text-muted">
+                                        Put a payment button at the top of the dashboard page in order to redirecting user to payment page
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_dashboard_button_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_dashboard_button_url" string="URL" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_dashboard_button_url" class="flex-fill" placeholder="/my/payment"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">
                         <h2>Notifications</h2>

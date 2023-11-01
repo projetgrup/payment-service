@@ -31,8 +31,8 @@ const DashboardController = KanbanController.extend({
     willStart: function() {
         const self = this;
         const ready = this._rpc({
-            model: 'payment.acquirer',
-            method: 'has_dashboard_button',
+            model: 'payment.dashboard',
+            method: 'has_button',
             args: [],
         }).then(function (show) {
             self.show_button = show;
@@ -52,13 +52,13 @@ const DashboardController = KanbanController.extend({
         const self = this;
         this._rpc({
             model: 'payment.dashboard',
-            method: 'get_url',
+            method: 'get_button_url',
             args: [],
         }).then(function (url) {
             self.do_action({
                 type: 'ir.actions.act_url',
                 target: 'new',
-                url: url + '/my/payment',
+                url: url,
             });
         }).guardedCatch(function (error) {
             console.error(error);
