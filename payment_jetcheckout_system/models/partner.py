@@ -303,7 +303,7 @@ class Partner(models.Model):
 
         user = self.env['res.users'].sudo().with_context(active_test=False).search([
             ('id', '!=', self.users_id.id),
-            ('login', '=ilike', email),
+            ('login', '=', email),
         ])
 
         if user:
