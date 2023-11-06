@@ -3,6 +3,7 @@ import werkzeug
 import base64
 import re
 from urllib.parse import urlparse
+from datetime import date
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -99,6 +100,7 @@ class PayloxSystemController(Controller):
             'card_family': card_family,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
+            'date_empty': date(1, 1, 1),
             'tx': transaction,
             'system': system,
             'token': token,
