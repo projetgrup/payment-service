@@ -9,3 +9,6 @@ class Website(models.Model):
     payment_sale_agreement = fields.Html('Sale Agreement')
     payment_membership_agreement = fields.Html('Membership Agreement')
     payment_contact_page = fields.Html('Contact Page')
+
+    def _get_companies(self):
+        return self.search([('domain', '=', self.domain)]).mapped('company_id')

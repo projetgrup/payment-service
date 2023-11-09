@@ -64,6 +64,43 @@ payloxPage.include({
 
 });
 
+publicWidget.registry.payloxPaymentCompany = publicWidget.Widget.extend({
+    selector: '.payment-company',
+
+    init: function (parent, options) {
+        this._super(parent, options);
+        this.payment = {
+            company: new fields.element({
+                events: [['click', this._onClickCompany]],
+            }),
+        };
+    },
+ 
+    start: function () {
+        const self = this;
+        return this._super.apply(this, arguments).then(function () {
+            payloxPage.prototype._start.apply(self);
+        });
+    },
+
+    _onClickCompany: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        if (window.location.pathname.split('/')[1] !== 'my') {
+            return;
+        }
+
+        const $button = $(ev.currentTarget);
+        const cid = $button.data('id');
+        rpc.query({route: '/my/payment/company', params: { cid }}).then(function (result) {
+            if (result) {
+                framework.showLoading();
+                window.location.reload();
+            }
+        });
+    },
+});
+
 publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',
     jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
@@ -370,6 +407,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     _onClickCompany: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        if (window.location.pathname.split('/')[1] !== 'p') {
+            return;
+        }
+
         const $button = $(ev.currentTarget);
         const cid = $button.data('id');
         rpc.query({route: '/p/company', params: { cid }}).then(function (token) {
