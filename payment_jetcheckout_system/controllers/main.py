@@ -40,8 +40,11 @@ class PayloxSystemController(Controller):
         if not request.env.user.share and not request.env.user.payment_page_ok:
             raise werkzeug.exceptions.NotFound()
 
-    def _check_advance_page(self):
+    def _check_advance_page(self, **kwargs):
         if not request.env.company.payment_advance_ok:
+            raise werkzeug.exceptions.NotFound()
+
+        if request.env.user.share and not 'id' in kwargs:
             raise werkzeug.exceptions.NotFound()
 
     def _get_parent(self, token):
@@ -309,7 +312,16 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):
-        self._check_advance_page()
+        self._check_advance_page(**kwargs)
+
+        website_id = int(kwargs.get('id', request.website.id))
+        if request.website.id != website_id:
+            website = request.env['website'].sudo().browse(int(kwargs['id']))
+            if not website:
+                raise werkzeug.exceptions.NotFound()
+
+            website._force()
+            return werkzeug.utils.redirect('/my/advance')
 
         company = request.env.company
         if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
@@ -317,13 +329,20 @@ class PayloxSystemController(Controller):
         else:
             currency = None
 
-        partner = request.env.user.partner_id if request.env.user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        user = request.env.user
+        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
 
         values = self._prepare(partner=partner, company=company, currency=currency)
+        companies = values['companies']
+        if user.share:
+            companies = []
+        else:
+            companies = companies.filtered(lambda x: x.payment_advance_ok and x.id in user.company_ids.ids)
+
         values.update({
-            'companies': values['companies'].filtered(lambda x: x.payment_advance_ok),
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
+            'companies': companies,
             'system': company.system,
             'subsystem': company.subsystem,
             'vat': kwargs.get('vat'),
