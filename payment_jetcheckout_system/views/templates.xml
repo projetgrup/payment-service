@@ -133,11 +133,11 @@
 
     <template id="payment_company" name="Payment System Page Companies">
         <div t-if="companies and len(companies) > 1 or tags and len(tags) > 1" class="d-flex flex-column" style="gap: 5px;">
-            <div t-if="companies and len(companies) > 1" class="d-flex flex-wrap h-fit" style="gap: 5px;">
+            <div t-if="companies and len(companies) > 1" t-attf-class="d-flex flex-wrap h-fit #{classes or ''}" style="gap: 5px;">
                 <t t-foreach="companies" t-as="c">
                     <button t-attf-class="btn btn-light d-flex flex-nowrap flex-row flex-fill p-1 pr-2 rounded-pill align-items-center #{'bg-primary text-white' if c.id == company.id else 'bg-primary-light'}" style="gap: 5px;" t-att-data-id="c.id" field="payment.company">
                         <div class="align-items-center bg-white d-flex justify-content-center overflow-hidden rounded-circle" style="width: 32px; height: 32px; padding: 2px;">
-                            <img t-att-src="'/p/company/%s/logo' % c.id" t-att-alt="c.name" class="w-100"/>
+                            <img t-att-src="'/my/company/%s/logo' % c.id" t-att-alt="c.name" class="w-100"/>
                         </div>
                         <div class="align-items-center d-flex flex-fill overflow-hidden small text-nowrap" style="text-overflow: ellipsis; max-width: 200px;">
                             <t t-esc="c.name"/>
@@ -172,7 +172,9 @@
                     <div class="card p-5 w-50">
                         <div class="font-weight-bold h2 mb-5 text-700 text-center">Select a company</div>
                         <div class="mx-auto w-50" style="max-width: 400px;">
-                            <t t-call="payment_jetcheckout_system.payment_company"/>
+                            <t t-call="payment_jetcheckout_system.payment_company">
+                                <t t-set="classes" t-value="'flex-column'"/>
+                            </t>
                         </div>
                     </div>
                 </div>
