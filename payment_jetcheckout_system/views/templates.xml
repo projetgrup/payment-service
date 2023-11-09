@@ -130,7 +130,6 @@
         </t>
     </template>
 
-
     <template id="payment_company" name="Payment System Page Companies">
         <div t-if="companies and len(companies) > 1 or tags and len(tags) > 1" class="d-flex flex-column" style="gap: 5px;">
             <div t-if="companies and len(companies) > 1" t-attf-class="d-flex flex-wrap h-fit #{classes or ''}" style="gap: 5px;">
@@ -167,7 +166,7 @@
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
 
-            <t t-if="len(companies) > 1 and not request.session.get('company')">
+            <!--<t t-if="len(companies) > 1 and not request.session.get('company')">
                 <div class="payment-company d-flex justify-content-center mb256 mt80">
                     <div class="card p-5 w-50">
                         <div class="font-weight-bold h2 mb-5 text-700 text-center">Select a company</div>
@@ -178,207 +177,205 @@
                         </div>
                     </div>
                 </div>
-            </t>
-            <t t-else="">
-                <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
-                    <div>
-                        <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
-                    </div>
-                    <t t-call="payment_jetcheckout_system.payment_company"/>
+            </t>-->
+            <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div>
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
-                <div class="payment-system position-relative overflow-hidden">
-                    <t t-if="dynamic">
-                        <div name="wizard" class="payment-dynamic navbar-light pt-4 flex-wrap flex-row-reverse">
-                            <div class="col-md-9 d-flex navbar-light">
-                                <div class="card position-relative w-100">
-                                    <!--<div class="payment-card-section d-flex fade" field="wizard.page.section.all">
-                                        <div class="position-relative" field="wizard.page.section.amount">
-                                            <div><em class="fa fa-tag fa-bounce-rotate"/></div>
-                                            <div>Amount</div>
-                                            <div class="small">0.00</div>
+                <t t-call="payment_jetcheckout_system.payment_company"/>
+            </div>
+            <div class="payment-system position-relative overflow-hidden">
+                <t t-if="dynamic">
+                    <div name="wizard" class="payment-dynamic navbar-light pt-4 flex-wrap flex-row-reverse">
+                        <div class="col-md-9 d-flex navbar-light">
+                            <div class="card position-relative w-100">
+                                <!--<div class="payment-card-section d-flex fade" field="wizard.page.section.all">
+                                    <div class="position-relative" field="wizard.page.section.amount">
+                                        <div><em class="fa fa-tag fa-bounce-rotate"/></div>
+                                        <div>Amount</div>
+                                        <div class="small">0.00</div>
+                                    </div>
+                                    <div class="position-relative" field="wizard.page.section.card">
+                                        <div><em class="fa fa-credit-card-alt fa-bounce-rotate"/></div>
+                                        <div>Credit Card</div>
+                                        <div class="small">**** **** **** ****</div>
+                                    </div>
+                                    <div class="position-relative" field="wizard.page.section.installment">
+                                        <div><em class="fa fa-money fa-bounce-rotate"/></div>
+                                        <div>Installment</div>
+                                        <div class="small">Single Payment</div>
+                                    </div>
+                                </div>-->
+                                <div class="payment-card-item d-flex fade show p-3" field="wizard.page.loading">
+                                    <div class="m-auto">
+                                        <!--<em class="fa fa-4x fa-circle-o-notch fa-rotate text-primary"/>-->
+                                    </div>
+                                </div>
+                                <div class="payment-card-item fade p-3" field="wizard.page.login">
+                                    <div class="align-items-center d-flex flex-column justify-content-center">
+                                        <div class="bg-white">
+                                            <img src="/payment_jetcheckout_system/static/src/img/money.gif" class="payment-card-item-icon shadow m-0"/>
                                         </div>
-                                        <div class="position-relative" field="wizard.page.section.card">
-                                            <div><em class="fa fa-credit-card-alt fa-bounce-rotate"/></div>
-                                            <div>Credit Card</div>
-                                            <div class="small">**** **** **** ****</div>
+                                        <div name="welcome" class="font-weight-bold h2 my-3 text-primary">
+                                            Welcome
                                         </div>
-                                        <div class="position-relative" field="wizard.page.section.installment">
-                                            <div><em class="fa fa-money fa-bounce-rotate"/></div>
-                                            <div>Installment</div>
-                                            <div class="small">Single Payment</div>
+                                        <div name="vat" class="font-weight-bold text-primary">
+                                            Please enter your VAT number
                                         </div>
-                                    </div>-->
-                                    <div class="payment-card-item d-flex fade show p-3" field="wizard.page.loading">
-                                        <div class="m-auto">
-                                            <!--<em class="fa fa-4x fa-circle-o-notch fa-rotate text-primary"/>-->
+                                        <div>
+                                            <div class="field-container">
+                                                <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.vat" t-att-value="vat"/>
+                                                <span class="bar-container"/>
+                                            </div>
+                                        </div>
+                                        <div class="py-5">
+                                            <button class="btn px-4" field="wizard.button.login.done">Sign In<em class="fa fa-2x fa-sign-in fa-bounce-horizontal" t-translation="off"/></button>
                                         </div>
                                     </div>
-                                    <div class="payment-card-item fade p-3" field="wizard.page.login">
-                                        <div class="align-items-center d-flex flex-column justify-content-center">
-                                            <div class="bg-white">
-                                                <img src="/payment_jetcheckout_system/static/src/img/money.gif" class="payment-card-item-icon shadow m-0"/>
-                                            </div>
-                                            <div name="welcome" class="font-weight-bold h2 my-3 text-primary">
-                                                Welcome
-                                            </div>
-                                            <div name="vat" class="font-weight-bold text-primary">
-                                                Please enter your VAT number
-                                            </div>
-                                            <div>
+                                </div>
+                                <div name="register" class="payment-card-item fade p-3" field="wizard.page.register">
+                                    <div class="d-flex flex-row w-100 position-absolute" style="z-index:2">
+                                        <button class="btn btn-navigation" field="wizard.button.register.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
+                                    </div>
+                                    <div class="align-items-center d-flex flex-column justify-content-center">
+                                        <!--<div class="bg-white">
+                                            <img src="/payment_jetcheckout_system/static/src/img/money.gif" class="payment-card-item-icon shadow m-0"/>
+                                        </div>-->
+                                        <div name="title" class="font-weight-bold h2 my-3 text-primary">
+                                            Register
+                                        </div>
+                                        <div name="text" class="font-weight-bold text-primary my-3">
+                                            Please fill the required fields
+                                        </div>
+                                        <div name="fields" class="d-flex" style="gap:1em">
+                                            <div class="d-flex flex-column" style="gap:1em">
                                                 <div class="field-container">
-                                                    <input name="vat" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.vat" t-att-value="vat"/>
+                                                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
                                                     <span class="bar-container"/>
+                                                    <label class="text-primary"><span>Name</span></label>
                                                 </div>
-                                            </div>
-                                            <div class="py-5">
-                                                <button class="btn px-4" field="wizard.button.login.done">Sign In<em class="fa fa-2x fa-sign-in fa-bounce-horizontal" t-translation="off"/></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div name="register" class="payment-card-item fade p-3" field="wizard.page.register">
-                                        <div class="d-flex flex-row w-100 position-absolute" style="z-index:2">
-                                            <button class="btn btn-navigation" field="wizard.button.register.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
-                                        </div>
-                                        <div class="align-items-center d-flex flex-column justify-content-center">
-                                            <!--<div class="bg-white">
-                                                <img src="/payment_jetcheckout_system/static/src/img/money.gif" class="payment-card-item-icon shadow m-0"/>
-                                            </div>-->
-                                            <div name="title" class="font-weight-bold h2 my-3 text-primary">
-                                                Register
-                                            </div>
-                                            <div name="text" class="font-weight-bold text-primary my-3">
-                                                Please fill the required fields
-                                            </div>
-                                            <div name="fields" class="d-flex" style="gap:1em">
-                                                <div class="d-flex flex-column" style="gap:1em">
-                                                    <div class="field-container">
-                                                        <input type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
-                                                        <span class="bar-container"/>
-                                                        <label class="text-primary"><span>Name</span></label>
-                                                    </div>
-                                                    <div class="field-container">
-                                                        <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
-                                                        <span class="bar-container"/>
-                                                        <label class="text-primary"><span>ID Number</span></label>
-                                                    </div>
-                                                    <div class="field-container">
-                                                        <input type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>
-                                                        <span class="bar-container"/>
-                                                        <label class="text-primary"><span>Email</span></label>
-                                                    </div>
-                                                    <div class="field-container">
-                                                        <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.phone"/>
-                                                        <span class="bar-container"/>
-                                                        <label class="text-primary"><span>Phone</span></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="py-5">
-                                                <button class="btn px-4" field="wizard.button.register.done">Sign Up<em class="fa fa-2x fa-sign-out fa-bounce-horizontal" t-translation="off"/></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="payment-card-item fade invisible p-3" field="wizard.page.welcome">
-                                        <div class="d-flex flex-row w-100 fade position-absolute" style="z-index:2">
-                                            <button class="btn btn-navigation" field="wizard.button.welcome.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
-                                        </div>
-                                        <div class="align-items-center d-flex flex-column justify-content-center pb-5">
-                                            <div class="fade welcome-box">
-                                                <div class="welcome-title-top">
-                                                    <div style="top:0;z-index:1">
-                                                        <span class="bg-white">
-                                                            <img src="/payment_jetcheckout_system/static/src/img/card.gif" class="payment-card-item-icon shadow"/>
-                                                        </span>
-                                                    </div>
-                                                    <div class="text-primary font-weight-bold">Hello</div>
-                                                </div>
-                                                <div class="welcome-title-bottom">
-                                                    <div class="align-items-center d-flex flex-column align-items-center justify-content-center">
-                                                        <span class="text-primary font-weight-bold h2" field="wizard.partner"><t t-esc="partner.name"/></span>
-                                                        <span class="fade mt-5">
-                                                            <button class="btn m-auto" field="wizard.button.welcome.done">Proceed to payment<em class="fa fa-chevron-down fa-bounce" t-translation="off"/></button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="payment-card-item fade invisible p-3" field="wizard.page.amount">
-                                        <div class="d-flex flex-row w-100 position-absolute" style="z-index:2">
-                                            <button class="btn btn-navigation" field="wizard.button.amount.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
-                                        </div>
-                                        <div class="align-items-center d-flex flex-column justify-content-center">
-                                            <div class="bg-white">
-                                                <img src="/payment_jetcheckout_system/static/src/img/price.gif" class="payment-card-item-icon shadow m-0"/>
-                                            </div>
-                                            <div class="font-weight-bold h2 my-3 text-primary">
-                                                Amount to Pay
-                                            </div>
-                                            <div class="payment-card-item-amount">
                                                 <div class="field-container">
-                                                    <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None" field="wizard.amount"/>
+                                                    <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>
                                                     <span class="bar-container"/>
-                                                    <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
-                                                    <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
-                                                    <input type="hidden" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="currency.decimal_places" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                                                    <label class="text-primary"><span>ID Number</span></label>
                                                 </div>
-                                                <button class="btn btn-primary shadow" field="wizard.button.amount.currency">
-                                                    <span t-esc="currency.name"/>
-                                                    <t t-if="len(currencies) > 1">
-                                                        <i class="fa fa-caret-down" t-translation="off"/>
-                                                        <ul>
-                                                            <t t-foreach="currencies" t-as="curr">
-                                                                <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
-                                                            </t>
-                                                        </ul>
-                                                    </t>
-                                                </button>
+                                                <div class="field-container">
+                                                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.email"/>
+                                                    <span class="bar-container"/>
+                                                    <label class="text-primary"><span>Email</span></label>
+                                                </div>
+                                                <div class="field-container">
+                                                    <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.phone"/>
+                                                    <span class="bar-container"/>
+                                                    <label class="text-primary"><span>Phone</span></label>
+                                                </div>
                                             </div>
-                                            <div class="py-5">
-                                                <button class="btn" field="wizard.button.amount.done">Enter credit card details<em class="fa fa-2x fa-credit-card fa-bounce" t-translation="off"/></button>
+                                        </div>
+                                        <div class="py-5">
+                                            <button class="btn px-4" field="wizard.button.register.done">Sign Up<em class="fa fa-2x fa-sign-out fa-bounce-horizontal" t-translation="off"/></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="payment-card-item fade invisible p-3" field="wizard.page.welcome">
+                                    <div class="d-flex flex-row w-100 fade position-absolute" style="z-index:2">
+                                        <button class="btn btn-navigation" field="wizard.button.welcome.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
+                                    </div>
+                                    <div class="align-items-center d-flex flex-column justify-content-center pb-5">
+                                        <div class="fade welcome-box">
+                                            <div class="welcome-title-top">
+                                                <div style="top:0;z-index:1">
+                                                    <span class="bg-white">
+                                                        <img src="/payment_jetcheckout_system/static/src/img/card.gif" class="payment-card-item-icon shadow"/>
+                                                    </span>
+                                                </div>
+                                                <div class="text-primary font-weight-bold">Hello</div>
+                                            </div>
+                                            <div class="welcome-title-bottom">
+                                                <div class="align-items-center d-flex flex-column align-items-center justify-content-center">
+                                                    <span class="text-primary font-weight-bold h2" field="wizard.partner"><t t-esc="partner.name"/></span>
+                                                    <span class="fade mt-5">
+                                                        <button class="btn m-auto" field="wizard.button.welcome.done">Proceed to payment<em class="fa fa-chevron-down fa-bounce" t-translation="off"/></button>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3 d-flex navbar-light">
-                                <div class="mx-2 shine navbar-light"/>
+                                <div class="payment-card-item fade invisible p-3" field="wizard.page.amount">
+                                    <div class="d-flex flex-row w-100 position-absolute" style="z-index:2">
+                                        <button class="btn btn-navigation" field="wizard.button.amount.prev"><i class="fa fa-chevron-left" t-translation="off"/>Back</button>
+                                    </div>
+                                    <div class="align-items-center d-flex flex-column justify-content-center">
+                                        <div class="bg-white">
+                                            <img src="/payment_jetcheckout_system/static/src/img/price.gif" class="payment-card-item-icon shadow m-0"/>
+                                        </div>
+                                        <div class="font-weight-bold h2 my-3 text-primary">
+                                            Amount to Pay
+                                        </div>
+                                        <div class="payment-card-item-amount">
+                                            <div class="field-container">
+                                                <input name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None" field="wizard.amount"/>
+                                                <span class="bar-container"/>
+                                                <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                                <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                                <input type="hidden" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="currency.decimal_places" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                                            </div>
+                                            <button class="btn btn-primary shadow" field="wizard.button.amount.currency">
+                                                <span t-esc="currency.name"/>
+                                                <t t-if="len(currencies) > 1">
+                                                    <i class="fa fa-caret-down" t-translation="off"/>
+                                                    <ul>
+                                                        <t t-foreach="currencies" t-as="curr">
+                                                            <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
+                                                        </t>
+                                                    </ul>
+                                                </t>
+                                            </button>
+                                        </div>
+                                        <div class="py-5">
+                                            <button class="btn" field="wizard.button.amount.done">Enter credit card details<em class="fa fa-2x fa-credit-card fa-bounce" t-translation="off"/></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div field="wizard.page.overlay"/>
-                    </t>
-                    <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
-                        <t t-if="dynamic">
-                            <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                                <t t-call="payment_jetcheckout.payment_form">
-                                    <t t-set="no_smart_buttons" t-value="True"/>
-                                </t>
-                                <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
-                                <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
-                            </div>
-                        </t>
-                        <t t-call="payment_jetcheckout.payment_sidebar">
-                            <t t-set="page" t-value="'payment'"/>
-                            <t t-set="no_payment_icons" t-value="True"/>
-                            <t t-set="no_card_preview" t-value="True"/>
-                            <t t-if="not no_sidebar_buttons" t-set="buttons">
-                                <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
-                            </t>
-                            <t t-call="payment_jetcheckout_system.payment_contact"/>
-                            <t t-set="labels"/>
-                        </t>
-                        <t t-if="not dynamic">
-                            <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                                <t t-call="payment_jetcheckout.payment_form">
-                                    <t t-set="no_smart_buttons" t-value="True"/>
-                                </t>
-                                <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
-                                <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
-                            </div>
-                        </t>
+                        <div class="col-md-3 d-flex navbar-light">
+                            <div class="mx-2 shine navbar-light"/>
+                        </div>
                     </div>
+                    <div field="wizard.page.overlay"/>
+                </t>
+                <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
+                    <t t-if="dynamic">
+                        <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                            <t t-call="payment_jetcheckout.payment_form">
+                                <t t-set="no_smart_buttons" t-value="True"/>
+                            </t>
+                            <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                            <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        </div>
+                    </t>
+                    <t t-call="payment_jetcheckout.payment_sidebar">
+                        <t t-set="page" t-value="'payment'"/>
+                        <t t-set="no_payment_icons" t-value="True"/>
+                        <t t-set="no_card_preview" t-value="True"/>
+                        <t t-if="not no_sidebar_buttons" t-set="buttons">
+                            <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
+                        </t>
+                        <t t-call="payment_jetcheckout_system.payment_contact"/>
+                        <t t-set="labels"/>
+                    </t>
+                    <t t-if="not dynamic">
+                        <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                            <t t-call="payment_jetcheckout.payment_form">
+                                <t t-set="no_smart_buttons" t-value="True"/>
+                            </t>
+                            <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                            <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        </div>
+                    </t>
                 </div>
-            </t>
+            </div>
             <t t-call="payment_jetcheckout_system.payment_agreement"/>
             <t t-call="payment_jetcheckout_system.payment_footer"/>
         </t>

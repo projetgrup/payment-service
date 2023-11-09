@@ -504,6 +504,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         ev.preventDefault();
         const amount = parseFloat(this.amount.$.data('value') || 0);
         const params = [
+            ['id', $('html').data('websiteId') || 0],
             ['amount', amount],
             ['currency', this.currency.name],
             ['vat', this.vat.value],
