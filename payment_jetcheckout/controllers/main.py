@@ -663,7 +663,7 @@ class PayloxController(http.Controller):
                 if line.price_total > 0:
                     amount_lines += line.price_total
                     customer_basket.append({
-                        "id": line.product_id.default_code,
+                        "id": line.product_id.default_code or str(line.product_id.id),
                         "name": line.product_id.name,
                         "description": line.name,
                         "qty": line.product_uom_qty,
@@ -674,10 +674,10 @@ class PayloxController(http.Controller):
             if amount_total != amount_lines:
                 product = request.env.ref('payment_jetcheckout.product_commission').sudo()
                 customer_basket.append({
-                    "id": product.default_code,
+                    "id": product.default_code or str(product.id),
                     "name": product.display_name,
                     "description": product.name,
-                    "qty": 1,
+                    "qty": 1.0,
                     "amount": float_round(amount_total - amount_lines, 2),
                     "category": product.categ_id.name,
                     "is_physical": product.type == 'product',
