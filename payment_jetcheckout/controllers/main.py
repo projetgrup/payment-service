@@ -643,15 +643,6 @@ class PayloxController(http.Controller):
             billing_partner_id = sale_order_id.partner_invoice_id
             shipping_partner_id = sale_order_id.partner_shipping_id
             data.update({
-                "customer_basket": [{
-                    "id": line.product_id.default_code,
-                    "name": line.product_id.name,
-                    "description": line.name,
-                    "qty": line.product_uom_qty,
-                    "amount": line.price_total,
-                    "is_physical": line.product_id.type == 'product',
-                    "category": line.product_id.categ_id.name,
-                } for line in sale_order_id.order_line if line.price_total > 0],
                 "billing_address": {
                     "contactName": billing_partner_id.name,
                     "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),
@@ -665,6 +656,34 @@ class PayloxController(http.Controller):
                     "country": shipping_partner_id.country_id and shipping_partner_id.country_id.name or "",
                 },
             })
+
+            amount_lines = 0
+            customer_basket = []
+            for line in sale_order_id.order_line:
+                if line.price_total > 0:
+                    amount_lines += line.price_total
+                    customer_basket.append({
+                        "id": line.product_id.default_code,
+                        "name": line.product_id.name,
+                        "description": line.name,
+                        "qty": line.product_uom_qty,
+                        "amount": line.price_total,
+                        "category": line.product_id.categ_id.name,
+                        "is_physical": line.product_id.type == 'product',
+                    })
+            if amount_total != amount_lines:
+                product = request.env.ref('payment_jetcheckout.product_commission').sudo()
+                customer_basket.append({
+                    "id": product.default_code,
+                    "name": product.display_name,
+                    "description": product.name,
+                    "qty": 1,
+                    "amount": amount_total - amount_lines,
+                    "category": product.categ_id.name,
+                    "is_physical": product.type == 'product',
+                })
+            data.update({"customer_basket": customer_basket})
+
         elif invoice_id:
             tx.invoice_ids = [(4, invoice_id)]
 
