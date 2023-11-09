@@ -678,7 +678,7 @@ class PayloxController(http.Controller):
                     "name": product.display_name,
                     "description": product.name,
                     "qty": 1,
-                    "amount": amount_total - amount_lines,
+                    "amount": float_round(amount_total - amount_lines, 2),
                     "category": product.categ_id.name,
                     "is_physical": product.type == 'product',
                 })
