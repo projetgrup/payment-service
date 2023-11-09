@@ -76,6 +76,11 @@ class PayloxSystemController(Controller):
             url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
         return url, tx, status
 
+    def _prepare(self, **kwargs):
+        res = super()._prepare(**kwargs)
+        res['companies'] = request.website._get_companies().sudo()
+        return res
+
     def _prepare_system(self, company, system, partner, transaction):
         currency = company.currency_id
         acquirer = self._get_acquirer(False)
@@ -316,6 +321,7 @@ class PayloxSystemController(Controller):
 
         values = self._prepare(partner=partner, company=company, currency=currency)
         values.update({
+            'companies': values['companies'].filtered(lambda x: x.payment_advance_ok),
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
             'system': company.system,
@@ -414,6 +420,24 @@ class PayloxSystemController(Controller):
             return request.render('payment_jetcheckout_system.page_login', {'token': token})
         else:
             return werkzeug.utils.redirect('/p/%s' % token)
+
+    @http.route(['/my/payment/company'], type='json', auth='public', website=True, csrf=False)
+    def page_system_page_company(self, cid):
+        if cid == request.env.company.id:
+            if request.session.get('company'):
+                return False
+
+        else:
+            website = request.env['website'].sudo().search([
+                ('domain', '=', request.website.domain),
+                ('company_id', '=', cid)
+            ], limit=1)
+            if not website:
+                return False
+            website._force()
+
+        request.session['company'] = True
+        return True
 
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def page_system_payment_return(self, **kwargs):
