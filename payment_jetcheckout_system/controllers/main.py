@@ -313,7 +313,6 @@ class PayloxSystemController(Controller):
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):
         self._check_advance_page(**kwargs)
-
         website_id = int(kwargs.get('id', request.website.id))
         if request.website.id != website_id:
             website = request.env['website'].sudo().browse(int(kwargs['id']))
@@ -321,7 +320,11 @@ class PayloxSystemController(Controller):
                 raise werkzeug.exceptions.NotFound()
 
             website._force()
-            return werkzeug.utils.redirect('/my/advance')
+            path = request.httprequest.path
+            query = request.httprequest.query_string
+            if query:
+                path += '?' + query
+            return werkzeug.utils.redirect(path)
 
         company = request.env.company
         if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
@@ -330,8 +333,22 @@ class PayloxSystemController(Controller):
             currency = None
 
         user = request.env.user
-        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        if request.website.company_id.id != user.company_id.id:
+            website = request.env['website'].sudo().search([
+                ('domain', '=', request.website.domain),
+                ('company_id', '=', user.company_id.id)
+            ], limit=1)
+            if not website:
+                raise werkzeug.exceptions.NotFound()
+            
+            website._force()
+            path = request.httprequest.path
+            query = request.httprequest.query_string
+            if query:
+                path += '?' + query
+            return werkzeug.utils.redirect(path)
 
+        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
         if user.share:
@@ -457,6 +474,10 @@ class PayloxSystemController(Controller):
 
         request.session['company'] = True
         return True
+
+    @http.route(['/my/payment/company/<int:id>/logo'], type='http', auth='public')
+    def page_system_page_company_image(self, id):
+        return request.env['ir.http'].sudo()._content_image(xmlid=None, model='res.company', res_id=id, field='logo', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
 
     @http.route(['/my/payment/success', '/my/payment/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
     def page_system_payment_return(self, **kwargs):
