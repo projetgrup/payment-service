@@ -11,4 +11,4 @@ class BaseModel(models.AbstractModel):
         url = website and website.domain or super().get_base_url() or ''
         if url and url[-1] == '/':
             url = url[:-1]
-        return url
+        return url or ''
