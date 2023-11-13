@@ -242,7 +242,9 @@ class Partner(models.Model):
 
     def _get_payment_url(self, shorten=False):
         self.ensure_one()
-        url = self.get_base_url() + self._get_share_url()
+        base_url = self.get_base_url() or ''
+        share_url = self._get_share_url() or ''
+        url = base_url + share_url
         if shorten:
             link = self.env['link.tracker'].sudo().search_or_create({
                 'url': url,
