@@ -91,6 +91,14 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
+    def _compute_payment_link_url(self):
+        for partner in self:
+            partner.payment_link_url = partner._get_payment_url()
+
+    def _compute_payment_page_url(self):
+        for partner in self:
+            partner.payment_page_url = partner.with_context(active_type='page')._get_payment_url()
+
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
         ids = group_portal.users.mapped('partner_id').ids
@@ -123,6 +131,8 @@ class Partner(models.Model):
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     acquirer_branch_id = fields.Many2one('payment.acquirer.jetcheckout.branch', string='Payment Acquirer Branch')
     users_id = fields.Many2one('res.users', compute='_compute_user_details', compute_sudo=True, readonly=True)
+    payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
+    payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
 
     @api.model
     def default_get(self, fields):
