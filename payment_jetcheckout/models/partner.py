@@ -30,4 +30,4 @@ class Partner(models.Model):
         return False
 
     acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers', store=False)
-    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', default=_default_campaign_id, copy=False)
+    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', default=_default_campaign_id, copy=False, tracking=True)
