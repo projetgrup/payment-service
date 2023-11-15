@@ -671,7 +671,7 @@ class PayloxController(http.Controller):
                         "category": line.product_id.categ_id.name,
                         "is_physical": line.product_id.type == 'product',
                     })
-            if amount_total != amount_lines:
+            if not float_compare(amount_total,  amount_lines, 2):
                 product = request.env.ref('payment_jetcheckout.product_commission').sudo()
                 customer_basket.append({
                     "id": product.default_code or str(product.id),
