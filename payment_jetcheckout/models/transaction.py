@@ -426,6 +426,15 @@ class PaymentTransaction(models.Model):
         if not values:
             values = self._paylox_api_status()
             if 'error' in values:
+                now = fields.Datetime.now()
+                date = now - relativedelta(minutes=10)
+                if (date > self.write_date):
+                    self.write({
+                        'state': 'error',
+                        'state_message': values['error'],
+                        'last_state_change': now,
+                    })
+                    self.env.cr.commit()
                 raise UserError(values['error'])
 
             result = values['result']
@@ -459,7 +468,7 @@ class PaymentTransaction(models.Model):
 
     def paylox_query(self):
         self.ensure_one()
-        if (not self.jetcheckout_order_id):
+        if not self.jetcheckout_order_id:
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'payment.acquirer.jetcheckout.prestatus',
