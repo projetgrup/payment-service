@@ -671,14 +671,16 @@ class PayloxController(http.Controller):
                         "category": line.product_id.categ_id.name,
                         "is_physical": line.product_id.type == 'product',
                     })
-            if not float_compare(amount_total,  amount_lines, 2):
+            
+            amount_diff = float_round(amount_total - amount_lines, 2)
+            if amount_diff:
                 product = request.env.ref('payment_jetcheckout.product_commission').sudo()
                 customer_basket.append({
                     "id": product.default_code or str(product.id),
                     "name": product.display_name,
                     "description": product.name,
                     "qty": 1.0,
-                    "amount": float_round(amount_total - amount_lines, 2),
+                    "amount": amount_diff,
                     "category": product.categ_id.name,
                     "is_physical": product.type == 'product',
                 })
