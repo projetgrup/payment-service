@@ -72,6 +72,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             type: '',
             family: '',
             bin: '',
+            valid: false,
         };
         this.campaign = {
             name: new fields.string({
@@ -269,7 +270,36 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     _onAcceptCardNumber: function () {
         this._getInstallment();
         const card = this.card.number._.masked.currentMask;
+        const limit = card.code === 'amex' ? 14 : 15;
         this.card.type = card.name;
+
+        if (card.typedValue.length > limit) {
+            const self = this;
+            rpc.query({
+                route: '/payment/card/valid',
+                params: { number: card.typedValue },
+            }).then(function (valid) {
+                self.card.valid = valid;
+                if (!valid) {
+                    self.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please enter a valid card number'),
+                    });
+                }
+            }).guardedCatch(function (error) {
+                self.card.valid = false;
+                self.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured. Please contact with your system administrator.'),
+                });
+                if (config.isDebug()) {
+                    console.error(error);
+                }
+            });
+        }
+
         if (card.icon) {
             this.card.icon.html = card.icon;
             this.card.icon.$.addClass('show');
@@ -697,6 +727,14 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please fill card number'),
+            });
+            this._enableButton();
+            return false;
+        } else if (!this.card.valid) {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('Please enter a valid card number'),
             });
             this._enableButton();
             return false;

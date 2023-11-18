@@ -13,6 +13,8 @@
     <br/><br/>
     If you want to view and pay online, <a t-att-href="object._get_payment_url()" style="color:#3079ed;font-weight:bold;">click here.</a>
     <br/><br/>
+    <a t-att-href="object._get_payment_url()" style="background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;"><span style="margin-right: 10px">Go to Payment</span>❯</a>
+    <br/><br/>
     Have a nice day.
     <br/><br/>
     Sincerely...
@@ -47,10 +49,10 @@
                         Transaction Amount : <t t-out="format_amount(ctx['tx'].amount, ctx['tx'].currency_id) or ''"/><br/>
                         Installment Count : <t t-out="ctx['tx'].with_context(lang=ctx['lang']).jetcheckout_installment_description_long or ''"/><br/><br/>
                         <div style="margin: 16px 0px 16px 0px; text-align: center;">
-                            <a t-att-href="'%s/report/html/payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                            <a t-att-href="'%s/payment/card/report/receipt/%s' % (ctx['url'], ctx['tx'].jetcheckout_order_id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
                                 <strong>Receipt</strong>
                             </a>
-                            <a t-att-href="'%s/report/html/payment_jetcheckout.payment_conveyance/%s' % (ctx['url'], ctx['tx'].id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                            <a t-att-href="'%s/payment/card/report/conveyance/%s' % (ctx['url'], ctx['tx'].jetcheckout_order_id)" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
                                 <strong>Conveyance</strong>
                             </a>
                         </div>

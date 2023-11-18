@@ -365,6 +365,7 @@ class PayloxSystemController(Controller):
             'vat': kwargs.get('vat'),
             'flow': 'dynamic',
             'advance': True,
+            'readonly': company.payment_advance_amount_readonly,
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):

@@ -64,6 +64,12 @@
                                     <div class="text-muted">
                                         Accept advance payments from partners
                                     </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_advance_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_advance_amount_readonly" string="Amount Readonly" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_advance_amount_readonly" widget="boolean_toggle"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -193,6 +199,20 @@
                                         <div class="row mt16">
                                             <label for="payment_dashboard_button_url" string="URL" class="col-lg-4 o_light_label"/>
                                             <field name="payment_dashboard_button_url" class="flex-fill" placeholder="/my/payment"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_dashboard_field_amount" string="Dashboard Payment Amount Field"/>
+                                    <div class="text-muted">
+                                        Specify a base field from which the amount data retrieved on dashboard
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="payment_dashboard_field_amount" widget="radio" class="flex-fill"/>
                                         </div>
                                     </div>
                                 </div>
