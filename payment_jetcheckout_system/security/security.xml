@@ -23,6 +23,10 @@
             <field name="name">Show Payment Link</field>
             <field name="category_id" ref="module_category_system_technical"/>
         </record>
+        <record model="res.groups" id="group_show_campaign_button">
+            <field name="name">Show Campaign Button</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
 
         <record id="module_category_system" model="ir.module.category">
             <field name="name">Payment System</field>
@@ -32,7 +36,7 @@
         <record model="res.groups" id="group_system_user">
             <field name="name">User</field>
             <field name="category_id" ref="module_category_system"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('group_show_payment_link'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('group_show_payment_link')), (4, ref('group_show_campaign_button'))]"/>
         </record>
         <record model="res.groups" id="group_system_manager">
             <field name="name">Manager</field>

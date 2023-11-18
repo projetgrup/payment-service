@@ -37,7 +37,7 @@ class PaymentDasboard(models.Model):
     graph_type = fields.Selection([('bar', 'Bar'), ('line', 'Line')], default='bar', required=True)
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def read_group(self, **kw):
         raise UserError(_('You cannot group dashboard items'))
 
     def _get_data(self):
@@ -129,6 +129,7 @@ class PaymentDasboard(models.Model):
             raise UserError(_('This time period is not implemented'))
  
         user = self.env.user
+        field = self.env.company.payment_dashboard_field_amount or 'amount'
         restricted = user.has_group('payment_jetcheckout_system.group_system_own_partner')
         restricted_join = """
             LEFT JOIN res_partner p on t.partner_id = p.id
@@ -144,7 +145,7 @@ class PaymentDasboard(models.Model):
             )
         """ if restricted else ""
         template = f"""
-            SELECT %s AS line, COUNT(t.id) AS count, SUM(t.amount) AS amount
+            SELECT %s AS line, COUNT(t.id) AS count, SUM(t.{field}) AS amount
             FROM payment_transaction t
             {restricted_join}
             WHERE t.state = 'done'
@@ -232,6 +233,7 @@ class PaymentDasboard(models.Model):
 
     def _get_domain_query(self):
         dates = self._get_dates()
+        field = self.env.company.payment_dashboard_field_amount or 'amount'
         companies = tuple(self.env.companies.ids + [0])
         user = self.env.user
         restricted = user.has_group('payment_jetcheckout_system.group_system_own_partner')
@@ -251,10 +253,10 @@ class PaymentDasboard(models.Model):
         query = f"""
             SELECT
                 COUNT(*) AS total_count,
-                SUM(t.amount) AS total_amount,
-                AVG(t.amount) AS average_amount,
+                SUM(t.{field}) AS total_amount,
+                AVG(t.{field}) AS average_amount,
                 SUM(CASE WHEN t.state = 'done' THEN 1 ELSE 0 END) AS success_count,
-                SUM(CASE WHEN t.state = 'done' THEN t.amount ELSE 0 END) AS success_amount,
+                SUM(CASE WHEN t.state = 'done' THEN t.{field} ELSE 0 END) AS success_amount,
                 SUM(CASE WHEN t.jetcheckout_installment_count = 1 AND t.state = 'done' THEN 1 ELSE 0 END) AS advance_count,
                 c.name AS currency_name,
                 c.id AS currency_id

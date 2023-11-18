@@ -220,6 +220,20 @@
                 <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
             </t>
         </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
+            <t t-if="advance">
+                <div class="d-flex flex-column m-3" style="gap:1em;min-width:250px;">
+                    <div class="field-container">
+                        <select class="text-center border-primary" required="required" field="wizard.register.company_type" placeholder="Select partner type">
+                            <option value="person" selected="selected">Individual</option>
+                            <option value="company">Company</option>
+                        </select>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>Type</span></label>
+                    </div>
+                </div>
+            </t>
+        </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
             <t t-if="advance">
                 <div class="d-flex flex-column" style="gap:1em">
