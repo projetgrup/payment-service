@@ -163,6 +163,26 @@ class PayloxController(http.Controller):
                 return '%s + %s' % (installment['installment_count'], installment['plus_installment'])
         return '%s' % installment['installment_count']
 
+    @staticmethod
+    def _get_validity(acquirer=None, number=None):
+        acquirer = acquirer or PayloxController._get_acquirer()
+        url = '%s/api/v1/prepayment/card_check' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "card_number": number,
+            "language": "tr",
+        }
+
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                return result['response_code'] == "00" and result.get('card_valid')
+            else:
+                return False
+        except:
+            return False
+
     def _check_user(self):
         return True
 
@@ -548,6 +568,10 @@ class PayloxController(http.Controller):
             'logo': values['logo'],
             'type': values['type'],
         }
+
+    @http.route('/payment/card/valid', type='json', auth='public', csrf=False, sitemap=False, website=True)
+    def payment_card_valid(self, number):
+        return self._get_validity(number=number)
 
     @http.route(['/payment/card/pay'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def payment(self, **kwargs):

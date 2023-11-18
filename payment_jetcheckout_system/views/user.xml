@@ -104,6 +104,7 @@
                         <field name="group_create_partner"/>
                         <field name="group_grant_partner"/>
                         <field name="group_show_payment_link"/>
+                        <field name="group_show_campaign_button"/>
                         <field name="group_transaction_commission"/>
                         <field name="group_transaction_cancel"/>
                         <field name="group_transaction_refund"/>

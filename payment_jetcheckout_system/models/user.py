@@ -171,6 +171,16 @@ class Users(models.Model):
             group = self.env.ref('payment_jetcheckout_system.group_show_payment_link')
             group.sudo().write({'users': [(code, user.id)]})
 
+    def _compute_group_show_campaign_button(self):
+        for user in self:
+            user.group_show_campaign_button = user.has_group('payment_jetcheckout_system.group_show_campaign_button')
+
+    def _set_group_show_campaign_button(self):
+        for user in self:
+            code = user.group_show_campaign_button and 4 or 3
+            group = self.env.ref('payment_jetcheckout_system.group_show_campaign_button')
+            group.sudo().write({'users': [(code, user.id)]})
+
     def _compute_payment_page_item_priority(self):
         for user in self:
             user.payment_page_item_priority_selection = user.payment_page_item_priority and 'ok' or 'no'
@@ -187,6 +197,7 @@ class Users(models.Model):
     group_create_partner = fields.Boolean(string='Create Partners', compute='_compute_group_create_partner', inverse='_set_group_create_partner')
     group_grant_partner = fields.Boolean(string='Grant Partners', compute='_compute_group_grant_partner', inverse='_set_group_grant_partner')
     group_show_payment_link = fields.Boolean(string='Show Payment Link', compute='_compute_group_show_payment_link', inverse='_set_group_show_payment_link')
+    group_show_campaign_button = fields.Boolean(string='Show Campaign Button', compute='_compute_group_show_campaign_button', inverse='_set_group_show_campaign_button')
 
     payment_page_ok = fields.Boolean(string='Payment Page Active', default=True)
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
