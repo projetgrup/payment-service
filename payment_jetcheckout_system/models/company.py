@@ -30,7 +30,7 @@ class Company(models.Model):
         ('jetcheckout_payment_amount', 'Paid Amount'),
         ('jetcheckout_payment_net', 'Net Amount'),
         ('jetcheckout_fund_amount', 'Fund Amount'),
-    ], string='Dashboard Payment Amount Field', default='paid')
+    ], string='Dashboard Payment Amount Field', default='jetcheckout_payment_amount')
 
     payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')

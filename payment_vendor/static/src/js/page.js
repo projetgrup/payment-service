@@ -15,7 +15,7 @@ systemFlow.dynamic.include({
         Object.assign(this.wizard.register, {
             country_id: new fields.integer(),
             company_type: new fields.string(),
-            tax_office_id: new fields.selection(),
+            paylox_tax_office: new fields.string(),
             state_id: new fields.selection(),
             city: new fields.string(),
             street: new fields.string(),
@@ -50,7 +50,7 @@ systemFlow.dynamic.include({
 
         const name = this.wizard.register.name.$.parent().find('label span');
         const vat = this.wizard.register.vat.$.parent().find('label span');
-        const office = this.wizard.register.tax_office_id;
+        const office = this.wizard.register.paylox_tax_office;
         if (type === 'company') {
             name.text(_t('Company Name'));
             vat.text(_t('VAT'));

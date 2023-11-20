@@ -315,7 +315,7 @@ class PayloxSystemController(Controller):
         self._check_advance_page(**kwargs)
         website_id = int(kwargs.get('id', request.website.id))
         if request.website.id != website_id:
-            website = request.env['website'].sudo().browse(int(kwargs['id']))
+            website = request.env['website'].sudo().browse(website_id)
             if not website:
                 raise werkzeug.exceptions.NotFound()
 
