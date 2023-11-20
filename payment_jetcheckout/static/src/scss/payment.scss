@@ -396,7 +396,7 @@
     .field-container {
         position: relative;
 
-        > input, > textarea {
+        > input[type=text], > textarea {
             -webkit-box-sizing: border-box;
             min-height: 50px;
             box-sizing: border-box;
@@ -410,12 +410,12 @@
             box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
         }
 
-        > input:focus, > textarea:focus {
+        > input[type=text]:focus, > textarea:focus {
             outline: none;
             border-color: theme-color('primary');
         }
 
-        > input::placeholder, > textarea::placeholder {
+        > input[type=text]::placeholder, > textarea::placeholder {
             color: #cccccc;
         }
 
@@ -434,6 +434,7 @@
             transition: 0.2s ease all;
             -moz-transition: 0.2s ease all;
             -webkit-transition: 0.2s ease all;
+
             span {
                 background-image: linear-gradient(0deg, transparent 40%, rgb(255,255,255) 40%, rgb(255,255,255) 60%, transparent 100%);
                 padding: 0 5px;
@@ -468,11 +469,17 @@
             right: 50%; 
         }
 
-        > input:focus ~ .bar-container:before, > input:focus ~ .bar-container:after, > textarea:focus ~ .bar-container:before, > textarea:focus ~ .bar-container:after {
+        > input[type=text]:focus ~ .bar-container:before,
+        > input[type=text]:focus ~ .bar-container:after,
+        > textarea:focus ~ .bar-container:before,
+        > textarea:focus ~ .bar-container:after {
             width: 50%;
         }
 
-        > input.border-danger ~ .bar-container:before, > input.border-danger ~ .bar-container:after, > textarea.border-danger ~ .bar-container:before, > textarea.border-danger ~ .bar-container:after {
+        > input[type=text].border-danger ~ .bar-container:before,
+        > input[type=text].border-danger ~ .bar-container:after,
+        > textarea.border-danger ~ .bar-container:before,
+        > textarea.border-danger ~ .bar-container:after {
             background: theme-color('danger');
         }
 
@@ -486,10 +493,65 @@
             opacity: 0.5;
         }
 
-        > input:focus ~ .highlight-container, > textarea:focus ~ .highlight-container  {
+        > input[type=text]:focus ~ .highlight-container,
+        > textarea:focus ~ .highlight-container  {
             -webkit-animation: inputHighlighter 0.3s ease;
             -moz-animation: inputHighlighter 0.3s ease;
             animation: inputHighlighter 0.3s ease;
+        }
+
+        button {
+            position: relative;
+            border-width: 2px !important;
+            border-color: #eeeeee !important;
+
+            &.selected {
+                border-color: theme-color('primary') !important;
+            }
+
+            &:hover input + span {
+                background-color: #cccccc;
+            }
+
+            input {
+                cursor: pointer;
+                position: absolute;
+                opacity: 0;
+                height: 0;
+                width: 0;
+            }
+
+            input + span {
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+                background-color: #eeeeee;
+            }
+
+            input + span:after {
+                content: "";
+                position: absolute;
+                display: none;
+            }
+    
+            input + span:after {
+                top: 9px;
+                left: 9px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #ffffff;
+            }
+    
+            input:checked + span {
+                background-color: theme-color('primary');
+            }
+    
+            input:checked + span:after {
+                display: block;
+            }
         }
 
         @-webkit-keyframes inputHighlighter {
@@ -724,30 +786,17 @@
     }
 
     .select2-container {
-        //box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
         border: 2px solid #ddd;
         border-radius: 5px;
-        //width: 235px;
         min-height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        /*&:focus {
-            box-shadow: none;
-            outline: none;
-            border: none;
-        }*/
-
         &.select2-dropdown-open {
             border-color: theme-color('primary');
             border-radius: 5px 5px 0 0;
             border-bottom: none;
-
-            .select2-choice {
-                padding-left: 6px;
-                padding-top: 1px;
-            }
         }
 
         &.select2-drop-above {
@@ -758,6 +807,7 @@
             border-bottom: 1px solid !important;
             border-color: theme-color('primary') !important;
             margin-bottom: 0 !important;
+
             .select2-choice {
                 border-color: theme-color('primary') !important;
                 border-top: 0px !important;
@@ -781,7 +831,6 @@
             box-shadow: none;
             background: none;
             color: #999;
-            padding-left: 5px;
             border: none;
         }
 

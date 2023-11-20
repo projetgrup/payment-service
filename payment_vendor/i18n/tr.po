@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-18 13:41+0000\n"
-"PO-Revision-Date: 2023-11-18 16:43+0300\n"
+"POT-Creation-Date: 2023-11-20 09:53+0000\n"
+"PO-Revision-Date: 2023-11-20 12:54+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -84,26 +84,6 @@ msgstr ""
 "</p>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
-msgid ""
-"<select class=\"text-center border-primary\" required=\"required\" "
-"field=\"wizard.register.company_type\" placeholder=\"Select partner type\">\n"
-"                            <option value=\"person\" "
-"selected=\"selected\">Individual</option>\n"
-"                            <option value=\"company\">Company</option>\n"
-"                        </select>\n"
-"                        <span class=\"bar-container\"/>"
-msgstr ""
-"<select class=\"text-center border-primary\" required=\"required\" "
-"field=\"wizard.register.company_type\" placeholder=\"İş ortağı türü "
-"seçin\">\n"
-"                            <option value=\"person\" "
-"selected=\"selected\">Bireysel</option>\n"
-"                            <option value=\"company\">Kurumsal</option>\n"
-"                        </select>\n"
-"                        <span class=\"bar-container\"/>"
-
-#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "<span class=\"text-500\">Amount</span>"
 msgstr "<span class=\"text-500\">Tutar</span>"
@@ -140,13 +120,23 @@ msgstr "<span>İlçe</span>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>Company</span>"
+msgstr "<span>Kurumsal</span>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "<span>Individual</span>"
+msgstr "<span>Bireysel</span>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
 msgid "<span>State</span>"
 msgstr "<span>Şehir</span>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
-msgid "<span>Type</span>"
-msgstr "<span>Tür</span>"
+msgid "<span>Tax Office</span>"
+msgstr "<span>Vergi Dairesi</span>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -729,6 +719,13 @@ msgid "Companies"
 msgstr "Şirketler"
 
 #. module: payment_vendor
+#. openerp-web
+#: code:addons/payment_vendor/static/src/js/page.js:0
+#, python-format
+msgid "Company Name"
+msgstr "Şirket Adı"
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_companies
 msgid "Company Settings"
 msgstr "Şirket Ayarları"
@@ -863,6 +860,13 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_vendor
+#. openerp-web
+#: code:addons/payment_vendor/static/src/js/page.js:0
+#, python-format
+msgid "Name"
+msgstr "Adı"
+
+#. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
@@ -977,6 +981,11 @@ msgstr "Satış Ekipleri"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
 msgid "Select a state"
 msgstr "Bir il seçin"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+msgid "Select a tax office"
+msgstr "Bir vergi dairesi seçin"
 
 #. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
@@ -1129,6 +1138,25 @@ msgstr ""
 #: model:mail.template,subject:payment_vendor.mail_transaction_successful
 msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
 msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid ""
+#~ "<select class=\"text-center border-primary\" required=\"required\" "
+#~ "field=\"wizard.register.company_type\" placeholder=\"Select partner "
+#~ "type\">\n"
+#~ "                            <option value=\"person\" "
+#~ "selected=\"selected\">Individual</option>\n"
+#~ "                            <option value=\"company\">Company</option>\n"
+#~ "                        </select>\n"
+#~ "                        <span class=\"bar-container\"/>"
+#~ msgstr ""
+#~ "<select class=\"text-center border-primary\" required=\"required\" "
+#~ "field=\"wizard.register.company_type\" placeholder=\"İş ortağı türü "
+#~ "seçin\">\n"
+#~ "                            <option value=\"person\" "
+#~ "selected=\"selected\">Bireysel</option>\n"
+#~ "                            <option value=\"company\">Kurumsal</option>\n"
+#~ "                        </select>\n"
+#~ "                        <span class=\"bar-container\"/>"
 
 #~ msgid "No setting found"
 #~ msgstr "Ayar bulunamadı"

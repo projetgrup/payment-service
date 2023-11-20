@@ -223,14 +223,29 @@
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
             <t t-if="advance">
                 <div class="d-flex flex-column m-3" style="gap:1em;min-width:250px;">
-                    <div class="field-container">
-                        <select class="text-center border-primary" required="required" field="wizard.register.company_type" placeholder="Select partner type">
-                            <option value="person" selected="selected">Individual</option>
-                            <option value="company">Company</option>
-                        </select>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>Type</span></label>
+                    <div class="field-container d-flex p-2" style="gap:1em;">
+                        <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
+                            <input type="radio" checked="checked"/><span t-translation="off"/><span>Individual</span>
+                        </button>
+                        <button class="btn" name="company" field="wizard.register.buttons.company_type">
+                            <input type="radio"/><span t-translation="off"/><span>Company</span>
+                        </button>
+                        <input type="hidden" value="person" field="wizard.register.company_type"/>
                     </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
+            <t t-if="advance">
+                <div class="field-container d-none">
+                    <select class="text-center border-primary" required="required" field="wizard.register.tax_office_id" placeholder="Select a tax office">
+                        <option/>
+                        <t t-foreach="company.env['account.tax.office'].sudo().search_read([('state_id.country_id', '=', company.country_id.id)])" t-as="tax_office">
+                            <option t-att-value="tax_office['id']" t-esc="tax_office['name']"/>
+                        </t>
+                    </select>
+                    <span class="bar-container"/>
+                    <label class="text-primary"><span>Tax Office</span></label>
                 </div>
             </t>
         </xpath>
