@@ -133,6 +133,7 @@ class Partner(models.Model):
     users_id = fields.Many2one('res.users', compute='_compute_user_details', compute_sudo=True, readonly=True)
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
+    paylox_tax_office = fields.Char('Tax Office')
 
     @api.model
     def default_get(self, fields):
