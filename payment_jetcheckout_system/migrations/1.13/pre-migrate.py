@@ -7,3 +7,6 @@ def migrate(cr, version):
 
     if not column_exists(cr, 'res_company', 'payment_advance_amount_readonly'):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_advance_amount_readonly boolean')
+
+    if not column_exists(cr, 'res_partner', 'paylox_tax_office'):
+        cr.execute('ALTER TABLE res_partner ADD COLUMN paylox_tax_office varchar')

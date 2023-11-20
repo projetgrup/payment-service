@@ -238,12 +238,7 @@
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
             <t t-if="advance">
                 <div class="field-container d-none">
-                    <select class="text-center border-primary" required="required" field="wizard.register.tax_office_id" placeholder="Select a tax office">
-                        <option/>
-                        <t t-foreach="company.env['account.tax.office'].sudo().search_read([('state_id.country_id', '=', company.country_id.id)])" t-as="tax_office">
-                            <option t-att-value="tax_office['id']" t-esc="tax_office['name']"/>
-                        </t>
-                    </select>
+                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.paylox_tax_office"/>
                     <span class="bar-container"/>
                     <label class="text-primary"><span>Tax Office</span></label>
                 </div>

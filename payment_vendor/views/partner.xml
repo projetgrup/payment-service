@@ -93,6 +93,7 @@
             <attribute name="string">Contacts</attribute>
         </xpath>
         <xpath expr='//group[@name="general"]' position="inside">
+            <field name="paylox_tax_office"/>
             <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
         </xpath>
         <xpath expr='//notebook' position="inside">
