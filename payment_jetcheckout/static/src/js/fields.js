@@ -89,6 +89,11 @@ class selection extends fields {
         if ($.isNumeric(value)) return parseFloat(value);
         return value;
     }
+
+    set value(v) {
+        this.$.val(v);
+        this.$.trigger('change');
+    }
 }
 
 class float extends fields {
@@ -120,6 +125,7 @@ class integer extends float {
 }
 
 export default {
+    field: fields,
     string: string,
     boolean: boolean,
     integer: integer,

@@ -225,8 +225,10 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         let partner = {};
         try {
             const params = {};
-            for (const field of Object.keys(this.wizard.register)) {
-                params[field] = this.wizard.register[field].value;
+            for (const [name, field] of Object.entries(this.wizard.register)) {
+                if (field instanceof fields.field && field.value) {
+                    params[name] = field.value;
+                }
             }
             partner = await rpc.query({
                 route: '/my/payment/create/partner',
