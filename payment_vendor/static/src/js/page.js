@@ -14,12 +14,16 @@ systemFlow.dynamic.include({
         this._super.apply(this, arguments);
         Object.assign(this.wizard.register, {
             country_id: new fields.integer(),
-            company_type: new fields.selection({
-                events: [['change', this._onChangeCompanyType]],
-            }),
+            company_type: new fields.string(),
+            tax_office_id: new fields.selection(),
             state_id: new fields.selection(),
             city: new fields.string(),
             street: new fields.string(),
+            buttons: {
+                company_type: new fields.element({
+                    events: [['click', this._onClickCompanyType]],
+                }),
+            }
         });
     },
 
@@ -35,14 +39,29 @@ systemFlow.dynamic.include({
         }
     },
 
-    _onChangeCompanyType: function(ev) {
-        const label = $('.payment-system input[field="wizard.register.vat"]').parent().find('label span');
-        if (ev.val === 'company') {
-            label.text(_t('VAT'));
+    _onClickCompanyType: function(ev) {
+        const button = $(ev.currentTarget);
+        const buttons = $('.payment-system button[field="wizard.register.buttons.company_type"]');
+        buttons.removeClass('selected').find('input').prop({'checked': false});
+        button.addClass('selected').find('input').prop({'checked': true});
+
+        const type = button.attr('name');
+        this.wizard.register.company_type.value = type;
+
+        const name = this.wizard.register.name.$.parent().find('label span');
+        const vat = this.wizard.register.vat.$.parent().find('label span');
+        const office = this.wizard.register.tax_office_id;
+        if (type === 'company') {
+            name.text(_t('Company Name'));
+            vat.text(_t('VAT'));
+            office.$.parent().removeClass('d-none');
         } else {
-            label.text(_t('Vat'));
+            name.text(_t('Name'));
+            vat.text(_t('Vat'));
+            office.value = '';
+            office.$.parent().addClass('d-none');
         }
-    }
+    },
 });
 
 publicWidget.registry.payloxSystemVendor = systemPage.extend({
