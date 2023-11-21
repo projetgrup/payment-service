@@ -281,12 +281,22 @@ class PaymentTransaction(models.Model):
 
     def paylox_order_confirm(self):
         self.ensure_one()
-        orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids
+        orders = hasattr(self, 'sale_order_ids') and self.sale_order_ids.filtered(lambda x: x.state not in ('sale','done'))
         if not orders:
             return
+
         try:
             self.env.cr.commit()
-            orders.filtered(lambda x: x.state not in ('sale','done')).with_context(send_email=True).action_confirm()
+            commission = self.jetcheckout_customer_amount
+            if commission > 0:
+                product = self.env.ref('payment_jetcheckout.product_commission')
+                orders[0].write({
+                    'order_line': [(0, 0, {
+                        'product_id': product.id,
+                        'price_unit': commission,
+                    })]
+                })
+            orders.with_context(send_email=True).action_confirm()
         except Exception as e:
             self.env.cr.rollback()
             _logger.error('Confirming order for transaction %s is failed\n%s' % (self.reference, e))
