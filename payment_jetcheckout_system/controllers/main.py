@@ -323,7 +323,7 @@ class PayloxSystemController(Controller):
             path = request.httprequest.path
             query = request.httprequest.query_string
             if query:
-                path += '?' + query
+                path += '?' + query.decode('utf-8')
             return werkzeug.utils.redirect(path)
 
         company = request.env.company
@@ -345,7 +345,7 @@ class PayloxSystemController(Controller):
             path = request.httprequest.path
             query = request.httprequest.query_string
             if query:
-                path += '?' + query
+                path += '?' + query.decode('utf-8')
             return werkzeug.utils.redirect(path)
 
         partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
@@ -365,7 +365,7 @@ class PayloxSystemController(Controller):
             'vat': kwargs.get('vat'),
             'flow': 'dynamic',
             'advance': True,
-            'readonly': company.payment_advance_amount_readonly,
+            'readonly': user.share and company.payment_advance_amount_readonly,
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):

@@ -86,7 +86,7 @@ publicWidget.registry.payloxPaymentCompany = publicWidget.Widget.extend({
     _onClickCompany: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        if (window.location.pathname.split('/')[1] !== 'my') {
+        if (!window.location.pathname.includes('/my/')) {
             return;
         }
 
@@ -407,7 +407,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     _onClickCompany: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        if (window.location.pathname.split('/')[1] !== 'p') {
+        if (!window.location.pathname.includes('/p/')) {
             return;
         }
 
