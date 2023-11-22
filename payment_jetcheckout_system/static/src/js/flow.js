@@ -111,12 +111,13 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
 
-            if (window.location.search) {
-                window.history.replaceState(null, '', window.location.pathname);
-            } else {
-                self.wizard.vat.value = '';
-            }
+            // if (window.location.search) {
+            //     window.history.replaceState(null, '', window.location.pathname);
+            // } else {
+            //     self.wizard.vat.value = '';
+            // }
 
+            self.wizard.vat.value = '';
             self.wizard.page.login.$.addClass('show');
             self.wizard.page.loading.$.removeClass('show');
             setTimeout(function() {
