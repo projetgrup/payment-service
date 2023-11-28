@@ -701,7 +701,7 @@ class PayloxController(http.Controller):
                         "qty": 1.0,
                         "amount": amount_customer,
                         "category": product.categ_id.name,
-                        "is_physical": product.type == 'product',
+                        "is_physical": False,
                     })
                 data.update({"customer_basket": customer_basket})
 
