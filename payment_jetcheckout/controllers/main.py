@@ -697,7 +697,7 @@ class PayloxController(http.Controller):
                     })
             
             amount_diff = float_round(amount_total - amount_lines, 2)
-            if amount_diff:
+            if amount_diff > 0:
                 product = request.env.ref('payment_jetcheckout.product_commission').sudo()
                 customer_basket.append({
                     "id": product.default_code or str(product.id),
