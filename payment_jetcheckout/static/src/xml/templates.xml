@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="paylox.installment.grid">
-        <main t-if="!error &amp;&amp; rows" class="row installment-table bg-white">
+        <main t-if="!error &amp;&amp; rows" class="row installment-table">
             <t t-foreach="rows" t-as="row">
                 <div class="col-md-4 p-2">
-                    <div class="border">
+                    <div class="border bg-white text-700">
                         <table class="w-100">
                             <colgroup>
                                 <col width="20%"/>

@@ -25,17 +25,18 @@ const qweb = core.qweb;
 
 const DashboardController = KanbanController.extend({
     events: _.extend({
-        'click .o_button_payment_page': '_onClickPaymentPage'
+        'click .o_button_payment_page': '_onClickPaymentPage',
+        'click .o_button_preview_page': '_onClickPreviewPage',
     }, KanbanController.prototype.events),
 
     willStart: function() {
         const self = this;
         const ready = this._rpc({
             model: 'payment.dashboard',
-            method: 'has_button',
+            method: 'has_payment_button',
             args: [],
         }).then(function (show) {
-            self.show_button = show;
+            self.show_payment_button = show;
         }).guardedCatch(function (error) {
             console.error(error);
         });
@@ -43,9 +44,7 @@ const DashboardController = KanbanController.extend({
     },
 
     renderButtons: function () {
-        if (this.show_button) {
-            this.$buttons = $(qweb.render('Dashboard.Buttons'));
-        }
+        this.$buttons = $(qweb.render('Dashboard.Buttons', { show_payment_button: this.show_payment_button }));
     },
 
     _onClickPaymentPage: function () {
@@ -54,6 +53,23 @@ const DashboardController = KanbanController.extend({
             model: 'payment.dashboard',
             method: 'get_button_url',
             args: [],
+        }).then(function (url) {
+            self.do_action({
+                type: 'ir.actions.act_url',
+                target: 'new',
+                url: url,
+            });
+        }).guardedCatch(function (error) {
+            console.error(error);
+        });
+    },
+
+    _onClickPreviewPage: function () {
+        const self = this;
+        this._rpc({
+            model: 'payment.dashboard',
+            method: 'get_button_url',
+            args: ['preview'],
         }).then(function (url) {
             self.do_action({
                 type: 'ir.actions.act_url',

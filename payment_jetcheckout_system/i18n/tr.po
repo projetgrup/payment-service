@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-20 14:34+0000\n"
-"PO-Revision-Date: 2023-11-20 17:36+0300\n"
+"POT-Creation-Date: 2023-12-04 17:02+0000\n"
+"PO-Revision-Date: 2023-12-04 20:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -518,6 +518,21 @@ msgstr "Tutar<br/>(Tümü / Başarılı)"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "An error occured."
+msgstr "Bir hata meydana geldi."
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+"Bir hata meydana geldi. Lütfen sistem yöneticisi ile iletişime geçiniz."
+
+#. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/flow.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
@@ -612,8 +627,23 @@ msgid "Campaign Table on Payment Page"
 msgstr "Ödeme Sayfasında Kampanya Tablosu"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_preview
+msgid "Campaigns"
+msgstr "Kampanyalar"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Campaigns Table"
+msgstr "Kampanya Tablosu"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
+#, python-format
 msgid "Cancel"
 msgstr "İptal"
 
@@ -2154,9 +2184,22 @@ msgid "Portal: User Portal Invite Template"
 msgstr "Portal: Kullanıcı Portal Davet Şablonu"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Preview"
 msgstr "Önizleme"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/dashboard.xml:0
+#, python-format
+msgid "Preview Payment"
+msgstr "Ödemeyi Önizle"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_preview
+msgid "Print"
+msgstr "Yazdır"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -2594,6 +2637,7 @@ msgid "Telegram"
 msgstr "Telegram"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__template_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Template"
@@ -2905,6 +2949,11 @@ msgid "Url"
 msgstr "Url"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__template_ok
+msgid "Use Template"
+msgstr "Şablon Kullan"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Use campaign table instead of installment table on payment page"
 msgstr "Ödeme sayfasında taksit tablosu yerine kampanya tablosu kullanın"
@@ -3166,10 +3215,6 @@ msgstr "kayıt seçildi"
 
 #~ msgid "Payment System: Own Partners Only"
 #~ msgstr "Ödeme Sistemi: Sadece Kendi İş Ortakları"
-
-#, python-format
-#~ msgid "An error occured."
-#~ msgstr "Bir hata meydana geldi."
 
 #, python-format
 #~ msgid "Code must be 6 digits"

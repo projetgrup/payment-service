@@ -14,9 +14,10 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _paylox_done_postprocess(self):
-        super()._paylox_done_postprocess()
+        res = super()._paylox_done_postprocess()
         self._paylox_send_done_email()
         self._paylox_send_done_sms()
+        return res
 
     def _paylox_send_done_email(self):
         self.ensure_one()

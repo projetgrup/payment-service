@@ -33,6 +33,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_sync_item_force"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_sync_item_force" string="Sync Payment Items From Scratch"/>
+                            <div class="text-muted">
+                                Even if they are paid, sync payment items all over
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </xpath>
     </field>

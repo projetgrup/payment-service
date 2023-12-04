@@ -144,6 +144,7 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state_message': _('Successful status of this transaction has not been posted to connector yet.')
             })
             self.action_process_connector()
+        self.env.cr.commit()
         return res
 
     def _paylox_cancel_postprocess(self):
@@ -154,6 +155,7 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state_message': _('Cancelled status of this transaction has not been posted to connector yet.')
             })
             self.action_process_connector()
+        self.env.cr.commit()
         return res
 
     def _paylox_refund_postprocess(self, amount=0):
@@ -165,4 +167,5 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state_message': _('Refunded status of this transaction has not been posted to connector yet.')
             })
             res.action_process_connector()
+        self.env.cr.commit()
         return res
