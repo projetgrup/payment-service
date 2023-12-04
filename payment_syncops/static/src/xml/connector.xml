@@ -102,7 +102,7 @@
                 </button>
             </t>
             <t t-else="">
-                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page' || 'btn-outline-primary btn shadow-sm o_connector_button_page'" t-att-data-page="p" t-att-data-type="type">
+                <button t-att-class="page === p &amp;&amp; 'bg-primary text-white btn-outline-primary btn shadow-sm o_connector_button_page' || 'btn-outline-primary text-primary btn shadow-sm o_connector_button_page'" t-att-data-page="p" t-att-data-type="type">
                     <t t-esc="p"/>
                 </button>
             </t>

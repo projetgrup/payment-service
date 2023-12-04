@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:02+0000\n"
-"PO-Revision-Date: 2023-12-04 17:02+0000\n"
+"POT-Creation-Date: 2023-12-04 19:13+0000\n"
+"PO-Revision-Date: 2023-12-04 19:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1842,6 +1842,11 @@ msgid "Payment Page URL"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_preview_ok
+msgid "Payment Preview Page Active"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
@@ -2815,6 +2820,7 @@ msgid "Vergi Dairesi"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 msgid "View"
 msgstr ""

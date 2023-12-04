@@ -173,7 +173,6 @@
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
-                <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
             <div class="payment-system position-relative overflow-hidden">
                 <div class="payment-card row justify-content-center mx-0">
