@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class Website(models.Model):
@@ -20,6 +20,13 @@ class Website(models.Model):
 
     def _get_companies(self):
         return self.search([('domain', '=', self.domain)]).mapped('company_id')
+
+    @api.model
+    def create(self, values):
+        if 'template_id' in values and values['template_id']:
+            template = self.browse(values['template_id'])
+            values['domain'] = template.domain
+        return super().create(values)
 
     def write(self, values):
         if 'template_id' in values and values['template_id']:
