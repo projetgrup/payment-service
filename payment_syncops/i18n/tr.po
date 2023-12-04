@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-21 07:17+0000\n"
-"PO-Revision-Date: 2023-10-21 10:21+0300\n"
+"POT-Creation-Date: 2023-12-04 17:11+0000\n"
+"PO-Revision-Date: 2023-12-04 20:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/wizards/sync.py:0
@@ -224,6 +224,11 @@ msgstr "Bitiş tarihi boş olamaz"
 #, python-format
 msgid "Error"
 msgstr "Hata"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Even if they are paid, sync payment items all over"
+msgstr "Ödenmiş olsa bile, ödeme kalemlerini baştan eşle"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
@@ -569,6 +574,11 @@ msgid "Sync Partners Automatically"
 msgstr "İş Ortaklarını Otomatik Olarak Eşle"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Payment Items From Scratch"
+msgstr "Ödeme Kalemlerini Baştan Eşle"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 msgid "Synchronization Date Range"
 msgstr "Eşleme Tarih Aralığı"
@@ -589,6 +599,12 @@ msgstr "Syncops İş Ortağı Eşle Zamanlayıcısı"
 #: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_partner_required
 msgid "Syncops Payment Page Partner Required"
 msgstr "Syncops Ödeme Sayfası İş Ortağı Zorunlu"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_sync_item_force
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_sync_item_force
+msgid "Syncops Sync Item Force"
+msgstr "Syncops Eşleme Kalem Zorla"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_sync_item_subtype
