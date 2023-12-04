@@ -104,7 +104,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _paylox_done_postprocess(self):
-        super()._paylox_done_postprocess()
+        res = super()._paylox_done_postprocess()
         webhooks = self.company_id.notif_webhook_ids
         if webhooks:
             self.write({
@@ -114,6 +114,7 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_webhook_state_message': _('This transaction has not been notified yet.')
             })
             self.action_process_notification_webhook()
+        return res
 
 
 class PaymentTransactionItem(models.Model):

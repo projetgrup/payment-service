@@ -1269,3 +1269,32 @@
         background-position-x: -200%;
     }
 }
+
+@media print {
+
+    html {
+        position: static;
+        overflow: visible;
+        height: auto;
+
+        body.payment-page {
+            position: static;
+            overflow: visible;
+            height: auto;
+
+            #wrapwrap {
+                position: static;
+                overflow: visible;
+                height: auto;
+            }
+        }
+    }
+
+    nav.o_main_navbar {
+        display: none !important;
+    }
+
+    div.o_terminal {
+        display: none !important;
+    }
+}
