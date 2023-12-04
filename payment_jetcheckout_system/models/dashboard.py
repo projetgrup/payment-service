@@ -275,7 +275,10 @@ class PaymentDasboard(models.Model):
 
     @api.model
     def has_payment_button(self):
-        return self.env.company.payment_dashboard_button_ok and self.env.user.payment_page_ok
+        return {
+            'show_payment_button': self.env.company.payment_dashboard_button_ok and self.env.user.payment_page_ok,
+            'show_preview_button': self.env.company.payment_dashboard_button_ok and self.env.user.payment_preview_ok,
+        }
 
     @api.model    
     def get_button_url(self, type=None):

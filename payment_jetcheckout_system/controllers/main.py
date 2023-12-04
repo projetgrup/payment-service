@@ -41,7 +41,7 @@ class PayloxSystemController(Controller):
             raise werkzeug.exceptions.NotFound()
 
     def _check_payment_preview_page(self):
-        if request.env.user.share or not request.env.company.payment_page_ok or not request.env.company.payment_advance_ok:
+        if request.env.user.share or not request.env.user.payment_preview_ok or not request.env.company.payment_page_ok or not request.env.company.payment_advance_ok:
             raise werkzeug.exceptions.NotFound()
 
     def _check_advance_page(self, **kwargs):

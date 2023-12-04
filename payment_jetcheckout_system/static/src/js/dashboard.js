@@ -35,8 +35,9 @@ const DashboardController = KanbanController.extend({
             model: 'payment.dashboard',
             method: 'has_payment_button',
             args: [],
-        }).then(function (show) {
-            self.show_payment_button = show;
+        }).then(function ({ show_payment_button, show_preview_button}) {
+            self.show_payment_button = show_payment_button;
+            self.show_preview_button = show_preview_button;
         }).guardedCatch(function (error) {
             console.error(error);
         });
@@ -44,7 +45,10 @@ const DashboardController = KanbanController.extend({
     },
 
     renderButtons: function () {
-        this.$buttons = $(qweb.render('Dashboard.Buttons', { show_payment_button: this.show_payment_button }));
+        this.$buttons = $(qweb.render('Dashboard.Buttons', {
+            show_payment_button: this.show_payment_button,
+            show_preview_button: this.show_preview_button,
+        }));
     },
 
     _onClickPaymentPage: function () {

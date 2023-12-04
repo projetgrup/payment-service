@@ -122,9 +122,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.amountEditable = false;
         this.amount = new fields.float({
             default: 0,
-            events: [
-                ['input', this._onInputRawAmount],
-            ],
         });
         this.vat = new fields.string();
         this.campaign = {
@@ -212,6 +209,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 self._onChangePaid();
             } else if (self.payment.preview.grid.exist) {
                 self.isPreview = true;
+                self.amount = new fields.float({
+                    events: [
+                        ['input', self._onInputRawAmount],
+                    ],
+                    default: 0,
+                    mask: payloxPage.prototype._maskAmount.bind(self),
+                });
+                self.amount.$ = $('[field=amount]');
+                self.amount.start(self, 'amount');
                 self._getPreviewGrid();
             }
         });
