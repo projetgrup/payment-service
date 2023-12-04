@@ -117,10 +117,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             position: 'after',
             symbol: '', 
         };
-        this.amountEditable = false;
+        this.isPreview = false;
         this.itemPriority = false;
+        this.amountEditable = false;
         this.amount = new fields.float({
             default: 0,
+            events: [
+                ['input', this._onInputRawAmount],
+            ],
         });
         this.vat = new fields.string();
         this.campaign = {
@@ -170,6 +174,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }),
             pivot: new fields.element(),
             priority: new fields.element(),
+            preview: {
+                grid: new fields.element(),
+                print: new fields.element({
+                    events: [['click', this._onClickPreviewPrint]],
+                }),
+                campaign: new fields.element({
+                    events: [['click', this._onClickPreviewCampaign]],
+                }),
+            },
             due: {
                 date: new fields.element(),
                 days: new fields.element(),
@@ -197,8 +210,129 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 self.itemPriority = self.payment.priority.exist;
                 self.amountEditable = self.payment.amount.exist;
                 self._onChangePaid();
+            } else if (self.payment.preview.grid.exist) {
+                self.isPreview = true;
+                self._getPreviewGrid();
             }
         });
+    },
+
+    _getPreviewGrid: async function () {
+        let self = this;
+        let grid = false;
+        await rpc.query({
+            route: '/payment/card/installments',
+            params: {
+                amount: this.amount.value,
+                currency: this.currency.id,
+                campaign: this.campaign.name.value,
+            },
+        }).then(function (result) {
+            if ('error' in result) {
+                grid = false;
+                self.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('An error occured.') + ' ' + result.error,
+                });
+            } else {
+                grid = result;
+            }
+        }).guardedCatch(function (error) {
+            grid = false;
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
+            });
+            if (config.isDebug()) {
+                console.error(error);
+            }
+        });
+
+        if (grid) {
+            this.payment.preview.grid.html = qweb.render('paylox.installment.grid', {
+                value: this.amount.value,
+                format: format,
+                ...this.currency,
+                ...grid,
+            });
+
+            $('.installment-table picture > img').on('load', function () {
+                $(this).removeClass('d-none');
+                $('.installment-table picture').removeClass('placeholder');
+            });
+        } else {
+            this.payment.preview.grid.html = `<h2 class="text-600 mt-4">${_t('No payment information found')}</h2>`;
+            $('.installment-table picture > img').off('load', null);
+        }
+    },
+
+    _onClickPreviewPrint: async function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        if (this.isPreview) {
+            window.print();
+        }
+    },
+
+    _onClickPreviewCampaign: async function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        if (this.isPreview) {
+            let campaigns = false;
+            let self = this;
+            await rpc.query({
+                route: '/payment/card/campaigns',
+            }).then(function (result) {
+                campaigns = result;
+            }).guardedCatch(function (error) {
+                self.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured. Please contact with your system administrator.'),
+                });
+                if (config.isDebug()) {
+                    console.error(error);
+                }
+            });
+
+            if (campaigns) {
+                let popup = new dialog(self, {
+                    title: _t('Campaigns Table'),
+                    size: 'small',
+                    buttons: [{
+                        close: true,
+                        text: _t('Cancel'),
+                        classes: 'btn-secondary text-white',
+                    }],
+                    $content: qweb.render('paylox.campaigns', { campaigns, current: this.campaign.name.value })
+                });
+
+                popup.open().opened(function () {
+                    popup.$modal.addClass('payment-page');
+                    let $button = $('.modal-body button.o_button_select_campaign');
+                    $button.click(function(e) {
+                        let campaign = e.currentTarget.dataset.name;
+                        self.campaign.name.value = campaign;
+                        self.campaign.name.$.trigger('change');
+                        self._getPreviewGrid();
+                        popup.destroy();
+                    });
+                });
+            }
+        }
+    },
+
+    _onInputRawAmount: function () {
+        if (this.isPreview) {
+            clearTimeout(this.debounce);
+            this.debounce = setTimeout(() => {
+                this._getPreviewGrid();
+            }, 500);
+        }
     },
 
     _onInputAmount: function () {

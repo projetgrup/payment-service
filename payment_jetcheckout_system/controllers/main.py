@@ -40,6 +40,10 @@ class PayloxSystemController(Controller):
         if not request.env.user.share and not request.env.user.payment_page_ok:
             raise werkzeug.exceptions.NotFound()
 
+    def _check_payment_preview_page(self):
+        if request.env.user.share or not request.env.company.payment_page_ok or not request.env.company.payment_advance_ok:
+            raise werkzeug.exceptions.NotFound()
+
     def _check_advance_page(self, **kwargs):
         if not request.env.company.payment_advance_ok:
             raise werkzeug.exceptions.NotFound()
@@ -381,6 +385,27 @@ class PayloxSystemController(Controller):
         self._del('hash')
 
         return request.render('payment_jetcheckout_system.page_payment', values)
+
+    @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
+    def page_system_payment_preview(self, **kwargs):
+        self._check_payment_preview_page()
+
+        company = request.env.company
+        values = self._prepare(company=company)
+        values.update({
+            'system': company.system,
+            'subsystem': company.subsystem,
+        })
+
+        if 'values' in kwargs and isinstance(kwargs['values'], dict):
+            values.update({**kwargs['values']})
+
+        try:
+            values.update({'amount': float(kwargs['amount'])})
+        except:
+            pass
+
+        return request.render('payment_jetcheckout_system.page_payment_preview', values)
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
