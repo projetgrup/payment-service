@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 19:13+0000\n"
-"PO-Revision-Date: 2023-12-04 22:16+0300\n"
+"POT-Creation-Date: 2023-12-05 16:27+0000\n"
+"PO-Revision-Date: 2023-12-05 19:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -900,6 +900,7 @@ msgstr "Gün"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/settings.py:0
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__days
 #, python-format
 msgid "Days"
 msgstr "Gün"
@@ -1025,6 +1026,7 @@ msgstr "Eposta Gönderim Tarihi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__mail_template_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__mail_template_id
 msgid "Email Template"
 msgstr "Eposta Şablonu"
 
@@ -1200,6 +1202,11 @@ msgstr "Ödeme Formunu Gizle"
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__hours
 msgid "Hour"
+msgstr "Saat"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__hours
+msgid "Hours"
 msgstr "Saat"
 
 #. module: payment_jetcheckout_system
@@ -1568,6 +1575,11 @@ msgid "Method"
 msgstr "Metot"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__minutes
+msgid "Minutes"
+msgstr "Dakika"
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Monday"
@@ -1576,6 +1588,11 @@ msgstr "Pazartesi"
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__months
 msgid "Month"
+msgstr "Ay"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__months
+msgid "Months"
 msgstr "Ay"
 
 #. module: payment_jetcheckout_system
@@ -1926,6 +1943,13 @@ msgid "Payment Items Wizard"
 msgstr "Ödeme Kalemleri Sihirbazı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.actions.server,name:payment_jetcheckout_system.cron_send_due_reminder_ir_actions_server
+#: model:ir.cron,cron_name:payment_jetcheckout_system.cron_send_due_reminder
+#: model:ir.cron,name:payment_jetcheckout_system.cron_send_due_reminder
+msgid "Payment Items: Send Due Reminder"
+msgstr "Ödeme Kalemleri: Vade Hatırlatması Gönder"
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.server,name:payment_jetcheckout_system.payment_share_link
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Link"
@@ -1980,6 +2004,24 @@ msgstr "Ödeme Sayfası Vade Ödeme Formunu Gizle"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_hide_payment_message
 msgid "Payment Page Due Hide Payment Message"
 msgstr "Ödeme Sayfası Vade Ödeme Formunu Gizle Mesajı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_ok
+msgid "Payment Page Due Reminder"
+msgstr "Ödeme Sayfası Vade Hatırlatıcı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_interval_number
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_interval_number
+msgid "Payment Page Due Reminder Interval Number"
+msgstr "Ödeme Sayfası Vade Hatırlatıcı Aralık Değeri"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_interval_type
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_interval_type
+msgid "Payment Page Due Reminder Interval Type"
+msgstr "Ödeme Sayfası Vade Hatırlatıcı Aralık Türü"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_ids
@@ -2453,6 +2495,11 @@ msgstr "Davet Epostası Gönder"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Send email to partners when"
+msgstr "Sonra vade tarihine"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid ""
 "Send email to transaction owner and its followers right after completing a "
 "transaction with success"
@@ -2502,6 +2549,11 @@ msgstr "Sunucu"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Set Password"
 msgstr "Parola Ayarla"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Set Reminder"
+msgstr "Hatırlatıcı Ayarla"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_form
@@ -3120,6 +3172,11 @@ msgid "Week 5"
 msgstr "5. Hafta"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__weeks
+msgid "Weeks"
+msgstr "Hafta"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 msgid "Welcome"
 msgstr "Hoş Geldiniz"
@@ -3207,6 +3264,11 @@ msgstr "e.g. Ali Veli"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "e.g. email@yourcompany.com"
 msgstr "e.g. eposta@sirketiniz.com"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "left to next due date"
+msgstr "kaldığında hatırlatma epostası gönder"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
