@@ -4,7 +4,7 @@
         <button t-if="show_payment_button" type="button" class="btn btn-primary o_button_payment_page">
             Receive Payment
         </button>
-        <button type="button" class="btn btn-primary o_button_preview_page">
+        <button t-if="show_preview_button" type="button" class="btn btn-primary o_button_preview_page">
             Preview Payment
         </button>
     </t>
