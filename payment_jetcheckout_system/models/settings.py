@@ -29,6 +29,9 @@ class PaymentSettings(models.TransientModel):
     payment_page_due_base = fields.Selection(related='company_id.payment_page_due_base', readonly=False)
     payment_page_due_hide_payment_ok = fields.Boolean(related='company_id.payment_page_due_hide_payment_ok', readonly=False)
     payment_page_due_hide_payment_message = fields.Text(related='company_id.payment_page_due_hide_payment_message', readonly=False)
+    payment_page_due_reminder_ok = fields.Boolean(related='company_id.payment_page_due_reminder_ok', readonly=False)
+    payment_page_due_reminder_interval_number = fields.Integer(related='company_id.payment_page_due_reminder_interval_number', readonly=False)
+    payment_page_due_reminder_interval_type = fields.Selection(related='company_id.payment_page_due_reminder_interval_type', readonly=False)
 
     notif_mail_success_ok = fields.Boolean(related='company_id.notif_mail_success_ok', readonly=False)
     notif_sms_success_ok = fields.Boolean(related='company_id.notif_sms_success_ok', readonly=False)
@@ -109,6 +112,7 @@ class PaymentSettingsDue(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
     campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
+    mail_template_id = fields.Many2one('mail.template', string='Email Template')
 
     def get_campaign(self, day):
         line = None

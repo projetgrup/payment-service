@@ -15,6 +15,9 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as
 class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
+        if not request.env.user.share:
+            return False
+
         if not partner.system:
             return False
  
