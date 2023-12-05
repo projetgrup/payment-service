@@ -112,6 +112,13 @@
                                             <label for="payment_page_due_base" string="Base Date" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_due_base" widget="radio" options="{'horizontal': True}"/>
                                         </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_due_reminder_ok" string="Set Reminder" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_due_reminder_ok" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="mt16" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Send email to partners when <field name="payment_page_due_reminder_interval_number" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-right mr-1" style="width: 32px"/> <field name="payment_page_due_reminder_interval_type" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-left mr-1" style="width: 64px"/> left to next due date
+                                        </div>
                                         <div class="mt16">
                                             <field name="payment_page_due_ids" class="w-100">
                                                 <tree editable="bottom">
@@ -120,6 +127,7 @@
                                                     <field name="tolerance"/>
                                                     <field name="round" widget="boolean_toggle"/>
                                                     <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                                    <field name="mail_template_id" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'column_invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
                                                     <field name="campaign_ids" invisible="1"/>
                                                 </tree>
                                                 <form>
@@ -133,6 +141,7 @@
                                                             </group>
                                                             <group>
                                                                 <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
+                                                                <field name="mail_template_id" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
                                                                 <field name="campaign_ids" invisible="1"/>
                                                             </group>
                                                         </group>
