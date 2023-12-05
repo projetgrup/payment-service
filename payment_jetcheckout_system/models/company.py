@@ -41,6 +41,15 @@ class Company(models.Model):
     ], string='Payment Page Due Base Date', default='date_due')
     payment_page_due_hide_payment_ok = fields.Boolean(string='Payment Page Due Hide Payment Form')
     payment_page_due_hide_payment_message = fields.Text(string='Payment Page Due Hide Payment Message', translate=True)
+    payment_page_due_reminder_ok = fields.Boolean(string='Payment Page Due Reminder')
+    payment_page_due_reminder_interval_number = fields.Integer(string='Payment Page Due Reminder Interval Number')
+    payment_page_due_reminder_interval_type = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+    ], string='Payment Page Due Reminder Interval Type')
 
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
     payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')

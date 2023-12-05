@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
+import logging
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from odoo import models, fields, api
 from odoo.tools.misc import get_lang
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentItem(models.Model):
@@ -177,26 +182,82 @@ class PaymentItem(models.Model):
                 amount += residual * diff.days
 
             days = amount/total if total else 0
-            date = (today + timedelta(days=days)).strftime(lang.date_format)
-            days, campaign, advance, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
+            date = (today + relativedelta(days=days)).strftime(lang.date_format)
+            days, campaign, line, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
 
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
 
-            if advance:
-                due = advance.due + advance.tolerance
-                if advance.round:
+            if line:
+                due = line.due + line.tolerance
+                if line.round:
                     due -= 0.49
                 advance_amount = (sign * amount / due) - total if due else 0
-                advance_campaign = advance.campaign_id.name
+                advance_campaign = line.campaign_id.name
 
-        return {
+        values = {
             'amount': amount,
             'days': days,
             'date': date,
             'campaign': campaign,
-            'advance_amount': advance_amount,
-            'advance_campaign': advance_campaign,
-            'hide_payment': hide_payment,
-            'hide_payment_message': hide_payment_message,
+            'advance_amount': advance_amount or 0.0,
+            'advance_campaign': advance_campaign or '',
+            'hide_payment': hide_payment or False,
+            'hide_payment_message': hide_payment_message or '',
         }
+        if self.env.context.get('show_extra'):
+            values.update({'line': line})
+        return values
+
+    @api.model
+    def paylox_send_due_reminder(self):
+        now = datetime.now()
+        self.env.cr.execute(f"""
+            SELECT
+                ARRAY_AGG(p.id),
+                p.parent_id,
+                c.id,
+                c.payment_page_due_reminder_interval_type,
+                c.payment_page_due_reminder_interval_number
+            FROM payment_item p
+            JOIN res_company c ON p.company_id = c.id
+            WHERE
+                p.paid IS NOT TRUE AND
+                c.payment_page_due_ok AND
+                c.payment_page_due_reminder_ok IS TRUE
+            GROUP BY
+                p.parent_id,
+                c.id,
+                c.payment_page_due_reminder_interval_type,
+                c.payment_page_due_reminder_interval_number
+        """)
+
+        for i in self.env.cr.fetchall():
+            due = self.browse(i[0]).with_context(show_extra=True).get_due()
+            line = due['line']
+            if line and line.mail_template_id:
+                diff = now + relativedelta(**{i[3]: i[4]}) - now
+                if line.due + line.tolerance == diff:
+                    partner = self.browse(i[1])
+                    company = self.browse(i[2])
+
+                    mail_server = company.mail_server_id
+                    email_from = mail_server.email_formatted or company.email_formatted
+
+                    context = self.env.context.copy()
+                    context.update({
+                        'due': due,
+                        'partner': partner,
+                        'company': company,
+                        'server': mail_server,
+                        'from': email_from,
+                    })
+
+                    try:
+                        with self.env.cr.savepoint():
+                            line.mail_template_id.with_context(context).send_mail(i[1], force_send=True, email_values={
+                                'is_notification': True,
+                                'mail_server_id': mail_server.id,
+                            })
+                    except Exception as e:
+                        _logger.error('An error occured when sending payment due date emil to partner %s (%s)' % (i[1], e))

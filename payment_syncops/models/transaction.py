@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+from datetime import timedelta
 from dateutil import parser
 
 from odoo import fields, models, _
@@ -91,6 +92,8 @@ class PaymentTransaction(models.Model):
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
+        offset = timedelta(hours=3) # Turkiye Timezone
+        date = self.last_state_change + offset
         if not line or not line.account_code:
             raise UserError(_('There is no account line for this provider'))
 
@@ -99,6 +102,7 @@ class PaymentTransaction(models.Model):
             'ref': ref,
             'vat': vat,
             'name': name,
+            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
             'amount': self.amount,
             'reference': self.reference,
             'provider': self.acquirer_id.provider,
@@ -106,7 +110,6 @@ class PaymentTransaction(models.Model):
             'company_id': self.company_id.partner_id.ref,
             'account_code': line.account_code,
             'state': 'refund' if self.source_transaction_id else self.state,
-            'date': self.last_state_change.strftime('%Y-%m-%d %H:%M:%S'),
             'card_number': self.jetcheckout_card_number or '',
             'card_name': self.jetcheckout_card_name,
             'order_id': self.source_transaction_id.jetcheckout_order_id if self.source_transaction_id else self.jetcheckout_order_id,
