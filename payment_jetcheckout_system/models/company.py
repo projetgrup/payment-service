@@ -41,15 +41,17 @@ class Company(models.Model):
     ], string='Payment Page Due Base Date', default='date_due')
     payment_page_due_hide_payment_ok = fields.Boolean(string='Payment Page Due Hide Payment Form')
     payment_page_due_hide_payment_message = fields.Text(string='Payment Page Due Hide Payment Message', translate=True)
+
     payment_page_due_reminder_ok = fields.Boolean(string='Payment Page Due Reminder')
-    payment_page_due_reminder_interval_number = fields.Integer(string='Payment Page Due Reminder Interval Number')
-    payment_page_due_reminder_interval_type = fields.Selection([
-        ('minutes', 'Minutes'),
-        ('hours', 'Hours'),
-        ('days', 'Days'),
-        ('weeks', 'Weeks'),
-        ('months', 'Months'),
-    ], string='Payment Page Due Reminder Interval Type')
+    payment_page_due_reminder_day = fields.Integer(string='Payment Page Due Reminder Day')
+    payment_page_due_reminder_user_ids = fields.Many2many('res.users', string='Payment Page Due Reminder Sales Representatives')
+    payment_page_due_reminder_user_ok = fields.Boolean(string='Payment Page Due Reminder Sales Representative Included')
+    payment_page_due_reminder_team_ids = fields.Many2many('crm.team', string='Payment Page Due Reminder Sales Teams')
+    payment_page_due_reminder_team_ok = fields.Boolean(string='Payment Page Due Reminder Sales Teams Included')
+    payment_page_due_reminder_partner_ids = fields.Many2many('res.partner', string='Payment Page Due Reminder Partners')
+    payment_page_due_reminder_partner_ok = fields.Boolean(string='Payment Page Due Reminder Partners Included')
+    payment_page_due_reminder_tag_ids = fields.Many2many('res.partner.category', string='Payment Page Due Reminder Partner Tags')
+    payment_page_due_reminder_tag_ok = fields.Boolean(string='Payment Page Due Reminder Partner Tags Included')
 
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
     payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')

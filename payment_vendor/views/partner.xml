@@ -69,6 +69,9 @@
             <field name="ref"/>
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
         </xpath>
+        <xpath expr='//field[@name="mobile"]' position="before">
+            <field name="phone" widget="phone"/>
+        </xpath>
         <xpath expr='//group[@name="communication"]' position="replace"/>
         <xpath expr='//group[@name="payment"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="replace"/>
@@ -84,6 +87,9 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
+        <xpath expr='//field[@name="mobile"]' position="before">
+            <field name="phone" widget="phone"/>
+        </xpath>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//field[@name="email"]' position="attributes">
             <attribute name="required">1</attribute>

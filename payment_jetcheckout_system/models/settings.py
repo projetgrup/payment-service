@@ -8,6 +8,42 @@ class PaymentSettings(models.TransientModel):
     _name = 'payment.settings'
     _description = 'Payment Settings'
 
+    @api.depends('company_id')
+    def _compute_payment_page_due_reminder_user_opt(self):
+        for setting in self:
+            setting.payment_page_due_reminder_user_opt = 'include' if setting.company_id.payment_page_due_reminder_user_ok else 'exclude'
+
+    @api.depends('company_id')
+    def _compute_payment_page_due_reminder_team_opt(self):
+        for setting in self:
+            setting.payment_page_due_reminder_team_opt = 'include' if setting.company_id.payment_page_due_reminder_team_ok else 'exclude'
+
+    @api.depends('company_id')
+    def _compute_payment_page_due_reminder_partner_opt(self):
+        for setting in self:
+            setting.payment_page_due_reminder_partner_opt = 'include' if setting.company_id.payment_page_due_reminder_partner_ok else 'exclude'
+
+    @api.depends('company_id')
+    def _compute_payment_page_due_reminder_tag_opt(self):
+        for setting in self:
+            setting.payment_page_due_reminder_tag_opt = 'include' if setting.company_id.payment_page_due_reminder_tag_ok else 'exclude'
+
+    def _set_payment_page_due_reminder_user_opt(self):
+        for setting in self:
+            setting.company_id.payment_page_due_reminder_user_ok = setting.payment_page_due_reminder_user_opt == 'include'
+
+    def _set_payment_page_due_reminder_team_opt(self):
+        for setting in self:
+            setting.company_id.payment_page_due_reminder_team_ok = setting.payment_page_due_reminder_team_opt == 'include'
+
+    def _set_payment_page_due_reminder_partner_opt(self):
+        for setting in self:
+            setting.company_id.payment_page_due_reminder_partner_ok = setting.payment_page_due_reminder_partner_opt == 'include'
+
+    def _set_payment_page_due_reminder_tag_opt(self):
+        for setting in self:
+            setting.company_id.payment_page_due_reminder_tag_ok = setting.payment_page_due_reminder_tag_opt == 'include'
+
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     required_2fa = fields.Boolean(related='company_id.required_2fa', readonly=False)
 
@@ -29,9 +65,21 @@ class PaymentSettings(models.TransientModel):
     payment_page_due_base = fields.Selection(related='company_id.payment_page_due_base', readonly=False)
     payment_page_due_hide_payment_ok = fields.Boolean(related='company_id.payment_page_due_hide_payment_ok', readonly=False)
     payment_page_due_hide_payment_message = fields.Text(related='company_id.payment_page_due_hide_payment_message', readonly=False)
+
     payment_page_due_reminder_ok = fields.Boolean(related='company_id.payment_page_due_reminder_ok', readonly=False)
-    payment_page_due_reminder_interval_number = fields.Integer(related='company_id.payment_page_due_reminder_interval_number', readonly=False)
-    payment_page_due_reminder_interval_type = fields.Selection(related='company_id.payment_page_due_reminder_interval_type', readonly=False)
+    payment_page_due_reminder_day = fields.Integer(related='company_id.payment_page_due_reminder_day', readonly=False)
+    payment_page_due_reminder_user_ids = fields.Many2many(related='company_id.payment_page_due_reminder_user_ids', readonly=False)
+    payment_page_due_reminder_user_ok = fields.Boolean(related='company_id.payment_page_due_reminder_user_ok', readonly=False)
+    payment_page_due_reminder_user_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_due_reminder_user_opt', inverse='_set_payment_page_due_reminder_user_opt', string='Payment Page Due Reminder Sales Representative Option')
+    payment_page_due_reminder_team_ids = fields.Many2many(related='company_id.payment_page_due_reminder_team_ids', readonly=False)
+    payment_page_due_reminder_team_ok = fields.Boolean(related='company_id.payment_page_due_reminder_team_ok', readonly=False)
+    payment_page_due_reminder_team_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_due_reminder_team_opt', inverse='_set_payment_page_due_reminder_team_opt', string='Payment Page Due Reminder Sales Teams Option')
+    payment_page_due_reminder_partner_ids = fields.Many2many(related='company_id.payment_page_due_reminder_partner_ids', readonly=False)
+    payment_page_due_reminder_partner_ok = fields.Boolean(related='company_id.payment_page_due_reminder_partner_ok', readonly=False)
+    payment_page_due_reminder_partner_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_due_reminder_partner_opt', inverse='_set_payment_page_due_reminder_partner_opt', string='Payment Page Due Reminder Partners Option')
+    payment_page_due_reminder_tag_ids = fields.Many2many(related='company_id.payment_page_due_reminder_tag_ids', readonly=False)
+    payment_page_due_reminder_tag_ok = fields.Boolean(related='company_id.payment_page_due_reminder_tag_ok', readonly=False)
+    payment_page_due_reminder_tag_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_due_reminder_tag_opt', inverse='_set_payment_page_due_reminder_tag_opt', string='Payment Page Due Reminder Partner Tags Option')
 
     notif_mail_success_ok = fields.Boolean(related='company_id.notif_mail_success_ok', readonly=False)
     notif_sms_success_ok = fields.Boolean(related='company_id.notif_sms_success_ok', readonly=False)
@@ -115,16 +163,16 @@ class PaymentSettingsDue(models.Model):
     mail_template_id = fields.Many2one('mail.template', string='Email Template')
 
     def get_campaign(self, day):
-        line = None
+        advance = None
         for due in self:
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)
             if due.due + due.tolerance >= days:
-                return int(days), due.campaign_id.name or '', line, False
-            line = due
+                return int(days), due.campaign_id.name or '', due, advance, False
+            advance = due
 
         days = float_round(day, precision_digits=0)
-        return int(days), '', line, self.env.company.payment_page_due_hide_payment_ok
+        return int(days), '', advance, advance, self.env.company.payment_page_due_hide_payment_ok
 
 
 class ResConfigSettings(models.TransientModel):

@@ -45,6 +45,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_cron_sync_item"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_cron_sync_item" string="Sync Payment Items Automatically"/>
+                            <div class="text-muted">
+                                Run a cronjob and sync payment items at specified time
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('syncops_cron_sync_item', '=', False)]}">
+                                <div class="row mt16">
+                                    <label for="syncops_cron_sync_item_hour" string="Sync Time" class="col-lg-4 o_light_label"/>
+                                    <field name="syncops_cron_sync_item_hour" class="text-right text-700" style="width:16px;margin-top: -1px;" placeholder="00"/>:00 
+                                </div>
+                                <div class="row">
+                                    <label for="syncops_cron_sync_item_subtype" string="Sync Type" class="col-lg-4 o_light_label"/>
+                                    <field name="syncops_cron_sync_item_subtype" widget="radio" attrs="{'required': [('syncops_cron_sync_item', '!=', False)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>
