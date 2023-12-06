@@ -116,8 +116,24 @@
                                             <label for="payment_page_due_reminder_ok" string="Set Reminder" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_due_reminder_ok" widget="boolean_toggle"/>
                                         </div>
-                                        <div class="mt16" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
-                                            Send email to partners when <field name="payment_page_due_reminder_interval_number" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-right mr-1" style="width: 32px"/> <field name="payment_page_due_reminder_interval_type" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-left mr-1" style="width: 64px"/> left to next due date
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Send email to partners when <field name="payment_page_due_reminder_day" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-right mr-1" style="width: 32px"/> day(s) left to next due date
+                                        </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Only <field name="payment_page_due_reminder_user_opt" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following sales representative(s)<br/><field name="payment_page_due_reminder_user_ids" domain="[('company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Sales representative(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_due_reminder_user_ok" invisible="1"/>
+                                        </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Only <field name="payment_page_due_reminder_team_opt" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following sales team(s)<br/><field name="payment_page_due_reminder_team_ids" domain="[('company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Sales team(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_due_reminder_team_ok" invisible="1"/>
+                                        </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Only <field name="payment_page_due_reminder_partner_opt" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following partner(s)<br/><field name="payment_page_due_reminder_partner_ids" domain="[('company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Partner(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_due_reminder_partner_ok" invisible="1"/>
+                                        </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important" attrs="{'invisible': [('payment_page_due_reminder_ok', '=', False)]}">
+                                            Only <field name="payment_page_due_reminder_tag_opt" attrs="{'required': [('payment_page_due_reminder_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following partner tag(s)<br/><field name="payment_page_due_reminder_tag_ids" domain="[('company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Partner tag(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_due_reminder_tag_ok" invisible="1"/>
                                         </div>
                                         <div class="mt16">
                                             <field name="payment_page_due_ids" class="w-100">
@@ -127,7 +143,7 @@
                                                     <field name="tolerance"/>
                                                     <field name="round" widget="boolean_toggle"/>
                                                     <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                                    <field name="mail_template_id" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'column_invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
+                                                    <field name="mail_template_id" domain="[('model', '=', 'res.partner')]" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'column_invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
                                                     <field name="campaign_ids" invisible="1"/>
                                                 </tree>
                                                 <form>
@@ -141,7 +157,7 @@
                                                             </group>
                                                             <group>
                                                                 <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
-                                                                <field name="mail_template_id" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
+                                                                <field name="mail_template_id" domain="[('model', '=', 'res.partner')]" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
                                                                 <field name="campaign_ids" invisible="1"/>
                                                             </group>
                                                         </group>

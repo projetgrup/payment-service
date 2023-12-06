@@ -505,3 +505,11 @@ class Partner(models.Model):
         pid = self.env.user.partner_id.id
         for partner in self:
             partner.message_unsubscribe([pid])
+
+    @api.model
+    def send_payment_link(self, type, link):
+        if type == 'email':
+            return {'error': ''}
+        elif type == 'sms':
+            return {'error': ''}
+        return {'error': _('Unknown sending method')}

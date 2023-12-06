@@ -8,8 +8,17 @@ def migrate(cr, version):
     if not column_exists(cr, 'res_company', 'payment_page_due_reminder_ok'):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_ok boolean')
 
-    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_interval_number'):
-        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_interval_number integer')
+    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_day'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_day integer')
 
-    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_interval_type'):
-        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_interval_type varchar')
+    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_user_ok'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_user_ok boolean')
+
+    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_team_ok'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_team_ok boolean')
+
+    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_partner_ok'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_partner_ok boolean')
+
+    if not column_exists(cr, 'res_company', 'payment_page_due_reminder_tag_ok'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_due_reminder_tag_ok boolean')

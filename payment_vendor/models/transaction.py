@@ -4,7 +4,7 @@ import pytz
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
-from odoo import models, api
+from odoo import models, fields, api
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
@@ -13,14 +13,20 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    paylox_notif_mail_state = fields.Boolean('Paylox Email Notification State', readonly=True)
+    paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
+
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()
-        self._paylox_send_done_email()
+        self._paylox_send_done_mail()
         self._paylox_send_done_sms()
         return res
 
-    def _paylox_send_done_email(self):
+    def _paylox_send_done_mail(self):
         self.ensure_one()
+        if self.paylox_notif_mail_state:
+            return
+
         try:
             with self.env.cr.savepoint():
                 company = self.env.company
@@ -54,12 +60,16 @@ class PaymentTransaction(models.Model):
                         'is_notification': True,
                         'mail_server_id': mail_server.id,
                     })
+                    self.paylox_notif_mail_state = True
 
         except Exception as e:
             _logger.error('Sending email for transaction %s is failed\n%s' % (self.reference, e))
  
     def _paylox_send_done_sms(self):
         self.ensure_one()
+        if self.paylox_notif_sms_state:
+            return
+
         try:
             with self.env.cr.savepoint():
                 company = self.env.company
@@ -126,6 +136,7 @@ class PaymentTransaction(models.Model):
                     })
                 self.env['mail.message'].create(messages)
                 self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
+                self.paylox_notif_sms_state = True
 
         except Exception as e:
             _logger.error('Sending sms for transaction %s is failed\n%s' % (self.reference, e))

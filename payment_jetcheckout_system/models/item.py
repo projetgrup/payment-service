@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from datetime import timedelta
 
 from odoo import models, fields, api
 from odoo.tools.misc import get_lang
@@ -182,18 +181,18 @@ class PaymentItem(models.Model):
                 amount += residual * diff.days
 
             days = amount/total if total else 0
-            date = (today + relativedelta(days=days)).strftime(lang.date_format)
-            days, campaign, line, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
+            date = (today + timedelta(days=days)).strftime(lang.date_format)
+            days, campaign, line, advance, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
 
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
 
-            if line:
-                due = line.due + line.tolerance
-                if line.round:
+            if advance:
+                due = advance.due + advance.tolerance
+                if advance.round:
                     due -= 0.49
                 advance_amount = (sign * amount / due) - total if due else 0
-                advance_campaign = line.campaign_id.name
+                advance_campaign = advance.campaign_id.name
 
         values = {
             'amount': amount,
@@ -211,53 +210,51 @@ class PaymentItem(models.Model):
 
     @api.model
     def paylox_send_due_reminder(self):
-        now = datetime.now()
-        self.env.cr.execute(f"""
-            SELECT
-                ARRAY_AGG(p.id),
-                p.parent_id,
-                c.id,
-                c.payment_page_due_reminder_interval_type,
-                c.payment_page_due_reminder_interval_number
-            FROM payment_item p
-            JOIN res_company c ON p.company_id = c.id
-            WHERE
-                p.paid IS NOT TRUE AND
-                c.payment_page_due_ok AND
-                c.payment_page_due_reminder_ok IS TRUE
-            GROUP BY
-                p.parent_id,
-                c.id,
-                c.payment_page_due_reminder_interval_type,
-                c.payment_page_due_reminder_interval_number
-        """)
+        companies = self.env['res.company'].search([
+            #('system', '!=', False),
+            ('payment_page_due_ok', '!=', False),
+            ('payment_page_due_reminder_ok', '!=', False),
+        ])
+        for company in companies:
+            users = company.payment_page_due_reminder_user_ids
+            teams = company.payment_page_due_reminder_team_ids
+            partners = company.payment_page_due_reminder_partner_ids
+            tags = company.payment_page_due_reminder_tag_ids
 
-        for i in self.env.cr.fetchall():
-            due = self.browse(i[0]).with_context(show_extra=True).get_due()
-            line = due['line']
-            if line and line.mail_template_id:
-                diff = now + relativedelta(**{i[3]: i[4]}) - now
-                if line.due + line.tolerance == diff:
-                    partner = self.browse(i[1])
-                    company = self.browse(i[2])
+            domain = [('company_id', '=', company.id), ('paid', '=', False)]
+            if users:
+                domain.append(('parent_id.user_id', 'in' if company.payment_page_due_reminder_user_ok else 'not in', users.ids))
+            if teams:
+                domain.append(('parent_id.team_id', 'in' if company.payment_page_due_reminder_team_ok else 'not in', teams.ids))
+            if partners:
+                domain.append(('parent_id.id', 'in' if company.payment_page_due_reminder_partner_ok else 'not in', partners.ids))
+            if tags:
+                domain.append(('parent_id.category_id', 'in' if company.payment_page_due_reminder_tag_ok else 'not in', users.ids))
 
-                    mail_server = company.mail_server_id
-                    email_from = mail_server.email_formatted or company.email_formatted
+            items = self.env['payment.item'].read_group(domain, ['ids:array_agg(id)'], ['parent_id'])
+            for item in items:
+                due = self.browse(item['ids']).with_context(show_extra=True).get_due()
+                line = due['line']
+                if line and line.mail_template_id:
+                    if line.due + line.tolerance + 1 - company.payment_page_due_reminder_day == due['days']:
+                        partner = self.env['res.partner'].browse(item['parent_id'][0])
+                        mail_server = company.mail_server_id
+                        email_from = mail_server.email_formatted or company.email_formatted
 
-                    context = self.env.context.copy()
-                    context.update({
-                        'due': due,
-                        'partner': partner,
-                        'company': company,
-                        'server': mail_server,
-                        'from': email_from,
-                    })
+                        context = self.env.context.copy()
+                        context.update({
+                            'due': due,
+                            'partner': partner,
+                            'company': company,
+                            'server': mail_server,
+                            'from': email_from,
+                        })
 
-                    try:
-                        with self.env.cr.savepoint():
-                            line.mail_template_id.with_context(context).send_mail(i[1], force_send=True, email_values={
-                                'is_notification': True,
-                                'mail_server_id': mail_server.id,
-                            })
-                    except Exception as e:
-                        _logger.error('An error occured when sending payment due date emil to partner %s (%s)' % (i[1], e))
+                        try:
+                            with self.env.cr.savepoint():
+                                line.mail_template_id.with_context(context).send_mail(partner.id, force_send=True, email_values={
+                                    'is_notification': True,
+                                    'mail_server_id': mail_server.id,
+                                })
+                        except Exception as e:
+                            _logger.error('An error occured when sending payment due date emil to partner %s (%s)' % (partner.id, e))
