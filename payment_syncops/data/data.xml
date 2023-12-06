@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="cron_sync" model="ir.cron">
+        <record id="cron_sync_partner" model="ir.cron">
             <field name="name">Partners: Sync</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="state">code</field>
@@ -11,6 +11,18 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 02:00:00')" />
+        </record>
+
+        <record id="cron_sync_item" model="ir.cron">
+            <field name="name">Payment Items: Sync</field>
+            <field name="model_id" ref="payment_jetcheckout_system.model_payment_item"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_sync()</field>
+            <field name="interval_number">1</field>
+            <field name="active">True</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')" />
         </record>
     </data>
 </odoo>

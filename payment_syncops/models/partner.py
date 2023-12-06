@@ -8,7 +8,7 @@ class Partner(models.Model):
     @api.model
     def cron_sync(self):
         self = self.sudo()
-        for company in self.env['res.company'].search([]):
+        for company in self.env['res.company'].search([('system', '!=', False)]):
             if company.syncops_cron_sync_partner:
                 wizard = self.env['syncops.sync.wizard'].create({
                     'type': 'partner',

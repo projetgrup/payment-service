@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-05 16:27+0000\n"
-"PO-Revision-Date: 2023-12-05 16:27+0000\n"
+"POT-Creation-Date: 2023-12-06 13:43+0000\n"
+"PO-Revision-Date: 2023-12-06 13:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -736,7 +736,6 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/settings.py:0
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__days
 #, python-format
 msgid "Days"
 msgstr ""
@@ -1041,11 +1040,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__hours
 msgid "Hour"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__hours
-msgid "Hours"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1404,11 +1398,6 @@ msgid "Method"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__minutes
-msgid "Minutes"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "Monday"
@@ -1417,11 +1406,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__period__months
 msgid "Month"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__months
-msgid "Months"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1539,6 +1523,11 @@ msgid "Offset"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Only"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_own_partner
 msgid "Only Own Partners"
 msgstr ""
@@ -1624,6 +1613,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
 msgid "Partner Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Partner tag(s)..."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Partner(s)..."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1836,15 +1835,77 @@ msgid "Payment Page Due Reminder"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_interval_number
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_interval_number
-msgid "Payment Page Due Reminder Interval Number"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_day
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_day
+msgid "Payment Page Due Reminder Day"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_interval_type
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_interval_type
-msgid "Payment Page Due Reminder Interval Type"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_tag_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_tag_ids
+msgid "Payment Page Due Reminder Partner Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_tag_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_tag_ok
+msgid "Payment Page Due Reminder Partner Tags Included"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_tag_opt
+msgid "Payment Page Due Reminder Partner Tags Option"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_partner_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_partner_ids
+msgid "Payment Page Due Reminder Partners"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_partner_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_partner_ok
+msgid "Payment Page Due Reminder Partners Included"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_partner_opt
+msgid "Payment Page Due Reminder Partners Option"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_user_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_user_ok
+msgid "Payment Page Due Reminder Sales Representative Included"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_user_opt
+msgid "Payment Page Due Reminder Sales Representative Option"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_user_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_user_ids
+msgid "Payment Page Due Reminder Sales Representatives"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_team_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_team_ids
+msgid "Payment Page Due Reminder Sales Teams"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_team_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_reminder_team_ok
+msgid "Payment Page Due Reminder Sales Teams Included"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_reminder_team_opt
+msgid "Payment Page Due Reminder Sales Teams Option"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2227,6 +2288,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_team
 msgid "Sales Teams"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Sales representative(s)..."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Sales team(s)..."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2984,11 +3055,6 @@ msgid "Week 5"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_reminder_interval_type__weeks
-msgid "Weeks"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 msgid "Welcome"
 msgstr ""
@@ -3067,6 +3133,11 @@ msgid "Your transaction status:"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "day(s) left to next due date"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "e.g. John Doe"
 msgstr ""
@@ -3077,8 +3148,39 @@ msgid "e.g. email@yourcompany.com"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_partner_opt__exclude
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_tag_opt__exclude
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_team_opt__exclude
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_user_opt__exclude
+msgid "exclude"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
-msgid "left to next due date"
+msgid "following partner tag(s)<br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "following partner(s)<br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "following sales representative(s)<br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "following sales team(s)<br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_partner_opt__include
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_tag_opt__include
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_team_opt__include
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_user_opt__include
+msgid "include"
 msgstr ""
 
 #. module: payment_jetcheckout_system

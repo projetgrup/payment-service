@@ -3,7 +3,7 @@ import requests
 from datetime import timedelta
 from dateutil import parser
 
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 
 class PaymentTransaction(models.Model):
@@ -138,27 +138,18 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_payment_ref': result and result[0].get('ref', False) or False,
                 'jetcheckout_connector_state_message': _('This transaction has been successfully posted to connector.')
             })
+        self.env.cr.commit()
 
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()
         if self.jetcheckout_connector_ok:
-            self.write({
-                'jetcheckout_connector_state': True,
-                'jetcheckout_connector_state_message': _('Successful status of this transaction has not been posted to connector yet.')
-            })
             self.action_process_connector()
-        self.env.cr.commit()
         return res
 
     def _paylox_cancel_postprocess(self):
         res = super()._paylox_cancel_postprocess()
         if self.jetcheckout_connector_ok:
-            self.write({
-                'jetcheckout_connector_state': True,
-                'jetcheckout_connector_state_message': _('Cancelled status of this transaction has not been posted to connector yet.')
-            })
             self.action_process_connector()
-        self.env.cr.commit()
         return res
 
     def _paylox_refund_postprocess(self, amount=0):
@@ -167,8 +158,12 @@ class PaymentTransaction(models.Model):
             res.write({
                 'jetcheckout_connector_ok': True,
                 'jetcheckout_connector_state': True,
-                'jetcheckout_connector_state_message': _('Refunded status of this transaction has not been posted to connector yet.')
             })
             res.action_process_connector()
-        self.env.cr.commit()
         return res
+
+    @api.model
+    def create(self, values):
+        if values.get('jetcheckout_connector_ok'):
+            values['jetcheckout_connector_state'] = True
+        return super().create(values)

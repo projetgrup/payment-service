@@ -132,6 +132,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [
                     ['input', this._onInputAmount],
                     ['update', this._onUpdateAmount],
+                    ['change', this._onChangeAmount],
                 ],
                 mask: payloxPage.prototype._maskAmount.bind(this),
                 default: 0,
@@ -375,6 +376,21 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.payment.amount._.updateValue();
     },
 
+    _onChangeAmount: function (ev) {
+        let amount = 0;
+        let items = this.payment.item.$.filter(function () {
+            return $(this).hasClass('input-switch');
+        });
+        items.each(function () {
+            amount += parseFloat($(this).data('amount'));
+        });
+
+        if (amount < this.payment.amount.value) {
+            this.payment.advance.amount = this.payment.amount.value - amount;
+            this._onClickAdvanceAdd(ev);
+        }
+    },
+
     _applyPriority: function () {
         if (this.itemPriority) {
             const items = this.payment.item.$;
@@ -506,14 +522,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         framework.showLoading();
-        const self = this;
         rpc.query({
             route: '/p/advance/add',
             params: { amount: this.payment.advance.amount }
-        }).then(function () {
+        }).then(() => {
             window.location.reload();
-        }).guardedCatch(function(error) {
-            self.displayNotification({
+        }).guardedCatch(() => {
+            this.displayNotification({
                 type: 'danger',
                 title: _t('Error'),
                 message: _t('An error occured. Please try again.'),
@@ -639,7 +654,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         });
     },
 
-    _onClickLink: function (ev) {
+    _onClickLink: async function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         const amount = parseFloat(this.amount.$.data('value') || 0);
@@ -652,22 +667,56 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
         let link = window.location.href;
         for (let i=0; i<params.length; i++) {
-            if (!i) {
-                link += '?';
-            } else {
-                link += '&';
+            if (params[i][1]) {
+                if (!i) {
+                    link += '?';
+                } else {
+                    link += '&';
+                }
+                link += params[i][0] + '=' + params[i][1];
             }
-            link += params[i][0] + '=' + params[i][1];
         }
         navigator.clipboard.writeText(link);
 
-        const content = qweb.render('paylox.system.link', { link });
-        this.displayNotification({
+        let content = qweb.render('paylox.system.link', { link });
+        await this.displayNotification({
             type: 'info',
             title: _t('Payment link is ready'),
             message: utils.Markup(content),
             sticky: true,
         });
+        setTimeout(() => {
+            $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
+                rpc.query({
+                    model: 'res.partner',
+                    method: 'send_payment_link',
+                    args: [ev.currentTarget.dataset.type, link],
+                }).then((result) => {
+                    if ('error' in result) {
+                        this.displayNotification({
+                            type: 'warning',
+                            title: _t('Warning'),
+                            message: _t('An error occured.') + ' ' + result.error,
+                        });
+                    } else {
+                        this.displayNotification({
+                            type: 'info',
+                            title: _t('Success'),
+                            message: result.message,
+                        });
+                    }
+                }).guardedCatch((error) => {
+                    this.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occured. Please contact with your system administrator.'),
+                    });
+                    if (config.isDebug()) {
+                        console.error(error);
+                    }
+                });
+            });
+        }, 1000);
     },
 });
 

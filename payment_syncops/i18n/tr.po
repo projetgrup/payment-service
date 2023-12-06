@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:11+0000\n"
-"PO-Revision-Date: 2023-12-04 20:12+0300\n"
+"POT-Creation-Date: 2023-12-06 13:51+0000\n"
+"PO-Revision-Date: 2023-12-06 16:53+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -26,6 +26,16 @@ msgid ""
 msgstr ""
 "Kayıtları tarih aralığına göre getirmek için \"Kapanmamış Kayıtları Getir\" "
 "metodu etkinleştirilmelidir"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "00"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid ":00"
+msgstr ""
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
@@ -88,13 +98,6 @@ msgstr "Uygula"
 #, python-format
 msgid "Balance"
 msgstr "Bakiye"
-
-#. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Cancelled status of this transaction has not been posted to connector yet."
-msgstr "Bu işlemin iptal durumu henüz bağlayıcıya gönderilmedi."
 
 #. module: payment_syncops
 #. openerp-web
@@ -166,6 +169,7 @@ msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__res_company__syncops_cron_sync_item_subtype__balance
 #: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__balance
 msgid "Current Balances"
 msgstr "Mevcut Bakiyeler"
@@ -397,8 +401,9 @@ msgstr "İş Ortakları"
 
 #. module: payment_syncops
 #: model:ir.actions.server,name:payment_syncops.cron_sync_ir_actions_server
-#: model:ir.cron,cron_name:payment_syncops.cron_sync
-#: model:ir.cron,name:payment_syncops.cron_sync
+#: model:ir.actions.server,name:payment_syncops.cron_sync_partner_ir_actions_server
+#: model:ir.cron,cron_name:payment_syncops.cron_sync_partner
+#: model:ir.cron,name:payment_syncops.cron_sync_partner
 msgid "Partners: Sync"
 msgstr "İş Ortakları: Eşle"
 
@@ -406,6 +411,18 @@ msgstr "İş Ortakları: Eşle"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Payment"
 msgstr "Ödeme"
+
+#. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_payment_item
+msgid "Payment Items"
+msgstr "Ödeme Kalemleri"
+
+#. module: payment_syncops
+#: model:ir.actions.server,name:payment_syncops.cron_sync_item_ir_actions_server
+#: model:ir.cron,cron_name:payment_syncops.cron_sync_item
+#: model:ir.cron,name:payment_syncops.cron_sync_item
+msgid "Payment Items: Sync"
+msgstr "Ödeme Kalemleri: Eşle"
 
 #. module: payment_syncops
 #: model:ir.model,name:payment_syncops.model_payment_settings
@@ -446,13 +463,6 @@ msgid "Reference"
 msgstr "Referans"
 
 #. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Refunded status of this transaction has not been posted to connector yet."
-msgstr "Bu işlemin iade durumu henüz bağlayıcıya gönderilmedi."
-
-#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner Name"
@@ -478,6 +488,12 @@ msgstr "Sıfırla"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Run a cronjob and sync partner list every day"
 msgstr "Planlanmış işlem çalıştırın ve iş ortakları listesini her gün eşleyin"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Run a cronjob and sync payment items at specified time"
+msgstr ""
+"Planlanmış işlem çalıştırın ve ödeme kalemlerini belirli saatte eşleyin"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
@@ -554,13 +570,6 @@ msgid "Start date cannot be later than end date"
 msgstr "Başlangıç tarihi, bitiş tarihinden sonra olamaz"
 
 #. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Successful status of this transaction has not been posted to connector yet."
-msgstr "Bu işlemin başarılı durumu henüz bağlayıcıya gönderilmedi."
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/item.xml:0
 #: code:addons/payment_syncops/static/src/xml/partner.xml:0
@@ -575,8 +584,23 @@ msgstr "İş Ortaklarını Otomatik Olarak Eşle"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Payment Items Automatically"
+msgstr "Ödeme Kalemlerini Otomatik Olarak Eşle"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync Payment Items From Scratch"
 msgstr "Ödeme Kalemlerini Baştan Eşle"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Time"
+msgstr "Eşleme Saati"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Type"
+msgstr "Eşleme Türü"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
@@ -587,6 +611,24 @@ msgstr "Eşleme Tarih Aralığı"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 msgid "Synchronization Type"
 msgstr "Eşleme Türü"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item
+msgid "Syncops Cron Sync Item"
+msgstr "Syncops Görev Eşleme Kalem"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item_hour
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item_hour
+msgid "Syncops Cron Sync Item Hour"
+msgstr "Syncops Görev Eşleme Kalem Saat"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item_subtype
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item_subtype
+msgid "Syncops Cron Sync Item Subtype"
+msgstr "Syncops Görev Eşleme Kalem Alttür"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_partner
@@ -676,6 +718,7 @@ msgid "Type Item Subtype Ok"
 msgstr "Tür Kalem Alttürdür"
 
 #. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__res_company__syncops_cron_sync_item_subtype__invoice
 #: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__invoice
 msgid "Unpaid Invoices"
 msgstr "Ödenmemiş Faturalar"
@@ -708,6 +751,22 @@ msgstr "syncOPS Eşle Sihirbazı"
 #: model:ir.model,name:payment_syncops.model_syncops_sync_wizard_line
 msgid "syncOPS Sync Wizard Lines"
 msgstr "syncOPS Eşle Sihirbaz Satırları"
+
+#, python-format
+#~ msgid ""
+#~ "Cancelled status of this transaction has not been posted to connector yet."
+#~ msgstr "Bu işlemin iptal durumu henüz bağlayıcıya gönderilmedi."
+
+#, python-format
+#~ msgid ""
+#~ "Refunded status of this transaction has not been posted to connector yet."
+#~ msgstr "Bu işlemin iade durumu henüz bağlayıcıya gönderilmedi."
+
+#, python-format
+#~ msgid ""
+#~ "Successful status of this transaction has not been posted to connector "
+#~ "yet."
+#~ msgstr "Bu işlemin başarılı durumu henüz bağlayıcıya gönderilmedi."
 
 #~ msgid "Connector Reference"
 #~ msgstr "Bağlayıcı Referansı"

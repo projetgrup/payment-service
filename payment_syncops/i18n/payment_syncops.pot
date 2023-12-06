@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:11+0000\n"
-"PO-Revision-Date: 2023-12-04 17:11+0000\n"
+"POT-Creation-Date: 2023-12-06 13:51+0000\n"
+"PO-Revision-Date: 2023-12-06 13:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,16 @@ msgstr ""
 msgid ""
 "\"Get Unreconciled Records List\" method must be activated to get records by"
 " their date range"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "00"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid ":00"
 msgstr ""
 
 #. module: payment_syncops
@@ -77,13 +87,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
 #, python-format
 msgid "Balance"
-msgstr ""
-
-#. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Cancelled status of this transaction has not been posted to connector yet."
 msgstr ""
 
 #. module: payment_syncops
@@ -156,6 +159,7 @@ msgid "Currency"
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__res_company__syncops_cron_sync_item_subtype__balance
 #: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__balance
 msgid "Current Balances"
 msgstr ""
@@ -388,14 +392,27 @@ msgstr ""
 
 #. module: payment_syncops
 #: model:ir.actions.server,name:payment_syncops.cron_sync_ir_actions_server
-#: model:ir.cron,cron_name:payment_syncops.cron_sync
-#: model:ir.cron,name:payment_syncops.cron_sync
+#: model:ir.actions.server,name:payment_syncops.cron_sync_partner_ir_actions_server
+#: model:ir.cron,cron_name:payment_syncops.cron_sync_partner
+#: model:ir.cron,name:payment_syncops.cron_sync_partner
 msgid "Partners: Sync"
 msgstr ""
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.page_ledger
 msgid "Payment"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_payment_item
+msgid "Payment Items"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.actions.server,name:payment_syncops.cron_sync_item_ir_actions_server
+#: model:ir.cron,cron_name:payment_syncops.cron_sync_item
+#: model:ir.cron,name:payment_syncops.cron_sync_item
+msgid "Payment Items: Sync"
 msgstr ""
 
 #. module: payment_syncops
@@ -436,13 +453,6 @@ msgid "Reference"
 msgstr ""
 
 #. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Refunded status of this transaction has not been posted to connector yet."
-msgstr ""
-
-#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Partner Name"
@@ -467,6 +477,11 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Run a cronjob and sync partner list every day"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Run a cronjob and sync payment items at specified time"
 msgstr ""
 
 #. module: payment_syncops
@@ -544,13 +559,6 @@ msgid "Start date cannot be later than end date"
 msgstr ""
 
 #. module: payment_syncops
-#: code:addons/payment_syncops/models/transaction.py:0
-#, python-format
-msgid ""
-"Successful status of this transaction has not been posted to connector yet."
-msgstr ""
-
-#. module: payment_syncops
 #. openerp-web
 #: code:addons/payment_syncops/static/src/xml/item.xml:0
 #: code:addons/payment_syncops/static/src/xml/partner.xml:0
@@ -565,7 +573,22 @@ msgstr ""
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Payment Items Automatically"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync Payment Items From Scratch"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Time"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Type"
 msgstr ""
 
 #. module: payment_syncops
@@ -576,6 +599,24 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
 msgid "Synchronization Type"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item
+msgid "Syncops Cron Sync Item"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item_hour
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item_hour
+msgid "Syncops Cron Sync Item Hour"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_cron_sync_item_subtype
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_cron_sync_item_subtype
+msgid "Syncops Cron Sync Item Subtype"
 msgstr ""
 
 #. module: payment_syncops
@@ -664,6 +705,7 @@ msgid "Type Item Subtype Ok"
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.model.fields.selection,name:payment_syncops.selection__res_company__syncops_cron_sync_item_subtype__invoice
 #: model:ir.model.fields.selection,name:payment_syncops.selection__syncops_sync_wizard__type_item_subtype__invoice
 msgid "Unpaid Invoices"
 msgstr ""
