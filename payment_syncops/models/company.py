@@ -12,6 +12,3 @@ class ResCompany(models.Model):
     syncops_cron_sync_item_hour = fields.Integer()
     syncops_cron_sync_partner = fields.Boolean()
     syncops_payment_page_partner_required = fields.Boolean()
-
-    def _check_syncops_payment_page_partner_required(self):
-        return not self.env.user.share and self.syncops_payment_page_partner_required and self.env['syncops.connector'].sudo().count('payment_get_partner_list', company=self)
