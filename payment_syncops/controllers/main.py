@@ -209,8 +209,13 @@ class PayloxSyncopsController(Controller):
                     'jetcheckout_connector_partner_vat': partner['vat'],
                     'jetcheckout_connector_partner_ref': partner['ref'],
                 })
-            elif request.env.company._check_syncops_payment_page_partner_required():
-                raise ValidationError(_('Please select a partner'))
+            else:
+                user = request.env.user
+                company = request.env.company
+                if  not user.share and user.partner_id.id == kwargs.get('partner', 0) \
+                    and company.syncops_payment_page_partner_required \
+                    and request.env['syncops.connector'].sudo().count('payment_get_partner_list', company=company):
+                        raise ValidationError(_('Please select a partner'))
 
         connector = request.env['syncops.connector'].sudo().search_count([
             ('company_id', '=', request.env.company.id),
