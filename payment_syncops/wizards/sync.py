@@ -210,9 +210,9 @@ class SyncopsSyncWizard(models.TransientModel):
                         })
             else:
                 items_all = self.env['payment.item']
-                force = [] if company.syncops_sync_item_force else [('paid', '=', False)]
                 if wizard.type_item_subtype == 'balance':
-                    items = items_all.search_read(force + [
+                    items = items_all.search_read([
+                        ('paid', '=', False),
                         ('company_id', '=', company.id),
                         ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
                         ('system', '=', wizard.system),
@@ -256,15 +256,19 @@ class SyncopsSyncWizard(models.TransientModel):
                     if partner_ctx:
                         domain.append(('parent_id', '=', partner_ctx.id))
 
-                    items_all.search(domain + force + [('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
-                    items = items_all.search_read(domain, ['id', 'ref'])
+                    if company.syncops_sync_item_force:
+                        items_all.search(domain + ['|', ('parent_id.vat', 'in', wizard.line_ids.mapped('partner_vat')), ('parent_id.ref', 'in', wizard.line_ids.mapped('partner_ref'))]).unlink()
+                    else:
+                        items_all.search(domain + [('paid', '=', False), ('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
 
+                    items = items_all.search_read(domain, ['id', 'ref'])
                     items = {item['ref']: item['id'] for item in items}
                     for line in wizard.line_ids.read():
                         pid = vats.get(line['partner_vat']) or refs.get(line['partner_ref'])
                         key = line['invoice_id'] if pid else None
+
                         if pid and key in items:
-                            items_all.search(force + [('id', '=', items[key])]).write({'amount': line['invoice_amount']})
+                            items_all.search([('id', '=', items[key]), ('paid', '=', False)]).write({'amount': line['invoice_amount']})
                         else:
                             if pid:
                                 partner = partners_all.browse(pid)
