@@ -88,4 +88,3 @@ const DashboardController = KanbanController.extend({
 
 return DashboardController;
 });
-    
