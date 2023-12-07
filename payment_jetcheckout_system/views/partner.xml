@@ -143,7 +143,7 @@
                         <field name="date_sms_sent" string="SMS"/>
                     </group>
                     <group name="payment" string="Payment Settings">
-                        <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" required="1"/>
+                        <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}"/>
                         <field name="acquirer_branch_id" string="Branch" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_internal', '=', False)]}"/>
                         <field name="acquirer_ids" invisible="1"/>
                     </group>
