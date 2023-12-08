@@ -456,7 +456,7 @@ class PaymentAcquirer(models.Model):
 
     def _paylox_api_create_pos(self, poses, apps, providers, currencies):
         pos_ids = [pos['id'] for pos in poses]
-        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_families', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id', 'imported'])
+        pos_prices = self._rpc('jet.pos.price', 'search_read', [('virtual_pos_id', 'in', pos_ids)], ['id', 'virtual_pos_id', 'excluded_bins', 'card_filters', 'is_active', 'from_date', 'offer_name', 'to_date', 'card_family_names', 'installments', 'currency_id', 'imported'])
         pos_price_ids = [price['id'] for price in pos_prices]
         pos_lines = self._rpc('jet.pos.price.line', 'search_read', [('pos_price_id', 'in', pos_price_ids)], ['id', 'pos_price_id', 'installment_type', 'customer_rate', 'cost_rate', 'is_active', 'plus_installment', 'plus_installment_description', 'fixed_customer_rate', 'margin_rate', 'additional_rate', 'only_fundings_active'])
 
@@ -568,7 +568,7 @@ class PaymentAcquirer(models.Model):
                         'plus_installment': line['plus_installment'],
                         'plus_installment_description': line['plus_installment_description'],
                     }) for line in pos_lines if line['pos_price_id'][0] == price['id']],
-                    'card_families': [(6, 0, family_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', price['card_families'])]).ids)],
+                    'card_filters': [(6, 0, family_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', price['card_filters'])]).ids)],
                     'excluded_bins': [(6, 0, bin_model.search([('acquirer_id', '=', self.id), ('res_id', 'in', price['excluded_bins'])]).ids)]
                 }) for price in pos_prices if price['virtual_pos_id'][0] == pos['id']],
             })
