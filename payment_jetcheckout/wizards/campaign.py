@@ -41,7 +41,7 @@ class PaymentPayloxApiCampaign(models.TransientModel):
     card_family_names = fields.Char('Card Family Names', readonly=True)
     installments = fields.Char('Installments', readonly=True)
     pos_lines = fields.One2many('payment.acquirer.jetcheckout.api.installment', 'pos_price_id', 'Lines')
-    card_families = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_campaing_family_rel', 'campaign_id', 'family_id', string='Card Families', ondelete='cascade', domain='[("acquirer_id", "=", acquirer_id)]')
+    card_filters = fields.Many2many('payment.acquirer.jetcheckout.api.family', 'payment_jetcheckout_api_campaing_family_rel', 'campaign_id', 'family_id', string='Card Families', ondelete='cascade', domain='[("acquirer_id", "=", acquirer_id)]')
     excluded_bins = fields.Many2many('payment.acquirer.jetcheckout.api.excluded', 'payment_jetcheckout_api_campaing_excluded_rel', 'campaign_id', 'excluded_id', string='Excluded Bins', ondelete='cascade', domain='[("acquirer_id", "=", acquirer_id)]')
     imported = fields.Boolean(default=False, readonly=True)
     import_rates = fields.Boolean(related='virtual_pos_id.import_rates')
