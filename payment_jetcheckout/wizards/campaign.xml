@@ -10,7 +10,7 @@
                     <field name="acquirer_id" invisible="1" readonly="1"/>
                     <field name="offer_name" readonly="context.get('no_edit')" attrs="{'readonly': [('imported', '=', True)]}"/>
                     <field name="currency_id" readonly="context.get('no_edit')" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('imported', '=', True)]}"/>
-                    <field name="card_families" readonly="context.get('no_edit')" mode="kanban" attrs="{'readonly': [('imported', '=', True)]}">
+                    <field name="card_filters" readonly="context.get('no_edit')" mode="kanban" attrs="{'readonly': [('imported', '=', True)]}">
                         <kanban create="0" edit="0">
                             <field name="name"/>
                             <field name="logo"/>
