@@ -106,6 +106,7 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'reference': self.reference,
             'provider': self.acquirer_id.provider,
+            'partner_name': self.partner_id.name,
             'currency_name': self.currency_id.name,
             'company_id': self.company_id.partner_id.ref,
             'account_code': line.account_code,
