@@ -59,8 +59,8 @@ class PaymentDasboard(models.Model):
             line['success_amount'] = formatLang(self.env, line['success_amount'], currency_obj=currency)
             line['average_amount'] = formatLang(self.env, average_amount, currency_obj=currency)
 
-        success_rate = int(100 * success_count / total_count) if total_count > 0 else 0
-        advance_rate = int(100 * advance_count / success_count) if success_count > 0 else 0
+        success_rate = round(100 * success_count / total_count) if total_count > 0 else 0
+        advance_rate = round(100 * advance_count / success_count) if success_count > 0 else 0
 
         return {
             'lines': lines,
