@@ -149,8 +149,9 @@ class SyncopsSyncWizard(models.TransientModel):
             users = users_all.search_read([
                 ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
             ], ['id', 'email'])
-            vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
-            refs = {partner['ref']: partner['id'] for partner in partners if partner['ref']}
+            #vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
+            #refs = {partner['ref']: partner['id'] for partner in partners if partner['ref']}
+            keys = {'%s;%s' % (partner['vat'] or '', partner['ref'] or ''): partner['id'] for partner in partners if partner['vat'] or partner['ref']}
             users = {user['email']: user['id'] for user in users if user['email']}
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
@@ -184,8 +185,9 @@ class SyncopsSyncWizard(models.TransientModel):
                     else:
                         user = None
 
-                    if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == vats[line['partner_ref']]:
-                        partner = partners_all.browse(vats[line['partner_vat']])
+                    key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
+                    if key in keys:
+                        partner = partners_all.browse(keys[key])
                         partner.write({
                             'name': line['name'],
                             'vat': line['partner_vat'],
@@ -220,13 +222,14 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     items = {item['parent_id'][0]: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        if line['partner_vat'] in vats and vats[line['partner_vat']] in items:
-                            items_all.browse(items[vats[line['partner_vat']]]).write({
+                        key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
+                        if key in keys and keys[key] in items:
+                            items_all.browse(items[keys[key]]).write({
                                 'amount': line['partner_balance'],
                             })
                         else:
-                            if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == vats[line['partner_ref']]:
-                                partner = partners_all.browse(vats[line['partner_vat']])
+                            if key in keys:
+                                partner = partners_all.browse(keys[key])
                             else:
                                 partner = partners_all.create({
                                     'system': wizard.system or company.system,
@@ -264,11 +267,12 @@ class SyncopsSyncWizard(models.TransientModel):
                     items = items_all.search_read(domain, ['id', 'ref'])
                     items = {item['ref']: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        pid = vats.get(line['partner_vat']) or refs.get(line['partner_ref'])
-                        key = line['invoice_id'] if pid else None
+                        key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
+                        pid = key in keys and keys[key]
+                        inv = line['invoice_id'] if pid else None
 
-                        if pid and key in items:
-                            items_all.search([('id', '=', items[key]), ('paid', '=', False)]).write({'amount': line['invoice_amount']})
+                        if pid and inv in items:
+                            items_all.search([('id', '=', items[inv]), ('paid', '=', False)]).write({'amount': line['invoice_amount']})
                         else:
                             if pid:
                                 partner = partners_all.browse(pid)
