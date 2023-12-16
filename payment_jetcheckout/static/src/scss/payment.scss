@@ -251,10 +251,18 @@
     }
 
     .installment-table {
-        color: #888 !important;
+        color: #888888 !important;
         margin-right: 0 !important;
         margin-left: 0 !important;
         font-size: 12px;
+
+        .tab-content {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
 
         ul {
             li {
@@ -292,19 +300,24 @@
                 }
             }
         }
+
         tr:nth-child(odd) {
             background-color: #f7fafc;
         }
+
         thead tr:first-child, tr:last-child {
             background-color: initial !important;
         }
+
         .side-border {
             border-right: 1px solid #eee;
             border-left: 1px solid #eee;
         }
+
         .bottom-border {
             border-bottom: 1px solid #eee;
         }
+
         > div {
             > div {
                 border-radius: 10px;
