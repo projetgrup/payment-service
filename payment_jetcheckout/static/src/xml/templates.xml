@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="paylox.installment.grid">
-        <main t-if="!error &amp;&amp; rows" class="row installment-table">
-            <ul class="nav nav-tabs row w-100" role="tablist">
+        <main t-if="!error &amp;&amp; rows" class="row installment-table bg-100">
+            <ul class="nav nav-tabs w-100" role="tablist">
                 <t t-set="i" t-value="0"/>
                 <t t-foreach="types" t-as="type">
                     <li class="nav-item font-weight-bold">
@@ -14,37 +14,39 @@
             <div class="tab-content">
                 <t t-set="i" t-value="0"/>
                 <t t-foreach="types" t-as="type">
-                    <div t-attf-class="tab-pane fade shadow-none d-flex flex-wrap #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
-                        <t t-foreach="type[1]" t-as="row">
-                            <div class="col-md-4 p-2">
-                                <div class="border bg-white text-700">
-                                    <table class="w-100">
-                                        <colgroup>
-                                            <col width="20%"/>
-                                            <col width="40%"/>
-                                            <col width="40%"/>
-                                        </colgroup>
-                                        <thead>
-                                            <tr>
-                                                <th colspan="4" class="text-center">
-                                                    <picture class="placeholder">
-                                                        <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
-                                                    </picture>
-                                                </th>
-                                            </tr>
-                                            <tr class="font-weight-bold bottom-border">
-                                                <td></td>
-                                                <td class="text-center">Monthly Payment</td>
-                                                <td class="text-center">Total Payment</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-call="paylox.installment.line"/>
-                                        </tbody>
-                                    </table>
+                    <div t-attf-class="tab-pane fade shadow-none #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
+                        <div class="d-flex flex-wrap shadow-sm">
+                            <t t-foreach="type[1]" t-as="row">
+                                <div class="col-md-4 p-2">
+                                    <div class="border bg-white text-700">
+                                        <table class="w-100">
+                                            <colgroup>
+                                                <col width="20%"/>
+                                                <col width="40%"/>
+                                                <col width="40%"/>
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4" class="text-center">
+                                                        <picture class="placeholder">
+                                                            <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
+                                                        </picture>
+                                                    </th>
+                                                </tr>
+                                                <tr class="font-weight-bold bottom-border">
+                                                    <td></td>
+                                                    <td class="text-center">Monthly Payment</td>
+                                                    <td class="text-center">Total Payment</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-call="paylox.installment.line"/>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
-                        </t>
+                            </t>
+                        </div>
                     </div>
                     <t t-set="i" t-value="i+1"/>
                 </t>
