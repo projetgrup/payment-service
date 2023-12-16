@@ -184,7 +184,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     else:
                         user = None
 
-                    if line['partner_vat'] in vats:
+                    if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == vats[line['partner_ref']]:
                         partner = partners_all.browse(vats[line['partner_vat']])
                         partner.write({
                             'name': line['name'],
@@ -225,7 +225,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                 'amount': line['partner_balance'],
                             })
                         else:
-                            if line['partner_vat'] in vats:
+                            if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == vats[line['partner_ref']]:
                                 partner = partners_all.browse(vats[line['partner_vat']])
                             else:
                                 partner = partners_all.create({

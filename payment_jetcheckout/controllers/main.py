@@ -234,6 +234,16 @@ class PayloxController(http.Controller):
             })
         return values
 
+    def _get_card_type(self, type):
+        if type == 'Credit':
+            return _('Credit Card')
+        elif type == 'Debit':
+            return _('Debit Card')
+        elif type == 'Credit-Business':
+            return _('Business Card')
+        else:
+            return _('General')
+
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
         if not request.env.user.has_group('base.group_user'):
@@ -282,6 +292,7 @@ class PayloxController(http.Controller):
                             'campaign': option.get('campaign_name', ''),
                             'family': option.get('card_family', ''),
                             'logo': option.get('card_family_logo', ''),
+                            'type': self._get_card_type(option.get('card_type', '')),
                             'currency': option.get('currency', ''),
                             'excluded': option.get('excluded_bins', []),
                             'installments': [],
@@ -334,6 +345,7 @@ class PayloxController(http.Controller):
                             'campaign': option.get('campaign_name', ''),
                             'family': option.get('card_family', ''),
                             'logo': option.get('card_family_logo', ''),
+                            'type': option.get('card_type', ''),
                             'currency': option.get('currency', ''),
                             'excluded': option.get('excluded_bins', []),
                             'installments': [],
@@ -699,7 +711,7 @@ class PayloxController(http.Controller):
                         "name": product.display_name,
                         "description": product.name,
                         "qty": 1.0,
-                        "amount": amount_customer,
+                        "amount": float_round(amount_customer, 2),
                         "category": product.categ_id.name,
                         "is_physical": False,
                     })

@@ -256,6 +256,14 @@
         margin-left: 0 !important;
         font-size: 12px;
 
+        ul {
+            li {
+                a.active {
+                    color: theme-color('primary') !important;
+                }
+            }
+        }
+
         table {
             table-layout: fixed;
         }

@@ -222,10 +222,11 @@ class PaymentTransaction(models.Model):
             "application_key": self.acquirer_id.jetcheckout_api_key,
             "order_id": self.jetcheckout_order_id,
             "transaction_id": self.jetcheckout_transaction_id,
-            "amount": int(amount * 100),
+            "amount": round(amount * 100),
             "currency": self.currency_id.name,
             "language": "tr",
         }
+        raise Exception()
 
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
