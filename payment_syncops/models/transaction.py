@@ -25,7 +25,7 @@ class PaymentTransaction(models.Model):
 
     def action_check_connector(self):
         self.ensure_one()
-        company = self.env.company
+        company = self.company_id or self.env.company
         connector = self.env['syncops.connector'].sudo()._find('payment_post_partner_payment', company=company)
         if not connector:
             raise UserError(_('No syncOPS connector found'))
@@ -73,12 +73,12 @@ class PaymentTransaction(models.Model):
                 raise UserError(response.text or response.reason)
         except Exception as e:
             raise UserError(str(e))
-        
+
         if result:
             logs = self.env['syncops.log'].sudo().create(result)
             action = self.env.ref('connector_syncops.action_log').sudo().read()[0]
             action['context'] = {'create': False, 'delete': False, 'edit': False, 'import': False}
-            action['domain'] = [('id', '=', logs.ids)]
+            action['domain'] = [('id', 'in', logs.ids)]
             return action
         else:
             raise UserError(_('No log found'))
