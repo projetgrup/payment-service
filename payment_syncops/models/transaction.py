@@ -125,6 +125,10 @@ class PaymentTransaction(models.Model):
             'amount_commission_rate': self.jetcheckout_commission_rate or 0,
             'amount_customer_rate': self.jetcheckout_customer_rate or 0,
             'description': self.state_message,
+            'items': [{
+                'ref': item.ref,
+                'amount': item.paid_amount
+            } for item in self.jetcheckout_item_ids if item.paid]
         }, company=self.company_id, message=True)
 
         if result == None:
