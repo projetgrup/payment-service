@@ -138,21 +138,27 @@ class SyncopsSyncWizard(models.TransientModel):
         wizard = self.browse(self.env.context.get('wizard_id', 0))
         if wizard:
             company = self.env.company
-            partners_all = self.env['res.partner']
+
             users_all = self.env['res.users']
+            users = users_all.search_read([
+                ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
+            ], ['id', 'email'])
+            users = {user['email']: user['id'] for user in users if user['email']}
+
+            partners_all = self.env['res.partner']
             partners = partners_all.search_read([
                 ('company_id', '=', company.id),
                 '|',
                 ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
                 ('ref', 'in', wizard.line_ids.mapped('partner_ref')),
             ], ['id', 'vat', 'ref'])
-            users = users_all.search_read([
-                ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
-            ], ['id', 'email'])
-            #vats = {partner['vat']: partner['id'] for partner in partners if partner['vat']}
-            #refs = {partner['ref']: partner['id'] for partner in partners if partner['ref']}
-            keys = {'%s;%s' % (partner['vat'] or '', partner['ref'] or ''): partner['id'] for partner in partners if partner['vat'] or partner['ref']}
-            users = {user['email']: user['id'] for user in users if user['email']}
+            vats, refs = {}, {}
+            for partner in partners:
+                if partner['vat']:
+                    vats.update({partner['vat']: partner['id']})
+                if partner['ref']:
+                    refs.update({partner['ref']: partner['id']})
+
             if wizard.type == 'partner':
                 for line in wizard.line_ids.read():
                     if line['partner_user_email'] in users:
@@ -185,9 +191,16 @@ class SyncopsSyncWizard(models.TransientModel):
                     else:
                         user = None
 
-                    key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
-                    if key in keys:
-                        partner = partners_all.browse(keys[key])
+                    pid = 0
+                    if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                        pid = vats[line['partner_vat']]
+                    elif line['partner_vat'] in vats:
+                        pid = vats[line['partner_vat']]
+                    elif line['partner_ref'] in refs:
+                        pid = refs[line['partner_ref']]
+
+                    if pid:
+                        partner = partners_all.browse(pid)
                         partner.write({
                             'name': line['name'],
                             'vat': line['partner_vat'],
@@ -210,6 +223,11 @@ class SyncopsSyncWizard(models.TransientModel):
                             'company_id': company.id,
                             'is_company': True,
                         })
+                        if line['partner_vat']:
+                            vats.update({line['partner_vat']: partner.id})
+                        if line['partner_ref']:
+                            refs.update({line['partner_ref']: partner.id})
+
             else:
                 items_all = self.env['payment.item']
                 if wizard.type_item_subtype == 'balance':
@@ -222,14 +240,21 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     items = {item['parent_id'][0]: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
-                        if key in keys and keys[key] in items:
-                            items_all.browse(items[keys[key]]).write({
+                        pid = 0
+                        if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                            pid = vats[line['partner_vat']]
+                        elif line['partner_vat'] in vats:
+                            pid = vats[line['partner_vat']]
+                        elif line['partner_ref'] in refs:
+                            pid = refs[line['partner_ref']]
+
+                        if pid and pid in items:
+                            items_all.browse(items[pid]).write({
                                 'amount': line['partner_balance'],
                             })
                         else:
-                            if key in keys:
-                                partner = partners_all.browse(keys[key])
+                            if pid:
+                                partner = partners_all.browse(pid)
                             else:
                                 partner = partners_all.create({
                                     'system': wizard.system or company.system,
@@ -242,6 +267,11 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'company_id': company.id,
                                     'is_company': True,
                                 })
+                                if line['partner_vat']:
+                                    vats.update({line['partner_vat']: partner.id})
+                                if line['partner_ref']:
+                                    refs.update({line['partner_ref']: partner.id})
+
                             items_all.create({
                                 'system': wizard.system or company.system,
                                 'amount': line['partner_balance'],
@@ -267,10 +297,15 @@ class SyncopsSyncWizard(models.TransientModel):
                     items = items_all.search_read(domain, ['id', 'ref'])
                     items = {item['ref']: item['id'] for item in items}
                     for line in wizard.line_ids.read():
-                        key = '%s;%s' % (line['partner_vat'] or '', line['partner_ref'] or '')
-                        pid = key in keys and keys[key]
-                        inv = line['invoice_id'] if pid else None
+                        pid = 0
+                        if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                            pid = vats[line['partner_vat']]
+                        elif line['partner_vat'] in vats:
+                            pid = vats[line['partner_vat']]
+                        elif line['partner_ref'] in refs:
+                            pid = refs[line['partner_ref']]
 
+                        inv = line['invoice_id'] if pid else None
                         if pid and inv in items:
                             items_all.search([('id', '=', items[inv]), ('paid', '=', False)]).write({'amount': line['invoice_amount']})
                         else:
@@ -288,6 +323,11 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'company_id': company.id,
                                     'is_company': True,
                                 })
+                                if line['partner_vat']:
+                                    vats.update({line['partner_vat']: partner.id})
+                                if line['partner_ref']:
+                                    refs.update({line['partner_ref']: partner.id})
+
                             items_all.create({
                                 'system': wizard.system or company.system,
                                 'amount': line['invoice_amount'],
