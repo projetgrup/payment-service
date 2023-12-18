@@ -4,6 +4,7 @@ from datetime import timedelta
 from dateutil import parser
 
 from odoo import fields, models, api, _
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 
 class PaymentTransaction(models.Model):
@@ -127,7 +128,7 @@ class PaymentTransaction(models.Model):
             'description': self.state_message,
             'items': [{
                 'ref': item.ref,
-                'amount': item.paid_amount
+                'amount': float_round(item.paid_amount, 2)
             } for item in self.jetcheckout_item_ids if item.paid]
         }, company=self.company_id, message=True)
 
