@@ -34,11 +34,11 @@
             <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='partner_id']" position="after">
-            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
-            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_name', '=', False)]}"/>
-            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_vat', '=', False)]}"/>
-            <field name="jetcheckout_connector_payment_ref" string="Related Reference" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="base.group_no_one"/>
-            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
+            <field name="jetcheckout_connector_partner_name" string="Related Partner Name" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_name', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
+            <field name="jetcheckout_connector_partner_vat" string="Related Partner VAT" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_partner_vat', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
+            <field name="jetcheckout_connector_payment_ref" string="Related Reference" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
+            <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
         </xpath>
         <xpath expr="//field[@name='state_message']" position="after">
             <field name="jetcheckout_connector_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}"/>
