@@ -7,6 +7,7 @@ from odoo import fields, models, api, _
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 
+
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 

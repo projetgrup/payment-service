@@ -226,7 +226,6 @@ class PaymentTransaction(models.Model):
             "currency": self.currency_id.name,
             "language": "tr",
         }
-        raise Exception()
 
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
