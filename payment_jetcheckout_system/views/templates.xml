@@ -13,7 +13,6 @@
 
     <template id="payment_sidebar" inherit_id="payment_jetcheckout.payment_sidebar">
         <xpath expr="//input[@field='amount']" position="attributes">
-            <attribute name="t-att-value">language.format('%.{0}f'.format(currency.decimal_places), amount or 0, grouping=True, monetary=True)</attribute>
             <attribute name="t-att-disabled">readonly or None</attribute>
         </xpath>
         <xpath expr="//input[@field='partner']" position="after">
@@ -190,7 +189,7 @@
                         <t t-set="labels"/>
                     </t>
                     <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                        <div class="pb-4 text-center" field="payment.preview.grid">
+                        <div class="py-4 text-center" field="payment.preview.grid">
                             <h1 class="align-items-center d-flex h-100 justify-content-center mt-4 text-500">
                                 <i class="fa fa-2x fa-circle-o-notch fa-spin" t-translation="off"/>
                             </h1>
