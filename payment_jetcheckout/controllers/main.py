@@ -711,7 +711,7 @@ class PayloxController(http.Controller):
                         "name": product.display_name,
                         "description": product.name,
                         "qty": 1.0,
-                        "amount": float_round(amount_customer, 2),
+                        "amount": round(float_round(amount_customer, 2), 2), # used double round, because format_round seems not working
                         "category": product.categ_id.name,
                         "is_physical": False,
                     })
