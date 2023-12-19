@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="paylox.installment.grid">
-        <main t-if="!error &amp;&amp; rows" class="row installment-table bg-100">
+        <main t-if="!error &amp;&amp; rows" class="row installment-table">
             <ul class="nav nav-tabs w-100" role="tablist">
                 <t t-set="i" t-value="0"/>
                 <t t-foreach="types" t-as="type">
