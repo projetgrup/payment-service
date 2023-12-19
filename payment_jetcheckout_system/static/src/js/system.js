@@ -243,6 +243,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                     message: _t('An error occured.') + ' ' + result.error,
                 });
             } else {
+                let types = {};
+                for (let r of result.rows) {
+                    if (r.type in types) {
+                        types[r.type].push(r);
+                    } else {
+                        types[r.type] = [r];
+                    }
+                }
+
+                result.types = Object.entries(types);
                 grid = result;
             }
         }).guardedCatch(function (error) {
