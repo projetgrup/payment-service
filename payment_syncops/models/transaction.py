@@ -130,7 +130,7 @@ class PaymentTransaction(models.Model):
             'items': [{
                 'ref': item.ref,
                 'amount': float_round(item.paid_amount, 2)
-            } for item in self.jetcheckout_item_ids if item.paid]
+            } for item in self.jetcheckout_item_ids if item.paid and item.ref]
         }, company=self.company_id, message=True)
 
         if result == None:
