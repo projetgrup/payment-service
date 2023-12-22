@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-06 13:43+0000\n"
-"PO-Revision-Date: 2023-12-06 16:50+0300\n"
+"POT-Creation-Date: 2023-12-22 14:17+0000\n"
+"PO-Revision-Date: 2023-12-22 17:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -449,6 +449,7 @@ msgstr "Yönetici"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__advance
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__advance
 msgid "Advance"
 msgstr "Avans"
 
@@ -835,6 +836,7 @@ msgstr "Oluşturulan ödemeler burada listelenir"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__currency_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__currency_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Currency"
 msgstr "Para Birimi"
@@ -1006,9 +1008,12 @@ msgid "Dynamic"
 msgstr "Dinamik"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
+#, python-format
 msgid "Email"
 msgstr "Eposta"
 
@@ -1658,6 +1663,11 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
+msgid "Number"
+msgstr "Numara"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Eylemler Sayısı"
@@ -1933,6 +1943,7 @@ msgstr "Ödeme Varsayılan SMS Ayarları"
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_item_wizard
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_item_ids
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Payment Items"
 msgstr "Ödemeler"
 
@@ -2292,6 +2303,11 @@ msgid "Portal: User Portal Invite Template"
 msgstr "Portal: Kullanıcı Portal Davet Şablonu"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_prepayment_amount
+msgid "Prepayment Amount"
+msgstr "Ön Ödeme Tutarı"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 msgid "Preview"
@@ -2386,6 +2402,11 @@ msgid "Ref"
 msgstr "Referans"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__ref
+msgid "Reference"
+msgstr "Referans"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 msgid "Register"
 msgstr "Kaydol"
@@ -2412,7 +2433,10 @@ msgid "Round"
 msgstr "Yuvarla"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+#, python-format
 msgid "SMS"
 msgstr "SMS"
 
@@ -2726,6 +2750,13 @@ msgstr "Durumu"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__subsystem
 msgid "Subsystem"
 msgstr "Altsistem"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Success"
+msgstr "Başarılı"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
@@ -3060,6 +3091,12 @@ msgstr "Takibi Bırak"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__unit
 msgid "Unit"
 msgstr "Birim"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "Unknown sending method"
+msgstr "Bilinmeyen gönderim metodu"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_unread
