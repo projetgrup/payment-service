@@ -129,8 +129,8 @@ class PaymentTransaction(models.Model):
             'description': self.state_message,
             'items': [{
                 'ref': item.ref,
-                'amount': float_round(item.paid_amount, 2)
-            } for item in self.jetcheckout_item_ids if item.paid and item.ref]
+                'amount': float_round(item.amount, 2)
+            } for item in self.paylox_transaction_item_ids if item.ref]
         }, company=self.company_id, message=True)
 
         if result == None:

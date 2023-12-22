@@ -289,13 +289,13 @@ class SyncopsSyncWizard(models.TransientModel):
                         domain.append(('parent_id', '=', partner_ctx.id))
 
                     if company.syncops_sync_item_force:
-                        items_all.search(domain + ['|', ('parent_id.vat', 'in', wizard.line_ids.mapped('partner_vat')), ('parent_id.ref', 'in', wizard.line_ids.mapped('partner_ref'))]).unlink()
+                        items_all.search(domain).unlink()
                     else:
                         domain.append(('ref', '!=', False))
                         items_all.search(domain + [('paid', '=', False), ('ref', 'not in', wizard.line_ids.mapped('invoice_id'))]).unlink()
 
                     items = items_all.search_read(domain, ['id', 'ref'])
-                    items = {item['ref']: item['id'] for item in items}
+                    items = {item['ref']: item['id'] for item in items if item['ref']}
                     for line in wizard.line_ids.read():
                         pid = 0
                         if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
