@@ -24,17 +24,12 @@
         <xpath expr="//field[@name='state_message']" position="after">
             <field name="jetcheckout_webhook_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('jetcheckout_webhook_ok', '=', False)]}"/>
         </xpath>
-        <xpath expr="//sheet" position="after">
-            <div class="oe_chatter">
-                <field name="message_ids" widget="mail_thread"/>
-            </div>
-        </xpath>
-        <xpath expr="//sheet" position="inside">
+        <xpath expr="//field[@name='state_message']/.." position="before">
             <notebook>
                 <page string="Payment Items" attrs="{'invisible': [('paylox_transaction_item_ids', '!=', False)]}" groups="payment_jetcheckout_system.group_system_manager">
                     <field name="paylox_transaction_item_ids" readonly="1">
                         <tree>
-                            <field name="id"/>
+                            <field name="id" string="Number"/>
                             <field name="item_id" optional="hide"/>
                             <field name="ref"/>
                             <field name="amount"/>
@@ -43,7 +38,7 @@
                         <form>
                             <sheet>
                                 <group>
-                                    <field name="id"/>
+                                    <field name="id" string="Number"/>
                                     <field name="item_id"/>
                                 </group>
                                 <group>
@@ -56,6 +51,11 @@
                     </field>
                 </page>
             </notebook>
+        </xpath>
+        <xpath expr="//sheet" position="after">
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
         </xpath>
     </field>
     </record>
