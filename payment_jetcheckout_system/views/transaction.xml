@@ -26,7 +26,7 @@
         </xpath>
         <xpath expr="//field[@name='state_message']/.." position="before">
             <notebook>
-                <page string="Payment Items" attrs="{'invisible': [('paylox_transaction_item_ids', '!=', False)]}" groups="payment_jetcheckout_system.group_system_manager">
+                <page string="Payment Items" attrs="{'invisible': [('paylox_transaction_item_ids', '=', False)]}" groups="payment_jetcheckout_system.group_system_manager">
                     <field name="paylox_transaction_item_ids" readonly="1">
                         <tree>
                             <field name="id" string="Number"/>
