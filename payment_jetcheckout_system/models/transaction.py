@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 from datetime import datetime
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 
 
 class PaymentTransaction(models.Model):
@@ -15,7 +15,9 @@ class PaymentTransaction(models.Model):
     state = fields.Selection(tracking=True)
     system = fields.Selection(related='company_id.system')
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
+
     paylox_item_count = fields.Integer(compute='_compute_item_count')
+    paylox_prepayment_amount = fields.Monetary('Prepayment Amount', readonly=True, copy=False)
     paylox_transaction_item_ids = fields.One2many('payment.transaction.item', 'transaction_id', string='Transaction Items')
 
     jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
@@ -127,3 +129,10 @@ class PaymentTransactionItem(models.Model):
     advance = fields.Boolean('Advance')
     amount = fields.Monetary('Amount')
     currency_id = fields.Many2one(related='transaction_id.currency_id')
+
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        if res.advance:
+            res.transaction_id.paylox_prepayment_amount = res.amount
+        return res

@@ -12,7 +12,7 @@
                 class="oe_stat_button"
                 icon="fa-chain"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '!=', False)]}">
+                attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', 'not in', ('done', 'cancel')), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '!=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Connector</span><span class="o_stat_text">Succeeded</span>
                 </div>
@@ -23,7 +23,7 @@
                 class="oe_stat_button"
                 icon="fa-unlink"
                 groups="base.group_user"
-                attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}">
+                attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', 'not in', ('done', 'cancel'), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}">
                 <div class="o_form_field o_stat_info mr3">
                     <span class="o_stat_value">Connector</span><span class="o_stat_text">Failed</span>
                 </div>
@@ -31,7 +31,7 @@
         </xpath>
         <xpath expr="//button[@name='action_void']" position="after">
             <field name="jetcheckout_connector_state" invisible="1"/>
-            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}"/>
+            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', '|', ('state', 'not in', ('done', 'cancel'), ('jetcheckout_connector_ok', '=', False), ('jetcheckout_connector_state', '=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='partner_id']" position="after">
             <br colspan="2" attrs="{'invisible': [('jetcheckout_connector_ok', '=', False)]}" groups="payment_jetcheckout_system.group_system_user"/>
