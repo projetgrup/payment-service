@@ -29,6 +29,34 @@
                 <field name="message_ids" widget="mail_thread"/>
             </div>
         </xpath>
+        <xpath expr="//sheet" position="inside">
+            <notebook>
+                <page string="Payment Items" attrs="{'invisible': [('paylox_transaction_item_ids', '!=', False)]}" groups="payment_jetcheckout_system.group_system_manager">
+                    <field name="paylox_transaction_item_ids" readonly="1">
+                        <tree>
+                            <field name="id"/>
+                            <field name="item_id" optional="hide"/>
+                            <field name="ref"/>
+                            <field name="amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <field name="id"/>
+                                    <field name="item_id"/>
+                                </group>
+                                <group>
+                                    <field name="ref"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </xpath>
     </field>
     </record>
 

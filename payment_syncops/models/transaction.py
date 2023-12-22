@@ -149,6 +149,8 @@ class PaymentTransaction(models.Model):
 
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()
+        if self.company_id.syncops_sync_item_force:
+            request.env['payment.item'].sudo().search([('parent_id', '=', self.partner_id.id), '|', ('advance', '=', True), ('paid', '=', True)]).unlink()
         if self.jetcheckout_connector_ok:
             self.action_process_connector()
         return res
