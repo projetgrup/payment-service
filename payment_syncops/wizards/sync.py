@@ -283,7 +283,6 @@ class SyncopsSyncWizard(models.TransientModel):
                     domain = [
                         ('company_id', '=', company.id),
                         ('system', '=', wizard.system),
-                        ('ref', '!=', False),
                     ]
                     partner_ctx = self.env.context.get('partner')
                     if partner_ctx:
