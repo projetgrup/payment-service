@@ -21,11 +21,12 @@ class PayloxSystemVendorController(Controller):
         if system == 'vendor':
             items = kwargs.get('items', [])
             ids = [i for i, null in items]
-            refs = {item.id: item.ref for item in request.env['payment.item'].sudo().browse(ids)}
+            item = {item.id: {'ref': item.ref, 'advance': item.advance} for item in request.env['payment.item'].sudo().browse(ids)}
             res['paylox_transaction_item_ids'] = [(0, 0, {
                 'item_id': id,
-                'ref': refs[id],
-                'amount': amount
+                'amount': amount,
+                'ref': item[id]['ref'],
+                'advance': item[id]['advance'],
             }) for id, amount in items]
         return res
 

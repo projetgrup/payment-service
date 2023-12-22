@@ -34,6 +34,7 @@ class PayloxSystemStudentController(Controller):
                     items.append((0, 0, {
                         'item_id': payment.id,
                         'ref': payment.ref,
+                        'advance': payment.advance,
                         'amount': amount,
                         'bursary_amount': bursary_amount,
                         'prepayment_amount': prepayment_amount,
