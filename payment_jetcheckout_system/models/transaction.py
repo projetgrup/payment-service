@@ -124,5 +124,6 @@ class PaymentTransactionItem(models.Model):
     transaction_id = fields.Many2one('payment.transaction', required=True, ondelete='cascade')
     item_id = fields.Many2one('payment.item', string='Item')
     ref = fields.Char('Reference')
+    advance = fields.Boolean('Advance')
     amount = fields.Monetary('Amount')
     currency_id = fields.Many2one(related='transaction_id.currency_id')
