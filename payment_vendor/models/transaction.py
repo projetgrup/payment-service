@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
 
         try:
             with self.env.cr.savepoint():
-                company = self.env.company
+                company = self.company_id or self.env.company
                 if not company.system or not company.notif_mail_success_ok:
                     return
 
@@ -72,7 +72,7 @@ class PaymentTransaction(models.Model):
 
         try:
             with self.env.cr.savepoint():
-                company = self.env.company
+                company = self.company_id or self.env.company
                 if not company.system or not company.notif_sms_success_ok:
                     return
 
