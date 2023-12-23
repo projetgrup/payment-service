@@ -635,7 +635,7 @@ class PayloxController(http.Controller):
 
         if partner.vat:
             partner_vat = re.sub(r'[^\d]', '', partner.vat)
-            if partner_vat:
+            if partner_vat and len(partner_vat) in (10, 11):
                 data.update({'billing_tax_number': partner_vat})
 
         order_id = str(uuid.uuid4())
