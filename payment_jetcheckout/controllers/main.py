@@ -628,6 +628,16 @@ class PayloxController(http.Controller):
             "language": "tr",
         }
 
+        if getattr(partner, 'tax_office_id', False):
+            data.update({'billing_tax_office': partner.tax_office_id.name})
+        elif getattr(partner, 'tax_office', False):
+            data.update({'billing_tax_office': partner.tax_office})
+
+        if partner.vat:
+            partner_vat = re.sub(r'[^\d]', '', partner.vat)
+            if partner_vat:
+                data.update({'billing_tax_number': partner_vat})
+
         order_id = str(uuid.uuid4())
         sale_id = int(kwargs.get('order', 0))
         invoice_id = int(kwargs.get('invoice', 0))
