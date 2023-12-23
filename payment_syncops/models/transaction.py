@@ -95,7 +95,7 @@ class PaymentTransaction(models.Model):
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
         offset = timedelta(hours=3) # Turkiye Timezone
-        date = self.last_state_change + offset
+        date = self.create_date + offset
         if not line or not line.account_code:
             raise UserError(_('There is no account line for this provider'))
 
