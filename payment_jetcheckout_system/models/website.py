@@ -41,9 +41,11 @@ class View(models.Model):
     def _render_template(self, template, values=None, **kw):
         if self.env.context.get('website_id'):
             try:
-                website_id = values['main_object'].website_id.template_id.id
-                template = self.env['website'].with_context(website_id=website_id).viewref('website.homepage').id
-                values['response_template'] = template
+                if values['main_object']._name == 'website.page':
+                    website_id = values['main_object'].website_id.template_id.id
+                    if website_id:
+                        template = self.env['website'].with_context(website_id=website_id).viewref('website.homepage').id
+                        values['response_template'] = template
             except:
                 pass
         return super(View, self)._render_template(template, values=values, **kw)
