@@ -55,7 +55,7 @@ class PaymentTransaction(models.Model):
                 for log in logs:
                     result.append({
                         'connector_id': connector.id,
-                        'company_id': company.id,
+                        'company_id': self.env.company.id,
                         'date': parser.parse(log['date']),
                         'partner_name': log['partner'],
                         'connector_name': log['connector'],
@@ -158,16 +158,14 @@ class PaymentTransaction(models.Model):
     def _paylox_cancel_postprocess(self):
         res = super()._paylox_cancel_postprocess()
         if self.jetcheckout_connector_ok:
+            self.write({'jetcheckout_connector_state': True})
             self.action_process_connector()
         return res
 
     def _paylox_refund_postprocess(self, amount=0):
         res = super()._paylox_refund_postprocess(amount=amount)
         if self.jetcheckout_connector_ok:
-            res.write({
-                'jetcheckout_connector_ok': True,
-                'jetcheckout_connector_state': True,
-            })
+            res.write({'jetcheckout_connector_state': True})
             res.action_process_connector()
         return res
 
