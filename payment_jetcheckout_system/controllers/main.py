@@ -15,7 +15,7 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as
 class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
-        if not request.env.user.share or not partner.system or request.session.get('company'):
+        if not request.env.user.share or not partner.system:
             return False
 
         company_id = partner.company_id.id or request.env.company.id
@@ -317,8 +317,9 @@ class PayloxSystemController(Controller):
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):
         self._check_advance_page(**kwargs)
-        website_id = int(kwargs.get('id', request.website.id))
-        if request.website.id != website_id:
+        w_id = request.website.id
+        website_id = int(kwargs.get('id', w_id))
+        if w_id != website_id:
             website = request.env['website'].sudo().browse(website_id)
             if not website:
                 raise werkzeug.exceptions.NotFound()
@@ -337,7 +338,8 @@ class PayloxSystemController(Controller):
             currency = None
 
         user = request.env.user
-        if request.website.company_id.id != user.company_id.id:
+        companies = user.company_ids
+        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
             website = request.env['website'].sudo().search([
                 ('domain', '=', request.website.domain),
                 ('company_id', '=', user.company_id.id)
