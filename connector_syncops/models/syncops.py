@@ -366,7 +366,7 @@ class SyncopsConnectorLineDefault(models.Model):
                 **values
             }
             safe_eval(self.code.strip(), context, mode='exec', nocopy=True)
-            return context.get('self')
+            return context.get('data')
         return
 
     @api.constrains('code')
