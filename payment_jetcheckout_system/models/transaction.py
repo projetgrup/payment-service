@@ -17,6 +17,7 @@ class PaymentTransaction(models.Model):
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
 
     paylox_item_count = fields.Integer(compute='_compute_item_count')
+    paylox_item_tag = fields.Char('Payment Item Tag', readonly=True, copy=False)
     paylox_prepayment_amount = fields.Monetary('Prepayment Amount', readonly=True, copy=False)
     paylox_transaction_item_ids = fields.One2many('payment.transaction.item', 'transaction_id', string='Transaction Items')
 
