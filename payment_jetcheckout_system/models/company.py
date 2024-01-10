@@ -53,8 +53,9 @@ class Company(models.Model):
     payment_page_due_reminder_tag_ids = fields.Many2many('res.partner.category', string='Payment Page Due Reminder Partner Tags')
     payment_page_due_reminder_tag_ok = fields.Boolean(string='Payment Page Due Reminder Partner Tags Included')
 
-    payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
+    payment_page_campaign_tag_ids = fields.One2many('payment.settings.campaign.tag', 'company_id', 'Payment Page Campaign Tags')
     payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')
+    payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
     payment_page_flow = fields.Selection([
         ('static', 'Static'),
         ('dynamic', 'Dynamic'),

@@ -78,6 +78,7 @@
             <field name="partner_name" invisible="1"/>
             <field name="invoice_id" invisible="1"/>
             <field name="invoice_name" string="Document"/>
+            <field name="invoice_tag" string="Tag" optional="hide"/>
             <field name="invoice_date" string="Date"/>
             <field name="invoice_due_date" string="Due Date"/>
         </xpath>

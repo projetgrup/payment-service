@@ -11,6 +11,8 @@
             <field name="amount" attrs="{'readonly': [('paid', '=', True), ('amount', '!=', 0)]}"/>
             <field name="date" optional="hide"/>
             <field name="due_date" optional="hide"/>
+            <field name="ref" optional="hide"/>
+            <field name="tag" optional="hide"/>
             <field name="description" optional="hide"/>
             <field name="file" optional="hide"/>
             <field name="paid"/>

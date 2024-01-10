@@ -8,6 +8,13 @@ class PaymentSettings(models.TransientModel):
     _name = 'payment.settings'
     _description = 'Payment Settings'
 
+    @api.constrains('payment_page_campaign_tag_ids')
+    def _check_payment_page_campaign_tag_ids(self):
+        for setting in self:
+            tags = setting.payment_page_campaign_tag_ids.filtered(lambda x: not x.campaign_id)
+            if not len(tags) == 1:
+                raise UserError(_('There must only one campaign tag without campaign selection'))
+
     @api.depends('company_id')
     def _compute_payment_page_due_reminder_user_opt(self):
         for setting in self:
@@ -59,6 +66,7 @@ class PaymentSettings(models.TransientModel):
     payment_page_amount_editable = fields.Boolean(related='company_id.payment_page_amount_editable', readonly=False)
     payment_page_item_priority = fields.Boolean(related='company_id.payment_page_item_priority', readonly=False)
     payment_page_campaign_table_ok = fields.Boolean(related='company_id.payment_page_campaign_table_ok', readonly=False)
+    payment_page_campaign_tag_ids = fields.One2many(related='company_id.payment_page_campaign_tag_ids', readonly=False)
     payment_page_advance_ok = fields.Boolean(related='company_id.payment_page_advance_ok', readonly=False)
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)
     payment_page_due_ids = fields.One2many(related='company_id.payment_page_due_ids', readonly=False)
@@ -160,19 +168,69 @@ class PaymentSettingsDue(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
     campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
+    tag_ids = fields.One2many('payment.settings.due.tag', 'due_id', 'Tags')
     mail_template_id = fields.Many2one('mail.template', string='Email Template')
 
     def get_campaign(self, day):
         advance = None
+        tag = self.env.context.get('tag') or False
         for due in self:
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)
+            tags = due.tag_ids.mapped('name')
             if due.due + due.tolerance >= days:
                 return int(days), due.campaign_id.name or '', due, advance, False
             advance = due
 
         days = float_round(day, precision_digits=0)
         return int(days), '', advance, advance, self.env.company.payment_page_due_hide_payment_ok
+
+
+class PaymentSettingsDueTag(models.Model):
+    _name = 'payment.settings.due.tag'
+    _description = 'Payment Settings Due Tags'
+
+    due_id = fields.Many2one('payment.settings.due')
+    name = fields.Char(required=True)
+
+
+class PaymentSettingsCampaignTag(models.Model):
+    _name = 'payment.settings.campaign.tag'
+    _description = 'Payment Settings Campaign Tags'
+    _order = 'sequence'
+
+    @api.model
+    def _get_acquirers(self, partner=None, limit=None):
+        company = partner and partner.company_id or self.env.company
+        return self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=limit, raise_exception=False)
+
+    @api.onchange('name')
+    def _compute_campaign_ids(self):
+        for line in self:
+            acquirers = self._get_acquirers()
+            campaigns = acquirers.mapped('paylox_campaign_ids')
+            line.campaign_ids = [(6, 0, campaigns.ids)]
+
+    def _default_campaign_id(self):
+        acquirers = self._get_acquirers(limit=1)
+        if acquirers:
+            return acquirers.jetcheckout_campaign_id.id
+        return False
+
+    sequence = fields.Integer(string='Sequence', default=10)
+    name = fields.Char(string='Tag', required=True)
+    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='cascade', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
+    campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    line_ids = fields.One2many('payment.settings.campaign.tag.line', 'campaign_id', 'Tags')
+
+
+class PaymentSettingsCampaignTagLine(models.Model):
+    _name = 'payment.settings.campaign.tag.line'
+    _description = 'Payment Settings Campaign Tag Lines'
+
+    campaign_id = fields.Many2one('payment.settings.campaign.tag')
+    name = fields.Char(required=True)
 
 
 class ResConfigSettings(models.TransientModel):

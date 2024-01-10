@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-20 09:53+0000\n"
-"PO-Revision-Date: 2023-11-20 09:53+0000\n"
+"POT-Creation-Date: 2024-01-10 11:19+0000\n"
+"PO-Revision-Date: 2024-01-10 11:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,14 @@ msgid ""
 "    <br/><br/>\n"
 "    <span t-out=\"object._get_payment_company()\"/>\n"
 "</p>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Address</b>\n"
+"            </span>"
 msgstr ""
 
 #. module: payment_vendor
@@ -303,6 +311,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
 msgstr ""
 
@@ -342,6 +351,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Country"
 msgstr ""
 
@@ -470,6 +480,16 @@ msgid "Paid"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_payment_transaction__paylox_notif_mail_state
+msgid "Paylox Email Notification State"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_payment_transaction__paylox_notif_sms_state
+msgid "Paylox SMS Notification State"
+msgstr ""
+
+#. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.vendor_mail
 msgid "Payment - {{ object.company_id.name }}"
 msgstr ""
@@ -571,11 +591,6 @@ msgid "Select a state"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
-msgid "Select a tax office"
-msgstr ""
-
-#. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
 #: model:ir.cron,cron_name:payment_vendor.crom_transaction_daily
 #: model:ir.cron,name:payment_vendor.crom_transaction_daily
@@ -589,13 +604,24 @@ msgid "Settings"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "Standard"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "State"
 msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
 msgid "Street"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "Street..."
 msgstr ""
 
 #. module: payment_vendor
@@ -708,6 +734,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_website
 msgid "Websites"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "ZIP"
 msgstr ""
 
 #. module: payment_vendor

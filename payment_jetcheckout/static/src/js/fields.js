@@ -9,8 +9,8 @@ class fields {
         this._name = undefined;
     }
 
-    async start(self, name) {
-        if (this._name) {
+    async start(self, name, force=false) {
+        if (this._name && !force) {
             return;
         }
 
@@ -25,6 +25,8 @@ class fields {
                 console.error(error);
             }
         }
+
+        this.$.off();
         if (this.events) {
             for (const [e, f] of this.events) {
                 if (this._ && e === 'accept') {
@@ -63,6 +65,14 @@ class fields {
 
     get html() {
         this.$.html();
+    }
+
+    set text(v) {
+        this.$.text(v);
+    }
+
+    get text() {
+        this.$.text();
     }
 
     get exist() {

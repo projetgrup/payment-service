@@ -28,8 +28,8 @@ systemPage.include({
         this.connector = {
             dateFormat: 'DD-MM-YYYY',
             format: {
-                date: (date) => date && moment(date).format(self.connector.dateFormat) || '',
-                currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.precision),
+                date: (date) => format.date(date, self.connector.dateFormat),
+                currency: (amount, currency) => format.currency(amount, currency.position, currency.symbol, currency.decimal),
             },
             partner: {
                 page: 1,
