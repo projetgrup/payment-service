@@ -43,8 +43,8 @@ class PayloxSystemStudentController(Controller):
                 res['paylox_transaction_item_ids'] = items
         return res
 
-    def _prepare_system(self, company, system, partner, transaction):
-        res = super()._prepare_system(company, system, partner, transaction)
+    def _prepare_system(self, company, system, partner, transaction, options={}):
+        res = super()._prepare_system(company, system, partner, transaction, options=options)
         if system == 'student':
             res.update({
                 'discount_single': company.get_student_discount() if company.student_discount_advance_active else 0,

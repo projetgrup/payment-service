@@ -3,6 +3,14 @@
     color: #888888 !important;
     overflow: auto !important;
 
+    .gap-1 {
+        gap: 0.2em;
+    }
+
+    .gap-5 {
+        gap: 1em;
+    }
+
     h1, h2, h3, h4, h5 {
         font-family: Montserrat, sans-serif !important;
     }

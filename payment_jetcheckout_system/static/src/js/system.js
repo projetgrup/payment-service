@@ -126,6 +126,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.vat = new fields.string();
         this.campaign = {
             name: new fields.string(),
+            text: new fields.string(),
         };
         this.payment = {
             amount: new fields.float({
@@ -142,6 +143,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }),
             tag: new fields.element({
                 events: [['click', this._onClickTag]],
+            }),
+            tags: new fields.element({
+                events: [['click', this._onClickTags]],
             }),
             privacy: new fields.element({
                 events: [['click', this._onClickPrivacy]],
@@ -164,9 +168,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             itemsBtn: new fields.element({
                 events: [['click', this._onChangePaidAllBtn]],
             }),
-            tags: new fields.element({
-                events: [['click', this._onClickTags]],
-            }),
             link: new fields.element({
                 events: [['click', this._onClickLink]],
             }),
@@ -186,6 +187,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 days: new fields.element(),
                 payment: new fields.element(),
                 warning: new fields.element(),
+                tag: new fields.element({
+                    events: [['click', this._onClickDueTag]],
+                }),
             },
             advance: {
                 amount: 0,
@@ -198,7 +202,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }
         };
     },
- 
+
     start: function () {
         const self = this;
         return this._super.apply(this, arguments).then(function () {
@@ -217,8 +221,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                     default: 0,
                     mask: payloxPage.prototype._maskAmount.bind(self),
                 });
-                self.amount.$ = $('[field=amount]');
-                self.amount.start(self, 'amount');
+                payloxPage.prototype._start.apply(self, ['amount']);
                 self._getPreviewGrid();
             }
         });
@@ -436,6 +439,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this._onChangePaid(ev);
     },
 
+    _getDueTag: function () {
+        if (this.payment.due.tag.exist) {
+            let tag = this.payment.due.tag.$.filter('.btn-primary');
+            return tag && tag.data('tag') || '';
+        }
+        return false;
+    },
+
     _onChangePaid: function (ev) {
         if (!this.amount.exist) {
             return;
@@ -472,38 +483,39 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.payment.items.checked = !!$items.length;
 
         if (this.payment.due.days.exist) {
-            const self = this;
-            const items = $items.map(function() {
-                const $this = $(this);
+            let items = $items.map(function() {
+                let $this = $(this);
                 return [[parseInt($this.data('id')), parseFloat($this.data('paid'))]];
             }).get();
+
             rpc.query({
                 route: '/p/due',
-                params: { items }
-            }).then(function (result) {
-                if (result.advance_amount) {
-                    self.payment.advance.add.html = _.str.sprintf(
+                params: { items, tag: this._getDueTag() }
+            }).then((result) => {
+                if (result.advance_amount > 0) {
+                    this.payment.advance.add.html = _.str.sprintf(
                         _t('Click here for getting <span class="text-primary">%s</span> campaign by adding <span class="text-primary">%s</span> advance payment'),
                         result.advance_campaign,
                         format.currency(result.advance_amount, currency.position, currency.symbol, currency.decimal)
                     );
-                    self.payment.advance.amount = result.advance_amount;
+                    this.payment.advance.amount = result.advance_amount;
                 } else {
-                    self.payment.advance.add.html = '';
-                    self.payment.advance.amount = 0;
+                    this.payment.advance.add.html = '';
+                    this.payment.advance.amount = 0;
                 }
-                self.payment.due.date.html = result.date;
-                self.payment.due.days.html = result.days;
-                self.campaign.name.value = result.campaign;
-                self.campaign.name.$.trigger('change', [{ locked: true }]);
+                this.payment.due.date.html = result.date;
+                this.payment.due.days.html = result.days;
+                this.campaign.text.html = result.campaign;
+                this.campaign.name.value = result.campaign;
+                this.campaign.name.$.trigger('change', [{ locked: true }]);
                 if (result.hide_payment) {
-                    self.payment.due.warning.$.removeClass('d-none');
-                    self.payment.due.warning.$.find('p').text(result.hide_payment_message);
-                    self.payment.due.payment.$.addClass('d-none');
+                    this.payment.due.warning.$.removeClass('d-none');
+                    this.payment.due.warning.$.find('p').text(result.hide_payment_message);
+                    this.payment.due.payment.$.addClass('d-none');
                 } else {
-                    self.payment.due.warning.$.addClass('d-none');
-                    self.payment.due.warning.$.find('p').text('');
-                    self.payment.due.payment.$.removeClass('d-none');
+                    this.payment.due.warning.$.addClass('d-none');
+                    this.payment.due.warning.$.find('p').text('');
+                    this.payment.due.payment.$.removeClass('d-none');
                 }
             });
         }
@@ -532,11 +544,28 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         framework.showLoading();
+
         rpc.query({
             route: '/p/advance/add',
-            params: { amount: this.payment.advance.amount }
-        }).then(() => {
-            window.location.reload();
+            params: { amount: this.payment.advance.amount, tag: this._getDueTag() }
+        }).then(([payments, company]) => {
+            $('.payment-item').html(qweb.render('paylox.item.all', {
+                payments,
+                company,
+                format,
+                prioritize: this.itemPriority,
+                currency: this.currency
+            }));
+            payloxPage.prototype._start.apply(this, [
+                'payment.item',
+                'payment.items',
+                'payment.itemsBtn',
+                'payment.due.date',
+                'payment.due.days',
+                'payment.advance.add',
+                'payment.advance.remove',
+            ]);
+            this._onChangePaid();
         }).guardedCatch(() => {
             this.displayNotification({
                 type: 'danger',
@@ -544,29 +573,45 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 message: _t('An error occured. Please try again.'),
                 sticky: false,
             });
-            framework.hideLoading();
         });
+        framework.hideLoading();
     },
 
     _onClickAdvanceRemove: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         framework.showLoading();
-        const self = this;
+
         rpc.query({
             route: '/p/advance/remove',
-            params: { pid: $(ev.currentTarget).data('id') }
-        }).then(function () {
-            window.location.reload();
-        }).guardedCatch(function(error) {
-            self.displayNotification({
+            params: { pid: $(ev.currentTarget).data('id'), tag: this._getDueTag() }
+        }).then(([payments, company]) => {
+            $('.payment-item').html(qweb.render('paylox.item.all', {
+                payments,
+                company,
+                format,
+                prioritize: this.itemPriority,
+                currency: this.currency
+            }));
+            payloxPage.prototype._start.apply(this, [
+                'payment.item',
+                'payment.items',
+                'payment.itemsBtn',
+                'payment.due.date',
+                'payment.due.days',
+                'payment.advance.add',
+                'payment.advance.remove',
+            ]);
+            this._onChangePaid();
+        }).guardedCatch(() => {
+            this.displayNotification({
                 type: 'danger',
                 title: _t('Error'),
                 message: _t('An error occured. Please try again.'),
                 sticky: false,
             });
-            framework.hideLoading();
         });
+        framework.hideLoading();
     },
 
     _onClickCompany: function (ev) {
@@ -618,6 +663,57 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }
         });
         this._onChangePaid();
+    },
+
+    _onClickDueTag: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        let $button = $(ev.currentTarget);
+        if ($button.hasClass('btn-primary')) {
+            return;
+        }
+        let $buttons = $('button[field="payment.due.tag"].btn-primary');
+
+        framework.showLoading();
+        $buttons.removeClass('btn-primary').addClass('btn-secondary');
+        $button.removeClass('btn-secondary').addClass('btn-primary');
+
+        let tag = $button.data('tag') || '';
+        rpc.query({route: '/p/due/tag', params: { tag }}).then(([payments, company]) => {
+            $('.payment-item').html(qweb.render('paylox.item.all', {
+                payments,
+                company,
+                format,
+                prioritize: this.itemPriority,
+                currency: this.currency
+            }));
+            payloxPage.prototype._start.apply(this, [
+                'payment.item',
+                'payment.items',
+                'payment.itemsBtn',
+                'payment.due.date',
+                'payment.due.days',
+                'payment.advance.add',
+                'payment.advance.remove',
+            ]);
+
+            if (company.campaign) {
+                this.campaign.text.html = company.campaign;
+                this.campaign.name.value = company.campaign;
+                this.campaign.name.$.trigger('change', [{ locked: true }]);
+            }
+            this._onChangePaid();
+        }).guardedCatch(() => {
+            $buttons.removeClass('btn-secondary').addClass('btn-primary');
+            $button.removeClass('btn-primary').addClass('btn-secondary');
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
+            });
+        });
+        framework.hideLoading();
     },
 
     _onClickPrivacy: function (ev) {
@@ -688,7 +784,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         }
         navigator.clipboard.writeText(link);
 
-        let content = qweb.render('paylox.system.link', { link });
+        let content = qweb.render('paylox.item.link', { link });
         await this.displayNotification({
             type: 'info',
             title: _t('Payment link is ready'),

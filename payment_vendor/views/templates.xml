@@ -8,7 +8,6 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="payments" t-value="partner.payable_ids.sorted(lambda x: x.date or date_empty)"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
             <t t-set="due" t-value="payments.get_due()"/>
             <t t-set="due_amount" t-value="due['amount']"/>
@@ -68,7 +67,14 @@
                         </div>
                     </div>
                     <t t-if="payments">
-                        <div class="row bg-white mx-0 px-3 w-100">
+                        <div t-if="payment_tags" class="row bg-white mx-0 px-3 mb-1 gap-1 w-100">
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="payment_tags" t-as="tag">
+                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} btn-sm px-3 font-weight-bold text-uppercase"  t-att-data-tag="tag.name" t-esc="tag.name" field="payment.due.tag"/>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </div>
+                        <div class="row bg-white mx-0 px-3 w-100 payment-item">
                             <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
                                 <t t-foreach="payments" t-as="payment">
                                     <div class="card shadow-sm w-100 text-700 position-relative">
@@ -108,7 +114,7 @@
                                     </div>
                                 </div>
                                 <div class="d-block mt-2 text-600 text-center">
-                                    <div t-if="company.payment_page_due_ok" class="d-flex flex-column border-0">
+                                    <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-column border-0">
                                         <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
                                         <em t-if="company.payment_page_advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
                                     </div>
@@ -157,7 +163,7 @@
                                     <tfoot class="shadow bg-light">
                                         <tr>
                                             <td class="text-left" colspan="5">
-                                                <div t-if="company.payment_page_due_ok" class="d-flex flex-wrap" style="gap: 5px;">
+                                                <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-wrap gap-1">
                                                     <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
                                                     <em t-if="company.payment_page_advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
                                                 </div>
@@ -222,8 +228,8 @@
         </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
             <t t-if="advance">
-                <div class="d-flex flex-column m-3" style="gap:1em;min-width:250px;">
-                    <div class="field-container d-flex p-2" style="gap:1em;">
+                <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
+                    <div class="field-container d-flex p-2 gap-5">
                         <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
                             <input type="radio" checked="checked"/><span t-translation="off"/><span>Individual</span>
                         </button>
@@ -246,7 +252,7 @@
         </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
             <t t-if="advance">
-                <div class="d-flex flex-column" style="gap:1em">
+                <div class="d-flex flex-column gap-5">
                     <div class="field-container">
                         <select class="text-center border-primary" required="required" field="wizard.register.state_id" placeholder="Select a state">
                             <option/>

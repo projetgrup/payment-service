@@ -100,6 +100,66 @@
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_page_campaign_table_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
+                                    <div class="text-muted">
+                                        Use campaign table instead of installment table on payment page
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="required_2fa"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="required_2fa"/>
+                                    <div class="text-muted">
+                                        Make two factor authentication usage essential for users
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_dashboard_button_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_dashboard_button_ok" string="Dashboard Payment Button"/>
+                                    <div class="text-muted">
+                                        Put a payment button at the top of the dashboard page in order to redirecting user to payment page
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_dashboard_button_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_dashboard_button_url" string="URL" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_dashboard_button_url" class="flex-fill" placeholder="/my/payment"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_dashboard_field_amount" string="Dashboard Payment Amount Field"/>
+                                    <div class="text-muted">
+                                        Specify a base field from which the amount data retrieved on dashboard
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="payment_dashboard_field_amount" widget="radio" class="flex-fill"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app_settings_block" data-string="Dues" string="Dues" data-key="hr_attendance">
+                        <h2>Dues</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_due_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -158,6 +218,11 @@
                                                             <group>
                                                                 <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
                                                                 <field name="mail_template_id" domain="[('model', '=', 'res.partner')]" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
+                                                                <!--<field name="tag_ids">
+                                                                    <tree editable="bottom">
+                                                                        <field name="name"/>
+                                                                    </tree>
+                                                                </field>-->
                                                                 <field name="campaign_ids" invisible="1"/>
                                                             </group>
                                                         </group>
@@ -168,6 +233,47 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                <label for="payment_page_campaign_tag_ids" string="Tags"/>
+                                    <div class="text-muted">
+                                        Specify different campaings per tag on payment page
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="payment_page_campaign_tag_ids" class="w-100">
+                                                <tree>
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="name" decoration-bf="1"/>
+                                                    <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                                                    <field name="campaign_ids" invisible="1"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name="name"/>
+                                                                <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                                                                <field name="campaign_ids" invisible="1"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="line_ids" attrs="{'invisible': [('campaign_id', '=', False)]}">
+                                                                    <tree editable="bottom">
+                                                                        <field name="name"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </group>
+                                                        </group>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_page_due_hide_payment_ok"/>
@@ -181,63 +287,6 @@
                                         <div class="row mt16">
                                             <label for="payment_page_due_hide_payment_message" string="Message" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_due_hide_payment_message" class="flex-fill" placeholder="This message will be displayed instead of payment form..."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_campaign_table_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
-                                    <div class="text-muted">
-                                        Use campaign table instead of installment table on payment page
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="required_2fa"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="required_2fa"/>
-                                    <div class="text-muted">
-                                        Make two factor authentication usage essential for users
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_dashboard_button_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_dashboard_button_ok" string="Dashboard Payment Button"/>
-                                    <div class="text-muted">
-                                        Put a payment button at the top of the dashboard page in order to redirecting user to payment page
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_dashboard_button_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label for="payment_dashboard_button_url" string="URL" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_dashboard_button_url" class="flex-fill" placeholder="/my/payment"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_dashboard_field_amount" string="Dashboard Payment Amount Field"/>
-                                    <div class="text-muted">
-                                        Specify a base field from which the amount data retrieved on dashboard
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16">
-                                            <field name="payment_dashboard_field_amount" widget="radio" class="flex-fill"/>
                                         </div>
                                     </div>
                                 </div>
