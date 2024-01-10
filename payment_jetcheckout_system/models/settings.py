@@ -11,9 +11,11 @@ class PaymentSettings(models.TransientModel):
     @api.constrains('payment_page_campaign_tag_ids')
     def _check_payment_page_campaign_tag_ids(self):
         for setting in self:
-            tags = setting.payment_page_campaign_tag_ids.filtered(lambda x: not x.campaign_id)
-            if not len(tags) == 1:
-                raise UserError(_('There must only one campaign tag without campaign selection'))
+            tags = setting.payment_page_campaign_tag_ids
+            if tags:
+                tags = tags.filtered(lambda x: not x.campaign_id)
+                if not len(tags) == 1:
+                    raise UserError(_('There must only one campaign tag without campaign selection'))
 
     @api.depends('company_id')
     def _compute_payment_page_due_reminder_user_opt(self):
