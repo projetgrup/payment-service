@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-22 14:17+0000\n"
-"PO-Revision-Date: 2023-12-22 14:17+0000\n"
+"POT-Creation-Date: 2024-01-10 13:02+0000\n"
+"PO-Revision-Date: 2024-01-10 13:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -330,7 +330,10 @@ msgid "Allowed Companies"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__amount
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__amount
 #, python-format
@@ -367,6 +370,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
@@ -413,6 +417,14 @@ msgid "Authorized"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Average Due:"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Average Dues"
 msgstr ""
@@ -454,6 +466,8 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__campaign_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__campaign_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__campaign_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
@@ -570,6 +584,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_category__company_id
@@ -649,7 +664,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_uid
 msgid "Created by"
@@ -664,7 +681,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_date
 msgid "Created on"
@@ -726,8 +745,12 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__date
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#, python-format
 msgid "Date"
 msgstr ""
 
@@ -742,6 +765,14 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/settings.py:0
 #, python-format
 msgid "Days"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Days)"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -771,7 +802,11 @@ msgid "Default SMS Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__description
+#, python-format
 msgid "Description"
 msgstr ""
 
@@ -794,7 +829,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__display_name
 msgid "Display Name"
@@ -806,6 +843,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #, python-format
 msgid "Distant Sale Agreement"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Document"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -826,6 +870,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__due
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__due_id
 msgid "Due"
 msgstr ""
 
@@ -835,9 +880,18 @@ msgid "Due Amount"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__due_date
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_due_base__date_due
+#, python-format
 msgid "Due Date"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Dues"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -896,6 +950,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
@@ -1059,7 +1114,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__id
 msgid "ID"
@@ -1214,7 +1271,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item____last_update
 msgid "Last Modified on"
@@ -1236,7 +1295,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_uid
 msgid "Last Updated by"
@@ -1251,7 +1312,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_date
 msgid "Last Updated on"
@@ -1435,6 +1498,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__name
 msgid "Name"
 msgstr ""
 
@@ -1569,9 +1633,12 @@ msgid "Page Footer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
+#, python-format
 msgid "Paid"
 msgstr ""
 
@@ -1819,6 +1886,12 @@ msgid "Payment Page Advance"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_tag_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_campaign_tag_ids
+msgid "Payment Page Campaign Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_ok
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_ok
 msgid "Payment Page Due"
@@ -1923,6 +1996,11 @@ msgid "Payment Page Due Reminder Sales Teams Option"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__tag_ids
+msgid "Payment Page Due Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_ids
 msgid "Payment Page Dues"
@@ -1967,6 +2045,16 @@ msgstr ""
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_campaign_tag
+msgid "Payment Settings Campaign Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_due_tag
+msgid "Payment Settings Due Tags"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2225,10 +2313,6 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
-msgid "Ref"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__ref
 msgid "Reference"
 msgstr ""
@@ -2239,7 +2323,25 @@ msgid "Register"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Remove"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Remove Advance"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
+#, python-format
 msgid "Residual"
 msgstr ""
 
@@ -2359,6 +2461,14 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__access_token
 msgid "Security Token"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#, python-format
+msgid "Select All"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2552,6 +2662,11 @@ msgid "Specify different campaings per average due dates on payment page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Specify different campaings per tag on payment page"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "State"
 msgstr ""
@@ -2599,8 +2714,15 @@ msgid "System"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__tag
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__name
+msgid "Tag"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Tags"
 msgstr ""
 

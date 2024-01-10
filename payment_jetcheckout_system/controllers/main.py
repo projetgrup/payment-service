@@ -3,7 +3,6 @@ import werkzeug
 import base64
 import re
 from urllib.parse import urlparse
-from datetime import date
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -88,7 +87,7 @@ class PayloxSystemController(Controller):
         res['companies'] = request.website._get_companies().sudo()
         return res
 
-    def _prepare_system(self, company, system, partner, transaction):
+    def _prepare_system(self, company, system, partner, transaction, options={}):
         currency = company.currency_id
         acquirer = self._get_acquirer(False)
         type = self._get_type()
@@ -97,6 +96,12 @@ class PayloxSystemController(Controller):
         token = partner._get_token()
         companies = partner._get_companies()
         tags = partner._get_tags()
+
+        if options.get('no_compute_payment_tags'):
+            payments, payment_tags = False, False
+        else:
+            payments, payment_tags = partner._get_payments()
+
         return {
             'ok': True,
             'partner': partner,
@@ -109,10 +114,11 @@ class PayloxSystemController(Controller):
             'user': not request.env.user.share,
             'acquirer': acquirer,
             'campaign': campaign,
+            'payments': payments,
+            'payment_tags': payment_tags,
             'card_family': card_family,
             'success_url': '/payment/card/success',
             'fail_url': '/payment/card/fail',
-            'date_empty': date(1, 1, 1),
             'tx': transaction,
             'system': system,
             'token': token,
@@ -249,14 +255,76 @@ class PayloxSystemController(Controller):
         return partner._get_token()
 
     @http.route(['/p/due'], type='json', auth='public', website=True, csrf=False)
-    def page_system_link_due(self, items):
-        ids = [i[0] for i in items]
+    def page_system_link_due(self, items, tag=False):
         amounts = dict(items)
-        items = request.env['payment.item'].sudo().browse(ids)
-        return items.with_context(amounts=amounts).get_due()
+        items = request.env['payment.item'].sudo().browse([i[0] for i in items])
+        return items.with_context(amounts=amounts, tag=tag).get_due()
+
+    @http.route(['/p/due/tag'], type='json', auth='public', website=True, csrf=False)
+    def page_system_link_due_tag(self, tag=False):
+        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        id, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not id or not token:
+            raise
+
+        company = request.env.company
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', id),
+            ('access_token', '=', token),
+            ('company_id', '=', company.id),
+        ], limit=1)
+        if not partner:
+            raise
+
+        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tag = payment_tags.filtered(lambda x: x.name == tag)
+        payment_tag_filter = []
+
+        if len(payment_tag) == 1 and payment_tag.campaign_id:
+            payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
+        else:
+            payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
+
+        payments = []
+        items = request.env['payment.item'].sudo().search([
+            ('parent_id', '=', partner.id),
+            ('paid', '=', False),
+        ] + payment_tag_filter, order='date')
+        for item in items:
+            if item.currency_id:
+                currency = {
+                    'id': item.currency_id.id,
+                    'decimal': item.currency_id.decimal_places,
+                    'name': item.currency_id.name,
+                    'position': item.currency_id.position,
+                    'symbol': item.currency_id.symbol, 
+                }
+            else:
+                currency = False
+
+            payments.append({
+                'id': item.id,
+                'date': item.date,
+                'due_date': item.due_date,
+                'amount': item.amount,
+                'advance': item.advance,
+                'residual_amount': item.residual_amount,
+                'description': item.description,
+                'file': item.file,
+                'token': token,
+                'currency': currency,
+            })
+
+        company = {
+            'campaign': payment_tag and payment_tag.campaign_id.name,
+            'due_base': company.payment_page_due_base,
+            'due_ok': company.payment_page_due_ok,
+            'advance_ok': company.payment_page_advance_ok,
+        }
+        return payments, company
 
     @http.route(['/p/advance/add'], type='json', auth='public', website=True, csrf=False)
-    def page_system_link_advance_add(self, amount):
+    def page_system_link_advance_add(self, amount, tag=False):
         if not request.env.company.payment_page_advance_ok:
             raise
 
@@ -265,19 +333,29 @@ class PayloxSystemController(Controller):
         if not id or not token:
             raise
 
+        company = request.env.company
         partner = request.env['res.partner'].sudo().search([
             ('id', '=', id),
             ('access_token', '=', token),
-            ('company_id', '=', request.env.company.id),
+            ('company_id', '=', company.id),
         ], limit=1)
         if not partner:
             raise
 
+        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tag = payment_tags.filtered(lambda x: x.name == tag)
+        payment_tag_filter = []
+
+        if len(payment_tag) == 1 and payment_tag.campaign_id:
+            payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
+        else:
+            payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
+
         item = request.env['payment.item'].sudo().search([
-            ('advance', '=', True),
             ('parent_id', '=', partner.id),
-            ('paid', '=', False)
-        ])
+            ('advance', '=', True),
+            ('paid', '=', False),
+        ] + payment_tag_filter, limit=1)
         if item:
             item.write({
                 'date': fields.Date.today(),
@@ -287,32 +365,115 @@ class PayloxSystemController(Controller):
             request.env['payment.item'].sudo().create({
                 'parent_id': partner.id,
                 'amount': amount,
+                'tag': tag,
                 'advance': True,
                 'description': _('Advance Payment'),
             })
-        return True
+
+        payments = []
+        items = request.env['payment.item'].sudo().search([
+            ('parent_id', '=', partner.id),
+            ('paid', '=', False),
+        ] + payment_tag_filter, order='date')
+        for item in items:
+            if item.currency_id:
+                currency = {
+                    'id': item.currency_id.id,
+                    'decimal': item.currency_id.decimal_places,
+                    'name': item.currency_id.name,
+                    'position': item.currency_id.position,
+                    'symbol': item.currency_id.symbol, 
+                }
+            else:
+                currency = False
+
+            payments.append({
+                'id': item.id,
+                'date': item.date,
+                'due_date': item.due_date,
+                'amount': item.amount,
+                'advance': item.advance,
+                'residual_amount': item.residual_amount,
+                'description': item.description,
+                'file': item.file,
+                'token': token,
+                'currency': currency,
+            })
+
+        company = request.env.company
+        company = {
+            'campaign': payment_tag and payment_tag.campaign_id.name,
+            'due_base': company.payment_page_due_base,
+            'due_ok': company.payment_page_due_ok,
+            'advance_ok': company.payment_page_advance_ok,
+        }
+        return payments, company
 
     @http.route(['/p/advance/remove'], type='json', auth='public', website=True, csrf=False)
-    def page_system_link_advance_remove(self, pid):
+    def page_system_link_advance_remove(self, pid, tag=False):
         token = request.httprequest.referrer.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             raise
 
+        company = request.env.company
         partner = request.env['res.partner'].sudo().search([
             ('id', '=', id),
             ('access_token', '=', token),
-            ('company_id', '=', request.env.company.id),
+            ('company_id', '=', company.id),
         ], limit=1)
         if not partner:
             raise
+
+        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tag = payment_tags.filtered(lambda x: x.name == tag)
+        payment_tag_filter = []
 
         request.env['payment.item'].sudo().search([
             ('id', '=', pid),
             ('parent_id', '=', partner.id),
             ('paid_amount', '=', 0)
-        ]).unlink()
-        return True
+        ] + payment_tag_filter).unlink()
+
+        payments = []
+        items = request.env['payment.item'].sudo().search([
+            ('parent_id', '=', partner.id),
+            ('paid', '=', False),
+        ] + payment_tag_filter, order='date')
+
+        for item in items:
+            if item.currency_id:
+                currency = {
+                    'id': item.currency_id.id,
+                    'decimal': item.currency_id.decimal_places,
+                    'name': item.currency_id.name,
+                    'position': item.currency_id.position,
+                    'symbol': item.currency_id.symbol, 
+                }
+            else:
+                currency = False
+
+            payments.append({
+                'id': item.id,
+                'date': item.date,
+                'due_date': item.due_date,
+                'amount': item.amount,
+                'advance': item.advance,
+                'residual_amount': item.residual_amount,
+                'description': item.description,
+                'file': item.file,
+                'token': token,
+                'currency': currency,
+            })
+
+        company = request.env.company
+        company = {
+            'campaign': payment_tag and payment_tag.campaign_id.name,
+            'due_base': company.payment_page_due_base,
+            'due_ok': company.payment_page_due_ok,
+            'advance_ok': company.payment_page_advance_ok,
+        }
+        return payments, company
 
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):

@@ -86,8 +86,9 @@ class PaymentItem(models.Model):
     due_date = fields.Date()
     due_amount = fields.Float(compute='_compute_due_amount')
 
+    ref = fields.Char('Reference', readonly=True)
+    tag = fields.Char(readonly=True)
     file = fields.Binary()
-    ref = fields.Char()
     description = fields.Char()
 
     paid = fields.Boolean(compute='_compute_paid', store=True, readonly=True)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="paylox.system.link">
+    <t t-name="paylox.item.link">
         <div class="bg-info-light mb-2 mt-3 overflow-hidden p-2 shadow-sm small text-monospace text-wrap" style="word-break:break-all">
             <span t-esc="link"/>
         </div>
@@ -13,4 +13,114 @@
             <!--<button class="btn btn-info py-0 o_button_link_send_whatsapp"><i class="fa fa-whatsapp mr-1" t-translation="off"/>Whatsapp</button>-->
         </div>
     </t>
+
+    <t t-name="paylox.item.all">
+        <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
+            <t t-foreach="payments" t-as="payment">
+                <t t-set="curr" t-value="payment.currency or currency"/>
+                <div class="card shadow-sm w-100 text-700 position-relative">
+                    <div class="p-2 text-center"><span t-esc="format.date(payment.date)"/><span class="text-500">Date</span></div>
+                    <div class="p-2 text-center"><span t-esc="format.currency(payment.amount, curr.position, curr.symbol, curr.decimal)"/><span class="text-500">Amount</span></div>
+                    <div t-if="company.due_base === 'date_due'" class="p-2 text-center"><span t-esc="format.date(payment.due_date)"/><span class="text-500">Due Date</span></div>
+                    <div class="p-2 text-center"><span t-esc="format.currency(payment.residual_amount, curr.position, curr.symbol, curr.decimal)"/><span class="text-500">Residual</span></div>
+                    <div class="align-items-center bg-100 d-flex flex-column justify-content-center p-2 text-center">
+                        <span t-if="payment.description" t-esc="payment.description"/>
+                        <span t-else="" class="text-500">Description</span>
+                        <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
+                            <i class="fa fa-times mr-1" t-translation="off"/>Remove
+                        </button>
+                        <div class="payment-kanban-pdf position-absolute">
+                            <form t-if="payment.file" t-att-action="'/p/' + payment.token + '/' + payment.id" method="POST">
+                                <button type="submit" class="btn text-danger px-2 py-0 fa fa-file-pdf-o"/>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="payment-kanban-checkbox position-absolute">
+                        <label t-attf-class="checkmark #{ prioritize ? 'disabled' : '' }">
+                            <input type="checkbox" class="payment-items input-checkmark" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-paid="format.currency(payment.residual_amount, curr.position, curr.symbol, curr.decimal)" checked="checked" field="payment.item"/>
+                            <span><i class="fa fa-check"/></span>
+                        </label>
+                    </div>
+                </div>
+            </t>
+            <div class="btn d-block card shadow-sm w-100 text-700 position-relative p-0 overflow-hidden payment-all-items-btn" field="payment.itemsBtn">
+                <div class="p-2 text-center border-0">
+                    <span class="text-600 font-weight-bold">Select All</span>
+                </div>
+                <div class="payment-kanban-checkbox position-absolute border-0">
+                    <label class="checkmark">
+                        <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
+                        <span><i class="fa fa-check"/></span>
+                    </label>
+                </div>
+            </div>
+            <div class="d-block mt-2 text-600 text-center">
+                <div t-if="company.due_ok &amp;&amp; !company.campaign" class="d-flex flex-column border-0">
+                    <em class="font-weight-bold">Average Due: <span field="payment.due.date"/> (<span field="payment.due.days"/> Days)</em>
+                    <em t-if="company.advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
+                </div>
+            </div>
+        </div>
+        <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
+            <table class="table table-sm sidebar-table mb-0 text-700">
+                <thead>
+                    <tr class="shadow-sm font-weight-bold bg-white">
+                        <th class="px-2">Date</th>
+                        <th t-if="company.due_base === 'date_due'" class="px-2">Due Date</th>
+                        <th class="px-2">Description</th>
+                        <th class="text-right px-2">Amount</th>
+                        <th class="text-right px-2">Residual</th>
+                        <th class="text-right px-2">Paid</th>
+                        <th class="text-center px-2">Document</th>
+                        <th/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="payments" t-as="payment">
+                        <t t-set="curr" t-value="payment.currency or currency"/>
+                        <tr>
+                            <td class="px-2"><span t-esc="format.date(payment.date)"/></td>
+                            <td t-if="company.due_base === 'date_due'" class="px-2"><span t-esc="format.date(payment.due_date)"/></td>
+                            <td class="px-2"><span t-esc="payment.description"/></td>
+                            <td class="text-right px-2"><span t-esc="format.currency(payment.amount, curr.position, curr.symbol, curr.decimal)"/></td>
+                            <td class="text-right px-2"><span t-esc="format.currency(payment.residual_amount, curr.position, curr.symbol, curr.decimal)"/></td>
+                            <td class="text-right px-2"><span t-esc="format.currency(payment.residual_amount, curr.position, curr.symbol, curr.decimal)" class="payment-amount-paid"/></td>
+                            <td class="text-center">
+                                <form t-if="payment.file" t-att-action="'/p/' + payment.token + '/' + payment.id" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
+                                </form>
+                                <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
+                                    <i class="fa fa-times mr-1" t-translation="off"/>Remove Advance
+                                </button>
+                            </td>
+                            <td class="text-center">
+                                <label t-attf-class="switch mb-0 #{ prioritize ? 'disabled' : '' }">
+                                    <input type="checkbox" class="payment-items input-switch" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-paid="payment.residual_amount" checked="checked" field="payment.item"/>
+                                    <span class="slider round fa"/>
+                                </label>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot class="shadow bg-light">
+                    <tr>
+                        <td class="text-left" colspan="5">
+                            <div t-if="company.due_ok &amp;&amp; !company.campaign" class="d-flex flex-wrap" style="gap: 5px;">
+                                <em class="font-weight-bold">Average Due: <span field="payment.due.date"/> (<span field="payment.due.days"/> Days)</em>
+                                <em t-if="company.advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
+                            </div>
+                        </td>
+                        <td class="text-right align-middle" t-att-colspan="company.due_base === 'date_due' ? '2' : '1'"><em>Select All</em></td>
+                        <td class="text-center align-middle">
+                            <label class="switch mb-0">
+                                <input type="checkbox" class="payment-all-items" checked="checked" field="payment.items"/>
+                                <span class="slider round fa"/>
+                            </label>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </t>
 </templates>
+

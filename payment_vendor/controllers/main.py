@@ -30,8 +30,9 @@ class PayloxSystemVendorController(Controller):
             }) for id, amount in items]
         return res
 
-    def _prepare_system(self, company, system, partner, transaction):
-        res = super()._prepare_system(company, system, partner, transaction)
+    def _prepare_system(self, company, system, partner, transaction, options={}):
+        options['no_compute_payment_tags'] = True
+        res = super()._prepare_system(company, system, partner, transaction, options=options)
         if system == 'vendor':
             try:
                 wizard = request.env['syncops.sync.wizard'].sudo().create({
@@ -43,4 +44,10 @@ class PayloxSystemVendorController(Controller):
                 wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
             except:
                 pass
+
+        payments, payment_tags = partner._get_payments()
+        res.update({
+            'payments': payments,
+            'payment_tags': payment_tags,
+        })
         return res

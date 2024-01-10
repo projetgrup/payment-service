@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-20 09:53+0000\n"
-"PO-Revision-Date: 2023-11-20 12:54+0300\n"
+"POT-Creation-Date: 2024-01-10 11:19+0000\n"
+"PO-Revision-Date: 2024-01-10 14:22+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -82,6 +82,17 @@ msgstr ""
 "    <br/><br/>\n"
 "    <span t-out=\"object._get_payment_company()\"/>\n"
 "</p>"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Address</b>\n"
+"            </span>"
+msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Adres</b>\n"
+"            </span>"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -709,6 +720,7 @@ msgstr "Kampanya"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
 msgstr "İlçe"
 
@@ -748,6 +760,7 @@ msgstr "Yetkililer"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Country"
 msgstr "Ülke"
 
@@ -882,6 +895,16 @@ msgid "Paid"
 msgstr "Ödenecek"
 
 #. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_payment_transaction__paylox_notif_mail_state
+msgid "Paylox Email Notification State"
+msgstr "Paylox Eposta Bildirim Durumu"
+
+#. module: payment_vendor
+#: model:ir.model.fields,field_description:payment_vendor.field_payment_transaction__paylox_notif_sms_state
+msgid "Paylox SMS Notification State"
+msgstr "Paylox SMS Bildirim Durumu"
+
+#. module: payment_vendor
 #: model:mail.template,subject:payment_vendor.vendor_mail
 msgid "Payment - {{ object.company_id.name }}"
 msgstr "Ödeme - {{ object.company_id.name }}"
@@ -983,11 +1006,6 @@ msgid "Select a state"
 msgstr "Bir il seçin"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
-msgid "Select a tax office"
-msgstr "Bir vergi dairesi seçin"
-
-#. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
 #: model:ir.cron,cron_name:payment_vendor.crom_transaction_daily
 #: model:ir.cron,name:payment_vendor.crom_transaction_daily
@@ -1001,7 +1019,13 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "Standard"
+msgstr "Standart"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "State"
 msgstr "Şehir"
 
@@ -1009,6 +1033,11 @@ msgstr "Şehir"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
 msgid "Street"
 msgstr "Adres"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "Street..."
+msgstr "Cadde..."
 
 #. module: payment_vendor
 #: model:ir.model.fields,field_description:payment_vendor.field_payment_item__system
@@ -1123,6 +1152,11 @@ msgid "Websites"
 msgstr "Websiteler"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "ZIP"
+msgstr "Posta Kodu"
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_syncops_connector
 msgid "syncOPS Integrations"
 msgstr "syncOPS Entegrasyonları"
@@ -1138,6 +1172,9 @@ msgstr ""
 #: model:mail.template,subject:payment_vendor.mail_transaction_successful
 msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
 msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid "Select a tax office"
+#~ msgstr "Bir vergi dairesi seçin"
 
 #~ msgid ""
 #~ "<select class=\"text-center border-primary\" required=\"required\" "

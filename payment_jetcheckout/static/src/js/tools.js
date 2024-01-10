@@ -30,10 +30,15 @@ function formatCurrency(value, position=false, symbol='', precision=2) {
     }
 }
 
+function formatDate(value, format='DD-MM-YYYY') {
+    return value && moment(value).format(format) || ''
+}
+
 export default {
     format: {
         float: formatFloat,
         percentage: formatPercentage,
         currency: formatCurrency,
+        date: formatDate,
     }
 };

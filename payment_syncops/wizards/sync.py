@@ -122,6 +122,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     'partner_phone': line.get('phone', False),
                     'partner_mobile': line.get('mobile', False),
                     'invoice_id': line.get('id', False),
+                    'invoice_tag': line.get('tag', False),
                     'invoice_name': line.get('name', False),
                     'invoice_date': line.get('date', False),
                     'invoice_due_date': line.get('due_date', False),
@@ -335,6 +336,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                 'date': line['invoice_date'],
                                 'due_date': line['invoice_due_date'],
                                 'ref': line['invoice_id'],
+                                'tag': line['invoice_tag'],
                                 'parent_id': partner.id,
                                 'company_id': company.id,
                                 'currency_id': line['invoice_currency'] and line['invoice_currency'][0] or company.currency_id.id,
@@ -358,6 +360,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     partner_user_phone = fields.Char(string='Partner Salesperson Phone', readonly=True)
     partner_user_mobile = fields.Char(string='Partner Salesperson Mobile', readonly=True)
     invoice_id = fields.Char(readonly=True)
+    invoice_tag = fields.Char(readonly=True)
     invoice_name = fields.Char(readonly=True)
     invoice_date = fields.Date(readonly=True)
     invoice_due_date = fields.Date(readonly=True)

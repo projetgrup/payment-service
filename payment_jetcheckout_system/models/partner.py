@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import email_normalize
@@ -214,6 +215,18 @@ class Partner(models.Model):
 
     def _get_tags(self):
         return self.search([('vat', '!=', False), ('vat', '=', self.vat), ('company_id', '=', self.env.company.id)]).mapped('category_id')
+
+    def _get_payments(self):
+        date_empty = date(1, 1, 1)
+        payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
+        payment_tags = self.env.company.sudo().payment_page_campaign_tag_ids
+        if payment_tags:
+            payment_tag = payment_tags[0]
+            if payment_tag.campaign_id:
+                payments = payments.filtered(lambda x: x.tag in payment_tag.line_ids.mapped('name'))
+            else:
+                payments = payments.filtered(lambda x: x.tag not in payment_tags.mapped('line_ids.name'))
+        return payments, payment_tags
 
     @api.model
     def _resolve_token(self, token):

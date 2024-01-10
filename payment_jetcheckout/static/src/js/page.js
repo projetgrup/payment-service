@@ -81,6 +81,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             table: new fields.string({
                 events: [['click', this._onClickCampaingTable]],
             }),
+            text: new fields.string(),
             locked: false,
         };
         this.currency = {
@@ -223,20 +224,51 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _start: function () {
+    _start: function (...fields) {
         const t = this;
-        const z = [];
-        $('[field]').each(function(_, e) {
-            const name = e.getAttribute('field');
-            const ids = name.split('.');
+        let fs = $();
+        let z = [];
+        let r = [];
+        if (fields.length) {
+            for (let f of fields) {
+                let tag = `[field="${f}"]`;
+                let el = $(tag);
+                if (el.length) {
+                    fs = fs.add(tag);
+                } else {
+                    const ids = f.split('.');
+                    if (!ids.length) {
+                        return;
+                    }
+
+                    try {
+                        let i = 0;
+                        let s = t;
+                        let l = ids.length - 1;
+                        while (i < l) {
+                            const id = ids[i];
+                            s = s[id];
+                            i++;
+                        }
+                        s[ids[l]].$ = $();
+                    } catch {}
+                }
+            }
+        } else {
+            fs = $('[field]');
+        }
+
+        fs.each(function(_, e) {
+            const n = e.getAttribute('field');
+            const ids = n.split('.');
             if (!ids.length) {
                 return;
             }
 
             try {
                 let i = 0;
-                let l = ids.length - 1;
                 let s = t;
+                let l = ids.length - 1;
 
                 while (i < l) {
                     const id = ids[i];
@@ -244,13 +276,20 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     i++;
                 }
 
+                if (fields.length) {
+                    if (!(r.includes(n))) {
+                        s[ids[l]].$ = $();
+                        r.push(n);
+                    }
+                }
+
                 s[ids[l]].$ = s[ids[l]].$.add(e);
-                z.push([s[ids[l]], t, name]);
+                z.push([s[ids[l]], t, n]);
             } catch {}
         });
 
         for (const a of z) {
-            a[0].start(a[1], a[2]);
+            a[0].start(a[1], a[2], fields.length);
         };
     },
  
@@ -348,7 +387,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _onChangeCampaign: function (ev, { locked }={}) {
         this.campaign.locked = locked;
-        const campaign = $(ev.currentTarget).val();
+        let campaign = $(ev.currentTarget).val();
         $('span#campaign').html(campaign || '-');
         this._getInstallment(true);
     },
