@@ -199,7 +199,7 @@ class PaymentSettingsDueTag(models.Model):
 class PaymentSettingsCampaignTag(models.Model):
     _name = 'payment.settings.campaign.tag'
     _description = 'Payment Settings Campaign Tags'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     @api.model
     def _get_acquirers(self, partner=None, limit=None):
