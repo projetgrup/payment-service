@@ -70,7 +70,7 @@
                         <div t-if="payment_tags" class="row bg-white mx-0 px-3 mb-1 gap-1 w-100">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="payment_tags" t-as="tag">
-                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} btn-sm px-3 font-weight-bold text-uppercase"  t-att-data-tag="tag.name" t-esc="tag.name" field="payment.due.tag"/>
+                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} px-3 font-weight-bold text-uppercase"  t-att-data-tag="tag.name" t-esc="tag.name" field="payment.due.tag"/>
                                 <t t-set="i" t-value="i+1"/>
                             </t>
                         </div>

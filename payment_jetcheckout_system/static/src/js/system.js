@@ -23,21 +23,29 @@ payloxPage.include({
     },
 
     _getParams: function () {
-        const params = this._super.apply(this, arguments);
-        const $items = $('input.input-switch:checked');
+        let params = this._super.apply(this, arguments);
+        let $items = $('input.input-switch:checked');
         if ($items.length) {
-            const payments = [];
-            const items = [];
+            let payments = [];
+            let items = [];
             $items.each(function () {
-                const $this = $(this);
-                const id = parseInt($this.data('id'));
-                const amount = parseFloat($this.data('paid'));
+                let $this = $(this);
+                let id = parseInt($this.data('id'));
+                let amount = parseFloat($this.data('paid'));
                 payments.push(id);
                 items.push([id, amount]);
             });
+
+            let payment_tag = false;
+            let $payment_tag = $('button[field="payment.due.tag"].btn-primary');
+            if ($payment_tag.length) {
+                payment_tag = $payment_tag[0].dataset.tag || '';
+            }
+
             params['system'] = this.system.value;
-            params['payments'] = payments;
             params['items'] = items;
+            params['payments'] = payments;
+            params['payment_tag'] = payment_tag;
         }
         return params;
     },
