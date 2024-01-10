@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-10 13:02+0000\n"
-"PO-Revision-Date: 2024-01-10 16:04+0300\n"
+"POT-Creation-Date: 2024-01-10 17:06+0000\n"
+"PO-Revision-Date: 2024-01-10 20:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -622,6 +622,7 @@ msgstr "Şubeler"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__campaign_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__campaign_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__campaign_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
@@ -821,6 +822,7 @@ msgstr "İş Ortağı Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_uid
@@ -838,6 +840,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_date
@@ -986,6 +989,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__display_name
@@ -1265,6 +1269,7 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__id
@@ -1429,6 +1434,7 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook____last_update
@@ -1453,6 +1459,7 @@ msgstr "Geçen Ay"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_uid
@@ -1470,6 +1477,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_date
@@ -1658,6 +1666,7 @@ msgstr "Takip Etmediklerim"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__name
 msgid "Name"
 msgstr "Ad"
@@ -1998,6 +2007,11 @@ msgid "Payment Default SMS Settings"
 msgstr "Ödeme Varsayılan SMS Ayarları"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_tag
+msgid "Payment Item Tag"
+msgstr "Ödeme Kalemi Etiketi"
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_item
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_item_wizard
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item
@@ -2161,11 +2175,6 @@ msgid "Payment Page Due Reminder Sales Teams Option"
 msgstr "Ödeme Sayfası Vade Hatırlatma Satış Ekipleri Türü"
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__tag_ids
-msgid "Payment Page Due Tags"
-msgstr "Ödeme Sayfası Vade Etiketleri"
-
-#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_ids
 msgid "Payment Page Dues"
@@ -2211,6 +2220,11 @@ msgstr "Önizleme Sayfası Aktif"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_campaign_tag_line
+msgid "Payment Settings Campaign Tag Lines"
+msgstr "Ödeme Ayarları Kampanya Etiket Satırları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_campaign_tag
@@ -2732,6 +2746,7 @@ msgstr "Eylül"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__sequence
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__sequence
 msgid "Sequence"
 msgstr "Sıra"
 
@@ -2891,6 +2906,8 @@ msgstr "Etiket"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__line_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__tag_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Tags"
@@ -2989,6 +3006,12 @@ msgstr "Bir SMS sağlayıcı seçilmedi"
 #, python-format
 msgid "There is not any outgoing mail server set"
 msgstr "Bir giden eposta sunucusu ayarlanmadı"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/settings.py:0
+#, python-format
+msgid "There must only one campaign tag without campaign selection"
+msgstr "Kampanya seçilmemiş sadece bir adet kampanya etiketi olabilir"
 
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_month
@@ -3525,6 +3548,9 @@ msgstr "dahil"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#~ msgid "Payment Page Due Tags"
+#~ msgstr "Ödeme Sayfası Vade Etiketleri"
 
 #~ msgid "Ref"
 #~ msgstr "Referans"
