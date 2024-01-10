@@ -219,7 +219,8 @@ class Partner(models.Model):
     def _get_payments(self):
         date_empty = date(1, 1, 1)
         payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
-        payment_tags = self.env.company.sudo().payment_page_campaign_tag_ids
+        p_tags = payments.mapped('tag')
+        payment_tags = self.env.company.sudo().payment_page_campaign_tag_ids.filtered(lambda x: not x.campaign_id or any(l.name in p_tags for l in x.line_ids))
         if payment_tags:
             payment_tag = payment_tags[0]
             if payment_tag.campaign_id:
