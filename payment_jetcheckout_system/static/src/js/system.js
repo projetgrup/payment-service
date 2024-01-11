@@ -460,34 +460,34 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             return;
         }
 
-        const currency = this.currency;
+        let currency = this.currency;
         if (ev && ev.currentTarget) {
-            const $input = $(ev.currentTarget);
-            const id = parseInt($input.data('id'));
-            const checked = $input.prop('checked');
+            let $input = $(ev.currentTarget);
+            let id = parseInt($input.data('id'));
+            let checked = $input.prop('checked');
 
-            const $inputs = $('input[type="checkbox"][data-id="' + id + '"].payment-items');
+            let $inputs = $('input[type="checkbox"][data-id="' + id + '"].payment-items');
             $inputs.each(function () { $(this).prop('checked', checked); });
 
-            const $switches = $('input[type="checkbox"].payment-items.input-switch');
+            let $switches = $('input[type="checkbox"].payment-items.input-switch');
             $switches.each(function () {
-                const $this = $(this);
+                let $this = $(this);
                 $this.data('paid', $this.is(':checked') ? parseFloat($this.data('amount')) : 0);
-                const $paid = $this.closest('tr').find('.payment-amount-paid');
+                let $paid = $this.closest('tr').find('.payment-amount-paid');
                 $paid.html(format.currency(parseFloat($this.data('paid')), currency.position, currency.symbol, currency.decimal));
             });
         } else if (ev && ev.allTarget) {
-            const $inputs = $('input.input-switch');
+            let $inputs = $('input.input-switch');
             $inputs.each(function () {
-                const $input = $(this);
-                const id = parseInt($input.data('id'));
-                const checked = $input.prop('checked');
+                let $input = $(this);
+                let id = parseInt($input.data('id'));
+                let checked = $input.prop('checked');
                 $('input[type="checkbox"][data-id="' + id + '"].payment-items').prop('checked', checked);
             });
         }
 
-        const $total = $('div.payment-amount-total');
-        const $items = $('input.input-switch:checked');
+        let $total = $('div.payment-amount-total');
+        let $items = $('input.input-switch:checked');
         this.payment.items.checked = !!$items.length;
 
         if (this.payment.due.days.exist) {
@@ -533,16 +533,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         let amount = 0;
         $items.each(function() { amount += parseFloat($(this).data('paid')); });
 
-        const event = new Event('update');
         this.amount.value = format.float(amount);
-        this.amount.$[0].dispatchEvent(event);
+        this.amount.$.trigger('update');
 
         if (this.amountEditable) {
             if (ev && ev.allTarget) {
                 return;
             }
             this.payment.amount.value = format.float(amount, currency.decimal);
-            this.payment.amount.$[0].dispatchEvent(event);
+            this.payment.amount.$.trigger('update');
         } else {
             $total.html(format.currency(amount, currency.position, currency.symbol, currency.decimal));
         }
