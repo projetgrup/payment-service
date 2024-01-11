@@ -26,7 +26,10 @@ class fields {
             }
         }
 
-        this.$.off();
+        if (force) {
+            this.$.off();
+        }
+
         if (this.events) {
             for (const [e, f] of this.events) {
                 if (this._ && e === 'accept') {
