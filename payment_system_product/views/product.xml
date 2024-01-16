@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_product_variant" model="ir.actions.act_window">
+    <field name="name">Product Variants</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">product.product</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
+    <field name="search_view_id" ref="search_product_product"/>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_product_product')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_product_product')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_product_product')}),
+    ]"/>
+        <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new product variant
+        </p>
+        <p>
+            You must define a product for everything
+        </p>
+    </field>
+    </record>
+
+    <record id="form_product_template" model="ir.ui.view">
+    <field name="name">payment.system.product.template.form</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+        <form string="Product">
+            <sheet name="product_form">
+                <field name="product_variant_count" invisible="1"/>
+                <field name="is_product_variant" invisible="1"/>
+                <field name="attribute_line_ids" invisible="1"/>
+                <field name="type" invisible="1"/>
+                <div class="oe_button_box" name="button_box">
+                    <!--<button class="oe_stat_button" name="open_pricelist_rules" icon="fa-list-ul" type="object">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="pricelist_item_count"/>
+                                </span>
+                                <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
+                                    Extra Prices
+                                </span>
+                                <span attrs="{'invisible': [('pricelist_item_count', '!=', 1)]}">
+                                    Extra Price
+                                </span>
+                            </div>
+                    </button>-->
+                    <button name="%(action_product_variant)d" type="action" icon="fa-sitemap" class="oe_stat_button" attrs="{'invisible': [('product_variant_count', '&lt;=', 1), ('attribute_line_ids', '=', [])]}">
+                        <field string="Variants" name="product_variant_count" widget="statinfo"/>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="id" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                <div class="oe_title">
+                    <label for="name" string="Product Name"/>
+                    <h1>
+                        <div class="d-flex">
+                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field class="text-break" name="name" placeholder="Type a product name..."/>
+                        </div>
+                    </h1>
+                </div>
+                <group>
+                    <group name="group_price">
+                        <field name="payment_price_flow" invisible="1"/>
+                        <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}"/>
+                        <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                    </group>
+                    <group name="group_general">
+                        <label for="payment_color_background" string="Colors"/>
+                        <div class="d-flex">
+                            <field name="payment_color_background" nolabel="1" widget="color" class="w-auto"/>
+                            <field name="payment_color_foreground" nolabel="1" widget="color" class="w-auto"/>
+                        </div>
+                        <field name="categ_id" string="Category" options="{'no_create': True}"/>
+                        <field name="system" invisible="1" force_save="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="detailed_type" invisible="1"/>
+                        <field name="sale_ok" invisible="1"/>
+                        <field name="purchase_ok" invisible="1"/>
+                        <field name="product_variant_id" invisible="1"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name="variants" string="Attributes &amp; Variants">
+                        <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">
+                            <tree string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
+                                <field name="value_count" invisible="1"/>
+                                <field name="attribute_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
+                                <!--<button string="Configure" class="float-right btn-secondary" type="object" name="action_open_attribute_values" groups="product.group_product_variant"/>-->
+                            </tree>
+                        </field>
+                        <p class="oe_grey oe_edit_only">
+                            <strong>Warning</strong>: adding or deleting attributes
+                            will delete and recreate existing variants and lead
+                            to the loss of their possible customizations.
+                        </p>
+                        <group string="Internal Notes">
+                            <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="kanban_product_template" model="ir.ui.view">
+    <field name="name">payment.system.product.template.kanban</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+        <kanban sample="1">
+            <field name="id"/>
+            <field name="currency_id"/>
+            <field name="payment_price_flow"/>
+            <field name="payment_color_background"/>
+            <field name="payment_color_foreground"/>
+            <field name="product_variant_count"/>
+            <field name="attribute_line_ids"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_card oe_kanban_global_click">
+                        <div class="o_kanban_image mr-1">
+                            <img t-att-src="kanban_image('product.template', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
+                            <div t-if="record.product_variant_count.value &gt; 1 &amp;&amp; record.product_variant_count.value">
+                                <strong>
+                                    <t t-esc="record.product_variant_count.value"/> Variants
+                                </strong>
+                            </div>
+                            <div name="product_lst_price" class="mt-1">
+                                <strong>Price:</strong>
+                                <t t-if="record.payment_price_flow.raw_value">
+                                    <em>Dynamic</em>
+                                </t>
+                                <t t-else="">
+                                    <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                </t>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div t-attf-style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #{record.payment_color_foreground.value}; background-color: #{record.payment_color_background.value};"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="tree_product_template" model="ir.ui.view">
+    <field name="name">payment.system.product.template.tree</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+        <tree string="Product" multi_edit="1" sample="1">
+            <field name="sequence" widget="handle"/>
+            <field name="priority" widget="priority" optional="show" nolabel="1"/>
+            <field name="name" string="Product Name" decoration-bf="1"/>
+            <field name="default_code" optional="show"/>
+            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
+            <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" attrs="{'invisible': [('payment_price_flow', '!=', False)]}"/>
+            <field name="categ_id" optional="hide"/>
+            <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
+            <field name="active" invisible="1"/>
+            <field name="currency_id" invisible="1"/>
+            <field name="payment_price_flow" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_product_template" model="ir.ui.view">
+    <field name="name">payment.system.product.template.search</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+        <search string="Product">
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <filter name="favorite" string="Favorites" domain="[('priority', '=', '1')]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="form_product_product" model="ir.ui.view">
+    <field name="name">payment.system.product.product.form</field>
+    <field name="model">product.product</field>
+    <field name="arch" type="xml">
+        <form string="Product">
+            <sheet name="product_form">
+                <field name="is_product_variant" invisible="1"/>
+                <field name="type" invisible="1"/>
+                <div class="oe_button_box" name="button_box"/>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="id" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                <div class="oe_title">
+                    <label for="name" string="Product Name"/>
+                    <h1>
+                        <div class="d-flex">
+                            <field name="priority" widget="priority" class="mr-3"/>
+                            <field class="text-break" name="name" placeholder="Type a product name..." readonly="1"/>
+                        </div>
+                    </h1>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags"/>
+                </div>
+                <group>
+                    <group name="group_price">
+                        <field name="payment_price_flow" invisible="1"/>
+                        <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                        <field name="lst_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                    </group>
+                    <group name="group_general">
+                        <label for="payment_color_background" string="Colors"/>
+                        <div class="d-flex">
+                            <field name="payment_color_background" nolabel="1" widget="color" class="w-auto" readonly="1"/>
+                            <field name="payment_color_foreground" nolabel="1" widget="color" class="w-auto" readonly="1"/>
+                        </div>
+                        <field name="categ_id" string="Category" options="{'no_create': True}" readonly="1"/>
+                        <field name="system" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="detailed_type" invisible="1"/>
+                        <field name="sale_ok" invisible="1"/>
+                        <field name="purchase_ok" invisible="1"/>
+                        <field name="product_variant_id" invisible="1"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="kanban_product_product" model="ir.ui.view">
+    <field name="name">payment.system.product.product.kanban</field>
+    <field name="model">product.product</field>
+    <field name="arch" type="xml">
+        <kanban sample="1">
+            <field name="id"/>
+            <field name="currency_id"/>
+            <field name="payment_price_flow"/>
+            <field name="payment_color_background"/>
+            <field name="payment_color_foreground"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_card oe_kanban_global_click">
+                        <div class="o_kanban_image mr-1">
+                            <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
+                            <div class="o_kanban_tags_section">
+                                <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
+                            </div>
+                            <div name="product_lst_price" class="mt-1">
+                                <strong>Price:</strong>
+                                <t t-if="record.payment_price_flow.raw_value">
+                                    <em>Dynamic</em>
+                                </t>
+                                <t t-else="">
+                                    <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                </t>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div t-attf-style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #{record.payment_color_foreground.value}; background-color: #{record.payment_color_background.value};"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="tree_product_product" model="ir.ui.view">
+    <field name="name">payment.system.product.product.tree</field>
+    <field name="model">product.product</field>
+    <field name="arch" type="xml">
+        <tree string="Product" multi_edit="1" sample="1">
+            <field name="priority" widget="priority" optional="show" nolabel="1"/>
+            <field name="name" string="Product Name" decoration-bf="1"/>
+            <field name="default_code" optional="show"/>
+            <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
+            <field name="lst_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" attrs="{'invisible': [('payment_price_flow', '!=', False)]}"/>
+            <field name="categ_id" optional="hide"/>
+            <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
+            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
+            <field name="active" invisible="1"/>
+            <field name="currency_id" invisible="1"/>
+            <field name="payment_price_flow" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_product_product" model="ir.ui.view">
+    <field name="name">payment.system.product.product.search</field>
+    <field name="model">product.product</field>
+    <field name="arch" type="xml">
+        <search string="Product">
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <filter name="favorite" string="Favorites" domain="[('priority', '=', '1')]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Template" name="groupby_template" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="form_product_category" model="ir.ui.view">
+    <field name="name">payment.system.product.category.form</field>
+    <field name="model">product.category</field>
+    <field name="arch" type="xml">
+        <form string="Product Categories" class="oe_form_configuration">
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="%(product.product_template_action_all)d" icon="fa-th-list" type="action" context="{'search_default_categ_id': active_id, 'default_categ_id': active_id, 'group_expand': True}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="product_count"/></span>
+                            <span class="o_stat_text"> Products</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name" string="Category"/>
+                    <h1><field name="name" placeholder="Type a category name..."/></h1>
+                </div>
+                <group name="first" col="2">
+                    <field name="parent_id" class="oe_inline"/>
+                    <field name="system" invisible="1" force_save="1"/>
+                    <field name="company_id" invisible="1" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="tree_product_category" model="ir.ui.view">
+    <field name="name">payment.system.product.category.tree</field>
+    <field name="model">product.category</field>
+    <field name="arch" type="xml">
+        <tree string="Product Categories" multi_edit="1" sample="1">
+            <field name="display_name" string="Product Category"/>
+            <field name="system" invisible="1"/>
+            <field name="company_id" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_product_category" model="ir.ui.view">
+    <field name="name">payment.system.product.category.search</field>
+    <field name="model">product.category</field>
+    <field name="arch" type="xml">
+        <search string="Product Categories">
+            <field name="name" string="Product Category"/>
+            <field name="parent_id"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="form_product_attribute" model="ir.ui.view">
+    <field name="name">payment.system.product.attribute.form</field>
+    <field name="model">product.attribute</field>
+    <field name="arch" type="xml">
+        <form string="Product Attribute" class="oe_form_configuration">
+            <field name="number_related_products" invisible="1"/>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_open_related_products" type="object" icon="fa-bars" attrs="{'invisible': [('number_related_products', '=', [])]}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value"><field name="number_related_products"/></span>
+                            <span class="o_stat_text">Related Products</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name" string="Attribute Name"/>
+                    <h1>
+                        <div class="d-flex">
+                            <field class="text-break" name="name" placeholder="Type a attribute name..." force_save="1"/>
+                        </div>
+                    </h1>
+                </div>
+                <group name="main_fields" class="o_label_nowrap">
+                    <field name="payment_type" widget="radio" attrs="{'required': [('system', '!=', False)]}"/>
+                    <field name="system" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="display_type" invisible="1"/>
+                    <field name="create_variant" invisible="1"/>
+                </group>
+                <notebook>
+                    <page string="Attribute Values" name="attribute_values">
+                        <field name="value_ids" widget="one2many" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name" width="10" decoration-bf="1"/>
+                                <field name="image_1920" string=" " widget="image" class="oe_avatar text-right" options="{'preview_image': 'image_128'}" attrs="{'column_invisible': [('parent.payment_type', '!=', 'brand')]}"/>
+                                <field name="color" string=" " widget="color_picker" optional="hide"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="tree_product_attribute" model="ir.ui.view">
+    <field name="name">payment.system.product.attribute.tree</field>
+    <field name="model">product.attribute</field>
+    <field name="arch" type="xml">
+        <tree string="Product Attributes" multi_edit="1" sample="1">
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="system" invisible="1"/>
+            <field name="company_id" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_product_attribute" model="ir.ui.view">
+    <field name="name">payment.system.product.attribute.search</field>
+    <field name="model">product.attribute</field>
+    <field name="arch" type="xml">
+        <search string="Product Attributes">
+            <field name="name" string="Product Attribute"/>
+        </search>
+    </field>
+    </record>
+
+    <record id="action_product_template" model="ir.actions.act_window">
+    <field name="name">Products</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No products yet
+        </p>
+        <p>
+            Created products are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_product_template')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_product_template')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_product_template')}),
+    ]"/>
+    </record>
+
+    <record id="action_product_product" model="ir.actions.act_window">
+    <field name="name">Product Variants</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">product.product</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="context">{'create': False}</field>
+    <field name="search_view_id" ref="search_product_product"/>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_product_product')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_product_product')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_product_product')}),
+    ]"/>
+        <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new product variant
+        </p>
+        <p>
+            You must define a product for everything
+        </p>
+    </field>
+    </record>
+
+    <record id="action_product_pricelist" model="ir.actions.act_window">
+    <field name="name">Products</field>
+    <field name="res_model">product.pricelist</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No pricelists yet
+        </p>
+        <p>
+            Created pricelists are listed here
+        </p>
+    </field>
+    </record>
+
+    <record id="action_product_attribute" model="ir.actions.act_window">
+    <field name="name">Attributes</field>
+    <field name="res_model">product.attribute</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No attributes yet
+        </p>
+        <p>
+            Created attributes are listed here
+        </p>
+    </field>
+    </record>
+
+    <record id="action_product_category" model="ir.actions.act_window">
+    <field name="name">Categories</field>
+    <field name="res_model">product.category</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No categories yet
+        </p>
+        <p>
+            Created categories are listed here
+        </p>
+    </field>
+    </record>
+</odoo>

@@ -709,6 +709,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 this.campaign.text.html = company.campaign;
                 this.campaign.name.value = company.campaign;
                 this.campaign.name.$.trigger('change', [{ locked: true }]);
+
+                this.payment.due.warning.$.addClass('d-none');
+                this.payment.due.warning.$.find('p').text('');
+                this.payment.due.payment.$.removeClass('d-none');
             }
             this._onChangePaid();
         }).guardedCatch(() => {
