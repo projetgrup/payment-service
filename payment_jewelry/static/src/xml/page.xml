@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="paylox.jewelry.lines">
+        <t t-if="products.length">
+            <t t-foreach="products" t-as="product">
+                <tr>
+                    <td><span t-esc="product[0]"/> (<span t-esc="product[1].weight"/> gr)</td>
+                    <td class="text-nowrap text-right"><span t-esc="format.currency(product[1].value, currency.position, currency.symbol, currency.decimal)"/></td>
+                </tr>
+            </t>
+        </t>
+        <t t-else="">
+            <tr>
+                <td colspan="2" class="font-italic h3 text-center text-muted">Cart is empty</td>
+            </tr>
+        </t>
+    </t>
+</templates>
+

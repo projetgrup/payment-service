@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_child" model="ir.actions.act_window">
+    <field name="name">Customers</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system', '=', 'jewelry'), ('parent_id', '!=', False), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'jewelry', 'active_child': True, 'default_system': 'jewelry', 'default_is_company': False}</field>
+    <field name="search_view_id" ref="child_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a customer
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('child_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('child_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_parent" model="ir.actions.act_window">
+    <field name="name">Clients</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system', '=', 'jewelry'), ('parent_id', '=', False), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'jewelry', 'active_parent': True, 'default_system': 'jewelry', 'default_is_company': True}</field>
+    <field name="search_view_id" ref="parent_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a client
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('parent_tree')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('parent_kanban')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('parent_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_item" model="ir.actions.act_window">
+    <field name="name">Payments</field>
+    <field name="res_model">payment.item</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="search_view_id" ref="item_search"/>
+    <field name="domain">[('system', '=', 'jewelry')]</field>
+    <field name="context">{'active_system': 'jewelry'}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No payments yet
+        </p>
+        <p>
+            Created payments are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout_system.item_pivot')}),
+    ]"/>
+    </record>
+
+    <record id="action_settings" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field name="context">{'active_system' : 'jewelry'}</field>
+    </record>
+</odoo>

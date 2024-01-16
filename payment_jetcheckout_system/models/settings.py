@@ -170,16 +170,13 @@ class PaymentSettingsDue(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
     campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
-    tag_ids = fields.One2many('payment.settings.due.tag', 'due_id', 'Tags')
     mail_template_id = fields.Many2one('mail.template', string='Email Template')
 
     def get_campaign(self, day):
         advance = None
-        tag = self.env.context.get('tag') or False
         for due in self:
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)
-            tags = due.tag_ids.mapped('name')
             if due.due + due.tolerance >= days:
                 return int(days), due.campaign_id.name or '', due, advance, False
             advance = due
