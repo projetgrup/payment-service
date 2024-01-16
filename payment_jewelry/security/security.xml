@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="module_category_jewelry" model="ir.module.category">
+            <field name="name">Jewelry Payment System</field>
+            <field name="description">Jewelry Payment System</field>
+            <field name="sequence">4</field>
+        </record>
+        <record model="res.groups" id="group_jewelry_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_jewelry"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_user'))]"/>
+        </record>
+        <record model="res.groups" id="group_jewelry_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_jewelry"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager')), (4, ref('payment_jewelry.group_jewelry_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

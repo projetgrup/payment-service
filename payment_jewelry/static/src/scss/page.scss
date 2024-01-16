@@ -1,0 +1,105 @@
+.payment-jewelry {
+    background-color: #f7fafc;
+    color: #444444 !important;
+    overflow: auto !important;
+
+    .gap-1 {
+        gap: 0.2em;
+    }
+
+    .gap-5 {
+        gap: 1em;
+    }
+
+    h1, h2, h3, h4, h5 {
+        font-family: Montserrat, sans-serif !important;
+    }
+
+    .header {
+        img {
+            max-width: 200px;
+            max-height: 70px;
+            object-fit: contain;
+        }
+    }
+
+    //.text-primary {
+    //    color: #4da0df !important;
+    //}
+
+    .shadow {
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05) !important
+    }
+
+    .border {
+        border-color: #edf2f7 !important;
+    }
+
+    .border-bottom {
+        border-color: #edf2f7 !important;
+    }
+
+    .card {
+        border-color: #edf2f7 !important;
+    }
+
+    .payment-option {
+        cursor: pointer;
+    }
+
+    .payment-jewelry-tables {
+        border-right: 2px solid #e0d2d2;
+
+        > div {
+            border-bottom: 2px solid #e0d2d2;
+            padding: 20px 10px;
+
+            tr {
+                height: 36px;
+
+                td {
+                    padding: 2px 4px;
+                    vertical-align: middle;
+                }
+            }
+
+            img {
+                max-width: 200px;
+                max-height: 70px;
+                object-fit: contain;
+            }
+
+            input {
+                width: 100%;
+                border: none;
+                outline: none;
+                text-align: center;
+            }
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+
+            .payment-jewelry-product-name {
+                min-width: 120px;
+                font-size: 1.1em;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .payment-jewelry-sidebar {
+        > div {
+            border-bottom: 2px solid #e0d2d2;
+            padding: 20px 10px;
+
+            th {
+                border-bottom: 2px solid #e0d2d2;
+            }
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
+    }
+}
