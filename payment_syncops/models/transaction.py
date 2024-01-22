@@ -133,7 +133,7 @@ class PaymentTransaction(models.Model):
             } for item in self.paylox_transaction_item_ids if item.ref]
         }, company=self.company_id, message=True)
 
-        if result == None:
+        if result is None:
             self.write({
                 'jetcheckout_connector_state': True,
                 'jetcheckout_connector_payment_ref': False,

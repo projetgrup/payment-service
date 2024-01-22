@@ -11,9 +11,67 @@
         </t>
         <t t-else="">
             <tr>
-                <td colspan="2" class="font-italic h3 text-center text-muted">Cart is empty</td>
+                <td colspan="2" class="font-italic h4 text-center text-muted">Cart is empty</td>
             </tr>
         </t>
+    </t>
+
+    <t t-name="paylox.jewelry.brands">
+        <div class="d-flex flex-column">
+            <t t-foreach="brands" t-as="brand">
+                <button class="btn d-flex flex-row" t-att-data-id="brand['id']" t-attf-style="color:{{ foreground }} !important;border-color:{{ background }} !important;">
+                    <img t-att-src="'data:image/png;base64, ' + brand['image']" t-att-alt="brand['name']" draggable="false"/>
+                    <h2 class="flex-fill text-700" t-esc="brand['name']"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="paylox.jewelry.items">
+        <div class="payment-jewelry-items-list">
+            <div t-attf-style="grid-template-columns: 160px repeat({{ weights.length }}, minmax(100px, 1fr));">
+                <div class="text-nowrap payment-jewelry-items-list-name" t-attf-style="background-color: {{ product.background }}; color: {{ product.foreground }};">
+                    <span t-esc="product.name"/>
+                </div>
+                <div class="justify-content-start payment-jewelry-items-list-brand" t-attf-style="grid-column: 2 / span {{ weights.length }};">
+                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
+                        <img t-attf-src="data:image/png;base64, {{ brand['image'] }}" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
+                    </button>
+                </div>
+                <div class="justify-content-end payment-jewelry-items-list-caption" t-attf-style="border-right: 2px solid {{ product.background }}; border-left: 2px solid {{ product.background }};">
+                    Gram
+                </div>
+                <t t-foreach="weights" t-as="weight">
+                    <div class="font-weight-bold payment-jewelry-items-list-weight" t-attf-style="background-color: {{ product.background }}; color: {{ product.foreground }};">
+                        <span t-esc="weight['name']"/>
+                    </div>
+                </t>
+                <div class="justify-content-end payment-jewelry-items-list-caption" t-attf-style="border-right: 2px solid {{ product.background }}; border-left: 2px solid {{ product.background }};">
+                    Price
+                </div>
+                <t t-foreach="weights" t-as="weight">
+                    <div class="text-nowrap">
+                        <span t-esc="format.currency(weight['price'], currency.position, currency.symbol, currency.decimal)" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                    </div>
+                </t>
+                <div class="justify-content-end payment-jewelry-items-list-caption" t-attf-style="border-right: 2px solid {{ product.background }}; border-left: 2px solid {{ product.background }};">
+                    Quantity
+                </div>
+                <t t-foreach="weights" t-as="weight">
+                    <div class="font-weight-bold payment-jewelry-items-list-qty" t-attf-style="border: 2px solid {{ product.background }};">
+                        <input type="number" min="0" step="1" inputmode="numeric" value="0" class="font-weight-bold" t-att-data-id="weight['id']" t-att-data-name="weight['name']" field="jewelry.qty"/>
+                    </div>
+                </t>
+                <div class="justify-content-end payment-jewelry-items-list-caption" t-attf-style="border-right: 2px solid {{ product.background }}; border-left: 2px solid {{ product.background }}; border-bottom: 2px solid {{ product.background }}; border-radius: 0 0 10px 10px;">
+                    Amount
+                </div>
+                <t t-foreach="weights" t-as="weight">
+                    <div class="text-nowrap">
+                        <span t-esc="format.currency(0.0, currency.position, currency.symbol, currency.decimal)" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" field="jewelry.amount"/>
+                    </div>
+                </t>
+            </div>
+        </div>
     </t>
 </templates>
 

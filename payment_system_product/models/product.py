@@ -1,10 +1,57 @@
 # -*- coding: utf-8 -*-
+import time
+from psycopg2 import sql
+from datetime import datetime
+
+import odoo
 from odoo import models, fields, api, _
 
+import logging
+_logger = logging.getLogger(__name__)
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
     company = env.company
     return system, company
+
+
+class PaymentProduct(models.AbstractModel):
+    _name = 'payment.product'
+    _description = 'Payment System Product'
+
+    @api.model
+    def show_buttons(self):
+        return {}
+
+    @api.model
+    def update_price(self):
+        return False
+
+    @api.model
+    def get_price(self, products):
+        company = self.env.company
+        products = products.filtered(lambda p: p.company_id.id == company.id and p.system == company.system and p.default_code)
+        return [(product.code, product.price) for product in products]
+
+    @api.model
+    def broadcast_price(self, products):
+        if self.env.context.get('no_broadcast'):
+            return
+
+        prices = self.get_price(products)
+        if prices:
+            now = datetime.utcnow()
+            pid = int(time.mktime(now.timetuple()))
+            data = ['id:%s' % pid]
+            for code, price in prices:
+                data.append('data:%s;%s' % (code, price))
+
+            @self.env.cr.postcommit.add
+            def notify():
+                _logger.error(data)
+                with odoo.sql_db.db_connect('postgres').cursor() as cr:
+                    query = sql.SQL("SELECT {}('sse', %s)").format(sql.Identifier('pg_notify'))
+                    cr.execute(query, ('%s\n\n' % '\n'.join(data),))
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -64,24 +111,23 @@ class ProductTemplate(models.Model):
             view_id = self.env.ref('payment_system_product.%s_product_template' % (view_type,)).id
         return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    def _get_payment_attribute(self, type):
-        line = self.attribute_line_ids.filtered(lambda x: x.attribute_id.payment_type == type)
-        if line:
-            line = line[0]
-            if line.value_ids:
-                value = line.value_ids[0]
-                return {
+    def get_payment_attribute(self, type):
+        lines = self.attribute_line_ids.filtered(lambda x: x.attribute_id.payment_type == type)
+        result = []
+        for line in lines:
+            for value in line.value_ids:
+                result.append({
                     'id': value.id,
                     'name': value.name,
                     'image': value.image_128.decode('utf-8'),
-                }
-        return False
+                })
+        return result
 
-    def _get_payment_variants(self, type, value_ids=[]):
+    def get_payment_variants(self, type, value_ids=[]):
         result = []
         for variant in self.product_variant_ids:
             value = variant.product_template_attribute_value_ids.mapped('product_attribute_value_id')
-            if any(attr in value.ids for attr in value_ids):
+            if any(val in value.ids for val in value_ids):
                 line = value.filtered(lambda x: x.attribute_id.payment_type == type)
                 name = line[0].name if line else '-'
                 try:
@@ -92,13 +138,17 @@ class ProductTemplate(models.Model):
                     'id': variant.id,
                     'name': name,
                     'value': value,
-                    'price': variant.lst_price or 0,
+                    'price': variant.price or 0,
                     'currency': variant.currency_id,
+                    'code': variant.default_code or '-',
                 })
         return result
 
+
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    price_dynamic = fields.Float('Price Dynamic', digits='Product Price')
 
     @api.model
     def _search(self, args, **kw):
@@ -124,6 +174,36 @@ class ProductProduct(models.Model):
         if system and view_type in ('form', 'tree', 'kanban', 'search'):
             view_id = self.env.ref('payment_system_product.%s_product_product' % (view_type,)).id
         return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+    def _compute_product_price(self):
+        products = self.filtered(lambda p: p.payment_price_flow)
+        for product in products:
+            product.price = product.price_dynamic
+        super(ProductProduct, self - products)._compute_product_price()
+
+    def _set_product_price(self):
+        products = self.filtered(lambda p: p.payment_price_flow)
+        for product in products:
+            product.price_dynamic = product.price
+        super(ProductProduct, self - products)._set_product_price()
+
+    def _broadcast_price(self):
+        self.env['payment.product'].broadcast_price(self)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res._broadcast_price()
+        return res
+
+    def write(self, values):
+        res = super().write(values)
+        self._broadcast_price()
+        return res
+
+    def unlink(self):
+        self._broadcast_price()
+        return super().unlink()
 
 
 class ProductCategory(models.Model):

@@ -5,6 +5,7 @@
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">product.product</field>
     <field name="view_mode">kanban,tree,form</field>
+    <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
     <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
     <field name="search_view_id" ref="search_product_product"/>
     <field name="view_ids" eval="[
@@ -68,7 +69,12 @@
                     <group name="group_price">
                         <field name="payment_price_flow" invisible="1"/>
                         <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}"/>
-                        <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                        <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('payment_price_flow_option', '=', 'dynamic')], 'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
+                        <field name="default_code" attrs="{'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
+                        <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
+                        <p class="text-muted font-italic" colspan="2" attrs="{'invisible': [('product_variant_count', '&lt;=', 1), ('attribute_line_ids', '=', [])]}">
+                            Price and code values are handled in variant level for this product
+                        </p>
                     </group>
                     <group name="group_general">
                         <label for="payment_color_background" string="Colors"/>
@@ -115,7 +121,7 @@
     <field name="name">payment.system.product.template.kanban</field>
     <field name="model">product.template</field>
     <field name="arch" type="xml">
-        <kanban sample="1">
+        <kanban sample="1" js_class="payment_system_product_kanban">
             <field name="id"/>
             <field name="currency_id"/>
             <field name="payment_price_flow"/>
@@ -139,18 +145,24 @@
                                 <field name="priority" widget="priority"/>
                             </div>
                             <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
-                            <div t-if="record.product_variant_count.value &gt; 1 &amp;&amp; record.product_variant_count.value">
+                            <t t-set="has_variant" t-value="record.product_variant_count.value &gt; 1 || record.attribute_line_ids.value.length"/>
+                            <div t-if="has_variant">
                                 <strong>
                                     <t t-esc="record.product_variant_count.value"/> Variants
                                 </strong>
                             </div>
                             <div name="product_lst_price" class="mt-1">
                                 <strong>Price:</strong>
-                                <t t-if="record.payment_price_flow.raw_value">
-                                    <em>Dynamic</em>
+                                <t t-if="!has_variant">
+                                    <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 </t>
                                 <t t-else="">
-                                    <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <t t-if="record.payment_price_flow.raw_value">
+                                        <em>Dynamic</em>
+                                    </t>
+                                    <t t-else="">
+                                        <em>Static</em>
+                                    </t>
                                 </t>
                             </div>
                             <div class="d-flex justify-content-end">
@@ -168,18 +180,19 @@
     <field name="name">payment.system.product.template.tree</field>
     <field name="model">product.template</field>
     <field name="arch" type="xml">
-        <tree string="Product" multi_edit="1" sample="1">
+        <tree string="Product" multi_edit="1" sample="1" js_class="payment_system_product_list">
             <field name="sequence" widget="handle"/>
             <field name="priority" widget="priority" optional="show" nolabel="1"/>
             <field name="name" string="Product Name" decoration-bf="1"/>
             <field name="default_code" optional="show"/>
             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
-            <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" attrs="{'invisible': [('payment_price_flow', '!=', False)]}"/>
+            <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" attrs="{'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
             <field name="categ_id" optional="hide"/>
             <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
             <field name="active" invisible="1"/>
             <field name="currency_id" invisible="1"/>
-            <field name="payment_price_flow" invisible="1"/>
+            <field name="attribute_line_ids" invisible="1"/>
+            <field name="product_variant_count" invisible="1"/>
         </tree>
     </field>
     </record>
@@ -220,13 +233,15 @@
                             <field class="text-break" name="name" placeholder="Type a product name..." readonly="1"/>
                         </div>
                     </h1>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                 </div>
                 <group>
                     <group name="group_price">
                         <field name="payment_price_flow" invisible="1"/>
                         <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}" readonly="1"/>
-                        <field name="lst_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                        <field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                        <field name="default_code"/>
+                        <field name="barcode"/>
                     </group>
                     <group name="group_general">
                         <label for="payment_color_background" string="Colors"/>
@@ -253,7 +268,7 @@
     <field name="name">payment.system.product.product.kanban</field>
     <field name="model">product.product</field>
     <field name="arch" type="xml">
-        <kanban sample="1">
+        <kanban sample="1" js_class="payment_system_product_kanban">
             <field name="id"/>
             <field name="currency_id"/>
             <field name="payment_price_flow"/>
@@ -280,12 +295,7 @@
                             </div>
                             <div name="product_lst_price" class="mt-1">
                                 <strong>Price:</strong>
-                                <t t-if="record.payment_price_flow.raw_value">
-                                    <em>Dynamic</em>
-                                </t>
-                                <t t-else="">
-                                    <field name="lst_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                </t>
+                                <field name="price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             </div>
                             <div class="d-flex justify-content-end">
                                 <div t-attf-style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #{record.payment_color_foreground.value}; background-color: #{record.payment_color_background.value};"/>
@@ -302,12 +312,12 @@
     <field name="name">payment.system.product.product.tree</field>
     <field name="model">product.product</field>
     <field name="arch" type="xml">
-        <tree string="Product" multi_edit="1" sample="1">
+        <tree string="Product" multi_edit="1" sample="1" js_class="payment_system_product_list">
             <field name="priority" widget="priority" optional="show" nolabel="1"/>
             <field name="name" string="Product Name" decoration-bf="1"/>
             <field name="default_code" optional="show"/>
             <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
-            <field name="lst_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" attrs="{'invisible': [('payment_price_flow', '!=', False)]}"/>
+            <field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show"/>
             <field name="categ_id" optional="hide"/>
             <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
