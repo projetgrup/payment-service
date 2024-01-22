@@ -29,92 +29,154 @@
                     <t t-set="classes" t-value="'mx-0'"/>
                 </t>
                 <div class="row mx-0 my-4 card border shadow p-4 flex-row">
-                    <div class="col-md-9 payment-jewelry-tables">
+                    <div class="col-md-9 payment-jewelry-items">
                         <t t-foreach="products" t-as="product">
-                            <t t-set="brand" t-value="product._get_payment_attribute('brand')"/>
-                            <t t-set="weights" t-value="product._get_payment_variants('weight', [brand['id']])"/>
-                            <div t-if="brand and weights" class="table-responsive">
-                                <table class="table table-borderless">
-                                    <tr>
-                                        <td class="text-center text-nowrap payment-jewelry-product-name" t-attf-style="background-color: #{product.payment_color_background} !important; color: #{product.payment_color_foreground} !important; border-right: 2px solid #{product.payment_color_background} !important;" t-esc="product.name"/>
-                                        <td>
-                                            <img t-att-src="'data:image/png;base64, %s' % brand['image']" t-att-alt="brand['name']"/>
-                                        </td>
-                                        <td colspan="99"/>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right" t-attf-style="border-right: 2px solid #{product.payment_color_background} !important;">Gram</td>
-                                        <t t-foreach="weights" t-as="weight">
-                                            <td class="text-center font-weight-bold" t-attf-style="background-color: #{product.payment_color_background} !important; color: #{product.payment_color_foreground} !important;">
-                                                <span t-esc="weight['name']"/>
-                                            </td>
+                            <t t-set="brands" t-value="product.get_payment_attribute('brand')"/>
+                            <t t-if="brands">
+                                <t t-set="brand" t-value="brands[0]"/>
+                                <t t-set="weights" t-value="product.get_payment_variants('weight', [brand['id']])"/>
+                                <t t-if="weights">
+                                    <div t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="jewelry.items">
+                                        <div class="payment-jewelry-items-card">
+                                            <div>
+                                                <div class="text-nowrap payment-jewelry-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                                    <span t-esc="product.name"/>
+                                                </div>
+                                                <div class="justify-content-start payment-jewelry-items-brand">
+                                                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
+                                                        <img t-att-src="'data:image/png;base64, %s' % brand['image']" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <t t-foreach="weights" t-as="weight">
+                                                    <div t-attf-style="border: 2px solid #{product.payment_color_background};">
+                                                        <div class="font-weight-bold payment-jewelry-items-weight">
+                                                            <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
+                                                            <span class="mr4" t-esc="weight['name']"/><span>Gram</span>
+                                                        </div>
+                                                        <div class="font-weight-500">Price</div>
+                                                        <div class="payment-jewelry-items-qty">
+                                                            <div class="font-weight-bold">
+                                                                <button class="btn">
+                                                                    <i class="fa fa-2x fa-chevron-up"/>
+                                                                </button>
+                                                            </div>
+                                                            <div>
+                                                                <input type="number" min="0" step="1" inputmode="numeric" value="0" class="font-weight-bold" t-att-data-id="weight['id']" t-att-data-name="weight['name']" field="jewelry.qty"/>
+                                                            </div>
+                                                            <div>
+                                                                Unit(s)
+                                                            </div>
+                                                            <div class="font-weight-bold">
+                                                                <button class="btn">
+                                                                    <i class="fa fa-2x fa-chevron-down"/>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <span class="font-size-125" t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                        </div>
+                                                        <div class="font-weight-500 payment-jewelry-items-amount">Amount</div>
+                                                        <div>
+                                                            <span class="font-size-125" t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <div class="payment-jewelry-items-list d-none">
+                                            <div t-attf-style="grid-template-columns: 160px repeat(#{len(weights)}, minmax(100px, 1fr));">
+                                                <div class="text-nowrap payment-jewelry-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                                    <span t-esc="product.name"/>
+                                                </div>
+                                                <div class="justify-content-start payment-jewelry-items-brand" t-attf-style="grid-column: 2 / span #{len(weights)};">
+                                                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
+                                                        <img t-att-src="'data:image/png;base64, %s' % brand['image']" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
+                                                    </button>
+                                                </div>
+                                                <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                                    Gram
+                                                </div>
+                                                <t t-foreach="weights" t-as="weight">
+                                                    <div class="font-weight-bold payment-jewelry-items-weight" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                                        <span t-esc="weight['name']"/>
+                                                    </div>
+                                                </t>
+                                                <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                                    Price
+                                                </div>
+                                                <t t-foreach="weights" t-as="weight">
+                                                    <div class="text-nowrap">
+                                                        <span t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                    </div>
+                                                </t>
+                                                <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                                    Quantity
+                                                </div>
+                                                <t t-foreach="weights" t-as="weight">
+                                                    <div class="font-weight-bold payment-jewelry-items-qty" t-attf-style="border: 2px solid #{product.payment_color_background};">
+                                                        <input type="number" min="0" step="1" inputmode="numeric" value="0" class="font-weight-bold" t-att-data-id="weight['id']" t-att-data-name="weight['name']" field="jewelry.qty"/>
+                                                    </div>
+                                                </t>
+                                                <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background}; border-bottom: 2px solid #{product.payment_color_background}; border-radius: 0 0 10px 10px;">
+                                                    Amount
+                                                </div>
+                                                <t t-foreach="weights" t-as="weight">
+                                                    <div class="text-nowrap">
+                                                        <span t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <t t-foreach="brands" t-as="brand">
+                                            <input type="hidden" t-att-data-id="brand['id']" t-att-data-name="brand['name']" t-att-data-image="brand['image']" t-att-data-product="product.id" field="jewelry.brands"/>
                                         </t>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right" t-attf-style="border-right: 2px solid #{product.payment_color_background} !important;">Price</td>
-                                        <t t-foreach="weights" t-as="weight">
-                                            <td class="text-center">
-                                                <span t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.price"/>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right" t-attf-style="border-right: 2px solid #{product.payment_color_background} !important;">Quantity</td>
-                                        <t t-foreach="weights" t-as="weight">
-                                            <td class="text-center font-weight-bold" t-attf-style="border: 2px solid #{product.payment_color_background} !important;">
-                                                <input type="number" min="0" step="1" inputmode="numeric" value="0" class="font-weight-bold" t-att-data-id="weight['id']" field="jewelry.qty"/>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right" t-attf-style="border-right: 2px solid #{product.payment_color_background} !important;">Amount</td>
-                                        <t t-foreach="weights" t-as="weight">
-                                            <td class="text-center">
-                                                <span t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                </table>
-                            </div>
+                                    </div>
+                                </t>
+                            </t>
                         </t>
                     </div>
                     <div class="col-md-3 payment-jewelry-sidebar">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" class="bg-success-light">Order Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody field="jewelry.lines">
-                                    <tr>
-                                        <td colspan="2" class="text-center p-4"><i class="fa fa-3x fa-circle-o-notch fa-spin text-muted"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="bg-success-light">Order Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody field="jewelry.lines">
+                                        <tr>
+                                            <td colspan="2" class="text-center p-4"><i class="fa fa-3x fa-circle-o-notch fa-spin text-muted"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td>Order Net Amount</td>
+                                            <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}" field="jewelry.subtotal"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Fee</td>
+                                            <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}" field="jewelry.fee"/></td>
+                                        </tr>
+                                        <tr class="bg-success-light font-weight-bold">
+                                            <td>Amount to Pay</td>
+                                            <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}" field="jewelry.total"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-block btn-warning font-weight-bold rounded-0 m-2 p-3" field="jewelry.pay">Pay Now</button>
+                            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+                            <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                            <input type="hidden" t-att-value="commission" field="jewelry.commission"/>
+                            <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <tbody>
-                                    <tr>
-                                        <td>Order Net Amount</td>
-                                        <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.subtotal"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Service Fee</td>
-                                        <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.fee"/></td>
-                                    </tr>
-                                    <tr class="bg-success-light font-weight-bold">
-                                        <td>Amount to Pay</td>
-                                        <td class="text-nowrap text-right"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.total"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <button class="btn btn-block btn-warning font-weight-bold rounded-0 m-2 p-3" field="jewelry.pay">Pay Now</button>
-                        <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
-                        <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
-                        <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
                     </div>
                 </div>
                 <t t-call="payment_jetcheckout_system.payment_agreement"/>

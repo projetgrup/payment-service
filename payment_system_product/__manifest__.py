@@ -17,5 +17,13 @@
     'data': [
         'views/product.xml',
     ],
+    'assets': {
+        'web.assets_qweb': [
+            'payment_system_product/static/src/xml/product.xml',
+        ],
+        'web.assets_backend': [
+            'payment_system_product/static/src/js/product.js',
+        ],
+    },
     'images': ['static/description/icon.png'],
 }
