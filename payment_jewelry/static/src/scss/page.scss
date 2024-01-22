@@ -41,64 +41,370 @@
 
     .card {
         border-color: #edf2f7 !important;
+        overflow: initial;
+    }
+
+    .font-weight-500 {
+        font-weight: 500;
+    }
+
+    .font-size-125 {
+        font-size: 1.25em;
     }
 
     .payment-option {
         cursor: pointer;
     }
 
-    .payment-jewelry-tables {
+    .payment-jewelry-items {
         border-right: 2px solid #e0d2d2;
 
         > div {
             border-bottom: 2px solid #e0d2d2;
             padding: 20px 10px;
 
-            tr {
-                height: 36px;
-
-                td {
-                    padding: 2px 4px;
-                    vertical-align: middle;
-                }
-            }
-
-            img {
-                max-width: 200px;
-                max-height: 70px;
-                object-fit: contain;
-            }
-
-            input {
-                width: 100%;
-                border: none;
-                outline: none;
-                text-align: center;
-            }
-
             &:last-of-type {
                 border-bottom: none;
             }
+        }
 
-            .payment-jewelry-product-name {
-                min-width: 120px;
-                font-size: 1.1em;
-                font-weight: 500;
+        button {
+            box-shadow: none;
+        }
+
+        img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            outline: none;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: none;
+            text-align: center;
+        }
+
+        .payment-jewelry-items-card {
+            padding: 5px 0;
+
+            > div {
+                display: flex;
+
+                &:first-child {
+                    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+                    border-radius: 10px;
+                    position: sticky;
+                    z-index: 9;
+                    top: 10px;
+                    
+                    > div:last-child {
+                        flex: 1 1 auto;
+                    }
+
+                    div {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 36px;
+                        padding: 4px;
+                    }
+                }
+
+                &:last-child {
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
+                    margin-top: 24px;
+                    gap: 10px;
+
+                    > div {
+                        display: grid;
+                        grid-template-columns: 60% 40%;
+                        transition: box-shadow 0.2s;
+                        border-radius: 10px;
+                        border-top-width: 4px;
+                        color: #444444;
+                        overflow: hidden;
+
+                        &:hover {
+                            box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.175);
+                        }
+
+                        > div:first-child {
+                            grid-column: 1 / span 2;
+                            padding-bottom: 10px;
+                            height: 60px;
+                        }
+
+                        > div:nth-child(2) {
+                            margin-top: -10px;
+                            background: #ffffff;
+                            border-top-left-radius: 10px;
+                        }
+
+                        > div:nth-child(3) {
+                            margin-top: -10px;
+                            background: #ffffff;
+                            border-top-right-radius: 10px;
+                        }
+
+                        div {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-height: 36px;
+                            padding: 4px;
+                        }
+                    }
+                }
+
+                .payment-jewelry-items-brand {
+                    position: relative;
+                    margin-left: -10px;
+                    border-radius: 10px;
+                    background: #ffffff;
+                    box-shadow: 5px 0 5px -1px #00000011 inset;
+                }
+
+                .payment-jewelry-items-name {
+                    font-size: 1.1em;
+                    font-weight: 500;
+                    min-width: 160px;
+                    border-radius: 10px 0 0 10px;
+                    text-shadow: 0px 0px 1px #00000044;
+                    background: #ffffff;
+                    position: sticky;
+                    left: 0;
+                }
+
+                .payment-jewelry-items-weight {
+                    color: #444444;
+                    position: relative;
+
+                    span:first-child {
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        left: 0;
+                        top: 0;
+                        border-style: solid;
+                        border-width: 60px 60px 60px 0px;
+                    }
+
+                    & + div {
+                        position: relative;
+                        box-shadow: 0 -10px 20px 0px #00000011;
+                    }
+                }
+
+                .payment-jewelry-items-qty {
+                    position: relative;
+                    grid-row: 2 / span 4;
+                    grid-column: 2;
+                    color: #444444;
+                    flex-direction: column;
+                    box-shadow: -1px 0px 20px 0px #00000022;
+
+                    button {
+                        color: #aaaaaa;
+                    }
+                }
+
+                .payment-jewelry-items-amount {
+                    box-shadow: 0 5px 5px 2px #00000011 inset;
+
+                    & + div {
+                        box-shadow: 0 -5px 5px 2px #00000011 inset;
+                    }
+                }
+
+                input {
+                    font-size: 1.25em;
+                    color: #444444;
+
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+
+                    &[type=number] {
+                        -moz-appearance: textfield;
+                    }
+                }
+            }
+        }
+
+        .payment-jewelry-items-list {
+            overflow-x: auto;
+            padding: 5px 0;
+
+            > div {
+                display: grid;
+
+                > div {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 36px;
+                    padding: 4px;
+                }
+
+                .payment-jewelry-items-caption {
+                    box-shadow: -2px 0 2px 1px #00000011 inset;
+                    text-shadow: 0px 0px 1px #00000044;
+                    background: #ffffff;
+                    position: sticky;
+                    left: 0;
+                }
+
+                .payment-jewelry-items-name {
+                    font-size: 1.1em;
+                    font-weight: 500;
+                    border-radius: 10px 10px 0 0;
+                    text-shadow: 0px 0px 1px #00000044;
+                    background: #ffffff;
+                    position: sticky;
+                    left: 0;
+                }
+
+                .payment-jewelry-items-brand {
+                    button {
+                        position: sticky;
+                        left: 164px;
+                    }
+                }
+
+                .payment-jewelry-items-weight {
+                    text-shadow: 0px 0px 1px #00000044;
+
+                    &:nth-last-child(1 of .payment-jewelry-items-weight) {
+                        border-radius: 0 10px 10px 0;
+                    }
+                }
+
+                .payment-jewelry-items-qty {
+                    border-left: none !important;
+
+                    &:nth-last-child(1 of .payment-jewelry-items-qty) {
+                        border-radius: 0 10px 10px 0;
+                    }
+                }
             }
         }
     }
 
     .payment-jewelry-sidebar {
         > div {
-            border-bottom: 2px solid #e0d2d2;
-            padding: 20px 10px;
+            position: sticky;
+            top: 10px;
 
-            th {
+            > div {
                 border-bottom: 2px solid #e0d2d2;
+                padding: 20px 10px;
+    
+                th {
+                    border-bottom: 2px solid #e0d2d2;
+                }
+    
+                &:last-of-type {
+                    border-bottom: none;
+                }
             }
+        }
+    }
 
-            &:last-of-type {
-                border-bottom: none;
+    &.payment-page {
+        .payment-jewelry-brand-popup {
+            .modal-dialog {
+                .modal-content {
+                    background-color: initial !important;
+                    border: none !important;
+    
+                    .modal-header {
+                        background-color: rgba(255, 255, 255, 0.75) !important;
+                        border: none !important;
+                        backdrop-filter: blur(5px) !important;
+    
+                        .modal-title {
+                            text-align: center !important;
+                            flex: 1 1 auto !important;
+                        }
+                    }
+    
+                    .modal-body {
+                        background-color: rgba(0, 0, 0, 0.25) !important;
+                        backdrop-filter: blur(5px) !important;
+                        border-radius: 10px !important;
+                        margin-top: -5px !important;
+                        border: none !important;
+                        gap: 10px !important;
+
+                        button {
+                            background-color: #ffffff;
+                            border-radius: 10px;
+                            border: 4px solid #ffffff;
+                            align-items: center;
+                            height: 100px;
+                            padding: 2px;
+                            overflow: hidden;
+                            transition: filter 0.2s;
+                            box-shadow: 0 0 2px 2px #00000022 inset;
+    
+                            &:hover {
+                                filter: brightness(0.9);
+                            }
+
+                            img {
+                                background: #ffffff;
+                                max-width: 80px;
+                                max-height: 80px;
+                                object-fit: contain;
+                                margin: 0 10px;
+                                border-radius: 10px;
+                            }
+
+                            h2 {
+                                margin: 0;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background-color: #ffffff;
+                            }
+                        }
+                    }
+    
+                    .modal-footer {
+                        background-color: rgba(0, 0, 0, 0.25) !important;
+                        backdrop-filter: blur(5px) !important;
+                        border-radius: 10px !important;
+                        margin-top: 10px !important;
+                        border: none !important;
+    
+                        button {
+                            border: none !important;
+                            flex: 1 1 auto !important;
+                            font-size: 1rem !important;
+                            box-shadow: none !important;
+                            font-weight: bold !important;
+                            text-transform: uppercase !important;
+                            transition: filter 0.2s;
+    
+                            &:hover {
+                                filter: brightness(0.9);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

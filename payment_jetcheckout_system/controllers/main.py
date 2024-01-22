@@ -191,7 +191,7 @@ class PayloxSystemController(Controller):
         if cid == request.env.company.id:
             return False
 
-        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             return False
@@ -228,7 +228,7 @@ class PayloxSystemController(Controller):
 
     @http.route(['/p/tag'], type='json', auth='public', website=True, csrf=False)
     def page_system_link_tag(self, tid):
-        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             return False
@@ -263,7 +263,7 @@ class PayloxSystemController(Controller):
 
     @http.route(['/p/due/tag'], type='json', auth='public', website=True, csrf=False)
     def page_system_link_due_tag(self, tag=False):
-        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             raise
@@ -329,7 +329,7 @@ class PayloxSystemController(Controller):
         if not request.env.company.payment_page_advance_ok:
             raise
 
-        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             raise
@@ -412,7 +412,7 @@ class PayloxSystemController(Controller):
 
     @http.route(['/p/advance/remove'], type='json', auth='public', website=True, csrf=False)
     def page_system_link_advance_remove(self, pid, tag=False):
-        token = request.httprequest.referrer.rsplit('/', 1).pop()
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
             raise
@@ -742,6 +742,10 @@ class PayloxSystemController(Controller):
             'company_id': company.id,
             'system': company.system,
         })
+        if company.payment_advance_assign_salesperson and not request.env.user.share:
+            values.update({
+                'user_id': request.env.user.id,
+            })
         try:
             if not values.get('vat'):
                 raise UserError(_('Please enter ID number'))

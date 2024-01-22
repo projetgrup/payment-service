@@ -32,9 +32,19 @@ class PayloxSystemJewelryController(Controller):
     def _prepare_system(self,  company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if system == 'jewelry':
-            products = request.env['product.template'].sudo().search([
+            products = request.env['product.template'].sudo().with_context(system=system).search([
                 ('system', '=', 'jewelry'),
                 ('company_id', '=', request.env.company.id),
             ])
-            res.update({'products': products})
+
+            try:
+                installment = self._prepare_installment()
+                commission = installment['rows'][0]['installments'][0]['crate']
+            except:
+                commission = 0.0
+
+            res.update({
+                'products': products,
+                'commission': commission,
+            })
         return res

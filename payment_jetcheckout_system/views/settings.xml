@@ -69,6 +69,10 @@
                                             <label for="payment_advance_amount_readonly" string="Amount Readonly" class="col-lg-4 o_light_label"/>
                                             <field name="payment_advance_amount_readonly" widget="boolean_toggle"/>
                                         </div>
+                                        <div class="row mt16">
+                                            <label for="payment_advance_assign_salesperson" string="Assign Salesperson" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_advance_assign_salesperson" widget="boolean_toggle"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

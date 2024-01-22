@@ -62,6 +62,7 @@ class Company(models.Model):
     ], string='Payment Page Flow', default='static')
     payment_page_ok = fields.Boolean(string='Payment Page Active', default=True)
 
+    payment_advance_assign_salesperson = fields.Boolean(string='Payment Advance Assign Salesperson')
     payment_advance_amount_readonly = fields.Boolean(string='Payment Advance Amount Readonly')
     payment_advance_ok = fields.Boolean(string='Payment Advance Active')
 

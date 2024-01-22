@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="Payment.Product.Buttons">
+        <button t-if="show_update_price_button" type="button" class="btn btn-secondary o_button_update_price">
+            Update Prices
+        </button>
+    </t>
+</templates>
