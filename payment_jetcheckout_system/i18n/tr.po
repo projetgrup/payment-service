@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-10 17:06+0000\n"
-"PO-Revision-Date: 2024-01-10 20:07+0300\n"
+"POT-Creation-Date: 2024-01-22 11:24+0000\n"
+"PO-Revision-Date: 2024-01-22 14:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -553,6 +553,11 @@ msgstr "Nisan"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Archived"
 msgstr "Arşivlendi"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Assign Salesperson"
+msgstr "Satış Temsilcisi Ata"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__message_attachment_count
@@ -1971,6 +1976,12 @@ msgid "Payment Advance Amount Readonly"
 msgstr "Avans Ödemesi Tutar Salt Okunur"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_advance_assign_salesperson
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_advance_assign_salesperson
+msgid "Payment Advance Assign Salesperson"
+msgstr "Avans Ödemesi Satış Temsilcisi Ata"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "Payment Amount"
 msgstr "Ödeme Tutarı"
@@ -2907,7 +2918,6 @@ msgstr "Etiket"
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__line_ids
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__tag_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Tags"
