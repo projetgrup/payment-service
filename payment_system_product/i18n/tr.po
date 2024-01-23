@@ -1,0 +1,444 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_system_product
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-22 14:47+0000\n"
+"PO-Revision-Date: 2024-01-22 17:59+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
+msgid "<em>Dynamic</em>"
+msgstr "<em>Dinamik</em>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
+msgid "<em>Static</em>"
+msgstr "<em>Statik</em>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_category
+msgid "<span class=\"o_stat_text\"> Products</span>"
+msgstr "<span class=\"o_stat_text\"> Ürünler</span>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+msgid "<span class=\"o_stat_text\">Related Products</span>"
+msgstr "<span class=\"o_stat_text\">İlişkili Ürünler</span>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
+msgid "<strong>Price:</strong>"
+msgstr "<strong>Fiyat:</strong>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid ""
+"<strong>Warning</strong>: adding or deleting attributes\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
+"                            to the loss of their possible customizations."
+msgstr ""
+"<strong>Uyarı</strong>: nitelik eklemek veya kaldırmak\n"
+"                            varolan varyanların silinip tekrar "
+"oluşturulmasına\n"
+"                            ve onlara ait olası değişikliklerin "
+"kaybolmasına yol açabilir."
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/product.js:0
+#, python-format
+msgid "An error occured."
+msgstr "Bir hata meydana geldi."
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Archived"
+msgstr "Arşivlendi"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+msgid "Attribute Name"
+msgstr "Nitelik Adı"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_attribute_value
+msgid "Attribute Value"
+msgstr "Nitelik Değeri"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+msgid "Attribute Values"
+msgstr "Nitelik Değerleri"
+
+#. module: payment_system_product
+#: model:ir.actions.act_window,name:payment_system_product.action_product_attribute
+msgid "Attributes"
+msgstr "Nitelikler"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Attributes & Variants"
+msgstr "Nitelikler & Varyantlar"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_attribute__payment_type__brand
+msgid "Brand"
+msgstr "Marka"
+
+#. module: payment_system_product
+#: model:ir.actions.act_window,name:payment_system_product.action_product_category
+msgid "Categories"
+msgstr "Kategoriler"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_category
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Category"
+msgstr "Kategori"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template_attribute_value__product_attribute_value_color
+msgid "Color Index"
+msgstr "Renk Endeksi"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Colors"
+msgstr "Renkler"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute__company_id
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__company_id
+#: model:ir.model.fields,field_description:payment_system_product.field_product_category__company_id
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
+msgid "Company"
+msgstr "Şirket"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
+msgid "Create a new product variant"
+msgstr "Yeni bir ürün varyantı oluştur"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_attribute
+msgid "Created attributes are listed here"
+msgstr "Oluşturulan nitelikler burada listelenir"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_category
+msgid "Created categories are listed here"
+msgstr "Oluşturulan kategoriler burada listelenir"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_pricelist
+msgid "Created pricelists are listed here"
+msgstr "Oluşturulan fiyat listeleri burada listelenir"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_template
+msgid "Created products are listed here"
+msgstr "Oluşturulan ürünler burada listelenir"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_flow_option__dynamic
+msgid "Dynamic"
+msgstr "Dinamik"
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/product.js:0
+#, python-format
+msgid "Error"
+msgstr "Hata"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
+msgid "Favorites"
+msgstr "Favoriler"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
+msgid "Groupby"
+msgstr "Grupla"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_1920
+msgid "Image"
+msgstr "Resim"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_1024
+msgid "Image 1024"
+msgstr "Resim 1024"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_128
+msgid "Image 128"
+msgstr "Resim 128"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_256
+msgid "Image 256"
+msgstr "Resim 256"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_512
+msgid "Image 512"
+msgstr "Resim 512"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Internal Notes"
+msgstr "Notlar"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_attribute
+msgid "No attributes yet"
+msgstr "Bir nitelik yok"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_category
+msgid "No categories yet"
+msgstr "Bir kategori yok"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_pricelist
+msgid "No pricelists yet"
+msgstr "Bir fiyat listesi yok"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_template
+msgid "No products yet"
+msgstr "Bir ürün yok"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_attribute__payment_type__other
+msgid "Other"
+msgstr "Diğer"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_color_background
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_color_background
+msgid "Payment Color Background"
+msgstr "Ödeme Arkaplan Rengi"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_color_foreground
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_color_foreground
+msgid "Payment Color Foreground"
+msgstr "Ödeme Yazı Rengi"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow
+msgid "Payment Price Flow"
+msgstr "Ödeme Fiyat Akışı"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow_option
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow_option
+msgid "Payment Price Flow Option"
+msgstr "Ödeme Fiyat Akışı Seçeneği"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_product
+msgid "Payment System Product"
+msgstr "Ödeme Sistemi Ürün"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__price_dynamic
+msgid "Price Dynamic"
+msgstr "Fiyat Dinamik"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Price Flow"
+msgstr "Fiyat Akışı"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Price and code values are handled in variant level for this product"
+msgstr "Fiyat ve kod değerleri, bu ürün için varyant seviyesinde ele alınır"
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/product.js:0
+#, python-format
+msgid "Prices have been updated."
+msgstr "Fiyatlar güncellendi."
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_template
+msgid "Product"
+msgstr "Ürün"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_attribute
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_attribute
+msgid "Product Attribute"
+msgstr "Ürün Niteliği"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_attribute
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_attribute
+msgid "Product Attributes"
+msgstr "Ürün Nitelikleri"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_category
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_category
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_category
+msgid "Product Categories"
+msgstr "Ürün Kategorileri"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_category
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_category
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_category
+msgid "Product Category"
+msgstr "Ürün Kategorisi"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_template
+msgid "Product Name"
+msgstr "Ürün Adı"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_template
+msgid "Product Template"
+msgstr "Ürün Şablonu"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_product_template_attribute_value
+msgid "Product Template Attribute Value"
+msgstr "Ürün Şablon Nitelik Değeri"
+
+#. module: payment_system_product
+#: model:ir.actions.act_window,name:payment_system_product.action_product_product
+#: model:ir.actions.act_window,name:payment_system_product.action_product_variant
+msgid "Product Variants"
+msgstr "Ürün Nitelikleri"
+
+#. module: payment_system_product
+#: model:ir.actions.act_window,name:payment_system_product.action_product_pricelist
+#: model:ir.actions.act_window,name:payment_system_product.action_product_template
+msgid "Products"
+msgstr "Ürünler"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_template
+msgid "Sales Price"
+msgstr "Satış Fiyatı"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_flow_option__static
+msgid "Static"
+msgstr "Statik"
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/product.js:0
+#, python-format
+msgid "Success"
+msgstr "Başarılı"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute__system
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__system
+#: model:ir.model.fields,field_description:payment_system_product.field_product_category__system
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__system
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__system
+msgid "System"
+msgstr "Sistem"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
+msgid "Template"
+msgstr "Şablon"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "This note is only for internal purposes."
+msgstr "Bu not sadece şirket içi kullanım içindir."
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_attribute__payment_type
+msgid "Type"
+msgstr "Tür"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+msgid "Type a attribute name..."
+msgstr "Bir nitelik adı giriniz..."
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_category
+msgid "Type a category name..."
+msgstr "Type a kategori name..."
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Type a product name..."
+msgstr "Type a ürün name..."
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/product.xml:0
+#, python-format
+msgid "Update Prices"
+msgstr "Fiyatları Güncelle"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
+msgid "Values"
+msgstr "Değerler"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+#: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
+msgid "Variants"
+msgstr "Varyantlar"
+
+#. module: payment_system_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
+#: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
+msgid "You must define a product for everything"
+msgstr "Herşey için bir ürün tanımlayabilirsiniz"

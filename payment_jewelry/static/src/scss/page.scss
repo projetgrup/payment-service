@@ -89,6 +89,11 @@
 
         .payment-jewelry-items-card {
             padding: 5px 0;
+            display: none;
+
+            @include media-breakpoint-down(lg) {
+                display: block;
+            }
 
             > div {
                 display: flex;
@@ -117,10 +122,14 @@
                 }
 
                 &:last-child {
-                    flex-wrap: wrap;
-                    justify-content: space-evenly;
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
                     margin-top: 24px;
                     gap: 10px;
+
+                    @include media-breakpoint-down(xs) {
+                        grid-template-columns: repeat(1, 1fr);
+                    }
 
                     > div {
                         display: grid;
@@ -246,6 +255,10 @@
         .payment-jewelry-items-list {
             overflow-x: auto;
             padding: 5px 0;
+
+            @include media-breakpoint-down(lg) {
+                display: none;
+            }
 
             > div {
                 display: grid;
