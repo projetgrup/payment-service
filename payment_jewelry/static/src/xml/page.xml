@@ -20,7 +20,7 @@
         <div class="d-flex flex-column">
             <t t-foreach="brands" t-as="brand">
                 <button class="btn d-flex flex-row" t-att-data-id="brand['id']" t-attf-style="color:{{ foreground }} !important;border-color:{{ background }} !important;">
-                    <img t-att-src="'data:image/png;base64, ' + brand['image']" t-att-alt="brand['name']" draggable="false"/>
+                    <img t-attf-src="data:image/png;base64, {{ brand['image'] }}" t-att-alt="brand['name']" draggable="false"/>
                     <h2 class="flex-fill text-700" t-esc="brand['name']"/>
                 </button>
             </t>
@@ -34,7 +34,7 @@
                     <span t-esc="product.name"/>
                 </div>
                 <div class="justify-content-start payment-jewelry-items-brand">
-                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
+                    <button class="btn" t-att-data-id="brand['id']" t-att-data-name="brand['name']" t-att-data-image="brand['image']" t-att-data-product="product.id" field="jewelry.brand">
                         <img t-attf-src="data:image/png;base64, {{ brand['image'] }}" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
                     </button>
                 </div>
@@ -82,9 +82,11 @@
                     <span t-esc="product.name"/>
                 </div>
                 <div class="justify-content-start payment-jewelry-items-brand" t-attf-style="grid-column: 2 / span {{ weights.length }};">
-                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
-                        <img t-attf-src="data:image/png;base64, {{ brand['image'] }}" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
-                    </button>
+                    <t t-foreach="brands" t-as="b">
+                        <button t-attf-class="btn {{ b['id'] === brand['id'] ? 'active' : '' }}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="jewelry.brands">
+                            <img t-attf-src="data:image/png;base64, {{ b['image'] }}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
+                        </button>
+                    </t>
                 </div>
                 <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid {{ product.background }}; border-left: 2px solid {{ product.background }};">
                     Gram
@@ -122,4 +124,3 @@
         </div>
     </t>
 </templates>
-

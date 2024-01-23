@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-22 14:47+0000\n"
-"PO-Revision-Date: 2024-01-22 14:47+0000\n"
+"POT-Creation-Date: 2024-01-23 16:02+0000\n"
+"PO-Revision-Date: 2024-01-23 16:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,18 @@ msgid "<span>Gram</span>"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
+msgid "<span>VAT</span>"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Address"
+msgstr ""
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
@@ -59,7 +71,16 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "An error occured."
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/register.js:0
+#: code:addons/payment_jewelry/static/src/js/register.js:0
 #, python-format
 msgid "An error occured. Please contact with your system administrator."
 msgstr ""
@@ -72,6 +93,13 @@ msgstr ""
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_tree
 msgid "Authorized"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "CRS"
 msgstr ""
 
 #. module: payment_jewelry
@@ -123,6 +151,13 @@ msgid "Companies"
 msgstr ""
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Company Name"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_companies
 msgid "Company Settings"
 msgstr ""
@@ -135,6 +170,13 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.model,name:payment_jewelry.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Continue"
 msgstr ""
 
 #. module: payment_jewelry
@@ -187,6 +229,8 @@ msgstr ""
 #. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/register.js:0
+#: code:addons/payment_jewelry/static/src/js/register.js:0
 #, python-format
 msgid "Error"
 msgstr ""
@@ -310,6 +354,20 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Phone"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Please check your VAT number and try again."
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -367,6 +425,11 @@ msgid "SMS Templates"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
+msgid "Search"
+msgstr ""
+
+#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Service Fee"
 msgstr ""
@@ -378,7 +441,10 @@ msgid "Settings"
 msgstr ""
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+#, python-format
 msgid "State"
 msgstr ""
 
@@ -425,6 +491,13 @@ msgid "Type"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
+msgid ""
+"Type your <strong>VAT number</strong> and click <strong>Search</strong> "
+"button"
+msgstr ""
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -451,8 +524,22 @@ msgid "Users"
 msgstr ""
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "VAT"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_product
 msgid "Variants"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/register.xml:0
+#, python-format
+msgid "Website"
 msgstr ""
 
 #. module: payment_jewelry
@@ -468,6 +555,11 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.model.fields.selection,name:payment_jewelry.selection__product_attribute__payment_type__weight
 msgid "Weight"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
+msgid "Welcome"
 msgstr ""
 
 #. module: payment_jewelry

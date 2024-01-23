@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="paylox.jewelry.register">
+        <t t-if="error">
+            <em class="d-block mt72 text-center"><h2 class="text-500">An error occured.</h2></em>
+            <em class="d-block mt24 text-center"><h3 class="text-500">Please check your VAT number and try again.</h3></em>
+        </t>
+        <t t-else="">
+            <t t-if="name">
+                <div class="font-weight-bold mt16 text-primary">Company Name</div>
+                <div class="text-700" t-esc="name"/>
+            </t>
+            <t t-if="vat">
+                <div class="font-weight-bold mt16 text-primary">VAT</div>
+                <div class="text-700" t-esc="vat"/>
+            </t>
+            <t t-if="address">
+                <div class="font-weight-bold mt16 text-primary">Address</div>
+                <div class="text-700" t-esc="address"/>
+            </t>
+            <t t-if="city">
+                <div class="font-weight-bold mt16 text-primary">State</div>
+                <div class="text-700" t-esc="city"/>
+            </t>
+            <t t-if="crs">
+                <div class="font-weight-bold mt16 text-primary">CRS</div>
+                <div class="text-700" t-esc="crs"/>
+            </t>
+            <t t-if="phone">
+                <div class="font-weight-bold mt16 text-primary">Phone</div>
+                <div class="text-700" t-esc="phone"/>
+            </t>
+            <t t-if="website">
+                <div class="font-weight-bold mt16 text-primary">Website</div>
+                <div class="text-700" t-esc="website"/>
+            </t>
+            <button class="btn btn-block btn-primary py-3 mt16 continue">
+                Continue<i class="fa fa-chevron-right ml8" t-translations="off"/>
+            </button>
+        </t>
+    </t>
+</templates>

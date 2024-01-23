@@ -55,6 +55,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             brand: new fields.element({
                 events: [['click', this._onClickBrand]],
             }),
+            brands: new fields.element({
+                events: [['click', this._onClickBrands]],
+            }),
             pay: new fields.element({
             }),
         }
@@ -81,7 +84,6 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 image: e.dataset.image,
             });
         });
-        $brands.remove();
     },
 
     _listenPrices: function () {
@@ -195,7 +197,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     _onClickBrand(ev) {
         let $button = $(ev.currentTarget);
-        let $item = this.jewelry.items.$.filter(`[data-id=${ $button.data('id') }]`)
+        let $item = this.jewelry.items.$.filter(`[data-id=${ $button.data('product') }]`);
 
         let pid = parseInt($item.data('id'));
         let name = $item.data('name');
@@ -220,10 +222,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
                 let bid = parseInt($btn.data('id'));
                 rpc.query({
-                    model: 'product.template',
-                    method: 'get_payment_variants',
-                    context: {system: 'jewelry'},
-                    args: [pid, 'weight', [bid]],
+                    route: '/my/jewelry/brand',
+                    params: { pid, bid },
                 }).then((weights) => {
                     let currency = this.currency;
                     let brand = brands.find(b => b.id === bid);
@@ -238,6 +238,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
                     $item.html(Qweb.render('paylox.jewelry.items', {
                         brand,
+                        brands,
                         format,
                         weights,
                         currency,
@@ -256,6 +257,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                         'jewelry.plus',
                         'jewelry.minus',
                         'jewelry.brand',
+                        'jewelry.brands',
                     ]);
 
                     $item.find('.base[field="jewelry.qty"]').each((i, e) => {
@@ -273,6 +275,72 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                         message: _t('An error occured. Please contact with your system administrator.'),
                     });
                 });
+            });
+        });
+    },
+
+
+
+    _onClickBrands(ev) {
+        let $btn = $(ev.currentTarget);
+        let $item = this.jewelry.items.$.filter(`[data-id=${ $btn.data('product') }]`);
+
+        let name = $item.data('name');
+        let foreground = $item.data('foreground');
+        let background = $item.data('background');
+        let pid = parseInt($item.data('id'));
+        let bid = parseInt($btn.data('id'));
+        let brands = this.brands[pid];
+
+        rpc.query({
+            route: '/my/jewelry/brand',
+            params: { pid, bid },
+        }).then((weights) => {
+            let currency = this.currency;
+            let brand = brands.find(b => b.id === bid);
+            for (let w of weights) {
+                w.currency = this.currency;
+            }
+
+            let qtys = {};
+            $item.find('.base[field="jewelry.qty"]').each((i, e) => {
+                qtys[e.dataset.name] = e.value;
+            });
+            $item.html(Qweb.render('paylox.jewelry.items', {
+                brand,
+                brands,
+                format,
+                weights,
+                currency,
+                product: {
+                    id: pid,
+                    name: name,
+                    foreground: foreground,
+                    background: background,
+                },
+            }));
+
+            payloxPage.prototype._start.apply(this, [
+                'jewelry.price',
+                'jewelry.qty',
+                'jewelry.amount',
+                'jewelry.plus',
+                'jewelry.minus',
+                'jewelry.brand',
+                'jewelry.brands',
+            ]);
+
+            $item.find('.base[field="jewelry.qty"]').each((i, e) => {
+                if (e.dataset.name in qtys) {
+                    e.value = qtys[e.dataset.name];
+                }
+                $(e).trigger('change');
+            });
+        }).guardedCatch(() => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
             });
         });
     },

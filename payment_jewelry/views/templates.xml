@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="page_regsiter" name="Jewelry Register Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-jewelry-register navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div>
+                    <img t-att-src="'/p/company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+                <!--<t t-call="payment_jetcheckout_system.payment_company"/>-->
+            </div>
+            <div class="d-flex justify-content-center flex-fill px-lg-5">
+                <div>
+                    <div class="mx-2 my-4 card border shadow p-4 flex-fill fields">
+                        <h2 class="mb-4 text-center">Welcome</h2>
+                        <p class="mb-5 mt-2 text-center text-600">
+                            Type your <strong>VAT number</strong> and click <strong>Search</strong> button
+                        </p>
+                        <div class="field-container">
+                            <input id="vat" type="text" required="required" maxlength="11"/>
+                            <span class="bar-container"/>
+                            <label for="vat"><span>VAT</span></label>
+                            <button class="btn btn-primary search">
+                                Search<i class="fa fa-search ml8" t-translations="off"/>
+                            </button>
+                        </div>
+                        <div class="result">
+                            <div class="loading">
+                                <i class="fa fa-5x fa-spin fa-circle-o-notch text-primary"/>
+                            </div>
+                            <div class="info pt16"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+        </t>
+    </template>
+
     <template id="page_payment" name="Jewelry Payment Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
@@ -43,7 +85,7 @@
                                                     <span t-esc="product.name"/>
                                                 </div>
                                                 <div class="justify-content-start payment-jewelry-items-brand">
-                                                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
+                                                    <button class="btn" t-att-data-id="brand['id']" t-att-data-name="brand['name']" t-att-data-image="brand['image']" t-att-data-product="product.id" field="jewelry.brand">
                                                         <img t-attf-src="data:image/png;base64, #{brand['image']}" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
                                                     </button>
                                                 </div>
@@ -91,9 +133,11 @@
                                                     <span t-esc="product.name"/>
                                                 </div>
                                                 <div class="justify-content-start payment-jewelry-items-brand" t-attf-style="grid-column: 2 / span #{len(weights)};">
-                                                    <button class="btn" t-att-data-id="product.id" field="jewelry.brand">
-                                                        <img t-att-src="'data:image/png;base64, %s' % brand['image']" t-att-alt="brand['name']" t-att-data-id="brand['id']" draggable="false"/>
-                                                    </button>
+                                                    <t t-foreach="brands" t-as="b">
+                                                        <button t-attf-class="btn #{'active' if b['id'] == brand['id'] else ''}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="jewelry.brands">
+                                                            <img t-attf-src="data:image/png;base64, #{b['image']}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
+                                                        </button>
+                                                    </t>
                                                 </div>
                                                 <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
                                                     Gram
@@ -129,9 +173,6 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <t t-foreach="brands" t-as="brand">
-                                            <input type="hidden" t-att-data-id="brand['id']" t-att-data-name="brand['name']" t-att-data-image="brand['image']" t-att-data-product="product.id" field="jewelry.brands"/>
-                                        </t>
                                     </div>
                                 </t>
                             </t>

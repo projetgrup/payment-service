@@ -291,8 +291,19 @@
 
                 .payment-jewelry-items-brand {
                     button {
-                        position: sticky;
-                        left: 164px;
+                        opacity: 0.5;
+                        filter: saturate(0.5);
+                        transition: opacity 0.4s;
+
+                        &.active {
+                            opacity: 1;
+                            filter: saturate(1);
+                        }
+
+                        &:hover {
+                            opacity: 1;
+                            filter: saturate(1);
+                        }
                     }
                 }
 
