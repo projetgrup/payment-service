@@ -9,7 +9,12 @@ class Website(models.Model):
         for website in self:
             website.template_ok = bool(website.template_id)
 
-    template_ok = fields.Boolean('Use Template', compute='_compute_template_ok', readonly=False)
+    def _set_template_ok(self):
+        for website in self:
+            if not website.template_ok:
+                website.template_id = False
+
+    template_ok = fields.Boolean('Use Template', compute='_compute_template_ok', inverse='_set_template_ok', readonly=False)
     template_id = fields.Many2one('website', 'Template')
 
     payment_footer = fields.Html('Footer')

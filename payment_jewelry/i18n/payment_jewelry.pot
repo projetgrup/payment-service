@@ -1,0 +1,488 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_jewelry
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-22 14:47+0000\n"
+"PO-Revision-Date: 2024-01-22 14:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "<em>Partner : </em>"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_kanban
+msgid "<i class=\"fa fa-credit-card mr-2\"/>Payment Page"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_kanban
+msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Address</b>\n"
+"            </span>"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "<span>Gram</span>"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "Amount"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Amount to Pay"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_product_attribute
+msgid "Attributes"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_tree
+msgid "Authorized"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_tree
+msgid "Campaign"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#, python-format
+msgid "Cart is empty"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_product_category
+msgid "Categories"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Choose a brand"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "City"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.child_form
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.child_search
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.child_tree
+msgid "Client"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.actions.act_window,name:payment_jewelry.action_parent
+#: model:ir.ui.menu,name:payment_jewelry.menu_parent
+msgid "Clients"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_res_company
+#: model:ir.ui.menu,name:payment_jewelry.menu_company
+msgid "Companies"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_companies
+msgid "Company Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_conf
+msgid "Configuration"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "Country"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.actions.act_window,help:payment_jewelry.action_parent
+msgid "Create a client"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.actions.act_window,help:payment_jewelry.action_child
+msgid "Create a customer"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.actions.act_window,help:payment_jewelry.action_item
+msgid "Created payments are listed here"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.item_search
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.item_tree
+msgid "Customer"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.actions.act_window,name:payment_jewelry.action_child
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "Customers"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_dashboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_mail
+msgid "Email Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_mail_template
+msgid "Email Templates"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_main
+msgid "GPS"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "Gram"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_integrations
+msgid "Integration Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Jewelry"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__payment_item__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_attribute__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_category__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_template__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__res_company__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__res_partner__system__jewelry
+#: model:ir.module.category,description:payment_jewelry.module_category_jewelry
+#: model:ir.module.category,name:payment_jewelry.module_category_jewelry
+msgid "Jewelry Payment System"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_mail_server
+msgid "Mail Servers"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:res.groups,name:payment_jewelry.group_jewelry_manager
+msgid "Manager"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.actions.act_window,help:payment_jewelry.action_item
+msgid "No payments yet"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "No setting found"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Order Details"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Order Net Amount"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Pay Now"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_acquirer
+msgid "Payment Acquirers"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_payment_item
+msgid "Payment Items"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_tree
+msgid "Payment Link"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_tree
+msgid "Payment Page"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_acquirers
+msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_payment_product
+msgid "Payment System Product"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.actions.act_window,name:payment_jewelry.action_item
+#: model:ir.ui.menu,name:payment_jewelry.menu_payment
+msgid "Payments"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "Price"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_product_attribute
+msgid "Product Attribute"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_product_category
+msgid "Product Category"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_products
+msgid "Product Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_product
+#: model:ir.ui.menu,name:payment_jewelry.menu_product_template
+msgid "Products"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "Quantity"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_sms_provider
+msgid "SMS Providers"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_sms
+msgid "SMS Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_sms_template
+msgid "SMS Templates"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Service Fee"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.actions.act_window,name:payment_jewelry.action_settings
+#: model:ir.ui.menu,name:payment_jewelry.menu_settings
+msgid "Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "State"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "Street..."
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields,field_description:payment_jewelry.field_payment_item__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_product_attribute__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_product_category__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_product_product__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_product_template__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_users__system
+msgid "System"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_tags
+msgid "Tags"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "Tags..."
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_transaction
+msgid "Transactions"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Try searching for another keyword"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields,field_description:payment_jewelry.field_product_attribute__payment_type
+msgid "Type"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "Unit(s)"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/dashboard.xml:0
+#: code:addons/payment_jewelry/static/src/xml/product.xml:0
+#, python-format
+msgid "Update Prices"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:res.groups,name:payment_jewelry.group_jewelry_user
+msgid "User"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_user
+msgid "Users"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_product_product
+msgid "Variants"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_websites
+msgid "Website Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_website
+msgid "Websites"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_attribute__payment_type__weight
+msgid "Weight"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "ZIP"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#, python-format
+msgid "gr)"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_syncops_connector
+msgid "syncOPS Integrations"
+msgstr ""
