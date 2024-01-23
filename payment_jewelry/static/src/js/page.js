@@ -46,6 +46,12 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             }),
             items: new fields.element(),
             lines: new fields.element(),
+            plus: new fields.element({
+                events: [['click', this._onClickPlus]],
+            }),
+            minus: new fields.element({
+                events: [['click', this._onClickMinus]],
+            }),
             brand: new fields.element({
                 events: [['click', this._onClickBrand]],
             }),
@@ -115,7 +121,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _onChangePrice($price, update=true) {
-        let $qty = this.jewelry.qty.$.filter(`[data-id=${$price.data('id')}]`);
+        let $qty = this.jewelry.qty.$.filter(`.base[data-id=${$price.data('id')}]`);
         let $amount = this.jewelry.amount.$.filter(`[data-id=${$price.data('id')}]`);
 
         let qty = parseFloat($qty.val());
@@ -135,7 +141,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         let subtotal = 0;
         let products = {};
         let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
-        this.jewelry.amount.$.each((i, e) => {
+        this.jewelry.amount.$.filter(`.base`).each((i, e) => {
             let $e = $(e);
             let value = parseFloat($e.data('value'));
             if (value > 0) {
@@ -161,6 +167,30 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.jewelry.subtotal.text = format.currency(subtotal, ...currency);
         this.jewelry.fee.text = format.currency(fee, ...currency);
         this.jewelry.total.text = format.currency(total, ...currency);
+    },
+
+    _onClickPlus(ev) {
+        let btn = $(ev.currentTarget);
+        let pid = btn.data('id');
+        let qty = this.jewelry.qty.$.filter(`.base[data-id=${pid}]`);
+
+        let val = qty.val();
+        qty.val(+val+1);
+        qty.trigger('change');
+    },
+
+    _onClickMinus(ev) {
+        let btn = $(ev.currentTarget);
+        let pid = btn.data('id');
+        let qty = this.jewelry.qty.$.filter(`.base[data-id=${pid}]`);
+
+        let val = qty.val();
+        if (val > 0) {
+            qty.val(+val-1);
+        } else {
+            qty.val(0);
+        }
+        qty.trigger('change');
     },
 
     _onClickBrand(ev) {
@@ -202,7 +232,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                     }
 
                     let qtys = {};
-                    $item.find('[field="jewelry.qty"]').each((i, e) => {
+                    $item.find('.base[field="jewelry.qty"]').each((i, e) => {
                         qtys[e.dataset.name] = e.value;
                     });
 
@@ -223,10 +253,12 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                         'jewelry.price',
                         'jewelry.qty',
                         'jewelry.amount',
+                        'jewelry.plus',
+                        'jewelry.minus',
                         'jewelry.brand',
                     ]);
 
-                    $item.find('[field="jewelry.qty"]').each((i, e) => {
+                    $item.find('.base[field="jewelry.qty"]').each((i, e) => {
                         if (e.dataset.name in qtys) {
                             e.value = qtys[e.dataset.name];
                         }
@@ -247,8 +279,11 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     _onChangeQty(ev) {
         let $qty = $(ev.currentTarget);
-        let $price = this.jewelry.price.$.filter(`[data-id=${$qty.data('id')}]`);
-        let $amount = this.jewelry.amount.$.filter(`[data-id=${$qty.data('id')}]`);
+        let pid = $qty.data('id');
+        this.jewelry.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
+
+        let $price = this.jewelry.price.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.jewelry.amount.$.filter(`[data-id=${pid}]`);
 
         let qty = parseFloat($qty.val());
         let price = parseFloat($price.data('value'));

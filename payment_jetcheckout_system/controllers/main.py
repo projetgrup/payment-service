@@ -50,6 +50,27 @@ class PayloxSystemController(Controller):
         if request.env.user.share and not 'id' in kwargs:
             raise werkzeug.exceptions.NotFound()
 
+    def _redirect_advance_page(self, website_id=None, company_id=None):
+        website = False
+        websites = request.env['website'].sudo()
+        if website_id:
+            website = websites.browse(website_id)
+        elif company_id:
+            website = websites.search([
+                ('domain', '=', request.website.domain),
+                ('company_id', '=', company_id)
+            ], limit=1)
+
+        if not website:
+            raise werkzeug.exceptions.NotFound()
+
+        website._force()
+        path = request.httprequest.path
+        query = request.httprequest.query_string
+        if query:
+            path += '?' + query.decode('utf-8')
+        return werkzeug.utils.redirect(path)
+
     def _get_parent(self, token):
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
         if not id or not token:
@@ -482,16 +503,7 @@ class PayloxSystemController(Controller):
         w_id = request.website.id
         website_id = int(kwargs.get('id', w_id))
         if w_id != website_id:
-            website = request.env['website'].sudo().browse(website_id)
-            if not website:
-                raise werkzeug.exceptions.NotFound()
-
-            website._force()
-            path = request.httprequest.path
-            query = request.httprequest.query_string
-            if query:
-                path += '?' + query.decode('utf-8')
-            return werkzeug.utils.redirect(path)
+            return self._redirect_advance_page(website_id=website_id)
 
         company = request.env.company
         if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
@@ -502,19 +514,10 @@ class PayloxSystemController(Controller):
         user = request.env.user
         companies = user.company_ids
         if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
-            website = request.env['website'].sudo().search([
-                ('domain', '=', request.website.domain),
-                ('company_id', '=', user.company_id.id)
-            ], limit=1)
-            if not website:
-                raise werkzeug.exceptions.NotFound()
-            
-            website._force()
-            path = request.httprequest.path
-            query = request.httprequest.query_string
-            if query:
-                path += '?' + query.decode('utf-8')
-            return werkzeug.utils.redirect(path)
+            return self._redirect_advance_page(company_id=user.company_id.id)
+
+        if company.id != request.website.company_id.id:
+            return self._redirect_advance_page(company_id=company.id)
 
         partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
         values = self._prepare(partner=partner, company=company, currency=currency)
