@@ -1,0 +1,51 @@
+.payment-jewelry-register {
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fields {
+        max-width: 400px;
+
+        .field-container button {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            border-radius: 7px;
+            height: calc(100% - 8px);
+        }
+
+        .result {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+            min-height: 0;
+
+            &.show {
+                min-height: 400px;
+
+                .loading {
+                    display: flex;
+                }
+            }
+
+            .loading {
+                position: absolute;
+                display: none;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                inset: 0;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.2s;
+                background-color: #ffffff;
+
+                &.show {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+    }
+}
