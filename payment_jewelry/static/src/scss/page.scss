@@ -291,8 +291,8 @@
 
                 .payment-jewelry-items-brand {
                     button {
-                        opacity: 0.5;
-                        filter: saturate(0.5);
+                        opacity: 0.4;
+                        filter: saturate(0);
                         transition: opacity 0.4s;
 
                         &.active {
@@ -429,6 +429,39 @@
                         }
                     }
                 }
+            }
+        }
+
+        .payment-jewelry-policy-popup {
+
+            .modal-content {
+                overflow: hidden;
+            }
+            .modal-body {
+                position: relative;
+                padding-top: 15px !important;
+
+                .loading {
+                    position: absolute;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    justify-content: center;
+                    inset: 0;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.2s;
+                    background-color: #ffffffdd;
+    
+                    &.show {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+            }
+
+            .modal-footer {
+                display: none;
             }
         }
     }

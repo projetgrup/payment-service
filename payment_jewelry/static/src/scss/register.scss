@@ -23,15 +23,11 @@
 
             &.show {
                 min-height: 400px;
-
-                .loading {
-                    display: flex;
-                }
             }
 
             .loading {
                 position: absolute;
-                display: none;
+                display: flex;
                 align-items: center;
                 flex-direction: column;
                 justify-content: center;
