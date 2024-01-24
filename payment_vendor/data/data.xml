@@ -194,7 +194,7 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <record id="crom_transaction_daily" model="ir.cron">
+        <record id="cron_transaction_daily" model="ir.cron">
             <field name="name">Send daily report email of transactions</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>

@@ -10,7 +10,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['payment_system_product', 'payment_syncops'],
     'data': [
-        #'data/data.xml',
+        'data/data.xml',
         'security/security.xml',
         'views/item.xml',
         'views/partner.xml',
