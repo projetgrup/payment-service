@@ -61,10 +61,16 @@
                         <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
                     </tr>
                     <tr>
-                        <td class="text-right"></td>
-                        <td/>
+                        <td colspan="2" class="px-0 py-1">
+                            <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="jewelry.policy">
+                                My PoS Policy
+                            </button>
+                        </td>
                     </tr>
                 </table>
+            </div>
+            <div class="o_loading" style="opacity:0;visibility:hidden;">
+                <em class="fa fa-3x fa-spin fa-circle-o-notch text-warning"/>
             </div>
             <div class="px-lg-5">
                 <t t-call="payment_jetcheckout_system.payment_state">

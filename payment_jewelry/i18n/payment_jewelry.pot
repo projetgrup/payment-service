@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-23 16:02+0000\n"
-"PO-Revision-Date: 2024-01-23 16:02+0000\n"
+"POT-Creation-Date: 2024-01-24 11:27+0000\n"
+"PO-Revision-Date: 2024-01-24 11:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,74 @@ msgid "<span>VAT</span>"
 msgstr ""
 
 #. module: payment_jewelry
+#: model:mail.template,body_html:payment_jewelry.mail_policy
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hello <strong t-out=\"object.name or ''\">Marc Demo</strong>,<br/><br/>\n"
+"                        Your PoS policy information as follows.<br/><br/>\n"
+"                        <t t-if=\"object.name\">\n"
+"                            Name : <t t-out=\"object.name or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.vat\">\n"
+"                            VAT : <t t-out=\"object.vat or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.street\">\n"
+"                            Address : <t t-out=\"object.street or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.state_id\">\n"
+"                            State : <t t-out=\"object.state_id.name or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.country_id\">\n"
+"                            Country : <t t-out=\"object.country_id.name or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.phone or object.mobile\">\n"
+"                            Phone : <t t-out=\"object.phone or object.mobile or ''\"/><br/>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.website\">\n"
+"                            Website : <t t-out=\"object.website or ''\"/><br/>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"mailto:{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"{{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+
+#. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "Address"
@@ -78,6 +145,9 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
@@ -180,7 +250,10 @@ msgid "Continue"
 msgstr ""
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+#, python-format
 msgid "Country"
 msgstr ""
 
@@ -228,6 +301,10 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
@@ -277,8 +354,20 @@ msgid "Jewelry Payment System"
 msgstr ""
 
 #. module: payment_jewelry
+#: model:mail.template,name:payment_jewelry.mail_policy
+msgid "Jewelry: PoS Policy Email"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_mail_server
 msgid "Mail Servers"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#, python-format
+msgid "Make Application"
 msgstr ""
 
 #. module: payment_jewelry
@@ -289,6 +378,21 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.model,name:payment_jewelry.model_ir_ui_menu
 msgid "Menu"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
+msgid "My PoS Policy"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
+#, python-format
+msgid "Name"
 msgstr ""
 
 #. module: payment_jewelry
@@ -354,6 +458,7 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "Phone"
@@ -364,6 +469,19 @@ msgstr ""
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "Please check your VAT number and try again."
+msgstr ""
+
+#. module: payment_jewelry
+#: code:addons/payment_jewelry/controllers/main.py:0
+#, python-format
+msgid "Please specify an email address before proceeding."
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Policy has been sent succesfully."
 msgstr ""
 
 #. module: payment_jewelry
@@ -442,6 +560,7 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 #, python-format
@@ -451,6 +570,13 @@ msgstr ""
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid "Street..."
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Success"
 msgstr ""
 
 #. module: payment_jewelry
@@ -525,6 +651,7 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "VAT"
@@ -537,6 +664,7 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "Website"
@@ -577,4 +705,9 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_syncops_connector
 msgid "syncOPS Integrations"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:mail.template,subject:payment_jewelry.mail_policy
+msgid "{{ ctx['company'].name }} | PoS Policy"
 msgstr ""

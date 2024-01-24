@@ -58,6 +58,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             brands: new fields.element({
                 events: [['click', this._onClickBrands]],
             }),
+            policy: new fields.element({
+                events: [['click', this._onClickPolicy]],
+            }),
             pay: new fields.element({
             }),
         }
@@ -279,8 +282,6 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         });
     },
 
-
-
     _onClickBrands(ev) {
         let $btn = $(ev.currentTarget);
         let $item = this.jewelry.items.$.filter(`[data-id=${ $btn.data('product') }]`);
@@ -342,6 +343,61 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 title: _t('Error'),
                 message: _t('An error occured. Please contact with your system administrator.'),
             });
+        });
+    },
+
+    _onClickPolicy() {
+        framework.showLoading();
+        rpc.query({
+            route: '/my/jewelry/policy',
+        }).then((partner) => {
+            let popup = new dialog(this, {
+                size: 'small',
+                technical: false,
+                title: _t('My PoS Policy'),
+                $content: Qweb.render('paylox.jewelry.policy', partner),
+            });
+            popup.open().opened(() => {
+                let $loading = popup.$modal.find('.loading');
+                popup.$modal.addClass('payment-jewelry-policy-popup');
+                popup.$modal.find('button').click(() => {
+                    $loading.addClass('show');
+                    rpc.query({
+                        route: '/my/jewelry/policy/send',
+                    }).then((result) => {
+                        if (result.error) {
+                            this.displayNotification({
+                                type: 'danger',
+                                title: _t('Error'),
+                                message: result.error,
+                            });
+                        } else {
+                            this.displayNotification({
+                                type: 'info',
+                                title: _t('Success'),
+                                message: _t('Policy has been sent succesfully.'),
+                            });
+                            popup.close();
+                        }
+                        $loading.removeClass('show');
+                    }).guardedCatch(() => {
+                        this.displayNotification({
+                            type: 'danger',
+                            title: _t('Error'),
+                            message: _t('An error occured. Please contact with your system administrator.'),
+                        });
+                        $loading.removeClass('show');
+                    });
+                });
+            });
+            framework.hideLoading();
+        }).guardedCatch(() => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
+            });
+            framework.hideLoading();
         });
     },
 
