@@ -232,7 +232,7 @@ class Partner(models.Model):
             if not payment.tag:
                 tag = payment_tag.search([('company_id', '=', payment.company_id.id), ('campaign_id', '=', False)], limit=1)
                 for t in tag:
-                    key = (t.id, t.name, False)
+                    key = (t.id, t.name, '')
                     if key not in tags:
                         tags[key] = []
                     tags[key].append(payment.id)
