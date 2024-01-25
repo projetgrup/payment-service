@@ -39,7 +39,8 @@ payloxPage.include({
             let payment_tag = false;
             let $payment_tag = $('button[field="payment.due.tag"].btn-primary');
             if ($payment_tag.length) {
-                payment_tag = $payment_tag[0].dataset.tag || '';
+                //payment_tag = $payment_tag[0].dataset.id || false;
+                payment_tag = $payment_tag[0].dataset.tag || false;
             }
 
             params['system'] = this.system.value;
