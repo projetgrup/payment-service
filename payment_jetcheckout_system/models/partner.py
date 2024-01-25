@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date
+from collections import OrderedDict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import email_normalize
@@ -217,17 +219,35 @@ class Partner(models.Model):
         return self.search([('vat', '!=', False), ('vat', '=', self.vat), ('company_id', '=', self.env.company.id)]).mapped('category_id')
 
     def _get_payments(self):
+        tags = OrderedDict()
         date_empty = date(1, 1, 1)
+
+        payment_item = self.env['payment.item'].sudo()
+        payment_tag = self.env['payment.settings.campaign.tag'].sudo()
+        payment_tag_line = self.env['payment.settings.campaign.tag.line'].sudo()
+
+        payments_tag = []
         payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
-        p_tags = payments.mapped('tag')
-        payment_tags = self.env.company.sudo().payment_page_campaign_tag_ids.filtered(lambda x: not x.campaign_id or any(l.name in p_tags for l in x.line_ids))
-        if payment_tags:
-            payment_tag = payment_tags[0]
-            if payment_tag.campaign_id:
-                payments = payments.filtered(lambda x: x.tag in payment_tag.line_ids.mapped('name'))
+        for payment in payments:
+            if not payment.tag:
+                tag = payment_tag.search([('company_id', '=', payment.company_id.id), ('campaign_id', '=', False)], limit=1)
+                for t in tag:
+                    if t.id not in tags:
+                        tags[t.id] = []
+                    tags[t.id].append(payment.id)
             else:
-                payments = payments.filtered(lambda x: x.tag not in payment_tags.mapped('line_ids.name'))
-        return payments, payment_tags
+                tag = payment_tag_line.search([('campaign_id.company_id', '=', payment.company_id.id), ('name', '=', payment.tag)])
+                for t in tag:
+                    if t.campaign_id.id not in tags:
+                        tags[t.campaign_id.id] = []
+                    tags[t.campaign_id.id].append(payment.id)
+
+        if tags:
+            keys = list(tags.keys())
+            payments_tag = payment_tag.browse(keys)
+            payments = payment_item.browse(tags[keys[0]])
+
+        return payments, payments_tag
 
     @api.model
     def _resolve_token(self, token):
