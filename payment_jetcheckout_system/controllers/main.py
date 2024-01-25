@@ -94,7 +94,10 @@ class PayloxSystemController(Controller):
             vals.update({'jetcheckout_item_ids': [(6, 0, ids)]})
         if request.env.company.system:
             vals.update({'jetcheckout_payment_ok': False})
-        vals.update({'paylox_item_tag': kwargs.get('payment_tag', '')})
+
+        tags = kwargs.get('payment_tag', {})
+        for key, val in tags.items():
+            vals.update({'paylox_item_tag_%s' % key: val})
         return vals
 
     def _process(self, **kwargs):
