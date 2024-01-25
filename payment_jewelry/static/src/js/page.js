@@ -85,6 +85,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 id: parseInt(e.dataset.id),
                 name: e.dataset.name,
                 image: e.dataset.image,
+                lines: {},
             });
         });
     },
@@ -161,8 +162,10 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 subtotal += value;
             }
         });
+        let brands = [{}]
         this.jewelry.lines.html = Qweb.render('paylox.jewelry.lines', {
             format,
+            brands,
             currency: this.currency,
             products: Object.entries(products),
         });

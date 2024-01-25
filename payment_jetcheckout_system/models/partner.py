@@ -222,31 +222,40 @@ class Partner(models.Model):
         tags = OrderedDict()
         date_empty = date(1, 1, 1)
 
-        payment_item = self.env['payment.item'].sudo()
-        payment_tag = self.env['payment.settings.campaign.tag'].sudo()
-        payment_tag_line = self.env['payment.settings.campaign.tag.line'].sudo()
-
-        payments_tag = []
+        payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
+            ('company_id', '=', self.env.company.id),
+            ('campaign_id', '=', False)
+        ], limit=1)
         payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
         for payment in payments:
             if not payment.tag:
-                tag = payment_tag.search([('company_id', '=', payment.company_id.id), ('campaign_id', '=', False)], limit=1)
-                for t in tag:
-                    key = (t.id, t.name, '')
+                if payment_tag:
+                    key = (payment_tag.id, payment_tag.name, '', False)
                     if key not in tags:
                         tags[key] = []
                     tags[key].append(payment.id)
             else:
-                tag = payment_tag_line.search([('campaign_id.company_id', '=', payment.company_id.id), ('name', '=', payment.tag)])
-                for t in tag:
-                    key = (t.campaign_id.id, t.campaign_id.name, t.name)
-                    if key not in tags:
-                        tags[key] = []
-                    tags[key].append(payment.id)
+                tag = self.env['payment.settings.campaign.tag.line'].sudo().search([
+                    ('campaign_id.company_id', '=', payment.company_id.id),
+                    ('name', '=', payment.tag)
+                ])
+                if tag:
+                    for t in tag:
+                        key = (t.campaign_id.id, t.campaign_id.name, payment.tag, True)
+                        if key not in tags:
+                            tags[key] = []
+                        tags[key].append(payment.id)
+                else:
+                    for t in tag:
+                        key = (payment_tag.id, payment_tag.name, payment.tag, False)
+                        if key not in tags:
+                            tags[key] = []
+                        tags[key].append(payment.id)
 
+        payments_tag = []
         if tags:
             payments_tag = list(tags.keys())
-            payments = payment_item.browse(tags[payments_tag[0]])
+            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0]])
 
         return payments, payments_tag
 
