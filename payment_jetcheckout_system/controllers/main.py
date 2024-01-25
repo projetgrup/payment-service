@@ -95,9 +95,9 @@ class PayloxSystemController(Controller):
         if request.env.company.system:
             vals.update({'jetcheckout_payment_ok': False})
 
-        tags = kwargs.get('payment_tag', {})
-        for key, val in tags.items():
-            vals.update({'paylox_item_tag_%s' % key: val})
+        tag = kwargs.get('payment_tag', False)
+        if tag:
+            vals.update({'paylox_item_tag_id': tag})
         return vals
 
     def _process(self, **kwargs):
@@ -334,7 +334,7 @@ class PayloxSystemController(Controller):
                 'amount': item.amount,
                 'advance': item.advance,
                 'residual_amount': item.residual_amount,
-                'description': item.description,
+                'description': item.description or '',
                 'file': item.file,
                 'token': token,
                 'currency': currency,

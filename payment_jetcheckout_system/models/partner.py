@@ -231,10 +231,9 @@ class Partner(models.Model):
         for payment in payments:
             if not payment.tag:
                 if payment_tag:
-                    key = (payment_tag.id, payment_tag.name, '', False)
-                    if key not in tags:
-                        tags[key] = []
-                    tags[key].append(payment.id)
+                    if payment_tag.id not in tags:
+                        tags[payment_tag.id] = []
+                    tags[payment_tag.id].append(payment.id)
             else:
                 tag = self.env['payment.settings.campaign.tag.line'].sudo().search([
                     ('campaign_id.company_id', '=', company.id),
@@ -242,21 +241,20 @@ class Partner(models.Model):
                 ])
                 if tag:
                     for t in tag:
-                        key = (t.campaign_id.id, t.campaign_id.name, payment.tag, True)
-                        if key not in tags:
-                            tags[key] = []
-                        tags[key].append(payment.id)
+                        if t.campaign_id.id not in tags:
+                            tags[t.campaign_id.id] = []
+                        tags[t.campaign_id.id].append(payment.id)
                 else:
                     if payment_tag:
-                        key = (payment_tag.id, payment_tag.name, payment.tag, False)
-                        if key not in tags:
-                            tags[key] = []
-                        tags[key].append(payment.id)
+                        if payment_tag.id not in tags:
+                            tags[payment_tag.id] = []
+                        tags[payment_tag.id].append(payment.id)
 
         payments_tag = []
         if tags:
-            payments_tag = list(tags.keys())
-            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0]])
+            keys = list(tags.keys())
+            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys)
+            payments = self.env['payment.item'].sudo().browse(tags[keys[0]])
 
         return payments, payments_tag
 

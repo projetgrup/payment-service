@@ -32,6 +32,17 @@ class PaymentTransaction(models.Model):
     jetcheckout_partner_team_id = fields.Many2one('crm.team', 'Sales Team', related='partner_id.team_id', store=True, readonly=True, ondelete='set null')
     jetcheckout_partner_categ_ids = fields.Many2many('res.partner.category', 'transaction_partner_category_rel', 'transaction_id', 'category_id', 'Tags', related='partner_id.category_id', store=True, readonly=True, ondelete='set null')
 
+    @api.model
+    def create(self, values):
+        if values.get('paylox_item_tag_id'):
+            tag = self.env['payment.settings.campaign.tag'].sudo().browse(values['paylox_item_tag_id'])
+            values['paylox_item_tag_name'] = tag.name
+        if values.get('jetcheckout_item_ids'):
+            item = self.env['payment.item'].sudo().browse(values['jetcheckout_item_ids'][0][2])
+            values['paylox_item_tag_code'] = '/'.join(set([i.tag or '-' for i in item]))
+        res = super().create(values)
+        return res
+
     def action_items(self):
         self.ensure_one()
         system = self.company_id.system or self.partner_id.system or 'jetcheckout_system'
