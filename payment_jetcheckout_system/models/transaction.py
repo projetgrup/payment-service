@@ -40,8 +40,7 @@ class PaymentTransaction(models.Model):
         if values.get('jetcheckout_item_ids'):
             item = self.env['payment.item'].sudo().browse(values['jetcheckout_item_ids'][0][2])
             values['paylox_item_tag_code'] = '/'.join(set([i.tag or '-' for i in item]))
-        res = super().create(values)
-        return res
+        return super().create(values)
 
     def action_items(self):
         self.ensure_one()
