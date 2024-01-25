@@ -36,13 +36,10 @@ payloxPage.include({
                 items.push([id, amount]);
             });
 
-            let payment_tag = {};
+            let payment_tag = false;
             let $payment_tag = $('button[field="payment.due.tag"].btn-primary');
             if ($payment_tag.length) {
-                let p_tag = $payment_tag[0].dataset;
-                payment_tag.id = parseInt(p_tag.id);
-                payment_tag.name = p_tag.name;
-                payment_tag.code = p_tag.code;
+                payment_tag = parseInt($payment_tag[0].dataset.id);
             }
 
             params['system'] = this.system.value;
