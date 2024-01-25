@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                                 <div class="d-block mt-2 text-600 text-center">
-                                    <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0][2])" class="d-flex flex-column border-0">
+                                    <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-column border-0">
                                         <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
                                         <em t-if="company.payment_page_advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
                                     </div>
@@ -163,7 +163,7 @@
                                     <tfoot class="shadow bg-light">
                                         <tr>
                                             <td class="text-left" colspan="5">
-                                                <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0][2])" class="d-flex flex-wrap gap-1">
+                                                <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-wrap gap-1">
                                                     <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
                                                     <em t-if="company.payment_page_advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
                                                 </div>
