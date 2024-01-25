@@ -17,7 +17,6 @@ class PaymentTransaction(models.Model):
     partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
 
     paylox_item_count = fields.Integer(compute='_compute_item_count')
-    paylox_item_tag = fields.Char('Payment Item Tag', readonly=True, copy=False)
     paylox_item_tag_id = fields.Many2one('payment.settings.campaign.tag', 'Payment Item Tag', readonly=True, copy=False)
     paylox_item_tag_name = fields.Char('Payment Item Tag Name', readonly=True, copy=False)
     paylox_item_tag_code = fields.Char('Payment Item Tag Code', readonly=True, copy=False)
