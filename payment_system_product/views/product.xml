@@ -101,6 +101,7 @@
     <field name="model">product.product</field>
     <field name="arch" type="xml">
         <tree string="Product" multi_edit="1" sample="1" js_class="payment_system_product_list">
+            <field name="sequence" widget="handle"/>
             <field name="priority" widget="priority" optional="show" nolabel="1"/>
             <field name="name" string="Product Name" decoration-bf="1"/>
             <field name="default_code" optional="show"/>
