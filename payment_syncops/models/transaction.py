@@ -104,6 +104,7 @@ class PaymentTransaction(models.Model):
             'ref': ref,
             'vat': vat,
             'name': name,
+            #'tag': self.paylox_item_tag_code,
             'date': date.strftime('%Y-%m-%d %H:%M:%S'),
             'amount': self.amount,
             'reference': self.reference,
