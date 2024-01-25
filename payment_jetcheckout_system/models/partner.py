@@ -221,9 +221,10 @@ class Partner(models.Model):
     def _get_payments(self):
         tags = OrderedDict()
         date_empty = date(1, 1, 1)
+        company = self.env.company
 
         payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
-            ('company_id', '=', self.env.company.id),
+            ('company_id', '=', company.id),
             ('campaign_id', '=', False)
         ], limit=1)
         payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
@@ -236,7 +237,7 @@ class Partner(models.Model):
                     tags[key].append(payment.id)
             else:
                 tag = self.env['payment.settings.campaign.tag.line'].sudo().search([
-                    ('campaign_id.company_id', '=', payment.company_id.id),
+                    ('campaign_id.company_id', '=', company.id),
                     ('name', '=', payment.tag)
                 ])
                 if tag:
@@ -246,7 +247,7 @@ class Partner(models.Model):
                             tags[key] = []
                         tags[key].append(payment.id)
                 else:
-                    for t in tag:
+                    if payment_tag:
                         key = (payment_tag.id, payment_tag.name, payment.tag, False)
                         if key not in tags:
                             tags[key] = []
