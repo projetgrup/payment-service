@@ -227,7 +227,7 @@ class Partner(models.Model):
             ('company_id', '=', company.id),
             ('campaign_id', '=', False)
         ], limit=1)
-        payments = self.payable_ids.sorted(lambda x: x.date or date_empty)
+        payments = self.payable_ids
         for payment in payments:
             if not payment.tag:
                 if payment_tag:
@@ -253,9 +253,11 @@ class Partner(models.Model):
         payments_tag = []
         if tags:
             keys = list(tags.keys())
-            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys).sorted(lambda x: not x.campaign_id)
-            payments = self.env['payment.item'].sudo().browse(tags[keys[0]]).sorted(lambda x: x.date or date_empty)
+            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys)
+            payments = self.env['payment.item'].sudo().browse(tags[keys[0]])
 
+        payments = payments.sorted(lambda x: x.date or date_empty)
+        payments_tag = payments_tag.sorted(lambda x: not x.campaign_id)
         return payments, payments_tag
 
     @api.model
