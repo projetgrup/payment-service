@@ -49,6 +49,7 @@ class PayloxSystemVendorController(Controller):
         payments, payment_tags = partner._get_payments()
         if payment_tags and payment_tags[0].campaign_id:
             campaign = payment_tags[0].campaign_id.name
+            raise Exception(campaign)
 
         res.update({
             'campaign': campaign,
