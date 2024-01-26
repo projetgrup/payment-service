@@ -432,6 +432,11 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+msgid "Passive"
+msgstr "Pasif"
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_follower
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 msgid "Add Follower"

@@ -253,6 +253,8 @@
             <field name="vat"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system"/>
             <filter name="filterby_active" string="Active" domain="[('active', '=', True)]"/>
+            <filter name="filterby_passive" string="Passive" domain="[('active', '=', False)]"/>
+            <separator/>
             <filter name="filterby_authorized" string="Authorized" domain="[('is_portal', '=', True)]"/>
             <filter name="filterby_user" string="User" domain="[('is_internal', '=', True)]"/>
             <separator/>

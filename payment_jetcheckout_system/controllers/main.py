@@ -302,10 +302,10 @@ class PayloxSystemController(Controller):
             raise
 
         payment_tags = company.sudo().payment_page_campaign_tag_ids
-        payment_tag = payment_tags.filtered(lambda x: x.name == tag)
+        payment_tag = payment_tags.filtered(lambda x: x.id == tag)
         payment_tag_filter = []
 
-        if len(payment_tag) == 1 and payment_tag.campaign_id:
+        if payment_tag and payment_tag.campaign_id:
             payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
         else:
             payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
