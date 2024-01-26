@@ -45,8 +45,13 @@ class PayloxSystemVendorController(Controller):
             except:
                 pass
 
+        campaign = res['campaign']
         payments, payment_tags = partner._get_payments()
+        if payment_tags and payment_tags[0].campaign_id:
+            campaign = payment_tags[0].campaign_id.name
+
         res.update({
+            'campaign': campaign,
             'payments': payments,
             'payment_tags': payment_tags,
         })
