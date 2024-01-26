@@ -175,6 +175,7 @@ class PayloxSystemController(Controller):
 
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._prepare_system(company, system, partner, transaction)
+        raise Exception(values)
         return request.render('payment_%s.page_payment' % system, values)
 
     @http.route('/p/<token>/<int:pid>', type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
