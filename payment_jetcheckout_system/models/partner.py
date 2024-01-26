@@ -253,8 +253,8 @@ class Partner(models.Model):
         payments_tag = []
         if tags:
             keys = list(tags.keys())
-            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys)
-            payments = self.env['payment.item'].sudo().browse(tags[keys[0]])
+            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys).sorted(lambda x: not x.campaign_id)
+            payments = self.env['payment.item'].sudo().browse(tags[keys[0]]).sorted(lambda x: x.date or date_empty)
 
         return payments, payments_tag
 
