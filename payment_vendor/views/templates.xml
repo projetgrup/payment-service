@@ -185,7 +185,7 @@
                                 <t t-set="amount" t-value="amount or 0"/>
                                 <t t-set="no_border" t-value="True"/>
                                 <t t-set="partner" t-value="partner"/>
-                                <t t-if="due_campaign" t-set="campaign" t-value="due_campaign"/>
+                                <t t-if="due_campaign and (not payment_tags or not payment_tags[0].campaign_id)" t-set="campaign" t-value="due_campaign"/>
                             </t>
                         </div>
                         <div t-if="company.payment_page_due_hide_payment_ok" t-attf-class="row justify-content-center flex-column m-3 #{'d-none' if not due_hide_payment else ''}" field="payment.due.warning">
