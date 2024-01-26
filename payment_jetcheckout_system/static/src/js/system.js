@@ -686,7 +686,11 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         $buttons.removeClass('btn-primary').addClass('btn-secondary');
         $button.removeClass('btn-secondary').addClass('btn-primary');
 
-        let tag = $button.data('tag') || '';
+        let tag = $button.data('id') || false;
+        if (tag) {
+            tag = parseInt(tag);
+        }
+
         rpc.query({route: '/p/due/tag', params: { tag }}).then(([payments, company]) => {
             $('.payment-item').html(qweb.render('paylox.item.all', {
                 payments,
