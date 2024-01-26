@@ -109,7 +109,7 @@ class PayloxSystemController(Controller):
 
     def _prepare(self, **kwargs):
         res = super()._prepare(**kwargs)
-        res['companies'] = request.website._get_companies().sudo()
+        res['companies'] = request.website._get_companies()
         return res
 
     def _prepare_system(self, company, system, partner, transaction, options={}):
