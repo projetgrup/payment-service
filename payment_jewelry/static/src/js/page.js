@@ -21,6 +21,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     init: function (parent, options) {
         this._super(parent, options);
         this.brands = {};
+        this.products = {};
         this.jewelry = {
             price: new fields.float({
                 default: 0,
@@ -69,6 +70,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     start: function () {
         return this._super.apply(this, arguments).then(() => {
             this._getBrands();
+            this._getProducts();
             this._updateLines();
             this._listenPrices();
         });
@@ -77,16 +79,30 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     _getBrands: function () {
         let $brands = $('[field="jewelry.brands"]');
         $brands.each((i, e) => {
-            let product = e.dataset.product;
-            if (!(product in this.brands)) {
-                this.brands[product] = [];
+            let bid = e.dataset.id;
+            let pid = e.dataset.product;
+            if (!(pid in this.brands)) {
+                this.brands[pid] = {};
             }
-            this.brands[product].push({
-                id: parseInt(e.dataset.id),
+            this.brands[pid][bid] = {
+                id: parseInt(bid),
                 name: e.dataset.name,
                 image: e.dataset.image,
                 lines: {},
-            });
+            }
+        });
+    },
+
+    _getProducts: function () {
+        let $products = $('[field="jewelry.items"]');
+        $products.each((i, e) => {
+            let pid = e.dataset.id;
+            this.products[pid] = {
+                id: parseInt(pid),
+                name: e.dataset.name,
+                foreground: e.dataset.foreground,
+                background: e.dataset.background,
+            }
         });
     },
 
@@ -145,29 +161,40 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     _updateLines() {
         let subtotal = 0;
-        let products = {};
+        let brands = {};
         let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
         this.jewelry.amount.$.filter(`.base`).each((i, e) => {
             let $e = $(e);
             let value = parseFloat($e.data('value'));
             if (value > 0) {
-                let name = $e.data('name');
+                let bid = $e.data('brand');
+                let pid = $e.data('product');
                 let qty = parseFloat($e.data('qty'));
                 let weight = parseFloat($e.data('weight'));
-                if (!(name in products)) {
-                    products[name] = { weight: 0, value: 0 };
+
+                if (!(bid in brands)) {
+                    brands[bid] = { products: {}, name: this.brands[pid][bid]['name'] };
                 }
-                products[name].weight += qty * weight;
-                products[name].value += value;
+
+                if (!(pid in brands[bid]['products'])) {
+                    brands[bid]['products'][pid] = { weight: 0, value: 0, name: this.products[pid]['name'] };
+                }
+
+                brands[bid]['products'][pid]['weight'] += qty * weight;
+                brands[bid]['products'][pid]['value'] += value;
                 subtotal += value;
             }
         });
-        let brands = [{}]
+
+        brands = Object.values(brands);
+        for (let brand of brands) {
+            brand.products = Object.values(brand.products);
+        }
+
         this.jewelry.lines.html = Qweb.render('paylox.jewelry.lines', {
             format,
-            brands,
+            brands: this.brands,
             currency: this.currency,
-            products: Object.entries(products),
         });
 
         let fee = subtotal * this.jewelry.commission.value / 100;
@@ -301,7 +328,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             params: { pid, bid },
         }).then((weights) => {
             let currency = this.currency;
-            let brand = brands.find(b => b.id === bid);
+            let brand = brands[bid];
             for (let w of weights) {
                 w.currency = this.currency;
             }

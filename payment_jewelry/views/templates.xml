@@ -123,11 +123,11 @@
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <span class="font-size-125" t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                            <span class="font-size-125" t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-att-data-brand="brand['id']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
                                                         </div>
                                                         <div class="font-weight-500 payment-jewelry-items-amount">Amount</div>
                                                         <div>
-                                                            <span class="font-size-125" t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
+                                                            <span class="font-size-125" t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-att-data-brand="brand['id']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
                                                         </div>
                                                     </div>
                                                 </t>
@@ -158,7 +158,7 @@
                                                 </div>
                                                 <t t-foreach="weights" t-as="weight">
                                                     <div class="text-nowrap">
-                                                        <span class="base" t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                        <span class="base" t-esc="weight['price']" t-att-data-id="weight['id']" t-att-data-value="weight['price']" t-att-data-name="weight['code']" t-att-data-brand="brand['id']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
                                                     </div>
                                                 </t>
                                                 <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
@@ -166,7 +166,7 @@
                                                 </div>
                                                 <t t-foreach="weights" t-as="weight">
                                                     <div class="font-weight-bold payment-jewelry-items-qty" t-attf-style="border: 2px solid #{product.payment_color_background};">
-                                                        <input type="number" min="0" step="1" inputmode="numeric" value="0" class="base font-weight-bold" t-att-data-id="weight['id']" t-att-data-name="weight['name']" field="jewelry.qty"/>
+                                                        <input type="number" min="0" step="1" inputmode="numeric" value="0" class="base font-weight-bold" t-att-data-id="weight['id']" t-att-data-name="weight['name']" t-att-data-brand="brand['id']" field="jewelry.qty"/>
                                                     </div>
                                                 </t>
                                                 <div class="justify-content-end payment-jewelry-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background}; border-bottom: 2px solid #{product.payment_color_background}; border-radius: 0 0 10px 10px;">
@@ -174,7 +174,7 @@
                                                 </div>
                                                 <t t-foreach="weights" t-as="weight">
                                                     <div class="text-nowrap">
-                                                        <span class="base" t-esc="0.0" t-att-data-name="product.name" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
+                                                        <span class="base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="weight['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="weight['value']" t-att-data-product="product['id']" t-att-data-brand="brand['id']" t-options="{'widget': 'monetary', 'display_currency': weight['currency']}" field="jewelry.amount"/>
                                                     </div>
                                                 </t>
                                             </div>

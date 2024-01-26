@@ -24,7 +24,11 @@ class Website(models.Model):
     payment_contact_page = fields.Html('Contact Page')
 
     def _get_companies(self):
-        return self.search([('domain', '=', self.domain)]).mapped('company_id')
+        self = self.sudo()
+        if self.env.user.share:
+            return self.search([('domain', '=', self.domain)]).mapped('company_id')
+        else:
+            return self.env.user.company_ids
 
     @api.model
     def create(self, values):
