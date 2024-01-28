@@ -257,7 +257,8 @@ class Partner(models.Model):
             payments = self.env['payment.item'].sudo().browse(tags[keys[0]])
 
         payments = payments.sorted(lambda x: x.date or date_empty)
-        payments_tag = payments_tag.sorted(lambda x: not x.campaign_id)
+        if payments_tag:
+            payments_tag = payments_tag.sorted(lambda x: not x.campaign_id)
         return payments, payments_tag
 
     @api.model
