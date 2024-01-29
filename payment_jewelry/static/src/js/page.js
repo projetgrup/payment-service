@@ -53,9 +53,6 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             minus: new fields.element({
                 events: [['click', this._onClickMinus]],
             }),
-            brand: new fields.element({
-                events: [['click', this._onClickBrand]],
-            }),
             brands: new fields.element({
                 events: [['click', this._onClickBrands]],
             }),
@@ -115,7 +112,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
             for (let data of event.data.split('\n')) {
                 let [code, price] = data.split(';'); price = parseFloat(price);
-                let $price = $prices.filter(`[data-name="${code}"]`);
+                let $price = $prices.filter(`[data-id="${code}"]`);
                 let value = $price.data('value');
                 if (price == value) {
                     continue;
@@ -179,10 +176,24 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 if (!(pid in brands[bid]['products'])) {
                     brands[bid]['products'][pid] = { weight: 0, value: 0, name: this.products[pid]['name'] };
                 }
-
                 brands[bid]['products'][pid]['weight'] += qty * weight;
                 brands[bid]['products'][pid]['value'] += value;
                 subtotal += value;
+            }
+        });
+
+        this.jewelry.brands.$.each((i, e) => {
+            let $e = $(e);
+            let $span = $e.find('span');
+            let bid = parseInt($e.data('id'));
+            let pid = parseInt($e.data('product'));
+
+            let weight = brands?.[bid]?.['products']?.[pid]?.['weight'];
+            if (weight) {
+                $span.removeClass('d-none');
+                $span.text(weight);
+            } else {
+                $span.addClass('d-none');
             }
         });
 
@@ -193,7 +204,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
         this.jewelry.lines.html = Qweb.render('paylox.jewelry.lines', {
             format,
-            brands: this.brands,
+            brands,
             currency: this.currency,
         });
 
@@ -228,152 +239,42 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         qty.trigger('change');
     },
 
-    _onClickBrand(ev) {
-        let $button = $(ev.currentTarget);
-        let $item = this.jewelry.items.$.filter(`[data-id=${ $button.data('product') }]`);
-
-        let pid = parseInt($item.data('id'));
-        let name = $item.data('name');
-        let brands = this.brands[pid];
-        let foreground = $item.data('foreground');
-        let background = $item.data('background');
-        let popup = new dialog(this, {
-            size: 'small',
-            title: _t('Choose a brand'),
-            $content: Qweb.render('paylox.jewelry.brands', { brands, foreground, background }),
-        });
-        popup.open().opened(() => {
-            popup.$modal.addClass('payment-jewelry-brand-popup');
-            popup.$modal.find('.modal-header').attr('style', `color:${foreground} !important;background-color:${background} !important`);
-            popup.$modal.find('.modal-footer button').attr('style', `color:${foreground} !important;background-color:${background} !important`);
-            popup.$modal.find('button').click((e) => {
-                let $btn = $(e.currentTarget);
-                if (!('id' in $btn.data())) {
-                    popup.close();
-                    return;
-                }
-
-                let bid = parseInt($btn.data('id'));
-                rpc.query({
-                    route: '/my/jewelry/brand',
-                    params: { pid, bid },
-                }).then((weights) => {
-                    let currency = this.currency;
-                    let brand = brands.find(b => b.id === bid);
-                    for (let w of weights) {
-                        w.currency = this.currency;
-                    }
-
-                    let qtys = {};
-                    $item.find('.base[field="jewelry.qty"]').each((i, e) => {
-                        qtys[e.dataset.name] = e.value;
-                    });
-
-                    $item.html(Qweb.render('paylox.jewelry.items', {
-                        brand,
-                        brands,
-                        format,
-                        weights,
-                        currency,
-                        product: {
-                            id: pid,
-                            name: name,
-                            foreground: foreground,
-                            background: background,
-                        },
-                    }));
-
-                    payloxPage.prototype._start.apply(this, [
-                        'jewelry.price',
-                        'jewelry.qty',
-                        'jewelry.amount',
-                        'jewelry.plus',
-                        'jewelry.minus',
-                        'jewelry.brand',
-                        'jewelry.brands',
-                    ]);
-
-                    $item.find('.base[field="jewelry.qty"]').each((i, e) => {
-                        if (e.dataset.name in qtys) {
-                            e.value = qtys[e.dataset.name];
-                        }
-                        $(e).trigger('change');
-                    });
-
-                    popup.close();
-                }).guardedCatch(() => {
-                    this.displayNotification({
-                        type: 'danger',
-                        title: _t('Error'),
-                        message: _t('An error occured. Please contact with your system administrator.'),
-                    });
-                });
-            });
-        });
-    },
-
     _onClickBrands(ev) {
         let $btn = $(ev.currentTarget);
         let $item = this.jewelry.items.$.filter(`[data-id=${ $btn.data('product') }]`);
-
-        let name = $item.data('name');
-        let foreground = $item.data('foreground');
-        let background = $item.data('background');
-        let pid = parseInt($item.data('id'));
-        let bid = parseInt($btn.data('id'));
-        let brands = this.brands[pid];
-
-        rpc.query({
-            route: '/my/jewelry/brand',
-            params: { pid, bid },
-        }).then((weights) => {
-            let currency = this.currency;
-            let brand = brands[bid];
-            for (let w of weights) {
-                w.currency = this.currency;
-            }
-
-            let qtys = {};
-            $item.find('.base[field="jewelry.qty"]').each((i, e) => {
-                qtys[e.dataset.name] = e.value;
+        if ($btn.hasClass('base')) {
+            $item.find(`[data-brand]`).each((i, e) => $(e).addClass('d-none'));
+            $item.find(`[data-brand=${ $btn.data('id') }]`).each((i, e) => $(e).removeClass('d-none'));
+    
+            this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
+            this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ $btn.data('id') }]`).each((i, e) => $(e).addClass('active'));
+        } else {   
+            let pid = parseInt($item.data('id'));
+            let brands = Object.values(this.brands[pid]);
+            let foreground = $item.data('foreground');
+            let background = $item.data('background');
+            let popup = new dialog(this, {
+                size: 'small',
+                title: _t('Choose a brand'),
+                $content: Qweb.render('paylox.jewelry.brands', { brands, foreground, background }),
             });
-            $item.html(Qweb.render('paylox.jewelry.items', {
-                brand,
-                brands,
-                format,
-                weights,
-                currency,
-                product: {
-                    id: pid,
-                    name: name,
-                    foreground: foreground,
-                    background: background,
-                },
-            }));
-
-            payloxPage.prototype._start.apply(this, [
-                'jewelry.price',
-                'jewelry.qty',
-                'jewelry.amount',
-                'jewelry.plus',
-                'jewelry.minus',
-                'jewelry.brand',
-                'jewelry.brands',
-            ]);
-
-            $item.find('.base[field="jewelry.qty"]').each((i, e) => {
-                if (e.dataset.name in qtys) {
-                    e.value = qtys[e.dataset.name];
-                }
-                $(e).trigger('change');
+            popup.open().opened(() => {
+                popup.$modal.addClass('payment-jewelry-brand-popup');
+                popup.$modal.find('.modal-header').attr('style', `color:${foreground} !important;background-color:${background} !important`);
+                popup.$modal.find('.modal-footer button').attr('style', `color:${foreground} !important;background-color:${background} !important`);
+                popup.$modal.find('button').click((e) => {
+                    let bid = parseInt(e.currentTarget.dataset.id);
+                    if (!isNaN(bid)) {
+                        $item.find(`[data-brand]`).each((i, e) => $(e).addClass('d-none'));
+                        $item.find(`[data-brand=${ bid }]`).each((i, e) => $(e).removeClass('d-none'));
+                
+                        this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
+                        this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ bid }]`).each((i, e) => $(e).addClass('active'));
+                    }
+                    popup.close();
+                });
             });
-        }).guardedCatch(() => {
-            this.displayNotification({
-                type: 'danger',
-                title: _t('Error'),
-                message: _t('An error occured. Please contact with your system administrator.'),
-            });
-        });
+        }
     },
 
     _onClickPolicy() {

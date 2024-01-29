@@ -53,10 +53,6 @@ class PayloxSystemJewelryController(Controller):
             })
         return res
 
-    @route('/my/jewelry/brand', type='json', auth='public', website=True)
-    def page_jewelry_brand(self, pid, bid):
-        return request.env['product.template'].sudo().with_context(system='jewelry').browse(pid).get_payment_variants('weight', [bid])
-
     @route('/my/jewelry/policy', type='json', auth='public', website=True)
     def page_jewelry_policy(self):
         token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()

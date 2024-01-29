@@ -6,8 +6,6 @@ from datetime import datetime
 import odoo
 from odoo import models, fields, api, _
 
-import logging
-_logger = logging.getLogger(__name__)
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
     company = env.company
@@ -29,8 +27,8 @@ class PaymentProduct(models.AbstractModel):
     @api.model
     def get_price(self, products):
         company = self.env.company
-        products = products.filtered(lambda p: p.company_id.id == company.id and p.system == company.system and p.default_code)
-        return [(product.code, product.price) for product in products]
+        products = products.filtered(lambda p: p.company_id.id == company.id and p.system == company.system)
+        return [(product.id, product.price) for product in products]
 
     @api.model
     def broadcast_price(self, products):
@@ -47,7 +45,6 @@ class PaymentProduct(models.AbstractModel):
 
             @self.env.cr.postcommit.add
             def notify():
-                _logger.error(data)
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
                     query = sql.SQL("SELECT {}('sse', %s)").format(sql.Identifier('pg_notify'))
                     cr.execute(query, ('%s\n\n' % '\n'.join(data),))
@@ -111,7 +108,7 @@ class ProductTemplate(models.Model):
             view_id = self.env.ref('payment_system_product.%s_product_template' % (view_type,)).id
         return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    def get_payment_attribute(self, type):
+    def get_payment_attribute(self, type=None):
         lines = self.attribute_line_ids.filtered(lambda x: x.attribute_id.payment_type == type)
         result = []
         for line in lines:
@@ -119,31 +116,39 @@ class ProductTemplate(models.Model):
                 result.append({
                     'id': value.id,
                     'name': value.name,
-                    'image': value.image_128.decode('utf-8'),
+                    'image': value.image_128 and value.image_128.decode('utf-8') or False,
                 })
         return result
 
-    def get_payment_variants(self, type, value_ids=[]):
-        result = []
+    def get_payment_variants(self, types=None):
+        if not types:
+            types = self.attribute_line_ids.mapped('attribute_id.payment_type')
+
+        result = {}
         for variant in self.product_variant_ids:
-            value = variant.product_template_attribute_value_ids.mapped('product_attribute_value_id')
-            if any(val in value.ids for val in value_ids):
-                line = value.filtered(lambda x: x.attribute_id.payment_type == type)
-                name = line[0].name if line else '-'
-                try:
-                    value = float(name.replace(',', '.'))
-                except:
-                    value = 0
-                result.append({
-                    'id': variant.id,
-                    'name': name,
-                    'value': value,
-                    'price': variant.price or 0,
-                    'currency': variant.currency_id,
-                    'code': variant.default_code or '-',
-                })
+            attrs = {type: 0 for type in types}
+            values = variant.product_template_attribute_value_ids.mapped('product_attribute_value_id')
+            for value in values:
+                attrs[value.attribute_id.payment_type] = value.id
+
+            key = []
+            for type in types:
+                key.append(attrs[type])
+
+            result[tuple(key)] = {
+                'id': variant.id,
+                'name': variant.name,
+                'price': variant.price or 0,
+                'currency': variant.currency_id,
+                'code': variant.default_code or '-',
+            }
         return result
 
+    def _prepare_payment_variants(self, variants={}, ids=[]):
+        if ids:
+            variants[ids.pop(0)] = {}
+            return self._prepare_payment_variants(variants, ids)
+        return variants
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -187,7 +192,10 @@ class ProductProduct(models.Model):
             product.price_dynamic = product.price
         super(ProductProduct, self - products)._set_product_price()
 
-    def _broadcast_price(self):
+    def _broadcast_price(self, values=None):
+        if values:
+            if 'price_dynamic' not in values:
+                return
         self.env['payment.product'].broadcast_price(self)
 
     @api.model_create_multi
@@ -198,7 +206,7 @@ class ProductProduct(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        self._broadcast_price()
+        self._broadcast_price(values)
         return res
 
     def unlink(self):
