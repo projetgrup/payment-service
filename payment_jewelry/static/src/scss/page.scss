@@ -121,7 +121,7 @@
                     }
                 }
 
-                &:last-child {
+                &:not(:first-child) {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
                     margin-top: 24px;
@@ -181,6 +181,31 @@
                     border-radius: 10px;
                     background: #ffffff;
                     box-shadow: 5px 0 5px -1px #00000011 inset;
+
+                    button {
+                        position: relative;
+                        display: none;
+
+                        span {
+                            position: absolute;
+                            bottom: 0;
+                            right: 0;
+                            height: 20px;
+                            min-width: 20px;
+                            border-radius: 20px;
+                            font-size: 0.75em;
+                            font-weight: 500;
+                            padding: 0 5px;
+                            justify-content: center;
+                            align-items: center;
+                            display: flex;
+                        }
+
+                        &.active {
+                            display: block;
+                        }
+
+                    }
                 }
 
                 .payment-jewelry-items-name {
@@ -191,6 +216,7 @@
                     text-shadow: 0px 0px 1px #00000044;
                     background: #ffffff;
                     position: sticky;
+                    z-index: 1;
                     left: 0;
                 }
 
@@ -286,14 +312,31 @@
                     text-shadow: 0px 0px 1px #00000044;
                     background: #ffffff;
                     position: sticky;
+                    z-index: 1;
                     left: 0;
                 }
 
                 .payment-jewelry-items-brand {
                     button {
+                        position: relative;
                         opacity: 0.4;
                         filter: saturate(0);
                         transition: opacity 0.4s;
+
+                        span {
+                            position: absolute;
+                            bottom: 0;
+                            right: 0;
+                            height: 20px;
+                            min-width: 20px;
+                            border-radius: 20px;
+                            font-size: 0.75em;
+                            font-weight: 500;
+                            padding: 0 5px;
+                            justify-content: center;
+                            align-items: center;
+                            display: flex;
+                        }
 
                         &.active {
                             opacity: 1;
