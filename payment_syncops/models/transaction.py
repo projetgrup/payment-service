@@ -166,7 +166,7 @@ class PaymentTransaction(models.Model):
     def _paylox_refund_postprocess(self, amount=0):
         res = super()._paylox_refund_postprocess(amount=amount)
         if self.jetcheckout_connector_ok:
-            res.write({'jetcheckout_connector_state': True})
+            res.write({'jetcheckout_connector_ok': True, 'jetcheckout_connector_state': True})
             res.action_process_connector()
         return res
 
