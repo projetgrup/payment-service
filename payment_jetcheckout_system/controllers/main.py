@@ -245,7 +245,6 @@ class PayloxSystemController(Controller):
         if not partner:
             return False
 
-        self._del('campaign')
         website._force()
         return partner._get_token()
 
@@ -431,9 +430,9 @@ class PayloxSystemController(Controller):
         company = request.env.company
         company = {
             'campaign': payment_tag and payment_tag.campaign_id.name,
-            'due_base': company.payment_page_due_base,
-            'due_ok': company.payment_page_due_ok,
             'advance_ok': company.payment_page_advance_ok,
+            'due_base': company.payment_page_due_base,
+            'due_ok': payment_tag and not payment_tag.campaign_id and company.payment_page_due_ok,
         }
         return payments, company
 
@@ -663,8 +662,6 @@ class PayloxSystemController(Controller):
             ], limit=1)
             if not website:
                 return False
-
-            self._del('campaign')
             website._force()
 
         request.session['company'] = True
