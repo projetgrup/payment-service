@@ -525,6 +525,7 @@ class PayloxSystemController(Controller):
         if company.id != request.website.company_id.id:
             return self._redirect_advance_page(company_id=company.id)
 
+        self._del()
         partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
@@ -552,10 +553,6 @@ class PayloxSystemController(Controller):
             values.update({'amount': float(kwargs['amount'])})
         except:
             pass
-
-        # remove hash if exists
-        # it could be there because of api module
-        self._del('hash')
 
         return request.render('payment_jetcheckout_system.page_payment', values)
 
@@ -615,6 +612,7 @@ class PayloxSystemController(Controller):
         else:
             partner = None
 
+        self._del()
         values = self._prepare(partner=partner, company=company, currency=currency)
         values.update({
             'success_url': '/my/payment/success',
@@ -632,10 +630,6 @@ class PayloxSystemController(Controller):
             values.update({'amount': float(kwargs['amount'])})
         except:
             pass
-
-        # remove hash if exists
-        # it could be there because of api module
-        self._del('hash')
 
         return request.render('payment_jetcheckout_system.page_payment', values)
 
