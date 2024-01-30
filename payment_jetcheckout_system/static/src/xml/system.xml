@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="d-block mt-2 text-600 text-center">
-                <div t-if="company.due_ok &amp;&amp; !company.campaign" class="d-flex flex-column border-0">
+                <div t-if="company.due_ok" t-attf-class="d-flex flex-column border-0 {{ company.campaign ? '' : 'd-none' }}">
                     <em class="font-weight-bold">Average Due: <span field="payment.due.date"/> (<span field="payment.due.days"/> Days)</em>
                     <em t-if="company.advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
                 </div>
@@ -105,7 +105,7 @@
                 <tfoot class="shadow bg-light">
                     <tr>
                         <td class="text-left" colspan="5">
-                            <div t-if="company.due_ok &amp;&amp; !company.campaign" class="d-flex flex-wrap" style="gap: 5px;">
+                            <div t-if="company.due_ok" t-attf-class="d-flex flex-wrap {{ company.campaign ? '' : 'd-none' }}" style="gap: 5px;">
                                 <em class="font-weight-bold">Average Due: <span field="payment.due.date"/> (<span field="payment.due.days"/> Days)</em>
                                 <em t-if="company.advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
                             </div>
