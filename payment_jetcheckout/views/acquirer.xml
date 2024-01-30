@@ -226,6 +226,7 @@
             </group>
             <footer>
                 <button name="confirm" type="object" class="btn-primary text-uppercase" string="Refund" icon="fa-undo"/>
+                <button name="draft" type="object" class="btn-secondary text-uppercase" string="Create" icon="fa-plus" groups="base.group_system"/>
                 <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
             </footer>
         </form>
