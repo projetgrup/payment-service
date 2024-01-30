@@ -271,11 +271,11 @@ class PayloxController(http.Controller):
         values = {
             'cols': [],
             'rows': [],
+            'excluded': [],
+            'currency': '',
             'campaign': '',
             'family': '',
             'logo': '', 
-            'currency': '',
-            'excluded': [],
             'type': type,
         }
 
@@ -290,11 +290,11 @@ class PayloxController(http.Controller):
                     for option in options:
                         row = {
                             'campaign': option.get('campaign_name', ''),
-                            'family': option.get('card_family', ''),
                             'logo': option.get('card_family_logo', ''),
-                            'type': self._get_card_type(option.get('card_type', '')),
+                            'family': option.get('card_family', ''),
                             'currency': option.get('currency', ''),
                             'excluded': option.get('excluded_bins', []),
+                            'type': self._get_card_type(option.get('card_type', '')),
                             'installments': [],
                             'ids': [],
                         }

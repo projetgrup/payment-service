@@ -245,6 +245,7 @@ class PayloxSystemController(Controller):
         if not partner:
             return False
 
+        self._del('campaign')
         website._force()
         return partner._get_token()
 
@@ -668,6 +669,8 @@ class PayloxSystemController(Controller):
             ], limit=1)
             if not website:
                 return False
+
+            self._del('campaign')
             website._force()
 
         request.session['company'] = True
