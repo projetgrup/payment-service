@@ -26,7 +26,7 @@
         </xpath>
         <xpath expr="//field[@name='jetcheckout_payment_amount']/.." position="inside">
             <br colspan="2"/>
-            <field name="paylox_prepayment_amount" class="mr-5 float-right"/>
+            <field name="paylox_prepayment_amount" class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
         </xpath>
         <xpath expr="//field[@name='state_message']/.." position="before">
             <notebook>
