@@ -449,7 +449,9 @@ class PaymentTransaction(models.Model):
 
             result = values['result']
             commission_rate = result['expected_cost_rate']
-            sign = -1 if self.source_transaction_id else 1
+            if self.source_transaction_id:
+                self.amount = -abs(self.amount)
+
             commission_amount = float_round(self.amount * commission_rate / 100, 2)
             values = {
                 'date': result['transaction_date'][:19],
