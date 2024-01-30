@@ -450,7 +450,7 @@ class PaymentTransaction(models.Model):
             result = values['result']
             commission_rate = result['expected_cost_rate']
             if self.source_transaction_id:
-                self.amount = -abs(self.amount)
+                self.amount = -abs(result.get('amount', self.amount))
 
             commission_amount = float_round(self.amount * commission_rate / 100, 2)
             values = {
@@ -468,12 +468,12 @@ class PaymentTransaction(models.Model):
                 'card_program': result['card_program'] and result['card_program'].lower().capitalize() or '',
                 'bin_code': result['bin_code'],
                 'service_ref_id': result['service_ref_id'],
-                'amount': result['amount'],
                 'commission_amount': commission_amount,
                 'commission_rate': commission_rate,
                 'customer_amount': self.jetcheckout_customer_amount,
                 'customer_rate': self.jetcheckout_customer_rate,
                 'currency_id': self.currency_id.id,
+                'amount': self.amount,
             }
 
         self._paylox_process_query(values)
