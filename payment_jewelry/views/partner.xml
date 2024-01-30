@@ -102,6 +102,12 @@
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>
         </xpath>
+        <xpath expr='//field[@name="campaign_id"]' position="after">
+            <label for="system_jewelry_price_margin" string="Price Margin"/>
+            <div class="o_row">
+                % <field name="system_jewelry_price_margin"/>
+            </div>
+        </xpath>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//page[@name="siblings"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="attributes">

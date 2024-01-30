@@ -22,6 +22,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this._super(parent, options);
         this.brands = {};
         this.products = {};
+        this.margin = 0;
+        this.commission = 0;
         this.jewelry = {
             price: new fields.float({
                 default: 0,
@@ -31,6 +33,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 events: [['change', this._onChangeQty]],
             }),
             amount: new fields.float({
+                default: 0,
+            }),
+            margin: new fields.float({
                 default: 0,
             }),
             commission: new fields.float({
@@ -66,11 +71,17 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     start: function () {
         return this._super.apply(this, arguments).then(() => {
+            this._getNumbers();
             this._getBrands();
             this._getProducts();
             this._updateLines();
             this._listenPrices();
         });
+    },
+
+    _getNumbers: function () {
+        this.margin = this.jewelry.margin.value; this.jewelry.margin.$.remove();
+        this.commission = this.jewelry.commission.value; this.jewelry.commission.$.remove();
     },
 
     _getBrands: function () {
@@ -123,6 +134,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 }
 
                 changed = true;
+                price *= this.margin;
                 $price.animate({ backgroundColor: '#ffffff' }, 'slow');
                 $price.data('value', price);
                 $price.text(format.currency(price, ...currency));
@@ -208,7 +220,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             currency: this.currency,
         });
 
-        let fee = subtotal * this.jewelry.commission.value / 100;
+        let fee = subtotal * this.commission;
         let total = subtotal + fee;
         this.jewelry.subtotal.text = format.currency(subtotal, ...currency);
         this.jewelry.fee.text = format.currency(fee, ...currency);

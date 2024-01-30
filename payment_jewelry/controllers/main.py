@@ -38,6 +38,7 @@ class PayloxSystemJewelryController(Controller):
         if system == 'jewelry':
             products = request.env['product.template'].sudo().with_context(system=system).search([
                 ('system', '=', 'jewelry'),
+                ('payment_page_ok', '=', True),
                 ('company_id', '=', request.env.company.id),
             ])
 
@@ -49,7 +50,8 @@ class PayloxSystemJewelryController(Controller):
 
             res.update({
                 'products': products,
-                'commission': commission,
+                'commission': commission / 100,
+                'margin': 1 + (partner.system_jewelry_price_margin / 100),
             })
         return res
 

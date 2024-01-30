@@ -5,6 +5,10 @@ from datetime import datetime
 
 import odoo
 from odoo import models, fields, api, _
+from odoo.tools.safe_eval import safe_eval
+
+#import logging
+#_logger = logging.getLogger(__name__)
 
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
@@ -63,6 +67,7 @@ class ProductTemplate(models.Model):
             product.payment_price_flow = product.payment_price_flow_option == 'dynamic'
 
     system = fields.Selection(selection=[], readonly=True)
+    payment_page_ok = fields.Boolean()
     payment_color_foreground = fields.Char()
     payment_color_background = fields.Char()
     payment_price_flow = fields.Boolean()
@@ -70,6 +75,12 @@ class ProductTemplate(models.Model):
         ('static', 'Static'),
         ('dynamic', 'Dynamic'),
     ], compute='_compute_price_flow', inverse='_set_price_flow')
+    payment_price_method = fields.Selection([
+        ('constant', 'Constant'),
+        ('formula', 'Formula'),
+    ])
+    payment_price_method_product_id = fields.Many2one('product.template')
+    payment_price_method_formula = fields.Char()
 
     @api.model
     def _search(self, args, **kw):
@@ -144,16 +155,29 @@ class ProductTemplate(models.Model):
             }
         return result
 
-    def _prepare_payment_variants(self, variants={}, ids=[]):
-        if ids:
-            variants[ids.pop(0)] = {}
-            return self._prepare_payment_variants(variants, ids)
-        return variants
+    def toggle_payment_page(self):
+        self.payment_page_ok = not self.payment_page_ok
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    @api.onchange('payment_price_method_product_id', 'payment_price_method_formula')
+    def _compute_payment_price_method_result(self):
+        for product in self:
+            base = product.payment_price_method_product_id
+            formula = product.payment_price_method_formula
+            if base and formula:
+                price = base.product_variant_ids[0].price
+                formula = formula.replace('x', str(price))
+                product.payment_price_method_result = safe_eval(formula)
+            else:
+                product.payment_price_method_result = 0
+
     price_dynamic = fields.Float('Price Dynamic', digits='Product Price')
+    payment_price_method_product_id = fields.Many2one('product.template')
+    payment_price_method_formula = fields.Char()
+    payment_price_method_result = fields.Monetary(compute='_compute_payment_price_method_result')
 
     @api.model
     def _search(self, args, **kw):
@@ -183,20 +207,31 @@ class ProductProduct(models.Model):
     def _compute_product_price(self):
         products = self.filtered(lambda p: p.payment_price_flow)
         for product in products:
-            product.price = product.price_dynamic
+            if product.payment_price_flow and product.payment_price_method == 'formula':
+                product.price = product.payment_price_method_result
+            elif len(product.product_tmpl_id.product_variant_ids) > 1:
+                product.price = product.price_dynamic
+            else:
+                product.price = product.lst_price
         super(ProductProduct, self - products)._compute_product_price()
 
     def _set_product_price(self):
         products = self.filtered(lambda p: p.payment_price_flow)
         for product in products:
-            product.price_dynamic = product.price
+            if product.payment_price_flow and product.payment_price_method == 'formula':
+                continue
+            elif len(product.product_tmpl_id.product_variant_ids) > 1:
+                product.price_dynamic = product.price
+            else:
+                product.lst_price = product.price
         super(ProductProduct, self - products)._set_product_price()
 
-    def _broadcast_price(self, values=None):
-        if values:
-            if 'price_dynamic' not in values:
-                return
-        self.env['payment.product'].broadcast_price(self)
+    def _broadcast_price(self, values={}):
+        if 'price_dynamic' in values or 'payment_price_method_product_id' in values or 'payment_price_method_formula' in values:
+            self.env['payment.product'].broadcast_price(self)
+        elif 'base_unit_count' in values:
+            products = self.search([('payment_price_method_product_id', 'in', self.mapped('product_tmpl_id').ids)])
+            self.env['payment.product'].broadcast_price(products)
 
     @api.model_create_multi
     def create(self, vals_list):

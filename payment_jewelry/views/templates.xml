@@ -59,8 +59,13 @@
                     <tr>
                         <td class="bg-100 border-right text-right align-middle"><em>Partner : </em></td>
                         <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
+                        <td class="border-0"/>
+                        <td class="bg-100 border-right text-right align-middle"><em>Balance : </em></td>
+                        <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
                     </tr>
                     <tr>
+                        <td colspan="2" class="px-0 py-1"></td>
+                        <td class="border-0"/>
                         <td colspan="2" class="px-0 py-1">
                             <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="jewelry.policy">
                                 My PoS Policy
@@ -128,7 +133,7 @@
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <span class="font-size-125" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                            <span class="font-size-125" t-esc="variant['price'] * margin" t-att-data-id="variant['id']" t-att-data-value="variant['price'] * margin" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
                                                         </div>
                                                         <div class="font-weight-500 payment-jewelry-items-amount">Amount</div>
                                                         <div>
@@ -167,7 +172,7 @@
                                                 <div class="text-nowrap">
                                                     <t t-foreach="brands" t-as="b">
                                                         <t t-set="variant" t-value="variants[(b['id'], w['id'])]"/>
-                                                        <span t-attf-class="base #{'' if b['id'] == brand['id'] else 'd-none'}" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
+                                                        <span t-attf-class="base #{'' if b['id'] == brand['id'] else 'd-none'}" t-esc="variant['price'] * margin" t-att-data-id="variant['id']" t-att-data-value="variant['price'] * margin" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="jewelry.price"/>
                                                     </t>
                                                 </div>
                                             </t>
@@ -236,8 +241,9 @@
                             <button class="btn btn-block btn-warning font-weight-bold rounded-0 m-2 p-3" field="jewelry.pay">Pay Now</button>
                             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
                             <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
-                            <input type="hidden" t-att-value="commission" field="jewelry.commission"/>
                             <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
+                            <input type="hidden" t-att-value="commission" field="jewelry.commission"/>
+                            <input type="hidden" t-att-value="margin" field="jewelry.margin"/>
                         </div>
                     </div>
                 </div>
