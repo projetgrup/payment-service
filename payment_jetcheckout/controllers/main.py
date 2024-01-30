@@ -108,10 +108,17 @@ class PayloxController(http.Controller):
         return request.env['payment.acquirer.jetcheckout.campaign'].sudo().search_read([('acquirer_id', '=', acquirer.id)], ['id', 'name'])
 
     @staticmethod
-    def _get_campaign(partner=None, transaction=None):
+    def _get_campaign(acquirer=None, partner=None, transaction=None):
         campaign = PayloxController._get('campaign')
         if not campaign:
-            campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
+            if acquirer:
+                campaign = acquirer.jetcheckout_campaign_id.name
+            elif transaction:
+                campaign = transaction.jetcheckout_campaign_name
+            elif partner:
+                campaign = partner.campaign_id.name
+            else:
+                campaign = ''
             PayloxController._set('campaign', campaign)
         return campaign
 
@@ -266,7 +273,9 @@ class PayloxController(http.Controller):
             data.update({"bin": bin})
 
         if not type == 'campaign':
-            data.update({"campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))})
+            data.update({
+                "campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))
+            })
 
         values = {
             'cols': [],
