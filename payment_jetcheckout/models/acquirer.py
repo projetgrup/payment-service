@@ -70,6 +70,12 @@ class PaymentPayloxRefund(models.TransientModel):
         self.transaction_id._paylox_api_refund(amount=self.amount)
         return {'type': 'ir.actions.act_window_close'}
 
+    def draft(self):
+        if self.amount > self.total:
+            raise UserError(_('Refund amount cannot be higher than total amount'))
+        self.transaction_id._paylox_refund_postprocess(amount)
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class PaymentPayloxBank(models.Model):
     _name = 'payment.acquirer.jetcheckout.bank'
