@@ -73,7 +73,7 @@ class PaymentPayloxRefund(models.TransientModel):
     def draft(self):
         if self.amount > self.total:
             raise UserError(_('Refund amount cannot be higher than total amount'))
-        self.transaction_id._paylox_refund_postprocess(amount)
+        self.transaction_id._paylox_refund_postprocess(amount=self.amount)
         return {'type': 'ir.actions.act_window_close'}
 
 
