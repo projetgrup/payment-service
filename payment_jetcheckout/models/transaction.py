@@ -393,24 +393,23 @@ class PaymentTransaction(models.Model):
         if 'commission_amount' not in values:
             values['commission_amount'] = float_round(self.amount * values['commission_rate'] / 100, 2)
 
-        sign = -1 if self.source_transaction_id else 1
         vpos_id = values.get('vpos_id', 0)
         vpos_name = values.get('vpos_name', '')
         amount = values.get('amount', self.amount)
         commission = values.get('commission_amount', 0)
         self.write({
-            'amount': amount * sign,
-            'fees': commission * sign,
+            'amount': amount,
+            'fees': commission,
             'jetcheckout_vpos_id': vpos_id,
             'jetcheckout_vpos_name': vpos_name,
             'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
             'jetcheckout_vpos_code': values.get('vpos_code', ''),
-            'jetcheckout_commission_rate': values.get('commission_rate', 0) * sign,
-            'jetcheckout_commission_amount': values.get('commission_amount', 0) * sign,
+            'jetcheckout_commission_rate': values.get('commission_rate', 0),
+            'jetcheckout_commission_amount': values.get('commission_amount', 0),
             'jetcheckout_card_family': values.get('card_family', self.jetcheckout_card_family),
             'jetcheckout_card_type': values.get('card_program', self.jetcheckout_card_type),
             'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % (values.get('bin_code', '') or '',),
-            'jetcheckout_payment_amount': (self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount) * sign,
+            'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         })
 
         journal_line = self.env['payment.acquirer.jetcheckout.journal'].sudo().search([('res_id', '=', vpos_id)], limit=1)
@@ -450,6 +449,7 @@ class PaymentTransaction(models.Model):
 
             result = values['result']
             commission_rate = result['expected_cost_rate']
+            sign = -1 if self.source_transaction_id else 1
             commission_amount = float_round(self.amount * commission_rate / 100, 2)
             values = {
                 'date': result['transaction_date'][:19],
