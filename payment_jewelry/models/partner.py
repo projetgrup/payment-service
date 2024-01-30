@@ -6,6 +6,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     system = fields.Selection(selection_add=[('jewelry', 'Jewelry Payment System')])
+    system_jewelry_price_margin = fields.Float(string='Jewelry Price Margin')
 
     def action_payable(self):
         action = super(Partner, self).action_payable()

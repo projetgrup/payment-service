@@ -27,7 +27,8 @@
                     <group name="group_price">
                         <field name="payment_price_flow" invisible="1"/>
                         <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}" readonly="1"/>
-                        <field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                        <field name="payment_price_method" string="Price Method" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                        <field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_method', '=', 'formula')], 'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>
                         <field name="default_code"/>
                         <field name="barcode"/>
                     </group>
@@ -47,6 +48,18 @@
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
                     </group>
                 </group>
+                <notebook>
+                    <page name="formula" string="Price Formula" attrs="{'invisible': [('payment_price_method', '!=', 'formula')]}">
+                        <group>
+                            <field name="payment_price_method_product_id" string="Base Product" attrs="{'required': [('payment_price_method', '=', 'formula')]}" options="{'no_create': False, 'no_open': False}"/>
+                            <field name="payment_price_method_formula" string="Price Formula" attrs="{'required': [('payment_price_method', '=', 'formula')]}"/>
+                            <field name="payment_price_method_result" string="Calculated Price" class="font-weight-bold"/>
+                            <p class="oe_grey oe_edit_only" colspan="2">
+                                <strong>Note</strong>: you can use <em>x</em> as unknown parameter, which is linked to price of the base product, in formula.
+                            </p>
+                        </group>
+                    </page>
+                </notebook>
             </sheet>
         </form>
     </field>
@@ -189,6 +202,7 @@
                 <field name="product_variant_count" invisible="1"/>
                 <field name="is_product_variant" invisible="1"/>
                 <field name="attribute_line_ids" invisible="1"/>
+                <field name="payment_page_ok" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <!--<button class="oe_stat_button" name="open_pricelist_rules" icon="fa-list-ul" type="object">
@@ -206,6 +220,12 @@
                     </button>-->
                     <button name="%(action_product_variant)d" type="action" icon="fa-sitemap" class="oe_stat_button" attrs="{'invisible': [('product_variant_count', '&lt;=', 1), ('attribute_line_ids', '=', [])]}">
                         <field string="Variants" name="product_variant_count" widget="statinfo"/>
+                    </button>
+                    <button name="toggle_payment_page" type="object" icon="fa-globe" class="oe_stat_button text-success" attrs="{'invisible': [('payment_page_ok', '=', False)]}">
+                        <span>Published</span>
+                    </button>
+                    <button name="toggle_payment_page" type="object" icon="fa-globe" class="oe_stat_button" attrs="{'invisible': [('payment_page_ok', '!=', False)]}">
+                        <span>Not Published</span>
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -225,6 +245,7 @@
                     <group name="group_price">
                         <field name="payment_price_flow" invisible="1"/>
                         <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}"/>
+                        <field name="payment_price_method" string="Price Method" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('payment_price_flow_option', '=', 'static')], 'required': [('payment_price_flow_option', '=', 'dynamic')]}"/>
                         <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('payment_price_flow_option', '=', 'dynamic')], 'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
                         <field name="default_code" attrs="{'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
                         <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '&gt;', 1), ('attribute_line_ids', '!=', [])]}"/>
