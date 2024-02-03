@@ -489,6 +489,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
         if (this.installment.grid) {
             const popup = new dialog(this, {
+                size: 'extra-large',
                 title: _t('Installments Table'),
                 $content: qweb.render('paylox.installment.grid', {
                     value: this.amount.value,
@@ -555,7 +556,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _onClickRow: function (ev) {
-        if (this.installment.row.$.data('type') === 'installment') {
+        if (this.installment.row.$.data('type') === 'i') {
             const $rows = this.installment.row.$.find('div');
             $rows.removeClass('installment-selected');
             $rows.find('input').prop({'checked': false});
@@ -563,7 +564,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             const $el = $(ev.target).closest('div.installment-line');
             $el.addClass('installment-selected');
             $el.find('input').prop({'checked': true});
-        } else if (this.installment.row.$.data('type') === 'campaign') {
+        } else if (this.installment.row.$.data('type') === 'c') {
             const $el = $(ev.target).closest('div.installment-cell');
             if (!$el.length) {
                 return;
@@ -579,7 +580,19 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
             this.campaign.name.value = $input.data('campaign');
             this.campaign.name.$.trigger('change');
-        }
+        } else if (this.installment.row.$.data('type') === 'ct') {
+            const $rows = this.installment.row.$.find('div');
+            $rows.removeClass('installment-selected');
+            $rows.find('input').prop({'checked': false});
+
+            const $el = $(ev.target).closest('div.installment-line');
+            $el.addClass('installment-selected');
+            const $input = $el.find('input');
+            $input.prop({'checked': true});
+
+            this.campaign.name.value = $input.data('campaign');
+            this.campaign.name.$.trigger('change');
+        } 
     },
 
     _onInputHolder: function () {
@@ -681,7 +694,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 message: _t('An error occured.') + ' ' + result.error,
                             });
                         } else {
-                            if (result.type === 'campaign') {
+                            if (result.type === 'c') {
                                 self.installment.colempty.$.addClass('d-none');
                                 self.installment.col.$.removeClass('d-none');
                                 self.installment.col.html = qweb.render('paylox.installment.col', {

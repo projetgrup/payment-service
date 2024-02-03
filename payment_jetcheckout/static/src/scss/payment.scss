@@ -262,6 +262,31 @@
             border-top: none;
             border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
+
+            &.type-ct {
+                table {
+                    min-width: 100%;
+
+                    tr {
+                        background-color: unset;
+                    }
+
+                    th, td {
+                        cursor: default;
+                        padding: 0.5em;
+                        min-width: 64px;
+                        transition: all 0.2s;
+
+                        picture img {
+                            max-width: calc(100% - 20px);
+                        }
+                    }
+
+                    td.marked:hover {
+                        box-shadow: 0 0 40px 5px rgba(0, 0, 0, 0.15);
+                    }
+                }
+            }
         }
 
         ul {

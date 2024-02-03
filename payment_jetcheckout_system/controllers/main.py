@@ -173,6 +173,7 @@ class PayloxSystemController(Controller):
             website._force()
             return request.redirect(request.httprequest.url)
 
+        self._del()
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._prepare_system(company, system, partner, transaction)
         return request.render('payment_%s.page_payment' % system, values)
