@@ -370,6 +370,10 @@
         transform: translate(-50%, -50%) !important;
         min-width: 500px;*/
 
+        &.modal-xl {
+            max-width: calc(100% - 32px);
+        }
+
         .modal-content {
             border-radius: 10px !important;
 
@@ -390,6 +394,7 @@
             }
 
             .modal-body {
+                margin: 0 auto;            
                 color: #888888 !important;
                 padding: 25px !important;
                 border-bottom: 1px solid #ddd !important;

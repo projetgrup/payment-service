@@ -133,29 +133,32 @@
                     <div>
                         <span t-esc="row.id"/>
                     </div>
+                    <t t-set="selected" t-value="true"/>
                     <t t-foreach="row.ids" t-as="r">
                         <t t-if="r.id">
                             <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-                            <div t-attf-class="installment-cell text-center #{r.id === 1 &amp;&amp; r.index === 0 ? 'installment-selected' : ''}">
-                                <input class="d-none" type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="r.id === 1 &amp;&amp; r.index === 0 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
+                            <div t-attf-class="installment-cell text-center #{selected ? 'installment-selected' : ''}">
+                                <input class="d-none" type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-index="r.index" t-att-data-campaign="r.campaign"/>
                                 <span t-esc="format.currency(val, position, symbol, decimal)"/>
                             </div>
                         </t>
                         <t t-else="">
                             <div class="text-center"/>
                         </t>
+                        <t t-set="selected" t-value="false"/>
                     </t>
                 </div>
             </t>
         </t>
         <t t-elif="type === 'ct'">
+            <t t-set="selected" t-value="true"/>
             <t t-foreach="rows" t-as="row">
                 <t t-foreach="row.installments" t-as="r">
                     <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-                    <div t-attf-class="installment-line #{r.id === 1 ? 'installment-selected' : ''}">
+                    <div t-attf-class="installment-line {{ selected ? 'installment-selected' : '' }}">
                         <div class="installment-cell">
                             <div class="text-center">
-                                <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-campaign="r.campaign"/>
+                                <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-campaign="r.campaign"/>
                                 <span class="installment-radio"/>
                             </div>
                             <div class="position-relative text-nowrap" style="overflow:hidden;text-overflow:ellipsis;min-width:50px;">
@@ -173,16 +176,18 @@
                             <span t-esc="format.currency(val, position, symbol, decimal)"/>
                         </div>
                     </div>
+                    <t t-set="selected" t-value="false"/>
                 </t>
             </t>
         </t>
         <t t-else="">
+            <t t-set="selected" t-value="true"/>
             <t t-foreach="rows" t-as="r">
                 <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-                <div t-attf-class="installment-line #{r.id === 1 ? 'installment-selected' : ''}">
+                <div t-attf-class="installment-line #{selected ? 'installment-selected' : ''}">
                     <div class="installment-cell">
                         <div class="text-center">
-                            <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="r.id === 1 ? 'checked' : undefined" t-att-data-id="r.id"/>
+                            <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="r.id"/>
                             <span class="installment-radio"/>
                         </div>
                         <div class="position-relative">
@@ -200,6 +205,7 @@
                         <span t-esc="format.currency(val, position, symbol, decimal)"/>
                     </div>
                 </div>
+                <t t-set="selected" t-value="false"/>
             </t>
         </t>
     </t>

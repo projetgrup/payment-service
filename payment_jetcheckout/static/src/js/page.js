@@ -389,7 +389,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         this.campaign.locked = locked;
         let campaign = $(ev.currentTarget).val();
         $('span#campaign').html(campaign || '-');
-        this._getInstallment(true);
+        if (this.installment.row.$.data('type') === 'i') {
+            this._getInstallment(true);
+        }
     },
 
     _onClickCardSample: function () {
