@@ -5,6 +5,7 @@ from odoo import models, fields
 class PaymentSettings(models.TransientModel):
     _inherit = 'payment.settings'
 
+    @api.depends('company_id')
     def _compute_api_item_notif_mail_create_filter_email_opt(self):
         for setting in self:
             setting.api_item_notif_mail_create_filter_email_opt = 'include' if setting.company_id.api_item_notif_mail_create_filter_email_ok else 'exclude'
@@ -13,6 +14,7 @@ class PaymentSettings(models.TransientModel):
         for setting in self:
             setting.company_id.api_item_notif_mail_create_filter_email_ok = setting.api_item_notif_mail_create_filter_email_opt == 'include'
 
+    @api.depends('company_id')
     def _compute_api_item_notif_sms_create_filter_number_opt(self):
         for setting in self:
             setting.api_item_notif_sms_create_filter_number_opt = 'include' if setting.company_id.api_item_notif_sms_create_filter_number_ok else 'exclude'
