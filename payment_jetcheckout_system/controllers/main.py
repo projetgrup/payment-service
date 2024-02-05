@@ -350,7 +350,7 @@ class PayloxSystemController(Controller):
         company = {
             'campaign': payment_tag and payment_tag.campaign_id.name,
             'due_base': company.payment_page_due_base,
-            'due_ok': company.payment_page_due_ok,
+            'due_ok': company.payment_page_due_ok and not (payment_tag and payment_tag.campaign_id),
             'advance_ok': company.payment_page_advance_ok,
         }
         return payments, company
