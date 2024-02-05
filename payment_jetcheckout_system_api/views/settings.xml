@@ -20,9 +20,13 @@
                                 Send email notifications to partners related to created payment items
                             </div>
                             <div class="content-group" attrs="{'invisible': [('api_item_notif_mail_create_ok','=',False)]}">
-                                <div class="row mt16">
+                                <div class="mt16 border-left" style="border-width:2px !important">
                                     <label for="api_item_notif_mail_create_template" class="col-lg-4 o_light_label" string="Email Template"/>
                                     <field name="api_item_notif_mail_create_template" class="mx-2" attrs="{'required': [('api_item_notif_mail_create_ok','!=',False)]}" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('model_id.model', '=', 'res.partner')]"/>
+                                </div>
+                                <div class="mt16 pl-3 border-left" style="border-width:2px !important">
+                                    Only <field name="api_item_notif_mail_create_filter_email_opt" attrs="{'required': [('api_item_notif_mail_create_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following email addresses<br/><em class="text-muted">(every address on a new line)</em><br/><br/><field name="api_item_notif_mail_create_filter_email" class="w-100" placeholder="Email Addresses..."/>
+                                    <field name="api_item_notif_mail_create_filter_email_ok" invisible="1"/>
                                 </div>
                             </div>
                         </div>
@@ -37,9 +41,13 @@
                                 Send SMS notifications to partners related to created payment items
                             </div>
                             <div class="content-group" attrs="{'invisible': [('api_item_notif_sms_create_ok','=',False)]}">
-                                <div class="row mt16">
+                                <div class="mt16 border-left" style="border-width:2px !important">
                                     <label for="api_item_notif_sms_create_template" class="col-lg-4 o_light_label" string="SMS Template"/>
                                     <field name="api_item_notif_sms_create_template" class="mx-2" attrs="{'required': [('api_item_notif_sms_create_ok','!=',False)]}" options="{'no_create': True}" domain="[('company_id', '=', company_id), ('model_id.model', '=', 'res.partner')]"/>
+                                </div>
+                                <div class="mt16 pl-3 border-left" style="border-width:2px !important">
+                                    Only <field name="api_item_notif_sms_create_filter_number_opt" attrs="{'required': [('api_item_notif_sms_create_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following phone numbers<br/><em class="text-muted">(every number on a new line)</em><br/><br/><field name="api_item_notif_sms_create_filter_number" class="w-100" placeholder="Phone Numbers..."/>
+                                    <field name="api_item_notif_sms_create_filter_number_ok" invisible="1"/>
                                 </div>
                             </div>
                         </div>
