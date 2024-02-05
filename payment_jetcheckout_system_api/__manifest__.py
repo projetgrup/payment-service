@@ -3,7 +3,7 @@
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Payment System API',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
