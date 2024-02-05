@@ -176,7 +176,11 @@ class PayloxSystemController(Controller):
         self._del()
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._prepare_system(company, system, partner, transaction)
-        return request.render('payment_%s.page_payment' % system, values)
+        return request.render('payment_%s.page_payment' % system, values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
     @http.route('/p/<token>/<int:pid>', type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, website=True)
     def page_system_link_file(self, token, pid, **kwargs):
@@ -554,7 +558,11 @@ class PayloxSystemController(Controller):
         except:
             pass
 
-        return request.render('payment_jetcheckout_system.page_payment', values)
+        return request.render('payment_jetcheckout_system.page_payment', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
@@ -631,7 +639,11 @@ class PayloxSystemController(Controller):
         except:
             pass
 
-        return request.render('payment_jetcheckout_system.page_payment', values)
+        return request.render('payment_jetcheckout_system.page_payment', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_login(self, token, **kwargs):

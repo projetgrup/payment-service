@@ -100,9 +100,9 @@ class PayloxApiController(Controller):
             'order': order,
         }
         return request.render('payment_jetcheckout_api.payment_page', values, headers={
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
-            'Expires': '0'
+            'Expires': '-1'
         })
 
     @http.route(['/payment/card'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
@@ -132,9 +132,9 @@ class PayloxApiController(Controller):
         values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False)
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.page_card', values, headers={
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
-            'Expires': '0'
+            'Expires': '-1'
         })
 
     @http.route(['/payment/bank'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
@@ -173,9 +173,9 @@ class PayloxApiController(Controller):
         )
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
-            'Expires': '0'
+            'Expires': '-1'
         })
 
     @http.route(['/payment/bank/result'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
@@ -204,9 +204,9 @@ class PayloxApiController(Controller):
         )
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
-            'Expires': '0'
+            'Expires': '-1'
         })
 
     @http.route(['/payment/bank/confirm'], type='json', auth='public')
