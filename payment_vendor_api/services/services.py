@@ -68,45 +68,38 @@ class VendorAPIService(Component):
 
             types = []
             vals = {}
+            send = True
             if company.api_item_notif_mail_create_ok:
-                send = False
                 template = company.api_item_notif_mail_create_template
                 if template:
                     if company.api_item_notif_mail_create_filter_email:
                         parent_email = parent.email
                         emails = company.api_item_notif_mail_create_filter_email.split('\n')
-                        if company.api_item_notif_mail_create_filter_email_ok and any(email in parent_email for email in emails):
-                            send = True
-                        elif not company.api_item_notif_mail_create_filter_email_ok and all(email not in parent_email for email in emails):
-                            send = True
-                    else:
-                        send = True
-                if send:
+                        if company.api_item_notif_mail_create_filter_email_ok and all(email not in parent_email for email in emails):
+                            send = False
+                        elif not company.api_item_notif_mail_create_filter_email_ok and any(email in parent_email for email in emails):
+                            send = False
                     types.append(self.env.ref('payment_jetcheckout_system.send_type_email').id)
                     vals.update({'mail_template_id': template.id})
             if company.api_item_notif_sms_create_ok:
-                send = False
                 template = company.api_item_notif_sms_create_template
                 if template:
                     if company.api_item_notif_sms_create_filter_number:
                         parent_number = parent.mobile.replace(' ', '')
                         numbers = company.api_item_notif_sms_create_filter_number.split('\n')
-                        if company.api_item_notif_sms_create_filter_number_ok and any(number in parent_number for number in numbers):
-                            send = True
-                        elif not company.api_item_notif_sms_create_filter_number_ok and all(number not in parent_number for number in numbers):
-                            send = True
-                    else:
-                        send = True
-                if send:
+                        if company.api_item_notif_sms_create_filter_number_ok and all(number not in parent_number for number in numbers):
+                            send = False
+                        elif not company.api_item_notif_sms_create_filter_number_ok and any(number in parent_number for number in numbers):
+                            send = False
                     types.append(self.env.ref('payment_jetcheckout_system.send_type_sms').id)
                     vals.update({'sms_template_id': template.id})
-            if types:
+            if send and types:
                 authorized = self.env.ref('payment_jetcheckout_system.categ_authorized')
                 user = self.env['res.users'].sudo().search([
                     ('company_id', '=', company.id),
                     ('partner_id.category_id', 'in', [authorized.id])
                 ], limit=1) or self.env.user
-                sending = self.env['payment.acquirer.jetcheckout.send'].sudo().with_context(partners=vendors).create({
+                sending = self.env['payment.acquirer.jetcheckout.send'].sudo().with_context(partners=parent).create({
                     'selection': [(6, 0, types)],
                     'type_ids': [(6, 0, types)],
                     'company_id': company.id,
