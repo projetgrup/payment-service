@@ -33,7 +33,6 @@
             <t t-set="amount" t-value="model.amount_total"/>
             <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
             <t t-set="currency" t-value="model.currency_id"/>
-            <t t-set="type" t-value="type or 'installment'"/>
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="sale_order and sale_order._name == 'sale.order'">
@@ -43,7 +42,6 @@
             <t t-set="amount" t-value="model.amount_total"/>
             <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
             <t t-set="currency" t-value="model.currency_id"/>
-            <t t-set="type" t-value="type or 'installment'"/>
             <input type="hidden" t-att-value="model.id" field="payment.order"/>
         </t>
         <t t-elif="invoice and invoice._name == 'account.move'">
@@ -53,7 +51,6 @@
             <t t-set="amount" t-value="model.amount_total"/>
             <t t-set="partner" t-value="model.partner_id"/>
             <t t-set="currency" t-value="model.currency_id"/>
-            <t t-set="type" t-value="type or 'installment'"/>
             <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
         </t>
         <t t-elif="account and account._name == 'sale.subscription'">
@@ -63,7 +60,6 @@
             <t t-set="amount" t-value="model.recurring_total"/>
             <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
             <t t-set="currency" t-value="model.currency_id"/>
-            <t t-set="type" t-value="type or 'installment'"/>
             <input type="hidden" t-att-value="model.id" field="payment.subscription"/>
         </t>
         <t t-else="">
@@ -74,7 +70,6 @@
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_invoice_id or model.partner_id"/>
                     <t t-set="currency" t-value="model.currency_id"/>
-                    <t t-set="type" t-value="type or 'installment'"/>
                     <input type="hidden" t-att-value="model.id" field="payment.order"/>
                 </t>
                 <t t-elif="invoice_id">
@@ -83,7 +78,6 @@
                     <t t-set="fail_url" t-value="'/payment/card/custom/%s/%s' % (model.id, access_token)"/>
                     <t t-set="partner" t-value="model.partner_id"/>
                     <t t-set="currency" t-value="model.currency_id"/>
-                    <t t-set="type" t-value="type or 'installment'"/>
                     <input type="hidden" t-att-value="model.id" field="payment.invoice"/>
                 </t>
             </t>
@@ -101,7 +95,6 @@
             <t t-set="company" t-value="company or acquirer.company_id or request.env.company"/>
             <t t-set="currency" t-value="currency or company.currency_id"/>
             <t t-set="user" t-value="not request.env.user.share"/>
-            <t t-set="type" t-value="type or 'installment'"/>
             <t t-set="no_terms" t-value="not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms"/>
         </t>
 
@@ -363,25 +356,25 @@
                     <div t-if="not s2s" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div t-attf-class="payment-gradient border card p-3 #{'installment-cols' if type == 'campaign' else 'installment-rows'}">
+                    <div t-attf-class="payment-gradient border card p-3 #{'installment-cols' if type == 'c' else 'installment-rows'}">
                         <div>
                             <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
                                 <t t-call="payment_jetcheckout.payment_installment_header"/>
                             </div>
                             <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div class="d-none installment-row overflow-auto" t-att-data-type="'campaign' if type == 'campaign' else 'installment'" field="installment.row"/>
+                        <div class="d-none installment-row overflow-auto" t-att-data-type="type" field="installment.row"/>
                         <div class="text-muted small h-100 w-75 text-center mt72 mx-auto" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
-                        <div t-if="user and (not type or type == 'installment')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'" field="campaign.text"/></div>
+                        <div t-if="user and (not type or type == 'i')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'" field="campaign.text"/></div>
                         <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
                                 <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
-                                <div t-if="user and (not type or type == 'installment')" class="mt-2" field="campaign.table">
+                                <div t-if="user and (not type or type == 'i')" class="mt-2" field="campaign.table">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
                                 </div>
@@ -407,9 +400,15 @@
     </template>
 
     <template id="payment_installment_header" name="Paylox Installment Table Header">
-        <t t-if="type == 'campaign'">
+        <t t-if="type == 'c'">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div class="text-center">Campaign</div>
+        </t>
+        <t t-elif="type == 'ct'">
+            <div class="text-center">Campaign</div>
+            <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
+            <div class="text-center">Monthly</div>
+            <div class="text-center">Total</div>
         </t>
         <t t-else="">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
