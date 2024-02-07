@@ -174,6 +174,7 @@ class PayloxSystemController(Controller):
             return request.redirect(request.httprequest.url)
 
         self._del()
+
         system = company.system or partner.system or 'jetcheckout_system'
         values = self._prepare_system(company, system, partner, transaction)
         return request.render('payment_%s.page_payment' % system, values, headers={
@@ -530,6 +531,7 @@ class PayloxSystemController(Controller):
             return self._redirect_advance_page(company_id=company.id)
 
         self._del()
+
         partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
@@ -567,6 +569,7 @@ class PayloxSystemController(Controller):
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
         self._check_payment_preview_page()
+        self._del()
 
         company = request.env.company
         values = self._prepare(company=company)
@@ -583,7 +586,11 @@ class PayloxSystemController(Controller):
         except:
             pass
 
-        return request.render('payment_jetcheckout_system.page_payment_preview', values)
+        return request.render('payment_jetcheckout_system.page_payment_preview', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
