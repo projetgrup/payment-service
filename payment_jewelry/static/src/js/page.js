@@ -65,6 +65,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 events: [['click', this._onClickPolicy]],
             }),
             pay: new fields.element({
+                events: [['click', this._onClickPay]],
             }),
         }
     },
@@ -227,6 +228,25 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.jewelry.total.text = format.currency(total, ...currency);
     },
 
+    _onChangeQty(ev) {
+        let $qty = $(ev.currentTarget);
+        let pid = $qty.data('id');
+        this.jewelry.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
+
+        let $price = this.jewelry.price.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.jewelry.amount.$.filter(`[data-id=${pid}]`);
+
+        let qty = parseFloat($qty.val());
+        let price = parseFloat($price.data('value'));
+        let value = qty * price;
+
+        $amount.data('qty', qty);
+        $amount.data('value', value);
+        $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
+
+        this._updateLines();
+    },
+
     _onClickPlus(ev) {
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
@@ -344,22 +364,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         });
     },
 
-    _onChangeQty(ev) {
-        let $qty = $(ev.currentTarget);
-        let pid = $qty.data('id');
-        this.jewelry.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
-
-        let $price = this.jewelry.price.$.filter(`.base[data-id=${pid}]`);
-        let $amount = this.jewelry.amount.$.filter(`[data-id=${pid}]`);
-
-        let qty = parseFloat($qty.val());
-        let price = parseFloat($price.data('value'));
-        let value = qty * price;
-
-        $amount.data('qty', qty);
-        $amount.data('value', value);
-        $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
-
-        this._updateLines();
+    _onClickPay() {
+        
     },
 });

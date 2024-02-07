@@ -1,14 +1,15 @@
 /** @odoo-module alias=paylox.system.page **/
 'use strict';
 
-import core from 'web.core';
 import rpc from 'web.rpc';
-import publicWidget from 'web.public.widget';
-import dialog from 'web.Dialog';
+import core from 'web.core';
 import utils from 'web.utils';
+import config from 'web.config';
+import dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
+import framework from 'paylox.framework';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
-import framework from 'paylox.framework';
 import { format } from 'paylox.tools';
 
 const _t = core._t;
