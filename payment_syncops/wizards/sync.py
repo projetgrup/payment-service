@@ -51,11 +51,9 @@ class SyncopsSyncWizard(models.TransientModel):
 
     def confirm(self):
         res = super().confirm()
-
+        params = {'company': self.env.company.sudo().partner_id.ref}
         if self.type == 'partner':
-            lines = self.env['syncops.connector']._execute('payment_get_partner_list', params={
-                'company': self.env.company.sudo().partner_id.ref,
-            })
+            lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
             if lines == None:
                 raise ValidationError(_('An error occured. Please try again.'))
             if not lines:
@@ -79,7 +77,6 @@ class SyncopsSyncWizard(models.TransientModel):
         elif self.type == 'item':
             self.env.company.write({'syncops_sync_item_subtype': self.type_item_subtype})
             if self.type_item_subtype == 'balance':
-                params = {'company': self.env.company.sudo().partner_id.ref}
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
                     lines = []
@@ -93,15 +90,12 @@ class SyncopsSyncWizard(models.TransientModel):
                     'partner_phone': line.get('phone', False),
                     'partner_mobile': line.get('mobile', False),
                     'partner_balance': line.get('balance', 0),
-                }) for line in lines if line.get('balance', 0) > 0]
+                }) for line in lines if float(line.get('balance', 0)) > 0]
                 res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_item_balance').id
 
             elif self.type_item_subtype == 'invoice':
                 if not self.type_item_subtype_ok:
                     raise UserError(_('"Get Unreconciled Records List" method must be activated to get records by their date range'))
-                params = {
-                    'company': self.env.company.sudo().partner_id.ref,
-                }
                 if self.type_item_date_start:
                     params.update({'date_start': self.type_item_date_start.strftime(DF)})
                 if self.type_item_date_end:
