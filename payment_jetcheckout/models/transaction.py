@@ -348,6 +348,13 @@ class PaymentTransaction(models.Model):
 
     def _paylox_cancel(self):
         self.ensure_one()
+
+        offset = relativedelta(hours=3) # Turkiye Timezone
+        expired = (self.create_date + offset).date() + relativedelta(days=1)
+        today = (datetime.now() + offset).date()
+        if today >= expired:
+            raise UserError(_('Cancellation period seems expired. Please consider refunding the transaction.'))
+
         if not self.state == 'cancel':
             if not self.state in ('draft', 'pending'):
                 values = self._paylox_api_cancel()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-27 17:26+0000\n"
-"PO-Revision-Date: 2023-08-27 20:28+0300\n"
+"POT-Creation-Date: 2024-02-08 08:56+0000\n"
+"PO-Revision-Date: 2024-02-08 11:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: payment_student
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_receipt
@@ -80,6 +80,33 @@ msgstr ""
 
 #. module: payment_student
 #: model:mail.template,body_html:payment_student.payment_mail
+#, fuzzy
+#| msgid ""
+#| "<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
+#| "<p>\n"
+#| "    <strong>Dear <i t-out=\"object.name\"/></strong>,\n"
+#| "    <br/><br/>\n"
+#| "    You can pay register fee of students, who has been already registered "
+#| "at school, for our <t t-out=\"object._get_payment_terms()\"/> services "
+#| "with your credit online\n"
+#| "    <t t-if=\"line\"> for <t t-out=\"line['month']\"/> term by choosing "
+#| "either <t t-out=\"line['installment']\"/> installments or single payment "
+#| "with <t t-out=\"line['percentage']\"/>% discount.</t>\n"
+#| "    <t t-else=\"\">.</t>\n"
+#| "    <br/>\n"
+#| "    If you want to view and pay online, <a t-att-href=\"object."
+#| "_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">click here."
+#| "</a>\n"
+#| "    <br/><br/>    <a t-att-href=\"object._get_payment_url()\" "
+#| "style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:"
+#| "#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Go to "
+#| "Payment</span>❯</a>    <br/><br/>\n"
+#| "    Have a nice day.\n"
+#| "    <br/><br/>\n"
+#| "    Sincerely...\n"
+#| "    <br/><br/>\n"
+#| "    <span t-out=\"object._get_payment_company()\"/>\n"
+#| "</p>"
 msgid ""
 "<t t-set=\"line\" t-value=\"object._get_setting_line()\"/>\n"
 "<p>\n"
@@ -94,9 +121,7 @@ msgid ""
 "    <t t-else=\"\">.</t>\n"
 "    <br/>\n"
 "    If you want to view and pay online, <a t-att-href=\"object."
-"_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">click here.</a>\n"
-"    <br/><br/>"
-"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Go to Payment</span>❯</a>"
+"_get_payment_url()\" style=\"color:#3079ed;\">click here.</a>\n"
 "    <br/><br/>\n"
 "    Have a nice day.\n"
 "    <br/><br/>\n"
@@ -119,10 +144,12 @@ msgstr ""
 "    <t t-else=\"\">kredi kartınız ile online olarak ödeyebilirsiniz.</t>\n"
 "    <br/>\n"
 "    İncelemek ve Online Ödeme için <a t-att-href=\"object."
-"_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">tıklayınız.</a>\n"
-"    <br/><br/>"
-"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Ödemeye Git</span>❯</a>"
-"    <br/><br/>\n"
+"_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">tıklayınız.</"
+"a>\n"
+"    <br/><br/>    <a t-att-href=\"object._get_payment_url()\" "
+"style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:"
+"#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Ödemeye Git</"
+"span>❯</a>    <br/><br/>\n"
 "    Sağlıklı bir yıl dileriz.\n"
 "    <br/><br/>\n"
 "    Saygılarımızla...\n"
@@ -188,6 +215,11 @@ msgstr "Burslar"
 #: model_terms:ir.ui.view,arch_db:payment_student.item_search
 msgid "Bursary"
 msgstr "Burs"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction_item__bursary_amount
+msgid "Bursary Amount"
+msgstr "Burs İndirimi Tutarı"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__bursary_amount
@@ -627,6 +659,12 @@ msgid "Name"
 msgstr "Ad"
 
 #. module: payment_student
+#: code:addons/payment_student/controllers/main.py:0
+#, python-format
+msgid "No ID Number has been entered"
+msgstr "ID numarası girilmedi"
+
+#. module: payment_student
 #: code:addons/payment_student/wizards/student_import.py:0
 #, python-format
 msgid "No bursary found with code \"%s\" for student \"%s\""
@@ -766,6 +804,11 @@ msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
 
 #. module: payment_student
+#: model:ir.model,name:payment_student.model_payment_transaction_item
+msgid "Payment Transaction Items"
+msgstr "Ödeme İşlemi Kalemleri"
+
+#. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__payment_type_id
 #: model:ir.model.fields,field_description:payment_student.field_res_student_payment_template__payment_type_id
 msgid "Payment Type"
@@ -821,6 +864,11 @@ msgstr "Lütfen \"%s\" sütununu oluşturun"
 #: model_terms:ir.ui.view,arch_db:payment_student.import_form
 msgid "Please upload a student list"
 msgstr "Lütfen bir öğrenci listesi yükleyin"
+
+#. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction_item__prepayment_amount
+msgid "Prepayment Amount"
+msgstr "Peşin Ödeme İndirimi Tutarı"
 
 #. module: payment_student
 #: model:ir.model.fields,field_description:payment_student.field_payment_item__prepayment_amount
@@ -937,8 +985,14 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_student
+#: model:ir.model.fields,field_description:payment_student.field_payment_transaction_item__sibling_amount
+msgid "Sibling Amount"
+msgstr "Kardeş İndirimi Tutarı"
+
+#. module: payment_student
 #. openerp-web
 #: code:addons/payment_student/static/src/xml/templates.xml:0
+#: model:ir.model.fields,field_description:payment_student.field_payment_item__sibling_amount
 #: model:ir.model.fields,field_description:payment_student.field_payment_settings__student_discount_sibling_active
 #: model:ir.model.fields,field_description:payment_student.field_res_company__student_discount_sibling_active
 #: model_terms:ir.ui.view,arch_db:payment_student.payment_table
