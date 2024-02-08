@@ -27,7 +27,9 @@ class ResCompany(models.Model):
             '|',('date_end','=',False),('date_end','>=',today),
         ], limit=1, order='id desc')
 
-    def get_student_discount(self):
+    def _get_student_discount(self, installment=0):
         self.ensure_one()
+        if installment > 1:
+            return 0
         line = self._get_student_discount_line()
         return line.percentage if line else 0

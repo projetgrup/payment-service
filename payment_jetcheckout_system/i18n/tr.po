@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-05 11:08+0000\n"
-"PO-Revision-Date: 2024-02-05 14:10+0300\n"
+"POT-Creation-Date: 2024-02-08 08:55+0000\n"
+"PO-Revision-Date: 2024-02-08 11:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
@@ -1820,9 +1820,9 @@ msgstr "Ödendi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid_amount
-#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_dashboard_field_amount__jetcheckout_payment_amount
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_dashboard_field_amount__jetcheckout_payment_paid
 msgid "Paid Amount"
-msgstr "Ödeme Tutarı"
+msgstr "Ödenen Tutar"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__paid_date
@@ -1912,6 +1912,11 @@ msgstr "Pasif"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 msgid "Payable"
 msgstr "Ödenecek"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_dashboard_field_amount__jetcheckout_payment_amount
+msgid "Payable Amount"
+msgstr "Ödenebilir Tutar"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__line_ids
