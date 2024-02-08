@@ -33,20 +33,16 @@ class PaymentItem(models.Model):
     @api.depends('residual_amount')
     def _compute_paid(self):
         for item in self:
-            if item.residual_amount:
+            transactions = item.transaction_ids.filtered(lambda x: x.state == 'done')
+            if item.residual_amount or not transactions:
                 item.paid = False
                 item.paid_date = False
                 item.installment_count = False
             else:
                 item.paid = True
-                transactions = item.transaction_ids.filtered(lambda x: x.state == 'done')
-                if transactions:
-                    transaction = transactions[0]
-                    item.paid_date = transaction.last_state_change
-                    item.installment_count = transaction.jetcheckout_installment_count
-                else:
-                    item.paid_date = False
-                    item.installment_count = False
+                transaction = transactions[0]
+                item.paid_date = transaction.last_state_change
+                item.installment_count = transaction.jetcheckout_installment_count
 
     @api.depends('transaction_ids.state')
     def _compute_paid_amount(self):

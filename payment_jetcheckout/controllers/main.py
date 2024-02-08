@@ -713,16 +713,25 @@ class PayloxController(http.Controller):
 
         rows = kwargs['installment']['rows']
         installment = kwargs['installment']['id']
+        campaign = kwargs.get('campaign', '')
 
         amount = float(kwargs['amount'])
         rate = float(kwargs.get('discount', {}).get('single', 0))
         if rate > 0 and installment == 1:
             amount = amount * (100 - rate) / 100
 
-        installment = next(filter(lambda x: x['id'] == installment, rows), None)
-        if 'ids' in installment:
+        type = self._get_type()
+        if type == 'c':
             index = kwargs['installment']['index']
+            installment = next(filter(lambda x: x['id'] == installment, rows), None)
             installment = next(filter(lambda x: x['index'] == index, installment['ids']), None)
+        elif type == 'ct':
+            index = kwargs['installment']['id']
+            installment = next(filter(lambda x: x['campaign'] == campaign, rows), None)
+            installment = next(filter(lambda x: x['id'] == index, installment['installments']), None)
+            
+        else:
+            installment = next(filter(lambda x: x['id'] == installment, rows), None)
 
         amount_customer = amount * installment['crate'] / 100
         amount_total = float_round(amount + amount_customer, 2)
@@ -732,7 +741,6 @@ class PayloxController(http.Controller):
         acquirer = self._get_acquirer()
         currency = self._get_currency(kwargs['currency'], acquirer)
         partner = self._get_partner(int(kwargs['partner']))
-        campaign = kwargs.get('campaign', '')
         year = str(fields.Date.today().year)[:2]
         hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {

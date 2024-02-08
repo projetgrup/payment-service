@@ -13,6 +13,7 @@ class PaymentTransaction(models.Model):
         super()._paylox_cancel_postprocess()
         self.mapped('jetcheckout_item_ids').write({
             'bursary_amount': 0,
+            'sibling_amount': 0,
             'prepayment_amount': 0,
         })
 
@@ -34,6 +35,7 @@ class PaymentTransaction(models.Model):
                     'total': item.amount,
                     'discount': {
                         'bursary': item.bursary_amount,
+                        #'sibling': item.sibling_amount,
                         'prepayment': item.prepayment_amount,
                     },
                     'installment': {
@@ -50,4 +52,5 @@ class PaymentTransactionItem(models.Model):
     _inherit = 'payment.transaction.item'
 
     bursary_amount = fields.Float()
+    sibling_amount = fields.Float()
     prepayment_amount = fields.Float()

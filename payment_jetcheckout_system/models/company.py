@@ -27,10 +27,11 @@ class Company(models.Model):
     payment_dashboard_button_ok = fields.Boolean(string='Dashboard Payment Button', default=True)
     payment_dashboard_button_url = fields.Char(string='Dashboard Payment Button URL')
     payment_dashboard_field_amount = fields.Selection([
-        ('jetcheckout_payment_amount', 'Paid Amount'),
+        ('jetcheckout_payment_paid', 'Paid Amount'),
+        ('jetcheckout_payment_amount', 'Payable Amount'),
         ('jetcheckout_payment_net', 'Net Amount'),
         ('jetcheckout_fund_amount', 'Fund Amount'),
-    ], string='Dashboard Payment Amount Field', default='jetcheckout_payment_amount')
+    ], string='Dashboard Payment Amount Field', default='jetcheckout_payment_paid')
 
     payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')

@@ -16,9 +16,11 @@ class PaymentItem(models.Model):
                     ('transaction_id.state', '=', 'done'),
                 ])
                 item.bursary_amount = sum(items.mapped('bursary_amount'))
+                item.sibling_amount = sum(items.mapped('sibling_amount'))
                 item.prepayment_amount = sum(items.mapped('prepayment_amount'))
             else:
                 item.bursary_amount = 0
+                item.sibling_amount = 0
                 item.prepayment_amount = 0
 
     system = fields.Selection(selection_add=[('student', 'Student Payment System')])
@@ -29,6 +31,7 @@ class PaymentItem(models.Model):
     term_id = fields.Many2one('res.student.term', ondelete='restrict')
     payment_type_id = fields.Many2one('res.student.payment.type', ondelete='restrict')
     bursary_amount = fields.Monetary(string='Bursary Discount', compute='_compute_paid_amount', store=True, readonly=True)
+    sibling_amount = fields.Monetary(string='Sibling Discount', compute='_compute_paid_amount', store=True, readonly=True)
     prepayment_amount = fields.Monetary(string='Prepayment Discount', compute='_compute_paid_amount', store=True, readonly=True)
 
     system_student_faculty_id = fields.Many2one('res.student.faculty', related='parent_id.system_student_faculty_id', store=True, readonly=True, ondelete='restrict')
@@ -72,7 +75,7 @@ class PaymentItem(models.Model):
         action['res_id'] = payment_table.id
         return action
 
-    def get_student_payment_table(self):
+    def get_student_payment_table(self, installment=None):
         company = self.mapped('company_id')
         if not len(company) == 1:
             return False
@@ -145,10 +148,11 @@ class PaymentItem(models.Model):
             subbursaries.append({'id': student, 'amount': 0})
             totals.append({'id': student, 'amount': 0})
 
-        discount_single = company.get_student_discount()
-        discount_sibling = 0
+        discount_single = company._get_student_discount(installment=installment)
         if len(siblings) > 1 or len(siblings) == 1 and any(line._is_student_sibling_paid() for line in self):
             discount_sibling = company.student_discount_sibling_rate if company.student_discount_sibling_active else 0
+        else:
+            discount_sibling = 0
 
         for line in self:
             student_id = line.child_id.id
