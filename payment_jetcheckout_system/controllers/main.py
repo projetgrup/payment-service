@@ -119,8 +119,9 @@ class PayloxSystemController(Controller):
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
-        companies = partner._get_companies()
         tags = partner._get_tags()
+        websites = request.website._get_companies()
+        companies = partner._get_companies().filtered(lambda x: x.id in websites.ids)
 
         if options.get('no_compute_payment_tags'):
             payments, payment_tags = False, False
