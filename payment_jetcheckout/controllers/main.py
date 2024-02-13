@@ -146,7 +146,7 @@ class PayloxController(http.Controller):
             return request.env['res.currency'].sudo().browse(cid)
 
     @staticmethod
-    def _get_partner(pid=None, parent=None)
+    def _get_partner(pid=None, parent=None):
         partners = request.env['res.partner'].sudo()
         if not pid:
             pid = PayloxController._get('partner')
