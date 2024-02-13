@@ -250,7 +250,7 @@
                                             <circle class="fill"/>
                                             <circle class="progress"/>
                                         </svg>
-                                        <div>306</div>
+                                        <div t-esc="0"/>
                                     </div>
                                     <span>
                                         seconds.
