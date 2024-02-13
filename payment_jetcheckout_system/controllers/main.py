@@ -657,6 +657,7 @@ class PayloxSystemController(Controller):
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_login(self, token, **kwargs):
         self._check_payment_page()
+        self._del()
 
         partner = self._get_parent(token)
         redirect = self._check_redirect(partner)

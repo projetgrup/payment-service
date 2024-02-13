@@ -410,7 +410,7 @@
                         <t t-set="no_card_preview" t-value="True"/>
                         <t t-if="not no_sidebar_buttons" t-set="buttons">
                             <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/transactions"><i class="fa fa-list mr-2" t-translation="off"/>Transactions</a>
-                            <a role="button" class="btn btn-outline-primary btn-block mt-1 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/preview"><i class="fa fa-eye mr-2" t-translation="off"/>Preview</a>
+                            <a t-if="not request.env.user.share and request.env.user.payment_preview_ok and request.env.company.payment_page_ok and request.env.company.payment_advance_ok" role="button" class="btn btn-outline-primary btn-block mt-1 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment/preview"><i class="fa fa-eye mr-2" t-translation="off"/>Preview</a>
                         </t>
                         <t t-call="payment_jetcheckout_system.payment_contact"/>
                         <t t-set="labels"/>
