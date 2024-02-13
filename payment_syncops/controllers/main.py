@@ -230,7 +230,7 @@ class PayloxSyncopsController(Controller):
 
     def _prepare(self, company=None, partner=None, **kwargs):
         values = super()._prepare(company=company, partner=partner, **kwargs)
-        partner = self._connector_get_partner(partner)
+        partner = self._connector_get_partner(values['partner'])
         balances, show_total = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
         show_balance = self._connector_can_show_partner_balance()
         show_ledger = self._connector_can_show_partner_ledger()
