@@ -14,6 +14,64 @@ import { format } from 'paylox.tools';
 const _t = core._t;
 const Qweb = core.qweb;
 
+payloxPage.include({
+
+    init: function (parent, options) {
+        this._super(parent, options);
+        this.systemJewelryPayment = false;
+    },
+
+    start: function () {
+        return this._super.apply(this, arguments).then(() => {
+            if (this.system.value === 'jewelry') {
+                window.addEventListener('payment-started', () => {
+                    this.systemJewelryPayment = true;
+                    this._getInstallment();
+                });
+                window.addEventListener('payment-stopped', () => {
+                    this.systemJewelryPayment = false;
+
+                    this.installment.colempty.$.removeClass('d-none');
+                    this.installment.col.$.addClass('d-none');
+                    this.installment.col.html = '';
+                    this.installment.cols = [];
+    
+                    this.installment.rowempty.$.removeClass('d-none');
+                    this.installment.row.$.addClass('d-none');
+                    this.installment.row.html = '';
+                    this.installment.rows = [];
+    
+                    this.card.logo.html = '';
+                    this.card.logo.$.removeClass('show');
+                    this.card.bin = '';
+                    this.card.family = '';
+                });
+            }
+        });
+    },
+
+    _checkData: function () {
+        if (this.system.value === 'jewelry') {
+            if (!this.systemJewelryPayment) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Price locked has been removed.\nPlease start the payment procedure all over.'),
+                });
+                this._enableButton();
+                return false;
+            }
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+
+    //_getParams: function () {
+    //    let params = this._super.apply(this, arguments);
+    //    return params;
+    //},
+});
+
 publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     selector: '.payment-jewelry #wrapwrap',
     xmlDependencies: ['/payment_jewelry/static/src/xml/page.xml'],
@@ -23,6 +81,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.brands = {};
         this.products = {};
         this.margin = 0;
+        this.validity = 0;
         this.commission = 0;
         this.jewelry = {
             price: new fields.float({
@@ -38,6 +97,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             margin: new fields.float({
                 default: 0,
             }),
+            validity: new fields.float({
+                default: 0,
+            }),
             commission: new fields.float({
                 default: 0,
             }),
@@ -50,6 +112,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             total: new fields.float({
                 default: 0,
             }),
+            counter: new fields.element(),
             items: new fields.element(),
             lines: new fields.element(),
             plus: new fields.element({
@@ -82,6 +145,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     _getNumbers: function () {
         this.margin = this.jewelry.margin.value; this.jewelry.margin.$.remove();
+        this.validity = this.jewelry.validity.value; this.jewelry.validity.$.remove();
         this.commission = this.jewelry.commission.value; this.jewelry.commission.$.remove();
     },
 
@@ -170,6 +234,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _updateLines() {
+        if (this.timeout) return;
+
         let subtotal = 0;
         let brands = {};
         let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
@@ -223,6 +289,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
         let fee = subtotal * this.commission;
         let total = subtotal + fee;
+        this.amount.value = format.float(total);
+        this.amount.$.trigger('update');
+
         this.jewelry.subtotal.text = format.currency(subtotal, ...currency);
         this.jewelry.fee.text = format.currency(fee, ...currency);
         this.jewelry.total.text = format.currency(total, ...currency);
@@ -364,7 +433,47 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         });
     },
 
-    _onClickPay() {
-        
+    _onClickPay(ev) {
+        const $body = $(document.body);
+        const $button = $(ev.currentTarget);
+        if ($body.hasClass('payment-form')) {
+            $body.removeClass('payment-form');
+            $button.text(_t('Pay Now'));
+            this._stopPayment();
+        } else {
+            $body.addClass('payment-form');
+            $button.text(_t('Go Back'));
+            this._startPayment();
+        }
+    },
+
+    _startPayment() {
+        const $counter = this.jewelry.counter.$.find('svg');
+        const $progress = $counter.find('.progress');
+        const counter = () => {
+            if (this.timeout <= 0) {
+                this._stopPayment();
+                return;
+            }
+
+            $counter.next().text(--this.timeout);
+            $progress.css('stroke-dashoffset', 400 - 400 * this.timeout / this.validity);
+        }
+        this.timeout = this.validity + 1; counter();
+        this.interval = setInterval(counter, 1000);
+
+        $('[field="installment.table"] button').removeClass('disabled').removeAttr('disabled');
+        $('[field="payment.button"]').removeClass('disabled').removeAttr('disabled');
+        window.dispatchEvent(new Event('payment-started'));
+    },
+
+    _stopPayment() {
+        this.timeout = undefined;
+        clearInterval(this.interval);
+        this._updateLines();
+
+        $('[field="installment.table"] button').addClass('disabled').attr('disabled', 'disabled');
+        $('[field="payment.button"]').addClass('disabled').attr('disabled', 'disabled');
+        window.dispatchEvent(new Event('payment-stopped'));
     },
 });

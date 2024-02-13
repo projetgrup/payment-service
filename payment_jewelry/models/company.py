@@ -7,3 +7,4 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     system = fields.Selection(selection_add=[('jewelry', 'Jewelry Payment System')])
+    jewelry_payment_validity = fields.Integer(string='Jewelry Payment Validity')

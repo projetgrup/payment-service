@@ -626,9 +626,10 @@ class PayloxSystemController(Controller):
         elif company.payment_page_flow == 'dynamic':
             partner = request.website.user_id.partner_id.sudo()
         else:
-            partner = None
+            partner = self._get_partner()
 
         self._del()
+
         values = self._prepare(partner=partner, company=company, currency=currency)
         values.update({
             'success_url': '/my/payment/success',

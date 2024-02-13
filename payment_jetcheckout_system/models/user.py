@@ -248,7 +248,7 @@ class Users(models.Model):
         if not self.env.user.has_group('base.group_erp_manager') and self.env.user.has_group('payment_jetcheckout_system.group_system_manager'):
             self = self.sudo()
 
-        res = super(Users, self).create(values)
+        res = super(Users, self.with_context(mail_channel_nosubscribe=True)).create(values)
         res.company_id._update_subsystem()
         return res
 

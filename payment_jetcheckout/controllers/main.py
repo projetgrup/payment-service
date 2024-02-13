@@ -9,7 +9,7 @@ import logging
 import re
 from collections import OrderedDict
 
-from odoo import fields, http, SUPERUSER_ID, _
+from odoo import fields, models, http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools.misc import formatLang
 from odoo.tools.float_utils import float_compare, float_round
@@ -146,8 +146,28 @@ class PayloxController(http.Controller):
             return request.env['res.currency'].sudo().browse(cid)
 
     @staticmethod
-    def _get_partner(id=None):
-        return request.env['res.partner'].sudo().browse(id) if id else request.env.user.partner_id.commercial_partner_id
+    def _get_partner(pid=None, parent=None)
+        partners = request.env['res.partner'].sudo()
+        if not pid:
+            pid = PayloxController._get('partner')
+            if pid:
+                partner = partners.browse(pid)
+            else:
+                partner = request.env.user.partner_id
+        else:
+            if isinstance(pid, int):
+                partner = partners.browse(pid)
+            elif isinstance(pid, str):
+                partner = partners.browse(pid)
+            elif isinstance(pid, models.Model):
+                partner = pid
+            else:
+                partner = request.env.user.partner_id
+
+        PayloxController._set('partner', partner.id)
+        if parent:
+            return partner.commercial_partner_id
+        return partner
 
     @staticmethod
     def _get_type(t=None):
@@ -207,7 +227,7 @@ class PayloxController(http.Controller):
         currency = currency or (transaction and transaction.currency_id) or company.currency_id
 
         user = not request.env.user.share
-        partner = partner or request.env.user.partner_id
+        partner = self._get_partner(partner)
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
         type = self._get_type()
@@ -260,7 +280,7 @@ class PayloxController(http.Controller):
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
         if not request.env.user.has_group('base.group_user'):
-            client = self._get_partner(int(partner))
+            client = self._get_partner(partner, parent=True)
             if client and client.campaign_id:
                 campaign = client.campaign_id.name
 
@@ -740,7 +760,7 @@ class PayloxController(http.Controller):
 
         acquirer = self._get_acquirer()
         currency = self._get_currency(kwargs['currency'], acquirer)
-        partner = self._get_partner(int(kwargs['partner']))
+        partner = self._get_partner(kwargs['partner'], parent=True)
         year = str(fields.Date.today().year)[:2]
         hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
         data = {
@@ -979,8 +999,7 @@ class PayloxController(http.Controller):
         acquirer = self._get_acquirer()
         company = request.env.company
         domain = request.httprequest.referrer
-        pid = 'partner' in kwargs and int(kwargs['partner']) or None
-        partner = self._get_partner(pid)
+        partner = self._get_partner(kwargs.get('partner'), parent=True)
         return acquirer.sudo().with_context(domain=domain)._render_paylox_terms(company.id, partner.id)
 
     @http.route(['/payment/card/report/<string:name>/<string:order>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
