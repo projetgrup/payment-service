@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-24 11:27+0000\n"
-"PO-Revision-Date: 2024-01-24 11:27+0000\n"
+"POT-Creation-Date: 2024-02-13 22:04+0000\n"
+"PO-Revision-Date: 2024-02-13 22:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "<em>Balance : </em>"
+msgstr ""
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -31,11 +36,32 @@ msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid ""
+"<span class=\"mb8\">\n"
+"                                        The price has been locked for\n"
+"                                    </span>"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "<span class=\"ml4\">Second(s)</span>"
+msgstr ""
+
+#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
 "                <b>Address</b>\n"
 "            </span>"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid ""
+"<span>\n"
+"                                        seconds.\n"
+"                                    </span>"
 msgstr ""
 
 #. module: payment_jewelry
@@ -123,11 +149,7 @@ msgid "Address"
 msgstr ""
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-#, python-format
 msgid "Amount"
 msgstr ""
 
@@ -145,8 +167,6 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
@@ -304,8 +324,6 @@ msgstr ""
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/page.js:0
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #, python-format
@@ -319,10 +337,13 @@ msgstr ""
 
 #. module: payment_jewelry
 #. openerp-web
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#: code:addons/payment_jewelry/static/src/js/page.js:0
 #, python-format
+msgid "Go Back"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Gram"
 msgstr ""
 
@@ -351,6 +372,18 @@ msgstr ""
 #: model:ir.module.category,description:payment_jewelry.module_category_jewelry
 #: model:ir.module.category,name:payment_jewelry.module_category_jewelry
 msgid "Jewelry Payment System"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity
+msgid "Jewelry Payment Validity"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system_jewelry_price_margin
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_users__system_jewelry_price_margin
+msgid "Jewelry Price Margin"
 msgstr ""
 
 #. module: payment_jewelry
@@ -401,11 +434,6 @@ msgid "No payments yet"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "No setting found"
-msgstr ""
-
-#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Order Details"
 msgstr ""
@@ -416,7 +444,10 @@ msgid "Order Net Amount"
 msgstr ""
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#, python-format
 msgid "Pay Now"
 msgstr ""
 
@@ -441,6 +472,7 @@ msgid "Payment Page"
 msgstr ""
 
 #. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_payment_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_acquirers
 msgid "Payment Settings"
 msgstr ""
@@ -448,6 +480,11 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.model,name:payment_jewelry.model_payment_product
 msgid "Payment System Product"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Payment Validity Period"
 msgstr ""
 
 #. module: payment_jewelry
@@ -485,12 +522,22 @@ msgid "Policy has been sent succesfully."
 msgstr ""
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-#, python-format
 msgid "Price"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
+msgid "Price Margin"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid ""
+"Price locked has been removed.\n"
+"Please start the payment procedure all over."
 msgstr ""
 
 #. module: payment_jewelry
@@ -520,10 +567,7 @@ msgid "Products"
 msgstr ""
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-#, python-format
 msgid "Quantity"
 msgstr ""
 
@@ -556,6 +600,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_jewelry.action_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_settings
 msgid "Settings"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid ""
+"Show a countdown and lock the price during payment. Non positive values mean"
+" the countdown will not be shown."
 msgstr ""
 
 #. module: payment_jewelry
@@ -602,13 +653,13 @@ msgid "Tags..."
 msgstr ""
 
 #. module: payment_jewelry
-#: model:ir.ui.menu,name:payment_jewelry.menu_transaction
-msgid "Transactions"
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Time"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "Try searching for another keyword"
+#: model:ir.ui.menu,name:payment_jewelry.menu_transaction
+msgid "Transactions"
 msgstr ""
 
 #. module: payment_jewelry
@@ -624,10 +675,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-#, python-format
 msgid "Unit(s)"
 msgstr ""
 
@@ -660,6 +708,13 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_product
 msgid "Variants"
+msgstr ""
+
+#. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: payment_jewelry
