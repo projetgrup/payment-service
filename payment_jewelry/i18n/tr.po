@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 22:04+0000\n"
-"PO-Revision-Date: 2024-02-14 01:08+0300\n"
+"POT-Creation-Date: 2024-02-14 16:17+0000\n"
+"PO-Revision-Date: 2024-02-14 19:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -45,7 +45,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"mb8\">\n"
-"                                        Fiyatlar\n"
+"                                        Seçili ürünlerde fiyatlar\n"
 "                                    </span>"
 
 #. module: payment_jewelry
@@ -278,6 +278,7 @@ msgstr "Ödenecek Tutar"
 
 #. module: payment_jewelry
 #. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "An error occured."
@@ -449,9 +450,7 @@ msgid "GPS"
 msgstr "APS"
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Go Back"
 msgstr "Geri Dön"
 
@@ -482,16 +481,23 @@ msgstr "Mücevherat"
 #: model:ir.model.fields.selection,name:payment_jewelry.selection__product_template__system__jewelry
 #: model:ir.model.fields.selection,name:payment_jewelry.selection__res_company__system__jewelry
 #: model:ir.model.fields.selection,name:payment_jewelry.selection__res_partner__system__jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__sale_order__system__jewelry
 #: model:ir.module.category,description:payment_jewelry.module_category_jewelry
 #: model:ir.module.category,name:payment_jewelry.module_category_jewelry
 msgid "Jewelry Payment System"
 msgstr "Mücevherat Ödeme Sistemi "
 
 #. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity
+#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_ok
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_ok
 msgid "Jewelry Payment Validity"
 msgstr "Mücevherat Ödeme Geçerliliği"
+
+#. module: payment_jewelry
+#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_time
+#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_time
+msgid "Jewelry Payment Validity Time"
+msgstr "Mücevherat Ödeme Geçerlilik Süresi"
 
 #. module: payment_jewelry
 #: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system_jewelry_price_margin
@@ -555,6 +561,11 @@ msgstr "Sipariş Detayları"
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Order Net Amount"
 msgstr "Sipariş Net Tutarı"
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_sale_order
+msgid "Orders"
+msgstr "Siparişler"
 
 #. module: payment_jewelry
 #. openerp-web
@@ -687,6 +698,13 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: payment_jewelry
+#. openerp-web
+#: code:addons/payment_jewelry/static/src/js/page.js:0
+#, python-format
+msgid "Restart Payment"
+msgstr "Yeniden Başlat"
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_sms_provider
 msgid "SMS Providers"
 msgstr "SMS Alıcıları"
@@ -700,6 +718,16 @@ msgstr "SMS Ayarları"
 #: model:ir.ui.menu,name:payment_jewelry.menu_sms_template
 msgid "SMS Templates"
 msgstr "SMS Şablonları"
+
+#. module: payment_jewelry
+#: model:ir.ui.menu,name:payment_jewelry.menu_sale
+msgid "Sales"
+msgstr "Satışlar"
+
+#. module: payment_jewelry
+#: model:ir.model,name:payment_jewelry.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
@@ -719,12 +747,8 @@ msgstr "Ayarlar"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid ""
-"Show a countdown and lock the price during payment. Non positive values mean "
-"the countdown will not be shown."
-msgstr ""
-"Ödeme süresince bir sayaç gösterin ve fiyatları sabitleyin. Positif olmayan "
-"değerler için sayaç gösterilmeyecektir."
+msgid "Show a countdown and lock the price during payment."
+msgstr "Ödeme süresince bir sayaç gösterin ve fiyatları sabitleyin."
 
 #. module: payment_jewelry
 #. openerp-web
@@ -756,6 +780,7 @@ msgstr "Başarılı"
 #: model:ir.model.fields,field_description:payment_jewelry.field_res_company__system
 #: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_jewelry.field_res_users__system
+#: model:ir.model.fields,field_description:payment_jewelry.field_sale_order__system
 msgid "System"
 msgstr "Sistem"
 

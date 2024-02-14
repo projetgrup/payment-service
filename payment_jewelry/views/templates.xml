@@ -257,7 +257,8 @@
                                     </span>
                                 </div>
                             </div>
-                            <button class="btn btn-block btn-warning font-weight-bold rounded-0 m-2 p-3" field="jewelry.pay">Pay Now</button>
+                            <button class="btn btn-block btn-warning font-weight-bold rounded-0 m-2" field="jewelry.pay">Pay Now</button>
+                            <button class="btn btn-block btn-secondary font-weight-bold rounded-0 m-2 hide" field="jewelry.back">Go Back</button>
                             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
                             <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                             <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
