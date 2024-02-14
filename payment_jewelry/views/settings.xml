@@ -10,16 +10,18 @@
                 <h2>Jewelry</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_left_pane">
+                            <field name="jewelry_payment_validity_ok"/>
+                        </div>
                         <div class="o_setting_right_pane">
-                            <label for="jewelry_payment_validity" string="Payment Validity Period"/>
+                            <label for="jewelry_payment_validity_ok" string="Payment Validity Period"/>
                             <div class="text-muted">
-                                Show a countdown and lock the price during payment. Non positive values mean the countdown will not be shown.
+                                Show a countdown and lock the price during payment.
                             </div>
-                            <div class="content-group">
+                            <div class="content-group" attrs="{'invisible': [('jewelry_payment_validity_ok', '=', False)]}">
                                 <div class="row mt16">
-                                    <label for="jewelry_payment_validity" string="Time" class="col-lg-4 o_light_label"/>
-                                    <field name="jewelry_payment_validity" style="width:50px" class="text-right"/>
+                                    <label for="jewelry_payment_validity_time" string="Time" class="col-lg-4 o_light_label"/>
+                                    <field name="jewelry_payment_validity_time" style="width:50px" class="text-right"/>
                                     <span class="ml4">Second(s)</span>
                                 </div>
                             </div>

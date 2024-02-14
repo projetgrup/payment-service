@@ -51,7 +51,7 @@ class PayloxSystemJewelryController(Controller):
             res.update({
                 'products': products,
                 'commission': commission / 100,
-                'validity': company.jewelry_payment_validity or 0,
+                'validity': company.jewelry_payment_validity_ok and company.jewelry_payment_validity_time or 0,
                 'margin': 1 + (partner.system_jewelry_price_margin / 100),
             })
         return res

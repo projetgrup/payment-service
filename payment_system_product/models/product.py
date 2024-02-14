@@ -7,9 +7,6 @@ import odoo
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 
-#import logging
-#_logger = logging.getLogger(__name__)
-
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
     company = env.company

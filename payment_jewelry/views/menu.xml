@@ -5,19 +5,22 @@
     <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
 
-    <menuitem id="menu_product" name="Products" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_sale" name="Sales" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_sale_order" action="payment_system_sale.action_sale_order" name="Orders" parent="menu_sale" sequence="0"/>
+
+    <menuitem id="menu_product" name="Products" parent="menu_main" sequence="4"/>
     <menuitem id="menu_product_template" action="payment_system_product.action_product_template" name="Products" parent="menu_product" sequence="0"/>
     <menuitem id="menu_product_product" action="payment_system_product.action_product_product" name="Variants" parent="menu_product" sequence="1"/>
     <!--<menuitem id="menu_product_pricelist" action="action_product_pricelist" name="Pricelists" parent="menu_conf" sequence="1"/>-->
 
 
-    <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="4"/>
+    <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="5"/>
 
     <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
     <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>
     <menuitem id="menu_sms_messages" action="payment_jetcheckout_system.action_sms_messages" parent="menu_messages" sequence="1"/>-->
 
-    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="5" groups="group_jewelry_manager"/>
+    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="6" groups="group_jewelry_manager"/>
 
     <menuitem id="menu_companies" name="Company Settings" parent="menu_conf" sequence="1"/>
     <menuitem id="menu_settings" action="action_settings" name="Settings" parent="menu_conf" sequence="0"/>
