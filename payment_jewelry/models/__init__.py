@@ -4,5 +4,6 @@ from . import company
 from . import settings
 from . import partner
 from . import product
+from . import sale
 from . import menu
 from . import item

@@ -78,6 +78,10 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        this._saveOrder = _.debounce(this._save, 1000);
+        this._saveTime = undefined;
+
+        this.lines = {};
         this.brands = {};
         this.products = {};
         this.margin = 0;
@@ -130,6 +134,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             pay: new fields.element({
                 events: [['click', this._onClickPay]],
             }),
+            back: new fields.element({
+                events: [['click', this._onClickBack]],
+            }),
         }
     },
 
@@ -140,6 +147,21 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             this._getProducts();
             this._updateLines();
             this._listenPrices();
+        });
+    },
+
+    _save: function (values) {
+        rpc.query({
+            route: '/my/order',
+            params: { values },
+        }).then((res) => {
+            this._saveTime = Date.now();
+        }).catch((err) => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured.'),
+            });
         });
     },
 
@@ -161,7 +183,6 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                 id: parseInt(bid),
                 name: e.dataset.name,
                 image: e.dataset.image,
-                lines: {},
             }
         });
     },
@@ -225,6 +246,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         let value = qty * price;
 
         $amount.data('qty', qty);
+        $amount.data('price', price);
         $amount.data('value', value);
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
 
@@ -243,10 +265,13 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             let $e = $(e);
             let value = parseFloat($e.data('value'));
             if (value > 0) {
+                let vid = $e.data('id');
                 let bid = $e.data('brand');
                 let pid = $e.data('product');
                 let qty = parseFloat($e.data('qty'));
+                let price = parseFloat($e.data('price'));
                 let weight = parseFloat($e.data('weight'));
+                this.lines[vid] = { pid: vid, price, qty };
 
                 if (!(bid in brands)) {
                     brands[bid] = { products: {}, name: this.brands[pid][bid]['name'] };
@@ -295,6 +320,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.jewelry.subtotal.text = format.currency(subtotal, ...currency);
         this.jewelry.fee.text = format.currency(fee, ...currency);
         this.jewelry.total.text = format.currency(total, ...currency);
+
+        this._saveOrder({ lines: Object.values(this.lines) });
     },
 
     _onChangeQty(ev) {
@@ -434,46 +461,55 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _onClickPay(ev) {
-        const $body = $(document.body);
-        const $button = $(ev.currentTarget);
-        if ($body.hasClass('payment-form')) {
-            $body.removeClass('payment-form');
-            $button.text(_t('Pay Now'));
-            this._stopPayment();
-        } else {
-            $body.addClass('payment-form');
-            $button.text(_t('Go Back'));
-            this._startPayment();
-        }
+        $(document.body).addClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
+        $(ev.currentTarget).addClass('hide');
+        this.jewelry.back.$.removeClass('hide');
+        this._startPayment();
+    },
+
+    _onClickBack(ev) {
+        $(document.body).removeClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
+        $(ev.currentTarget).addClass('hide');
+        this.jewelry.pay.$.text(_t('Pay Now'));
+        this.jewelry.pay.$.removeClass('hide');
+        this._stopPayment();
     },
 
     _startPayment() {
-        const $counter = this.jewelry.counter.$.find('svg');
-        const $progress = $counter.find('.progress');
-        const counter = () => {
-            if (this.timeout <= 0) {
-                this._stopPayment();
-                return;
+        this._saveOrder({ lock: true });
+        if (this.validity > 0) {
+            const $counter = this.jewelry.counter.$.find('svg');
+            const $progress = $counter.find('.progress');
+            const counter = () => {
+                if (this.timeout <= 0) {
+                    this.jewelry.pay.$.text(_t('Restart Payment'));
+                    this.jewelry.pay.$.removeClass('hide');
+                    this._stopPayment();
+                    return;
+                }
+    
+                $counter.next().text(--this.timeout);
+                $progress.css('stroke-dashoffset', 400 - 400 * this.timeout / this.validity);
             }
 
-            $counter.next().text(--this.timeout);
-            $progress.css('stroke-dashoffset', 400 - 400 * this.timeout / this.validity);
+            this.timeout = this.validity + 1; counter();
+            this.interval = setInterval(counter, 1000);
+    
+            $('[field="installment.table"] button').removeClass('disabled').removeAttr('disabled');
+            $('[field="payment.button"]').removeClass('disabled').removeAttr('disabled');
+            window.dispatchEvent(new Event('payment-started'));
         }
-        this.timeout = this.validity + 1; counter();
-        this.interval = setInterval(counter, 1000);
-
-        $('[field="installment.table"] button').removeClass('disabled').removeAttr('disabled');
-        $('[field="payment.button"]').removeClass('disabled').removeAttr('disabled');
-        window.dispatchEvent(new Event('payment-started'));
     },
 
     _stopPayment() {
-        this.timeout = undefined;
-        clearInterval(this.interval);
+        if (this.validity > 0) {
+            this.timeout = undefined;
+            clearInterval(this.interval);
+    
+            $('[field="installment.table"] button').addClass('disabled').attr('disabled', 'disabled');
+            $('[field="payment.button"]').addClass('disabled').attr('disabled', 'disabled');
+            window.dispatchEvent(new Event('payment-stopped'));
+        }
         this._updateLines();
-
-        $('[field="installment.table"] button').addClass('disabled').attr('disabled', 'disabled');
-        $('[field="payment.button"]').addClass('disabled').attr('disabled', 'disabled');
-        window.dispatchEvent(new Event('payment-stopped'));
     },
 });

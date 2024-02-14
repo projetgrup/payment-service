@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--<record id="form_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="name">payment.system.sale.order.form</field>
+    <field name="model">sale.order</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <form>
+        </form>
+    </field>
+    </record>
+
+    <record id="kanban_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+    <field name="name">payment.system.sale.order.kanban</field>
+    <field name="model">sale.order</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <kanban sample="1">
+            <field name="id"/>
+            <templates>
+                <t t-name="kanban-box">
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="tree_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_order_tree"/>
+    <field name="name">payment.system.sale.order.tree</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <tree multi_edit="1" sample="1">
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_sale_order" model="ir.ui.view">
+    <field name="name">payment.system.sale.order.search</field>
+    <field name="model">sale.order</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <filter name="favorite" string="Favorites" domain="[('priority', '=', '1')]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>-->
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+    <field name="name">Orders</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">sale.order</field>
+    <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+    <field name="domain">[('system', '!=', False)]</field>
+    <field name="context">{'create': False, 'edit': False}</field>
+    <!--<field name="search_view_id" ref="search_sale_order"/>-->
+    <!--<field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_sale_order')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_sale_order')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_sale_order')}),
+    ]"/>-->
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Sale Orders
+        </p>
+        <p>
+            All sale orders are listed here
+        </p>
+    </field>
+    </record>
+</odoo>
