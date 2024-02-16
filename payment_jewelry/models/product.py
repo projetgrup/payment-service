@@ -36,7 +36,7 @@ class PaymentProduct(models.AbstractModel):
             for product in products:
                 try:
                     product.with_context(no_broadcast=True).write({
-                        'price_dynamic': prices[product.default_code],
+                        'price': prices[product.default_code],
                     })
                 except:
                     continue
