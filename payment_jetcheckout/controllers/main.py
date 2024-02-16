@@ -920,11 +920,12 @@ class PayloxController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
+            txid = result['transaction_id']
             if result['response_code'] in ("00", "00307"):
                 rurl = result['redirect_url']
-                txid = result['transaction_id']
                 tx.write({
                     'state': 'pending',
+                    'state_message': _('Transaction is pending...'),
                     'acquirer_reference': txid,
                     'jetcheckout_transaction_id': txid,
                     'last_state_change': fields.Datetime.now(),
@@ -936,6 +937,8 @@ class PayloxController(http.Controller):
                 tx.write({
                     'state': 'error',
                     'state_message': message,
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
                     'last_state_change': fields.Datetime.now(),
                 })
                 values = {'error': message}
