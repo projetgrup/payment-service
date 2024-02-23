@@ -26,6 +26,7 @@
         'views/mail.xml',
         'views/user.xml',
         'views/item.xml',
+        'views/page.xml',
         'views/partner.xml',
         'views/website.xml',
         'views/settings.xml',

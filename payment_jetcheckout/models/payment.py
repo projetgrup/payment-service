@@ -149,7 +149,10 @@ class AccountPayment(models.Model):
             html = layout._render({'body': body, 'base_url': base_url})
             pdf_content = self.env['ir.actions.report']._run_wkhtmltopdf(
                 [html],
-                specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+                specific_paperformat_args={
+                    'data-report-margin-top': 10,
+                    'data-report-header-spacing': 10,
+                }
             )
             attachment = self.env['ir.attachment'].sudo().create({
                 'name': _('Terms & Conditions.pdf'),

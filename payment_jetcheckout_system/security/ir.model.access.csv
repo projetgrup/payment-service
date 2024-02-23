@@ -62,3 +62,6 @@ jetcheckout_system_api_currency,jetcheckout_system_api_currency,payment_jetcheck
 
 jetcheckout_system_sale_order,jetcheckout_system_sale_order,sale.model_sale_order,payment_jetcheckout_system.group_system_manager,1,0,0,0
 jetcheckout_system_crm_team,jetcheckout_system_crm_team,sales_team.model_crm_team,payment_jetcheckout_system.group_system_manager,1,1,1,1
+
+payment_page_user,payment_page_user,payment_jetcheckout_system.model_payment_page,base.group_user,1,0,0,0
+payment_page_admin,payment_page_admin,payment_jetcheckout_system.model_payment_page,base.group_system,1,1,1,1

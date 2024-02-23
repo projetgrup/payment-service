@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_agreement" model="ir.ui.view">
+    <field name="name">payment.agreement.form</field>
+    <field name="model">payment.agreement</field>
+    <field name="arch" type="xml">
+        <form string="Agreement">
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-muted" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}">
+                        <span class="o_stat_text font-weight-bold">Passive</span>
+                    </button>
+                    <button name="action_toggle_active" type="object" class="oe_stat_button text-success" icon="fa-toggle-on" attrs="{'invisible': [('active','=',False)]}">
+                        <span class="o_stat_text font-weight-bold">Active</span>
+                    </button>
+                </div>
+                <div class="row ml4 mr4">
+                    <div class="col-md-8">
+                        <field name="body" colspan="2" nolabel="1"/>
+                    </div>
+                    <div class="col-md-4 shadow-sm table-bordered" style="position: sticky; top: 20px; border-radius: 10px;">
+                        <separator string="Name"/>
+                        <field name="name" colspan="2" nolabel="1"/>
+                        <separator string="Version"/>
+                        <field name="version" colspan="2" nolabel="1"/>
+                        <separator string="Pages" class="mt16"/>
+                        <field name="page_ids" widget="many2many_checkboxes" options="{'no_create': True, 'no_open': True}" colspan="2" nolabel="1"/>
+                        <separator string="Start Date"/>
+                        <field name="date_start" colspan="2" nolabel="1"/>
+                        <separator string="End Date"/>
+                        <field name="date_end" colspan="2" nolabel="1"/>
+                        <separator string="Submit Text"/>
+                        <field name="text" class="font-weight-bold" colspan="2" nolabel="1" placeholder="I have carefully read and agree to the terms and conditions..."/>
+                        <separator string="Company" groups="base.group_multi_company,base.group_system"/>
+                        <field name="company_id" colspan="2" nolabel="1" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company,base.group_system"/>
+                        <field name="active" invisible="1"/>
+                        <separator string="Help" class="mt16"/>
+                        <div colspan="2">
+                            <p class="mt16 mb4">Available variables;</p>
+                            <ul class="list-inline">
+                                <li><code>${partner_name}</code>: Name of payer</li>
+                                <li><code>${payment_amount}</code>: Amount of payment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="kanban_agreement" model="ir.ui.view">
+    <field name="name">payment.agreement.kanban</field>
+    <field name="model">payment.agreement</field>
+    <field name="arch" type="xml">
+        <kanban sample="1">
+            <!--<field name="id"/>-->
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_card oe_kanban_global_click">
+                        <div class="o_kanban_image mr-1">
+                            <!--<img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>-->
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <!--<t t-if="record.default_code.value">[<field name="default_code"/>]</t>
+                            <div class="o_kanban_tags_section">
+                                <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
+                            </div>
+                            <div name="product_lst_price" class="mt-1">
+                                <strong>Price:</strong>
+                                <field name="price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div t-attf-style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #{record.payment_color_foreground.value}; background-color: #{record.payment_color_background.value};"/>
+                            </div>-->
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="tree_agreement" model="ir.ui.view">
+    <field name="name">payment.agreement.tree</field>
+    <field name="model">payment.agreement</field>
+    <field name="arch" type="xml">
+        <tree string="Agreement" sample="1" decoration-muted="active == False">
+            <field name="sequence" widget="handle"/>
+            <field name="name" decoration-bf="1"/>
+            <field name="version"/>
+            <field name="date_start"/>
+            <field name="date_end"/>
+            <field name="page_ids" widget="many2many_tags"/>
+            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company,base.group_system" optional="hide"/>
+            <field name="active" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_agreement" model="ir.ui.view">
+    <field name="name">payment.agreement.search</field>
+    <field name="model">payment.agreement</field>
+    <field name="arch" type="xml">
+        <search string="Agreement">
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="form_transaction_agreement" model="ir.ui.view">
+    <field name="name">payment.transaction.agreement.form</field>
+    <field name="model">payment.transaction.agreement</field>
+    <field name="arch" type="xml">
+        <form string="Agreement">
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_pdf" type="object" class="oe_stat_button font-weight-bold" icon="fa-file-pdf-o" attrs="{'invisible': [('body', '=', False)]}">
+                        <span class="o_stat_text font-weight-bold">PDF</span>
+                    </button>
+                    <button name="action_transaction" type="object" class="oe_stat_button font-weight-bold" icon="fa-money" attrs="{'invisible': [('transaction_id', '=', False)]}">
+                        <span class="o_stat_text font-weight-bold">Transaction</span>
+                    </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="agreement_id" options="{'no_create': True}"/>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                        <field name="create_uid" options="{'no_create': True}" string="User"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company,base.group_system"/>
+                    </group>
+                    <group>
+                        <field name="create_date" options="{'no_create': True}" string="Date"/>
+                        <field name="page_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="path" options="{'no_create': True}"/>
+                        <field name="ip_address" options="{'no_create': True}"/>
+                        <field name="transaction_id" invisible="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Agreement">
+                        <field name="body" colspan="2" nolabel="1"/>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="tree_transaction_agreement" model="ir.ui.view">
+    <field name="name">payment.transaction.agreement.tree</field>
+    <field name="model">payment.transaction.agreement</field>
+    <field name="arch" type="xml">
+        <tree string="Agreements" sample="1">
+            <field name="create_date" string="Date" decoration-bf="1"/>
+            <field name="partner_id" options="{'no_create': True}"/>
+            <field name="agreement_id" options="{'no_create': True}"/>
+            <field name="page_id" options="{'no_create': True}"/>
+            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company,base.group_system" optional="hide"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="search_transaction_agreement" model="ir.ui.view">
+    <field name="name">payment.transaction.agreement.search</field>
+    <field name="model">payment.transaction.agreement</field>
+    <field name="arch" type="xml">
+        <search string="Agreements">
+            <field name="agreement_id"/>
+            <field name="partner_id"/>
+            <field name="page_id"/>
+            <field name="transaction_id"/>
+            <field name="create_uid" string="User"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <group expand="0" string="Groupby">
+                <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'create_date'}"/>
+                <filter string="Agreement" name="groupby_agreement" domain="[]" context="{'group_by':'agreement_id'}"/>
+                <filter string="Partner" name="groupby_partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                <filter string="Page" name="groupby_page" domain="[]" context="{'group_by':'page_id'}"/>
+                <filter string="User" name="groupby_user" domain="[]" context="{'group_by':'create_uid'}"/>
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="action_agreement" model="ir.actions.act_window">
+    <field name="name">Agreements</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.agreement</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="context">{'active_test': False}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new agreement
+        </p>
+        <p>
+            You can establish agreements to facilitate receiving payments.
+        </p>
+    </field>
+    </record>
+
+    <record id="action_transaction_agreement" model="ir.actions.act_window">
+    <field name="name">Agreements</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.transaction.agreement</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No agreement found
+        </p>
+        <p>
+            All agreements linked to any transaction will be listed here.
+        </p>
+    </field>
+    </record>
+</odoo>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-08 08:55+0000\n"
-"PO-Revision-Date: 2024-02-08 11:59+0300\n"
+"POT-Creation-Date: 2024-02-23 20:25+0000\n"
+"PO-Revision-Date: 2024-02-23 23:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -825,6 +825,7 @@ msgstr "İş Ortağı Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__create_uid
@@ -843,6 +844,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__create_date
@@ -967,6 +969,11 @@ msgid "Default SMS Settings"
 msgstr "Varsayılan SMS Ayarları"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Define payment page names and paths"
+msgstr "Ödeme sayfaları adlarını ve yollarını tanımlayın"
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__description
@@ -992,6 +999,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__display_name
@@ -1062,6 +1070,11 @@ msgstr "Vadeler"
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_page_flow__dynamic
 msgid "Dynamic"
 msgstr "Dinamik"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+msgid "Edit Pages"
+msgstr "Sayfaları Düzenle"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -1272,6 +1285,7 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__id
@@ -1437,6 +1451,7 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line____last_update
@@ -1462,6 +1477,7 @@ msgstr "Geçen Ay"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__write_uid
@@ -1480,6 +1496,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__write_date
@@ -1671,6 +1688,7 @@ msgstr "Takip Etmediklerim"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__name
 msgid "Name"
@@ -1907,6 +1925,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Passive"
 msgstr "Pasif"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__path
+msgid "Path"
+msgstr "Yol"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
@@ -2240,6 +2263,15 @@ msgstr "Ödeme Sayfası Kalemler Öncelik Seçeneği"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_page_url
 msgid "Payment Page URL"
 msgstr "Ödeme Sayfası URL"
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_payment_page
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_page
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_config_settings__payment_page_ids
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.tree_payment_page
+msgid "Payment Pages"
+msgstr "Ödeme Sayfaları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_preview_ok

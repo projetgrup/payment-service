@@ -12,8 +12,8 @@
     'depends': ['base'],
     'data': [
         'data/data.xml',
-        'views/config.xml',
         'views/syncops.xml',
+        'views/config.xml',
         'wizards/log.xml',
         'wizards/sync.xml',
         'security/ir.model.access.csv',
