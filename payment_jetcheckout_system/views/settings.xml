@@ -396,10 +396,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mt16 o_settings_container">
-                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="mt16"/>
                         <div class="o_setting_left_pane">
                             <field name="payment_default_sms_setting"/>
                         </div>
@@ -416,6 +413,34 @@
                                     <label for="payment_default_sms_template" string="Template" class="col-3 col-lg-3 o_light_label"/>
                                     <field name="payment_default_sms_template" class="oe_inline" options="{'no_create': True}"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_page_ids" string="Payment Pages"/>
+                            <div class="text-muted">
+                                Define payment page names and paths
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="payment_page_ids" class="w-100" nolabel="1">
+                                        <tree editable="bottom">
+                                            <field name="name" decoration-bf="1"/>
+                                            <field name="path"/>
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <group>
+                                                    <field name="name"/>
+                                                    <field name="path"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </div>
+                                <button name="%(action_payment_page)d" icon="fa-arrow-right" type="action" string="Edit Pages" class="btn-link"/>
                             </div>
                         </div>
                     </div>

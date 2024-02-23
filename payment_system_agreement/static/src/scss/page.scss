@@ -1,0 +1,25 @@
+.payment-page {
+    .btn-payment-agreement {
+        gap: 6px;
+        border: none;
+        display: flex;
+        font-size: 0.9em;
+
+        label {
+            cursor: pointer;
+
+            &:first-of-type {
+                flex: none;
+            }
+
+            &:last-of-type {
+                text-align: left;
+            }
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
+}

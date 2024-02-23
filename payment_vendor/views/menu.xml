@@ -5,6 +5,7 @@
     <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_transaction_agreement" action="payment_system_agreement.action_transaction_agreement" name="Agreements" parent="menu_main" sequence="4" groups="payment_system_agreement.group_agreement"/>
 
     <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
     <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>
@@ -25,6 +26,9 @@
 
     <menuitem id="menu_acquirers" name="Payment Settings" parent="menu_conf" sequence="4"/>
     <menuitem id="menu_acquirer" action="payment_jetcheckout_system.action_payment_acquirer" name="Payment Acquirers" parent="menu_acquirers" sequence="1"/>
+
+    <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="4" groups="payment_system_agreement.group_agreement"/>
+    <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement"/>
 
     <menuitem id="menu_mail" name="Email Settings" parent="menu_conf" sequence="5"/>
     <menuitem id="menu_mail_template" action="payment_jetcheckout_system.action_mail_template" parent="menu_mail" sequence="1"/>

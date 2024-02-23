@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_payment_page" model="ir.ui.view">
+    <field name="name">payment.page.tree</field>
+    <field name="model">payment.page</field>
+    <field name="arch" type="xml">
+        <tree string="Payment Pages" editable="bottom">
+            <field name="name" decoration-bf="1"/>
+            <field name="path"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="action_payment_page" model="ir.actions.act_window">
+    <field name="name">Payment Pages</field>
+    <field name="res_model">payment.page</field>
+    <field name="view_mode">tree</field>
+    </record>
+</odoo>

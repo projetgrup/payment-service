@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+payment_agreement_user,payment_agreement_user,model_payment_agreement,base.group_user,1,0,0,0
+payment_agreement_admin,payment_agreement_admin,model_payment_agreement,payment_jetcheckout_system.group_system_manager,1,1,1,1
+payment_transaction_agreement_user,payment_transaction_agreement_user,model_payment_transaction_agreement,payment_jetcheckout_system.group_system_user,1,0,0,0

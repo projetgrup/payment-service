@@ -801,6 +801,7 @@ class PayloxController(http.Controller):
             'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+            'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
             'jetcheckout_campaign_name': campaign,
             'jetcheckout_card_name': kwargs['card']['holder'],
             'jetcheckout_card_number': ''.join([kwargs['card']['number'][:6], '*'*6, kwargs['card']['number'][-4:]]),
@@ -920,11 +921,12 @@ class PayloxController(http.Controller):
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
+            txid = result['transaction_id']
             if result['response_code'] in ("00", "00307"):
                 rurl = result['redirect_url']
-                txid = result['transaction_id']
                 tx.write({
                     'state': 'pending',
+                    'state_message': _('Transaction is pending...'),
                     'acquirer_reference': txid,
                     'jetcheckout_transaction_id': txid,
                     'last_state_change': fields.Datetime.now(),
@@ -936,6 +938,8 @@ class PayloxController(http.Controller):
                 tx.write({
                     'state': 'error',
                     'state_message': message,
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
                     'last_state_change': fields.Datetime.now(),
                 })
                 values = {'error': message}

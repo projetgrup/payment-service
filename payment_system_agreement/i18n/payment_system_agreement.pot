@@ -1,0 +1,401 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_system_agreement
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-23 20:19+0000\n"
+"PO-Revision-Date: 2024-02-23 20:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "<code>${partner_name}</code>: Name of payer"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "<code>${payment_amount}</code>: Amount of payment"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid ""
+"<em class=\"ml8 text-700\">Please read the whole agreement content entirely "
+"to confirm it</em>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "<span class=\"o_stat_text font-weight-bold\">Active</span>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.transaction_form
+msgid "<span class=\"o_stat_text font-weight-bold\">Agreements</span>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
+msgid "<span class=\"o_stat_text font-weight-bold\">PDF</span>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "<span class=\"o_stat_text font-weight-bold\">Passive</span>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
+msgid "<span class=\"o_stat_text font-weight-bold\">Transaction</span>"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__active
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__active
+msgid "Active"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__agreement_id
+#: model:res.groups,name:payment_system_agreement.group_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.tree_agreement
+msgid "Agreement"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.actions.act_window,name:payment_system_agreement.action_agreement
+#: model:ir.actions.act_window,name:payment_system_agreement.action_transaction_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_settings__system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction__paylox_agreement_ids
+#: model:ir.model.fields,field_description:payment_system_agreement.field_res_company__system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.tree_transaction_agreement
+msgid "Agreements"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.actions.act_window,help:payment_system_agreement.action_transaction_agreement
+msgid "All agreements linked to any transaction will be listed here."
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#, python-format
+msgid "An error occured."
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Available variables;"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__body
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__body
+msgid "Body"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__company_id
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__company_id
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+msgid "Company"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.actions.act_window,help:payment_system_agreement.action_agreement
+msgid "Create a new agreement"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__create_uid
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__create_date
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.tree_transaction_agreement
+msgid "Date"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.settings_form
+msgid "Define agreements to facilitate receiving payments"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__display_name
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__date_end
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "End Date"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+msgid "Groupby"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Help"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "I have carefully read and agree to the terms and conditions..."
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "I have read and confirmed"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__id
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__ip_address
+msgid "IP Address"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement____last_update
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__write_uid
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__write_date
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__name
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__name
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Name"
+msgstr ""
+
+#. module: payment_system_agreement
+#: code:addons/payment_system_agreement/models/transaction.py:0
+#: model_terms:ir.actions.act_window,help:payment_system_agreement.action_transaction_agreement
+#, python-format
+msgid "No agreement found"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__page_id
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+msgid "Page"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__page_ids
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Pages"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__partner_id
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+msgid "Partner"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__path
+msgid "Path"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction__paylox_agreement_count
+msgid "Paylox Agreement Count"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_payment_settings
+msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_payment_agreement
+msgid "Payment System Agreement"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_payment_transaction_agreement
+msgid "Payment System Transaction Agreement"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model,name:payment_system_agreement.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__pdf
+msgid "Pdf"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "Please read and confirm all agreements"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "Please read the whole agreement content entirely."
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#, python-format
+msgid "Prices have been updated."
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__date_start
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Start Date"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Submit Text"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/frontend.js:0
+#: code:addons/payment_system_agreement/static/src/js/product.js:0
+#, python-format
+msgid "Success"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__text
+msgid "Text"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__transaction_id
+msgid "Transaction"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/xml/product.xml:0
+#, python-format
+msgid "Update Prices"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
+msgid "User"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__version
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Version"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model_terms:ir.actions.act_window,help:payment_system_agreement.action_agreement
+msgid "You can establish agreements to facilitate receiving payments."
+msgstr ""

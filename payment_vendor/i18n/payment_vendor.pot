@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-10 11:19+0000\n"
-"PO-Revision-Date: 2024-01-10 11:19+0000\n"
+"POT-Creation-Date: 2024-02-23 20:38+0000\n"
+"PO-Revision-Date: 2024-02-23 20:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -274,6 +274,17 @@ msgid ""
 "</table>\n"
 "</td></tr>\n"
 "</table>"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_agreements
+msgid "Agreement Settings"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_agreement
+#: model:ir.ui.menu,name:payment_vendor.menu_transaction_agreement
+msgid "Agreements"
 msgstr ""
 
 #. module: payment_vendor
@@ -592,8 +603,11 @@ msgstr ""
 
 #. module: payment_vendor
 #: model:ir.actions.server,name:payment_vendor.crom_transaction_daily_ir_actions_server
+#: model:ir.actions.server,name:payment_vendor.cron_transaction_daily_ir_actions_server
 #: model:ir.cron,cron_name:payment_vendor.crom_transaction_daily
+#: model:ir.cron,cron_name:payment_vendor.cron_transaction_daily
 #: model:ir.cron,name:payment_vendor.crom_transaction_daily
+#: model:ir.cron,name:payment_vendor.cron_transaction_daily
 msgid "Send daily report email of transactions"
 msgstr ""
 
@@ -601,11 +615,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
 msgid "Settings"
-msgstr ""
-
-#. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
-msgid "Standard"
 msgstr ""
 
 #. module: payment_vendor
