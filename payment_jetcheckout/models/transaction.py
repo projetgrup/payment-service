@@ -68,6 +68,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
+    jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
 
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)

@@ -801,6 +801,7 @@ class PayloxController(http.Controller):
             'operation': 'online_direct',
             'jetcheckout_website_id': request.website.id,
             'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+            'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
             'jetcheckout_campaign_name': campaign,
             'jetcheckout_card_name': kwargs['card']['holder'],
             'jetcheckout_card_number': ''.join([kwargs['card']['number'][:6], '*'*6, kwargs['card']['number'][-4:]]),

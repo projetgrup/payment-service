@@ -19,6 +19,9 @@
                                 <div class="mt16">
                                     <field name="syncops_url"/>
                                 </div>
+                                <div class="mt8" groups="base.group_no_one">
+                                    <button name="%(connector_syncops.action_connector)d" icon="fa-arrow-right" type="action" string="Integrations" class="btn-link"/>
+                                </div>
                             </div>
                         </div>
                     </div>

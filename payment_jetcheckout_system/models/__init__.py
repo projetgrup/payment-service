@@ -11,6 +11,7 @@ from . import user
 from . import rule
 from . import partner
 from . import item
+from . import page
 from . import website
 from . import settings
 from . import payment
