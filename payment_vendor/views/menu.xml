@@ -6,6 +6,9 @@
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
     <menuitem id="menu_transaction_agreement" action="payment_system_agreement.action_transaction_agreement" name="Agreements" parent="menu_main" sequence="4" groups="payment_system_agreement.group_agreement"/>
+    <menuitem id="menu_product" name="Products" parent="menu_main" sequence="4" groups="payment_system_product.group_product"/>
+    <menuitem id="menu_product_template" action="payment_system_product.action_product_template" name="Products" parent="menu_product" sequence="0" groups="payment_system_product.group_product"/>
+    <menuitem id="menu_product_product" action="payment_system_product.action_product_product" name="Variants" parent="menu_product" sequence="1" groups="payment_system_product.group_product"/>
 
     <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
     <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>
@@ -29,6 +32,10 @@
 
     <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="4" groups="payment_system_agreement.group_agreement"/>
     <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement"/>
+
+    <menuitem id="menu_products" name="Product Settings" parent="menu_conf" sequence="4" groups="payment_system_product.group_product"/>
+    <menuitem id="menu_product_attribute" action="payment_system_product.action_product_attribute" name="Attributes" parent="menu_products" sequence="1" groups="payment_system_product.group_product"/>
+    <menuitem id="menu_product_category" action="payment_system_product.action_product_category" name="Categories" parent="menu_products" sequence="2" groups="payment_system_product.group_product"/>
 
     <menuitem id="menu_mail" name="Email Settings" parent="menu_conf" sequence="5"/>
     <menuitem id="menu_mail_template" action="payment_jetcheckout_system.action_mail_template" parent="menu_mail" sequence="1"/>

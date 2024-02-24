@@ -1,0 +1,19 @@
+.payment-page {
+    .payment-dynamic {
+        .col-md-9 > div {
+            .payment-card-item {
+                .payment-card-item-product {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(min-content, auto));
+
+                    button {
+                        margin: 32px;
+                        min-width: 160px;
+                        flex-direction: column;
+                        justify-content: center;
+                    }    
+                }
+            }
+        }
+    }
+}

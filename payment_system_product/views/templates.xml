@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="page_payment" inherit_id="payment_jetcheckout_system.page_payment">
+        <xpath expr="//div[@field='wizard.page.amount']//div[hasclass('text-primary')]" position="attributes">
+            <attribute name="t-if">not products</attribute>
+        </xpath>
+        <xpath expr="//div[@field='wizard.page.amount']//div[hasclass('text-primary')]" position="after">
+            <div t-else="" class="font-weight-bold h2 my-3 text-primary">
+                Select a product
+            </div>
+        </xpath>
+        <xpath expr="//div[@field='wizard.page.amount']//div[hasclass('payment-card-item-amount')]" position="attributes">
+            <attribute name="t-if">not products</attribute>
+        </xpath>
+        <xpath expr="//div[@field='wizard.page.amount']//div[hasclass('payment-card-item-amount')]" position="after">
+            <div t-else="" class="payment-card-item-product">
+                <t t-set="i" t-value="0"/>
+                <t t-foreach="products" t-as="product">
+                    <button t-attf-class="btn #{'text-primary' if i else 'btn-primary text-white'}" t-att-data-id="product.id" t-att-data-price="product.list_price" field="wizard.button.product">
+                        <div t-esc="product.name"/>
+                        <div class="font-weight-normal">
+                            <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                            <span t-field="product.list_price"/>
+                            <span t-if="currency.position == 'after'" class="symbol symbol-after" t-esc="currency.symbol"/>
+                        </div>
+                    </button>
+                    <t t-set="i" t-value="i+1"/>
+                </t>
+                <input name="amount" type="hidden" field="wizard.amount"/>
+                <input type="hidden" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="currency.decimal_places" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

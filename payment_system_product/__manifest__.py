@@ -15,11 +15,18 @@
         'payment_jetcheckout_system',
     ],
     'data': [
+        #'views/settings.xml',
         'views/product.xml',
+        'views/templates.xml',
+        'security/security.xml',
     ],
     'assets': {
         'web.assets_qweb': [
             'payment_system_product/static/src/xml/product.xml',
+        ],
+        'web.assets_frontend': [
+            'payment_system_product/static/src/scss/flow.scss',
+            'payment_system_product/static/src/js/flow.js',
         ],
         'web.assets_backend': [
             'payment_system_product/static/src/js/product.js',

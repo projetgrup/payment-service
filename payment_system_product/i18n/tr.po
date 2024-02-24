@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-22 14:47+0000\n"
-"PO-Revision-Date: 2024-01-22 17:59+0300\n"
+"POT-Creation-Date: 2024-02-24 16:56+0000\n"
+"PO-Revision-Date: 2024-02-24 20:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
@@ -38,6 +38,25 @@ msgid "<span class=\"o_stat_text\">Related Products</span>"
 msgstr "<span class=\"o_stat_text\">İlişkili Ürünler</span>"
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "<span>Not Published</span>"
+msgstr "<span>Yayınlanmadı</span>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "<span>Published</span>"
+msgstr "<span>Yayınlandı</span>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid ""
+"<strong>Note</strong>: you can use <em>x</em> as unknown parameter, which is "
+"linked to price of the base product, in formula."
+msgstr ""
+"<strong>Not</strong>: formülde baz ürüne bağlı fiyat hesabında bilinmeyen "
+"değişken olarak<em>x</em> parametresini kullanabilirsiniz."
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
 msgid "<strong>Price:</strong>"
@@ -54,8 +73,8 @@ msgstr ""
 "<strong>Uyarı</strong>: nitelik eklemek veya kaldırmak\n"
 "                            varolan varyanların silinip tekrar "
 "oluşturulmasına\n"
-"                            ve onlara ait olası değişikliklerin "
-"kaybolmasına yol açabilir."
+"                            ve onlara ait olası değişikliklerin kaybolmasına "
+"yol açabilir."
 
 #. module: payment_system_product
 #. openerp-web
@@ -96,9 +115,19 @@ msgid "Attributes & Variants"
 msgstr "Nitelikler & Varyantlar"
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Base Product"
+msgstr "Baz Ürün"
+
+#. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_attribute__payment_type__brand
 msgid "Brand"
 msgstr "Marka"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Calculated Price"
+msgstr "Hesaplanan Fiyat"
 
 #. module: payment_system_product
 #: model:ir.actions.act_window,name:payment_system_product.action_product_category
@@ -124,6 +153,11 @@ msgid "Colors"
 msgstr "Renkler"
 
 #. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_attribute__company_id
 #: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__company_id
 #: model:ir.model.fields,field_description:payment_system_product.field_product_category__company_id
@@ -131,6 +165,11 @@ msgstr "Renkler"
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Company"
 msgstr "Şirket"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_method__constant
+msgid "Constant"
+msgstr "Sabit"
 
 #. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
@@ -177,10 +216,20 @@ msgid "Favorites"
 msgstr "Favoriler"
 
 #. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_method__formula
+msgid "Formula"
+msgstr "Formül"
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Groupby"
 msgstr "Grupla"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Yönlendirme"
 
 #. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__image_1920
@@ -250,6 +299,12 @@ msgid "Payment Color Foreground"
 msgstr "Ödeme Yazı Rengi"
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_page_ok
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_page_ok
+msgid "Payment Page Ok"
+msgstr "Ödeme Sayfası"
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow
 #: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow
 msgid "Payment Price Flow"
@@ -260,6 +315,34 @@ msgstr "Ödeme Fiyat Akışı"
 #: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow_option
 msgid "Payment Price Flow Option"
 msgstr "Ödeme Fiyat Akışı Seçeneği"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method
+msgid "Payment Price Method"
+msgstr "Ödeme Fiyat Metodu"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_formula
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method_formula
+msgid "Payment Price Method Formula"
+msgstr "Ödeme Fiyat Metot Formülü"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_product_id
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method_product_id
+msgid "Payment Price Method Product"
+msgstr "Ödeme Fiyat Metot Ürünü"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_result
+msgid "Payment Price Method Result"
+msgstr "Ödeme Fiyat Metot Sonucu"
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_settings
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
 
 #. module: payment_system_product
 #: model:ir.model,name:payment_system_product.model_payment_product
@@ -278,6 +361,17 @@ msgid "Price Flow"
 msgstr "Fiyat Akışı"
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Price Formula"
+msgstr "Fiyat Formülü"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Price Method"
+msgstr "Fiyat Metodu"
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 msgid "Price and code values are handled in variant level for this product"
 msgstr "Fiyat ve kod değerleri, bu ürün için varyant seviyesinde ele alınır"
@@ -291,6 +385,7 @@ msgstr "Fiyatlar güncellendi."
 
 #. module: payment_system_product
 #: model:ir.model,name:payment_system_product.model_product_product
+#: model:res.groups,name:payment_system_product.group_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_product
@@ -356,6 +451,8 @@ msgstr "Ürün Nitelikleri"
 #. module: payment_system_product
 #: model:ir.actions.act_window,name:payment_system_product.action_product_pricelist
 #: model:ir.actions.act_window,name:payment_system_product.action_product_template
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_settings__system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_res_company__system_product
 msgid "Products"
 msgstr "Ürünler"
 
@@ -366,6 +463,11 @@ msgstr "Ürünler"
 #: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_template
 msgid "Sales Price"
 msgstr "Satış Fiyatı"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Select a product"
+msgstr "Bir ürün seçin"
 
 #. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_flow_option__static

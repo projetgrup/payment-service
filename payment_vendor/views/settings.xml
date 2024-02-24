@@ -11,6 +11,30 @@
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
+                            <field name="system_agreement"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="system_agreement"/>
+                            <div class="text-muted">
+                                Define agreements to facilitate receiving payments
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="system_product"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="system_product"/>
+                            <div class="text-muted">
+                                Define products to facilitate receiving payments
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
                             <field name="payment_page_amount_editable"/>
                         </div>
                         <div class="o_setting_right_pane">
