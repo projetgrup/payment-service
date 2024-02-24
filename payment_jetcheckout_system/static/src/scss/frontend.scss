@@ -21,14 +21,13 @@
         button {
             padding: 1em;
             border-radius: 10px !important;
-            border-bottom: 3px solid theme-color('primary');
             color: theme-color('primary');
             font-weight: bold;
             transition: all 0.2s;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             display: flex;
             gap: 10px;
             align-items: center;
+            box-shadow: 0 3px 0 0 $primary, 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 
             &.btn-navigation {
                 border: none;
@@ -45,11 +44,7 @@
             }
 
             &:hover {
-                box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-            }
- 
-            &:not(.btn-primary):hover {
-                border-bottom-width: 6px;
+                box-shadow: 0 5px 0 0 $primary, 0 1rem 3rem rgba(0, 0, 0, 0.175);
             }
         }
 

@@ -202,7 +202,7 @@ class ProductProduct(models.Model):
         return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     def _compute_product_price(self):
-        products = self.filtered(lambda p: p.payment_price_flow)
+        products = self.filtered(lambda p: p.system)
         for product in products:
             if product.payment_price_flow and product.payment_price_method == 'formula':
                 product.price = product.payment_price_method_result
@@ -213,7 +213,7 @@ class ProductProduct(models.Model):
         super(ProductProduct, self - products)._compute_product_price()
 
     def _set_product_price(self):
-        products = self.filtered(lambda p: p.payment_price_flow)
+        products = self.filtered(lambda p: p.system)
         for product in products:
             if product.payment_price_flow and product.payment_price_method == 'formula':
                 continue

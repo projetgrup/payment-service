@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-22 14:47+0000\n"
-"PO-Revision-Date: 2024-01-22 14:47+0000\n"
+"POT-Creation-Date: 2024-02-24 16:56+0000\n"
+"PO-Revision-Date: 2024-02-24 16:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,23 @@ msgstr ""
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_attribute
 msgid "<span class=\"o_stat_text\">Related Products</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "<span>Not Published</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "<span>Published</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid ""
+"<strong>Note</strong>: you can use <em>x</em> as unknown parameter, which is"
+" linked to price of the base product, in formula."
 msgstr ""
 
 #. module: payment_system_product
@@ -89,8 +106,18 @@ msgid "Attributes & Variants"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Base Product"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_attribute__payment_type__brand
 msgid "Brand"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Calculated Price"
 msgstr ""
 
 #. module: payment_system_product
@@ -117,12 +144,22 @@ msgid "Colors"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_attribute__company_id
 #: model:ir.model.fields,field_description:payment_system_product.field_product_attribute_value__company_id
 #: model:ir.model.fields,field_description:payment_system_product.field_product_category__company_id
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Company"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_method__constant
+msgid "Constant"
 msgstr ""
 
 #. module: payment_system_product
@@ -171,9 +208,19 @@ msgid "Favorites"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_method__formula
+msgid "Formula"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Groupby"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_ir_http
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: payment_system_product
@@ -244,6 +291,12 @@ msgid "Payment Color Foreground"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_page_ok
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_page_ok
+msgid "Payment Page Ok"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow
 #: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow
 msgid "Payment Price Flow"
@@ -253,6 +306,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow_option
 #: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_flow_option
 msgid "Payment Price Flow Option"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method
+msgid "Payment Price Method"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_formula
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method_formula
+msgid "Payment Price Method Formula"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_product_id
+#: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_price_method_product_id
+msgid "Payment Price Method Product"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_method_result
+msgid "Payment Price Method Result"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_settings
+msgid "Payment Settings"
 msgstr ""
 
 #. module: payment_system_product
@@ -272,6 +353,17 @@ msgid "Price Flow"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+msgid "Price Formula"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
+msgid "Price Method"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 msgid "Price and code values are handled in variant level for this product"
 msgstr ""
@@ -285,6 +377,7 @@ msgstr ""
 
 #. module: payment_system_product
 #: model:ir.model,name:payment_system_product.model_product_product
+#: model:res.groups,name:payment_system_product.group_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_product
@@ -350,6 +443,8 @@ msgstr ""
 #. module: payment_system_product
 #: model:ir.actions.act_window,name:payment_system_product.action_product_pricelist
 #: model:ir.actions.act_window,name:payment_system_product.action_product_template
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_settings__system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_res_company__system_product
 msgid "Products"
 msgstr ""
 
@@ -359,6 +454,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_template
 msgid "Sales Price"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Select a product"
 msgstr ""
 
 #. module: payment_system_product

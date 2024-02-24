@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="res.groups" id="group_product">
+            <field name="name">Product</field>
+            <field name="category_id" ref="payment_jetcheckout_system.module_category_system_technical"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>
