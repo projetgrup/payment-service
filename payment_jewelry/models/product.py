@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
 
-import odoo
 from odoo import models, fields, api
-from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
 
 
 class PaymentProduct(models.AbstractModel):

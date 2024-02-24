@@ -1,15 +1,12 @@
 /** @odoo-module alias=paylox.system.page.flow **/
 'use strict';
 
-import core from 'web.core';
+import { _t } from 'web.core';
 import rpc from 'web.rpc';
 import publicWidget from 'web.public.widget';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
-
-const _t = core._t;
-
 
 publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
     selector: '.payment-dynamic',

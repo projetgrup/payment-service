@@ -14,7 +14,7 @@
         'payment_jetcheckout_system',
     ],
     'data': [
-        'views/settings.xml',
+        #'views/settings.xml',
         'views/agreement.xml',
         'views/transaction.xml',
         'views/templates.xml',
