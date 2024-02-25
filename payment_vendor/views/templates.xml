@@ -211,7 +211,7 @@
 
     <template id="page_payment_advance" inherit_id="payment_jetcheckout_system.page_payment">
         <xpath expr="//t[@t-set='labels']" position="inside">
-            <t t-if="advance">
+            <t t-if="system == 'vendor'">
                 <label name="country" class="text-primary font-weight-bold mb-0 d-block">Country</label>
                 <span name="country" class="text-600" t-esc="partner and partner.country_id.name or '-'"/>
                 <label name="state" class="text-primary font-weight-bold mb-0 d-block">State</label>
