@@ -77,6 +77,7 @@ class PaymentSystemProductController(SystemController):
         products = request.env['product.template'].sudo().search([
             ('company_id', '=', company.id),
             ('system', '=', company.system),
+            ('payment_page_ok', '=', True),
         ])    
         values.update({
             'success_url': '/my/payment/success',
