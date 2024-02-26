@@ -25,10 +25,26 @@ class PaymentAgreement(models.Model):
     def _render_agreement(self, values={}):
         partner = values.get('partner', None)
         partner_name = partner and partner.name or ''
+        partner_vat = partner and partner.vat or ''
+        partner_tax_office = partner and partner.paylox_tax_office or ''
+        partner_company_name = partner and partner.commercial_partner_id.name or ''
+        partner_address = partner and partner._display_address() or ''
+        partner_phone = partner and partner.phone or ''
+        partner_mobile = partner and partner.mobile or ''
+        partner_email = partner and partner.email or ''
+        partner_website = partner and partner.website or ''
         payment_currency = values.get('currency', self.company_id.currency_id)
         payment_amount = formatLang(self.env, values.get('amount', 0), monetary=True, currency_obj=payment_currency)
         agreement = self.body \
             .replace('${partner_name}', partner_name) \
+            .replace('${partner_vat}', partner_vat) \
+            .replace('${partner_tax_office}', partner_tax_office) \
+            .replace('${partner_company_name}', partner_company_name) \
+            .replace('${partner_address}', partner_address) \
+            .replace('${partner_phone}', partner_phone) \
+            .replace('${partner_mobile}', partner_mobile) \
+            .replace('${partner_email}', partner_email) \
+            .replace('${partner_website}', partner_website) \
             .replace('${payment_amount}', payment_amount)
         return agreement
 
