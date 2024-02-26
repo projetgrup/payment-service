@@ -209,9 +209,9 @@
         </t>
     </template>
 
-    <template id="page_payment_advance" inherit_id="payment_jetcheckout_system.page_payment">
+    <template id="page_payment_system" inherit_id="payment_jetcheckout_system.page_payment">
         <xpath expr="//t[@t-set='labels']" position="inside">
-            <t t-if="system == 'vendor'">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <label name="country" class="text-primary font-weight-bold mb-0 d-block">Country</label>
                 <span name="country" class="text-600" t-esc="partner and partner.country_id.name or '-'"/>
                 <label name="state" class="text-primary font-weight-bold mb-0 d-block">State</label>
@@ -227,7 +227,7 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
-            <t t-if="advance">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
                     <div class="field-container d-flex p-2 gap-5">
                         <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
@@ -242,7 +242,7 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
-            <t t-if="advance">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <div class="field-container d-none">
                     <input type="text" class="text-center border-primary" required="required" field="wizard.register.paylox_tax_office"/>
                     <span class="bar-container"/>
@@ -251,7 +251,7 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
-            <t t-if="advance">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <div class="d-flex flex-column gap-5">
                     <div class="field-container">
                         <select class="text-center border-primary" required="required" field="wizard.register.state_id" placeholder="Select a state">
