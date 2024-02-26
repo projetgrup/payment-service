@@ -44,7 +44,9 @@ systemFlow.dynamic.include({
     },
 
     _onClickAmountNext: async function () {
-        this._onUpdateProductPrice();
+        if (this.wizard.button.product.exist) {
+            this._onUpdateProductPrice();
+        }
         return this._super.apply(this, arguments);
     }
 });

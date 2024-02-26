@@ -29,7 +29,7 @@ systemFlow.dynamic.include({
 
     _queryPartnerPostprocess: function (partner) {
         this._super(partner);
-        if (this.advance.exist) {
+        if (this.system.value === 'vendor') {
             $('.payment-system span[name=country]').text(Array.isArray(partner.country_id) ? partner.country_id[1] : partner.country_id || '-');
             $('.payment-system span[name=state]').text(Array.isArray(partner.state) ? partner.state[1] : partner.state || '-');
             $('.payment-system span[name=city]').text(partner.city || '-');
