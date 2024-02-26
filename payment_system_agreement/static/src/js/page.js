@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.system.agreement **/
+/** @odoo-module alias=paylox.page.agreement **/
 'use strict';
 
 import rpc from 'web.rpc';
@@ -16,16 +16,18 @@ payloxPage.include({
     },
 
     start: function () {
+        window.addEventListener('agreement-added', (ev) => {
+            for (const agreement of ev.detail) {
+                this.agreement.all[agreement.id] = false;
+            }
+        });
         return this._super.apply(this, arguments).then(() => {
             if (this.agreement.exist) {
                 this.agreement.all = {};
-                this.agreement.ids = [];
-                this.agreement.total = this.agreement.$.length;
                 this.agreement.$.each((_, e) => {
                     const $e = $(e);
                     const id = Number($e.data('id'));
                     this.agreement.all[id] = $e.find('input').is(':checked');
-                    this.agreement.ids.push(id);
                 });
                 Object.defineProperty(this.agreement, 'count', {
                     get () {
@@ -34,7 +36,7 @@ payloxPage.include({
                 });
                 Object.defineProperty(this.agreement, 'confirmed', {
                     get () {
-                        return this.total === this.count;
+                        return this.$.length === this.count;
                     },
                 });
             }
@@ -44,7 +46,7 @@ payloxPage.include({
     _getParams: function () {
         let params = this._super.apply(this, arguments);
         if (this.agreement.exist) {
-            params['agreements'] = this.agreement.ids;
+            params['agreements'] = Object.keys(this.agreement.all);
         }
         return params;
     },

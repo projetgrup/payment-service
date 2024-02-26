@@ -26,7 +26,7 @@ class PaymentPortal(portal.PaymentPortal):
         """
         We don't use payment tokens yet, so redirect 404
         """
-        raise werkzeug.exceptions.NotFound
+        raise werkzeug.exceptions.NotFound()
 
 
 class PayloxController(http.Controller):

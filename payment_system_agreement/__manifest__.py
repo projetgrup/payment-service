@@ -12,6 +12,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_jetcheckout_system',
+        'payment_system_product',
     ],
     'data': [
         #'views/settings.xml',
@@ -22,12 +23,13 @@
         'security/ir.model.access.csv',
     ],
     'assets': {
-    #    'web.assets_qweb': [
-    #        'payment_system_product/static/src/xml/product.xml',
-    #    ],
+        'web.assets_qweb': [
+            'payment_system_agreement/static/src/xml/page.xml',
+        ],
         'web.assets_frontend': [
             'payment_system_agreement/static/src/scss/page.scss',
             'payment_system_agreement/static/src/js/page.js',
+            'payment_system_agreement/static/src/js/flow.js',
         ],
     },
     'images': ['static/description/icon.png'],

@@ -294,13 +294,17 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
  
     start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self._setCurrency();
-            self._start();
+        window.addEventListener('field-updated', (ev) => {
+            if (Array(ev.detail)) {
+                this._start(ev.detail);
+            }
+        });
+        return this._super.apply(this, arguments).then(() => {
+            this._setCurrency();
+            this._start();
             const $currency = $('[field=currency]');
             $currency.on('update', function () {
-                self._setCurrency();
+                this._setCurrency();
             });
             framework.hideLoading();
         });
