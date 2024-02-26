@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 20:19+0000\n"
-"PO-Revision-Date: 2024-02-23 20:19+0000\n"
+"POT-Creation-Date: 2024-02-26 08:03+0000\n"
+"PO-Revision-Date: 2024-02-26 08:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -157,11 +157,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.tree_transaction_agreement
 msgid "Date"
-msgstr ""
-
-#. module: payment_system_agreement
-#: model_terms:ir.ui.view,arch_db:payment_system_agreement.settings_form
-msgid "Define agreements to facilitate receiving payments"
 msgstr ""
 
 #. module: payment_system_agreement
@@ -334,6 +329,12 @@ msgid "Prices have been updated."
 msgstr ""
 
 #. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__product_ids
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Products"
+msgstr ""
+
+#. module: payment_system_agreement
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__sequence
 msgid "Sequence"
 msgstr ""
@@ -378,6 +379,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_transaction_agreement
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
 msgid "User"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__uuid
+msgid "UUID"
 msgstr ""
 
 #. module: payment_system_agreement

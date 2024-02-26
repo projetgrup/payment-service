@@ -18,8 +18,9 @@ class PaymentAgreement(models.Model):
     date_start = fields.Date('Start Date')
     date_end = fields.Date('End Date')
     version = fields.Char()
-    page_ids = fields.Many2many('payment.page', 'payment_agreement_page_rel', 'agreement_id', 'page_id', string='Pages')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    page_ids = fields.Many2many('payment.page', 'payment_agreement_page_rel', 'agreement_id', 'page_id', string='Pages')
+    product_ids = fields.Many2many('product.template', 'payment_agreement_product_rel', 'agreement_id', 'product_id', string='Products')
 
     def _render_agreement(self, values={}):
         partner = values.get('partner', None)
@@ -47,6 +48,7 @@ class PaymentTransactionAgreement(models.Model):
     path = fields.Char(readonly=True)
     pdf = fields.Binary(readonly=True)
     active = fields.Boolean(readonly=True)
+    uuid = fields.Char('UUID', readonly=True)
     name = fields.Char(compute='_compute_name')
     body = fields.Html(sanitize=False, readonly=True)
     ip_address = fields.Char('IP Address', readonly=True)

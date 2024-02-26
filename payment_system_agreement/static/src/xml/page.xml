@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-	<t t-name="Payment.Product.Buttons">
-        <button t-if="show_update_price_button" type="button" class="btn btn-secondary o_button_update_price">
-            Update Prices
-        </button>
+	<t t-name="paylox.agreement.product">
+        <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
+            <label class="switch">
+                <input type="checkbox" class="d-none"/>
+                <span class="slider round fa"/>
+            </label>
+            <label t-esc="agreement.text"/>
+        </div>
     </t>
 </templates>
