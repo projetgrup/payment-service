@@ -7,6 +7,7 @@ from odoo import _
 from odoo.http import Response
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
@@ -24,11 +25,74 @@ class VendorAPIService(Component):
     _description = """This API helps you connect vendor payment system with your specially generated key"""
 
     @restapi.method(
+        [(["/payment/status"], "GET")],
+        input_param=Datamodel("vendor.payment.read.input"),
+        output_param=Datamodel("vendor.payment.read.output"),
+        auth="public",
+        tags=['Payments']
+    )
+    def get_payments(self, params):
+        """
+        Get Payments
+        """
+        try:
+            company = self.env.company
+
+            api = self._get_api(company, params.apikey)
+            if not api:
+                return Response("Application key is not matched", status=401, mimetype="application/json")
+
+            payments = self._get_payment(company, params.reference)
+            if not payments:
+                return Response("Payment not found", status=404, mimetype="application/json")
+            
+            results = [{
+                "date": payment.create_date.strftime(DTF),
+                "reference": payment.jetcheckout_order_id,
+                "status": payment.state,
+                "description": payment.state_message,
+                "payment_payable": payment.jetcheckout_payment_amount,
+                "customer_rate": payment.jetcheckout_customer_rate,
+                "customer_amount": payment.jetcheckout_customer_amount,
+                "payment_paid": payment.jetcheckout_payment_paid,
+                "commission_rate": payment.jetcheckout_commission_rate,
+                "commission_amount": payment.jetcheckout_commission_amount,
+                "payment_net": payment.jetcheckout_payment_net,
+                "fund_amount": payment.jetcheckout_fund_amount,
+                "fund_rate": payment.jetcheckout_fund_rate,
+                "prepayment_amount": payment.paylox_prepayment_amount,
+                "installment_amount": payment.jetcheckout_installment_amount,
+                "installment_count": payment.jetcheckout_installment_count,
+                "installment_plus": payment.jetcheckout_installment_plus,
+                "installment_description": payment.jetcheckout_installment_description,
+                "card_name": payment.jetcheckout_card_name,
+                "card_number": payment.jetcheckout_card_number,
+                "card_type": payment.jetcheckout_card_type,
+                "card_family": payment.jetcheckout_card_family,
+                "campaign_name": payment.jetcheckout_campaign_name,
+                "pos_name": payment.jetcheckout_vpos_name,
+                "transaction_id": payment.jetcheckout_transaction_id,
+                "transaction_name": payment.reference,
+                "partner_name": payment.partner_name,
+                "partner_email": payment.partner_email,
+                "partner_phone": payment.partner_phone,
+                "partner_address": payment.partner_address,
+                "ip_address": payment.jetcheckout_ip_address,
+                "url_address": payment.jetcheckout_url_address,
+            } for payment in payments]
+
+            ResponseOk = self.env.datamodels["vendor.payment.read.output"]
+            return ResponseOk(payments=results, **RESPONSE[200])
+        except Exception as e:
+            _logger.error(e)
+            return Response("Server Error", status=500, mimetype="application/json")
+
+    @restapi.method(
         [(["/payment/create"], "POST")],
         input_param=Datamodel("vendor.payment.create"),
         output_param=Datamodel("vendor.payment.output"),
         auth="public",
-        tags=['Create Methods']
+        tags=['Payments']
     )
     def create_payments(self, params):
         """
@@ -118,7 +182,7 @@ class VendorAPIService(Component):
         input_param=Datamodel("vendor.campaign.update"),
         output_param=Datamodel("vendor.campaign.output"),
         auth="public",
-        tags=['Update Campaigns']
+        tags=['Campaigns']
     )
     def update_campaign(self, params):
         """
@@ -169,7 +233,7 @@ class VendorAPIService(Component):
 
     @restapi.webhook(
         input_param=Datamodel("vendor.payment.item.webhook"),
-        tags=['Webhook Methods']
+        tags=['Payments']
     )
     def webhook_successful_payment(self):
         """
@@ -203,6 +267,12 @@ class VendorAPIService(Component):
         if hasattr(vendor, 'ref') and vendor.ref:
             domain.append(('ref', '=', vendor.ref))
         return self.env['res.partner'].sudo().search(domain, limit=1)
+
+    def _get_payment(self, company, reference):
+        return self.env['payment.transaction'].sudo().search([
+            ('company_id', '=', company.id),
+            ('jetcheckout_order_id', '=', reference),
+        ], limit=1)
 
     def _get_campaign(self, acquirer, campaign):
         return self.env['payment.acquirer.jetcheckout.campaign'].sudo().search([
