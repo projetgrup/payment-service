@@ -1372,7 +1372,7 @@ msgstr "Fonlanan Tutar"
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_fund_rate
 msgid "Fund Rate"
-msgstr "Fonlanan Tutar"
+msgstr "Fonlanan Oran"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_list
