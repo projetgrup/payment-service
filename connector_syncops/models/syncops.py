@@ -23,6 +23,7 @@ class SyncopsConnector(models.Model):
     line_ids = fields.One2many('syncops.connector.line', 'connector_id', string='Lines', readonly=True)
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
+    environment = fields.Boolean(default=False)
 
     @api.constrains('token')
     def _check_token(self):
@@ -56,7 +57,7 @@ class SyncopsConnector(models.Model):
         return {default.name: default._value(values) for default in defaults}
 
     @api.model
-    def _execute(self, method, ref='', params={}, company=None, message=None):
+    def _execute(self, method, reference='', params={}, company=None, message=None):
         result = []
         try:
             if not company:
@@ -80,8 +81,9 @@ class SyncopsConnector(models.Model):
                 'username': connector.username,
                 'token': connector.token,
                 'method': method,
-                'ref': ref,
                 'params': params,
+                'reference': reference,
+                'environment': self.environment and 'P' or 'T',
             })
             if response.status_code == 200:
                 results = response.json()
@@ -210,6 +212,10 @@ class SyncopsConnector(models.Model):
             ('connected', '=', True),
             ('line_ids.code', '=', method)
         ])
+
+    def action_toggle_environment(self):
+        self.ensure_one()
+        self.environment = not self.environment
 
     def action_toggle_active(self):
         self.ensure_one()

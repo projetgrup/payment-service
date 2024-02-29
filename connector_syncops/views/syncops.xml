@@ -26,6 +26,8 @@
                     <button name="action_view_log" type="object" class="oe_stat_button" icon="fa-file-text-o" attrs="{'invisible': [('connected','=',False)]}" string="Logs"/>
                     <button name="action_connect" type="object" class="oe_stat_button text-danger" icon="fa-unlink" attrs="{'invisible': [('connected','!=',False)]}" string="Not Connected"/>
                     <button name="action_connect" type="object" class="oe_stat_button text-success" icon="fa-chain" attrs="{'invisible': [('connected','=',False)]}" string="Connected"/>
+                    <button name="action_toggle_environment" type="object" class="oe_stat_button text-danger" icon="fa-stop" attrs="{'invisible': [('environment','!=',False)]}" string="Test"/>
+                    <button name="action_toggle_environment" type="object" class="oe_stat_button text-success" icon="fa-play" attrs="{'invisible': [('environment','=',False)]}" string="Production"/>
                     <button name="action_toggle_active" type="object" class="oe_stat_button text-muted" icon="fa-toggle-off" attrs="{'invisible': [('active','!=',False)]}" string="Passive"/>
                     <button name="action_toggle_active" type="object" class="oe_stat_button text-success" icon="fa-toggle-on" attrs="{'invisible': [('active','=',False)]}" string="Active"/>
                 </div>
@@ -93,6 +95,7 @@
                         <label for="line_ids" attrs="{'invisible': [('connected', '!=', False)]}"/>
                         <span class="text-muted" attrs="{'invisible': [('connected', '!=', False)]}">Methods will be available after connection is successful</span>
                         <field name="active" invisible="1"/>
+                        <field name="environment" invisible="1"/>
                         <field name="connected" invisible="1" force_save="1"/>
                     </group>
                 </group>
