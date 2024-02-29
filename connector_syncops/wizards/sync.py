@@ -59,6 +59,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
 
 class SyncopsSyncWizardReload(models.AbstractModel):
     _name = 'syncops.sync.wizard.reload'
+    _description = 'syncOPS Sync Wizard Reload'
 
     def _get_readable_fields(self):
         return {}
