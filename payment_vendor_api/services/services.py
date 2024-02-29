@@ -36,12 +36,11 @@ class VendorAPIService(Component):
         Get Payments
         """
         try:
-            company = self.env.company
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             payments = self._get_payment(company, params.reference)
             if not payments:
                 return Response("Payment not found", status=404, mimetype="application/json")
@@ -99,9 +98,7 @@ class VendorAPIService(Component):
         Create Payments
         """
         try:
-            company = self.env.company
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
@@ -110,6 +107,7 @@ class VendorAPIService(Component):
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
             result = []
+            company = api.company_id
             vendors = self.env['res.partner'].sudo()
             for item in params.items:
                 vendor = self._get_vendor(company, item.vendor)
@@ -189,9 +187,7 @@ class VendorAPIService(Component):
         Update Campaigns
         """
         try:
-            company = self.env.company
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
@@ -199,6 +195,7 @@ class VendorAPIService(Component):
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             acquirer = self._get_acquirer(company)
             for campaign in params.campaigns:
                 vat, ref = None, None
@@ -245,8 +242,8 @@ class VendorAPIService(Component):
     # PRIVATE METHODS
     #
 
-    def _get_api(self, company, apikey, secretkey=False):
-        domain = [('company_id', '=', company.id), ('api_key', '=', apikey)]
+    def _get_api(self, apikey, secretkey=False):
+        domain = [('api_key', '=', apikey)]
         if secretkey:
             domain.append(('secret_key', '=', secretkey))
         return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
@@ -271,7 +268,7 @@ class VendorAPIService(Component):
     def _get_payment(self, company, reference):
         return self.env['payment.transaction'].sudo().search([
             ('company_id', '=', company.id),
-            ('jetcheckout_order_id', '=', reference),
+            '|', ('jetcheckout_order_id', '=', reference), ('jetcheckout_transaction_id', '=', reference),
         ], limit=1)
 
     def _get_campaign(self, acquirer, campaign):
