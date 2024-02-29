@@ -45,7 +45,7 @@ class PaymentTransaction(models.Model):
             response = requests.get(url, params={
                 'username': connector.username,
                 'token': connector.token,
-                'ref': str(self.id)
+                'reference': str(self.id),
             })
             if response.status_code == 200:
                 results = response.json()
@@ -99,7 +99,7 @@ class PaymentTransaction(models.Model):
         if not line or not line.account_code:
             raise UserError(_('There is no account line for this provider'))
 
-        result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', ref=str(self.id), params={
+        result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params={
             'id': self.id,
             'ref': ref,
             'vat': vat,
