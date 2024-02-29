@@ -72,7 +72,7 @@ class VendorPaymentTransaction(Datamodel):
     partner_phone = fields.String(required=True, allow_none=False, metadata={"title": "Partner Phone", "description": "Partner phone", "example": "+905320000000"})
     partner_address = fields.String(required=True, allow_none=False, metadata={"title": "Partner Address", "description": "Partner address", "example": "İstanbul"})
     ip_address = fields.String(required=True, allow_none=False, metadata={"title": "IP Address", "description": "IP address of payer", "example": "34.221.4.6"})
-    url_address = fields.String(required=True, allow_none=False, metadata={"title": "URL Address", "description": "Website address on which payment is made", "example": "https://mywebsite.com/my/payment/"})
+    url_address = fields.String(required=True, allow_none=False, metadata={"title": "URL Address", "description": "Website address on which payment is made", "example": "https://payment.com/my/payment/"})
 
 
 class VendorPaymentReadInput(Datamodel):

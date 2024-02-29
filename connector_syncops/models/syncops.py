@@ -330,11 +330,13 @@ class SyncopsConnectorLineIO(models.AbstractModel):
 class SyncopsConnectorLineInput(models.Model):
     _name = 'syncops.connector.line.input'
     _inherit = 'syncops.connector.line.io'
+    _description = 'syncOPS Connector Line Input'
 
 
 class SyncopsConnectorLineOutput(models.Model):
     _name = 'syncops.connector.line.output'
     _inherit = 'syncops.connector.line.io'
+    _description = 'syncOPS Connector Line Output'
 
 
 class SyncopsConnectorLineDefault(models.Model):
