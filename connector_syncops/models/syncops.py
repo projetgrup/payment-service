@@ -92,8 +92,8 @@ class SyncopsConnector(models.Model):
                     return (None, results['message']) if message else None
                 result = results.get('result', [])
             else:
-                _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.reason))
-                return (None, response.reason) if message else None
+                _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.text or response.reason))
+                return (None, response.text or response.reason) if message else None
         except Exception as e:
             _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', e))
             _logger.error(traceback.format_exc())
