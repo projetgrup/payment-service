@@ -132,9 +132,7 @@ class PayloxSystemJewelryController(Controller):
 
     @route('/my/jewelry/register/query', type='json', auth='public', website=True)
     def page_jewelry_register_query(self, vat):
-        result, message = request.env['syncops.connector'].sudo()._execute('partner_get_company', params={'vat': vat}, message=True)
+        result = request.env['syncops.connector'].sudo()._execute('partner_get_company', params={'vat': vat})
         if result is None:
-            return {
-                'error': message,
-            }
+            return {'error': _('An error occured. Please contact with system administrator.')}
         return result[0]
