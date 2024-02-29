@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 
 class PaymentProduct(models.AbstractModel):
@@ -21,7 +21,7 @@ class PaymentProduct(models.AbstractModel):
         if company.system == 'jewelry':
             prices, message = self.env['syncops.connector'].sudo()._execute('product_get_products', company=company, message=True)
             if prices is None:
-                return {'error': message}
+                return {'error': _('An error occured:\n%s') % message}
 
             prices = {p['code']: p['price'] for p in prices}
             products = self.env['product.product'].sudo().search([
