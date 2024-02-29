@@ -86,7 +86,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_commission_amount = fields.Monetary('Cost Amount', readonly=True, copy=False)
     jetcheckout_customer_rate = fields.Float('Customer Rate', digits=(12,4), readonly=True, copy=False)
     jetcheckout_customer_amount = fields.Monetary('Customer Amount', readonly=True, copy=False)
-    jetcheckout_fund_rate = fields.Float('Fund Rate', digits=(12,4), compute='_compute_amounts', readonly=True, copy=False, store=True, precision='')
+    jetcheckout_fund_rate = fields.Float('Fund Rate', digits=(12,4), compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_fund_amount = fields.Monetary('Fund Amount', compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
