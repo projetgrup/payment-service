@@ -1,35 +1,37 @@
-/** @odoo-module alias=paylox.system.jewelry **/
+/** @odoo-module alias=paylox.system.product.page **/
 'use strict';
 
-import publicWidget from 'web.public.widget';
-import core from 'web.core';
+import { _t, qweb } from 'web.core';
 import rpc from 'web.rpc';
 import dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
+
 import fields from 'paylox.fields';
 import payloxPage from 'paylox.page';
 import framework from 'paylox.framework';
 import systemPage from 'paylox.system.page';
 import { format } from 'paylox.tools';
 
-const _t = core._t;
-const Qweb = core.qweb;
-
 payloxPage.include({
 
     init: function (parent, options) {
         this._super(parent, options);
-        this.systemJewelryPayment = false;
+        this.state = {
+            product: {
+                payment: false,
+            }
+        };
     },
 
     start: function () {
         return this._super.apply(this, arguments).then(() => {
-            if (this.system.value === 'jewelry') {
+            if (this.options.product) {
                 window.addEventListener('payment-started', () => {
-                    this.systemJewelryPayment = true;
+                    this.state.product.payment = true;
                     this._getInstallment();
                 });
                 window.addEventListener('payment-stopped', () => {
-                    this.systemJewelryPayment = false;
+                    this.state.product.payment = false;
 
                     this.installment.colempty.$.removeClass('d-none');
                     this.installment.col.$.addClass('d-none');
@@ -51,8 +53,8 @@ payloxPage.include({
     },
 
     _checkData: function () {
-        if (this.system.value === 'jewelry') {
-            if (!this.systemJewelryPayment) {
+        if (this.options.product) {
+            if (!this.state.product.payment) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
@@ -72,9 +74,9 @@ payloxPage.include({
     //},
 });
 
-publicWidget.registry.payloxSystemJewelry = systemPage.extend({
-    selector: '.payment-jewelry #wrapwrap',
-    xmlDependencies: ['/payment_jewelry/static/src/xml/page.xml'],
+publicWidget.registry.payloxSystemProduct = systemPage.extend({
+    selector: '.payment-product #wrapwrap',
+    xmlDependencies: ['/payment_system_product/static/src/xml/page.xml'],
 
     init: function (parent, options) {
         this._super(parent, options);
@@ -87,7 +89,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.margin = 0;
         this.validity = 0;
         this.commission = 0;
-        this.jewelry = {
+        this.product = {
             price: new fields.float({
                 default: 0,
             }),
@@ -119,6 +121,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             counter: new fields.element(),
             items: new fields.element(),
             lines: new fields.element(),
+            categ: new fields.element({
+                events: [['click', this._onClickCateg]],
+            }),
             plus: new fields.element({
                 events: [['click', this._onClickPlus]],
             }),
@@ -166,13 +171,13 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _getNumbers: function () {
-        this.margin = this.jewelry.margin.value; this.jewelry.margin.$.remove();
-        this.validity = this.jewelry.validity.value; this.jewelry.validity.$.remove();
-        this.commission = this.jewelry.commission.value; this.jewelry.commission.$.remove();
+        this.margin = this.product.margin.value; this.product.margin.$.remove();
+        this.validity = this.product.validity.value; this.product.validity.$.remove();
+        this.commission = this.product.commission.value; this.product.commission.$.remove();
     },
 
     _getBrands: function () {
-        let $brands = $('[field="jewelry.brands"]');
+        let $brands = $('[field="product.brands"]');
         $brands.each((i, e) => {
             let bid = e.dataset.id;
             let pid = e.dataset.product;
@@ -188,7 +193,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _getProducts: function () {
-        let $products = $('[field="jewelry.items"]');
+        let $products = $('[field="product.items"]');
         $products.each((i, e) => {
             let pid = e.dataset.id;
             this.products[pid] = {
@@ -205,7 +210,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         console.log('Price service is active.');
         events.onmessage = (event) => {
             let changed = false;
-            let $prices = this.jewelry.price.$;
+            let $prices = this.product.price.$;
             let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
             for (let data of event.data.split('\n')) {
                 let [code, price] = data.split(';'); price = parseFloat(price);
@@ -238,8 +243,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     },
 
     _onChangePrice($price, update=true) {
-        let $qty = this.jewelry.qty.$.filter(`.base[data-id=${$price.data('id')}]`);
-        let $amount = this.jewelry.amount.$.filter(`[data-id=${$price.data('id')}]`);
+        let $qty = this.product.qty.$.filter(`.base[data-id=${$price.data('id')}]`);
+        let $amount = this.product.amount.$.filter(`[data-id=${$price.data('id')}]`);
 
         let qty = parseFloat($qty.val());
         let price = parseFloat($price.data('value'));
@@ -261,7 +266,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         let subtotal = 0;
         let brands = {};
         let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
-        this.jewelry.amount.$.filter(`.base`).each((i, e) => {
+        this.product.amount.$.filter(`.base`).each((i, e) => {
             let $e = $(e);
             let value = parseFloat($e.data('value'));
             if (value > 0) {
@@ -286,7 +291,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             }
         });
 
-        this.jewelry.brands.$.each((i, e) => {
+        this.product.brands.$.each((i, e) => {
             let $e = $(e);
             let $span = $e.find('span');
             let bid = parseInt($e.data('id'));
@@ -306,7 +311,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             brand.products = Object.values(brand.products);
         }
 
-        this.jewelry.lines.html = Qweb.render('paylox.jewelry.lines', {
+        this.product.lines.html = qweb.render('paylox.product.lines', {
             format,
             brands,
             currency: this.currency,
@@ -317,9 +322,9 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this.amount.value = format.float(total);
         this.amount.$.trigger('update');
 
-        this.jewelry.subtotal.text = format.currency(subtotal, ...currency);
-        this.jewelry.fee.text = format.currency(fee, ...currency);
-        this.jewelry.total.text = format.currency(total, ...currency);
+        this.product.subtotal.text = format.currency(subtotal, ...currency);
+        this.product.fee.text = format.currency(fee, ...currency);
+        this.product.total.text = format.currency(total, ...currency);
 
         this._saveOrder({ lines: Object.values(this.lines) });
     },
@@ -327,10 +332,10 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     _onChangeQty(ev) {
         let $qty = $(ev.currentTarget);
         let pid = $qty.data('id');
-        this.jewelry.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
+        this.product.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
 
-        let $price = this.jewelry.price.$.filter(`.base[data-id=${pid}]`);
-        let $amount = this.jewelry.amount.$.filter(`[data-id=${pid}]`);
+        let $price = this.product.price.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.product.amount.$.filter(`[data-id=${pid}]`);
 
         let qty = parseFloat($qty.val());
         let price = parseFloat($price.data('value'));
@@ -343,10 +348,21 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
         this._updateLines();
     },
 
+    _onClickCateg(ev) {
+        const categ = ev.currentTarget.value;
+        this.product.items.$.each((_, e) => {
+            if (e.dataset.categ === categ) {
+                e.classList.remove('d-none');
+            } else {
+                e.classList.add('d-none');
+            }
+        });
+    },
+
     _onClickPlus(ev) {
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
-        let qty = this.jewelry.qty.$.filter(`.base[data-id=${pid}]`);
+        let qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
 
         let val = qty.val();
         qty.val(+val+1);
@@ -356,7 +372,7 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     _onClickMinus(ev) {
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
-        let qty = this.jewelry.qty.$.filter(`.base[data-id=${pid}]`);
+        let qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
 
         let val = qty.val();
         if (val > 0) {
@@ -369,13 +385,13 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
 
     _onClickBrands(ev) {
         let $btn = $(ev.currentTarget);
-        let $item = this.jewelry.items.$.filter(`[data-id=${ $btn.data('product') }]`);
+        let $item = this.product.items.$.filter(`[data-id=${ $btn.data('product') }]`);
         if ($btn.hasClass('base')) {
             $item.find(`[data-brand]`).each((i, e) => $(e).addClass('d-none'));
             $item.find(`[data-brand=${ $btn.data('id') }]`).each((i, e) => $(e).removeClass('d-none'));
     
-            this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
-            this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ $btn.data('id') }]`).each((i, e) => $(e).addClass('active'));
+            this.product.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
+            this.product.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ $btn.data('id') }]`).each((i, e) => $(e).addClass('active'));
         } else {   
             let pid = parseInt($item.data('id'));
             let brands = Object.values(this.brands[pid]);
@@ -384,10 +400,10 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
             let popup = new dialog(this, {
                 size: 'small',
                 title: _t('Choose a brand'),
-                $content: Qweb.render('paylox.jewelry.brands', { brands, foreground, background }),
+                $content: qweb.render('paylox.product.brands', { brands, foreground, background }),
             });
             popup.open().opened(() => {
-                popup.$modal.addClass('payment-jewelry-brand-popup');
+                popup.$modal.addClass('payment-product-brand-popup');
                 popup.$modal.find('.modal-header').attr('style', `color:${foreground} !important;background-color:${background} !important`);
                 popup.$modal.find('.modal-footer button').attr('style', `color:${foreground} !important;background-color:${background} !important`);
                 popup.$modal.find('button').click((e) => {
@@ -396,8 +412,8 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
                         $item.find(`[data-brand]`).each((i, e) => $(e).addClass('d-none'));
                         $item.find(`[data-brand=${ bid }]`).each((i, e) => $(e).removeClass('d-none'));
                 
-                        this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
-                        this.jewelry.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ bid }]`).each((i, e) => $(e).addClass('active'));
+                        this.product.brands.$.filter(`[data-product=${ $btn.data('product') }]`).removeClass('active');
+                        this.product.brands.$.filter(`[data-product=${ $btn.data('product') }][data-id=${ bid }]`).each((i, e) => $(e).addClass('active'));
                     }
                     popup.close();
                 });
@@ -408,21 +424,21 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     _onClickPolicy() {
         framework.showLoading();
         rpc.query({
-            route: '/my/jewelry/policy',
+            route: '/my/product/policy',
         }).then((partner) => {
             let popup = new dialog(this, {
                 size: 'small',
                 technical: false,
                 title: _t('My PoS Policy'),
-                $content: Qweb.render('paylox.jewelry.policy', partner),
+                $content: qweb.render('paylox.product.policy', partner),
             });
             popup.open().opened(() => {
                 let $loading = popup.$modal.find('.loading');
-                popup.$modal.addClass('payment-jewelry-policy-popup');
-                popup.$modal.find('button').click(() => {
+                popup.$modal.addClass('payment-product-policy-popup');
+                popup.$modal.find('.modal-body button').click(() => {
                     $loading.addClass('show');
                     rpc.query({
-                        route: '/my/jewelry/policy/send',
+                        route: '/my/product/policy/send',
                     }).then((result) => {
                         if (result.error) {
                             this.displayNotification({
@@ -463,27 +479,27 @@ publicWidget.registry.payloxSystemJewelry = systemPage.extend({
     _onClickPay(ev) {
         $(document.body).addClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
         $(ev.currentTarget).addClass('hide');
-        this.jewelry.back.$.removeClass('hide');
+        this.product.back.$.removeClass('hide');
         this._startPayment();
     },
 
     _onClickBack(ev) {
         $(document.body).removeClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
         $(ev.currentTarget).addClass('hide');
-        this.jewelry.pay.$.text(_t('Pay Now'));
-        this.jewelry.pay.$.removeClass('hide');
+        this.product.pay.$.text(_t('Pay Now'));
+        this.product.pay.$.removeClass('hide');
         this._stopPayment();
     },
 
     _startPayment() {
         this._saveOrder({ lock: true });
         if (this.validity > 0) {
-            const $counter = this.jewelry.counter.$.find('svg');
+            const $counter = this.product.counter.$.find('svg');
             const $progress = $counter.find('.progress');
             const counter = () => {
                 if (this.timeout <= 0) {
-                    this.jewelry.pay.$.text(_t('Restart Payment'));
-                    this.jewelry.pay.$.removeClass('hide');
+                    this.product.pay.$.text(_t('Restart Payment'));
+                    this.product.pay.$.removeClass('hide');
                     this._stopPayment();
                     return;
                 }

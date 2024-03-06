@@ -183,9 +183,6 @@ class PayloxController(http.Controller):
             PayloxController._set('type', type)
         return type == t if t else type
 
-    def _get_transaction(self):
-        return False
-
     @staticmethod
     def _get_installment_description(installment):
         if installment['plus_installment'] > 0:

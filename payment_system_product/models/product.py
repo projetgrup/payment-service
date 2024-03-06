@@ -126,6 +126,12 @@ class ProductTemplate(models.Model):
                     'name': value.name,
                     'image': value.image_128 and value.image_128.decode('utf-8') or False,
                 })
+        if not result:
+            result.append({
+                'id': 0,
+                'name': '',
+                'image': False,
+            })
         return result
 
     def get_payment_variants(self, types=None):
@@ -248,7 +254,13 @@ class ProductProduct(models.Model):
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
+    _order = 'sequence, complete_name'
 
+    sequence = fields.Integer(default=10)
+    view_type = fields.Selection(selection=[
+        ('list', 'List'),
+        ('table', 'Table'),
+    ])
     system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company')
 

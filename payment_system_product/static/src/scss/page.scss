@@ -1,4 +1,4 @@
-.payment-jewelry {
+.payment-product {
     background-color: #f7fafc;
     color: #444444 !important;
     overflow: auto !important;
@@ -56,7 +56,7 @@
         cursor: pointer;
     }
 
-    .payment-jewelry-items {
+    .payment-product-items {
         opacity: 1;
         border-right: 2px solid #e0d2d2;
         transition: opacity 1s, margin 1s;
@@ -91,7 +91,34 @@
             text-align: center;
         }
 
-        .payment-jewelry-items-card {
+        .payment-product-categ {
+            display: flex;
+            gap: 4px;
+
+            > div {
+                max-width: 100px;
+                white-space: nowrap;
+                align-items: center;
+                gap: 4px;
+
+                input {
+                    display: none;
+                }
+
+                label {
+                    margin: 0;
+                    font-weight: 500;
+                    color: #212529;
+                    border-color: #ffc107;
+                }
+
+                input:checked + label {
+                    background-color: #ffc107;
+                }
+            }
+        }
+
+        .payment-product-items-card {
             padding: 5px 0;
             display: none;
 
@@ -179,7 +206,7 @@
                     }
                 }
 
-                .payment-jewelry-items-brand {
+                .payment-product-items-brand {
                     position: relative;
                     margin-left: -10px;
                     border-radius: 10px;
@@ -212,7 +239,7 @@
                     }
                 }
 
-                .payment-jewelry-items-name {
+                .payment-product-items-name {
                     font-size: 1.1em;
                     font-weight: 500;
                     min-width: 160px;
@@ -224,7 +251,7 @@
                     left: 0;
                 }
 
-                .payment-jewelry-items-weight {
+                .payment-product-items-weight {
                     color: #444444;
                     position: relative;
 
@@ -244,7 +271,7 @@
                     }
                 }
 
-                .payment-jewelry-items-qty {
+                .payment-product-items-qty {
                     position: relative;
                     grid-row: 2 / span 4;
                     grid-column: 2;
@@ -257,7 +284,7 @@
                     }
                 }
 
-                .payment-jewelry-items-amount {
+                .payment-product-items-amount {
                     box-shadow: 0 5px 5px 2px #00000011 inset;
 
                     & + div {
@@ -282,7 +309,7 @@
             }
         }
 
-        .payment-jewelry-items-list {
+        .payment-product-items-table {
             overflow-x: auto;
             padding: 5px 0;
 
@@ -301,7 +328,7 @@
                     padding: 4px;
                 }
 
-                .payment-jewelry-items-caption {
+                .payment-product-items-caption {
                     box-shadow: -2px 0 2px 1px #00000011 inset;
                     text-shadow: 0px 0px 1px #00000044;
                     background: #ffffff;
@@ -309,7 +336,7 @@
                     left: 0;
                 }
 
-                .payment-jewelry-items-name {
+                .payment-product-items-name {
                     font-size: 1.1em;
                     font-weight: 500;
                     border-radius: 10px 10px 0 0;
@@ -320,7 +347,7 @@
                     left: 0;
                 }
 
-                .payment-jewelry-items-brand {
+                .payment-product-items-brand {
                     button {
                         position: relative;
                         opacity: 0.4;
@@ -354,26 +381,45 @@
                     }
                 }
 
-                .payment-jewelry-items-weight {
+                .payment-product-items-weight {
                     text-shadow: 0px 0px 1px #00000044;
 
-                    &:nth-last-child(1 of .payment-jewelry-items-weight) {
+                    &:nth-last-child(1 of .payment-product-items-weight) {
                         border-radius: 0 10px 10px 0;
                     }
                 }
 
-                .payment-jewelry-items-qty {
+                .payment-product-items-qty {
                     border-left: none !important;
 
-                    &:nth-last-child(1 of .payment-jewelry-items-qty) {
+                    &:nth-last-child(1 of .payment-product-items-qty) {
                         border-radius: 0 10px 10px 0;
                     }
                 }
             }
         }
+
+        .payment-product-items-list {
+            overflow-x: auto;
+            padding: 5px 0;
+    
+            @include media-breakpoint-down(lg) {
+                display: none;
+            }
+    
+            > div {
+                display: grid;
+                grid-template-columns: 1fr 4fr 1fr 1fr;
+
+                .payment-product-items-qty {
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+        }
     }
 
-    .payment-jewelry-sidebar {
+    .payment-product-sidebar {
         border-right: 2px solid transparent;
         transition: border-color 1s;
         transition-timing-function: ease-in-out;
@@ -411,7 +457,7 @@
             }
         }
 
-        .payment-jewelry-counter {
+        .payment-product-counter {
             opacity: 0;
             max-height: 0;
             overflow: hidden;
@@ -475,7 +521,7 @@
         }
     }
 
-    .payment-jewelry-payment {
+    .payment-product-payment {
         opacity: 0;
         transition: opacity 1s, margin 1s;
         transition-timing-function: ease-in-out;
@@ -486,7 +532,7 @@
     }
 
     &.payment-page {
-        .payment-jewelry-brand-popup {
+        .payment-product-brand-popup {
             .modal-dialog {
                 .modal-content {
                     background-color: initial !important;
@@ -571,7 +617,7 @@
             }
         }
 
-        .payment-jewelry-policy-popup {
+        .payment-product-policy-popup {
 
             .modal-content {
                 overflow: hidden;
@@ -606,23 +652,23 @@
     }
 
     &.payment-form {
-        .payment-jewelry-items {
+        .payment-product-items {
             opacity: 0;
             margin-left: -75%;
             border-right-color: transparent;
         }
     
-        .payment-jewelry-sidebar {
+        .payment-product-sidebar {
             border-right-color: #e0d2d2;
         }
     
-        .payment-jewelry-payment {
+        .payment-product-payment {
             opacity: 1;
         }
 
         &.payment-counter {
-            .payment-jewelry-sidebar {
-                .payment-jewelry-counter {
+            .payment-product-sidebar {
+                .payment-product-counter {
                     opacity: 1;
                     max-height: 256px;
                 }

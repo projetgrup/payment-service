@@ -11,18 +11,31 @@
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
-                            <field name="jewelry_payment_validity_ok"/>
+                            <field name="system_agreement"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="jewelry_payment_validity_ok" string="Payment Validity Period"/>
+                            <label for="system_agreement"/>
                             <div class="text-muted">
-                                Show a countdown and lock the price during payment.
+                                Define agreements to facilitate receiving payments
                             </div>
-                            <div class="content-group" attrs="{'invisible': [('jewelry_payment_validity_ok', '=', False)]}">
-                                <div class="row mt16">
-                                    <label for="jewelry_payment_validity_time" string="Time" class="col-lg-4 o_light_label"/>
-                                    <field name="jewelry_payment_validity_time" style="width:50px" class="text-right"/>
-                                    <span class="ml4">Second(s)</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="system_product"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="system_product"/>
+                            <div class="text-muted">
+                                Define products to facilitate receiving payments
+                            </div>
+                            <div class="content-group mt16" attrs="{'invisible': [('system_product', '=', False)]}">
+                                <div>
+                                    <label for="system_product_payment_validity_ok" string="Payment Validity Period" class="col-lg-6 o_light_label"/>
+                                    <field name="system_product_payment_validity_ok" widget="boolean_toggle"/>
+                                    <span class="ml4 font-weight-bold" attrs="{'invisible': [('system_product_payment_validity_ok', '!=', False)]}">off</span>
+                                    <field name="system_product_payment_validity_time" style="width:50px" class="text-right font-weight-bold text-700" attrs="{'invisible': [('system_product_payment_validity_ok', '=', False)]}"/>
+                                    <span class="ml4 font-weight-bold" attrs="{'invisible': [('system_product_payment_validity_ok', '=', False)]}">Second(s)</span>
                                 </div>
                             </div>
                         </div>

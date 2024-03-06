@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import werkzeug
+from urllib.parse import urlparse
+
 from .sse import dispatch
+from odoo import _
 from odoo.http import route, request, Response, Controller
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as SystemController
 
@@ -99,3 +102,96 @@ class PaymentSystemProductController(SystemController):
             'Pragma': 'no-cache',
             'Expires': '-1'
         })
+
+
+    def _prepare_system(self,  company, system, partner, transaction, options={}):
+        res = super()._prepare_system(company, system, partner, transaction, options=options)
+        if company.system_product:
+            categs = request.env['product.category'].sudo().with_context(system=system).search([
+                ('system', '!=', False),
+                ('company_id', '=', company.id),
+            ])
+            products = request.env['product.template'].sudo().with_context(system=system).search([
+                ('system', '!=', False),
+                ('payment_page_ok', '=', True),
+                ('company_id', '=', company.id),
+            ])
+
+            try:
+                installment = self._prepare_installment()
+                commission = installment['rows'][0]['installments'][0]['crate']
+            except:
+                commission = 0.0
+
+            res.update({
+                'categs': categs,
+                'products': products,
+                'commission': commission / 100,
+                'validity': company.system_product_payment_validity_ok and company.system_product_payment_validity_time or 0,
+                'margin': 1,
+            })
+        return res
+
+    @route('/my/product/policy', type='json', auth='public', website=True)
+    def page_product_policy(self):
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
+        pid, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not pid or not token:
+            raise
+
+        company = request.env.company
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', pid),
+            ('access_token', '=', token),
+            ('company_id', '=', company.id),
+        ], limit=1)
+        if not partner:
+            raise
+
+        return {
+            'name': partner.name,
+            'vat': partner.vat,
+            'address': partner.street,
+            'state': partner.state_id.name,
+            'country': partner.country_id.name,
+            'phone': partner.mobile or partner.phone,
+            'website': partner.website,
+        }
+
+    @route('/my/product/policy/send', type='json', auth='public', website=True)
+    def page_product_policy_send(self):
+        token = urlparse(request.httprequest.referrer).path.rsplit('/', 1).pop()
+        pid, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not pid or not token:
+            raise
+
+        company = request.env.company
+        partner = request.env['res.partner'].sudo().search([
+            ('id', '=', pid),
+            ('access_token', '=', token),
+            ('company_id', '=', company.id),
+        ], limit=1)
+        if not partner:
+            raise
+
+        if not partner.email:
+            return {'error': _('Please specify an email address before proceeding.')}
+        
+        template = request.env.ref('payment_product.mail_policy')
+        mail_server = company.mail_server_id
+
+        context = request.env.context.copy()
+        context.update({
+            'company': company,
+            'partner': partner,
+            'tz': partner.tz,
+            'lang': partner.lang,
+            'server': mail_server,
+            'from': mail_server.email_formatted or company.email_formatted,
+        })
+        template.with_context(context).send_mail(partner.id, force_send=True, email_values={
+            'is_notification': True,
+            'mail_server_id': mail_server.id,
+        })
+
+        return {}

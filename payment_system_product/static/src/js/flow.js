@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.system.product **/
+/** @odoo-module alias=paylox.system.product.flow **/
 'use strict';
 
 import { _t } from 'web.core';
