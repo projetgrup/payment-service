@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import werkzeug
-import base64
 import re
+import base64
+import werkzeug
 from urllib.parse import urlparse
 
 from odoo import fields, http, _

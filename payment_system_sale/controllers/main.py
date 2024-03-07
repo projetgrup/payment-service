@@ -13,9 +13,6 @@ class PaymentSaleController(Controller):
             raise
 
         company = request.env.company
-        if not company.system:
-            raise
-
         partner = request.env['res.partner'].sudo().search([
             ('id', '=', pid),
             ('access_token', '=', token),

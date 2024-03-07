@@ -102,12 +102,6 @@
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>
         </xpath>
-        <xpath expr='//field[@name="campaign_id"]' position="after">
-            <label for="system_jewelry_price_margin" string="Price Margin"/>
-            <div class="o_row">
-                % <field name="system_jewelry_price_margin"/>
-            </div>
-        </xpath>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//page[@name="siblings"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="attributes">
@@ -115,6 +109,30 @@
         </xpath>
         <xpath expr='//group[@name="general"]' position="inside">
             <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
+        </xpath>
+        <xpath expr='//page[@name="children"]' position="after">
+            <page string="Products" groups="payment_jetcheckout_system.group_system_manager">
+                <field name="payment_product_attribute_ids">
+                    <tree editable="bottom">
+                        <field name="product_id" options="{'no_create': True}"/>
+                        <field name="margin"/>
+                        <field name="percentage" width="0.1" string="%"/>
+                    </tree>
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="product_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <label for="margin"/>
+                                <div class="o_row">
+                                    <field name="margin" nolabel="1"/> %
+                                </div>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </page>
         </xpath>
     </field>
     </record>

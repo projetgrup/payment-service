@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="paylox.jewelry.lines">
+    <t t-name="paylox.product.lines">
         <t t-if="brands.length">
             <t t-foreach="brands" t-as="brand">
                 <tr>
@@ -8,7 +8,7 @@
                 </tr>
                 <t t-foreach="brand.products" t-as="product">
                     <tr>
-                        <td class="py-0"><span t-esc="product.name"/> (<span t-esc="product.weight"/> gr)</td>
+                        <td class="py-0"><span t-esc="product.name"/><t t-if="product.weight"> (<span t-esc="product.weight"/> gr)</t></td>
                         <td class="text-nowrap text-right py-0"><span t-esc="format.currency(product.value, currency.position, currency.symbol, currency.decimal)"/></td>
                     </tr>
                 </t>
@@ -21,7 +21,7 @@
         </t>
     </t>
 
-    <t t-name="paylox.jewelry.brands">
+    <t t-name="paylox.product.brands">
         <div class="d-flex flex-column">
             <t t-foreach="brands" t-as="brand">
                 <button class="btn d-flex flex-row" t-att-data-id="brand['id']" t-attf-style="color:{{ foreground }} !important;border-color:{{ background }} !important;">
@@ -32,7 +32,7 @@
         </div>
     </t>
 
-    <t t-name="paylox.jewelry.policy">
+    <t t-name="paylox.product.policy">
         <main>
             <div class="loading">
                 <i class="fa fa-5x fa-spin fa-circle-o-notch text-primary"/>

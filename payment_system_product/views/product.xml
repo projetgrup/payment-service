@@ -3,6 +3,7 @@
     <record id="form_product_product" model="ir.ui.view">
     <field name="name">payment.system.product.product.form</field>
     <field name="model">product.product</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <form string="Product">
             <sheet name="product_form">
@@ -68,6 +69,7 @@
     <record id="kanban_product_product" model="ir.ui.view">
     <field name="name">payment.system.product.product.kanban</field>
     <field name="model">product.product</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <kanban sample="1" js_class="payment_system_product_kanban">
             <field name="id"/>
@@ -112,6 +114,7 @@
     <record id="tree_product_product" model="ir.ui.view">
     <field name="name">payment.system.product.product.tree</field>
     <field name="model">product.product</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <tree string="Product" multi_edit="1" sample="1" js_class="payment_system_product_list">
             <field name="sequence" widget="handle"/>
@@ -133,6 +136,7 @@
     <record id="search_product_product" model="ir.ui.view">
     <field name="name">payment.system.product.product.search</field>
     <field name="model">product.product</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <search string="Product">
             <field name="name"/>
@@ -196,6 +200,7 @@
     <record id="form_product_template" model="ir.ui.view">
     <field name="name">payment.system.product.template.form</field>
     <field name="model">product.template</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <form string="Product">
             <sheet name="product_form">
@@ -297,6 +302,7 @@
     <record id="kanban_product_template" model="ir.ui.view">
     <field name="name">payment.system.product.template.kanban</field>
     <field name="model">product.template</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <kanban sample="1" js_class="payment_system_product_kanban">
             <field name="id"/>
@@ -356,6 +362,7 @@
     <record id="tree_product_template" model="ir.ui.view">
     <field name="name">payment.system.product.template.tree</field>
     <field name="model">product.template</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <tree string="Product" multi_edit="1" sample="1" js_class="payment_system_product_list">
             <field name="sequence" widget="handle"/>
@@ -377,6 +384,7 @@
     <record id="search_product_template" model="ir.ui.view">
     <field name="name">payment.system.product.template.search</field>
     <field name="model">product.template</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <search string="Product">
             <field name="name"/>
@@ -392,6 +400,7 @@
     <record id="form_product_category" model="ir.ui.view">
     <field name="name">payment.system.product.category.form</field>
     <field name="model">product.category</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <form string="Product Categories" class="oe_form_configuration">
             <sheet>
@@ -407,10 +416,15 @@
                     <label for="name" string="Category"/>
                     <h1><field name="name" placeholder="Type a category name..."/></h1>
                 </div>
-                <group name="first" col="2">
-                    <field name="parent_id" class="oe_inline"/>
-                    <field name="system" invisible="1" force_save="1"/>
-                    <field name="company_id" invisible="1" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <group>
+                    <group>
+                        <field name="parent_id"/>
+                    </group>
+                    <group>
+                        <field name="view_type" required="1" widget="radio"/>
+                        <field name="system" invisible="1" force_save="1"/>
+                        <field name="company_id" invisible="1" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    </group>
                 </group>
             </sheet>
         </form>
@@ -420,8 +434,10 @@
     <record id="tree_product_category" model="ir.ui.view">
     <field name="name">payment.system.product.category.tree</field>
     <field name="model">product.category</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <tree string="Product Categories" multi_edit="1" sample="1">
+            <field name="sequence" widget="handle"/>
             <field name="display_name" string="Product Category"/>
             <field name="system" invisible="1"/>
             <field name="company_id" invisible="1"/>
@@ -432,6 +448,7 @@
     <record id="search_product_category" model="ir.ui.view">
     <field name="name">payment.system.product.category.search</field>
     <field name="model">product.category</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <search string="Product Categories">
             <field name="name" string="Product Category"/>
@@ -443,6 +460,7 @@
     <record id="form_product_attribute" model="ir.ui.view">
     <field name="name">payment.system.product.attribute.form</field>
     <field name="model">product.attribute</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <form string="Product Attribute" class="oe_form_configuration">
             <field name="number_related_products" invisible="1"/>
@@ -490,6 +508,7 @@
     <record id="tree_product_attribute" model="ir.ui.view">
     <field name="name">payment.system.product.attribute.tree</field>
     <field name="model">product.attribute</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <tree string="Product Attributes" multi_edit="1" sample="1">
             <field name="sequence" widget="handle"/>
@@ -503,6 +522,7 @@
     <record id="search_product_attribute" model="ir.ui.view">
     <field name="name">payment.system.product.attribute.search</field>
     <field name="model">product.attribute</field>
+    <field name="priority">50</field>
     <field name="arch" type="xml">
         <search string="Product Attributes">
             <field name="name" string="Product Attribute"/>

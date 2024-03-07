@@ -6,6 +6,8 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     system_product = fields.Boolean(string='Products')
+    system_product_payment_validity_ok = fields.Boolean(string='Payment Validity')
+    system_product_payment_validity_time = fields.Integer(string='Payment Validity Time')
 
     def _update_system_product(self):
         group = self.env.ref('payment_system_product.group_product')

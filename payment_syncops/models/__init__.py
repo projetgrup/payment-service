@@ -5,3 +5,4 @@ from . import company
 from . import partner
 from . import item
 from . import http
+from . import user
