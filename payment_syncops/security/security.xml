@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="res.groups" id="group_sync">
+            <field name="name">Sync Partners and Payments</field>
+            <field name="category_id" ref="payment_jetcheckout_system.module_category_system_technical"/>
+        </record>
+
+        <record model="res.groups" id="payment_jetcheckout_system.group_system_manager">
+            <field name="implied_ids" eval="[(4, ref('group_sync'))]"/>
+        </record>
+    </data>
+</odoo>

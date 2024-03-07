@@ -12,21 +12,18 @@
     'data': [
         'data/data.xml',
         'security/security.xml',
+        'views/settings.xml',
         'views/item.xml',
+        'views/menu.xml',
         'views/partner.xml',
         'views/actions.xml',
-        'views/menu.xml',
         'views/templates.xml',
-        'views/settings.xml',
     ],
     'assets': {
         'web.assets_frontend': [
             'payment_jewelry/static/src/scss/register.scss',
             'payment_jewelry/static/src/xml/register.xml',
             'payment_jewelry/static/src/js/register.js',
-            'payment_jewelry/static/src/scss/page.scss',
-            'payment_jewelry/static/src/xml/page.xml',
-            'payment_jewelry/static/src/js/page.js',
         ],
     },
 }

@@ -4,7 +4,7 @@
 
 {
     'name': 'Payment System - Product',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -19,14 +19,18 @@
         'views/product.xml',
         'views/templates.xml',
         'security/security.xml',
+        'security/ir.model.access.csv',
     ],
     'assets': {
         'web.assets_qweb': [
             'payment_system_product/static/src/xml/product.xml',
+            'payment_system_product/static/src/xml/page.xml',
         ],
         'web.assets_frontend': [
             'payment_system_product/static/src/scss/flow.scss',
+            'payment_system_product/static/src/scss/page.scss',
             'payment_system_product/static/src/js/flow.js',
+            'payment_system_product/static/src/js/page.js',
         ],
         'web.assets_backend': [
             'payment_system_product/static/src/js/product.js',

@@ -16,6 +16,15 @@
                         <div class="text-muted">
                             Define products to facilitate receiving payments
                         </div>
+                        <div class="content-group mt16" attrs="{'invisible': [('system_product', '=', False)]}">
+                            <div>
+                                <label for="system_product_payment_validity_ok" string="Payment Validity Period" class="col-lg-4 o_light_label"/>
+                                <field name="system_product_payment_validity_ok" widget="boolean_toggle"/>
+                                <span class="ml4" attrs="{'invisible': [('system_product_payment_validity_ok', '!=', False)]}">off</span>
+                                <field name="system_product_payment_validity_time" style="width:50px" class="text-right" attrs="{'invisible': [('system_product_payment_validity_ok', '=', False)]}"/>
+                                <span class="ml4" attrs="{'invisible': [('system_product_payment_validity_ok', '=', False)]}">Second(s)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

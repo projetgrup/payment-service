@@ -51,6 +51,20 @@ class PaymentProduct(models.AbstractModel):
                     cr.execute(query, ('%s\n\n' % '\n'.join(data),))
 
 
+class PaymentProductPartner(models.Model):
+    _name = 'payment.product.partner'
+    _description = 'Payment System Product Partner Attributes'
+
+    def _compute_percentage(self):
+        for rec in self:
+            rec.percentage = '%'
+
+    product_id = fields.Many2one('product.product', ondelete='cascade', required=True)
+    partner_id = fields.Many2one('res.partner', ondelete='cascade', required=True)
+    margin = fields.Float()
+    percentage = fields.Char(compute='_compute_percentage')
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -124,8 +138,16 @@ class ProductTemplate(models.Model):
                 result.append({
                     'id': value.id,
                     'name': value.name,
+                    'color': value.color,
                     'image': value.image_128 and value.image_128.decode('utf-8') or False,
                 })
+        if not result:
+            result.append({
+                'id': 0,
+                'name': '',
+                'color': '',
+                'image': False,
+            })
         return result
 
     def get_payment_variants(self, types=None):
@@ -175,6 +197,7 @@ class ProductProduct(models.Model):
     payment_price_method_product_id = fields.Many2one('product.template')
     payment_price_method_formula = fields.Char()
     payment_price_method_result = fields.Monetary(compute='_compute_payment_price_method_result')
+    payment_partner_attribute_ids = fields.One2many('payment.product.partner', 'product_id', 'Partner Attributes')
 
     @api.model
     def _search(self, args, **kw):
@@ -194,22 +217,32 @@ class ProductProduct(models.Model):
             domain += [('system', '=', False)]
         return super()._read_group_raw(domain, *args, **kwargs)
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        system, company = _get_system(self.env)
-        if system and view_type in ('form', 'tree', 'kanban', 'search'):
-            view_id = self.env.ref('payment_system_product.%s_product_product' % (view_type,)).id
-        return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    def _get_payment_partner_attribute(self, name, partner=None):
+        if not partner:
+            partner = self.env.user.partner_id
 
+        attr = self.env['payment.product.partner'].sudo().search([('product_id', '=', self.id), ('partner_id', '=', partner.id)])
+        return attr and attr[name]
+
+    @api.depends_context('include_margin')
     def _compute_product_price(self):
         products = self.filtered(lambda p: p.system)
+
+        if self.env.context.get('include_margin'):
+            attrs = self.env['payment.product.partner'].sudo()
+            pid = self.env.context.get('partner_id') or self.env.user.partner_id.id
+            margins = {attr.product_id.id: attr.margin for attr in attrs.search([('product_id', 'in', products.ids), ('partner_id', '=', pid)])}
+        else:
+            margins = {}
+
         for product in products:
+            margin = (100 + margins.get(product.id, 0)) / 100 if margins else 1
             if product.payment_price_flow and product.payment_price_method == 'formula':
-                product.price = product.payment_price_method_result
+                product.price = product.payment_price_method_result * margin
             elif len(product.product_tmpl_id.product_variant_ids) > 1:
-                product.price = product.price_dynamic
+                product.price = product.price_dynamic * margin
             else:
-                product.price = product.lst_price
+                product.price = product.lst_price * margin
         super(ProductProduct, self - products)._compute_product_price()
 
     def _set_product_price(self):
@@ -224,11 +257,18 @@ class ProductProduct(models.Model):
         super(ProductProduct, self - products)._set_product_price()
 
     def _broadcast_price(self, values={}):
-        if 'price_dynamic' in values or 'payment_price_method_product_id' in values or 'payment_price_method_formula' in values:
+        if 'lst_price' in values or 'price_dynamic' in values or 'payment_price_method_product_id' in values or 'payment_price_method_formula' in values:
             self.env['payment.product'].broadcast_price(self)
         elif 'base_unit_count' in values:
             products = self.search([('payment_price_method_product_id', 'in', self.mapped('product_tmpl_id').ids)])
             self.env['payment.product'].broadcast_price(products)
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        system, company = _get_system(self.env)
+        if system and view_type in ('form', 'tree', 'kanban', 'search'):
+            view_id = self.env.ref('payment_system_product.%s_product_product' % (view_type,)).id
+        return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -248,7 +288,13 @@ class ProductProduct(models.Model):
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
+    _order = 'sequence, complete_name'
 
+    sequence = fields.Integer(default=10)
+    view_type = fields.Selection(selection=[
+        ('list', 'List'),
+        ('table', 'Table'),
+    ])
     system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company')
 
