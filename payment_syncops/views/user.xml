@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="user_form" model="ir.ui.view">
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.user_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='other']" position="inside">
+            <field name="group_syncops_sync" string="Show Sync Button" widget="boolean_toggle"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

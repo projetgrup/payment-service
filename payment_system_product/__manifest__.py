@@ -19,6 +19,7 @@
         'views/product.xml',
         'views/templates.xml',
         'security/security.xml',
+        'security/ir.model.access.csv',
     ],
     'assets': {
         'web.assets_qweb': [

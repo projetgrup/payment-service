@@ -19,8 +19,10 @@
         'views/transaction.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'views/user.xml',
         'wizards/sync.xml',
         'report/company.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
     ],
     'assets': {

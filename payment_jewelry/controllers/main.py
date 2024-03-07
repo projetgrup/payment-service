@@ -7,13 +7,13 @@ from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
-class CustomerPortal(portal.CustomerPortal):
-    @route(['/my', '/my/home'], type='http', auth='user', website=True)
-    def home(self, **kwargs):
-        system = kwargs.get('system', request.env.company.system)
-        if system == 'jewelry':
-            return request.redirect('/my/payment')
-        return super().home(**kwargs)
+#class CustomerPortal(portal.CustomerPortal):
+#    @route(['/my', '/my/home'], type='http', auth='user', website=True)
+#    def home(self, **kwargs):
+#        system = kwargs.get('system', request.env.company.system)
+#        if system == 'jewelry':
+#            return request.redirect('/my/payment')
+#        return super().home(**kwargs)
 
 
 class PayloxSystemJewelryController(Controller):
@@ -31,14 +31,6 @@ class PayloxSystemJewelryController(Controller):
 #        if system == 'jewelry':
 #            pass
 #        return res
-
-    def _prepare_system(self,  company, system, partner, transaction, options={}):
-        res = super()._prepare_system(company, system, partner, transaction, options=options)
-        if system == 'jewelry':
-            res.update({
-                'margin': 1 + (partner.system_jewelry_price_margin / 100),
-            })
-        return res
 
     @route(['/my/jewelry/register'], type='http', auth='public', website=True)
     def page_jewelry_register(self, **kwargs):

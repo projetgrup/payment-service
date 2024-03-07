@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from .sse import dispatch
 from odoo import _
 from odoo.http import route, request, Response, Controller
+from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as SystemController
 
 
@@ -19,6 +20,89 @@ class PaymentProductController(Controller):
             'X-Accel-Buffering': 'no',
         })
 
+class CustomerPortal(portal.CustomerPortal):
+
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        company = request.env.company
+        Products = request.env['product.product'].sudo().with_context(system=company.system)
+        if 'product_count' in counters:
+            values['product_count'] = Products.search_count([
+                ('system', '!=', False),
+                ('payment_page_ok', '=', True),
+                ('company_id', '=', company.id),
+            ]) if Products.check_access_rights('read', raise_exception=False) else 0
+        return values
+
+    @route('/my/products', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def page_products(self, page=1, sortby=None, filterby=None, **kw):
+        values = self._prepare_portal_layout_values()
+        company = request.env.company
+        domain = [
+            ('company_id', '=', company.id),
+            ('system', '=', company.system),
+            ('payment_page_ok', '=', True),
+        ]
+        Products = request.env['product.product'].sudo().with_context(system=company.system)
+
+        searchbar_sortings = {
+            'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
+            'name': {'label': _('Name'), 'order': 'name asc, id asc'},
+        }
+
+        if not sortby:
+            sortby = 'date'
+
+        order = searchbar_sortings[sortby]['order']
+        count = Products.search_count(domain)
+        pager = portal.pager(
+            url='/my/products',
+            url_args={'sortby': sortby, 'filterby': filterby},
+            total=count,
+            page=page,
+            step=self._items_per_page
+        )
+        products = Products.search(
+            domain,
+            order=order,
+            limit=self._items_per_page,
+            offset=pager['offset']
+        )
+        request.session['my_products_history'] = products.ids[:100]
+
+        colors = {
+            0: '#444444',
+            1: '#F06050',
+            2: '#F4A460',
+            3: '#F7CD1F',
+            4: '#6CC1ED',
+            5: '#814968',
+            6: '#EB7E7F',
+            7: '#2C8397',
+            8: '#475577',
+            9: '#D6145F',
+            10: '#30C381',
+            11: '#9365B8',
+        }
+
+        values.update({
+            'system': company.system,
+            'subsystem': company.subsystem,
+            'products': products,
+            'pager': pager,
+            'colors': colors,
+            'sortby': sortby,
+            'filterby': filterby,
+            'default_url': '/my/products',
+            'searchbar_filters': {},
+            'searchbar_sortings': searchbar_sortings,
+        })
+
+        return request.render('payment_system_product.portal_my_products', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
 class PaymentSystemProductController(SystemController):
 
@@ -50,8 +134,35 @@ class PaymentSystemProductController(SystemController):
             path += '?' + query.decode('utf-8')
         return werkzeug.utils.redirect(path)
 
+    def _prepare_system(self,  company, system, partner, transaction, options={}):
+        res = super()._prepare_system(company, system, partner, transaction, options=options)
+        if company.system_product:
+            categs = request.env['product.category'].sudo().with_context(system=system).search([
+                ('system', '!=', False),
+                ('company_id', '=', company.id),
+            ])
+            products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
+                ('system', '!=', False),
+                ('payment_page_ok', '=', True),
+                ('company_id', '=', company.id),
+            ])
+
+            try:
+                installment = self._prepare_installment()
+                commission = installment['rows'][0]['installments'][0]['crate']
+            except:
+                commission = 0.0
+
+            res.update({
+                'categs': categs,
+                'products': products,
+                'commission': commission / 100,
+                'validity': company.system_product_payment_validity_ok and company.system_product_payment_validity_time or 0,
+            })
+        return res
+
     @route('/my/product', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
-    def _check_product_page(self, **kwargs):
+    def page_product(self, **kwargs):
         self._check_advance_page(**kwargs)
         w_id = request.website.id
         website_id = int(kwargs.get('id', w_id))
@@ -81,7 +192,7 @@ class PaymentSystemProductController(SystemController):
             ('company_id', '=', company.id),
             ('system', '=', company.system),
             ('payment_page_ok', '=', True),
-        ])    
+        ])
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
@@ -102,35 +213,6 @@ class PaymentSystemProductController(SystemController):
             'Pragma': 'no-cache',
             'Expires': '-1'
         })
-
-
-    def _prepare_system(self,  company, system, partner, transaction, options={}):
-        res = super()._prepare_system(company, system, partner, transaction, options=options)
-        if company.system_product:
-            categs = request.env['product.category'].sudo().with_context(system=system).search([
-                ('system', '!=', False),
-                ('company_id', '=', company.id),
-            ])
-            products = request.env['product.template'].sudo().with_context(system=system).search([
-                ('system', '!=', False),
-                ('payment_page_ok', '=', True),
-                ('company_id', '=', company.id),
-            ])
-
-            try:
-                installment = self._prepare_installment()
-                commission = installment['rows'][0]['installments'][0]['crate']
-            except:
-                commission = 0.0
-
-            res.update({
-                'categs': categs,
-                'products': products,
-                'commission': commission / 100,
-                'validity': company.system_product_payment_validity_ok and company.system_product_payment_validity_time or 0,
-                'margin': 1,
-            })
-        return res
 
     @route('/my/product/policy', type='json', auth='public', website=True)
     def page_product_policy(self):

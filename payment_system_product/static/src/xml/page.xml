@@ -8,7 +8,7 @@
                 </tr>
                 <t t-foreach="brand.products" t-as="product">
                     <tr>
-                        <td class="py-0"><span t-esc="product.name"/> (<span t-esc="product.weight"/> gr)</td>
+                        <td class="py-0"><span t-esc="product.name"/><t t-if="product.weight"> (<span t-esc="product.weight"/> gr)</t></td>
                         <td class="text-nowrap text-right py-0"><span t-esc="format.currency(product.value, currency.position, currency.symbol, currency.decimal)"/></td>
                     </tr>
                 </t>

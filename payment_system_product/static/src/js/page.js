@@ -86,7 +86,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this.lines = {};
         this.brands = {};
         this.products = {};
-        this.margin = 0;
         this.validity = 0;
         this.commission = 0;
         this.product = {
@@ -98,9 +97,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                 events: [['change', this._onChangeQty]],
             }),
             amount: new fields.float({
-                default: 0,
-            }),
-            margin: new fields.float({
                 default: 0,
             }),
             validity: new fields.float({
@@ -171,7 +167,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _getNumbers: function () {
-        this.margin = this.product.margin.value; this.product.margin.$.remove();
         this.validity = this.product.validity.value; this.product.validity.$.remove();
         this.commission = this.product.commission.value; this.product.commission.$.remove();
     },
@@ -225,7 +220,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                 }
 
                 changed = true;
-                price *= this.margin;
                 $price.animate({ backgroundColor: '#ffffff' }, 'slow');
                 $price.data('value', price);
                 $price.text(format.currency(price, ...currency));
@@ -270,18 +264,17 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             let $e = $(e);
             let value = parseFloat($e.data('value'));
             if (value > 0) {
-                let vid = $e.data('id');
-                let bid = $e.data('brand');
-                let pid = $e.data('product');
-                let qty = parseFloat($e.data('qty'));
-                let price = parseFloat($e.data('price'));
-                let weight = parseFloat($e.data('weight'));
+                let vid = $e.data('id') || 0;
+                let bid = $e.data('brand') || 0;
+                let pid = $e.data('product') || 0;
+                let qty = parseFloat($e.data('qty') || 0);
+                let price = parseFloat($e.data('price') || 0);
+                let weight = parseFloat($e.data('weight') || 0);
                 this.lines[vid] = { pid: vid, price, qty };
 
                 if (!(bid in brands)) {
-                    brands[bid] = { products: {}, name: this.brands[pid][bid]['name'] };
+                    brands[bid] = { products: {}, name: this.brands?.[pid]?.[bid]?.['name'] || '' };
                 }
-
                 if (!(pid in brands[bid]['products'])) {
                     brands[bid]['products'][pid] = { weight: 0, value: 0, name: this.products[pid]['name'] };
                 }
@@ -512,6 +505,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             this.interval = setInterval(counter, 1000);
     
             $('[field="installment.table"] button').removeClass('disabled').removeAttr('disabled');
+            $('[field="campaign.table"] button').removeClass('disabled').removeAttr('disabled');
             $('[field="payment.button"]').removeClass('disabled').removeAttr('disabled');
             window.dispatchEvent(new Event('payment-started'));
         }
@@ -523,6 +517,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             clearInterval(this.interval);
     
             $('[field="installment.table"] button').addClass('disabled').attr('disabled', 'disabled');
+            $('[field="campaign.table"] button').addClass('disabled').attr('disabled', 'disabled');
             $('[field="payment.button"]').addClass('disabled').attr('disabled', 'disabled');
             window.dispatchEvent(new Event('payment-stopped'));
         }
