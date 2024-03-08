@@ -43,7 +43,7 @@ class PayloxSyncopsController(Controller):
             'card_4': tx.jetcheckout_card_number[-4:] if tx.jetcheckout_card_number else '',
             'vpos_id': tx.jetcheckout_vpos_id or 0,
             'bank_payment_day': 1,
-            'installment_count': tx.jetcheckout_installment_count,
+            'installment_count': tx.jetcheckout_installment_count - tx.jetcheckout_installment_plus,
             'installment_code': tx.jetcheckout_campaign_name or '',
             'payment_date': (tx.create_date + offset).strftime('%Y-%m-%d'),
             'payment_time': (tx.create_date + offset).strftime('%H:%M:%S'),

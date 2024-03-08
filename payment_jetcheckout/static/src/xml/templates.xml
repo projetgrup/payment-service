@@ -30,7 +30,7 @@
                                                         <t t-set="val" t-value="value * (1 + (i.installments[0].crate / 100)) * (1 + (i.installments[0].irate / 100))"/>
                                                         <div class="text-nowrap position-relative font-weight-bold">
                                                             <span t-esc="i.installments[0].id"/>
-                                                            <span t-if="i.installments[0].plus" t-esc="'+' + i.installments[0].plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="i.installments[0].pdesc"/>
+                                                            <span t-if="i.installments[0].plus" t-esc="'+' + i.installments[0].plus" class="badge badge-danger badge-pill p-1 position-absolute" style="margin-left: 38px;" t-att-title="i.installments[0].pdesc"/>
                                                             <span>Installment</span>
                                                         </div>
                                                         <div class="text-nowrap">
@@ -167,7 +167,7 @@
                         </div>
                         <div class="text-center side-border position-relative">
                             <span t-esc="r.id"/>
-                            <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml-1 position-absolute" t-att-title="r.pdesc"/>
+                            <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 position-absolute" style="margin-left: 38px;" t-att-title="r.pdesc"/>
                         </div>
                         <div class="text-center side-border">
                             <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
