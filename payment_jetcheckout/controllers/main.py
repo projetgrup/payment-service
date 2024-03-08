@@ -746,7 +746,6 @@ class PayloxController(http.Controller):
             index = kwargs['installment']['id']
             installment = next(filter(lambda x: x['campaign'] == campaign, rows), None)
             installment = next(filter(lambda x: x['id'] == index, installment['installments']), None)
-            
         else:
             installment = next(filter(lambda x: x['id'] == installment, rows), None)
 
