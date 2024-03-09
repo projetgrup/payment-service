@@ -735,12 +735,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             }
                             self.card.bin = bin;
                             if (!self.campaign.locked) {
-                                if (result.type === 'ct' && result.rows.length ) {
+                                if (result.type === 'ct' && result.rows.length) {
                                     self.campaign.name.value = result.rows[0]['campaign'];
+                                    self.campaign.name.$.trigger('change');
                                 } else {
                                     self.campaign.name.value = result.campaign;
                                 }
-                                self.campaign.name.$.trigger('change');
                                 $('span#campaign').html(self.campaign.name.value || '-');
                             }
                         }
