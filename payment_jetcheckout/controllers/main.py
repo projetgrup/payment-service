@@ -326,7 +326,7 @@ class PayloxController(http.Controller):
                             'family': option.get('card_family', ''),
                             'currency': option.get('currency', ''),
                             'excluded': option.get('excluded_bins', []),
-                            'type': self._get_card_type(option.get('card_type', '')),
+                            'type': option.get('card_type', ''),
                             'installments': [],
                             'ids': [],
                         }
@@ -374,13 +374,13 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 row = {
-                                    'campaign': option.get('campaign_name', ''),
-                                    'family': option.get('card_family', ''),
-                                    'logo': option.get('card_family_logo', ''),
+                                    'installments': [],
                                     'type': option.get('card_type', ''),
                                     'currency': option.get('currency', ''),
+                                    'family': option.get('card_family', ''),
+                                    'logo': option.get('card_family_logo', ''),
+                                    'campaign': option.get('campaign_name', ''),
                                     'excluded': option.get('excluded_bins', []),
-                                    'installments': [],
                                 }
 
                                 cols.append(row['campaign'])
@@ -412,67 +412,58 @@ class PayloxController(http.Controller):
 
                             values.update({'cols': cols, 'rows': rows})
                         else:
-                            cols = []
-                            rows = []
-                            fcols = {}
-                            ids = OrderedDict()
+                            tabs = set()
+                            cols = dict()
+                            rows = OrderedDict()
 
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 row = {
-                                    'campaign': option.get('campaign_name', ''),
-                                    'family': option.get('card_family', ''),
-                                    'logo': option.get('card_family_logo', ''),
                                     'type': option.get('card_type', ''),
                                     'currency': option.get('currency', ''),
+                                    'family': option.get('card_family', ''),
+                                    'logo': option.get('card_family_logo', ''),
+                                    'campaign': option.get('campaign_name', ''),
                                     'excluded': option.get('excluded_bins', []),
-                                    'installments': [],
-                                    'ids': [],
                                 }
 
-                                if row['family'] not in cols:
-                                    cols.append(row['family'])
-                                    fcols[row['family']] = {
+                                tabs.add(row['type'])
+                                cols.update({
+                                    row['family']: {
                                         'family': row['family'],
                                         'logo': row['logo'],
                                     }
-                                if row['campaign'] not in ids:
-                                    ids[row['campaign']] = OrderedDict()
-                                if row['family'] not in ids[row['campaign']]:
-                                    ids[row['campaign']][row['family']] = {}
-
-                                for installment in option['installments']:
-                                    r = {
-                                        'campaign': row['campaign'],
-                                        'id': installment['installment_count'],
-                                        'amount': installment['installment_amount'],
-                                        'crate': installment['customer_rate'],
-                                        'corate': installment['cost_rate'],
-                                        'min': installment['min_amount'],
-                                        'max': installment['max_amount'],
-                                        'plus': installment['plus_installment'],
-                                        'pdesc': installment['plus_installment_description'],
-                                        'idesc': self._get_installment_description(installment),
-                                        'count': installment['installment_count'] + installment['plus_installment']
-                                    }
-
-                                    if rate > 0 and installment['installment_count'] == 1:
-                                        r['irate'] = -rate
-                                    else:
-                                        r['irate'] = 0.0
-                                    row['installments'].append(r)
-                                    break
-                                ids[row['campaign']][row['family']] = row
-
-                            idl = list(ids.keys())
-                            idl.sort()
-                            for i in idl:
-                                rows.append({
-                                    'id': i,
-                                    'ids': [ids[i].get(j, False) for j in cols]
                                 })
-                            cols = list(fcols.values())
-                            values.update({'cols': cols, 'rows': rows})
+
+                                if row['type'] not in rows:
+                                    rows[row['type']] = OrderedDict()
+                                if row['campaign'] not in rows[row['type']]:
+                                    rows[row['type']][row['campaign']] = {}
+                                if row['family'] not in rows[row['type']][row['campaign']]:
+                                    rows[row['type']][row['campaign']][row['family']] = []
+
+                                rows[row['type']][row['campaign']][row['family']] += [{
+                                    'type': row['type'],
+                                    'family': row['family'],
+                                    'campaign': row['campaign'],
+                                    'id': installment['installment_count'],
+                                    'amount': installment['installment_amount'],
+                                    'crate': installment['customer_rate'],
+                                    'corate': installment['cost_rate'],
+                                    'min': installment['min_amount'],
+                                    'max': installment['max_amount'],
+                                    'plus': installment['plus_installment'],
+                                    'pdesc': installment['plus_installment_description'],
+                                    'idesc': self._get_installment_description(installment),
+                                    'count': installment['installment_count'] + installment['plus_installment'],
+                                    'irate': -rate if rate > 0 and installment['installment_count'] == 1 else 0.0
+                                } for installment in option['installments']]
+
+                            values.update({
+                                'tabs': list(tabs),
+                                'cols': list(cols.values()),
+                                'rows': rows
+                            })
                     else:
                         cols = []
                         rows = []

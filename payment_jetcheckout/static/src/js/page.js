@@ -210,16 +210,16 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return {
            mask: 'MM{/}YY',
            blocks: {
-               YY: {
-                   mask: IMask.MaskedRange,
-                   from: 0,
-                   to: 99
-               },
-               MM: {
-                   mask: IMask.MaskedRange,
-                   from: 1,
-                   to: 12
-               },
+                YY: {
+                    mask: IMask.MaskedRange,
+                    from: 0,
+                    to: 99
+                },
+                MM: {
+                    mask: IMask.MaskedRange,
+                    from: 1,
+                    to: 12
+                },
             }
         }
     },
@@ -452,6 +452,21 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
         const self = this;
         if (!this.installment.grid) {
+            const getCardType = (type) => {
+                switch (type) {
+                    case 'Credit':
+                        return _t('Credit Card');
+                    case 'Debit':
+                        return _t('Debit Card');
+                    case 'Debit':
+                        return _t('Credit-Business');
+                    case 'Debit':
+                        return _t('Business Card');
+                    default:
+                        return _t('General');
+                }
+            };
+
             await rpc.query({
                 route: '/payment/card/installments',
                 params: {
@@ -469,16 +484,34 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         message: _t('An error occured.') + ' ' + result.error,
                     });
                 } else {
-                    let types = {};
-                    for (let r of result.rows) {
+                    const types = {};
+                    if (result.type[0] === 'ct'){
+                        for (let r of result.rows) {
+                            if ('ids' in r) {
+                                for (let i of r.ids) {
+                                    if (r.type in types) {
+                                        types[r.type]['rows'].push(r);
+                                    } else {
+                                        types[r.type] = {
+                                            name: getCardType(r.type),
+                                            rows: [r]
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                    } else {
                         if (r.type in types) {
-                            types[r.type].push(r);
+                            types[r.type]['rows'].push(r);
                         } else {
-                            types[r.type] = [r];
+                            types[r.type] = {
+                                name: getCardType(r.type),
+                                rows: [r]
+                            };
                         }
                     }
 
-                    result.types = Object.entries(types);
+                    result.types = Object.values(types);
                     self.installment.grid = result;
                 }
             }).guardedCatch(function (error) {

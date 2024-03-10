@@ -3,6 +3,15 @@
     <t t-name="paylox.installment.grid">
         <main t-if="!error &amp;&amp; rows" class="row installment-table">
             <t t-if="type === 'ct'">
+                <ul class="nav nav-tabs w-100" role="tablist">
+                    <t t-set="i" t-value="0"/>
+                    <t t-foreach="types" t-as="t">
+                        <li class="nav-item font-weight-bold">
+                            <a t-attf-class="nav-link #{!i ? 'active' : ''}" t-att-id="'#installment-tab-' + i + '-tab'" data-toggle="tab" t-att-href="'#installment-tab-' + i" role="tab" t-att-aria-controls="'installment-tab-' + i" t-att-aria-selected="!i ? 'true' : 'false'" t-esc="t.name"/>
+                            <t t-set="i" t-value="i+1"/>
+                        </li>
+                    </t>
+                </ul>
                 <div class="tab-content border type-ct">
                     <t t-set="i" t-value="0"/>
                     <div t-attf-class="tab-pane fade shadow-none #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
@@ -56,7 +65,7 @@
                     <t t-set="i" t-value="0"/>
                     <t t-foreach="types" t-as="t">
                         <li class="nav-item font-weight-bold">
-                            <a t-attf-class="nav-link #{!i ? 'active' : ''}" t-att-id="'#installment-tab-' + i + '-tab'" data-toggle="tab" t-att-href="'#installment-tab-' + i" role="tab" t-att-aria-controls="'installment-tab-' + i" t-att-aria-selected="!i ? 'true' : 'false'" t-esc="t[0]"/>
+                            <a t-attf-class="nav-link #{!i ? 'active' : ''}" t-att-id="'#installment-tab-' + i + '-tab'" data-toggle="tab" t-att-href="'#installment-tab-' + i" role="tab" t-att-aria-controls="'installment-tab-' + i" t-att-aria-selected="!i ? 'true' : 'false'" t-esc="t.name"/>
                             <t t-set="i" t-value="i+1"/>
                         </li>
                     </t>
@@ -66,7 +75,7 @@
                     <t t-foreach="types" t-as="t">
                         <div t-attf-class="tab-pane fade shadow-none #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
                             <div class="d-flex flex-wrap shadow-sm">
-                                <t t-foreach="t[1]" t-as="row">
+                                <t t-foreach="t.rows" t-as="row">
                                     <div class="col-md-4 p-2">
                                         <div class="border bg-white text-700">
                                             <table class="w-100">
