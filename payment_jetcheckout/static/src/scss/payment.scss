@@ -153,14 +153,13 @@
             flex-direction: column;
         }
         .installment-line {
+            cursor: pointer;
             display: flex;
             font-size: 12px;
             border-radius: 5px;
-            flex: 1;
             max-height: 2rem;
+            padding: 4px 2px;
             user-select: none;
-            justify-content: space-between;
-            cursor: pointer;
             input {
                 pointer-events: none;
             }
@@ -170,12 +169,11 @@
                 justify-content: center;
                 flex: 3;
             }
-            .installment-cell > div {
+            .installment-cell > div:first-child {
                 flex: 1;
             }
-            .installment-cell input {
-                margin: auto;
-                display: block;
+            .installment-cell > div:last-child {
+                flex: 2;
             }
             &.installment-selected {
                 background-color: theme-color('success');
@@ -255,6 +253,19 @@
         margin-right: 0 !important;
         margin-left: 0 !important;
         font-size: 12px;
+
+        .nav-tabs {
+            > li > a.active {
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            }
+
+            &.type-ct {
+                gap: 5px;
+                > li > a.active {
+                    border-color: #dee2e6 !important;
+                }
+            }
+        }
 
         .tab-content {
             background-color: #ffffff;

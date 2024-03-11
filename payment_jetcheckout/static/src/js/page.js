@@ -450,23 +450,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const self = this;
         if (!this.installment.grid) {
-            const getCardType = (type) => {
-                switch (type) {
-                    case 'Credit':
-                        return _t('Credit Card');
-                    case 'Debit':
-                        return _t('Debit Card');
-                    case 'Debit':
-                        return _t('Credit-Business');
-                    case 'Debit':
-                        return _t('Business Card');
-                    default:
-                        return _t('General');
-                }
-            };
-
             await rpc.query({
                 route: '/payment/card/installments',
                 params: {
@@ -476,53 +460,22 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     rate: this.discount.single.value,
                     currency: this.currency.id,
                 },
-            }).then(function (result) {
+            }).then((result) => {
                 if ('error' in result) {
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'warning',
                         title: _t('Warning'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
                 } else {
-                    const types = {};
-                    if (result.type[0] === 'ct'){
-                        for (let r of result.rows) {
-                            if ('ids' in r) {
-                                for (let i of r.ids) {
-                                    if (r.type in types) {
-                                        types[r.type]['rows'].push(r);
-                                    } else {
-                                        types[r.type] = {
-                                            name: getCardType(r.type),
-                                            rows: [r]
-                                        };
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        if (r.type in types) {
-                            types[r.type]['rows'].push(r);
-                        } else {
-                            types[r.type] = {
-                                name: getCardType(r.type),
-                                rows: [r]
-                            };
-                        }
-                    }
-
-                    result.types = Object.values(types);
-                    self.installment.grid = result;
+                    this.installment.grid = result;
                 }
-            }).guardedCatch(function (error) {
-                self.displayNotification({
+            }).guardedCatch(() => {
+                this.displayNotification({
                     type: 'danger',
                     title: _t('Error'),
                     message: _t('An error occured. Please contact with your system administrator.'),
                 });
-                if (config.isDebug()) {
-                    console.error(error);
-                }
             });
         }
 
@@ -532,12 +485,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 title: _t('Installments Table'),
                 $content: qweb.render('paylox.installment.grid', {
                     value: this.amount.value,
-                    format: format,
+                    format: {...format, type: this._getCardType},
                     ...this.currency,
                     ...this.installment.grid,
                 }),
             });
-            popup.open().opened(function () {
+            popup.open().opened(() => {
                 popup.$modal.addClass('payment-page');
                 $('.installment-table picture > img').on('load', function () {
                     $(this).removeClass('d-none');
@@ -551,26 +504,22 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const self = this;
         if (!this.campaign.list) {
             await rpc.query({
                 route: '/payment/card/campaigns',
-            }).then(function (result) {
-                self.campaign.list = result;
-            }).guardedCatch(function (error) {
-                self.displayNotification({
+            }).then((result) => {
+                this.campaign.list = result;
+            }).guardedCatch(() => {
+                this.displayNotification({
                     type: 'danger',
                     title: _t('Error'),
                     message: _t('An error occured. Please contact with your system administrator.'),
                 });
-                if (config.isDebug()) {
-                    console.error(error);
-                }
             });
         }
 
         if (this.campaign.list) {
-            const popup = new dialog(self, {
+            const popup = new dialog(this, {
                 title: _t('Campaigns Table'),
                 size: 'small',
                 buttons: [{
@@ -578,16 +527,19 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     classes: 'btn-secondary text-white',
                     close: true,
                 }],
-                $content: qweb.render('paylox.campaigns', { campaigns: this.campaign.list, current: this.campaign.name.value })
+                $content: qweb.render('paylox.campaigns', {
+                    campaigns: this.campaign.list,
+                    current: this.campaign.name.value,
+                })
             });
 
-            popup.open().opened(function () {
+            popup.open().opened(() => {
                 popup.$modal.addClass('payment-page');
                 const $button = $('.modal-body button.o_button_select_campaign');
                 $button.click(function(e) {
                     const campaign = e.currentTarget.dataset.name;
-                    self.campaign.name.value = campaign;
-                    self.campaign.name.$.trigger('change');
+                    this.campaign.name.value = campaign;
+                    this.campaign.name.$.trigger('change');
                     popup.destroy();
                 });
             });
@@ -677,6 +629,19 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
+    _getCardType: function (type) {
+        switch (type) {
+            case 'Credit':
+                return _t('Credit Card');
+            case 'Debit':
+                return _t('Debit Card');
+            case 'Credit-Business':
+                return _t('Business Card');
+            default:
+                return _t('General');
+        }
+    },
+
     _getInstallment: async function (force=false) {
         const self = this;
         if (force) {
@@ -743,7 +708,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 });
                             }
                             self.installment.cols = result.cols;
-
+                            self.installment.rows = result.rows;
                             self.installment.type = result.type;
                             self.installment.rowempty.$.addClass('d-none');
                             self.installment.row.$.removeClass('d-none');
@@ -755,12 +720,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 format: format,
                                 ...self.currency,
                             });
-                            self.installment.rows = result.rows;
 
-                            if (result.family) {
-                                self.card.logo.html = '<img src="' + result.logo + '" alt="' + result.family + '"/>';
+                            if (result.card.family) {
+                                self.card.logo.html = '<img src="' + result.card.logo + '" alt="' + result.card.family + '"/>';
                                 self.card.logo.$.addClass('show');
-                                self.card.family = result.family;
+                                self.card.family = result.card.family;
                             } else {
                                 self.card.logo.html = '';
                                 self.card.logo.$.removeClass('show');
@@ -768,11 +732,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             }
                             self.card.bin = bin;
                             if (!self.campaign.locked) {
-                                if (result.type === 'ct' && result.rows.length) {
+                                if (result.type[0] === 'c' && result.rows.length) {
                                     self.campaign.name.value = result.rows[0]['campaign'];
                                     self.campaign.name.$.trigger('change');
                                 } else {
-                                    self.campaign.name.value = result.campaign;
+                                    self.campaign.name.value = result.card.campaign;
                                 }
                                 $('span#campaign').html(self.campaign.name.value || '-');
                             }
