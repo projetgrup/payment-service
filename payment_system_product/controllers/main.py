@@ -104,6 +104,37 @@ class CustomerPortal(portal.CustomerPortal):
             'Expires': '-1'
         })
 
+    @route('/my/products/save', type='json', auth='user', website=True)
+    def page_products_save(self, products):
+        paid = request.env.user.partner_id.id
+        pids = list(map(int, products.keys()))
+        lines = request.env['payment.product.partner'].sudo().search([
+            ('product_id', 'in', pids),
+            ('partner_id', '=', paid),
+        ])
+        for line in lines:
+            try:
+                pid = str(line.product_id.id)
+                if line.margin != products[pid]:
+                    line.write({'margin': products[pid]})
+                del products[pid]
+            except:
+                pass
+
+        for pid, val in products.items():
+            try:
+                if val != 0.0:
+                    lines.create({
+                        'product_id': int(pid),
+                        'partner_id': paid,
+                        'margin': val,
+                    })
+            except:
+                pass
+
+        return {}
+
+
 class PaymentSystemProductController(SystemController):
 
     def _check_product_page(self, **kwargs):

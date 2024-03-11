@@ -20,6 +20,7 @@
                 <p>There are currently no products for your account.</p>
             </t>
             <t t-else="" t-call="portal.portal_table">
+                <t t-set="classes" t-value="'o_portal_payment_products'"/>
                 <thead>
                     <tr class="active">
                         <th>
@@ -58,17 +59,17 @@
                         </td>
                         <td class="text-right">
                             <span class="border-bottom" style="padding-bottom: 3px;">
-                                <input type="number" min="0" step="1" inputmode="numeric" value="0" class="text-right border-0 bg-transparent" style="width: 72px; outline: none;" t-att-value="margin and margin.is_integer() and int(margin) or '0'"/> %
+                                <input type="number" min="0" step="1" inputmode="numeric" class="text-right border-0 bg-transparent" t-att-value="margin and margin.is_integer() and int(margin) or '0'" t-att-data-id="product.id" t-att-data-value="price"/> %
                             </span>
                         </td>
                         <td class="text-right">
-                            <span t-esc="price * (100 + margin) / 100" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                            <span t-esc="price * (100 + margin) / 100" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}" t-att-data-id="product.id"/>
                         </td>
                     </tr>
                 </t>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="py-2 text-right font-italic small">* Prices are not dynamic and can be obsolete.</td>
+                        <td colspan="4" class="py-2 text-right font-italic small">* Prices are not dynamic and can be obsolete. <button class="btn btn-primary ml16">Save</button></td>
                     </tr>
                 </tfoot>
             </t>

@@ -346,30 +346,41 @@ class PayloxController(http.Controller):
 
                         rows.sort(key=lambda x: x['id'])
                         values.update({'rows': rows})
+
                     else:
                         tabs = set()
-                        ids = list()
-                        rows = list()
+                        grids = OrderedDict()
 
-                        options = result.get('installment_options', result.get('installments', []))
+                        options = result.get('installment_options')
+                        if not options:
+                            return {'error': _('No installment found (Error Code: -1)')}
+
+                        campaign = options[0].get('campaign_name', '')
                         for option in options:
-                            row = {
-                                'installments': [],
+                            if option.get('campaign_name', '') != campaign:
+                                continue
+
+                            grid = {
+                                'lines': [],
+                                'campaign': campaign,
                                 'type': option.get('card_type', ''),
                                 'currency': option.get('currency', ''),
                                 'family': option.get('card_family', ''),
                                 'logo': option.get('card_family_logo', ''),
-                                'campaign': option.get('campaign_name', ''),
                                 'excluded': option.get('excluded_bins', []),
                             }
 
-                            tabs.add(row['type'])
+                            tabs.add(grid['type'])
 
+                            if grid['type'] not in grids:
+                                grids[grid['type']] = []
+
+                            ids = list()
                             for installment in option['installments']:
-                                if installment['installment_count'] in row['ids']:
+                                if installment['installment_count'] in ids:
                                     continue
 
-                                r = {
+                                line = {
                                     'id': installment['installment_count'],
                                     'amount': installment['installment_amount'],
                                     'crate': installment['customer_rate'],
@@ -381,15 +392,15 @@ class PayloxController(http.Controller):
                                     'idesc': self._get_installment_description(installment),
                                     'count': installment['installment_count'] + installment['plus_installment'],'irate': -rate if rate > 0 and installment['installment_count'] == 1 else 0.0,
                                 }
-                                row['ids'].append(r['id'])
-                                row['installments'].append(r)
+                                ids.append(line['id'])
+                                grid['lines'].append(line)
 
-                            row['installments'].sort(key=lambda x: x['id'])
-                            rows.append(row)
+                            grid['lines'].sort(key=lambda x: x['id'])
+                            grids[grid['type']].append(grid)
 
                         values.update({
-                            'rows': rows,
                             'tabs': list(tabs),
+                            'grids': grids,
                         })
 
                 elif type.startswith('c'):
@@ -792,8 +803,7 @@ class PayloxController(http.Controller):
             installment = next(filter(lambda x: x['index'] == index, installment['ids']), None)
         elif type == 'ct':
             index = kwargs['installment']['id']
-            installment = next(filter(lambda x: x['campaign'] == campaign, rows), None)
-            installment = next(filter(lambda x: x['id'] == index, installment['installments']), None)
+            installment = next(filter(lambda x: x['id'] == index and x['campaign'] == campaign, rows), None)
         else:
             installment = next(filter(lambda x: x['id'] == installment, rows), None)
 

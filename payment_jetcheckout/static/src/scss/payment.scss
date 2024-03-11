@@ -30,18 +30,18 @@
 }
 
 .payment-page, .o_payment_form {
-    &::-webkit-scrollbar, *::-webkit-scrollbar {
+    &::-webkit-scrollbar {
         width: 10px;
         height: 10px;
         background-color: #f7fafc;
     }
 
-    &::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb {
         background-color: #ccc;
         border-radius: 50px;
     }
 
-    &::-webkit-scrollbar-corner, *::-webkit-scrollbar-corner {
+    &::-webkit-scrollbar-corner {
         background-color: initial;
     }
 

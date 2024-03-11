@@ -395,6 +395,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         $('span#campaign').html(campaign || '-');
         if (this.installment.row.$.data('type') === 'i') {
             this._getInstallment(true);
+            this.installment.grid = null;
         }
     },
 
@@ -536,7 +537,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             popup.open().opened(() => {
                 popup.$modal.addClass('payment-page');
                 const $button = $('.modal-body button.o_button_select_campaign');
-                $button.click(function(e) {
+                $button.click((e) => {
                     const campaign = e.currentTarget.dataset.name;
                     this.campaign.name.value = campaign;
                     this.campaign.name.$.trigger('change');

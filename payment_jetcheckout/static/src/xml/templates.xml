@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="paylox.installment.grid">
-        <main t-if="!error &amp;&amp; rows" class="row installment-table">
+        <main t-if="!error &amp;&amp; tabs" class="row installment-table">
             <t t-if="type[0] === 'c'">
                 <ul class="nav nav-tabs w-100 border-0 mb-1 type-ct" role="tablist">
                     <t t-set="i" t-value="0"/>
@@ -78,7 +78,7 @@
                     <t t-foreach="tabs" t-as="tab">
                         <div t-attf-class="tab-pane fade shadow-none #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
                             <div class="d-flex flex-wrap shadow-sm">
-                                <t t-foreach="rows" t-as="row">
+                                <t t-foreach="grids[tab]" t-as="grid">
                                     <div class="col-md-4 p-2">
                                         <div class="border bg-white text-700">
                                             <table class="w-100">
@@ -91,7 +91,7 @@
                                                     <tr>
                                                         <th colspan="4" class="text-center">
                                                             <picture class="placeholder">
-                                                                <img class="d-none" t-att-src="row.logo" t-att-alt="row.family"/>
+                                                                <img class="d-none" t-att-src="grid.logo" t-att-alt="grid.family"/>
                                                             </picture>
                                                         </th>
                                                     </tr>
@@ -102,7 +102,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <t t-call="paylox.installment.line"/>
+                                                    <t t-foreach="grid.lines" t-as="line">
+                                                        <t t-set="val" t-value="value * (1 + (line.crate / 100)) * (1 + (line.irate / 100))"/>
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <span class="position-relative">
+                                                                    <span t-esc="line.id"/>
+                                                                    <span t-if="line.plus" t-esc="'+' + line.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="line.pdesc"/>
+                                                                </span>
+                                                            </td>
+                                                            <td class="text-center side-border">
+                                                                <span t-esc="format.currency(val/line.count, position, symbol, decimal)"/>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -120,34 +136,14 @@
         </main>
     </t>
 
-    <t t-name="paylox.installment.line">
-        <t t-foreach="row.installments" t-as="r">
-            <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-            <tr>
-                <td class="text-center">
-                    <span class="position-relative">
-                        <span t-esc="r.id"/>
-                        <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="r.pdesc"/>
-                    </span>
-                </td>
-                <td class="text-center side-border">
-                    <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
-                </td>
-                <td class="text-center">
-                    <span t-esc="format.currency(val, position, symbol, decimal)"/>
-                </td>
-            </tr>
-        </t>
-    </t>
-
     <t t-name="paylox.installment.row">
         <t t-if="type === 'c'">
+            <t t-set="selected" t-value="true"/>
             <t t-foreach="rows" t-as="row">
                 <div class="installment-line">
                     <div>
                         <span t-esc="row.id"/>
                     </div>
-                    <t t-set="selected" t-value="true"/>
                     <t t-foreach="row.ids" t-as="r">
                         <t t-if="r.id">
                             <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
@@ -167,57 +163,55 @@
         <t t-elif="type === 'ct'">
             <t t-set="selected" t-value="true"/>
             <t t-foreach="rows" t-as="row">
-                <t t-foreach="row.installments" t-as="r">
-                    <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
-                    <div t-attf-class="installment-line {{ selected ? 'installment-selected' : '' }}">
-                        <div class="installment-cell overflow-hidden">
-                            <div>
-                                <input type="radio" class="d-block m-auto" t-att-name="r.id" t-att-value="r.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="r.id" t-att-data-campaign="r.campaign"/>
-                                <span class="installment-radio"/>
-                            </div>
-                            <div class="overflow-hidden text-nowrap text-overflow-ellipsis">
-                                <span t-esc="r.campaign" t-att-title="r.campaign"/>
-                            </div>
+                <t t-set="val" t-value="value * (1 + (row.crate / 100)) * (1 + (row.irate / 100))"/>
+                <div t-attf-class="installment-line {{ selected ? 'installment-selected' : '' }}">
+                    <div class="installment-cell overflow-hidden">
+                        <div>
+                            <input type="radio" class="d-block m-auto" t-att-name="row.id" t-att-value="row.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="row.id" t-att-data-campaign="row.campaign"/>
+                            <span class="installment-radio"/>
                         </div>
-                        <div class="text-center side-border">
-                            <span class="position-relative">
-                                <span t-esc="r.id"/>
-                                <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="r.pdesc"/>
-                            </span>
-                        </div>
-                        <div class="text-center side-border">
-                            <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
-                        </div>
-                        <div class="text-center">
-                            <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                        <div class="overflow-hidden text-nowrap text-overflow-ellipsis">
+                            <span t-esc="row.campaign" t-att-title="row.campaign"/>
                         </div>
                     </div>
-                    <t t-set="selected" t-value="false"/>
-                </t>
+                    <div class="text-center side-border">
+                        <span class="position-relative">
+                            <span t-esc="row.id"/>
+                            <span t-if="row.plus" t-esc="'+' + row.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="row.pdesc"/>
+                        </span>
+                    </div>
+                    <div class="text-center side-border">
+                        <span t-esc="format.currency(val/row.count, position, symbol, decimal)"/>
+                    </div>
+                    <div class="text-center">
+                        <span t-esc="format.currency(val, position, symbol, decimal)"/>
+                    </div>
+                </div>
+                <t t-set="selected" t-value="false"/>
             </t>
         </t>
         <t t-else="">
             <t t-set="selected" t-value="true"/>
-            <t t-foreach="rows" t-as="r">
-                <t t-set="val" t-value="value * (1 + (r.crate / 100)) * (1 + (r.irate / 100))"/>
+            <t t-foreach="rows" t-as="row">
+                <t t-set="val" t-value="value * (1 + (row.crate / 100)) * (1 + (row.irate / 100))"/>
                 <div t-attf-class="installment-line #{selected ? 'installment-selected' : ''}">
                     <div class="installment-cell">
                         <div class="text-center">
-                            <input type="radio" t-att-name="r.id" t-att-value="r.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="r.id" class="d-block mx-auto"/>
+                            <input type="radio" t-att-name="row.id" t-att-value="row.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="row.id" class="d-block mx-auto"/>
                             <span class="installment-radio"/>
                         </div>
                         <div class="flex-fill">
                             <span class="position-relative">
-                                <span t-esc="r.id"/>
-                                <span t-if="r.plus" t-esc="'+' + r.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="r.pdesc"/>
+                                <span t-esc="row.id"/>
+                                <span t-if="row.plus" t-esc="'+' + row.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="row.pdesc"/>
                             </span>
                         </div>
                     </div>
                     <div t-if="!s2s" class="text-center side-border">
-                        <span t-esc="format.percentage(r.crate)"/>
+                        <span t-esc="format.percentage(row.crate)"/>
                     </div>
                     <div class="text-center side-border">
-                        <span t-esc="format.currency(val/r.count, position, symbol, decimal)"/>
+                        <span t-esc="format.currency(val/row.count, position, symbol, decimal)"/>
                     </div>
                     <div class="text-center">
                         <span t-esc="format.currency(val, position, symbol, decimal)"/>
