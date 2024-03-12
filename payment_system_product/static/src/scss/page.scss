@@ -410,13 +410,15 @@
         }
 
         .payment-product-categ-card {
-            min-width: 20%;
+            width: 25%;
+            min-width: 25%;
             max-width: 250px;
             float: left;
             overflow: hidden;
             border-bottom: none;
     
             @include media-breakpoint-down(lg) {
+                width: 33%;
                 min-width: 33%;
             }
 
@@ -1068,11 +1070,13 @@
             max-width: 100%;
             border-right-color: transparent;
         }
+ 
         .payment-product-sidebar {
             flex: 0 0 100%;
             max-width: 100%;
             border-right-color: transparent;
         }
+
         .payment-product-payment {
             display: grid;
             grid-template-rows: 0fr;
