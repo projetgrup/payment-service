@@ -21,17 +21,17 @@
         'security/ir.model.access.csv',
         'security/sms_security.xml',
 
-        'views/payment_subscription.xml',
-        'views/account_analytic_account.xml',
-        'views/payment_subscription_portal.xml',
-        'views/sale_order.xml',
+        'views/res_partner.xml',
         'views/sms_composer.xml',
         'views/product_template.xml',
-        'views/res_partner.xml',
+        'views/payment_subscription.xml',
+        'views/payment_subscription_portal.xml',
+        'views/account_analytic_account.xml',
+        'views/sale_order.xml',
 
-        'wizard/payment_subscription_reason_wizard_views.xml',
-        'wizard/payment_subscription_renew_wizard_views.xml',
-        'wizard/payment_subscription_wizard_views.xml',
+        'wizard/payment_subscription_reason_wizard.xml',
+        'wizard/payment_subscription_renew_wizard.xml',
+        'wizard/payment_subscription_wizard.xml',
     ],
     'assets': {
         'web.assets_backend': [
