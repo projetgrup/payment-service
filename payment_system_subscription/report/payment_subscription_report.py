@@ -23,16 +23,16 @@ class PaymentSubscriptionReport(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
-    template_id = fields.Many2one('saas.subscription.template', 'Subscription Template', readonly=True)
+    template_id = fields.Many2one('payment.subscription.template', 'Subscription Template', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Customer Company', readonly=True)
     industry_id = fields.Many2one('res.partner.industry', 'Industry', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    reason_id = fields.Many2one('saas.subscription.reason', 'Close Reason', readonly=True)
+    reason_id = fields.Many2one('payment.subscription.reason', 'Close Reason', readonly=True)
     to_renew = fields.Boolean('To Renew', readonly=True)
     in_progress = fields.Boolean('Running', readonly=True)
-    stage_id = fields.Many2one('saas.subscription.stage', string='Stage', readonly=True)
+    stage_id = fields.Many2one('payment.subscription.stage', string='Stage', readonly=True)
 
     def _select(self):
         select_str = '''
@@ -67,7 +67,7 @@ class PaymentSubscriptionReport(models.Model):
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
                     partner.industry_id as industry_id,
-                    sub.close_reason_id as close_reason_id
+                    sub.reason_id as reason_id
         '''
         return select_str
 

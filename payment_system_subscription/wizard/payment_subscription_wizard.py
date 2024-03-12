@@ -57,7 +57,7 @@ class PaymentSubscriptionWizardOption(models.TransientModel):
 
     name = fields.Char(string='Description')
     wizard_id = fields.Many2one('payment.subscription.wizard', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', required=True, domain="[('saas_recurring_invoice', '=', True)]", ondelete='cascade')
+    product_id = fields.Many2one('product.product', required=True, domain="[('payment_recurring_invoice', '=', True)]", ondelete='cascade')
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, ondelete='cascade', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     quantity = fields.Float(default=1.0)

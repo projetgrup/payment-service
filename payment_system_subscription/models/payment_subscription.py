@@ -41,7 +41,7 @@ class PaymentSubscription(models.Model):
     def _default_starred_user(self):
         return [(6, 0, [self.env.uid])]
 
-    @api.depends('recurring_invoice_line_ids', 'recurring_total')
+    @api.depends('line_ids', 'recurring_total')
     def _compute_amount_all(self):
         for sub in self:
             val = val1 = 0.0
@@ -52,7 +52,7 @@ class PaymentSubscription(models.Model):
             sub.recurring_amount_tax = cur.round(val)
             sub.recurring_amount_total = sub.recurring_amount_tax + sub.recurring_total
 
-    @api.depends('recurring_invoice_line_ids', 'recurring_invoice_line_ids.quantity', 'recurring_invoice_line_ids.price_subtotal')
+    @api.depends('line_ids', 'line_ids.quantity', 'line_ids.price_subtotal')
     def _compute_recurring_total(self):
         for sub in self:
             sub.recurring_total = sum(line.price_subtotal for line in sub.line_ids)
@@ -549,7 +549,7 @@ class PaymentSubscription(models.Model):
 
         return {
             'name': line.name,
-            'payment_subscription_id': line.analytic_account_id.id,
+            'payment_subscription_id': line.subscription_id.id,
             'price_unit': price_unit,
             'currency_id': currency_id,
             'discount': line.discount,
@@ -558,8 +558,8 @@ class PaymentSubscription(models.Model):
             'product_id': line.product_id.id,
             'account_id': accounts['income'],
             'tax_ids': [(6, 0, tax_ids.ids)],
-            'analytic_account_id': line.analytic_account_id.analytic_account_id.id,
-            'analytic_tag_ids': [(6, 0, line.analytic_account_id.tag_ids.ids)],
+            'analytic_account_id': line.subscription_id.analytic_account_id.id,
+            'analytic_tag_ids': [(6, 0, line.subscription_id.tag_ids.ids)],
             'payment_subscription_start_date': date_start,
             'payment_subscription_end_date': date_stop,
         }
@@ -585,7 +585,7 @@ class PaymentSubscription(models.Model):
         for subscription in self:
             order_lines = []
             fpos_id = self.env['account.fiscal.position'].company_id(subscription.company_id.id).get_fiscal_position(subscription.partner_id.id)
-            for line in subscription.recurring_invoice_line_ids:
+            for line in subscription.line_ids:
                 partner_lang = subscription.partner_id.lang
                 product = line.product_id.with_context(lang=partner_lang) if partner_lang else line.product_id
 
@@ -623,7 +623,7 @@ class PaymentSubscription(models.Model):
         values = self._prepare_renewal_order_values()
         order = self.env['sale.order'].create(values[self.id])
         order.message_post(body=(
-            _('This renewal order has been created from the saas subscription ') + ' <a href=# data-oe-model=saas.subscription data-oe-id=%d>%s</a>' % (self.id, self.display_name)
+            _('This renewal order has been created from the payment subscription ') + ' <a href=# data-oe-model=payment.subscription data-oe-id=%d>%s</a>' % (self.id, self.display_name)
         ))
         order.order_line._compute_tax_id()
         return {
@@ -771,9 +771,7 @@ class PaymentSubscription(models.Model):
                             if payment_token:
                                 invoice_values = subscription.with_context(
                                     lang=subscription.partner_id.lang)._prepare_invoice()
-                                new_invoice = self.env['account.move'].with_company(company_id).with_context(
-                                    context_invoice).create(
-                                    invoice_values)
+                                new_invoice = self.env['account.move'].with_company(company_id).with_context(context_invoice).create(invoice_values)
                                 if subscription.analytic_account_id or subscription.tag_ids:
                                     for line in new_invoice.invoice_line_ids:
                                         if subscription.analytic_account_id:
@@ -788,7 +786,7 @@ class PaymentSubscription(models.Model):
                                 tx = subscription._do_payment(payment_token, new_invoice, two_steps_sec=False)[0]
                                 if auto_commit:
                                     cr.commit()
-                                if tx.saas_renewal_allowed:
+                                if tx.payment_renewal_allowed:
                                     msg_body = _(
                                         'Automatic payment succeeded. Payment reference: <a href=# data-oe-model=payment.transaction data-oe-id=%d>%s</a>; Amount: %s. Invoice <a href=# data-oe-model=account.move data-oe-id=%d>View Invoice</a>.') % (tx.id, tx.reference, tx.amount, new_invoice.id)
                                     subscription.message_post(body=msg_body)
@@ -805,7 +803,7 @@ class PaymentSubscription(models.Model):
                                     if auto_commit:
                                         cr.rollback()
                                     new_invoice.unlink()
-                            if tx is None or not tx.saas_renewal_allowed:
+                            if tx is None or not tx.payment_renewal_allowed:
                                 amount = subscription.recurring_total
                                 date_close = (
                                     subscription.recurring_next_date +
@@ -824,20 +822,20 @@ class PaymentSubscription(models.Model):
                                     'date_close': date_close
                                 })
                                 if close_subscription:
-                                    model, template_id = imd_res.get_object_reference('saas_subscription', 'email_payment_close')
+                                    model, template_id = imd_res.get_object_reference('payment_subscription', 'email_payment_close')
                                     template = template_res.browse(template_id)
                                     template.with_context(email_context).send_mail(subscription.id)
-                                    _logger.debug('Sending SaaS Subscription Closure Mail to %s for saas subscription %s and closing saas subscription', subscription.partner_id.email, subscription.id)
-                                    msg_body = _('Automatic payment failed after multiple attempts. SaaS Subscription closed automatically.')
+                                    _logger.debug('Sending Payment Subscription Closure Mail to %s for payment subscription %s and closing payment subscription', subscription.partner_id.email, subscription.id)
+                                    msg_body = _('Automatic payment failed after multiple attempts. Payment Subscription closed automatically.')
                                     subscription.message_post(body=msg_body)
                                     subscription.set_close()
                                 else:
-                                    model, template_id = imd_res.get_object_reference('saas_subscription', 'email_payment_reminder')
+                                    model, template_id = imd_res.get_object_reference('payment_subscription', 'email_payment_reminder')
                                     msg_body = _('Automatic payment failed. Subscription set to 'To Renew'.')
                                     if (datetime.date.today() - subscription.recurring_next_date).days in [0, 3, 7, 14]:
                                         template = template_res.browse(template_id)
                                         template.with_context(email_context).send_mail(subscription.id)
-                                        _logger.debug('Sending Payment Failure Mail to %s for saas subscription %s and setting saas subscription to pending', subscription.partner_id.email, subscription.id)
+                                        _logger.debug('Sending Payment Failure Mail to %s for payment subscription %s and setting payment subscription to pending', subscription.partner_id.email, subscription.id)
                                         msg_body += _(' E-mail sent to customer.')
                                     subscription.message_post(body=msg_body)
                                     subscription.set_to_renew()
@@ -852,7 +850,7 @@ class PaymentSubscription(models.Model):
                             last_tx = self.env['payment.transaction'].search([
                                 ('reference', 'like', 'SUBSCRIPTION-%s-%s' % (subscription.id, datetime.date.today().strftime('%y%m%d')))
                             ], limit=1)
-                            error_message = 'Error during renewal of saas subscription %s (%s)' % (
+                            error_message = 'Error during renewal of payment subscription %s (%s)' % (
                                 subscription.code,
                                 'Payment recorded: %s' % last_tx.reference if last_tx and last_tx.state == 'done' else 'No payment recorded.'
                             )
@@ -888,7 +886,7 @@ class PaymentSubscription(models.Model):
                         except Exception:
                             if automatic and auto_commit:
                                 cr.rollback()
-                                _logger.exception('Fail to create recurring invoice for saas subscription %s', subscription.code)
+                                _logger.exception('Fail to create recurring invoice for payment subscription %s', subscription.code)
                             else:
                                 raise
         return invoices
@@ -902,7 +900,7 @@ class PaymentSubscription(models.Model):
             periods = {'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
             invoicing_period = relativedelta(**{periods[self.recurring_rule_type]: self.recurring_interval})
             next_date = next_date + invoicing_period
-        _, template_id = imd_res.get_object_reference('saas_subscription', 'email_payment_success')
+        _, template_id = imd_res.get_object_reference('payment_subscription', 'email_payment_success')
         email_context = self.env.context.copy()
         email_context.update({
             'payment_token': self.payment_token_id.name,
@@ -915,7 +913,7 @@ class PaymentSubscription(models.Model):
             'currency': self.pricelist_id.currency_id.name,
             'date_end': self.date,
         })
-        _logger.debug('Sending Payment Confirmation Mail to %s for saas subscription %s', self.partner_id.email, self.id)
+        _logger.debug('Sending Payment Confirmation Mail to %s for payment subscription %s', self.partner_id.email, self.id)
         template = template_res.browse(template_id)
         return template.with_context(email_context).send_mail(invoice.id)
 
@@ -931,7 +929,7 @@ class PaymentSubscription(models.Model):
             'currency': self.pricelist_id.currency_id.name,
             'date_end': self.date,
         })
-        _logger.debug('Sending Invoice Mail to %s for saas subscription %s', self.partner_id.email, self.id)
+        _logger.debug('Sending Invoice Mail to %s for payment subscription %s', self.partner_id.email, self.id)
         self.template_id.invoice_mail_template_id.with_context(email_context).send_mail(invoice.id)
         invoice.invoice_sent = True
         if hasattr(invoice, 'attachment_ids') and invoice.attachment_ids:

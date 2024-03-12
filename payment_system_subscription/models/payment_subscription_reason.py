@@ -4,7 +4,7 @@ from odoo import fields, models, _
 
 
 class PaymentSubscriptionReason(models.Model):
-    _name = 'saas.subscription.reason'
+    _name = 'payment.subscription.reason'
     _description = 'Subscription Close Reason'
     _order = 'sequence, id'
 

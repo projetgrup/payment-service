@@ -18,18 +18,18 @@ msgstr ""
 "X-Generator: Poedit 3.3.1\n"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid " E-mail sent to customer."
 msgstr "Müşteriye e-posta gönderildi."
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.mail_template_saas_subscription_invoice
+#: model:mail.template,subject:payment_subscription.mail_template_payment_subscription_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
 msgstr "${object.company_id.name} Fatura (Ref ${object.name veya 'n/a'})"
 
 #. module: payment_system_subscription
-#: model:sms.template,body:saas_subscription.sms_template_data_payment_failure
+#: model:sms.template,body:payment_subscription.sms_template_data_payment_failure
 msgid ""
 "${object.company_id.name}: Our final attempt to process a payment for your "
 "subscription failed. As your payment should have been made on ${object."
@@ -40,18 +40,18 @@ msgstr ""
 "recurring_next_date}, aboneliğiniz feshedildi."
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.mail_template_subscription_alert
+#: model:mail.template,subject:payment_subscription.mail_template_subscription_alert
 msgid "${object.company_id.name}: Please check the subscription ${object.name}"
 msgstr ""
 "${object.company_id.name}: Lütfen aboneliği kontrol edin ${object.name}"
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.mail_template_subscription_rating
+#: model:mail.template,subject:payment_subscription.mail_template_subscription_rating
 msgid "${object.company_id.name}: Service Rating Request"
 msgstr "${object.company_id.name}:Hizmet Derecelendirme Talebi"
 
 #. module: payment_system_subscription
-#: model:sms.template,body:saas_subscription.sms_template_data_payment_reminder
+#: model:sms.template,body:payment_subscription.sms_template_data_payment_reminder
 msgid ""
 "${object.company_id.name}: We were unable to process a payment for your "
 "subscription. Your subscription ${object.name} is still valid but will be "
@@ -63,7 +63,7 @@ msgstr ""
 "olmadıkça $ {object.recurring_next_date} tarihinde askıya alınacak."
 
 #. module: payment_system_subscription
-#: model:sms.template,body:saas_subscription.sms_template_data_default_alert
+#: model:sms.template,body:payment_subscription.sms_template_data_default_alert
 msgid ""
 "${object.company_id.name}: Your subscription ${object.name} needs your "
 "attention. If you have some concerns about it, please contact ${object."
@@ -74,32 +74,32 @@ msgstr ""
 "olan $ {object.user_id.name} ile iletişim kurun."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__percentage_satisfaction
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__percentage_satisfaction
 msgid "% Happy"
 msgstr "% Memnuniyet"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "(Not in"
 msgstr "(içinde değil"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "(Wrong address?)"
 msgstr "(Yanlış adres?)"
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.mail_template_subscription_alert
+#: model:mail.template,body_html:payment_subscription.mail_template_subscription_alert
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
@@ -136,7 +136,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.mail_template_saas_subscription_invoice
+#: model:mail.template,body_html:payment_subscription.mail_template_payment_subscription_invoice
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
@@ -195,7 +195,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.mail_template_subscription_rating
+#: model:mail.template,body_html:payment_subscription.mail_template_subscription_rating
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
@@ -282,7 +282,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid ""
 "<abbr title=\"You need to be logged in as this subscription's customer to "
 "change country\">Taxes</abbr>:<br/>"
@@ -291,7 +291,7 @@ msgstr ""
 "change country\">Vergiler</abbr>:<br/>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid ""
 "<i class=\"fa fa-check\"/> Closable by\n"
 "                                            customer"
@@ -300,12 +300,12 @@ msgstr ""
 "                                            kapatılabilir"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "<i class=\"fa fa-comment\"/> Send message"
 msgstr "<i class=\"fa fa-comment\"/>Mesaj Gönder"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid ""
 "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
 "title=\"Manage\"/>"
@@ -314,27 +314,27 @@ msgstr ""
 "title=\"Manage\"/>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-check\"/> In Progress"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Aktif"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-refresh\"/> To Renew"
 msgstr "<i class=\"fa fa-fw fa-refresh\"/> Yenilenecek"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-remove\"/> Closed"
 msgstr "<i class=\"fa fa-fw fa-remove\"/> Kapalı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
-msgid "<small class=\"text-muted\">SaaS Subscription -</small>"
-msgstr "<small class=\"text-muted\">SaaS Aboneliği -</small>"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
+msgid "<small class=\"text-muted\">Payment Subscription -</small>"
+msgstr "<small class=\"text-muted\">Payment Aboneliği -</small>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
 msgid ""
 "<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/> Closed</span>"
@@ -343,7 +343,7 @@ msgstr ""
 "remove\"/> Kapalı</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
 msgid ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\"/> In Progress</span>"
@@ -352,7 +352,7 @@ msgstr ""
 "check\"/> Devam Ediyor</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
 msgid ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "refresh\"/> To Renew</span>"
@@ -361,27 +361,27 @@ msgstr ""
 "refresh\"/> Yenilenecek</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "<span class=\"ml-1\">days</span>"
 msgstr "<span class=\"ml-1\">Günler</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "<span class=\"mr-1\">Every</span>"
 msgstr "<span class=\"mr-1\">Her</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "<span class=\"mr-1\">For</span>"
 msgstr "<span class=\"mr-1\">İçin</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "<span class=\"mr-1\">period(s)</span>"
 msgstr "<span class=\"mr-1\">süre(leri)</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
@@ -390,22 +390,22 @@ msgstr ""
 "                                <span class=\"o_stat_text\">Görünümü</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
-msgid "<span>SaaS Subscriptions</span>"
-msgstr "<span>SaaS Abonelikleri</span>"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
+msgid "<span>Payment Subscriptions</span>"
+msgstr "<span>Payment Abonelikleri</span>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
-msgid "<strong class=\"text-muted\">SaaS Subscription Manager:</strong>"
-msgstr "<strong class=\"text-muted\">SaaS Abonelik Yöneticisi:</strong>"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
+msgid "<strong class=\"text-muted\">Payment Subscription Manager:</strong>"
+msgstr "<strong class=\"text-muted\">Payment Abonelik Yöneticisi:</strong>"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "<strong>Next Billing Amount:</strong><br/>"
 msgstr "<strong>Sonraki Fatura Tutarı:</strong><br/>"
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.email_payment_success
+#: model:mail.template,body_html:payment_subscription.email_payment_success
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -516,7 +516,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.email_payment_close
+#: model:mail.template,body_html:payment_subscription.email_payment_close
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -630,7 +630,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:mail.template,body_html:saas_subscription.email_payment_reminder
+#: model:mail.template,body_html:payment_subscription.email_payment_reminder
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -747,49 +747,49 @@ msgid ""
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__uuid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__uuid
 msgid "Account UUID"
 msgstr "Hesap UUID"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__journal_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__journal_id
 msgid "Accounting Journal"
 msgstr "Muhasebe Hesabı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_needaction
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_needaction
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_needaction
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_needaction
 msgid "Action Needed"
 msgstr "Eylem Gerekiyor"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__active
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__active
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__active
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__active
 msgid "Active"
 msgstr "Etkin"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_ids
 msgid "Activities"
 msgstr "Aktiviteler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_exception_decoration
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Etkinlik İstisna Donatımı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_state
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_state
 msgid "Activity State"
 msgstr "Aktivite Durumu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_type_icon
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Aktivite Simge Tipi"
 
 #. module: payment_system_subscription
-#: model:res.groups,name:saas_subscription.group_saas_subscription_manager
+#: model:res.groups,name:payment_subscription.group_payment_subscription_manager
 msgid "Administrator"
 msgstr "Yönetici"
 
@@ -800,53 +800,53 @@ msgid "All"
 msgstr "Tümü"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_account_analytic_account
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__analytic_account_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__analytic_account_id
+#: model:ir.model,name:payment_subscription.model_account_analytic_account
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__analytic_account_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__analytic_account_id
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_search
 msgid "Archived"
 msgstr "Arşivlendi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__kept_archived_product_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__kept_archived_product_ids
 msgid "Archived products"
 msgstr "Arşivlenmiş Ürünler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_attachment_count
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_attachment_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_attachment_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_attachment_count
 msgid "Attachment Count"
 msgstr "Ek Sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__auto_close_limit
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__auto_close_limit
 msgid "Automatic Closing"
 msgstr "Otomatik Kapanış"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid ""
-"Automatic payment failed after multiple attempts. SaaS Subscription closed "
+"Automatic payment failed after multiple attempts. Payment Subscription closed "
 "automatically."
 msgstr ""
-"Otomatik ödeme birden fazla denemeden sonra başarısız oldu. SaaS Aboneliği "
+"Otomatik ödeme birden fazla denemeden sonra başarısız oldu. Payment Aboneliği "
 "otomatik olarak kapatıldı."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Automatic payment failed. Subscription set to \"To Renew\"."
 msgstr ""
 "Otomatik ödeme başarısız oldu. Abonelik \"Yenilemek\" olarak ayarlandı."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid ""
 "Automatic payment succeeded. Payment reference: <a href=# data-oe-"
@@ -858,7 +858,7 @@ msgstr ""
 "model=account.move data-oe-id=%d>Faturayı Görüntüle</a>."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__percentage_satisfaction
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__percentage_satisfaction
 msgid ""
 "Calculate the ratio between the number of the best ('great') ratings and the "
 "total number of ratings"
@@ -867,82 +867,82 @@ msgstr ""
 "arasındaki oranı hesaplayın"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_close_reason_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.wizard_form_view
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_reason_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid "Cancel"
 msgstr "İptal"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__product_uom_category_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__product_uom_category_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__product_uom_category_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__product_uom_category_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__product_uom_category_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__product_uom_category_id
 msgid "Category"
 msgstr "Kategori"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Change Payment Method"
 msgstr "Ödeme Yöntemini Değiştir"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Change plan"
 msgstr "Plan Değiştir"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Choose Payment Method"
 msgstr "Ödeme yöntemini seçin"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__user_closable
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__user_closable
 msgid "Closable by Customer"
 msgstr "Müşteri tarafından kapatılabilir"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Close"
 msgstr "Kapat"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_close_reason_wizard_action
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__close_reason_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__close_reason_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__close_reason_id
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_reason_wizard_action
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__reason_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__reason_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__reason_id
 msgid "Close Reason"
 msgstr "Kapatma Nedeni"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_close_reason_action
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_close_reason_action
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_close_reason_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_close_reason_view_tree
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_reason_action
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_reason_action
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_reason_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_reason_view_tree
 msgid "Close Reasons"
 msgstr "Kapatma & İptal Nedenleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
-msgid "Close SaaS Subscription"
-msgstr "SaaS Aboneliğini Kapat"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
+msgid "Close Payment Subscription"
+msgstr "Payment Aboneliğini Kapat"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
-#: model:saas.subscription.stage,name:saas_subscription.saas_subscription_stage_closed
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:payment.subscription.stage,name:payment_subscription.payment_subscription_stage_closed
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 #, python-format
 msgid "Closed"
 msgstr "Kapanma"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-msgid "Closed SaaS Subscriptions"
-msgstr "Kapalı SaaS Abonelikleri"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+msgid "Closed Payment Subscriptions"
+msgstr "Kapalı Payment Abonelikleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "Closed subscriptions"
 msgstr "Kapalı abonelikler"
 
@@ -953,43 +953,43 @@ msgid "Closing text : "
 msgstr "Kapama Notu:"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__code
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__code
 msgid "Code"
 msgstr "Kod"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__color
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__color
 msgid "Color"
 msgstr "Renk"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__company_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__company_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__company_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__company_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__company_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__company_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__company_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__company_id
 msgid "Company"
 msgstr "Şirket"
 
 #. module: payment_system_subscription
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_config
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_config
 msgid "Configuration"
 msgstr "Yapılandırma"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Confirm"
 msgstr "Doğrula"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_res_partner
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model:ir.model,name:payment_subscription.model_res_partner
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Contact"
 msgstr "Kontak"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_line__product_uom_category_id
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_renew_wizard_replace_option__product_uom_category_id
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_wizard_option__product_uom_category_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_line__product_uom_category_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_renew_wizard_replace_option__product_uom_category_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_wizard_option__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -998,46 +998,46 @@ msgstr ""
 "Dönüşümler oranlara göre yapılacaktır."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__country_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__country_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__country_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__country_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Country"
 msgstr "Ülke"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.wizard_form_view
+#: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid "Create & View Quotation"
 msgstr "Teklif Oluştur & Görüntüle"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Create Invoice"
 msgstr "Fatura Oluştur"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_action
-msgid "Create a new saas subscription"
-msgstr "Yeni bir saas aboneliği oluşturun"
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_action
+msgid "Create a new payment subscription"
+msgstr "Yeni bir payment aboneliği oluşturun"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_action_filtered
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_action_filtered
 msgid "Create a new subscription"
 msgstr "Yeni bir abonelik oluştur"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_stage_action
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_stage_action
 msgid "Create a new subscription stage"
 msgstr "Yeni bir abonelik aşaması oluşturma"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_template_action
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_template_action
 msgid "Create a new template of subscription"
 msgstr "Yeni bir abonelik şablonu oluşturun"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.wizard_form_view
+#: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid ""
 "Create a quotation with new products and send it to the customer for "
 "approval.\n"
@@ -1052,131 +1052,131 @@ msgstr ""
 "orantılı olacaktır."
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_action
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_action
 msgid ""
-"Create saas subscriptions to manage recurring invoicing &amp; payments. SaaS "
+"Create payment subscriptions to manage recurring invoicing &amp; payments. Payment "
 "Subscriptions can\n"
 "                be time-bounded or not. In case of a limited period, they "
 "are flagged as to be renewed\n"
 "                one month from the end date."
 msgstr ""
-"Yinelenen faturalama ve ödemeleri yönetmek için saas abonelikleri oluşturun. "
-"SaaS Abonelikleri şunları yapabilir\n"
+"Yinelenen faturalama ve ödemeleri yönetmek için payment abonelikleri oluşturun. "
+"Payment Abonelikleri şunları yapabilir\n"
 "                zaman sınırlı olsun ya da olmasın. Sınırlı bir süre olması "
 "durumunda, yenilenecek olarak işaretlenirler\n"
 "                bitiş tarihinden itibaren bir ay."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__create_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__create_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__create_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__create_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__sale_order__saas_subscription_management__create
+#: model:ir.model.fields.selection,name:payment_subscription.selection__sale_order__payment_subscription_management__create
 msgid "Creation"
 msgstr "Oluşturma"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_sale_order__saas_subscription_management
+#: model:ir.model.fields,help:payment_subscription.field_sale_order__payment_subscription_management
 msgid ""
-"Creation: The Sales Order created the saas subscription\n"
-"Upselling: The Sales Order added lines to the saas subscription\n"
-"Renewal: The Sales Order replaced the saas subscription's content with its "
+"Creation: The Sales Order created the payment subscription\n"
+"Upselling: The Sales Order added lines to the payment subscription\n"
+"Renewal: The Sales Order replaced the payment subscription's content with its "
 "own"
 msgstr ""
-"Oluşturma: Satış Siparişi saas aboneliğini oluşturdu\n"
-"Üst Satış: Satış Siparişi saas aboneliğine satır ekledi\n"
-"Yenileme: Satış Siparişi, saas aboneliğinin içeriğini kendi içeriğiyle "
+"Oluşturma: Satış Siparişi payment aboneliğini oluşturdu\n"
+"Üst Satış: Satış Siparişi payment aboneliğine satır ekledi\n"
+"Yenileme: Satış Siparişi, payment aboneliğinin içeriğini kendi içeriğiyle "
 "değiştirdi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__currency_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__currency_id
 msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Current Plan:"
 msgstr "Mevcut Plan:"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__partner_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__partner_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__partner_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__partner_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__commercial_partner_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__commercial_partner_id
 msgid "Customer Company"
 msgstr "Müşteri Şirketi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__date
 msgid "Date"
 msgstr "Mail"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_next_date
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_next_date
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Date of Next Invoice"
 msgstr "Sonraki Fatura Tarihi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_type__daily
 msgid "Days"
 msgstr "Gün"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__description
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__description
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__name
 msgid "Description"
 msgstr "Açıklama"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Disc.%"
 msgstr "İnd.(%)"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__discount
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__discount
 msgid "Discount (%)"
 msgstr "İndirim (%)"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid ""
 "Discount computation failed because the upsell date is not between the next "
@@ -1188,60 +1188,60 @@ msgstr ""
 "NO İndirim politikası."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__display_name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__display_name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__display_replacement_lines
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__display_replacement_lines
 msgid "Display Replacement Lines"
 msgstr ""
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__payment_mode__draft_invoice
-#: model:saas.subscription.stage,name:saas_subscription.saas_subscription_stage_draft
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__payment_mode__draft_invoice
+#: model:payment.subscription.stage,name:payment_subscription.payment_subscription_stage_draft
 msgid "Draft"
 msgstr "Taslak"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_rule_boundary
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__recurring_rule_boundary
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_rule_boundary
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__recurring_rule_boundary
 msgid "Duration"
 msgstr "Süre"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__recurring_rule_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__recurring_rule_count
 msgid "End After"
 msgstr "Sonrası"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__date_end
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__date_end
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: payment_system_subscription
-#: model:saas.partner.lang,name:saas_subscription.lang_english
+#: model:payment.partner.lang,name:payment_subscription.lang_english
 msgid "English"
 msgstr "İngilizce"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_stage__description
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_stage__description
 msgid ""
 "Enter here the internal requirements for this stage. It will appear as a "
 "tooltip over the stage's name."
@@ -1250,189 +1250,189 @@ msgstr ""
 "ipucu olarak görünecektir."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "Expired"
 msgstr "Süresi Doldu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__failed_message_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__failed_message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__failed_message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__failed_message_ids
 msgid "Failed Messages"
 msgstr "Başarısız Mesajlar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_boundary__limited
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_boundary__limited
 msgid "Fixed"
 msgstr "Sabit"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__fold
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__fold
 msgid "Folded in Kanban"
 msgstr "Kanban Görüntüsünü Katla"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_follower_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_follower_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_follower_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_follower_ids
 msgid "Followers"
 msgstr "Takipçiler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_partner_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_partner_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_partner_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Tekipçiler (İş ortakları)"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__activity_type_icon
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Fontawesome simgesi, örneğin fa-tasks"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_boundary__unlimited
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_boundary__unlimited
 msgid "Forever"
 msgstr "Sonsuza dek"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Future Activities"
 msgstr "Sonraki Aktiviteler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Generate Invoice"
 msgstr "Fatura Oluştur"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_stage_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_stage_view_form
 msgid "Give your team the requirements to move a subscription to this stage."
 msgstr "Ekibinize bir aboneliği bu aşamaya taşıma gereksinimleri verin."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Group By"
 msgstr "Grupla"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "Group of Subscription"
 msgstr "Abonelik Grubu"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Happy face"
 msgstr "Mutlu yüz"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__has_message
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__has_message
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__has_message
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__has_message
 msgid "Has Message"
 msgstr "Mesaj Var"
 
 #. module: payment_system_subscription
-#: model:ir.module.category,description:saas_subscription.module_category_saas_subscription_management
-msgid "Helps you handle saas subscriptions and recurring invoicing."
+#: model:ir.module.category,description:payment_subscription.module_category_payment_subscription_management
+msgid "Helps you handle payment subscriptions and recurring invoicing."
 msgstr ""
-"Saas aboneliklerini ve yinelenen faturalandırmayı yönetmenize yardımcı olur."
+"Payment aboneliklerini ve yinelenen faturalandırmayı yönetmenize yardımcı olur."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "History"
 msgstr "Geçmiş"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.close.reason,name:saas_subscription.close_reason_4
+#: model:payment.subscription.reason,name:payment_subscription.reason_4
 msgid "I don't use it"
 msgstr "Kullanmıyorum"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_exception_icon
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_exception_icon
 msgid "Icon"
 msgstr "İkon"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__activity_exception_icon
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Bir istisna faaliyetini gösteren simge."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_needaction
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_unread
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_needaction
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_unread
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_needaction
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_unread
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_needaction
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_has_error
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_has_sms_error
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_has_error
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_has_sms_error
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_has_error
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_has_sms_error
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_has_error
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_renew_wizard__kept_archived_product_ids
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_renew_wizard__kept_archived_product_ids
 msgid "If checked, the product will be reused in the renewal order"
 msgstr "İşaretlenirse, ürün yenileme siparişinde yeniden kullanılır"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__user_closable
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__user_closable
 msgid ""
 "If checked, the user will be able to close his account from the frontend"
 msgstr "Eğer işaretli ise, kullanıcı hesabını ön yüzden kapatabilir"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__payment_token_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__payment_token_id
 msgid "If not set, the automatic payment will fail."
 msgstr "Ayarlanmazsa, otomatik ödeme başarısız olur."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__date
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__date
 msgid ""
-"If set in advance, the saas subscription will be set to renew 1 month before "
+"If set in advance, the payment subscription will be set to renew 1 month before "
 "the date and will be closed on the date set in this field."
 msgstr ""
-"Önceden ayarlanırsa, saas aboneliği tarihten 1 ay önce yenilenecek şekilde "
+"Önceden ayarlanırsa, payment aboneliği tarihten 1 ay önce yenilenecek şekilde "
 "ayarlanacak ve bu alanda ayarlanan tarihte kapatılacaktır."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_product_product__saas_recurring_invoice
-#: model:ir.model.fields,help:saas_subscription.field_product_template__saas_recurring_invoice
+#: model:ir.model.fields,help:payment_subscription.field_product_product__payment_recurring_invoice
+#: model:ir.model.fields,help:payment_subscription.field_product_template__payment_recurring_invoice
 msgid ""
-"If set, confirming a sale order with this product will create a saas "
+"If set, confirming a sale order with this product will create a payment "
 "subscription"
 msgstr ""
-"Ayarlanırsa, bu ürünle bir satış siparişini onaylamak bir saas aboneliği "
+"Ayarlanırsa, bu ürünle bir satış siparişini onaylamak bir payment aboneliği "
 "oluşturacaktır"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_product_product__saas_viewonly_product
-#: model:ir.model.fields,help:saas_subscription.field_product_template__saas_viewonly_product
+#: model:ir.model.fields,help:payment_subscription.field_product_product__payment_viewonly_product
+#: model:ir.model.fields,help:payment_subscription.field_product_template__payment_viewonly_product
 msgid "If set, product will be viewed on pricing page, but it cannot be bought"
 msgstr ""
 "Ayarlanırsa, ürün fiyatlandırma sayfasında görüntülenir, ancak satın alınamaz"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__journal_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__journal_id
 msgid ""
 "If set, subscriptions with this template will invoice in this journal; "
 "otherwise the sales journal with the lowest sequence is used."
@@ -1441,7 +1441,7 @@ msgstr ""
 "faturalanacak; yoksa en düşük sıra ile birlikte satış yevmiyesi kullanılır."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__auto_close_limit
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__auto_close_limit
 msgid ""
 "If the chosen payment method has failed to renew the subscription after this "
 "time, the subscription is automatically closed."
@@ -1450,21 +1450,21 @@ msgstr ""
 "otomatik olarak kapatılır."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid ""
-"If you confirm, your saas subscription will be closed right away. Your "
+"If you confirm, your payment subscription will be closed right away. Your "
 "current invoicing period is valid until"
 msgstr ""
-"Onaylamanız durumunda saas aboneliğiniz hemen kapatılacaktır. Mevcut "
+"Onaylamanız durumunda payment aboneliğiniz hemen kapatılacaktır. Mevcut "
 "faturalama döneminiz şu tarihe kadar geçerlidir"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "If you wish to reopen it, the"
 msgstr "Yeniden açmak isterseniz"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid ""
 "If you wish to reopen it, you can pay your invoice for the current invoicing "
 "period."
@@ -1472,62 +1472,62 @@ msgstr ""
 "Yeniden açmak isterseniz, güncel fatura döneminiz için ödeme yapabilirsiniz."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid "In #{kanban_getcolorname(record.color.raw_value)}"
 msgstr "#{kanban_getcolorname(record.color.raw_value)}"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__in_progress
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__stage_in_progress
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__in_progress
-#: model:saas.subscription.stage,name:saas_subscription.saas_subscription_stage_in_progress
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__in_progress
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__stage_in_progress
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__in_progress
+#: model:payment.subscription.stage,name:payment_subscription.payment_subscription_stage_in_progress
 #, python-format
 msgid "In Progress"
 msgstr "Devam Eden"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__industry_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__industry_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__industry_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__industry_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Industry"
 msgstr "Endüstri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__invoice_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__invoice_count
 msgid "Invoice Count"
 msgstr "Fatura Sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__invoice_currency_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__invoice_currency_id
 msgid "Invoice Currency"
 msgstr "Fatura Para Birimi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "Invoice Email"
 msgstr "Fatura E-postası"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__invoice_mail_template_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__invoice_mail_template_id
 msgid "Invoice Email Template"
 msgstr "Fatura E-posta Şablonu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__recurring_rule_type
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__recurring_rule_type
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__recurring_rule_type_readonly
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__recurring_rule_type
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__recurring_rule_type
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__recurring_rule_type_readonly
 msgid "Invoice automatically repeat at specified interval"
 msgstr "Belirlenen aralıklarda faturalar otomatik yinelenir"
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.email_payment_success
+#: model:mail.template,subject:payment_subscription.email_payment_success
 msgid "Invoice for subscription ${ctx.get('code')}"
 msgstr "Abonelik faturası ${ctx.get('code')}"
 
 #. module: payment_system_subscription
-#: model:mail.template,report_name:saas_subscription.mail_template_saas_subscription_invoice
+#: model:mail.template,report_name:payment_subscription.mail_template_payment_subscription_invoice
 msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
@@ -1536,224 +1536,224 @@ msgstr ""
 "'_draft' or ''}"
 
 #. module: payment_system_subscription
-#: model:mail.template,report_name:saas_subscription.email_payment_success
+#: model:mail.template,report_name:payment_subscription.email_payment_success
 msgid "Invoice_${ctx.get('code')}_${format_date(ctx.get('previous_date'))}"
 msgstr "Invoice_${ctx.get('code')}_${format_date(ctx.get('previous_date'))}"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Invoices"
 msgstr "Faturalar"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "Invoicing"
 msgstr "Faturalama"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__recurring_interval
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__recurring_interval
 msgid "Invoicing Period"
 msgstr "Fatura Dönemi"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #: code:addons/payment_system_subscription/models/sale_order.py:0
 #, python-format
 msgid "Invoicing period"
 msgstr "Fatura Dönemi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_is_follower
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_is_follower
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_is_follower
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_is_follower
 msgid "Is Follower"
 msgstr "Takipçi mi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_account_move
+#: model:ir.model,name:payment_subscription.model_account_move
 msgid "Journal Entry"
 msgstr "Yevmiye Kaydı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_account_move_line
+#: model:ir.model,name:payment_subscription.model_account_move_line
 msgid "Journal Item"
 msgstr "Yevmiye Kalemleri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__kpi_1month_mrr_delta
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__kpi_1month_mrr_delta
 msgid "KPI 1 Month MRR Delta"
 msgstr "KPI 1 Ay MRR Delta"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__kpi_1month_mrr_percentage
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__kpi_1month_mrr_percentage
 msgid "KPI 1 Month MRR Percentage"
 msgstr "KPI 1 Ay MRR Yüzdesi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__kpi_3months_mrr_percentage
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__kpi_3months_mrr_percentage
 msgid "KPI 3 Months MRR Percentage"
 msgstr "KPI 3 Ay MRR Yüzdesi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__kpi_3months_mrr_delta
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__kpi_3months_mrr_delta
 msgid "KPI 3 months MRR Delta"
 msgstr "KPI 3 ay MRR Delta"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__renew_product
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__renew_product
 msgid "Keep the product"
 msgstr "Ürünü koru"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard____last_update
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard____last_update
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__write_uid
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__write_uid
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason_wizard__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__write_date
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__write_date
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Last invoice date: "
 msgstr "Son fatura tarihi:"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Latest Rating: Higly Dissatisfied"
 msgstr "Son Değerlendirme: Son Derece Memnuniyetsiz"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Latest Rating: Not Satisfied"
 msgstr "Son Değerlendirme: Memnun Değil"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Latest Rating: Satisfied"
 msgstr "Son Değerlendirme: Memnun"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_main_attachment_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_main_attachment_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_main_attachment_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Ana Ek"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__payment_mode__manual
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__payment_mode__manual
 msgid "Manually"
 msgstr "Manuel Olarak"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__starred_user_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__starred_user_ids
 msgid "Members"
 msgstr "Üyeler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_has_error
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_has_error
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_has_error
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_has_error
 msgid "Message Delivery error"
 msgstr "Mesaj Teslim hatası"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_ids
 msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_account_move_line__saas_subscription_mrr
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_monthly
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__recurring_monthly
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__recurring_monthly
+#: model:ir.model.fields,field_description:payment_subscription.field_account_move_line__payment_subscription_mrr
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_monthly
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__recurring_monthly
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__recurring_monthly
 msgid "Monthly Recurring Revenue"
 msgstr "Aylık Tekrarlanan Ciro"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_type__monthly
 msgid "Months"
 msgstr "Ay"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__my_activity_date_deadline
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Aktivitemin Son Tarihi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-msgid "My SaaS Subscriptions"
-msgstr "SaaS Aboneliklerim"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+msgid "My Payment Subscriptions"
+msgstr "Payment Aboneliklerim"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "My Subscriptions"
 msgstr "Aboneliklerim"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__name
 #, python-format
 msgid "Name"
 msgstr "Adı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Neutral face"
 msgstr "Doğal yüz"
 
@@ -1764,808 +1764,808 @@ msgid "Newest"
 msgstr "En yeni"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_calendar_event_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Bir Sonraki Etkinlik Takvimi Etkinliği"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_date_deadline
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Sonraki Aktivite Zaman Sınırı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_summary
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_summary
 msgid "Next Activity Summary"
 msgstr "Sonraki Aktivite Özeti"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_type_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_type_id
 msgid "Next Activity Type"
 msgstr "Sonraki Aktivite Türü"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Next Invoice:"
 msgstr "Sonraki Fatura:"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Next invoice date: "
 msgstr "Sonraki fatura tarihi:"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.product_template_action_subscription
+#: model_terms:ir.actions.act_window,help:payment_subscription.product_template_action_subscription
 msgid "No product found"
 msgstr "Ürün bulunamadı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_needaction_counter
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_needaction_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_needaction_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Eylemlerin Sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_has_error_counter
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_has_error_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_has_error_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_has_error_counter
 msgid "Number of errors"
 msgstr "Hata sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_needaction_counter
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_needaction_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_needaction_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Eylem gerektiren mesaj sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_has_error_counter
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_has_error_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_has_error_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Teslimat hatası olan mesaj sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__message_unread_counter
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__message_unread_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__message_unread_counter
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Okunmamış mesaj sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__option_lines
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.wizard_form_view
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__option_lines
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid "Options"
 msgstr "Seçenekler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.sale_order_view_tree_saas_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.sale_order_view_tree_payment_subscription
 msgid "Order Number"
 msgstr "Sipariş No"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.close.reason,name:saas_subscription.close_reason_5
+#: model:payment.subscription.reason,name:payment_subscription.reason_5
 msgid "Other"
 msgstr "Diğer"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Other Info"
 msgstr "Diğer Bilgiler"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_res_partner_grade
+#: model:ir.model,name:payment_subscription.model_res_partner_grade
 msgid "Partner Grade"
 msgstr "Ortak Sınıfı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Pay With"
 msgstr "Öde"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__payment_mode
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__payment_mode
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__payment_mode
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__payment_mode
 msgid "Payment Mode"
 msgstr "Ödeme Biçimi"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_payment_token
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__payment_token_id
+#: model:ir.model,name:payment_subscription.model_payment_token
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__payment_token_id
 msgid "Payment Token"
 msgstr "Ödeme Token'ı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_payment_transaction
+#: model:ir.model,name:payment_subscription.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Payment method:"
 msgstr "Ödeme Metodu:"
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.email_payment_reminder
+#: model:mail.template,subject:payment_subscription.email_payment_reminder
 msgid "Payment reminder for subscription ${object.code}"
 msgstr "Abonelik ödeme hatırlatıcı ${object.code}"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-msgid "Pending SaaS Subscriptions"
-msgstr "Aktif SaaS Abonelikleri"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+msgid "Pending Payment Subscriptions"
+msgstr "Aktif Payment Abonelikleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "Pending subscriptions"
 msgstr "Aktif Abonelikler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Plan Details"
 msgstr "Plan Ayrıntıları"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Please define Date of Next Invoice of \"%s\"."
 msgstr "Lütfen gelecek faturanın tarihini tanımlayın \"%s\"."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
 msgstr "Lütfen \"%s\" şirketi için bir satış yevmiyesi tanımlayın."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__pricelist_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__pricelist_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__pricelist_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__pricelist_id
 msgid "Pricelist"
 msgstr "Fiyat Listesi"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_product_product
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__product_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__name
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__product_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__product_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__product_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__product_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model,name:payment_subscription.model_product_product
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__product_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__product_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__product_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__product_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__product_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Product"
 msgstr "Ürün"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__categ_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__categ_id
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__product_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__product_count
 msgid "Product Count"
 msgstr "Ürün Sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_product_template
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__product_tmpl_id
+#: model:ir.model,name:payment_subscription.model_product_template
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__product_tmpl_id
 msgid "Product Template"
 msgstr "Ürün Şablonu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_product_product__saas_subscription_template_id
-#: model:ir.model.fields,help:saas_subscription.field_product_template__saas_subscription_template_id
+#: model:ir.model.fields,help:payment_subscription.field_product_product__payment_subscription_template_id
+#: model:ir.model.fields,help:payment_subscription.field_product_template__payment_subscription_template_id
 msgid "Product will be included in a selected template"
 msgstr "Ürün seçilen bir şablona dahil edilecektir"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.product_template_action_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model:ir.actions.act_window,name:payment_subscription.product_template_action_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "Products"
 msgstr "Ürünler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_res_partner_grade__is_published
+#: model:ir.model.fields,field_description:payment_subscription.field_res_partner_grade__is_published
 msgid "Published"
 msgstr "Yayınlandı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_res_partner_grade__is_pricing_published
+#: model:ir.model.fields,field_description:payment_subscription.field_res_partner_grade__is_pricing_published
 msgid "Published on Pricing"
 msgstr "Fiyatlandırmada Yayınlandı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__quantity
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__quantity
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__quantity
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__quantity
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__quantity
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__quantity
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__quantity
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__quantity
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__quantity
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__quantity
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Quantity"
 msgstr "Miktar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_line__quantity
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_line__quantity
 msgid "Quantity that will be invoiced."
 msgstr "Faturalanacak miktar."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_ids
 msgid "Rating"
 msgstr "Değerlendirme"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_avg
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_avg
 msgid "Rating Average"
 msgstr "Değerlendirme Ortalaması"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__rating_template_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__rating_template_id
 msgid "Rating Email Template"
 msgstr "Değerlendirme E-posta Şablonu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_last_feedback
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_last_feedback
 msgid "Rating Last Feedback"
 msgstr "Son Geribildirimleri Derecelendirme "
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_last_image
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_last_image
 msgid "Rating Last Image"
 msgstr "Son Resmin Değerlendirilmesi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_last_value
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_last_value
 msgid "Rating Last Value"
 msgstr "Değerlendirme Son Değer"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__rating_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__rating_count
 msgid "Rating count"
 msgstr "Değerlendirme sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__name
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_close_reason_view_form
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__name
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_reason_view_form
 msgid "Reason"
 msgstr "Sebep"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__rating_last_feedback
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__rating_last_feedback
 msgid "Reason of the rating"
 msgstr "Değerlendirme nedeni"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_rule_type
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__recurring_rule_type
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_rule_type
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__recurring_rule_type
 msgid "Recurrence"
 msgstr "Periyot"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__recurring_rule_type_readonly
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__recurring_rule_type_readonly
 msgid "Recurrence Unit"
 msgstr "Tekrarlama Birimi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid "Recurrence:"
 msgstr "Periyot:"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_invoice_day
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_invoice_day
 msgid "Recurring Invoice Day"
 msgstr "Yinelenen Fatura Günü"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_total
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__recurring_total
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_total
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__recurring_total
 msgid "Recurring Price"
 msgstr "Yinelenen Fiyat"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__code
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__code
 msgid "Reference"
 msgstr "Referans"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Reference:"
 msgstr "Referans:"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid "Renew & View Quotation"
 msgstr "Teklifi Yenile & Görüntüle"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid "Renewable"
 msgstr "Yenilenebilir"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__sale_order__saas_subscription_management__renew
+#: model:ir.model.fields.selection,name:payment_subscription.selection__sale_order__payment_subscription_management__renew
 msgid "Renewal"
 msgstr "Yenile"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Renewal Quotation"
 msgstr "Yenileme Teklifi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_interval
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_interval
 msgid "Repeat Every"
 msgstr "Tekrarlama Durumu"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__recurring_interval
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__recurring_interval
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__recurring_interval
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "Tekrarlama Durumu (Gün/Hafta/Ay/Yıl)"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__replacement_line_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__replacement_line_ids
 msgid "Replaced by"
 msgstr "Tarafından değiştirildi"
 
 #. module: payment_system_subscription
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_report
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_report
 msgid "Reporting"
 msgstr "Raporlama"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__description
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_stage_view_form
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__description
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_stage_view_form
 msgid "Requirements"
 msgstr "Gereksinimler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__activity_user_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__activity_user_id
 msgid "Responsible User"
 msgstr "Sorumlu Kullanıcı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__in_progress
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__in_progress
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Running"
 msgstr "Aktif"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-msgid "Running SaaS Subscriptions"
-msgstr "Aktif SaaS Abonelikleri"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+msgid "Running Payment Subscriptions"
+msgstr "Aktif Payment Abonelikleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "Running Subscriptions"
 msgstr "Aktif Abonelikler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_has_sms_error
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_has_sms_error
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_has_sms_error
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS Ulaştırma hatası"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.res_config_settings_view_form
-msgid "SaaS"
-msgstr "SaaS"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.res_config_settings_view_form
+msgid "Payment"
+msgstr "Payment"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid ""
-"SaaS\n"
+"Payment\n"
 "                                            Subscriptions"
 msgstr ""
-"SaaS\n"
+"Payment\n"
 "                                            Abonelikler"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_partner_lang
-msgid "SaaS Partner Language"
-msgstr "SaaS İş Ortağı Dili"
+#: model:ir.model,name:payment_subscription.model_payment_partner_lang
+msgid "Payment Partner Language"
+msgstr "Payment İş Ortağı Dili"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard__saas_subscription_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_snapshot__subscription_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__subscription_id
-#: model:ir.model.fields,field_description:saas_subscription.field_sale_order_line__saas_subscription_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
-msgid "SaaS Subscription"
-msgstr "SaaS Aboneliği"
+#: model:ir.model,name:payment_subscription.model_payment_subscription
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard__payment_subscription_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_snapshot__subscription_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__subscription_id
+#: model:ir.model.fields,field_description:payment_subscription.field_sale_order_line__payment_subscription_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
+msgid "Payment Subscription"
+msgstr "Payment Aboneliği"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_report
-msgid "SaaS Subscription Analysis"
-msgstr "SaaS Abonelik Analizi"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_report
+msgid "Payment Subscription Analysis"
+msgstr "Payment Abonelik Analizi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_account_analytic_account__saas_subscription_count
-msgid "SaaS Subscription Count"
-msgstr "SaaS Abonelik Sayısı"
+#: model:ir.model.fields,field_description:payment_subscription.field_account_analytic_account__payment_subscription_count
+msgid "Payment Subscription Count"
+msgstr "Payment Abonelik Sayısı"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.mail_template_saas_subscription_invoice
-msgid "SaaS Subscription Invoice: Send by Email"
-msgstr "SaaS Abonelik Faturası: E-posta ile Gönder"
+#: model:mail.template,name:payment_subscription.mail_template_payment_subscription_invoice
+msgid "Payment Subscription Invoice: Send by Email"
+msgstr "Payment Abonelik Faturası: E-posta ile Gönder"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-msgid "SaaS Subscription Lines"
-msgstr "SaaS Abonelik Kalemleri"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+msgid "Payment Subscription Lines"
+msgstr "Payment Abonelik Kalemleri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_sale_order__saas_subscription_management
-msgid "SaaS Subscription Management"
-msgstr "SaaS Abonelik Yönetimi"
+#: model:ir.model.fields,field_description:payment_subscription.field_sale_order__payment_subscription_management
+msgid "Payment Subscription Management"
+msgstr "Payment Abonelik Yönetimi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_product_product__saas_recurring_invoice
-#: model:ir.model.fields,field_description:saas_subscription.field_product_template__saas_recurring_invoice
-msgid "SaaS Subscription Product"
-msgstr "SaaS Abonelik Ürünü"
+#: model:ir.model.fields,field_description:payment_subscription.field_product_product__payment_recurring_invoice
+#: model:ir.model.fields,field_description:payment_subscription.field_product_template__payment_recurring_invoice
+msgid "Payment Subscription Product"
+msgstr "Payment Abonelik Ürünü"
 
 #. module: payment_system_subscription
-#: model:product.pricelist,name:saas_subscription.saas_subscription_price_list
-msgid "SaaS Subscription Product Price List"
-msgstr "SaaS Abonelik Ürün Fiyat Listesi"
+#: model:product.pricelist,name:payment_subscription.payment_subscription_price_list
+msgid "Payment Subscription Product Price List"
+msgstr "Payment Abonelik Ürün Fiyat Listesi"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_renew_wizard_keep_option
-#: model:ir.model,name:saas_subscription.model_saas_subscription_renew_wizard_replace_option
-msgid "SaaS Subscription Renew Lines Wizard"
-msgstr "SaaS Abonelik Yenileme Satırları Sihirbazı"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_renew_wizard_keep_option
+#: model:ir.model,name:payment_subscription.model_payment_subscription_renew_wizard_replace_option
+msgid "Payment Subscription Renew Lines Wizard"
+msgstr "Payment Abonelik Yenileme Satırları Sihirbazı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_renew_wizard
-msgid "SaaS Subscription Renew wizard"
-msgstr "SaaS Abonelik Yenileme sihirbazı"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_renew_wizard
+msgid "Payment Subscription Renew wizard"
+msgstr "Payment Abonelik Yenileme sihirbazı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_account_move_line__saas_subscription_end_date
-msgid "SaaS Subscription Revenue End Date"
-msgstr "SaaS Abonelik Geliri Bitiş Tarihi"
+#: model:ir.model.fields,field_description:payment_subscription.field_account_move_line__payment_subscription_end_date
+msgid "Payment Subscription Revenue End Date"
+msgstr "Payment Abonelik Geliri Bitiş Tarihi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_account_move_line__saas_subscription_start_date
-msgid "SaaS Subscription Revenue Start Date"
-msgstr "SaaS Abonelik Geliri Başlangıç Tarihi"
+#: model:ir.model.fields,field_description:payment_subscription.field_account_move_line__payment_subscription_start_date
+msgid "Payment Subscription Revenue Start Date"
+msgstr "Payment Abonelik Geliri Başlangıç Tarihi"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_snapshot
-msgid "SaaS Subscription Snapshot"
-msgstr "SaaS Abonelik Snapshot"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_snapshot
+msgid "Payment Subscription Snapshot"
+msgstr "Payment Abonelik Snapshot"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_stage
-msgid "SaaS Subscription Stage"
-msgstr "SaaS Abonelik Aşaması"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_stage
+msgid "Payment Subscription Stage"
+msgstr "Payment Abonelik Aşaması"
 
 #. module: payment_system_subscription
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_stage
-msgid "SaaS Subscription Stages"
-msgstr "SaaS Abonelik Aşamaları"
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_stage
+msgid "Payment Subscription Stages"
+msgstr "Payment Abonelik Aşamaları"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_template
-#: model:ir.model.fields,field_description:saas_subscription.field_product_product__saas_subscription_template_id
-#: model:ir.model.fields,field_description:saas_subscription.field_product_template__saas_subscription_template_id
-msgid "SaaS Subscription Template"
-msgstr "SaaS Abonelik Şablonu"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_template
+#: model:ir.model.fields,field_description:payment_subscription.field_product_product__payment_subscription_template_id
+#: model:ir.model.fields,field_description:payment_subscription.field_product_template__payment_subscription_template_id
+msgid "Payment Subscription Template"
+msgstr "Payment Abonelik Şablonu"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_list
-msgid "SaaS Subscription Templates"
-msgstr "SaaS Abonelik Şablonları"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_list
+msgid "Payment Subscription Templates"
+msgstr "Payment Abonelik Şablonları"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_wizard_option
-msgid "SaaS Subscription Upsell Lines Wizard"
-msgstr "SaaS Abonelik Üst Satış Kalemleri Sihirbazı"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_wizard_option
+msgid "Payment Subscription Upsell Lines Wizard"
+msgstr "Payment Abonelik Üst Satış Kalemleri Sihirbazı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_wizard
-msgid "SaaS Subscription Upsell wizard"
-msgstr "SaaS Abonelik Ek Satış Sihirbazı"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_wizard
+msgid "Payment Subscription Upsell wizard"
+msgstr "Payment Abonelik Ek Satış Sihirbazı"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.close.reason,name:saas_subscription.close_reason_2
-msgid "SaaS Subscription does not meet my requirements"
-msgstr "SaaS Aboneliği gereksinimlerimi karşılamıyor"
+#: model:payment.subscription.reason,name:payment_subscription.reason_2
+msgid "Payment Subscription does not meet my requirements"
+msgstr "Payment Aboneliği gereksinimlerimi karşılamıyor"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.close.reason,name:saas_subscription.close_reason_1
-msgid "SaaS Subscription is too expensive"
-msgstr "SaaS Aboneliği çok pahalı"
+#: model:payment.subscription.reason,name:payment_subscription.reason_1
+msgid "Payment Subscription is too expensive"
+msgstr "Payment Aboneliği çok pahalı"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.close.reason,name:saas_subscription.close_reason_3
-msgid "SaaS Subscription reached its end date"
-msgstr "SaaS Aboneliği bitiş tarihine ulaştı"
+#: model:payment.subscription.reason,name:payment_subscription.reason_3
+msgid "Payment Subscription reached its end date"
+msgstr "Payment Aboneliği bitiş tarihine ulaştı"
 
 #. module: payment_system_subscription
-#: model:mail.message.subtype,description:saas_subscription.subtype_stage_change
-msgid "SaaS Subscription stage has changed"
-msgstr "SaaS Abonelik aşaması değişti"
+#: model:mail.message.subtype,description:payment_subscription.subtype_stage_change
+msgid "Payment Subscription stage has changed"
+msgstr "Payment Abonelik aşaması değişti"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_action
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_action_filtered
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_action_res_partner
-#: model:ir.model.fields,field_description:saas_subscription.field_account_analytic_account__saas_subscription_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_res_partner__saas_subscription_count
-#: model:ir.model.fields,field_description:saas_subscription.field_res_users__saas_subscription_count
-#: model:ir.module.category,name:saas_subscription.module_category_saas_subscription_management
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_report_pivot
-#: model:ir.ui.menu,name:saas_subscription.menu_saas_subscription_root
-#: model_terms:ir.ui.view,arch_db:saas_subscription.account_analytic_account_view_inherit_saas_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_home_menu_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_home_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
-#: model_terms:ir.ui.view,arch_db:saas_subscription.res_partner_view_inherit_saas_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_activity
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_graph
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_pivot
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.view_saas_subscription_order_line
-msgid "SaaS Subscriptions"
-msgstr "SaaS Abonelikleri"
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_action
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_action_filtered
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_action_res_partner
+#: model:ir.model.fields,field_description:payment_subscription.field_account_analytic_account__payment_subscription_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_res_partner__payment_subscription_count
+#: model:ir.model.fields,field_description:payment_subscription.field_res_users__payment_subscription_count
+#: model:ir.module.category,name:payment_subscription.module_category_payment_subscription_management
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_report_pivot
+#: model:ir.ui.menu,name:payment_subscription.menu_payment_subscription_root
+#: model_terms:ir.ui.view,arch_db:payment_subscription.account_analytic_account_view_inherit_payment_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_home_menu_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_home_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
+#: model_terms:ir.ui.view,arch_db:payment_subscription.res_partner_view_inherit_payment_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_activity
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_graph
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_pivot
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.view_payment_subscription_order_line
+msgid "Payment Subscriptions"
+msgstr "Payment Abonelikleri"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_report_pivot_action
-msgid "SaaS Subscriptions Analysis"
-msgstr "SaaS Abonelikleri Analizi"
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_report_pivot_action
+msgid "Payment Subscriptions Analysis"
+msgstr "Payment Abonelikleri Analizi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_action
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_action
 msgid ""
-"SaaS Subscriptions can be automatically generated from sales orders in Sales "
+"Payment Subscriptions can be automatically generated from sales orders in Sales "
 "or eCommerce\n"
-"                apps. To do so, set a saas subscription template on your "
-"saas subscription products."
+"                apps. To do so, set a payment subscription template on your "
+"payment subscription products."
 msgstr ""
-"SaaS Abonelikleri, Satış veya e-Ticaret'teki satış siparişlerinden otomatik "
+"Payment Abonelikleri, Satış veya e-Ticaret'teki satış siparişlerinden otomatik "
 "olarak oluşturulabilir\n"
-"                uygulamalar. Bunu yapmak için, saas abonelik ürünlerinizde "
-"bir saas abonelik şablonu ayarlayın."
+"                uygulamalar. Bunu yapmak için, payment abonelik ürünlerinizde "
+"bir payment abonelik şablonu ayarlayın."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
-msgid "SaaS Subscriptions that are not assigned to an account manager."
-msgstr "Bir hesap yöneticisine atanmamış SaaS Abonelikleri."
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
+msgid "Payment Subscriptions that are not assigned to an account manager."
+msgstr "Bir hesap yöneticisine atanmamış Payment Abonelikleri."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_product_product__saas_viewonly_product
-#: model:ir.model.fields,field_description:saas_subscription.field_product_template__saas_viewonly_product
-msgid "SaaS Viewonly Product"
-msgstr "SaaS Sadece Görünür (Seçilemez) Ürün"
+#: model:ir.model.fields,field_description:payment_subscription.field_product_product__payment_viewonly_product
+#: model:ir.model.fields,field_description:payment_subscription.field_product_template__payment_viewonly_product
+msgid "Payment Viewonly Product"
+msgstr "Payment Sadece Görünür (Seçilemez) Ürün"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_payment_transaction__saas_renewal_allowed
-msgid "Saas Renewal Allowed"
-msgstr "Saas Yenilemeye İzin Verildi"
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_transaction__payment_renewal_allowed
+msgid "Payment Renewal Allowed"
+msgstr "Payment Yenilemeye İzin Verildi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_account_move_line__saas_subscription_id
-msgid "Saas Subscription"
-msgstr "SaaS Aboneliği"
+#: model:ir.model.fields,field_description:payment_subscription.field_account_move_line__payment_subscription_id
+msgid "Payment Subscription"
+msgstr "Payment Aboneliği"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_close_reason
-msgid "Saas Subscription Close Reason"
-msgstr "Saas Abonelik Kapatma Nedeni"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_reason
+msgid "Payment Subscription Close Reason"
+msgstr "Payment Abonelik Kapatma Nedeni"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_sale_order__saas_subscription_count
-msgid "Saas Subscription Count"
-msgstr "Saas Abonelik Sayısı"
+#: model:ir.model.fields,field_description:payment_subscription.field_sale_order__payment_subscription_count
+msgid "Payment Subscription Count"
+msgstr "Payment Abonelik Sayısı"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_line
-msgid "Saas Subscription Line"
-msgstr "Saas Abonelik Kalemi"
+#: model:ir.model,name:payment_subscription.model_payment_subscription_line
+msgid "Payment Subscription Line"
+msgstr "Payment Abonelik Kalemi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_invoice_line_ids
-msgid "Saas Subscription Lines"
-msgstr "SaaS Abonelik Kalemleri"
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__line_ids
+msgid "Payment Subscription Lines"
+msgstr "Payment Abonelik Kalemleri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__template_id
-msgid "Saas Subscription Template"
-msgstr "Saas Abonelik Şablonu"
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__template_id
+msgid "Payment Subscription Template"
+msgstr "Payment Abonelik Şablonu"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_template_action
-#: model:ir.ui.menu,name:saas_subscription.menu_template_of_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_search
-msgid "Saas Subscription Templates"
-msgstr "Saas Abonelik Şablonları"
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_template_action
+#: model:ir.ui.menu,name:payment_subscription.menu_template_of_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_search
+msgid "Payment Subscription Templates"
+msgstr "Payment Abonelik Şablonları"
 
 #. module: payment_system_subscription
-#: model:ir.actions.server,name:saas_subscription.ir_cron_saas_subscription_update_kpi_ir_actions_server
-#: model:ir.cron,cron_name:saas_subscription.ir_cron_saas_subscription_update_kpi
-#: model:ir.cron,name:saas_subscription.ir_cron_saas_subscription_update_kpi
-msgid "Saas Subscription: Update KPI"
-msgstr "Saas Aboneliği: KPI Güncelleme"
+#: model:ir.actions.server,name:payment_subscription.ir_cron_payment_subscription_update_kpi_ir_actions_server
+#: model:ir.cron,cron_name:payment_subscription.ir_cron_payment_subscription_update_kpi
+#: model:ir.cron,name:payment_subscription.ir_cron_payment_subscription_update_kpi
+msgid "Payment Subscription: Update KPI"
+msgstr "Payment Aboneliği: KPI Güncelleme"
 
 #. module: payment_system_subscription
-#: model:ir.actions.server,name:saas_subscription.account_analytic_cron_for_invoice_ir_actions_server
-#: model:ir.cron,cron_name:saas_subscription.account_analytic_cron_for_invoice
-#: model:ir.cron,name:saas_subscription.account_analytic_cron_for_invoice
-msgid "Saas Subscription: generate recurring invoices and payments"
-msgstr "Saas Aboneliği: yinelenen faturalar ve ödemeler oluşturun"
+#: model:ir.actions.server,name:payment_subscription.account_analytic_cron_for_invoice_ir_actions_server
+#: model:ir.cron,cron_name:payment_subscription.account_analytic_cron_for_invoice
+#: model:ir.cron,name:payment_subscription.account_analytic_cron_for_invoice
+msgid "Payment Subscription: generate recurring invoices and payments"
+msgstr "Payment Aboneliği: yinelenen faturalar ve ödemeler oluşturun"
 
 #. module: payment_system_subscription
-#: model:ir.actions.server,name:saas_subscription.account_analytic_cron_ir_actions_server
-#: model:ir.cron,cron_name:saas_subscription.account_analytic_cron
-#: model:ir.cron,name:saas_subscription.account_analytic_cron
-msgid "Saas Subscription: subscriptions expiration"
-msgstr "Saas Aboneliği: aboneliklerin sona ermesi"
+#: model:ir.actions.server,name:payment_subscription.account_analytic_cron_ir_actions_server
+#: model:ir.cron,cron_name:payment_subscription.account_analytic_cron
+#: model:ir.cron,name:payment_subscription.account_analytic_cron
+msgid "Payment Subscription: subscriptions expiration"
+msgstr "Payment Aboneliği: aboneliklerin sona ermesi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid "Sad face"
 msgstr "Üzgün Yüz"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__sale_order_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__sale_order_count
 msgid "Sale Order Count"
 msgstr "Sipariş Sayısı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_list
-msgid "Sale SaaS Subscriptions"
-msgstr "Satış SaaS Abonelikleri"
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_list
+msgid "Sale Payment Subscriptions"
+msgstr "Satış Payment Abonelikleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Sales"
 msgstr "Satış"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_sale_order
+#: model:ir.model,name:payment_subscription.model_sale_order
 msgid "Sales Order"
 msgstr "Satış Siparişi"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_sale_order_line
+#: model:ir.model,name:payment_subscription.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
-#: model_terms:ir.ui.view,arch_db:saas_subscription.sale_order_view_tree_saas_subscription
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
+#: model_terms:ir.ui.view,arch_db:payment_subscription.sale_order_view_tree_payment_subscription
 #, python-format
 msgid "Sales Orders"
 msgstr "Satış Siparişleri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__team_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__team_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__team_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__team_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Sales Team"
 msgstr "Satış Ekibi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__user_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__user_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__user_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__user_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Salesperson"
 msgstr "Satış Temsilcisi"
 
 #. module: payment_system_subscription
-#: model:res.groups,name:saas_subscription.group_saas_subscription_view
-msgid "See SaaS Subscriptions"
-msgstr "SaaS Aboneliklerine bakın"
+#: model:res.groups,name:payment_subscription.group_payment_subscription_view
+msgid "See Payment Subscriptions"
+msgstr "Payment Aboneliklerine bakın"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.sale_subscription_renew_wizard_action
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
+#: model:ir.actions.act_window,name:payment_subscription.sale_subscription_renew_wizard_action
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid "Select Archived Product for Renewal"
 msgstr "Yenileme için Arşivlenmiş Ürünü Seçin"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid "Select another product to replace the archived one."
 msgstr "Arşivlenen ürünün yerine başka bir ürün seçin."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__payment_mode__validate_send
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__payment_mode__validate_send
 msgid "Send"
 msgstr "Gönder"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__payment_mode__validate_send_payment
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__payment_mode__validate_send_payment
 msgid "Send & try to charge"
 msgstr "Gönder ve şarj etmeyi dene"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__payment_mode__success_payment
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__payment_mode__success_payment
 msgid "Send after successful payment"
 msgstr "Başarılı ödeme yapıldıktan sonra gönder"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_act_window_sms_composer_multi
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_act_window_sms_composer_single
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_act_window_sms_composer_multi
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_act_window_sms_composer_single
 msgid "Send an SMS Text Message"
 msgstr "SMS Metin Mesajı Gönderme"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_stage__rating_template_id
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_stage__rating_template_id
 msgid ""
-"Send an email to the customer when the saas subscription is moved to this "
+"Send an email to the customer when the payment subscription is moved to this "
 "stage."
-msgstr "Saas aboneliği bu aşamaya taşındığında müşteriye bir e-posta gönderin."
+msgstr "Payment aboneliği bu aşamaya taşındığında müşteriye bir e-posta gönderin."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_partner_lang__sequence
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_close_reason__sequence
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__sequence
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_partner_lang__sequence
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason__sequence
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__sequence
 msgid "Sequence"
 msgstr "Sıra"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_kanban
 msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__starred
-msgid "Show SaaS Subscription on dashboard"
-msgstr "SaaS Aboneliğini kontrol panelinde göster"
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__starred
+msgid "Show Payment Subscription on dashboard"
+msgstr "Payment Aboneliğini kontrol panelinde göster"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__stage_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__stage_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__stage_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__stage_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Stage"
 msgstr "Aşama"
 
 #. module: payment_system_subscription
-#: model:mail.message.subtype,name:saas_subscription.subtype_stage_change
+#: model:mail.message.subtype,name:payment_subscription.subtype_stage_change
 msgid "Stage Change"
 msgstr "Aşama Değişimi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_stage__name
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_stage__name
 msgid "Stage Name"
 msgstr "Aşama Adı"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.saas_subscription_stage_action
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_stage_action
 msgid "Stages"
 msgstr "Aşamalar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__date_start
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__date_start
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard__date_from
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__date_start
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__date_start
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard__date_from
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Start Date:"
 msgstr "Başlangıç ​​tarihi:"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
 msgid "Status"
 msgstr "Durum"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__activity_state
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2578,139 +2578,139 @@ msgstr ""
 "Planlanan: Gelecek etkinlikler."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_close_reason_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_reason_view_form
 msgid "Submit"
 msgstr "Gönder"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__analytic_account_id
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__subscription_id
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Subscription"
 msgstr "Abonelik"
 
 #. module: payment_system_subscription
-#: model:ir.model,name:saas_subscription.model_saas_subscription_close_reason_wizard
+#: model:ir.model,name:payment_subscription.model_payment_subscription_reason_wizard
 msgid "Subscription Close Reason Wizard"
 msgstr "Abonelik Nedenini Kapat Sihirbazı"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__subscription_count
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__subscription_count
 msgid "Subscription Count"
 msgstr "Abonelik Sayısı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "Subscription Lines"
 msgstr "Abonelik Kalemleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.product_template_search_view_inherit_saas_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.product_template_search_view_inherit_payment_subscription
 msgid "Subscription Products"
 msgstr "Abonelik Ürünleri"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_stage_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_stage_view_form
 msgid "Subscription Stage"
 msgstr "Abonelik Aşaması"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_stage_view_list
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_stage_view_list
 msgid "Subscription Stages"
 msgstr "Abonelik Aşamaları"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__template_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__template_id
 msgid "Subscription Template"
 msgstr "Abonelik Şablonu"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.mail_template_subscription_alert
+#: model:mail.template,name:payment_subscription.mail_template_subscription_alert
 msgid "Subscription: Default Email Alert"
 msgstr "Abonelik: Varsayılan E-posta Uyarısı"
 
 #. module: payment_system_subscription
-#: model:sms.template,name:saas_subscription.sms_template_data_default_alert
+#: model:sms.template,name:payment_subscription.sms_template_data_default_alert
 msgid "Subscription: Default SMS Alert"
 msgstr "Abonelik: Varsayılan SMS Uyarısı"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.email_payment_close
+#: model:mail.template,name:payment_subscription.email_payment_close
 msgid "Subscription: Payment Failure"
 msgstr "Abonelik: Ödeme hatası"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.email_payment_reminder
+#: model:mail.template,name:payment_subscription.email_payment_reminder
 msgid "Subscription: Payment Reminder"
 msgstr "Abonelik: Ödeme hatırlatıcısı"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.email_payment_success
+#: model:mail.template,name:payment_subscription.email_payment_success
 msgid "Subscription: Payment Success"
 msgstr "Abonelik Ödeme Başarısı"
 
 #. module: payment_system_subscription
-#: model:sms.template,name:saas_subscription.sms_template_data_payment_failure
+#: model:sms.template,name:payment_subscription.sms_template_data_payment_failure
 msgid "Subscription: Payment failure"
 msgstr "Abonelik: Ödeme hatası"
 
 #. module: payment_system_subscription
-#: model:sms.template,name:saas_subscription.sms_template_data_payment_reminder
+#: model:sms.template,name:payment_subscription.sms_template_data_payment_reminder
 msgid "Subscription: Payment reminder"
 msgstr "Abonelik: Ödeme hatırlatıcısı"
 
 #. module: payment_system_subscription
-#: model:mail.template,name:saas_subscription.mail_template_subscription_rating
+#: model:mail.template,name:payment_subscription.mail_template_subscription_rating
 msgid "Subscription: Rating Request"
 msgstr "Abonelik: Derecelendirme Talebi"
 
 #. module: payment_system_subscription
-#: model:ir.ui.menu,name:saas_subscription.menu_subscription
+#: model:ir.ui.menu,name:payment_subscription.menu_subscription
 msgid "Subscriptions"
 msgstr "Abonelikler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__price_subtotal
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__price_subtotal
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Subtotal"
 msgstr "Ara Toplam"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Subtotal:<br/>"
 msgstr "Ara toplam:<br/>"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_res_partner__saas_supported_lang_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_res_users__saas_supported_lang_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_res_partner__payment_supported_lang_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_res_users__payment_supported_lang_ids
 msgid "Supported Languages"
 msgstr "Desteklenen Diller"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__tag_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__tag_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__tag_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__tag_ids
 msgid "Tags"
 msgstr "Etiketler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_amount_tax
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_amount_tax
 msgid "Taxes"
 msgstr "Vergiler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Taxes:<br/>"
 msgstr "Vergiler:<br/>"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__team_user_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__team_user_id
 msgid "Team Leader"
 msgstr "Satış Ekip Lideri"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_payment_transaction__saas_renewal_allowed
+#: model:ir.model.fields,help:payment_subscription.field_payment_transaction__payment_renewal_allowed
 msgid ""
 "Technical field used to control the renewal flow based on the transaction's "
 "state."
@@ -2719,14 +2719,14 @@ msgstr ""
 "teknik alan."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Template"
 msgstr "Şablon"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_template_action
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_template_action
 msgid ""
 "Templates are used to prefigure subscription that\n"
 "                can be selected by the salespeople to quickly configure the\n"
@@ -2736,20 +2736,20 @@ msgstr ""
 "yapılandırması amacıyla bir ön izleme yaratmak için kullanılır."
 
 #. module: payment_system_subscription
-#: model:mail.template,subject:saas_subscription.email_payment_close
+#: model:mail.template,subject:payment_subscription.email_payment_close
 msgid "Termination of subscription ${object.code}"
 msgstr "Aboneliğin sona ermesi ${object.code}"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__description
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__description
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Terms and Conditions"
 msgstr "Şartlar ve Koşullar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_account_move_line__saas_subscription_mrr
+#: model:ir.model.fields,help:payment_subscription.field_account_move_line__payment_subscription_mrr
 msgid ""
 "The MRR is computed by dividing the signed amount (in company currency) by "
 "the amount of time between the start and end dates converted in months.\n"
@@ -2766,7 +2766,7 @@ msgstr ""
 "günden oluştuğunu varsayar."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_wizard__date_from
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_wizard__date_from
 msgid ""
 "The discount applied when creating a sales order will be computed as the "
 "ratio between the full invoicing period of the subscription and the period "
@@ -2776,7 +2776,7 @@ msgstr ""
 "sonraki abonelik faturalama tarihi arasında hesaplanan indirim uygulanır."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_renew_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid ""
 "The following products are archived. Do you want to keep them in the renewal "
 "quotation ?"
@@ -2785,12 +2785,12 @@ msgstr ""
 "musunuz?"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__website_url
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__recurring_next_date
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__recurring_next_date
 msgid ""
 "The next invoice will be created on this date then the period will be "
 "extended."
@@ -2799,42 +2799,42 @@ msgstr ""
 "uzatılacaktır."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription_template.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription_template.py:0
 #, python-format
 msgid "The recurring interval must be positive"
 msgstr "Yinelenen aralık pozitif olmalıdır"
 
 #. module: payment_system_subscription
-#: model:res.groups,comment:saas_subscription.group_saas_subscription_view
-msgid "The user will have read access to saas subscriptions."
-msgstr "Kullanıcı saas aboneliklerine okuma erişimine sahip olacaktır."
+#: model:res.groups,comment:payment_subscription.group_payment_subscription_view
+msgid "The user will have read access to payment subscriptions."
+msgstr "Kullanıcı payment aboneliklerine okuma erişimine sahip olacaktır."
 
 #. module: payment_system_subscription
-#: model:res.groups,comment:saas_subscription.group_saas_subscription_manager
-msgid "The user will have write access to SaaS Subscriptions."
-msgstr "Kullanıcı SaaS Aboneliklerine yazma erişimine sahip olacaktır."
+#: model:res.groups,comment:payment_subscription.group_payment_subscription_manager
+msgid "The user will have write access to Payment Subscriptions."
+msgstr "Kullanıcı Payment Aboneliklerine yazma erişimine sahip olacaktır."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
 "Bu bar planlanmış eylemler üzerinden fırsatları planlamanıza izin verir."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "This invoice covers the following period: %s - %s"
 msgstr "Bu fatura aşağıdaki dönemleri kapsar: %s - %s"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
-msgid "This renewal order has been created from the saas subscription "
-msgstr "Bu yenileme siparişi saas aboneliğinden oluşturulmuştur"
+msgid "This renewal order has been created from the payment subscription "
+msgstr "Bu yenileme siparişi payment aboneliğinden oluşturulmuştur"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_stage__fold
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_stage__fold
 msgid ""
 "This stage is folded in the kanban view when there are not records in that "
 "stage to display."
@@ -2842,191 +2842,191 @@ msgstr ""
 "Bu aşama, görüntülenecek kayıt olmadığında kanban görünümünde katlanır."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/wizard/saas_subscription_wizard.py:0
+#: code:addons/payment_system_subscription/wizard/payment_subscription_wizard.py:0
 #, python-format
 msgid "This upsell order has been created from the subscription "
 msgstr "Bu satış emri abonelikten oluşturuldu"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__to_renew
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__to_renew
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_report_search
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_kanban
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__to_renew
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__to_renew
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_kanban
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 #, python-format
 msgid "To Renew"
 msgstr "Yenilenecek"
 
 #. module: payment_system_subscription
-#: model:saas.subscription.stage,name:saas_subscription.saas_subscription_stage_upsell
+#: model:payment.subscription.stage,name:payment_subscription.payment_subscription_stage_upsell
 msgid "To Upsell"
 msgstr "Ek Satış"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__recurring_amount_total
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__recurring_amount_total
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
 msgid "Total"
 msgstr "Toplam"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.sale_order_view_tree_saas_subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.sale_order_view_tree_payment_subscription
 msgid "Total Tax Included"
 msgstr "Toplam Vergi Dahil"
 
 #. module: payment_system_subscription
-#: model:saas.partner.lang,name:saas_subscription.lang_turkish
+#: model:payment.partner.lang,name:payment_subscription.lang_turkish
 msgid "Turkish"
 msgstr "Türkçe"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__activity_exception_decoration
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Kayıttaki istisna etkinliğinin türü."
 
 #. module: payment_system_subscription
-#: model:ir.model.constraint,message:saas_subscription.constraint_saas_subscription_uuid_uniq
+#: model:ir.model.constraint,message:payment_subscription.constraint_payment_subscription_uuid_uniq
 msgid ""
-"UUIDs (Universally Unique IDentifier) for SaaS Subscriptions should be "
+"UUIDs (Universally Unique IDentifier) for Payment Subscriptions should be "
 "unique!"
 msgstr ""
-"SaaS Abonelikleri için UUID'ler (Evrensel Benzersiz Kimlik Tanımlayıcı) "
+"Payment Abonelikleri için UUID'ler (Evrensel Benzersiz Kimlik Tanımlayıcı) "
 "benzersiz olmalıdır!"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_search
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
 msgid "Unassigned"
 msgstr "Atanmamış"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__price_unit
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__price_unit
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Unit Price"
 msgstr "Birim Fiyat"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_line__uom_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__uom_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__product_uom
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__uom_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_line__uom_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__uom_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__product_uom
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__uom_id
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_unread
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_unread
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_unread
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_unread
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__message_unread_counter
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__message_unread_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__message_unread_counter
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 msgid "UoM"
 msgstr "Ölçü Birimi"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:saas_subscription.wizard_action
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_view_form
-#: model_terms:ir.ui.view,arch_db:saas_subscription.wizard_form_view
+#: model:ir.actions.act_window,name:payment_subscription.wizard_action
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid "Upsell"
 msgstr "Arttırılmış Satış"
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Upsell date: "
 msgstr "Artırılmış Satış Tarihi:"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__sale_order__saas_subscription_management__upsell
+#: model:ir.model.fields.selection,name:payment_subscription.selection__sale_order__payment_subscription_management__upsell
 msgid "Upselling"
 msgstr "Ek Satış"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.saas_subscription_action_filtered
+#: model_terms:ir.actions.act_window,help:payment_subscription.payment_subscription_action_filtered
 msgid ""
-"Use saas subscriptions to follow tasks, issues, timesheets or invoicing "
+"Use payment subscriptions to follow tasks, issues, timesheets or invoicing "
 "based on\n"
 "                work done, expenses and/or sales orders. Odoo will "
 "automatically manage\n"
-"                the alerts for the renewal of the saas subscriptions to the "
+"                the alerts for the renewal of the payment subscriptions to the "
 "right salesperson."
 msgstr ""
 "Görevleri, sorunları, zaman çizelgelerini veya faturalandırmayı "
-"aşağıdakilere göre takip etmek için saas aboneliklerini kullanın\n"
+"aşağıdakilere göre takip etmek için payment aboneliklerini kullanın\n"
 "                yapılan işler, harcamalar ve/veya satış siparişleri. Odoo "
 "otomatik olarak şunları yönetecektir\n"
-"                saas aboneliklerinin yenilenmesi için uyarıların doğru satış "
+"                payment aboneliklerinin yenilenmesi için uyarıların doğru satış "
 "elemanına iletilmesi."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Valid Until:"
 msgstr "Geçerlilik Tarihi:"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid ""
 "We always listen to our customer. Could you specify the reason for "
-"cancelling your saas subscription?"
+"cancelling your payment subscription?"
 msgstr ""
-"Biz her zaman müşterimizi dinleriz. Saas aboneliğinizi iptal etme nedeninizi "
+"Biz her zaman müşterimizi dinleriz. Payment aboneliğinizi iptal etme nedeninizi "
 "belirtir misiniz?"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__website_message_ids
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_template__website_message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__website_message_ids
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_template__website_message_ids
 msgid "Website Messages"
 msgstr "Websitesi Mesajları"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription__website_url
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__website_url
 msgid "Website URL"
 msgstr "Web Sitesi URL Adresi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__website_message_ids
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription_template__website_message_ids
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__website_message_ids
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription_template__website_message_ids
 msgid "Website communication history"
 msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_type__weekly
 msgid "Weeks"
 msgstr "Hafta"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,help:saas_subscription.field_saas_subscription__starred
+#: model:ir.model.fields,help:payment_subscription.field_payment_subscription__starred
 msgid ""
-"Whether this saas subscription should be displayed on the dashboard or not"
+"Whether this payment subscription should be displayed on the dashboard or not"
 msgstr ""
-"Bu saas aboneliğinin gösterge panelinde görüntülenip görüntülenmeyeceği"
+"Bu payment aboneliğinin gösterge panelinde görüntülenip görüntülenmeyeceği"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__wizard_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_replace_option__wizard_id
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_wizard_option__wizard_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__wizard_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_replace_option__wizard_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_wizard_option__wizard_id
 msgid "Wizard"
 msgstr "Sihirbaz"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_report__recurring_yearly
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__recurring_yearly
 msgid "Yearly Recurring Revenue"
 msgstr "Yıllık Yinelenen Gelir"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields.selection,name:saas_subscription.selection__saas_subscription_template__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:payment_subscription.selection__payment_subscription_template__recurring_rule_type__yearly
 msgid "Years"
 msgstr "Yıl"
 
@@ -3034,61 +3034,61 @@ msgstr "Yıl"
 #: code:addons/payment_system_subscription/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot set to draft a canceled quotation linked to saas subscriptions. "
+"You cannot set to draft a canceled quotation linked to payment subscriptions. "
 "Please create a new quotation."
 msgstr ""
-"Saas aboneliklerine bağlı iptal edilmiş bir teklifi taslak olarak "
+"Payment aboneliklerine bağlı iptal edilmiş bir teklifi taslak olarak "
 "ayarlayamazsınız. Lütfen yeni bir teklif oluşturun."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.portal_my_saas_subscriptions
-msgid "You don't have any saas subscriptions yet."
-msgstr "Henüz saas aboneliğiniz bulunmamaktadır."
+#: model_terms:ir.ui.view,arch_db:payment_subscription.portal_my_payment_subscriptions
+msgid "You don't have any payment subscriptions yet."
+msgstr "Henüz payment aboneliğiniz bulunmamaktadır."
 
 #. module: payment_system_subscription
-#: code:addons/payment_system_subscription/models/saas_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
-msgid "You must first select a Customer for SaaS Subscription %s!"
-msgstr "SaaS Aboneliği için önce bir Müşteri seçmelisiniz %s!"
+msgid "You must first select a Customer for Payment Subscription %s!"
+msgstr "Payment Aboneliği için önce bir Müşteri seçmelisiniz %s!"
 
 #. module: payment_system_subscription
-#: model_terms:ir.actions.act_window,help:saas_subscription.product_template_action_subscription
+#: model_terms:ir.actions.act_window,help:payment_subscription.product_template_action_subscription
 msgid ""
 "You will find here all the products related to this subscription template."
 msgstr "Bu abonelik şablonu ile ilgili tüm ürünleri burada bulabilirsiniz."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Your Details"
 msgstr "Detaylarınız"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "Your Plan"
 msgstr "Planınız"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
-msgid "Your saas subscription is closed."
-msgstr "Saas aboneliğiniz kapatıldı."
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
+msgid "Your payment subscription is closed."
+msgstr "Payment aboneliğiniz kapatıldı."
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.saas_subscription_template_view_form
+#: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_template_view_form
 msgid "e.g. Monthly Subscription"
 msgstr "Örneğin. Aylık abone"
 
 #. module: payment_system_subscription
-#: model:ir.model.fields,field_description:saas_subscription.field_saas_subscription_renew_wizard_keep_option__product_id
+#: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_renew_wizard_keep_option__product_id
 msgid "id"
 msgstr "id"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "missing payments (from"
 msgstr "Kaçan ödemeler"
 
 #. module: payment_system_subscription
-#: model_terms:ir.ui.view,arch_db:saas_subscription.subscription
+#: model_terms:ir.ui.view,arch_db:payment_subscription.subscription
 msgid "to this day) will be automatically processed."
 msgstr "bu güne) otomatik olarak işleşecek"
 

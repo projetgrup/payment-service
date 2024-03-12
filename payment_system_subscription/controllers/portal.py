@@ -128,7 +128,7 @@ class PaymentSubscription(http.Controller):
             'template': account.template_id.sudo(),
             'display_close': display_close,
             'is_follower': is_follower,
-            'close_reasons': request.env['saas.subscription.reason'].search([]),
+            'reasons': request.env['payment.subscription.reason'].search([]),
             'missing_periods': missing_periods,
             'payment_mode': active_plan.payment_mode,
             'user': request.env.user,
@@ -169,7 +169,7 @@ class PaymentSubscription(http.Controller):
         '/my/subscriptions/payment/<int:account_id>/<string:uuid>'
     ], type='http', auth='public', methods=['POST'], website=True)
     def payment(self, account_id, uuid=None, **kw):
-        subscriptions = request.env['saas.subscription']
+        subscriptions = request.env['payment.subscription']
         invoice_res = request.env['account.move']
         get_param = ''
         if uuid:
@@ -194,8 +194,8 @@ class PaymentSubscription(http.Controller):
             if tx.html_3ds:
                 return tx.html_3ds
 
-            get_param = self.payment_succes_msg if tx.saas_renewal_allowed else self.payment_fail_msg
-            if tx.saas_renewal_allowed:
+            get_param = self.payment_succes_msg if tx.payment_renewal_allowed else self.payment_fail_msg
+            if tx.payment_renewal_allowed:
                 account.send_success_mail(tx, new_invoice)
                 msg_body = 'Manual payment succeeded. Payment reference: <a href=# data-oe-model=payment.transaction data-oe-id=%d>%s</a>; Amount: %s. Invoice <a href=# data-oe-model=account.move data-oe-id=%d>View Invoice</a>.' % (tx.id, tx.reference, tx.amount, new_invoice.id)
                 account.message_post(body=msg_body)
@@ -210,7 +210,7 @@ class PaymentSubscription(http.Controller):
         '/my/subscriptions/<sub_uuid>/payment/<int:tx_id>/exception/'
     ], type='http', auth='public', website=True)
     def payment_accept(self, sub_uuid, tx_id, **kw):
-        subscriptions = request.env['saas.subscription']
+        subscriptions = request.env['payment.subscription']
         tx_res = request.env['payment.transaction']
         subscription = subscriptions.sudo().search([('uuid', '=', sub_uuid)])
         tx = tx_res.sudo().browse(tx_id)
@@ -230,7 +230,7 @@ class PaymentSubscription(http.Controller):
             subscription = subscriptions.browse(subscription_id)
 
         if subscription.sudo().template_id.user_closable:
-            subscription.close_reason_id = request.env['saas.subscription.reason'].browse(int(kw.get('reason_id')))
+            subscription.reason_id = request.env['payment.subscription.reason'].browse(int(kw.get('reason_id')))
             if kw.get('closing_text'):
                 subscription.message_post(body=_('Closing text : ') + kw.get('closing_text'))
             subscription.set_close()
@@ -242,7 +242,7 @@ class PaymentSubscription(http.Controller):
         '/my/subscriptions/<int:subscription_id>/<string:uuid>/set_pm'
     ], type='http', methods=['POST'], auth='public', website=True)
     def set_payment_method(self, subscription_id, uuid=None, **kw):
-        subscriptions = request.env['saas.subscription']
+        subscriptions = request.env['payment.subscription']
         if uuid:
             subscription = subscriptions.sudo().browse(subscription_id)
             if uuid != subscription.uuid:

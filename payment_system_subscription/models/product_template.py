@@ -19,5 +19,5 @@ class ProductTemplate(models.Model):
     def create(self, values):
         res = super(ProductTemplate, self).create(values)
         for product in res.product_variant_ids:
-            product.saas_subscription_template_id = res.saas_subscription_template_id.id
+            product.payment_subscription_template_id = res.payment_subscription_template_id.id
         return res

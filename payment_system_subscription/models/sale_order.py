@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
             to_create = self._split_subscription_lines()
             for template in to_create:
                 values = order._prepare_payment_subscription_data(template)
-                values['recurring_invoice_line_ids'] = to_create[template]._prepare_payment_subscription_line_data()
+                values['line_ids'] = to_create[template]._prepare_payment_subscription_line_data()
                 subscription = self.env['payment.subscription'].sudo().create(values)
                 subscription.onchange_date_start()
                 res.append(subscription.id)
@@ -219,7 +219,7 @@ class SaleOrderLine(models.Model):
         values = list()
         dict_changes = dict()
         for line in self:
-            sub_line = subscription.recurring_invoice_line_ids.filtered(
+            sub_line = subscription.line_ids.filtered(
                 lambda l: (l.product_id, l.uom_id, l.price_unit) == (line.product_id, line.product_uom, line.price_unit)
             )
             if sub_line:

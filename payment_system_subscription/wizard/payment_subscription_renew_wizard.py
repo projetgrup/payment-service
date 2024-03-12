@@ -16,7 +16,7 @@ class PaymentSubscriptionWizard(models.TransientModel):
         res_ids = []
         options = self.env['payment.subscription.renew.wizard.option.keep']
         for product_id in sub_default_products:
-            quantity = payment_subscription_id.recurring_invoice_line_ids.filtered(lambda p: p.product_id == product_id).mapped('quantity')
+            quantity = payment_subscription_id.line_ids.filtered(lambda p: p.product_id == product_id).mapped('quantity')
 
             value = {
                 'name': product_id.name,
