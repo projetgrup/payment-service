@@ -23,7 +23,7 @@ class PaymentSubscription(models.Model):
 
     @api.model
     def _default_stage(self):
-        return self.env['payment.subscription'].search([], order='sequence', limit=1)
+        return self.env['payment.subscription.stage'].search([], order='sequence', limit=1)
 
     @api.model
     def _default_pricelist(self):
@@ -124,7 +124,7 @@ class PaymentSubscription(models.Model):
     date_end = fields.Date(string='End Date', tracking=True, help='If set in advance, the subscription will be set to renew 1 month before the date and will be closed on the date set in this field.')
     line_ids = fields.One2many('payment.subscription.line', 'subscription_id', string='Subscription Lines', copy=True)
 
-    stage_id = fields.Many2one('payment.subscription', string='Stage', index=True, default=_default_stage, copy=False, group_expand='_read_group_stage_ids', tracking=True)
+    stage_id = fields.Many2one('payment.subscription.stage', string='Stage', index=True, default=_default_stage, copy=False, group_expand='_read_group_stage_ids', tracking=True)
     stage_in_progress = fields.Boolean(related='stage_id.in_progress', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda s: s.env.company, required=True)
@@ -831,7 +831,7 @@ class PaymentSubscription(models.Model):
                                     subscription.set_close()
                                 else:
                                     model, template_id = imd_res.get_object_reference('payment_subscription', 'email_payment_reminder')
-                                    msg_body = _('Automatic payment failed. Subscription set to 'To Renew'.')
+                                    msg_body = _("Automatic payment failed. Subscription set to 'To Renew'.")
                                     if (datetime.date.today() - subscription.recurring_next_date).days in [0, 3, 7, 14]:
                                         template = template_res.browse(template_id)
                                         template.with_context(email_context).send_mail(subscription.id)

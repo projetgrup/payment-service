@@ -3,7 +3,7 @@
     <record id="rule_sms_template" model="ir.rule">
         <field name="name">SMS Template: subscription manager CUD on subscription / partner templates</field>
         <field name="model_id" ref="sms.model_sms_template"/>
-        <field name="groups" eval="[(4, ref('payment_subscription.group_subscription_manager'))]"/>
+        <field name="groups" eval="[(4, ref('payment_system_subscription.group_subscription_manager'))]"/>
         <field name="domain_force">[('model_id.model', 'in', ('payment.subscription', 'res.partner'))]</field>
         <field name="perm_read" eval="False"/>
     </record>

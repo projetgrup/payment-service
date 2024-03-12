@@ -1,6 +1,6 @@
 <odoo>
-    <record id="form_wizard_renew" model="ir.ui.view" >
-        <field name="name">payment.subscription.renew.wizard.view.form</field>
+    <record id="form_wizard_renew" model="ir.ui.view">
+        <field name="name">payment.subscription.renew.wizard.form</field>
         <field name="model">payment.subscription.renew.wizard</field>
         <field name="name">Select Archived Products for Renewal</field>
         <field name="arch" type="xml">
@@ -39,7 +39,7 @@
         </field>
     </record>
 
-    <record  id="sale_subscription_renew_wizard_action" model="ir.actions.act_window">
+    <record id="action_wizard_renew" model="ir.actions.act_window">
         <field name="name">Select Archived Product for Renewal</field>
         <field name="res_model">payment.subscription.renew.wizard</field>
         <field name="view_mode">form</field>

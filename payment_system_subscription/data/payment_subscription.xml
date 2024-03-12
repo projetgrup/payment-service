@@ -22,7 +22,7 @@
     <data noupdate="1">
         <record id="cron_account_analytic" model="ir.cron">
             <field name="name">Payment Subscription: subscriptions expiration</field>
-            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
             <field name="state">code</field>
             <field name="code">model.cron_account_analytic_account()</field>
             <field name="interval_number">1</field>
@@ -34,7 +34,7 @@
 
         <record id="cron_account_analytic_for_invoice" model="ir.cron">
             <field name="name">Payment Subscription: generate recurring invoices and payments</field>
-            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
             <field name="state">code</field>
             <field name="code">model._cron_recurring_create_invoice()</field>
             <field name="interval_number">1</field>
@@ -45,7 +45,7 @@
 
         <record id="cron_payment_subscription_update_kpi" model="ir.cron">
             <field name="name">Payment Subscription: Update KPI</field>
-            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
             <field name="state">code</field>
             <field name="code">model._cron_update_kpi()</field>
             <field name="interval_number">1</field>

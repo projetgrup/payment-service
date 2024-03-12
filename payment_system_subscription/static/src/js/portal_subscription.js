@@ -1,4 +1,4 @@
-odoo.define('payment_subscription.portal_subscription', function (require) {
+odoo.define('payment_system_subscription.portal_subscription', function (require) {
 'use strict';
 
 const publicWidget = require('web.public.widget');

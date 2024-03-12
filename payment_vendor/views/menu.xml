@@ -5,6 +5,14 @@
     <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="1"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
+
+    <menuitem id="menu_sale" name="Sales" parent="menu_main" sequence="3" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_sale_order" action="payment_system_sale.action_sale_order" name="Orders" parent="menu_sale" sequence="0" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_subscriptions" name="Subscriptions" parent="menu_main" sequence="3" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_subscription" action="payment_system_subscription.action_subscription" name="Subscriptions" parent="menu_subscriptions" sequence="0" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_subscription_report" name="Reports" parent="menu_subscriptions" sequence="2" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_subscription_report_pivot" action="payment_system_subscription.action_report_pivot_subscription" name="Analysis" parent="menu_subscription_report" sequence="0" groups="payment_system_subscription.group_subscription"/>
+
     <menuitem id="menu_transaction_agreement" action="payment_system_agreement.action_transaction_agreement" name="Agreements" parent="menu_main" sequence="4" groups="payment_system_agreement.group_agreement"/>
     <menuitem id="menu_product" name="Products" parent="menu_main" sequence="4" groups="payment_system_product.group_product"/>
     <menuitem id="menu_product_template" action="payment_system_product.action_product_template" name="Products" parent="menu_product" sequence="0" groups="payment_system_product.group_product"/>
@@ -29,6 +37,12 @@
 
     <menuitem id="menu_acquirers" name="Payment Settings" parent="menu_conf" sequence="4"/>
     <menuitem id="menu_acquirer" action="payment_jetcheckout_system.action_payment_acquirer" name="Payment Acquirers" parent="menu_acquirers" sequence="1"/>
+
+    <menuitem id="menu_conf_subscription" name="Subscription Settings" parent="menu_conf" sequence="4" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_conf_subscription_template" action="payment_system_subscription.action_subscription_template" name="Templates" parent="menu_conf_subscription" sequence="1" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_conf_subscription_stage" action="payment_system_subscription.action_subscription_stage" name="Stages" parent="menu_conf_subscription" sequence="2" groups="payment_system_subscription.group_subscription"/>
+    <menuitem id="menu_conf_subscription_reason" action="payment_system_subscription.action_subscription_reason" name="Reasons" parent="menu_conf_subscription" sequence="3" groups="payment_system_subscription.group_subscription"/>
+
 
     <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="4" groups="payment_system_agreement.group_agreement"/>
     <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement"/>
