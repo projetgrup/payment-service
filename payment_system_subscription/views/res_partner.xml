@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_partner_subscription" model="ir.actions.act_window">
+        <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+        <field name="name">Subscriptions</field>
+        <field name="res_model">payment.subscription</field>
+    </record>
+
+    <record id="form_partner" model="ir.ui.view">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="5"/>
+        <field name="groups_id" eval="[(4, ref('payment_subscription.group_payment_subscription_read'))]"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="action" name="%(payment_subscription.action_partner_subscription)d" icon="fa-refresh">
+                    <field string="Subscriptions" name="payment_subscription_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<odoo>
+    <record model="ir.ui.view" id="wizard_form_view">
+        <field name="name">wizard.form</field>
+        <field name="model">saas.subscription.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upsell">
+                <p>
+                    Create a quotation with new products and send it to the customer for approval.
+                    When the quotation is confirmed, the products will be added to the subscription.
+                    Quotation prices will be prorated to the remaining time of the current invoicing period.
+                </p>
+                <group>
+                    <group>
+                        <field name="date_from" groups="base.group_no_one"/>
+                    </group>
+                </group>
+                <field name="option_lines">
+                    <tree string="Options" editable="bottom">
+                        <field name="product_id" domain="[('saas_recurring_invoice', '=', True)]" context="{'default_recurring_invoice': True}"/>
+                        <field name="name" invisible="1"/>
+                        <field name="quantity" readonly="0"/>
+                        <field name="product_uom_category_id" invisible="1"/>
+                        <field name="uom_id" groups="uom.group_uom"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="create_sale_order" type="object"
+                            string="Create &amp; View Quotation" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wizard_action">
+        <field name="name">Upsell</field>
+        <field name="res_model">saas.subscription.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_form_view"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

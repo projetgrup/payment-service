@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_payment_close" model="mail.template">
+        <field name="name">Subscription: Payment Failure</field>
+        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="subject">Termination of subscription ${object.code}</field>
+        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    % set company = object.company_id or object.user_id.company_id or user.company_id
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">${object.name}</span>
+                </td></tr>
+                <tr><td valign="middle" align="right">
+                    <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hello ${object.partner_id.name},<br/><br/>
+                    % if ctx.get('payment_token') and ctx.get('total_amount'):
+                        Our final attempt to process a payment for your subscription using your payment method
+                        ${ctx['payment_token']}
+                        for ${ctx['total_amount']} ${ctx.get('currency')} failed.
+                        % if ctx.get('error'):
+                            Your bank or credit institution gave the following details about the issue: <pre>${ctx['error']}</pre>.
+                        %endif
+                    % else:
+                        Our final attempt to process a payment for your subscription failed because we have no payment method recorded for you.
+                    % endif
+                    <br/><br/>
+                    As your payment should have been made <strong>15 days ago</strong>, your subscription has been terminated.
+                    Should you wish to resolve this issue, do not hesitate to contact us.<br/><br/>
+                    Thank you for choosing ${company.name}!
+                    % if user.signature
+                        <br/><br/>
+                        ${user.signature | safe}
+                    % endif
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    ${company.name}
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    % if company.phone
+                        ${company.phone} |
+                    %endif
+                    % if company.email
+                        <a href="'mailto:%s' % ${company.email}" style="text-decoration:none; color: #454748;">${company.email}</a> |
+                    % endif
+                    % if company.website
+                        <a href="'%s' % ${company.website}" style="text-decoration:none; color: #454748;">${company.website}
+                        </a>
+                    % endif
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+</table>
+        </field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+</record>
+
+    <record id="mail_payment_reminder" model="mail.template">
+        <field name="name">Subscription: Payment Reminder</field>
+        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="subject">Payment reminder for subscription ${object.code}</field>
+        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    % set company = object.company_id or object.user_id.company_id or user.company_id
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">${object.name}</span>
+                </td></tr>
+                <tr><td valign="middle" align="right">
+                    <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hello ${object.partner_id.name},<br/><br/>
+                    % if ctx.get('payment_token') and ctx.get('total_amount'):
+                        We were unable to process a payment for your subscription using your payment method
+                        ${ctx['payment_token']}
+                        for ${ctx['total_amount']} ${ctx.get('currency')}.
+                        % if ctx.get('error'):
+                            Your bank or credit institution gave the following details about the issue: <pre>${ctx['error']}</pre>.
+                        %endif
+                    % else:
+                        We were unable to process a payment for your subscription because we have no payment method recorded for you.
+                    % endif
+                    <br/><br/>
+                    Your subscription ${ctx.get('code')} is still valid but will be <strong>suspended</strong>
+                    on ${format_date(ctx.get('date_close'))} unless the payment succeeds in the mean time (we will retry once every day).
+                    Please double-check that you have sufficient funds.<br/><br/>
+                    If you have any questions, do not hesitate to contact us.<br/><br/>
+                    Thank you for choosing ${company.name}!
+                    % if user.signature:
+                        <br/><br/>
+                        ${user.signature | safe}
+                    % endif
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    ${company.name}
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    % if company.phone
+                        ${company.phone} |
+                    %endif
+                    % if company.email
+                        <a href="'mailto:%s' % ${company.email}" style="text-decoration:none; color: #454748;">${company.email}</a> |
+                    % endif
+                    % if company.website
+                        <a href="'%s' % ${company.website}" style="text-decoration:none; color: #454748;">${company.website}
+                        </a>
+                    % endif
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+</table>
+        </field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+</record>
+
+    <record id="mail_payment_success" model="mail.template">
+        <field name="name">Subscription: Payment Success</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="subject">Invoice for subscription ${ctx.get('code')}</field>
+        <field name="email_from">${(object.invoice_user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    % set company = object.company_id or object.invoice_user_id.company_id or user.company_id
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">${ctx.get('code') or 'Document'}</span>
+                </td></tr>
+                <tr><td valign="middle" align="right">
+                    <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Dear ${object.partner_id.name},<br/><br/>
+                    Your Subscription (${ctx.get('code')}) has just been renewed
+                    %if ctx.get('total_amount') and ctx.get('payment_token'):
+                        via a payment of ${ctx['total_amount']} ${ctx['currency']} charged on ${ctx['payment_token']}.
+                    %endif
+                    <br/><br/>
+                    You will find your invoice attached.
+                    %if ctx.get('next_date'):
+                        Your next invoice will be on ${format_date(ctx.get('next_date'))}.
+                    %endif
+                    <br/><br/>
+                    If you have any questions, do not hesitate to contact us.
+                    <br/><br/>
+                    Thank you for choosing ${company.name}!
+                    % if user.signature
+                        <br/><br/>
+                        ${user.signature | safe}
+                    % endif
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    ${company.name}
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    % if company.phone
+                        ${company.phone} |
+                    %endif
+                    % if company.email
+                        <a href="'mailto:%s' % ${company.email}" style="text-decoration:none; color: #454748;">${company.email}</a> |
+                    % endif
+                    % if company.website
+                        <a href="'%s' % ${company.website}" style="text-decoration:none; color: #454748;">${company.website}
+                        </a>
+                    % endif
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+</table>
+        </field>
+        <field name="report_template" ref="account.account_invoices" />
+        <field name="report_name">Invoice_${ctx.get('code')}_${format_date(ctx.get('previous_date'))}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Mail sent to request a rating for a subscription -->
+    <record id="mail_subscription_rating" model="mail.template">
+        <field name="name">Subscription: Rating Request</field>
+        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="subject">${object.company_id.name}: Service Rating Request</field>
+        <field name="email_from">${(object.rating_get_rated_partner_id().email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to" >${object.rating_get_partner_id().id}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="xml">
+            <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+            % set access_token = object.rating_get_access_token()
+                <table style="width:600px;margin:5px auto;">
+                    <tbody>
+                        <tr><td>
+                            <a href="/"><img src="/web/binary/company_logo" style="vertical-align:baseline;max-width:100px;" /></a>
+                        </td><td style="text-align:right;vertical-align:middle;">
+                                Satisfaction Survey
+                        </td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                    <tbody>
+                        <tr><td style="padding:15px 20px 10px 20px;">
+                            <p>Hello,</p>
+                            <p>Please take a moment to rate our services related to your subscription "<strong>${object.name}</strong>"
+                               assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>
+                            <p>We appreciate your feedback. It helps us to improve continuously.</p>
+                        </td></tr>
+                        <tr><td style="padding:10px 20px">
+                            <table summary="o_mail_notification" style="width:100%;border-top:1px solid #e1e1e1;">
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <h2 style="font-weight:300;font-size:18px;">
+                                            Tell us how you feel about our services:
+                                        </h2>
+                                        <div style="text-color: #888888">(click on one of these smileys)</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 10px;">
+                                        <table style="width:100%;text-align:center;">
+                                            <tr>
+                                                <td>
+                                                    <a href="/rating/${access_token}/10">
+                                                        <img alt="Satisfied" src="/rating/static/src/img/rating_10.png" title="Satisfied"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/rating/${access_token}/5">
+                                                        <img alt="Not satisfied" src="/rating/static/src/img/rating_5.png" title="Not satisfied"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/rating/${access_token}/1">
+                                                        <img alt="Highly Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Highly Dissatisfied"/>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td></tr>
+                        <tr><td style="padding:15px 20px 10px 20px;">${(object.user_id.signature or '')| safe}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <!-- Mail sent to request a rating for a subscription -->
+    <record id="mail_subscription_alert" model="mail.template">
+        <field name="name">Subscription: Default Email Alert</field>
+        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="subject">${object.company_id.name}: Please check the subscription ${object.name}</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to" >${object.partner_id.id}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="xml">
+            <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                <table style="width:600px;margin:5px auto;">
+                    <tbody>
+                        <tr><td>
+                            <a href="/"><img src="/web/binary/company_logo" style="vertical-align:baseline;max-width:100px;" /></a>
+                        </td><td style="text-align:right;vertical-align:middle;">
+                                Subscription Feedback
+                        </td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                    <tbody>
+                        <tr><td style="padding:15px 20px 10px 20px;">
+                            <p>Dear ${object.partner_id.name},</p>
+                            <p>Your subscription <strong>${object.name}</strong> needs your attention.</p>
+                            <p>If you have some concerns about it, please contact your contact person ${object.user_id.name} or reply to this email.</p>
+                            <p>Kind regards.</p>
+                        </td></tr>
+                        <tr><td style="padding:15px 20px 10px 20px;">${(object.user_id.signature or '')| safe}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+        <field name="lang">${object.partner_id.lang}</field>
+    </record>
+
+    <!--Email template -->
+    <record id="mail_template_payment_subscription_invoice" model="mail.template">
+        <field name="name">Payment Subscription Invoice: Send by Email</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="email_from">${(object.invoice_user_id.email_formatted or user.email_formatted) |safe}</field>
+        <field name="partner_to">${object.partner_id.id}</field>
+        <field name="subject">${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})</field>
+        <field name="body_html" type="xml">
+            <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                <table style="width:600px;margin:5px auto;">
+                    <tbody>
+                        <tr><td>
+                            <a href="/"><img src="/web/binary/company_logo" style="vertical-align:baseline;max-width:100px;" /></a>
+                        </td><td style="text-align:right;vertical-align:middle;">
+                                Subscription Invoice
+                        </td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                    <tbody>
+                        <tr><td style="padding:15px 20px 10px 20px;">
+                            <p>Dear ${object.partner_id.name}
+                                % if object.partner_id.parent_id:
+                                    (${object.partner_id.parent_id.name})
+                                % endif
+                            </p>
+                            <p>
+                                Here is, in attachment, your
+                                % if object.name:
+                                    invoice <strong>${object.name}</strong>
+                                % else:
+                                    invoice
+                                %endif
+                                % if object.invoice_origin:
+                                    (with reference: ${object.invoice_origin} )
+                                % endif
+                                amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
+                                from ${object.company_id.name}.
+                                % if object.invoice_payment_state == 'paid':
+                                    This invoice is already paid.
+                                % else:
+                                    Please remit payment at your earliest convenience.
+                                % endif
+                            </p>
+                            <p>Do not hesitate to contact us if you have any questions.</p>
+                        </td></tr>
+                        <tr><td style="padding:15px 20px 10px 20px;">${(object.invoice_user_id.signature or '')| safe}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+        <field name="report_template" ref="account.account_invoices"/>
+        <field name="report_name">Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

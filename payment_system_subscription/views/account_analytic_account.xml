@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_account_analytic_account" model="ir.ui.view">
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="priority" eval="22"/>
+        <field name="groups_id" eval="[(4, ref('payment_subscription.group_payment_subscription_read'))]"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="payment_subscriptions_action"
+                    icon="fa-book" attrs="{'invisible': [('payment_subscription_count', '=', 0)]}">
+                    <field string="Subscriptions" name="payment_subscription_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="form_account_move_line" model="ir.ui.view">
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_tag_ids']" position="after">
+                <field name="payment_subscription_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="form_account_move" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='invoice_tab']//form//field[@name='analytic_tag_ids']" position="after">
+                <field name="payment_subscription_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
