@@ -7,7 +7,7 @@ import publicWidget from 'web.public.widget';
 import { format } from 'paylox.tools';
 import framework from 'paylox.framework';
 
-publicWidget.registry.payloxPage = publicWidget.Widget.extend({
+publicWidget.registry.payloxSystemProductsPage = publicWidget.Widget.extend({
     selector: '.o_portal_payment_products',
     events: {
         'click tfoot button': '_onClickSave',
