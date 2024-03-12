@@ -360,14 +360,18 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
     _onClickItem(ev) {
         this.product.item.$.removeClass('bg-warning');
-        this.product.qty.$.val(0);
+        this.product.qty.$.each((i, e) => {
+            const $e = $(e);
+            $e.val(0);
+            $e.change();
+        });
 
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
         let qty = this.product.qty.$.filter(`[data-id=${pid}]`);
 
         qty.val(1);
-        qty.trigger('change');
+        qty.change();
         btn.addClass('bg-warning');
     },
 

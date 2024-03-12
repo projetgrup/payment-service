@@ -405,7 +405,7 @@
                                                     <div t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
                                                         <t t-foreach="weights" t-as="w">
                                                             <t t-set="variant" t-value="variants[(b['id'], w['id'])]"/>
-                                                            <div class="d-block" t-attf-style="border: 2px solid #{product.payment_color_background};" field="product.item">
+                                                            <div class="d-block" t-attf-style="border: 2px solid #{product.payment_color_background};" t-att-data-id="variant['id']" field="product.item">
                                                                 <div class="font-weight-bold">
                                                                     <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
                                                                     <span class="mr4" t-esc="product['name']"/>
