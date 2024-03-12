@@ -10,11 +10,17 @@ class Partner(models.Model):
         company = partner and partner.company_id or self.env.company
         return self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=limit, raise_exception=False)
 
-    @api.onchange('lang')
+    @api.onchange('active')
     def _compute_acquirers(self):
         for partner in self:
             acquirers = self._get_acquirers(partner)
             partner.acquirer_ids = [(6, 0, acquirers.ids)]
+
+    @api.onchange('active')
+    def _compute_campaign_table(self):
+        company = self.env.company
+        for partner in self:
+            partner.campaign_table = partner.company_id.payment_page_campaign_table_ok if partner.company_id else company.payment_page_campaign_table_ok
 
     def _default_campaign_id(self):
         partner = False
@@ -31,3 +37,5 @@ class Partner(models.Model):
 
     acquirer_ids = fields.Many2many('payment.acquirer', string='Payment Acquirers', compute='_compute_acquirers', store=False)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', default=_default_campaign_id, copy=False, tracking=True)
+    campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'partner_id', 'campaign_id', string='Campaigns', copy=False, tracking=True)
+    campaign_table = fields.Boolean('Campaign Table', compute='_compute_campaign_table')

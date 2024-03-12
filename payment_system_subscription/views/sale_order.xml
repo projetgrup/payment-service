@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="form_order" model="ir.ui.view">
+        <field name="name">sale.order.line.subscription</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
+                <field name="payment_subscription_id" attrs="{'invisible': [('payment_subscription_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]/button[1]" position="before">
+                <button class="oe_stat_button" name="action_subscriptions" type="object" icon="fa-book" attrs="{'invisible': [('payment_subscription_count', '=', 0)]}">
+                    <field name="payment_subscription_count" widget="statinfo" string="Subscriptions"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tree_order" model="ir.ui.view">
+        <field name="name">sale.order.list.subscription</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <field name="message_needaction" invisible="1"/>
+                <field name="name" string="Order Number"/>
+                <field name="date_order"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="payment_subscription_management"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                <field name="invoice_status"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

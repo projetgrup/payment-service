@@ -5,7 +5,9 @@
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//page[@name="sales_purchases"]//group[@name="sale"]' position="inside">
-            <field name="campaign_id" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}"/>
+            <field name="campaign_id" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '!=', False)]}"/>
+            <field name="campaign_ids" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '=', False)]}" widget="many2many_tags"/>
+            <field name="campaign_table" invisible="1"/>
             <field name="acquirer_ids" invisible="1"/>
         </xpath>
     </field>

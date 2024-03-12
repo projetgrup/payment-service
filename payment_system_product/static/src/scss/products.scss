@@ -1,0 +1,61 @@
+.o_portal {
+    .o_loading {
+        position: fixed;
+        background: rgba(255, 255, 255, 0.75);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 9999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        cursor: wait;
+    }
+
+    .o_portal_payment_products {
+        height: 80vh;
+
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #cccccc;
+            border-radius: 50px;
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: initial;
+        }
+
+        thead {
+            top: -1px;
+            position: sticky;
+            background: #ffffff;
+            box-shadow: 0 0 3px 1px #DEE2E6;
+        }
+
+        tbody {
+            input {
+                width: 72px;
+                outline: none;
+            }
+        }
+
+        tfoot {
+            bottom: -1px;
+            position: sticky;
+            background: #ffffff;
+            box-shadow: 0 0 3px 1px #DEE2E6;
+        }
+    }
+}

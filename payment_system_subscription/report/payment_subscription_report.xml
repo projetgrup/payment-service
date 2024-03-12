@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_subcription_report_pivot" model="ir.ui.view">
+         <field name="name">subscription.report.pivot</field>
+         <field name="model">payment.subscription.report</field>
+         <field name="arch" type="xml">
+             <pivot disable_linking="True">
+                 <field name="template_id" type="row"/>
+                 <field name="user_id" type="col"/>
+                 <field name="recurring_monthly" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_subcription_report_graph" model="ir.ui.view">
+         <field name="name">subscription.report.graph</field>
+         <field name="model">payment.subscription.report</field>
+         <field name="arch" type="xml">
+             <graph>
+                 <field name="template_id" type="row"/>
+                 <field name="recurring_monthly" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="payment_subscription_report_pivot_action" model="ir.actions.act_window">
+        <field name="name">Payment Subscriptions Analysis</field>
+        <field name="res_model">payment.subscription.report</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+
+    <record id="payment_subscription_report_search" model="ir.ui.view">
+        <field name="name">payment.subscription.report.search</field>
+        <field name="model">payment.subscription.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Subscription"/>
+                <field name="template_id"/>
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <field name="product_id"/>
+                <field name="partner_id" operator="child_of"/>
+                <filter name="my_payment_subscriptions" string="My Subscriptions" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter name="open" string="Running" domain="[('in_progress', '=', True)]" help="Running Subscriptions"/>
+                <filter name="pending" string="To Renew" domain="[('to_renew', '=', True)]" help="Pending subscriptions"/>
+                <filter name="Expired" string="Expired" domain="[('in_progress', '=', False)]" help="Closed subscriptions"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Salesperson" name="sales_person" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Country" name="country" domain="[]" context="{'group_by': 'country_id'}"/>
+                    <filter string="Industry" name="industry" domain="[]" context="{'group_by': 'industry_id'}"/>
+                    <filter string="Template" name="template" domain="[]" context="{'group_by': 'template_id'}"/>
+                    <filter string="Start Date" name="start_month" domain="[]" context="{'group_by': 'date_start'}" />
+                    <filter string="End Date" name="end_month" domain="[]" context="{'group_by': 'date_end'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_payment_subscription_report" name="Reporting" parent="menu_payment_subscription_root" sequence="5"/>
+    <menuitem id="menu_payment_subscription_report_pivot" name="Payment Subscriptions" parent="menu_payment_subscription_report" action="payment_subscription_report_pivot_action" sequence="1"/>
+</odoo>
