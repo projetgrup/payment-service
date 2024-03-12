@@ -237,7 +237,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 
     _getPreviewGrid: async function () {
-        let self = this;
         let grid = false;
         await rpc.query({
             route: '/payment/card/installments',
@@ -246,43 +245,30 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 currency: this.currency.id,
                 campaign: this.campaign.name.value,
             },
-        }).then(function (result) {
+        }).then((result) => {
             if ('error' in result) {
                 grid = false;
-                self.displayNotification({
+                this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
                     message: _t('An error occured.') + ' ' + result.error,
                 });
             } else {
-                let types = {};
-                for (let r of result.rows) {
-                    if (r.type in types) {
-                        types[r.type].push(r);
-                    } else {
-                        types[r.type] = [r];
-                    }
-                }
-
-                result.types = Object.entries(types);
                 grid = result;
             }
-        }).guardedCatch(function (error) {
+        }).guardedCatch(() => {
             grid = false;
-            self.displayNotification({
+            this.displayNotification({
                 type: 'danger',
                 title: _t('Error'),
                 message: _t('An error occured. Please contact with your system administrator.'),
             });
-            if (config.isDebug()) {
-                console.error(error);
-            }
         });
 
         if (grid) {
             this.payment.preview.grid.html = qweb.render('paylox.installment.grid', {
                 value: this.amount.value,
-                format: format,
+                format: {...format, type: payloxPage.prototype._getCardType},
                 ...this.currency,
                 ...grid,
             });

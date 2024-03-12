@@ -1,0 +1,14 @@
+#wc-account-table td:nth-last-child(1),
+#wc-account-table th:nth-last-child(1),
+#wc-account-table td:nth-last-child(2),
+#wc-account-table th:nth-last-child(2),
+#wc-account-table td:nth-last-child(3),
+#wc-account-table th:nth-last-child(3), {
+    text-align:right;
+    min-width: 9em;
+}
+    
+
+#wc-account-table a {
+    text-decoration: none;
+}

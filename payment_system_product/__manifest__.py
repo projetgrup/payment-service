@@ -27,8 +27,10 @@
             'payment_system_product/static/src/xml/page.xml',
         ],
         'web.assets_frontend': [
+            'payment_system_product/static/src/scss/products.scss',
             'payment_system_product/static/src/scss/flow.scss',
             'payment_system_product/static/src/scss/page.scss',
+            'payment_system_product/static/src/js/products.js',
             'payment_system_product/static/src/js/flow.js',
             'payment_system_product/static/src/js/page.js',
         ],

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+    <!-- Standard Closing Reason -->
+    <record id="reason_close_1" model="payment.subscription.reason">
+        <field name="name">Subscription is too expensive</field>
+    </record>
+    <record id="reason_close_2" model="payment.subscription.reason">
+        <field name="name">Subscription does not meet my requirements</field>
+    </record>
+    <record id="reason_close_3" model="payment.subscription.reason">
+        <field name="name">Subscription reached its end date</field>
+    </record>
+    <record id="reason_close_4" model="payment.subscription.reason">
+        <field name="name">I don't use it</field>
+    </record>
+    <record id="reason_close_5" model="payment.subscription.reason">
+        <field name="name">Other</field>
+    </record>
+
+    <!-- Subtypes -->
+    <data noupdate="1">
+        <record id="cron_account_analytic" model="ir.cron">
+            <field name="name">Payment Subscription: subscriptions expiration</field>
+            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_account_analytic_account()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="cron_account_analytic_for_invoice" model="ir.cron">
+            <field name="name">Payment Subscription: generate recurring invoices and payments</field>
+            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_recurring_create_invoice()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="cron_payment_subscription_update_kpi" model="ir.cron">
+            <field name="name">Payment Subscription: Update KPI</field>
+            <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_kpi()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="subtype_stage_change" model="mail.message.subtype">
+            <field name="name">Stage Change</field>
+            <field name="res_model">payment.subscription</field>
+            <field name="default" eval="True"/>
+            <field name="internal" eval="True"/>
+            <field name="description">Subscription stage has changed</field>
+        </record>
+
+        <record id="seq_payment_subscription" model="ir.sequence">
+            <field name="name">Payment Subscriptions</field>
+            <field name="code">payment.subscription</field>
+            <field name="prefix">SUB</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+
+    <!-- Standard Stages -->
+    <record id="stage_draft" model="payment.subscription.stage">
+        <field name="name">Draft</field>
+        <field name="sequence">10</field>
+        <field name="in_progress" eval="False"/>
+    </record>
+    <record id="stage_in_progress" model="payment.subscription.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="stage_upsell" model="payment.subscription.stage">
+        <field name="name">To Upsell</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="stage_closed" model="payment.subscription.stage">
+        <field name="name">Closed</field>
+        <field name="sequence">40</field>
+        <field name="in_progress" eval="False"/>
+        <field name="fold">True</field>
+    </record>
+
+</odoo>

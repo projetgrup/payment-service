@@ -10,10 +10,7 @@
     'license': 'LGPL-3',
     'sequence': 1454,
     'category': 'Accounting/Payment Acquirers',
-    'depends': [
-        'sale',
-        'payment_system_product',
-    ],
+    'depends': ['sale', 'payment_system_product'],
     'data': [
         'views/sale.xml',
     ],

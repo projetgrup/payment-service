@@ -1,0 +1,33 @@
+.o_kanban_view.o_kanban_dashboard.o_subscription_kanban {
+    .o_kanban_record {
+        display: flex;
+        position: relative;
+    }
+
+    .o_subscription_kanban_main {
+        flex: 0 0 auto;
+        padding: $o-horizontal-padding;
+        width: 70%; // for IE11 overflow issue
+
+        .o_kanban_card_content {
+            font-size: 12px;
+        }
+
+        .o_subscription_kanban_manage {
+            .o_kanban_manage_toggle_button {
+                font-size: 18px;
+                padding: $o-horizontal-padding/2 $o-horizontal-padding;
+            }
+        }
+    }
+}
+
+.o_form_view.o_subscription_form {
+    .oe_title .o_field_widget.o_favorite i.fa {
+        font-size: inherit;
+    }
+
+    //.o_field_widget[name="health"] + .label {
+    //    margin-right: $o-horizontal-padding;
+    //}
+}

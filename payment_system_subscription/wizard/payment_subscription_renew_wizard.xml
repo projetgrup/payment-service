@@ -1,0 +1,49 @@
+<odoo>
+    <record id="form_wizard_renew" model="ir.ui.view" >
+        <field name="name">payment.subscription.renew.wizard.view.form</field>
+        <field name="model">payment.subscription.renew.wizard</field>
+        <field name="name">Select Archived Products for Renewal</field>
+        <field name="arch" type="xml">
+            <form string="Select Archived Product for Renewal">
+                <group col="1">
+                    <div>
+                        The following products are archived. Do you want to keep them in the renewal quotation ?
+                    </div>
+                    <field name="display_replacement_lines" invisible="1"/>
+                    <field name="kept_archived_product_ids" nolabel="1">
+                        <tree string="Renewable" create="0" editable="bottom">
+                            <field name="name" readonly="1"/>
+                            <field name="quantity" readonly="1"/>
+                            <field name="renew_product"/>
+                        </tree>
+                    </field>
+                    <div attrs="{'invisible': [('display_replacement_lines', '=', False)]}">
+                        Select another product to replace the archived one.
+                    </div>
+                    <field name="replacement_line_ids" nolabel="1"
+                           attrs="{'invisible': [('display_replacement_lines', '=', False)]}">
+                        <tree string="Options" editable="bottom">
+                            <field name="product_id" domain="[('payment_recurring_invoice', '=', True)]" context="{'default_recurring_invoice': True}"/>
+                            <field name="name" invisible="1"/>
+                            <field name="quantity" readonly="0"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="create_renewal_order" type="object" string="Renew &amp; View Quotation" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record  id="sale_subscription_renew_wizard_action" model="ir.actions.act_window">
+        <field name="name">Select Archived Product for Renewal</field>
+        <field name="res_model">payment.subscription.renew.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="form_wizard_renew"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

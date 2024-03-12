@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_wizard_reason" model="ir.ui.view">
+        <field name="name">payment.subscription.reason.form</field>
+        <field name="model">payment.subscription.reason.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reasons">
+                <group class="oe_title">
+                    <field name="reason_id" string="Reason"/>
+                </group>
+                <footer>
+                    <button name="confirm" string="Submit" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reason" model="ir.actions.act_window">
+        <field name="name">Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">payment.subscription.reason.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="form_wizard_reason"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
