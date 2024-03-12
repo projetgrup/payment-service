@@ -2,7 +2,7 @@
 <odoo>
     <record id="mail_payment_close" model="mail.template">
         <field name="name">Subscription: Payment Failure</field>
-        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
         <field name="subject">Termination of subscription ${object.code}</field>
         <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
         <field name="email_to">${object.partner_id.email_formatted | safe}</field>
@@ -92,7 +92,7 @@
 
     <record id="mail_payment_reminder" model="mail.template">
         <field name="name">Subscription: Payment Reminder</field>
-        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
         <field name="subject">Payment reminder for subscription ${object.code}</field>
         <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
         <field name="email_to">${object.partner_id.email_formatted | safe}</field>
@@ -276,7 +276,7 @@
     <!-- Mail sent to request a rating for a subscription -->
     <record id="mail_subscription_rating" model="mail.template">
         <field name="name">Subscription: Rating Request</field>
-        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
         <field name="subject">${object.company_id.name}: Service Rating Request</field>
         <field name="email_from">${(object.rating_get_rated_partner_id().email_formatted or user.email_formatted) | safe}</field>
         <field name="partner_to" >${object.rating_get_partner_id().id}</field>
@@ -346,7 +346,7 @@
     <!-- Mail sent to request a rating for a subscription -->
     <record id="mail_subscription_alert" model="mail.template">
         <field name="name">Subscription: Default Email Alert</field>
-        <field name="model_id" ref="payment_subscription.model_payment_subscription"/>
+        <field name="model_id" ref="payment_system_subscription.model_payment_subscription"/>
         <field name="subject">${object.company_id.name}: Please check the subscription ${object.name}</field>
         <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
         <field name="partner_to" >${object.partner_id.id}</field>

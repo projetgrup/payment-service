@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_subcription_report_pivot" model="ir.ui.view">
-         <field name="name">subscription.report.pivot</field>
+    <record id="pivot_report_subscription" model="ir.ui.view">
+         <field name="name">payment.subscription.report.pivot</field>
          <field name="model">payment.subscription.report</field>
          <field name="arch" type="xml">
              <pivot disable_linking="True">
@@ -12,8 +12,8 @@
          </field>
     </record>
 
-    <record id="view_subcription_report_graph" model="ir.ui.view">
-         <field name="name">subscription.report.graph</field>
+    <record id="graph_report_subscription" model="ir.ui.view">
+         <field name="name">payment.subscription.report.graph</field>
          <field name="model">payment.subscription.report</field>
          <field name="arch" type="xml">
              <graph>
@@ -23,13 +23,13 @@
          </field>
     </record>
 
-    <record id="payment_subscription_report_pivot_action" model="ir.actions.act_window">
-        <field name="name">Payment Subscriptions Analysis</field>
+    <record id="action_report_pivot_subscription" model="ir.actions.act_window">
+        <field name="name">Subscriptions Analysis</field>
         <field name="res_model">payment.subscription.report</field>
         <field name="view_mode">pivot,graph</field>
     </record>
 
-    <record id="payment_subscription_report_search" model="ir.ui.view">
+    <record id="search_report_subscription" model="ir.ui.view">
         <field name="name">payment.subscription.report.search</field>
         <field name="model">payment.subscription.report</field>
         <field name="arch" type="xml">
@@ -59,7 +59,4 @@
             </search>
         </field>
     </record>
-
-    <menuitem id="menu_payment_subscription_report" name="Reporting" parent="menu_payment_subscription_root" sequence="5"/>
-    <menuitem id="menu_payment_subscription_report_pivot" name="Payment Subscriptions" parent="menu_payment_subscription_report" action="payment_subscription_report_pivot_action" sequence="1"/>
 </odoo>

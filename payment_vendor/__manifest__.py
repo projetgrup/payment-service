@@ -8,7 +8,7 @@
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
     'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_syncops', 'payment_system_agreement'], # 'payment_system_subscription'],
+    'depends': ['payment_syncops', 'payment_system_agreement', 'payment_system_subscription'],
     'data': [
         'data/data.xml',
         'security/security.xml',

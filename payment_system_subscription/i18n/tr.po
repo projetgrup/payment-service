@@ -908,7 +908,7 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_reason_wizard_action
+#: model:ir.actions.act_window,name:payment_subscription.payment_subscription_reason_action_wizard
 #: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription__reason_id
 #: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_reason_wizard__reason_id
 #: model:ir.model.fields,field_description:payment_subscription.field_payment_subscription_report__reason_id
@@ -1734,10 +1734,6 @@ msgstr "Aktivitemin Son Tarihi"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_search
-msgid "My Payment Subscriptions"
-msgstr "Payment Aboneliklerim"
-
-#. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_report_search
 msgid "My Subscriptions"
 msgstr "Aboneliklerim"
@@ -2462,7 +2458,7 @@ msgid "See Payment Subscriptions"
 msgstr "Payment Aboneliklerine bakın"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:payment_subscription.sale_subscription_renew_wizard_action
+#: model:ir.actions.act_window,name:payment_subscription.sale_subscription_renew_action_wizard
 #: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_renew_wizard_view_form
 msgid "Select Archived Product for Renewal"
 msgstr "Yenileme için Arşivlenmiş Ürünü Seçin"
@@ -2936,7 +2932,7 @@ msgid "UoM"
 msgstr "Ölçü Birimi"
 
 #. module: payment_system_subscription
-#: model:ir.actions.act_window,name:payment_subscription.wizard_action
+#: model:ir.actions.act_window,name:payment_subscription.action_wizard
 #: model_terms:ir.ui.view,arch_db:payment_subscription.payment_subscription_view_form
 #: model_terms:ir.ui.view,arch_db:payment_subscription.wizard_form_view
 msgid "Upsell"
