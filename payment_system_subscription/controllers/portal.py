@@ -81,7 +81,7 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
         })
-        return request.render('payment_subscription.portal_my_subscriptions', values)
+        return request.render('payment_system_subscription.portal_my_subscriptions', values)
 
 
 class PaymentSubscription(http.Controller):
@@ -122,7 +122,7 @@ class PaymentSubscription(http.Controller):
             delta = datetime.date.today() - account.recurring_next_date
             missing_periods = delta.days / 7
 
-        action = request.env.ref('payment_subscription.action_payment_subscription')
+        action = request.env.ref('payment_system_subscription.action_payment_subscription')
         values = {
             'account': account,
             'template': account.template_id.sudo(),
@@ -159,7 +159,7 @@ class PaymentSubscription(http.Controller):
         }
 
         values['acq_extra_fees'] = fees_by_acquirer
-        return request.render('payment_subscription.subscription', values)
+        return request.render('payment_system_subscription.subscription', values)
 
     payment_succes_msg = 'message=Thank you, your payment has been validated.&message_class=alert-success'
     payment_fail_msg = 'message=There was an error with your payment, please try with another payment method or contact us.&message_class=alert-danger'

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="subscription" name="Subscription">
-        <t t-set="o_portal_fullwidth_alert" groups="payment_subscription.group_payment_subscription_read">
+        <t t-set="o_portal_fullwidth_alert" groups="payment_system_subscription.group_subscription_read">
             <t t-call="portal.portal_back_in_edit_mode">
                 <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (account._name, account.id, action)" t-ignore="true"/>
             </t>
@@ -285,5 +284,4 @@
             </t>
         </t>
     </template>
-
 </odoo>

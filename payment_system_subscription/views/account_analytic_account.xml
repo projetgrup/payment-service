@@ -4,10 +4,10 @@
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
         <field name="priority" eval="22"/>
-        <field name="groups_id" eval="[(4, ref('payment_subscription.group_payment_subscription_read'))]"/>
+        <field name="groups_id" eval="[(4, ref('payment_system_subscription.group_subscription_read'))]"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button class="oe_stat_button" type="object" name="payment_subscriptions_action"
+                <button class="oe_stat_button" type="object" name="action_payment_subscriptions"
                     icon="fa-book" attrs="{'invisible': [('payment_subscription_count', '=', 0)]}">
                     <field string="Subscriptions" name="payment_subscription_count" widget="statinfo"/>
                 </button>

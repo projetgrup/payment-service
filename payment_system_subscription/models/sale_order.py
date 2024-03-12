@@ -10,34 +10,37 @@ _logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
-    _name = 'sale.order'
     _inherit = 'sale.order'
 
     def _compute_payment_subscription_count(self):
         for order in self:
             order.payment_subscription_count = len(self.env['sale.order.line'].read_group(
                 [('order_id', '=', order.id), ('payment_subscription_id', '!=', False)],
-                ['payment_subscription_id'], ['payment_subscription_id'])
-            )
+                ['payment_subscription_id'], ['payment_subscription_id']
+            ))
 
     payment_subscription_count = fields.Integer(compute='_compute_payment_subscription_count')
-    payment_subscription_management = fields.Selection(string='Subscription Management', selection=[
-        ('create', 'Creation'),
-        ('renew', 'Renewal'),
-        ('upsell', 'Upselling')
-        ], default='create',
+    payment_subscription_management = fields.Selection(
+        string='Subscription Management',
+        selection=[
+            ('create', 'Creation'),
+            ('renew', 'Renewal'),
+            ('upsell', 'Upselling')
+        ],
+        default='create',
         help='Creation: The Sales Order created the subscription\n'
              'Upselling: The Sales Order added lines to the subscription\n'
-             'Renewal: The Sales Order replaced the subscription\'s content with its own')
+             'Renewal: The Sales Order replaced the subscription\'s content with its own'
+    )
 
     def action_subscriptions(self):
         self.ensure_one()
         subscriptions = self.order_line.mapped('payment_subscription_id')
-        action = self.env.ref('payment_subscription.action_subscription').read()[0]
+        action = self.env.ref('payment_system_subscription.action_subscription').read()[0]
         if len(subscriptions) > 1:
             action['domain'] = [('id', 'in', subscriptions.ids)]
         elif len(subscriptions) == 1:
-            form_view = [(self.env.ref('payment_subscription.form_subscription').id, 'form')]
+            form_view = [(self.env.ref('payment_system_subscription.form_subscription').id, 'form')]
             if 'views' in action:
                 action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
             else:
@@ -139,7 +142,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    payment_subscription_id = fields.Many2one('sapaymentas.subscription', 'Subscription', copy=False, check_company=True)
+    payment_subscription_id = fields.Many2one('payment.subscription', 'Subscription', copy=False, check_company=True)
 
     def _prepare_invoice_line(self, **optional_values):
         res = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values) # <-- ensure_one()

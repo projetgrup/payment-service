@@ -83,7 +83,7 @@ class PaymentSubscriptionTemplate(models.Model):
     )
     invoice_mail_template_id = fields.Many2one(
         'mail.template', string='Invoice Email Template', domain=[('model', '=', 'account.move')],
-        default=lambda self: self.env.ref('payment_subscription.mail_template_payment_subscription_invoice', raise_if_not_found=False)
+        default=lambda self: self.env.ref('payment_system_subscription.mail_template_payment_subscription_invoice', raise_if_not_found=False)
     )
 
     @api.constrains('recurring_interval')
