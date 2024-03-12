@@ -43,6 +43,29 @@
     </template>
 
     <template id="page_payment" name="Jewelry Payment Page">
-        <t t-call="payment_system_product.page_payment"/>
+        <t t-call="payment_system_product.page_payment">
+            <t t-set="options" t-value="{'listen_price_active': True, 'save_order_active': True}"/>
+            <t t-set="header_details">
+                <table class="m-0 table w-auto">
+                    <tr>
+                        <td class="bg-100 border-right text-right align-middle"><em>Partner : </em></td>
+                        <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
+                        <td class="border-0"/>
+                        <td class="bg-100 border-right text-right align-middle"><em>Balance : </em></td>
+                        <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="px-0 py-1"></td>
+                        <td class="border-0"/>
+                        <td colspan="2" class="px-0 py-1">
+                            <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="product.policy">
+                                My PoS Policy
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+
+        </t>
     </template>
 </odoo>

@@ -293,6 +293,7 @@ class ProductCategory(models.Model):
     sequence = fields.Integer(default=10)
     view_type = fields.Selection(selection=[
         ('list', 'List'),
+        ('card', 'Card'),
         ('table', 'Table'),
     ])
     system = fields.Selection(selection=[], readonly=True)

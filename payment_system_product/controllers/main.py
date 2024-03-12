@@ -219,6 +219,10 @@ class PaymentSystemProductController(SystemController):
         else:
             companies = companies.filtered(lambda x: x.system_product and x.id in user.company_ids.ids)
 
+        categs = request.env['product.category'].sudo().search([
+            ('company_id', '=', company.id),
+            ('system', '=', company.system),
+        ])
         products = request.env['product.template'].sudo().search([
             ('company_id', '=', company.id),
             ('system', '=', company.system),
@@ -232,14 +236,19 @@ class PaymentSystemProductController(SystemController):
             'subsystem': company.subsystem,
             'vat': kwargs.get('vat'),
             'flow': 'dynamic',
+            'categs': categs,
             'products': products,
             'readonly': True,
+            'options': {
+                'save_order_active': False,
+                'listen_price_active': False,
+            }
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
             values.update({**kwargs['values']})
 
-        return request.render('payment_jetcheckout_system.page_payment', values, headers={
+        return request.render('payment_system_product.page_payment', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '-1'

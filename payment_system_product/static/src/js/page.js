@@ -80,14 +80,17 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        this._listenPriceActive = false;
+        this._saveOrderActive = false;
+        this._saveOrderTime = undefined;
         this._saveOrder = _.debounce(this._save, 1000);
-        this._saveTime = undefined;
 
         this.lines = {};
         this.brands = {};
         this.products = {};
         this.validity = 0;
         this.commission = 0;
+        this.options = new fields.element();
         this.product = {
             price: new fields.float({
                 default: 0,
@@ -117,6 +120,9 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             counter: new fields.element(),
             items: new fields.element(),
             lines: new fields.element(),
+            item: new fields.element({
+                events: [['click', this._onClickItem]],
+            }),
             categ: new fields.element({
                 events: [['click', this._onClickCateg]],
             }),
@@ -143,6 +149,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
     start: function () {
         return this._super.apply(this, arguments).then(() => {
+            this._getOptions();
             this._getNumbers();
             this._getBrands();
             this._getProducts();
@@ -152,18 +159,26 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _save: function (values) {
-        rpc.query({
-            route: '/my/order',
-            params: { values },
-        }).then((res) => {
-            this._saveTime = Date.now();
-        }).catch((err) => {
-            this.displayNotification({
-                type: 'danger',
-                title: _t('Error'),
-                message: _t('An error occured.'),
+        if (this._saveOrderActive) {
+            rpc.query({
+                route: '/my/order',
+                params: { values },
+            }).then((res) => {
+                this._saveOrderTime = Date.now();
+            }).catch((err) => {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured.'),
+                });
             });
-        });
+        }
+    },
+
+    _getOptions: function () {
+        this._listenPriceActive = this.options.json.listen_price_active;
+        this._saveOrderActive = this.options.json.save_order_active;
+        this.options.$.remove();
     },
 
     _getNumbers: function () {
@@ -201,39 +216,41 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _listenPrices: function () {
-        const events = new EventSource('/longpolling/prices');
-        console.log('Price service is active.');
-        events.onmessage = (event) => {
-            let changed = false;
-            let $prices = this.product.price.$;
-            let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
-            for (let data of event.data.split('\n')) {
-                let [code, price] = data.split(';'); price = parseFloat(price);
-                let $price = $prices.filter(`[data-id="${code}"]`);
-                let value = $price.data('value');
-                if (price == value) {
-                    continue;
-                } else if (price > value) {
-                    $price.css({ backgroundColor: '#93daa3' });
-                } else if (price < value) {
-                    $price.css({ backgroundColor: '#eccfd1' });
+        if (this._listenPriceActive) {
+            const events = new EventSource('/longpolling/prices');
+            console.log('Price service is active.');
+            events.onmessage = (event) => {
+                let changed = false;
+                let $prices = this.product.price.$;
+                let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
+                for (let data of event.data.split('\n')) {
+                    let [code, price] = data.split(';'); price = parseFloat(price);
+                    let $price = $prices.filter(`[data-id="${code}"]`);
+                    let value = $price.data('value');
+                    if (price == value) {
+                        continue;
+                    } else if (price > value) {
+                        $price.css({ backgroundColor: '#93daa3' });
+                    } else if (price < value) {
+                        $price.css({ backgroundColor: '#eccfd1' });
+                    }
+    
+                    changed = true;
+                    $price.animate({ backgroundColor: '#ffffff' }, 'slow');
+                    $price.data('value', price);
+                    $price.text(format.currency(price, ...currency));
+                    this._onChangePrice($price, false);
                 }
-
-                changed = true;
-                $price.animate({ backgroundColor: '#ffffff' }, 'slow');
-                $price.data('value', price);
-                $price.text(format.currency(price, ...currency));
-                this._onChangePrice($price, false);
-            }
-            if (changed) {
-                this._updateLines();
-            }
-        };
-        events.onerror = () => {
-            console.error('An error occured on price service. Reconnecting...');
-            events.close();
-            setTimeout(this._listenPrices.bind(this), 10000);
-        };
+                if (changed) {
+                    this._updateLines();
+                }
+            };
+            events.onerror = () => {
+                console.error('An error occured on price service. Reconnecting...');
+                events.close();
+                setTimeout(this._listenPrices.bind(this), 10000);
+            };
+        }
     },
 
     _onChangePrice($price, update=true) {
@@ -339,6 +356,19 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
 
         this._updateLines();
+    },
+
+    _onClickItem(ev) {
+        this.product.item.$.removeClass('bg-warning');
+        this.product.qty.$.val(0);
+
+        let btn = $(ev.currentTarget);
+        let pid = btn.data('id');
+        let qty = this.product.qty.$.filter(`[data-id=${pid}]`);
+
+        qty.val(1);
+        qty.trigger('change');
+        btn.addClass('bg-warning');
     },
 
     _onClickCateg(ev) {
