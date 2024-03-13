@@ -4,51 +4,46 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20221104\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-13 14:28+0000\n"
-"PO-Revision-Date: 2024-03-13 18:04+0300\n"
+"PO-Revision-Date: 2024-03-13 14:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 3.4.2\n"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid " E-mail sent to customer."
-msgstr "Müşteriye e-posta gönderildi."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_template_payment_subscription_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Fatura (Ref ${object.name veya 'n/a'})"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:sms.template,body:payment_system_subscription.sms_payment_failure
 msgid ""
 "${object.company_id.name}: Our final attempt to process a payment for your "
-"subscription failed. As your payment should have been made on ${object."
-"recurring_next_date}, your subscription has been terminated."
+"subscription failed. As your payment should have been made on "
+"${object.recurring_next_date}, your subscription has been terminated."
 msgstr ""
-"${object.company_id.name}: Aboneliğiniz için bir ödemeyi işleme koymaya "
-"yönelik son girişimimiz başarısız oldu. Ödemenizin yapıldığı gibi${object."
-"recurring_next_date}, aboneliğiniz feshedildi."
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_subscription_alert
-msgid "${object.company_id.name}: Please check the subscription ${object.name}"
+msgid ""
+"${object.company_id.name}: Please check the subscription ${object.name}"
 msgstr ""
-"${object.company_id.name}: Lütfen aboneliği kontrol edin ${object.name}"
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_subscription_rating
 msgid "${object.company_id.name}: Service Rating Request"
-msgstr "${object.company_id.name}:Hizmet Derecelendirme Talebi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:sms.template,body:payment_system_subscription.sms_payment_reminder
@@ -58,77 +53,63 @@ msgid ""
 "suspended on ${object.recurring_next_date} unless the payment succeeds in "
 "the meantime."
 msgstr ""
-"$ {object.company_id.name}: Aboneliğiniz için bir ödeme işleme koyamadık. $ "
-"{Object.name} aboneliğiniz hala geçerli, ancak ödeme bu arada başarılı "
-"olmadıkça $ {object.recurring_next_date} tarihinde askıya alınacak."
 
 #. module: payment_system_subscription
 #: model:sms.template,body:payment_system_subscription.sms_default_alert
 msgid ""
 "${object.company_id.name}: Your subscription ${object.name} needs your "
-"attention. If you have some concerns about it, please contact ${object."
-"user_id.name}, your contact person."
+"attention. If you have some concerns about it, please contact "
+"${object.user_id.name}, your contact person."
 msgstr ""
-"$ {object.company_id.name}: $ {object.name} aboneliğinizin ilgilenilmesi "
-"gerekiyor. Bununla ilgili bazı endişeleriniz varsa, lütfen irtibat kişiniz "
-"olan $ {object.user_id.name} ile iletişim kurun."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__percentage_satisfaction
 msgid "% Happy"
-msgstr "% Memnuniyet"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "(Not in"
-msgstr "(içinde değil"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "(Wrong address?)"
-msgstr "(Yanlış adres?)"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,body_html:payment_system_subscription.mail_subscription_alert
 msgid ""
 "<?xml version=\"1.0\"?>\n"
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "                <table style=\"width:600px;margin:5px auto;\">\n"
 "                    <tbody>\n"
 "                        <tr><td>\n"
-"                            <a href=\"/\"><img src=\"/web/binary/"
-"company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
-"                        </td><td style=\"text-align:right;vertical-align:"
-"middle;\">\n"
+"                            <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                        </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                                Subscription Feedback\n"
 "                        </td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
-"                <table style=\"width:600px;margin:0px auto;background:white;"
-"border:1px solid #e1e1e1;\">\n"
+"                <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "                    <tbody>\n"
 "                        <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                            <p>Dear ${object.partner_id.name},</p>\n"
-"                            <p>Your subscription <strong>${object.name}</"
-"strong> needs your attention.</p>\n"
-"                            <p>If you have some concerns about it, please "
-"contact your contact person ${object.user_id.name} or reply to this email.</"
-"p>\n"
+"                            <p>Your subscription <strong>${object.name}</strong> needs your attention.</p>\n"
+"                            <p>If you have some concerns about it, please contact your contact person ${object.user_id.name} or reply to this email.</p>\n"
 "                            <p>Kind regards.</p>\n"
 "                        </td></tr>\n"
-"                        <tr><td style=\"padding:15px 20px 10px 20px;"
-"\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"                        <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
 "            </div>\n"
@@ -139,21 +120,17 @@ msgstr ""
 #: model:mail.template,body_html:payment_system_subscription.mail_template_payment_subscription_invoice
 msgid ""
 "<?xml version=\"1.0\"?>\n"
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "                <table style=\"width:600px;margin:5px auto;\">\n"
 "                    <tbody>\n"
 "                        <tr><td>\n"
-"                            <a href=\"/\"><img src=\"/web/binary/"
-"company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
-"                        </td><td style=\"text-align:right;vertical-align:"
-"middle;\">\n"
+"                            <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                        </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                                Subscription Invoice\n"
 "                        </td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
-"                <table style=\"width:600px;margin:0px auto;background:white;"
-"border:1px solid #e1e1e1;\">\n"
+"                <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "                    <tbody>\n"
 "                        <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                            <p>Dear ${object.partner_id.name}\n"
@@ -169,25 +146,19 @@ msgid ""
 "                                    invoice\n"
 "                                %endif\n"
 "                                % if object.invoice_origin:\n"
-"                                    (with reference: ${object."
-"invoice_origin} )\n"
+"                                    (with reference: ${object.invoice_origin} )\n"
 "                                % endif\n"
-"                                amounting in <strong>${format_amount(object."
-"amount_total, object.currency_id)}</strong>\n"
+"                                amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "                                from ${object.company_id.name}.\n"
-"                                % if object.invoice_payment_state == "
-"'paid':\n"
+"                                % if object.invoice_payment_state == 'paid':\n"
 "                                    This invoice is already paid.\n"
 "                                % else:\n"
-"                                    Please remit payment at your earliest "
-"convenience.\n"
+"                                    Please remit payment at your earliest convenience.\n"
 "                                % endif\n"
 "                            </p>\n"
-"                            <p>Do not hesitate to contact us if you have any "
-"questions.</p>\n"
+"                            <p>Do not hesitate to contact us if you have any questions.</p>\n"
 "                        </td></tr>\n"
-"                        <tr><td style=\"padding:15px 20px 10px 20px;"
-"\">${(object.invoice_user_id.signature or '')| safe}</td></tr>\n"
+"                        <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.invoice_user_id.signature or '')| safe}</td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
 "            </div>\n"
@@ -198,73 +169,52 @@ msgstr ""
 #: model:mail.template,body_html:payment_system_subscription.mail_subscription_rating
 msgid ""
 "<?xml version=\"1.0\"?>\n"
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "            % set access_token = object.rating_get_access_token()\n"
 "                <table style=\"width:600px;margin:5px auto;\">\n"
 "                    <tbody>\n"
 "                        <tr><td>\n"
-"                            <a href=\"/\"><img src=\"/web/binary/"
-"company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
-"                        </td><td style=\"text-align:right;vertical-align:"
-"middle;\">\n"
+"                            <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                        </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                                Satisfaction Survey\n"
 "                        </td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
-"                <table style=\"width:600px;margin:0px auto;background:white;"
-"border:1px solid #e1e1e1;\">\n"
+"                <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "                    <tbody>\n"
 "                        <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                            <p>Hello,</p>\n"
-"                            <p>Please take a moment to rate our services "
-"related to your subscription \"<strong>${object.name}</strong>\"\n"
-"                               assigned to <strong>${object."
-"rating_get_rated_partner_id().name}</strong>.</p>\n"
-"                            <p>We appreciate your feedback. It helps us to "
-"improve continuously.</p>\n"
+"                            <p>Please take a moment to rate our services related to your subscription \"<strong>${object.name}</strong>\"\n"
+"                               assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                            <p>We appreciate your feedback. It helps us to improve continuously.</p>\n"
 "                        </td></tr>\n"
 "                        <tr><td style=\"padding:10px 20px\">\n"
-"                            <table summary=\"o_mail_notification\" "
-"style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                                <tr>\n"
 "                                    <td style=\"text-align:center;\">\n"
-"                                        <h2 style=\"font-weight:300;font-"
-"size:18px;\">\n"
-"                                            Tell us how you feel about our "
-"services:\n"
+"                                        <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                            Tell us how you feel about our services:\n"
 "                                        </h2>\n"
-"                                        <div style=\"text-color: "
-"#888888\">(click on one of these smileys)</div>\n"
+"                                        <div style=\"text-color: #888888\">(click on one of these smileys)</div>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"padding:10px 10px;\">\n"
-"                                        <table style=\"width:100%;text-align:"
-"center;\">\n"
+"                                        <table style=\"width:100%;text-align:center;\">\n"
 "                                            <tr>\n"
 "                                                <td>\n"
-"                                                    <a href=\"/rating/"
-"${access_token}/10\">\n"
-"                                                        <img "
-"alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" "
-"title=\"Satisfied\"/>\n"
+"                                                    <a href=\"/rating/${access_token}/10\">\n"
+"                                                        <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
 "                                                    </a>\n"
 "                                                </td>\n"
 "                                                <td>\n"
-"                                                    <a href=\"/rating/"
-"${access_token}/5\">\n"
-"                                                        <img alt=\"Not "
-"satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not "
-"satisfied\"/>\n"
+"                                                    <a href=\"/rating/${access_token}/5\">\n"
+"                                                        <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
 "                                                    </a>\n"
 "                                                </td>\n"
 "                                                <td>\n"
-"                                                    <a href=\"/rating/"
-"${access_token}/1\">\n"
-"                                                        <img alt=\"Highly "
-"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly "
-"Dissatisfied\"/>\n"
+"                                                    <a href=\"/rating/${access_token}/1\">\n"
+"                                                        <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
 "                                                    </a>\n"
 "                                                </td>\n"
 "                                            </tr>\n"
@@ -273,8 +223,7 @@ msgid ""
 "                                </tr>\n"
 "                            </table>\n"
 "                        </td></tr>\n"
-"                        <tr><td style=\"padding:15px 20px 10px 20px;"
-"\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"                        <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "                    </tbody>\n"
 "                </table>\n"
 "            </div>\n"
@@ -287,47 +236,41 @@ msgid ""
 "<abbr title=\"You need to be logged in as this subscription's customer to "
 "change country\">Taxes</abbr>:<br/>"
 msgstr ""
-"<abbr title=\"You need to be logged in as this subscription's customer to "
-"change country\">Vergiler</abbr>:<br/>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "<i class=\"fa fa-check\"/> Closable by customer"
-msgstr "<i class=\"fa fa-check\"/> Müşteri tarafından kapatılabilir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr "<i class=\"fa fa-comment\"/>Mesaj Gönder"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
-msgid ""
-"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
-"title=\"Manage\"/>"
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
-"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
-"title=\"Manage\"/>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-check\"/> In Progress"
-msgstr "<i class=\"fa fa-fw fa-check\"/> Aktif"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-refresh\"/> To Renew"
-msgstr "<i class=\"fa fa-fw fa-refresh\"/> Yenilenecek"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<i class=\"fa fa-fw fa-remove\"/> Closed"
-msgstr "<i class=\"fa fa-fw fa-remove\"/> Kapalı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<small class=\"text-muted\">Subscription -</small>"
-msgstr "<small class=\"text-muted\">Abonelik -</small>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
@@ -335,8 +278,6 @@ msgid ""
 "<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/> Closed</span>"
 msgstr ""
-"<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
-"remove\"/> Kapalı</span>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
@@ -344,8 +285,6 @@ msgid ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\"/> In Progress</span>"
 msgstr ""
-"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
-"check\"/> Devam Ediyor</span>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
@@ -353,28 +292,26 @@ msgid ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "refresh\"/> To Renew</span>"
 msgstr ""
-"<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
-"refresh\"/> Yenilenecek</span>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "<span class=\"ml-1\">days</span>"
-msgstr "<span class=\"ml-1\">Günler</span>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "<span class=\"mr-1\">Every</span>"
-msgstr "<span class=\"mr-1\">Her</span>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "<span class=\"mr-1\">For</span>"
-msgstr "<span class=\"mr-1\">İçin</span>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "<span class=\"mr-1\">period(s)</span>"
-msgstr "<span class=\"mr-1\">süre(leri)</span>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
@@ -382,58 +319,42 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Müşteri</span>\n"
-"                                <span class=\"o_stat_text\">Görünümü</span>"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "<span>Subscriptions</span>"
-msgstr "<span>Abonelikler</span>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<strong class=\"text-muted\">Subscription Manager:</strong>"
-msgstr "<strong class=\"text-muted\">Abonelik Yöneticisi:</strong>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "<strong>Next Billing Amount:</strong><br/>"
-msgstr "<strong>Sonraki Fatura Tutarı:</strong><br/>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,body_html:payment_system_subscription.mail_payment_success
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
-"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"padding: 16px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    % set company = object.company_id or object."
-"invoice_user_id.company_id or user.company_id\n"
-"                    <span style=\"font-size: 10px;\">Your Subscription</"
-"span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;"
-"\">${ctx.get('code') or 'Document'}</span>\n"
+"                    % set company = object.company_id or object.invoice_user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Your Subscription</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">${ctx.get('code') or 'Document'}</span>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${company.id}\" "
-"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" "
-"alt=\"${company.name}\"/>\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -441,27 +362,20 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    Dear ${object.partner_id.name},<br/><br/>\n"
-"                    Your Subscription (${ctx.get('code')}) has just been "
-"renewed\n"
-"                    %if ctx.get('total_amount') and ctx."
-"get('payment_token'):\n"
-"                        via a payment of ${ctx['total_amount']} "
-"${ctx['currency']} charged on ${ctx['payment_token']}.\n"
+"                    Your Subscription (${ctx.get('code')}) has just been renewed\n"
+"                    %if ctx.get('total_amount') and ctx.get('payment_token'):\n"
+"                        via a payment of ${ctx['total_amount']} ${ctx['currency']} charged on ${ctx['payment_token']}.\n"
 "                    %endif\n"
 "                    <br/><br/>\n"
 "                    You will find your invoice attached.\n"
 "                    %if ctx.get('next_date'):\n"
-"                        Your next invoice will be on ${format_date(ctx."
-"get('next_date'))}.\n"
+"                        Your next invoice will be on ${format_date(ctx.get('next_date'))}.\n"
 "                    %endif\n"
 "                    <br/><br/>\n"
-"                    If you have any questions, do not hesitate to contact "
-"us.\n"
+"                    If you have any questions, do not hesitate to contact us.\n"
 "                    <br/><br/>\n"
 "                    Thank you for choosing ${company.name}!\n"
 "                    % if user.signature\n"
@@ -470,9 +384,7 @@ msgid ""
 "                    % endif\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -480,24 +392,19 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
-"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    ${company.name}\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
-"0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    % if company.phone\n"
 "                        ${company.phone} |\n"
 "                    %endif\n"
 "                    % if company.email\n"
-"                        <a href=\"'mailto:%s' % ${company.email}\" "
-"style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
+"                        <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
 "                    % endif\n"
 "                    % if company.website\n"
-"                        <a href=\"'%s' % ${company.website}\" style=\"text-"
-"decoration:none; color: #454748;\">${company.website}\n"
+"                        <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}\n"
 "                        </a>\n"
 "                    % endif\n"
 "                </td></tr>\n"
@@ -514,37 +421,23 @@ msgstr ""
 #. module: payment_system_subscription
 #: model:mail.template,body_html:payment_system_subscription.mail_payment_close
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
-"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"padding: 16px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    % set company = object.company_id or object.user_id."
-"company_id or user.company_id\n"
-"                    <span style=\"font-size: 10px;\">Your Subscription</"
-"span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;"
-"\">${object.name}</span>\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Your Subscription</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">${object.name}</span>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${company.id}\" "
-"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" "
-"alt=\"${company.name}\"/>\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -552,31 +445,22 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    Hello ${object.partner_id.name},<br/><br/>\n"
-"                    % if ctx.get('payment_token') and ctx."
-"get('total_amount'):\n"
-"                        Our final attempt to process a payment for your "
-"subscription using your payment method\n"
+"                    % if ctx.get('payment_token') and ctx.get('total_amount'):\n"
+"                        Our final attempt to process a payment for your subscription using your payment method\n"
 "                        ${ctx['payment_token']}\n"
-"                        for ${ctx['total_amount']} ${ctx.get('currency')} "
-"failed.\n"
+"                        for ${ctx['total_amount']} ${ctx.get('currency')} failed.\n"
 "                        % if ctx.get('error'):\n"
-"                            Your bank or credit institution gave the "
-"following details about the issue: <pre>${ctx['error']}</pre>.\n"
+"                            Your bank or credit institution gave the following details about the issue: <pre>${ctx['error']}</pre>.\n"
 "                        %endif\n"
 "                    % else:\n"
-"                        Our final attempt to process a payment for your "
-"subscription failed because we have no payment method recorded for you.\n"
+"                        Our final attempt to process a payment for your subscription failed because we have no payment method recorded for you.\n"
 "                    % endif\n"
 "                    <br/><br/>\n"
-"                    As your payment should have been made <strong>15 days "
-"ago</strong>, your subscription has been terminated.\n"
-"                    Should you wish to resolve this issue, do not hesitate "
-"to contact us.<br/><br/>\n"
+"                    As your payment should have been made <strong>15 days ago</strong>, your subscription has been terminated.\n"
+"                    Should you wish to resolve this issue, do not hesitate to contact us.<br/><br/>\n"
 "                    Thank you for choosing ${company.name}!\n"
 "                    % if user.signature\n"
 "                        <br/><br/>\n"
@@ -584,9 +468,7 @@ msgid ""
 "                    % endif\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -594,24 +476,19 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
-"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    ${company.name}\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
-"0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    % if company.phone\n"
 "                        ${company.phone} |\n"
 "                    %endif\n"
 "                    % if company.email\n"
-"                        <a href=\"'mailto:%s' % ${company.email}\" "
-"style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
+"                        <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
 "                    % endif\n"
 "                    % if company.website\n"
-"                        <a href=\"'%s' % ${company.website}\" style=\"text-"
-"decoration:none; color: #454748;\">${company.website}\n"
+"                        <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}\n"
 "                        </a>\n"
 "                    % endif\n"
 "                </td></tr>\n"
@@ -628,37 +505,23 @@ msgstr ""
 #. module: payment_system_subscription
 #: model:mail.template,body_html:payment_system_subscription.mail_payment_reminder
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
-"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
-"align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"padding: 16px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    % set company = object.company_id or object.user_id."
-"company_id or user.company_id\n"
-"                    <span style=\"font-size: 10px;\">Your Subscription</"
-"span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;"
-"\">${object.name}</span>\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Your Subscription</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">${object.name}</span>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${company.id}\" "
-"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" "
-"alt=\"${company.name}\"/>\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -666,34 +529,24 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
-"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    Hello ${object.partner_id.name},<br/><br/>\n"
-"                    % if ctx.get('payment_token') and ctx."
-"get('total_amount'):\n"
-"                        We were unable to process a payment for your "
-"subscription using your payment method\n"
+"                    % if ctx.get('payment_token') and ctx.get('total_amount'):\n"
+"                        We were unable to process a payment for your subscription using your payment method\n"
 "                        ${ctx['payment_token']}\n"
 "                        for ${ctx['total_amount']} ${ctx.get('currency')}.\n"
 "                        % if ctx.get('error'):\n"
-"                            Your bank or credit institution gave the "
-"following details about the issue: <pre>${ctx['error']}</pre>.\n"
+"                            Your bank or credit institution gave the following details about the issue: <pre>${ctx['error']}</pre>.\n"
 "                        %endif\n"
 "                    % else:\n"
-"                        We were unable to process a payment for your "
-"subscription because we have no payment method recorded for you.\n"
+"                        We were unable to process a payment for your subscription because we have no payment method recorded for you.\n"
 "                    % endif\n"
 "                    <br/><br/>\n"
-"                    Your subscription ${ctx.get('code')} is still valid but "
-"will be <strong>suspended</strong>\n"
-"                    on ${format_date(ctx.get('date_close'))} unless the "
-"payment succeeds in the mean time (we will retry once every day).\n"
-"                    Please double-check that you have sufficient funds.<br/"
-"><br/>\n"
-"                    If you have any questions, do not hesitate to contact us."
-"<br/><br/>\n"
+"                    Your subscription ${ctx.get('code')} is still valid but will be <strong>suspended</strong>\n"
+"                    on ${format_date(ctx.get('date_close'))} unless the payment succeeds in the mean time (we will retry once every day).\n"
+"                    Please double-check that you have sufficient funds.<br/><br/>\n"
+"                    If you have any questions, do not hesitate to contact us.<br/><br/>\n"
 "                    Thank you for choosing ${company.name}!\n"
 "                    % if user.signature:\n"
 "                        <br/><br/>\n"
@@ -701,9 +554,7 @@ msgid ""
 "                    % endif\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -711,24 +562,19 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
-"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    ${company.name}\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
-"0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    % if company.phone\n"
 "                        ${company.phone} |\n"
 "                    %endif\n"
 "                    % if company.email\n"
-"                        <a href=\"'mailto:%s' % ${company.email}\" "
-"style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
+"                        <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a> |\n"
 "                    % endif\n"
 "                    % if company.website\n"
-"                        <a href=\"'%s' % ${company.website}\" style=\"text-"
-"decoration:none; color: #454748;\">${company.website}\n"
+"                        <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}\n"
 "                        </a>\n"
 "                    % endif\n"
 "                </td></tr>\n"
@@ -745,78 +591,78 @@ msgstr ""
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__journal_id
 msgid "Accounting Journal"
-msgstr "Muhasebe Hesabı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_needaction
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_needaction
 msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__active
 msgid "Active"
-msgstr "Etkin"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_ids
 msgid "Activities"
-msgstr "Aktiviteler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Etkinlik İstisna Donatımı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_state
 msgid "Activity State"
-msgstr "Aktivite Durumu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivite Simge Tipi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:res.groups,name:payment_system_subscription.group_subscription_manager
 msgid "Administrator"
-msgstr "Yönetici"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr "Tümü"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_account_analytic_account
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__analytic_account_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__analytic_account_id
 msgid "Analytic Account"
-msgstr "Analitik Hesap"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription_template
 msgid "Archived"
-msgstr "Arşivlendi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard__kept_archived_product_ids
 msgid "Archived products"
-msgstr "Arşivlenmiş Ürünler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_attachment_count
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_attachment_count
 msgid "Attachment Count"
-msgstr "Ek Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__auto_close_limit
 msgid "Automatic Closing"
-msgstr "Otomatik Kapanış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
@@ -825,16 +671,12 @@ msgid ""
 "Automatic payment failed after multiple attempts. Payment Subscription "
 "closed automatically."
 msgstr ""
-"Otomatik ödeme birden fazla denemeden sonra başarısız oldu. Payment "
-"Aboneliği otomatik olarak kapatıldı."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "Automatic payment failed. Subscription set to \"To Renew\"."
+#, python-format
 msgid "Automatic payment failed. Subscription set to 'To Renew'."
 msgstr ""
-"Otomatik ödeme başarısız oldu. Abonelik \"Yenilemek\" olarak ayarlandı."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
@@ -844,18 +686,13 @@ msgid ""
 "model=payment.transaction data-oe-id=%d>%s</a>; Amount: %s. Invoice <a "
 "href=# data-oe-model=account.move data-oe-id=%d>View Invoice</a>."
 msgstr ""
-"Otomatik ödeme başarılı. Ödeme referansı: <a href=# data-oe-model=payment."
-"transaction data-oe-id=%d>%s</a>;Miktar: %s. Fatura <a href=# data-oe-"
-"model=account.move data-oe-id=%d>Faturayı Görüntüle</a>."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__percentage_satisfaction
 msgid ""
-"Calculate the ratio between the number of the best ('great') ratings and the "
-"total number of ratings"
+"Calculate the ratio between the number of the best ('great') ratings and the"
+" total number of ratings"
 msgstr ""
-"En iyi ('harika') derecelendirme sayısı ile toplam derecelendirme sayısı "
-"arasındaki oranı hesaplayın"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard
@@ -863,51 +700,51 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Cancel"
-msgstr "İptal"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__product_uom_category_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_replace__product_uom_category_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__product_uom_category_id
 msgid "Category"
-msgstr "Kategori"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Change Payment Method"
-msgstr "Ödeme Yöntemini Değiştir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Change plan"
-msgstr "Plan Değiştir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Choose Payment Method"
-msgstr "Ödeme yöntemini seçin"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__user_closable
 msgid "Closable by Customer"
-msgstr "Müşteri tarafından kapatılabilir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Close"
-msgstr "Kapat"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__reason_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__reason_id
 msgid "Close Reason"
-msgstr "Kapatma Nedeni"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Close Subscription"
-msgstr "Kapat"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -915,42 +752,38 @@ msgstr "Kapat"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 #, python-format
 msgid "Closed"
-msgstr "Kapanma"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Closed subscriptions"
 msgid "Closed Subscriptions"
-msgstr "Kapalı abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 msgid "Closed subscriptions"
-msgstr "Kapalı abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
 #, python-format
 msgid "Closing text : "
-msgstr "Kapama Notu:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__code
 msgid "Code"
-msgstr "Kod"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__color
 msgid "Color"
-msgstr "Renk"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_res_company
-#, fuzzy
-#| msgid "Company"
 msgid "Companies"
-msgstr "Şirket"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__company_id
@@ -958,18 +791,18 @@ msgstr "Şirket"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__company_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__company_id
 msgid "Company"
-msgstr "Şirket"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Confirm"
-msgstr "Doğrula"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_res_partner
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Contact"
-msgstr "Kontak"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_line__product_uom_category_id
@@ -979,8 +812,6 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse olur. "
-"Dönüşümler oranlara göre yapılacaktır."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__country_id
@@ -988,71 +819,50 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Country"
-msgstr "Ülke"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard
 msgid "Create & View Quotation"
-msgstr "Teklif Oluştur & Görüntüle"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Create Invoice"
-msgstr "Fatura Oluştur"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_filtered
 msgid "Create a new subscription"
-msgstr "Yeni bir abonelik oluştur"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_stage
 msgid "Create a new subscription stage"
-msgstr "Yeni bir abonelik aşaması oluşturma"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_template
 msgid "Create a new template of subscription"
-msgstr "Yeni bir abonelik şablonu oluşturun"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard
 msgid ""
-"Create a quotation with new products and send it to the customer for "
-"approval.\n"
-"                    When the quotation is confirmed, the products will be "
-"added to the subscription.\n"
-"                    Quotation prices will be prorated to the remaining time "
-"of the current invoicing period."
+"Create a quotation with new products and send it to the customer for approval.\n"
+"                    When the quotation is confirmed, the products will be added to the subscription.\n"
+"                    Quotation prices will be prorated to the remaining time of the current invoicing period."
 msgstr ""
-"Yeni ürünlerle bir teklif oluşturun ve onay için müşteriye gönderin.\n"
-"                   Teklif onaylandığında, ürünler aboneliğe eklenecektir.\n"
-"                   Teklif fiyatları, geçerli fatura döneminin kalan süresine "
-"orantılı olacaktır."
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription
-#, fuzzy
-#| msgid ""
-#| "Create payment subscriptions to manage recurring invoicing &amp; "
-#| "payments. Payment Subscriptions can\n"
-#| "                be time-bounded or not. In case of a limited period, they "
-#| "are flagged as to be renewed\n"
-#| "                one month from the end date."
 msgid ""
-"Create subscriptions to manage recurring invoicing &amp; payments. "
-"Subscriptions can\n"
-"                be time-bounded or not. In case of a limited period, they "
-"are flagged as to be renewed\n"
+"Create subscriptions to manage recurring invoicing &amp; payments. Subscriptions can\n"
+"                be time-bounded or not. In case of a limited period, they are flagged as to be renewed\n"
 "                one month from the end date."
 msgstr ""
-"Yinelenen faturalama ve ödemeleri yönetmek için payment abonelikleri "
-"oluşturun. Payment Abonelikleri şunları yapabilir\n"
-"                zaman sınırlı olsun ya da olmasın. Sınırlı bir süre olması "
-"durumunda, yenilenecek olarak işaretlenirler\n"
-"                bitiş tarihinden itibaren bir ay."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__create_uid
@@ -1068,7 +878,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__create_date
@@ -1084,40 +894,30 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__create_date
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__sale_order__payment_subscription_management__create
 msgid "Creation"
-msgstr "Oluşturma"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_sale_order__payment_subscription_management
-#, fuzzy
-#| msgid ""
-#| "Creation: The Sales Order created the payment subscription\n"
-#| "Upselling: The Sales Order added lines to the payment subscription\n"
-#| "Renewal: The Sales Order replaced the payment subscription's content with "
-#| "its own"
 msgid ""
 "Creation: The Sales Order created the subscription\n"
 "Upselling: The Sales Order added lines to the subscription\n"
 "Renewal: The Sales Order replaced the subscription's content with its own"
 msgstr ""
-"Oluşturma: Satış Siparişi payment aboneliğini oluşturdu\n"
-"Üst Satış: Satış Siparişi payment aboneliğine satır ekledi\n"
-"Yenileme: Satış Siparişi, payment aboneliğinin içeriğini kendi içeriğiyle "
-"değiştirdi"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__currency_id
 msgid "Currency"
-msgstr "Para Birimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Current Plan:"
-msgstr "Mevcut Plan:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__partner_id
@@ -1125,28 +925,28 @@ msgstr "Mevcut Plan:"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Customer"
-msgstr "Müşteri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__commercial_partner_id
 msgid "Customer Company"
-msgstr "Müşteri Şirketi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_snapshot__date
 msgid "Date"
-msgstr "Mail"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_next_date
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Date of Next Invoice"
-msgstr "Sonraki Fatura Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_type__daily
 msgid "Days"
-msgstr "Gün"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__description
@@ -1154,17 +954,17 @@ msgstr "Gün"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_replace__name
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__name
 msgid "Description"
-msgstr "Açıklama"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Disc.%"
-msgstr "İnd.(%)"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__discount
 msgid "Discount (%)"
-msgstr "İndirim (%)"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
@@ -1174,9 +974,6 @@ msgid ""
 "invoice date and the computed last invoice date. Defaulting to NO Discount "
 "policy."
 msgstr ""
-"İndirim tarihi bir sonraki fatura tarihi ile hesaplanan son fatura tarihi "
-"arasında olmadığından indirim hesaplaması başarısız oldu. Varsayılan olarak "
-"NO İndirim politikası."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__display_name
@@ -1193,7 +990,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__display_name
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard__display_replacement_lines
@@ -1204,18 +1001,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__draft_invoice
 #: model:payment.subscription.stage,name:payment_system_subscription.stage_draft
 msgid "Draft"
-msgstr "Taslak"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_rule_boundary
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__recurring_rule_boundary
 msgid "Duration"
-msgstr "Süre"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__recurring_rule_count
 msgid "End After"
-msgstr "Sonrası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__date_end
@@ -1223,7 +1020,7 @@ msgstr "Sonrası"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "End Date"
-msgstr "Bitiş Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_stage__description
@@ -1231,104 +1028,101 @@ msgid ""
 "Enter here the internal requirements for this stage. It will appear as a "
 "tooltip over the stage's name."
 msgstr ""
-"Bu aşama için dahili gereksinimleri buraya girin. Sahnenin adı üzerinde bir "
-"ipucu olarak görünecektir."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 msgid "Expired"
-msgstr "Süresi Doldu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__failed_message_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__failed_message_ids
 msgid "Failed Messages"
-msgstr "Başarısız Mesajlar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_boundary__limited
 msgid "Fixed"
-msgstr "Sabit"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_stage__fold
 msgid "Folded in Kanban"
-msgstr "Kanban Görüntüsünü Katla"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_follower_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_follower_ids
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_partner_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Tekipçiler (İş ortakları)"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Fontawesome simgesi, örneğin fa-tasks"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_boundary__unlimited
 msgid "Forever"
-msgstr "Sonsuza dek"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Future Activities"
-msgstr "Sonraki Aktiviteler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Generate Invoice"
-msgstr "Fatura Oluştur"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_stage
 msgid "Give your team the requirements to move a subscription to this stage."
-msgstr "Ekibinize bir aboneliği bu aşamaya taşıma gereksinimleri verin."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Group By"
-msgstr "Grupla"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Group of Subscription"
-msgstr "Abonelik Grubu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Happy face"
-msgstr "Mutlu yüz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__has_message
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__has_message
 msgid "Has Message"
-msgstr "Mesaj Var"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.module.category,description:payment_system_subscription.module_category_subscription_management
 msgid "Helps you handle payment subscriptions and recurring invoicing."
 msgstr ""
-"Ödeme aboneliklerini ve yinelenen faturalandırmayı yönetmenize yardımcı olur."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "History"
-msgstr "Geçmiş"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_4
 msgid "I don't use it"
-msgstr "Kullanmıyorum"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__id
@@ -1345,17 +1139,17 @@ msgstr "Kullanmıyorum"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_exception_icon
 msgid "Icon"
-msgstr "İkon"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Bir istisna faaliyetini gösteren simge."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__message_needaction
@@ -1363,7 +1157,7 @@ msgstr "Bir istisna faaliyetini gösteren simge."
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_needaction
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__message_has_error
@@ -1371,49 +1165,37 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_has_error
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_renew_wizard__kept_archived_product_ids
 msgid "If checked, the product will be reused in the renewal order"
-msgstr "İşaretlenirse, ürün yenileme siparişinde yeniden kullanılır"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__user_closable
 msgid ""
 "If checked, the user will be able to close his account from the frontend"
-msgstr "Eğer işaretli ise, kullanıcı hesabını ön yüzden kapatabilir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__payment_token_id
 msgid "If not set, the automatic payment will fail."
-msgstr "Ayarlanmazsa, otomatik ödeme başarısız olur."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__date_end
-#, fuzzy
-#| msgid ""
-#| "If set in advance, the payment subscription will be set to renew 1 month "
-#| "before the date and will be closed on the date set in this field."
 msgid ""
 "If set in advance, the subscription will be set to renew 1 month before the "
 "date and will be closed on the date set in this field."
 msgstr ""
-"Önceden ayarlanırsa, payment aboneliği tarihten 1 ay önce yenilenecek "
-"şekilde ayarlanacak ve bu alanda ayarlanan tarihte kapatılacaktır."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_product_product__payment_recurring_invoice
 #: model:ir.model.fields,help:payment_system_subscription.field_product_template__payment_recurring_invoice
-#, fuzzy
-#| msgid ""
-#| "If set, confirming a sale order with this product will create a payment "
-#| "subscription"
 msgid ""
 "If set, confirming a sale order with this product will create a subscription"
 msgstr ""
-"Ayarlanırsa, bu ürünle bir satış siparişini onaylamak bir payment aboneliği "
-"oluşturacaktır"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__journal_id
@@ -1421,48 +1203,37 @@ msgid ""
 "If set, subscriptions with this template will invoice in this journal; "
 "otherwise the sales journal with the lowest sequence is used."
 msgstr ""
-"Eğer ayarlanmış ise, abonelikler bu şablonla birlikte bu yevmiyede "
-"faturalanacak; yoksa en düşük sıra ile birlikte satış yevmiyesi kullanılır."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__auto_close_limit
 msgid ""
-"If the chosen payment method has failed to renew the subscription after this "
-"time, the subscription is automatically closed."
+"If the chosen payment method has failed to renew the subscription after this"
+" time, the subscription is automatically closed."
 msgstr ""
-"Seçilen ödeme yöntemi bu süreden sonra aboneliği yenileyemezse, abonelik "
-"otomatik olarak kapatılır."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid ""
-#| "If you confirm, your payment subscription will be closed right away. Your "
-#| "current invoicing period is valid until"
 msgid ""
 "If you confirm, your subscription will be closed right away. Your current "
 "invoicing period is valid until"
 msgstr ""
-"Onaylamanız durumunda payment aboneliğiniz hemen kapatılacaktır. Mevcut "
-"faturalama döneminiz şu tarihe kadar geçerlidir"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "If you wish to reopen it, the"
-msgstr "Yeniden açmak isterseniz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid ""
-"If you wish to reopen it, you can pay your invoice for the current invoicing "
-"period."
+"If you wish to reopen it, you can pay your invoice for the current invoicing"
+" period."
 msgstr ""
-"Yeniden açmak isterseniz, güncel fatura döneminiz için ödeme yapabilirsiniz."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "In #{kanban_getcolorname(record.color.raw_value)}"
-msgstr "#{kanban_getcolorname(record.color.raw_value)}"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -1472,7 +1243,7 @@ msgstr "#{kanban_getcolorname(record.color.raw_value)}"
 #: model:payment.subscription.stage,name:payment_system_subscription.stage_in_progress
 #, python-format
 msgid "In Progress"
-msgstr "Devam Eden"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__industry_id
@@ -1480,121 +1251,119 @@ msgstr "Devam Eden"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Industry"
-msgstr "Endüstri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__invoice_count
 msgid "Invoice Count"
-msgstr "Fatura Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__invoice_currency_id
 msgid "Invoice Currency"
-msgstr "Fatura Para Birimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Invoice Email"
-msgstr "Fatura E-postası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr "Fatura E-posta Şablonu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__recurring_rule_type
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__recurring_rule_type
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__recurring_rule_type_readonly
 msgid "Invoice automatically repeat at specified interval"
-msgstr "Belirlenen aralıklarda faturalar otomatik yinelenir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_payment_success
 msgid "Invoice for subscription ${ctx.get('code')}"
-msgstr "Abonelik faturası ${ctx.get('code')}"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,report_name:payment_system_subscription.mail_template_payment_subscription_invoice
 msgid ""
-"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+" '_draft' or ''}"
 msgstr ""
-"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
 
 #. module: payment_system_subscription
 #: model:mail.template,report_name:payment_system_subscription.mail_payment_success
 msgid "Invoice_${ctx.get('code')}_${format_date(ctx.get('previous_date'))}"
-msgstr "Invoice_${ctx.get('code')}_${format_date(ctx.get('previous_date'))}"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Invoices"
-msgstr "Faturalar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Invoicing"
-msgstr "Faturalama"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__recurring_interval
 msgid "Invoicing Period"
-msgstr "Fatura Dönemi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #: code:addons/payment_system_subscription/models/sale_order.py:0
 #, python-format
 msgid "Invoicing period"
-msgstr "Fatura Dönemi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_is_follower
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_is_follower
 msgid "Is Follower"
-msgstr "Takipçi mi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Journal"
-msgstr "Yevmiye"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_account_move
 msgid "Journal Entry"
-msgstr "Yevmiye Kaydı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_account_move_line
 msgid "Journal Item"
-msgstr "Yevmiye Kalemleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__kpi_1month_mrr_delta
 msgid "KPI 1 Month MRR Delta"
-msgstr "KPI 1 Ay MRR Delta"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__kpi_1month_mrr_percentage
 msgid "KPI 1 Month MRR Percentage"
-msgstr "KPI 1 Ay MRR Yüzdesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__kpi_3months_mrr_percentage
 msgid "KPI 3 Months MRR Percentage"
-msgstr "KPI 3 Ay MRR Yüzdesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__kpi_3months_mrr_delta
 msgid "KPI 3 months MRR Delta"
-msgstr "KPI 3 ay MRR Delta"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_keep__renew_product
 msgid "Keep the product"
-msgstr "Ürünü koru"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription____last_update
@@ -1611,7 +1380,7 @@ msgstr "Ürünü koru"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard____last_update
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__write_uid
@@ -1627,7 +1396,7 @@ msgstr "Son Düzenleme"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__write_uid
 msgid "Last Updated by"
-msgstr "Son Güncelleyen"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__write_date
@@ -1643,61 +1412,61 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__write_date
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Last invoice date: "
-msgstr "Son fatura tarihi:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Late Activities"
-msgstr "Geciken Aktiviteler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr "Son Değerlendirme: Son Derece Memnuniyetsiz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Latest Rating: Not Satisfied"
-msgstr "Son Değerlendirme: Memnun Değil"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Latest Rating: Satisfied"
-msgstr "Son Değerlendirme: Memnun"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_main_attachment_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Ana Ek"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__manual
 msgid "Manually"
-msgstr "Manuel Olarak"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__starred_user_ids
 msgid "Members"
-msgstr "Üyeler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_has_error
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_has_error
 msgid "Message Delivery error"
-msgstr "Mesaj Teslim hatası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_ids
 msgid "Messages"
-msgstr "Mesajlar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_mrr
@@ -1705,23 +1474,23 @@ msgstr "Mesajlar"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__recurring_monthly
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_snapshot__recurring_monthly
 msgid "Monthly Recurring Revenue"
-msgstr "Aylık Tekrarlanan Ciro"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_type__monthly
 msgid "Months"
-msgstr "Ay"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Aktivitemin Son Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "My Subscriptions"
-msgstr "Aboneliklerim"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -1730,266 +1499,262 @@ msgstr "Aboneliklerim"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__name
 #, python-format
 msgid "Name"
-msgstr "Adı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Neutral face"
-msgstr "Doğal yüz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "Newest"
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
+#: code:addons/payment_system_subscription/models/payment_subscription.py:0
+#, python-format
 msgid "New"
-msgstr "En yeni"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
 #, python-format
 msgid "Newest"
-msgstr "En yeni"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Bir Sonraki Etkinlik Takvimi Etkinliği"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Sonraki Aktivite Zaman Sınırı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_summary
 msgid "Next Activity Summary"
-msgstr "Sonraki Aktivite Özeti"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_type_id
 msgid "Next Activity Type"
-msgstr "Sonraki Aktivite Türü"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Next Invoice:"
-msgstr "Sonraki Fatura:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Next invoice date: "
-msgstr "Sonraki fatura tarihi:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_product
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_product
 msgid "No product found"
-msgstr "Ürün bulunamadı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_needaction_counter
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Eylemlerin Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_has_error_counter
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_has_error_counter
 msgid "Number of errors"
-msgstr "Hata sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__message_needaction_counter
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__message_has_error_counter
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Teslimat hatası olan mesaj sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__message_unread_counter
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard__option_lines
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid "Options"
-msgstr "Seçenekler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_order
 msgid "Order Number"
-msgstr "Sipariş No"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_5
 msgid "Other"
-msgstr "Diğer"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Other Info"
-msgstr "Diğer Bilgiler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Pay With"
-msgstr "Öde"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__payment_mode
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__payment_mode
 msgid "Payment Mode"
-msgstr "Ödeme Biçimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_transaction__payment_renewal_allowed
 msgid "Payment Renewal Allowed"
-msgstr "Ödeme Yenilemeye İzin Verildi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_settings
-#, fuzzy
-#| msgid "Payment Subscriptions"
 msgid "Payment Settings"
-msgstr "Payment Abonelikleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_id
 msgid "Payment Subscription"
-msgstr "Ödeme Aboneliği"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_report
 msgid "Payment Subscription Analysis"
-msgstr "Ödeme Abonelik Analizi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_sale_order__payment_subscription_count
-#, fuzzy
-#| msgid "Payment Subscription Product"
 msgid "Payment Subscription Count"
-msgstr "Payment Abonelik Ürünü"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_template_payment_subscription_invoice
 msgid "Payment Subscription Invoice: Send by Email"
-msgstr "Ödeme Abonelik Faturası: E-posta ile Gönder"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_line
 msgid "Payment Subscription Line"
-msgstr "Ödeme Abonelik Kalemi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_snapshot
 msgid "Payment Subscription Snapshot"
-msgstr "Ödeme Abonelik Anlık"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_stage
 msgid "Payment Subscription Stage"
-msgstr "Ödeme Abonelik Aşaması"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_template
 msgid "Payment Subscription Template"
-msgstr "Ödeme Abonelik Şablonu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.server,name:payment_system_subscription.cron_payment_subscription_update_kpi_ir_actions_server
 #: model:ir.cron,cron_name:payment_system_subscription.cron_payment_subscription_update_kpi
 #: model:ir.cron,name:payment_system_subscription.cron_payment_subscription_update_kpi
 msgid "Payment Subscription: Update KPI"
-msgstr "Ödeme Aboneliği: KPI Güncelleme"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.server,name:payment_system_subscription.cron_account_analytic_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:payment_system_subscription.cron_account_analytic_for_invoice
 #: model:ir.cron,name:payment_system_subscription.cron_account_analytic_for_invoice
 msgid "Payment Subscription: generate recurring invoices and payments"
-msgstr "Ödeme Aboneliği: yinelenen faturalar ve ödemeler oluşturun"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.server,name:payment_system_subscription.cron_account_analytic_ir_actions_server
 #: model:ir.cron,cron_name:payment_system_subscription.cron_account_analytic
 #: model:ir.cron,name:payment_system_subscription.cron_account_analytic
 msgid "Payment Subscription: subscriptions expiration"
-msgstr "Ödeme Aboneliği: aboneliklerin sona ermesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.module.category,name:payment_system_subscription.module_category_subscription_management
 msgid "Payment Subscriptions"
-msgstr "Ödeme Abonelikleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription
-#, fuzzy
-#| msgid "Payment Subscription"
 msgid "Payment System Subscription"
-msgstr "Payment Aboneliği"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_token
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__payment_token_id
 msgid "Payment Token"
-msgstr "Ödeme Token'ı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Ödeme İşlemi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Payment method:"
-msgstr "Ödeme Metodu:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_payment_reminder
 msgid "Payment reminder for subscription ${object.code}"
-msgstr "Abonelik ödeme hatırlatıcı ${object.code}"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Pending Subscriptions"
-msgstr "Bekleyen Abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 msgid "Pending subscriptions"
-msgstr "Aktif Abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Plan Details"
-msgstr "Plan Ayrıntıları"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Please define Date of Next Invoice of \"%s\"."
-msgstr "Lütfen gelecek faturanın tarihini tanımlayın \"%s\"."
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr "Lütfen \"%s\" şirketi için bir satış yevmiyesi tanımlayın."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__pricelist_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__pricelist_id
 msgid "Pricelist"
-msgstr "Fiyat Listesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_product_product
@@ -2001,36 +1766,36 @@ msgstr "Fiyat Listesi"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__product_id
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Product"
-msgstr "Ürün"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__categ_id
 msgid "Product Category"
-msgstr "Ürün Kategorisi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__product_count
 msgid "Product Count"
-msgstr "Ürün Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_product_template
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__product_tmpl_id
 msgid "Product Template"
-msgstr "Ürün Şablonu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_product_product__payment_subscription_template_id
 #: model:ir.model.fields,help:payment_system_subscription.field_product_template__payment_subscription_template_id
 msgid "Product will be included in a selected template"
-msgstr "Ürün seçilen bir şablona dahil edilecektir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_product
 #: model:ir.actions.act_window,name:payment_system_subscription.action_subscription_product
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "Products"
-msgstr "Ürünler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__quantity
@@ -2040,52 +1805,52 @@ msgstr "Ürünler"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__quantity
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Quantity"
-msgstr "Miktar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_line__quantity
 msgid "Quantity that will be invoiced."
-msgstr "Faturalanacak miktar."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_ids
 msgid "Rating"
-msgstr "Değerlendirme"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_avg
 msgid "Rating Average"
-msgstr "Değerlendirme Ortalaması"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_stage__rating_template_id
 msgid "Rating Email Template"
-msgstr "Değerlendirme E-posta Şablonu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Son Geribildirimleri Derecelendirme "
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_last_image
 msgid "Rating Last Image"
-msgstr "Son Resmin Değerlendirilmesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_last_value
 msgid "Rating Last Value"
-msgstr "Değerlendirme Son Değer"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_count
 msgid "Rating count"
-msgstr "Değerlendirme sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:res.groups,name:payment_system_subscription.group_subscription_read
 msgid "Read Subscriptions"
-msgstr "Abonelikleri Oku"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_reason
@@ -2093,170 +1858,166 @@ msgstr "Abonelikleri Oku"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_reason_wizard__reason_id
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_reason
 msgid "Reason"
-msgstr "Sebep"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__rating_last_feedback
 msgid "Reason of the rating"
-msgstr "Değerlendirme nedeni"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_subscription_reason
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_reason
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription_reason
-#, fuzzy
-#| msgid "Reason"
 msgid "Reasons"
-msgstr "Sebep"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_rule_type
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__recurring_rule_type
 msgid "Recurrence"
-msgstr "Periyot"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__recurring_rule_type_readonly
 msgid "Recurrence Unit"
-msgstr "Tekrarlama Birimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "Recurrence:"
-msgstr "Periyot:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_invoice_day
 msgid "Recurring Invoice Day"
-msgstr "Yinelenen Fatura Günü"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_total
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__recurring_total
 msgid "Recurring Price"
-msgstr "Yinelenen Fiyat"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__code
 msgid "Reference"
-msgstr "Referans"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Reference:"
-msgstr "Referans:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid "Renew & View Quotation"
-msgstr "Teklifi Yenile & Görüntüle"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid "Renewable"
-msgstr "Yenilenebilir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__sale_order__payment_subscription_management__renew
 msgid "Renewal"
-msgstr "Yenile"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Renewal Quotation"
-msgstr "Yenileme Teklifi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_interval
 msgid "Repeat Every"
-msgstr "Tekrarlama Durumu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__recurring_interval
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Tekrarlama Durumu (Gün/Hafta/Ay/Yıl)"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard__replacement_line_ids
 msgid "Replaced by"
-msgstr "Tarafından değiştirildi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_stage__description
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_stage
 msgid "Requirements"
-msgstr "Gereksinimler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__activity_user_id
 msgid "Responsible User"
-msgstr "Sorumlu Kullanıcı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__in_progress
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Running"
-msgstr "Aktif"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Running Subscriptions"
-msgstr "Aktif Abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_has_sms_error
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Ulaştırma hatası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid "Sad face"
-msgstr "Üzgün Yüz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__sale_order_count
 msgid "Sale Order Count"
-msgstr "Sipariş Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription
-#, fuzzy
-#| msgid "Sale Payment Subscriptions"
 msgid "Sale payment Subscriptions"
-msgstr "Satış Payment Abonelikleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Sales"
-msgstr "Satış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_sale_order
 msgid "Sales Order"
-msgstr "Satış Siparişi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Satış Sipariş Satırı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_order
 #, python-format
 msgid "Sales Orders"
-msgstr "Satış Siparişleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__team_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__team_id
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Sales Team"
-msgstr "Satış Ekibi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__user_id
@@ -2264,73 +2025,66 @@ msgstr "Satış Ekibi"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Salesperson"
-msgstr "Satış Temsilcisi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_wizard_renew
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid "Select Archived Product for Renewal"
-msgstr "Yenileme için Arşivlenmiş Ürünü Seçin"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid "Select another product to replace the archived one."
-msgstr "Arşivlenen ürünün yerine başka bir ürün seçin."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__validate_send
 msgid "Send"
-msgstr "Gönder"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__validate_send_payment
 msgid "Send & try to charge"
-msgstr "Gönder ve şarj etmeyi dene"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__success_payment
 msgid "Send after successful payment"
-msgstr "Başarılı ödeme yapıldıktan sonra gönder"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_sms_composer_multi
 #: model:ir.actions.act_window,name:payment_system_subscription.action_sms_composer_single
 msgid "Send an SMS Text Message"
-msgstr "SMS Metin Mesajı Gönderme"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_stage__rating_template_id
-#, fuzzy
-#| msgid ""
-#| "Send an email to the customer when the payment subscription is moved to "
-#| "this stage."
 msgid ""
 "Send an email to the customer when the subscription is moved to this stage."
 msgstr ""
-"Payment aboneliği bu aşamaya taşındığında müşteriye bir e-posta gönderin."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_reason__sequence
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_stage__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription_template
 msgid "Settings"
-msgstr "Ayarlar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__starred
-#, fuzzy
-#| msgid "Show Payment Subscription on dashboard"
 msgid "Show Subscriptions on dashboard"
-msgstr "Payment Aboneliğini kontrol panelinde göster"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Show all records which has next action date is before today"
-msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__stage_id
@@ -2338,22 +2092,22 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Stage"
-msgstr "Aşama"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.message.subtype,name:payment_system_subscription.subtype_stage_change
 msgid "Stage Change"
-msgstr "Aşama Değişimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_stage__name
 msgid "Stage Name"
-msgstr "Aşama Adı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_subscription_stage
 msgid "Stages"
-msgstr "Aşamalar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__date_start
@@ -2362,17 +2116,17 @@ msgstr "Aşamalar"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Start Date"
-msgstr "Başlangıç Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Start Date:"
-msgstr "Başlangıç ​​tarihi:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
 msgid "Status"
-msgstr "Durum"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__activity_state
@@ -2382,15 +2136,11 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Etkinliklerdeki aşamalar\n"
-"Zamanı Geçmiş: Tarihi geçmiş \n"
-"Bugün: Etkinlik günü bugün\n"
-"Planlanan: Gelecek etkinlikler."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_reason
 msgid "Submit"
-msgstr "Gönder"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__subscription_id
@@ -2404,12 +2154,12 @@ msgstr "Gönder"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Subscription"
-msgstr "Abonelik"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_reason
 msgid "Subscription Close Reason"
-msgstr "Abonelik Kapatma Gerekçesi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_analytic_account__payment_subscription_count
@@ -2417,74 +2167,64 @@ msgstr "Abonelik Kapatma Gerekçesi"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_res_partner__payment_subscription_count
 #: model:ir.model.fields,field_description:payment_system_subscription.field_res_users__payment_subscription_count
 msgid "Subscription Count"
-msgstr "Abonelik Sayısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__line_ids
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "Subscription Lines"
-msgstr "Abonelik Kalemleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_sale_order__payment_subscription_management
-#, fuzzy
-#| msgid "Payment Subscription Management"
 msgid "Subscription Management"
-msgstr "Payment Abonelik Yönetimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_product_product__payment_recurring_invoice
 #: model:ir.model.fields,field_description:payment_system_subscription.field_product_template__payment_recurring_invoice
 msgid "Subscription Product"
-msgstr "Abonelik Ürünü"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_product
 msgid "Subscription Products"
-msgstr "Abonelik Ürünleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_reason_wizard
 msgid "Subscription Reason Wizard"
-msgstr "Abonelik Gerekçe Sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard_option_replace
-#, fuzzy
-#| msgid "Payment Subscription Renew Lines Wizard"
 msgid "Subscription Renew Lines Wizard"
-msgstr "Payment Abonelik Yenileme Satırları Sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard
-#, fuzzy
-#| msgid "Payment Subscription Renew wizard"
 msgid "Subscription Renew wizard"
-msgstr "Payment Abonelik Yenileme sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_end_date
-#, fuzzy
-#| msgid "Payment Subscription Revenue End Date"
 msgid "Subscription Revenue End Date"
-msgstr "Payment Abonelik Geliri Bitiş Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_start_date
-#, fuzzy
-#| msgid "Payment Subscription Revenue Start Date"
 msgid "Subscription Revenue Start Date"
-msgstr "Payment Abonelik Geliri Başlangıç Tarihi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_stage
 msgid "Subscription Stage"
-msgstr "Abonelik Aşaması"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription_stage
 msgid "Subscription Stages"
-msgstr "Abonelik Aşamaları"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__template_id
@@ -2492,88 +2232,78 @@ msgstr "Abonelik Aşamaları"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_product_product__payment_subscription_template_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_product_template__payment_subscription_template_id
 msgid "Subscription Template"
-msgstr "Abonelik Şablonu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_subscription_template
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription_template
 msgid "Subscription Templates"
-msgstr "Abonelik Şablonları"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_wizard
-#, fuzzy
-#| msgid "Payment Subscription Upsell wizard"
 msgid "Subscription Upsell wizard"
-msgstr "Payment Abonelik Ek Satış Sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_2
-#, fuzzy
-#| msgid "Payment Subscription does not meet my requirements"
 msgid "Subscription does not meet my requirements"
-msgstr "Payment Aboneliği gereksinimlerimi karşılamıyor"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_1
-#, fuzzy
-#| msgid "Payment Subscription is too expensive"
 msgid "Subscription is too expensive"
-msgstr "Payment Aboneliği çok pahalı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_3
-#, fuzzy
-#| msgid "Payment Subscription reached its end date"
 msgid "Subscription reached its end date"
-msgstr "Payment Aboneliği bitiş tarihine ulaştı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.message.subtype,description:payment_system_subscription.subtype_stage_change
-#, fuzzy
-#| msgid "Payment Subscription stage has changed"
 msgid "Subscription stage has changed"
-msgstr "Payment Abonelik aşaması değişti"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_subscription_alert
 msgid "Subscription: Default Email Alert"
-msgstr "Abonelik: Varsayılan E-posta Uyarısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:sms.template,name:payment_system_subscription.sms_default_alert
 msgid "Subscription: Default SMS Alert"
-msgstr "Abonelik: Varsayılan SMS Uyarısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_payment_close
 msgid "Subscription: Payment Failure"
-msgstr "Abonelik: Ödeme hatası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_payment_reminder
 msgid "Subscription: Payment Reminder"
-msgstr "Abonelik: Ödeme hatırlatıcısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_payment_success
 msgid "Subscription: Payment Success"
-msgstr "Abonelik Ödeme Başarısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:sms.template,name:payment_system_subscription.sms_payment_failure
 msgid "Subscription: Payment failure"
-msgstr "Abonelik: Ödeme hatası"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:sms.template,name:payment_system_subscription.sms_payment_reminder
 msgid "Subscription: Payment reminder"
-msgstr "Abonelik: Ödeme hatırlatıcısı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_subscription_rating
 msgid "Subscription: Rating Request"
-msgstr "Abonelik: Derecelendirme Talebi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_partner_subscription
@@ -2595,72 +2325,56 @@ msgstr "Abonelik: Derecelendirme Talebi"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_home_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
 msgid "Subscriptions"
-msgstr "Abonelikler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_report_pivot_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions Analysis"
 msgid "Subscriptions Analysis"
-msgstr "Payment Abonelikleri Analizi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription
-#, fuzzy
-#| msgid ""
-#| "Payment Subscriptions can be automatically generated from sales orders in "
-#| "Sales or eCommerce\n"
-#| "                apps. To do so, set a payment subscription template on "
-#| "your payment subscription products."
 msgid ""
-"Subscriptions can be automatically generated from sales orders in Sales or "
-"eCommerce\n"
-"                apps. To do so, set a subscription template on your "
-"subscription products."
+"Subscriptions can be automatically generated from sales orders in Sales or eCommerce\n"
+"                apps. To do so, set a subscription template on your subscription products."
 msgstr ""
-"Payment Abonelikleri, Satış veya e-Ticaret'teki satış siparişlerinden "
-"otomatik olarak oluşturulabilir\n"
-"                uygulamalar. Bunu yapmak için, payment abonelik "
-"ürünlerinizde bir payment abonelik şablonu ayarlayın."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions that are not assigned to an account manager."
 msgid "Subscriptions that are not assigned to an account manager."
-msgstr "Bir hesap yöneticisine atanmamış Payment Abonelikleri."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Subtotal"
-msgstr "Ara Toplam"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Subtotal:<br/>"
-msgstr "Ara toplam:<br/>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__tag_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__tag_ids
 msgid "Tags"
-msgstr "Etiketler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_amount_tax
 msgid "Taxes"
-msgstr "Vergiler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Taxes:<br/>"
-msgstr "Vergiler:<br/>"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__team_user_id
 msgid "Team Leader"
-msgstr "Satış Ekip Lideri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_transaction__payment_renewal_allowed
@@ -2668,15 +2382,13 @@ msgid ""
 "Technical field used to control the renewal flow based on the transaction's "
 "state."
 msgstr ""
-"İşlemin durumuna bağlı olarak yenileme akışını kontrol etmek için kullanılan "
-"teknik alan."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription_template
 msgid "Template"
-msgstr "Şablon"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_template
@@ -2685,13 +2397,11 @@ msgid ""
 "                can be selected by the salespeople to quickly configure the\n"
 "                terms and conditions of the subscription."
 msgstr ""
-"Şablonlar seçili satış personelinin şartları ve sınırlarını hızlıca "
-"yapılandırması amacıyla bir ön izleme yaratmak için kullanılır."
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_payment_close
 msgid "Termination of subscription ${object.code}"
-msgstr "Aboneliğin sona ermesi ${object.code}"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__description
@@ -2699,24 +2409,15 @@ msgstr "Aboneliğin sona ermesi ${object.code}"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Terms and Conditions"
-msgstr "Şartlar ve Koşullar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_account_move_line__payment_subscription_mrr
 msgid ""
-"The MRR is computed by dividing the signed amount (in company currency) by "
-"the amount of time between the start and end dates converted in months.\n"
-"This allows comparison of invoice lines created by subscriptions with "
-"different temporalities.\n"
-"The computation assumes that 1 month is comprised of exactly 30 days, "
-"regardless  of the actual length of the month."
+"The MRR is computed by dividing the signed amount (in company currency) by the amount of time between the start and end dates converted in months.\n"
+"This allows comparison of invoice lines created by subscriptions with different temporalities.\n"
+"The computation assumes that 1 month is comprised of exactly 30 days, regardless  of the actual length of the month."
 msgstr ""
-"MRR, imzalanan tutarın (şirket para birimi cinsinden) ay olarak dönüştürülen "
-"başlangıç ve bitiş tarihleri arasındaki süreye bölünmesiyle hesaplanır.\n"
-"Bu, farklı zamansallıklara sahip abonelikler tarafından oluşturulan fatura "
-"satırlarının karşılaştırılmasına olanak tanır.\n"
-"Hesaplama, ayın gerçek uzunluğundan bağımsız olarak 1 ayın tam olarak 30 "
-"günden oluştuğunu varsayar."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_wizard__date_from
@@ -2725,22 +2426,18 @@ msgid ""
 "ratio between the full invoicing period of the subscription and the period "
 "between this date and the next invoicing date."
 msgstr ""
-"Bir satış siparişi oluştururken aboneliğin tüm faturalama dönemi ile bir "
-"sonraki abonelik faturalama tarihi arasında hesaplanan indirim uygulanır."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_renew
 msgid ""
-"The following products are archived. Do you want to keep them in the renewal "
-"quotation ?"
+"The following products are archived. Do you want to keep them in the renewal"
+" quotation ?"
 msgstr ""
-"Aşağıdaki ürünler arşivlenmiştir. Bunları yenileme teklifinde tutmak istiyor "
-"musunuz?"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Belgeye web sitesinden erişim için tam URL adresi."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__recurring_next_date
@@ -2748,45 +2445,40 @@ msgid ""
 "The next invoice will be created on this date then the period will be "
 "extended."
 msgstr ""
-"Bir sonraki fatura bu tarihte oluşturulacak daha sonra bu periyot "
-"uzatılacaktır."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription_template.py:0
 #, python-format
 msgid "The recurring interval must be positive"
-msgstr "Yinelenen aralık pozitif olmalıdır"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:res.groups,comment:payment_system_subscription.group_subscription_read
 msgid "The user will have read access to payment subscriptions."
-msgstr "Kullanıcı payment aboneliklerine okuma erişimine sahip olacaktır."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:res.groups,comment:payment_system_subscription.group_subscription_manager
-#, fuzzy
-#| msgid "The user will have write access to Payment Subscriptions."
 msgid "The user will have write access to payment subscriptions."
-msgstr "Kullanıcı Payment Aboneliklerine yazma erişimine sahip olacaktır."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
-"Bu bar planlanmış eylemler üzerinden fırsatları planlamanıza izin verir."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "This invoice covers the following period: %s - %s"
-msgstr "Bu fatura aşağıdaki dönemleri kapsar: %s - %s"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "This renewal order has been created from the payment subscription "
-msgstr "Bu yenileme siparişi payment aboneliğinden oluşturulmuştur"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_stage__fold
@@ -2794,13 +2486,12 @@ msgid ""
 "This stage is folded in the kanban view when there are not records in that "
 "stage to display."
 msgstr ""
-"Bu aşama, görüntülenecek kayıt olmadığında kanban görünümünde katlanır."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/wizard/payment_subscription_wizard.py:0
 #, python-format
 msgid "This upsell order has been created from the subscription "
-msgstr "Bu satış emri abonelikten oluşturuldu"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -2812,33 +2503,33 @@ msgstr "Bu satış emri abonelikten oluşturuldu"
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 #, python-format
 msgid "To Renew"
-msgstr "Yenilenecek"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:payment.subscription.stage,name:payment_system_subscription.stage_upsell
 msgid "To Upsell"
-msgstr "Ek Satış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Today Activities"
-msgstr "Bugünkü Aktiviteler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_amount_total
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
 msgid "Total"
-msgstr "Toplam"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_order
 msgid "Total Tax Included"
-msgstr "Toplam Vergi Dahil"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Kayıttaki istisna etkinliğinin türü."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__uuid
@@ -2847,26 +2538,20 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.constraint,message:payment_system_subscription.constraint_payment_subscription_uuid_uniq
-#, fuzzy
-#| msgid ""
-#| "UUIDs (Universally Unique IDentifier) for Payment Subscriptions should be "
-#| "unique!"
 msgid ""
 "UUIDs (Universally Unique IDentifier) should be unique for subscriptions!"
 msgstr ""
-"Payment Abonelikleri için UUID'ler (Evrensel Benzersiz Kimlik Tanımlayıcı) "
-"benzersiz olmalıdır!"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
 msgid "Unassigned"
-msgstr "Atanmamış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__price_unit
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Unit Price"
-msgstr "Birim Fiyat"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__uom_id
@@ -2874,203 +2559,166 @@ msgstr "Birim Fiyat"
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__product_uom
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__uom_id
 msgid "Unit of Measure"
-msgstr "Ölçü Birimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_unread
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_unread
 msgid "Unread Messages"
-msgstr "Okunmamış Mesajlar"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__message_unread_counter
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Okunmamış Mesaj Sayacı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 msgid "UoM"
-msgstr "Ölçü Birimi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_wizard
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard
 msgid "Upsell"
-msgstr "Arttırılmış Satış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Upsell date: "
-msgstr "Artırılmış Satış Tarihi:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__sale_order__payment_subscription_management__upsell
 msgid "Upselling"
-msgstr "Ek Satış"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_filtered
-#, fuzzy
-#| msgid ""
-#| "Use payment subscriptions to follow tasks, issues, timesheets or "
-#| "invoicing based on\n"
-#| "                work done, expenses and/or sales orders. Odoo will "
-#| "automatically manage\n"
-#| "                the alerts for the renewal of the payment subscriptions "
-#| "to the right salesperson."
 msgid ""
 "Use subscriptions to follow tasks, issues, timesheets or invoicing based on\n"
 "                work done, expenses and/or sales orders."
 msgstr ""
-"Görevleri, sorunları, zaman çizelgelerini veya faturalandırmayı "
-"aşağıdakilere göre takip etmek için payment aboneliklerini kullanın\n"
-"                yapılan işler, harcamalar ve/veya satış siparişleri. Odoo "
-"otomatik olarak şunları yönetecektir\n"
-"                payment aboneliklerinin yenilenmesi için uyarıların doğru "
-"satış elemanına iletilmesi."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Valid Until:"
-msgstr "Geçerlilik Tarihi:"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid ""
-#| "We always listen to our customer. Could you specify the reason for "
-#| "cancelling your payment subscription?"
 msgid ""
 "We always listen to our customer. Could you specify the reason for "
 "cancelling your subscription?"
 msgstr ""
-"Biz her zaman müşterimizi dinleriz. Payment aboneliğinizi iptal etme "
-"nedeninizi belirtir misiniz?"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__website_message_ids
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__website_message_ids
 msgid "Website Messages"
-msgstr "Websitesi Mesajları"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__website_url
 msgid "Website URL"
-msgstr "Web Sitesi URL Adresi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__website_message_ids
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_template__website_message_ids
 msgid "Website communication history"
-msgstr "Web Sitesi iletişim geçmişi"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_type__weekly
 msgid "Weeks"
-msgstr "Hafta"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__starred
-#, fuzzy
-#| msgid ""
-#| "Whether this payment subscription should be displayed on the dashboard or "
-#| "not"
 msgid "Whether this subscription should be displayed on the dashboard or not"
 msgstr ""
-"Bu payment aboneliğinin gösterge panelinde görüntülenip görüntülenmeyeceği"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_keep__wizard_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_replace__wizard_id
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_wizard_option__wizard_id
 msgid "Wizard"
-msgstr "Sihirbaz"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_report__recurring_yearly
 msgid "Yearly Recurring Revenue"
-msgstr "Yıllık Yinelenen Gelir"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__recurring_rule_type__yearly
 msgid "Years"
-msgstr "Yıl"
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/sale_order.py:0
-#, fuzzy, python-format
-#| msgid ""
-#| "You cannot set to draft a canceled quotation linked to payment "
-#| "subscriptions. Please create a new quotation."
+#, python-format
 msgid ""
-"You cannot set to draft a canceled quotation linked to subscriptions. Please "
-"create a new quotation."
+"You cannot set to draft a canceled quotation linked to subscriptions. Please"
+" create a new quotation."
 msgstr ""
-"Payment aboneliklerine bağlı iptal edilmiş bir teklifi taslak olarak "
-"ayarlayamazsınız. Lütfen yeni bir teklif oluşturun."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
-#, fuzzy
-#| msgid "You don't have any payment subscriptions yet."
 msgid "You don't have any subscriptions yet."
-msgstr "Henüz payment aboneliğiniz bulunmamaktadır."
+msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "You must first select a Customer for Payment Subscription %s!"
+#, python-format
 msgid "You must first select a customer for subscription %s!"
-msgstr "Payment Aboneliği için önce bir Müşteri seçmelisiniz %s!"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_product
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_product
 msgid ""
 "You will find here all the products related to this subscription template."
-msgstr "Bu abonelik şablonu ile ilgili tüm ürünleri burada bulabilirsiniz."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Your Details"
-msgstr "Detaylarınız"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "Your Plan"
-msgstr "Planınız"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid "Your payment subscription is closed."
 msgid "Your subscription is closed."
-msgstr "Payment aboneliğiniz kapatıldı."
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "e.g. Monthly Subscription"
-msgstr "Örneğin. Aylık abone"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_keep__product_id
 msgid "id"
-msgstr "id"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "missing payments (from"
-msgstr "Kaçan ödemeler"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard_option_keep
-#, fuzzy
-#| msgid "Payment Subscription Renew Lines Wizard"
 msgid "payment Subscription Renew Lines Wizard"
-msgstr "Payment Abonelik Yenileme Satırları Sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription_template
@@ -3079,101 +2727,15 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_wizard_option
-#, fuzzy
-#| msgid "Payment Subscription Upsell Lines Wizard"
 msgid "payment Subscription Upsell Lines Wizard"
-msgstr "Payment Abonelik Üst Satış Kalemleri Sihirbazı"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions"
 msgid "payment Subscriptions"
-msgstr "Payment Abonelikleri"
+msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "to this day) will be automatically processed."
-msgstr "bu güne) otomatik olarak işleşecek"
-
-#~ msgid "Account UUID"
-#~ msgstr "Hesap UUID"
-
-#~ msgid "Close Reasons"
-#~ msgstr "Kapatma & İptal Nedenleri"
-
-#~ msgid "Close Payment Subscription"
-#~ msgstr "Payment Aboneliğini Kapat"
-
-#~ msgid "Closed Payment Subscriptions"
-#~ msgstr "Kapalı Payment Abonelikleri"
-
-#~ msgid "Configuration"
-#~ msgstr "Yapılandırma"
-
-#~ msgid "Create a new payment subscription"
-#~ msgstr "Yeni bir payment aboneliği oluşturun"
-
-#~ msgid "English"
-#~ msgstr "İngilizce"
-
-#~ msgid ""
-#~ "If set, product will be viewed on pricing page, but it cannot be bought"
-#~ msgstr ""
-#~ "Ayarlanırsa, ürün fiyatlandırma sayfasında görüntülenir, ancak satın "
-#~ "alınamaz"
-
-#~ msgid "Partner Grade"
-#~ msgstr "Ortak Sınıfı"
-
-#~ msgid "Pending Payment Subscriptions"
-#~ msgstr "Aktif Payment Abonelikleri"
-
-#~ msgid "Published"
-#~ msgstr "Yayınlandı"
-
-#~ msgid "Published on Pricing"
-#~ msgstr "Fiyatlandırmada Yayınlandı"
-
-#~ msgid "Reporting"
-#~ msgstr "Raporlama"
-
-#~ msgid "Running Payment Subscriptions"
-#~ msgstr "Aktif Payment Abonelikleri"
-
-#~ msgid "Payment"
-#~ msgstr "Payment"
-
-#~ msgid ""
-#~ "Payment\n"
-#~ "                                            Subscriptions"
-#~ msgstr ""
-#~ "Payment\n"
-#~ "                                            Abonelikler"
-
-#~ msgid "Payment Partner Language"
-#~ msgstr "Payment İş Ortağı Dili"
-
-#~ msgid "Payment Subscription Product Price List"
-#~ msgstr "Payment Abonelik Ürün Fiyat Listesi"
-
-#~ msgid "Payment Subscription Stages"
-#~ msgstr "Payment Abonelik Aşamaları"
-
-#~ msgid "Payment Viewonly Product"
-#~ msgstr "Payment Sadece Görünür (Seçilemez) Ürün"
-
-#~ msgid "Payment Subscription Close Reason"
-#~ msgstr "Payment Abonelik Kapatma Nedeni"
-
-#~ msgid "See Payment Subscriptions"
-#~ msgstr "Payment Aboneliklerine bakın"
-
-#~ msgid "Supported Languages"
-#~ msgstr "Desteklenen Diller"
-
-#~ msgid "Turkish"
-#~ msgstr "Türkçe"
-
-#~ msgid "Account Move"
-#~ msgstr "Muhasebe Kaydı"
+msgstr ""

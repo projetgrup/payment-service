@@ -360,7 +360,7 @@
         <field name="name">payment.subscription.template.search</field>
         <field name="model">payment.subscription.template</field>
         <field name="arch" type="xml">
-            <search string="payment Subscription Templates">
+            <search string="Subscription Templates">
                 <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Template"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
