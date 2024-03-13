@@ -58,7 +58,7 @@ payloxPage.include({
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
-                    message: _t('Price locked has been removed.\nPlease start the payment procedure all over.'),
+                    message: _t('Price lock has been removed.\nPlease start the payment procedure all over.'),
                 });
                 this._enableButton();
                 return false;

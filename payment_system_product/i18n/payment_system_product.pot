@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-24 16:56+0000\n"
-"PO-Revision-Date: 2024-02-24 16:56+0000\n"
+"POT-Creation-Date: 2024-03-13 14:27+0000\n"
+"PO-Revision-Date: 2024-03-13 14:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid "* Prices are not dynamic and can be obsolete."
+msgstr ""
 
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
@@ -23,6 +28,42 @@ msgstr ""
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.kanban_product_template
 msgid "<em>Static</em>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid ""
+"<span class=\"d-none d-md-inline\">Price Margin %</span>\n"
+"                            <span class=\"d-block d-md-none\">Margin %</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid ""
+"<span class=\"d-none d-md-inline\">Price Unit *</span>\n"
+"                            <span class=\"d-block d-md-none\">Price *</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid ""
+"<span class=\"d-none d-md-inline\">Product Name</span>\n"
+"                            <span class=\"d-block d-md-none\">Name</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid ""
+"<span class=\"d-none d-md-inline\">Sale Price *</span>\n"
+"                            <span class=\"d-block d-md-none\">Total *</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid ""
+"<span class=\"mb8\">\n"
+"                                            The price has been locked for\n"
+"                                        </span>"
 msgstr ""
 
 #. module: payment_system_product
@@ -36,8 +77,41 @@ msgid "<span class=\"o_stat_text\">Related Products</span>"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid ""
+"<span>\n"
+"                                            seconds.\n"
+"                                        </span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>Email</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>Gram</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>ID Number</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>Name</span>"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 msgid "<span>Not Published</span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>Phone</span>"
 msgstr ""
 
 #. module: payment_system_product
@@ -68,10 +142,44 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Address"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/products.js:0
+#, python-format
+msgid "All changes have been saved."
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Amount"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Amount to Pay"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #, python-format
 msgid "An error occured."
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/products.js:0
+#, python-format
+msgid "An error occured. Please contact with your system administrator."
 msgstr ""
 
 #. module: payment_system_product
@@ -106,6 +214,11 @@ msgid "Attributes & Variants"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Back"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
 msgid "Base Product"
 msgstr ""
@@ -121,6 +234,18 @@ msgid "Calculated Price"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_category__view_type__card
+msgid "Card"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Cart is empty"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.actions.act_window,name:payment_system_product.action_product_category
 msgid "Categories"
 msgstr ""
@@ -130,6 +255,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 msgid "Category"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid "Choose a brand"
 msgstr ""
 
 #. module: payment_system_product
@@ -163,6 +295,18 @@ msgid "Constant"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Country"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
 msgid "Create a new product variant"
@@ -174,8 +318,20 @@ msgid "Created attributes are listed here"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__create_uid
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_category
 msgid "Created categories are listed here"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__create_date
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__create_date
+msgid "Created on"
 msgstr ""
 
 #. module: payment_system_product
@@ -189,14 +345,25 @@ msgid "Created products are listed here"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__display_name
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_flow_option__dynamic
 msgid "Dynamic"
 msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
+#: code:addons/payment_system_product/static/src/js/products.js:0
 #, python-format
 msgid "Error"
 msgstr ""
@@ -213,6 +380,21 @@ msgid "Formula"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,help:payment_system_product.field_product_category__sequence
+msgid "Gives the sequence order when displaying a category list"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Go Back"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Gram"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Groupby"
@@ -221,6 +403,17 @@ msgstr ""
 #. module: payment_system_product
 #: model:ir.model,name:payment_system_product.model_ir_http
 msgid "HTTP Routing"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Hello"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__id
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__id
+msgid "ID"
 msgstr ""
 
 #. module: payment_system_product
@@ -254,6 +447,62 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner____last_update
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__write_uid
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__write_date
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_category__view_type__list
+msgid "List"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Make Application"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__margin
+msgid "Margin"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid "My PoS Policy"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/controllers/main.py:0
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Name"
+msgstr ""
+
+#. module: payment_system_product
+#: code:addons/payment_system_product/controllers/main.py:0
+#, python-format
+msgid "Newest"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_attribute
 msgid "No attributes yet"
 msgstr ""
@@ -274,8 +523,36 @@ msgid "No products yet"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Order Details"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Order Net Amount"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_attribute__payment_type__other
 msgid "Other"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_partner_attribute_ids
+msgid "Partner Attributes"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+#, python-format
+msgid "Pay Now"
 msgstr ""
 
 #. module: payment_system_product
@@ -342,6 +619,73 @@ msgid "Payment System Product"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_product_partner
+msgid "Payment System Product Partner Attributes"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model,name:payment_system_product.model_payment_transaction_product
+msgid "Payment Transaction Product"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_settings__system_product_payment_validity_ok
+#: model:ir.model.fields,field_description:payment_system_product.field_res_company__system_product_payment_validity_ok
+msgid "Payment Validity"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_settings__system_product_payment_validity_time
+#: model:ir.model.fields,field_description:payment_system_product.field_res_company__system_product_payment_validity_time
+msgid "Payment Validity Time"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__percentage
+msgid "Percentage"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Phone"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Please enter your VAT number"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Please fill the required fields"
+msgstr ""
+
+#. module: payment_system_product
+#: code:addons/payment_system_product/controllers/main.py:0
+#, python-format
+msgid "Please specify an email address before proceeding."
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid "Policy has been sent succesfully."
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Price"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__price_dynamic
 msgid "Price Dynamic"
 msgstr ""
@@ -370,13 +714,29 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid ""
+"Price lock has been removed.\n"
+"Please start the payment procedure all over."
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #, python-format
 msgid "Prices have been updated."
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Proceed to payment"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model,name:payment_system_product.model_product_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__product_id
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__product_id
 #: model:res.groups,name:payment_system_product.group_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
@@ -397,6 +757,8 @@ msgid "Product Attribute"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_res_partner__payment_product_attribute_ids
+#: model:ir.model.fields,field_description:payment_system_product.field_res_users__payment_product_attribute_ids
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_attribute
 #: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_attribute
 msgid "Product Attributes"
@@ -444,8 +806,34 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_system_product.action_product_pricelist
 #: model:ir.actions.act_window,name:payment_system_product.action_product_template
 #: model:ir.model.fields,field_description:payment_system_product.field_payment_settings__system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction__paylox_product_ids
 #: model:ir.model.fields,field_description:payment_system_product.field_res_company__system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_home_products
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
 msgid "Products"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__quantity
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Quantity"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Register"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid "Restart Payment"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "SKU:"
 msgstr ""
 
 #. module: payment_system_product
@@ -457,8 +845,40 @@ msgid "Sales Price"
 msgstr ""
 
 #. module: payment_system_product
-#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid "Save"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.system_page_payment
 msgid "Select a product"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_category__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Service Fee"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Sign In"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Sign Up"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "State"
 msgstr ""
 
 #. module: payment_system_product
@@ -468,7 +888,9 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
+#: code:addons/payment_system_product/static/src/js/products.js:0
 #, python-format
 msgid "Success"
 msgstr ""
@@ -483,13 +905,38 @@ msgid "System"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_category__view_type__table
+msgid "Table"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Taxes:"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 msgid "Template"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.portal_my_products
+msgid "There are currently no products for your account."
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_template
 msgid "This note is only for internal purposes."
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Total"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__transaction_id
+msgid "Transaction"
 msgstr ""
 
 #. module: payment_system_product
@@ -514,10 +961,22 @@ msgid "Type a product name..."
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Unit(s)"
+msgstr ""
+
+#. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/xml/product.xml:0
 #, python-format
 msgid "Update Prices"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "VAT"
 msgstr ""
 
 #. module: payment_system_product
@@ -532,7 +991,44 @@ msgid "Variants"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_category__view_type
+msgid "View Type"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/products.js:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "Website"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Welcome"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
 msgid "You must define a product for everything"
+msgstr ""
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/page.xml:0
+#, python-format
+msgid "gr)"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "included"
 msgstr ""

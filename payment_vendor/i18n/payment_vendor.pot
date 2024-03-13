@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-24 16:56+0000\n"
-"PO-Revision-Date: 2024-02-24 16:56+0000\n"
+"POT-Creation-Date: 2024-03-13 14:28+0000\n"
+"PO-Revision-Date: 2024-03-13 14:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,32 +80,38 @@ msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Address</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>City</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Company</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Individual</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>State</span>"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Tax Office</span>"
 msgstr ""
 
@@ -298,6 +304,11 @@ msgid "Amount"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_report_pivot
+msgid "Analysis"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_product_attribute
 msgid "Attributes"
 msgstr ""
@@ -331,7 +342,8 @@ msgid "Categories"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
 msgstr ""
@@ -371,7 +383,8 @@ msgid "Contacts"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Country"
 msgstr ""
@@ -384,6 +397,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_child
 msgid "Create a vendor contact"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Create subscription with chosen products"
 msgstr ""
 
 #. module: payment_vendor
@@ -437,7 +455,8 @@ msgid "Editable Payment Amount"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Email"
 msgstr ""
 
@@ -498,6 +517,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
 msgid "No payments yet"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sale_order
+msgid "Orders"
 msgstr ""
 
 #. module: payment_vendor
@@ -562,7 +586,8 @@ msgid "Payments"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Phone"
 msgstr ""
 
@@ -589,7 +614,13 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_product
 #: model:ir.ui.menu,name:payment_vendor.menu_product_template
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_product
 msgid "Products"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_reason
+msgid "Reasons"
 msgstr ""
 
 #. module: payment_vendor
@@ -600,6 +631,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Remove Advance"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_report
+msgid "Reports"
 msgstr ""
 
 #. module: payment_vendor
@@ -628,6 +664,16 @@ msgid "SMS Templates"
 msgstr ""
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sale
+msgid "Sales"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
 msgid "Sales Person"
 msgstr ""
@@ -643,7 +689,8 @@ msgid "Sales Teams"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Select a state"
 msgstr ""
 
@@ -664,19 +711,37 @@ msgid "Settings"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_stage
+msgid "Stages"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "State"
 msgstr ""
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Street"
 msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Street..."
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription
+msgid "Subscription Settings"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription
+#: model:ir.ui.menu,name:payment_vendor.menu_subscriptions
+msgid "Subscriptions"
 msgstr ""
 
 #. module: payment_vendor
@@ -688,6 +753,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_vendor.field_res_company__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_users__system
+#: model:ir.model.fields,field_description:payment_vendor.field_sale_order__system
 msgid "System"
 msgstr ""
 
@@ -699,6 +765,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Tags..."
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_template
+msgid "Templates"
 msgstr ""
 
 #. module: payment_vendor
@@ -776,6 +847,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_vendor.selection__product_template__system__vendor
 #: model:ir.model.fields.selection,name:payment_vendor.selection__res_company__system__vendor
 #: model:ir.model.fields.selection,name:payment_vendor.selection__res_partner__system__vendor
+#: model:ir.model.fields.selection,name:payment_vendor.selection__sale_order__system__vendor
 #: model:ir.module.category,description:payment_vendor.module_category_vendor
 #: model:ir.module.category,name:payment_vendor.module_category_vendor
 msgid "Vendor Payment System"
