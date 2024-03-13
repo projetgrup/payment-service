@@ -106,7 +106,7 @@ class SaleOrder(models.Model):
         for order in self:
             to_create = self._split_subscription_lines()
             for template in to_create:
-                values = order._prepare_payment_subscription_data(template)
+                values = order._prepare_subscription_data(template)
                 values['line_ids'] = to_create[template]._prepare_payment_subscription_line_data()
                 subscription = self.env['payment.subscription'].sudo().create(values)
                 subscription.onchange_date_start()

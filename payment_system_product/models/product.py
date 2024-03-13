@@ -285,6 +285,9 @@ class ProductProduct(models.Model):
         self._broadcast_price()
         return super().unlink()
 
+    def toggle_payment_page(self):
+        self.payment_page_ok = not self.payment_page_ok
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'

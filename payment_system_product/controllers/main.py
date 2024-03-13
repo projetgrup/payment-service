@@ -137,6 +137,16 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PaymentSystemProductController(SystemController):
 
+    def _get_tx_vals(self, **kwargs):
+        vals = super()._get_tx_vals(**kwargs)
+        products = kwargs.get('products', [])
+        if products:
+            vals.update({'paylox_product_ids': [(0, 0, {
+                'product_id': product['pid'],
+                'quantity': product['qty'],
+            }) for product in products]})
+        return vals
+
     def _check_product_page(self, **kwargs):
         if not request.env.company.system_product:
             raise werkzeug.exceptions.NotFound()

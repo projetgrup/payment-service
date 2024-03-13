@@ -68,10 +68,21 @@ payloxPage.include({
         }
     },
 
-    //_getParams: function () {
-    //    let params = this._super.apply(this, arguments);
-    //    return params;
-    //},
+    _getParams: function () {
+        let params = this._super.apply(this, arguments);
+        let $products = $('.base[field="product.qty"]').filter((i, e) => e.value > 0);
+        if ($products.length) {
+            let products = [];
+            $products.each((i, e) => {
+                products.push({
+                    'pid': e.dataset.id,
+                    'qty': e.value,
+                })
+            });
+            params['products'] = products;
+        }        
+        return params;
+    },
 });
 
 publicWidget.registry.payloxSystemProduct = systemPage.extend({
@@ -360,18 +371,14 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
     _onClickItem(ev) {
         this.product.item.$.removeClass('bg-warning');
-        this.product.qty.$.each((i, e) => {
-            const $e = $(e);
-            $e.val(0);
-            $e.change();
-        });
+        this.product.qty.$.val(0);
 
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
         let qty = this.product.qty.$.filter(`[data-id=${pid}]`);
 
         qty.val(1);
-        qty.change();
+        qty.trigger('change');
         btn.addClass('bg-warning');
     },
 

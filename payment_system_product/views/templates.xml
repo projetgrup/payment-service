@@ -127,7 +127,7 @@
             </div>
             <div class="px-lg-5">
                 <t t-if="dynamic">
-                    <div name="wizard" class="payment-dynamic navbar-light pt-4 flex-wrap flex-row-reverse">
+                    <div name="wizard" class="payment-dynamic navbar-light pt-4 flex-wrap flex-row-reverse position-fixed">
                         <div class="col-md-9 d-flex navbar-light">
                             <div class="card position-relative w-100">
                                 <!--<div class="payment-card-section d-flex fade" field="wizard.page.section.all">
