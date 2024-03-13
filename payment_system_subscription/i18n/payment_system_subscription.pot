@@ -18,7 +18,7 @@ msgstr ""
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
-msgid " E-mail sent to customer."
+msgid "E-mail sent to customer."
 msgstr ""
 
 #. module: payment_system_subscription
@@ -2203,7 +2203,7 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard
-msgid "Subscription Renew wizard"
+msgid "Subscription Renew Wizard"
 msgstr ""
 
 #. module: payment_system_subscription
@@ -2717,22 +2717,22 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard_option_keep
-msgid "payment Subscription Renew Lines Wizard"
+msgid "Subscription Renew Lines Wizard"
 msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription_template
-msgid "payment Subscription Templates"
+msgid "Subscription Templates"
 msgstr ""
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_wizard_option
-msgid "payment Subscription Upsell Lines Wizard"
+msgid "Subscription Upsell Lines Wizard"
 msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-msgid "payment Subscriptions"
+msgid "Subscriptions"
 msgstr ""
 
 #. module: payment_system_subscription

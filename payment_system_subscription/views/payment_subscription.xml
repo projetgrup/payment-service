@@ -22,7 +22,7 @@
         <field name="name">payment.subscription.search</field>
         <field name="model">payment.subscription</field>
         <field name="arch" type="xml">
-            <search string="payment Subscriptions">
+            <search string="Subscriptions">
                 <field name="name" string="Subscription" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="user_id"/>
@@ -249,7 +249,7 @@
         <field name="model">payment.subscription</field>
         <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="arch" type="xml">
-            <tree string="Sale payment Subscriptions" decoration-warning="to_renew" decoration-muted="not in_progress" multi_edit="1">
+            <tree string="Sale Subscriptions" decoration-warning="to_renew" decoration-muted="not in_progress" multi_edit="1">
                 <field name="code" readonly="1"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="recurring_next_date"/>

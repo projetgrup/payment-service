@@ -836,7 +836,7 @@ class PaymentSubscription(models.Model):
                                         template = template_res.browse(template_id)
                                         template.with_context(email_context).send_mail(subscription.id)
                                         _logger.debug('Sending Payment Failure Mail to %s for payment subscription %s and setting payment subscription to pending', subscription.partner_id.email, subscription.id)
-                                        msg_body += _(' E-mail sent to customer.')
+                                        msg_body += _('E-mail sent to customer.')
                                     subscription.message_post(body=msg_body)
                                     subscription.set_to_renew()
                             if auto_commit:

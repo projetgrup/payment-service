@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20221104\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-13 14:28+0000\n"
-"PO-Revision-Date: 2024-03-13 18:04+0300\n"
+"PO-Revision-Date: 2024-03-13 23:28+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -20,8 +20,8 @@ msgstr ""
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
-msgid " E-mail sent to customer."
-msgstr "Müşteriye e-posta gönderildi."
+msgid "E-mail sent to customer."
+msgstr "E-posta müşteriye gönderildi."
 
 #. module: payment_system_subscription
 #: model:mail.template,subject:payment_system_subscription.mail_template_payment_subscription_invoice
@@ -58,8 +58,8 @@ msgid ""
 "suspended on ${object.recurring_next_date} unless the payment succeeds in "
 "the meantime."
 msgstr ""
-"$ {object.company_id.name}: Aboneliğiniz için bir ödeme işleme koyamadık. $ "
-"{Object.name} aboneliğiniz hala geçerli, ancak ödeme bu arada başarılı "
+"${object.company_id.name}: Aboneliğiniz için bir ödeme işleme koyamadık. "
+"${object.name} aboneliğiniz hala geçerli, ancak ödeme bu arada başarılı "
 "olmadıkça $ {object.recurring_next_date} tarihinde askıya alınacak."
 
 #. module: payment_system_subscription
@@ -830,11 +830,10 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "Automatic payment failed. Subscription set to \"To Renew\"."
+#, python-format
 msgid "Automatic payment failed. Subscription set to 'To Renew'."
 msgstr ""
-"Otomatik ödeme başarısız oldu. Abonelik \"Yenilemek\" olarak ayarlandı."
+"Otomatik ödeme başarısız oldu. Abonelik \"Yenilenecek\" olarak ayarlandı."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
@@ -919,10 +918,8 @@ msgstr "Kapanma"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Closed subscriptions"
 msgid "Closed Subscriptions"
-msgstr "Kapalı abonelikler"
+msgstr "Kapalı Abonelikler"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_report_subscription
@@ -933,7 +930,7 @@ msgstr "Kapalı abonelikler"
 #: code:addons/payment_system_subscription/controllers/portal.py:0
 #, python-format
 msgid "Closing text : "
-msgstr "Kapama Notu:"
+msgstr "Kapama Notu: "
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_template__code
@@ -947,10 +944,8 @@ msgstr "Renk"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_res_company
-#, fuzzy
-#| msgid "Company"
 msgid "Companies"
-msgstr "Şirket"
+msgstr "Şirketler"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__company_id
@@ -1034,13 +1029,6 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription
-#, fuzzy
-#| msgid ""
-#| "Create payment subscriptions to manage recurring invoicing &amp; "
-#| "payments. Payment Subscriptions can\n"
-#| "                be time-bounded or not. In case of a limited period, they "
-#| "are flagged as to be renewed\n"
-#| "                one month from the end date."
 msgid ""
 "Create subscriptions to manage recurring invoicing &amp; payments. "
 "Subscriptions can\n"
@@ -1048,8 +1036,8 @@ msgid ""
 "are flagged as to be renewed\n"
 "                one month from the end date."
 msgstr ""
-"Yinelenen faturalama ve ödemeleri yönetmek için payment abonelikleri "
-"oluşturun. Payment Abonelikleri şunları yapabilir\n"
+"Yinelenen faturalama ve ödemeleri yönetmek için abonelikleri oluşturun. "
+"Abonelikler şunları yapabilir\n"
 "                zaman sınırlı olsun ya da olmasın. Sınırlı bir süre olması "
 "durumunda, yenilenecek olarak işaretlenirler\n"
 "                bitiş tarihinden itibaren bir ay."
@@ -1093,21 +1081,14 @@ msgstr "Oluşturma"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_sale_order__payment_subscription_management
-#, fuzzy
-#| msgid ""
-#| "Creation: The Sales Order created the payment subscription\n"
-#| "Upselling: The Sales Order added lines to the payment subscription\n"
-#| "Renewal: The Sales Order replaced the payment subscription's content with "
-#| "its own"
 msgid ""
 "Creation: The Sales Order created the subscription\n"
 "Upselling: The Sales Order added lines to the subscription\n"
 "Renewal: The Sales Order replaced the subscription's content with its own"
 msgstr ""
-"Oluşturma: Satış Siparişi payment aboneliğini oluşturdu\n"
-"Üst Satış: Satış Siparişi payment aboneliğine satır ekledi\n"
-"Yenileme: Satış Siparişi, payment aboneliğinin içeriğini kendi içeriğiyle "
-"değiştirdi"
+"Oluşturma: Satış Siparişi aboneliği oluşturdu\n"
+"Üst Satış: Satış Siparişi aboneliğe satır ekledi\n"
+"Yenileme: Satış Siparişi, aboneliğinin içeriğini kendi içeriğiyle değiştirdi"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__currency_id
@@ -1198,7 +1179,7 @@ msgstr "Görünüm Adı"
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard__display_replacement_lines
 msgid "Display Replacement Lines"
-msgstr ""
+msgstr "Yer Değişen Satırları Görüntüle"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__payment_subscription_template__payment_mode__draft_invoice
@@ -1391,28 +1372,20 @@ msgstr "Ayarlanmazsa, otomatik ödeme başarısız olur."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__date_end
-#, fuzzy
-#| msgid ""
-#| "If set in advance, the payment subscription will be set to renew 1 month "
-#| "before the date and will be closed on the date set in this field."
 msgid ""
 "If set in advance, the subscription will be set to renew 1 month before the "
 "date and will be closed on the date set in this field."
 msgstr ""
-"Önceden ayarlanırsa, payment aboneliği tarihten 1 ay önce yenilenecek "
-"şekilde ayarlanacak ve bu alanda ayarlanan tarihte kapatılacaktır."
+"Önceden ayarlanırsa, abonelik tarihten 1 ay önce yenilenecek şekilde "
+"ayarlanacak ve bu alanda ayarlanan tarihte kapatılacaktır."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_product_product__payment_recurring_invoice
 #: model:ir.model.fields,help:payment_system_subscription.field_product_template__payment_recurring_invoice
-#, fuzzy
-#| msgid ""
-#| "If set, confirming a sale order with this product will create a payment "
-#| "subscription"
 msgid ""
 "If set, confirming a sale order with this product will create a subscription"
 msgstr ""
-"Ayarlanırsa, bu ürünle bir satış siparişini onaylamak bir payment aboneliği "
+"Ayarlanırsa, bu ürünle bir satış siparişi onaylanınca bir abonelik "
 "oluşturacaktır"
 
 #. module: payment_system_subscription
@@ -1435,16 +1408,12 @@ msgstr ""
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid ""
-#| "If you confirm, your payment subscription will be closed right away. Your "
-#| "current invoicing period is valid until"
 msgid ""
 "If you confirm, your subscription will be closed right away. Your current "
 "invoicing period is valid until"
 msgstr ""
-"Onaylamanız durumunda payment aboneliğiniz hemen kapatılacaktır. Mevcut "
-"faturalama döneminiz şu tarihe kadar geçerlidir"
+"Onaylamanız durumunda aboneliğiniz hemen kapatılacaktır. Mevcut faturalama "
+"döneminizin geçerli olduğu tarih"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
@@ -1649,7 +1618,7 @@ msgstr "Son Güncelleme"
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Last invoice date: "
-msgstr "Son fatura tarihi:"
+msgstr "Son fatura tarihi: "
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
@@ -1739,10 +1708,9 @@ msgstr "Doğal yüz"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "Newest"
+#, python-format
 msgid "New"
-msgstr "En yeni"
+msgstr "Yeni"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -1779,7 +1747,7 @@ msgstr "Sonraki Fatura:"
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Next invoice date: "
-msgstr "Sonraki fatura tarihi:"
+msgstr "Sonraki fatura tarihi: "
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_product
@@ -1857,10 +1825,8 @@ msgstr "Ödeme Yenilemeye İzin Verildi"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_settings
-#, fuzzy
-#| msgid "Payment Subscriptions"
 msgid "Payment Settings"
-msgstr "Payment Abonelikleri"
+msgstr "Ödeme Ayarları"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_id
@@ -1874,10 +1840,8 @@ msgstr "Ödeme Abonelik Analizi"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_sale_order__payment_subscription_count
-#, fuzzy
-#| msgid "Payment Subscription Product"
 msgid "Payment Subscription Count"
-msgstr "Payment Abonelik Ürünü"
+msgstr "Ödeme Abonelik Ürünü"
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_template_payment_subscription_invoice
@@ -1932,10 +1896,8 @@ msgstr "Ödeme Abonelikleri"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription
-#, fuzzy
-#| msgid "Payment Subscription"
 msgid "Payment System Subscription"
-msgstr "Payment Aboneliği"
+msgstr "Ödeme Sistemi Aboneliği"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_token
@@ -2065,7 +2027,7 @@ msgstr "Değerlendirme E-posta Şablonu"
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Son Geribildirimleri Derecelendirme "
+msgstr "Son Geribildirimleri Derecelendirme"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__rating_last_image
@@ -2104,10 +2066,8 @@ msgstr "Değerlendirme nedeni"
 #: model:ir.actions.act_window,name:payment_system_subscription.action_subscription_reason
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_wizard_reason
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription_reason
-#, fuzzy
-#| msgid "Reason"
 msgid "Reasons"
-msgstr "Sebep"
+msgstr "Gerekçeler"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__recurring_rule_type
@@ -2224,10 +2184,8 @@ msgstr "Sipariş Sayısı"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.tree_subscription
-#, fuzzy
-#| msgid "Sale Payment Subscriptions"
 msgid "Sale payment Subscriptions"
-msgstr "Satış Payment Abonelikleri"
+msgstr "Satış Abonelikleri"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription
@@ -2300,14 +2258,9 @@ msgstr "SMS Metin Mesajı Gönderme"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_stage__rating_template_id
-#, fuzzy
-#| msgid ""
-#| "Send an email to the customer when the payment subscription is moved to "
-#| "this stage."
 msgid ""
 "Send an email to the customer when the subscription is moved to this stage."
-msgstr ""
-"Payment aboneliği bu aşamaya taşındığında müşteriye bir e-posta gönderin."
+msgstr "Abonelik bu aşamaya taşındığında müşteriye bir e-posta gönderin."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_reason__sequence
@@ -2322,10 +2275,8 @@ msgstr "Ayarlar"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__starred
-#, fuzzy
-#| msgid "Show Payment Subscription on dashboard"
 msgid "Show Subscriptions on dashboard"
-msgstr "Payment Aboneliğini kontrol panelinde göster"
+msgstr "Abonelik kontrol panelinde göster"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
@@ -2427,10 +2378,8 @@ msgstr "Abonelik Kalemleri"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_sale_order__payment_subscription_management
-#, fuzzy
-#| msgid "Payment Subscription Management"
 msgid "Subscription Management"
-msgstr "Payment Abonelik Yönetimi"
+msgstr "Abonelik Yönetimi"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_product_product__payment_recurring_invoice
@@ -2450,31 +2399,23 @@ msgstr "Abonelik Gerekçe Sihirbazı"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard_option_replace
-#, fuzzy
-#| msgid "Payment Subscription Renew Lines Wizard"
 msgid "Subscription Renew Lines Wizard"
-msgstr "Payment Abonelik Yenileme Satırları Sihirbazı"
+msgstr "Abonelik Yenileme Satırları Sihirbazı"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard
-#, fuzzy
-#| msgid "Payment Subscription Renew wizard"
-msgid "Subscription Renew wizard"
-msgstr "Payment Abonelik Yenileme sihirbazı"
+msgid "Subscription Renew Wizard"
+msgstr "Abonelik Yenileme Sihirbazı"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_end_date
-#, fuzzy
-#| msgid "Payment Subscription Revenue End Date"
 msgid "Subscription Revenue End Date"
-msgstr "Payment Abonelik Geliri Bitiş Tarihi"
+msgstr "Abonelik Geliri Bitiş Tarihi"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_account_move_line__payment_subscription_start_date
-#, fuzzy
-#| msgid "Payment Subscription Revenue Start Date"
 msgid "Subscription Revenue Start Date"
-msgstr "Payment Abonelik Geliri Başlangıç Tarihi"
+msgstr "Abonelik Geliri Başlangıç Tarihi"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_stage
@@ -2502,38 +2443,28 @@ msgstr "Abonelik Şablonları"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_wizard
-#, fuzzy
-#| msgid "Payment Subscription Upsell wizard"
 msgid "Subscription Upsell wizard"
-msgstr "Payment Abonelik Ek Satış Sihirbazı"
+msgstr "Abonelik Ek Satış Sihirbazı"
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_2
-#, fuzzy
-#| msgid "Payment Subscription does not meet my requirements"
 msgid "Subscription does not meet my requirements"
-msgstr "Payment Aboneliği gereksinimlerimi karşılamıyor"
+msgstr "Abonelik ihtiyaçlarımı karşılamıyor"
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_1
-#, fuzzy
-#| msgid "Payment Subscription is too expensive"
 msgid "Subscription is too expensive"
-msgstr "Payment Aboneliği çok pahalı"
+msgstr "Abonelik çok pahalı"
 
 #. module: payment_system_subscription
 #: model:payment.subscription.reason,name:payment_system_subscription.reason_close_3
-#, fuzzy
-#| msgid "Payment Subscription reached its end date"
 msgid "Subscription reached its end date"
-msgstr "Payment Aboneliği bitiş tarihine ulaştı"
+msgstr "Abonelik bitiş tarihine ulaştı"
 
 #. module: payment_system_subscription
 #: model:mail.message.subtype,description:payment_system_subscription.subtype_stage_change
-#, fuzzy
-#| msgid "Payment Subscription stage has changed"
 msgid "Subscription stage has changed"
-msgstr "Payment Abonelik aşaması değişti"
+msgstr "Abonelik aşaması değişti"
 
 #. module: payment_system_subscription
 #: model:mail.template,name:payment_system_subscription.mail_subscription_alert
@@ -2599,36 +2530,26 @@ msgstr "Abonelikler"
 
 #. module: payment_system_subscription
 #: model:ir.actions.act_window,name:payment_system_subscription.action_report_pivot_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions Analysis"
 msgid "Subscriptions Analysis"
-msgstr "Payment Abonelikleri Analizi"
+msgstr "Abonelik Analizi"
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription
-#, fuzzy
-#| msgid ""
-#| "Payment Subscriptions can be automatically generated from sales orders in "
-#| "Sales or eCommerce\n"
-#| "                apps. To do so, set a payment subscription template on "
-#| "your payment subscription products."
 msgid ""
 "Subscriptions can be automatically generated from sales orders in Sales or "
 "eCommerce\n"
 "                apps. To do so, set a subscription template on your "
 "subscription products."
 msgstr ""
-"Payment Abonelikleri, Satış veya e-Ticaret'teki satış siparişlerinden "
-"otomatik olarak oluşturulabilir\n"
-"                uygulamalar. Bunu yapmak için, payment abonelik "
-"ürünlerinizde bir payment abonelik şablonu ayarlayın."
+"Abonelikler, Satış veya e-Ticaret'teki satış siparişlerinden otomatik olarak "
+"oluşturulabilir\n"
+"                Bunu yapmak için, abonelik ürünlerinizde bir abonelik "
+"şablonu ayarlayın."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions that are not assigned to an account manager."
 msgid "Subscriptions that are not assigned to an account manager."
-msgstr "Bir hesap yöneticisine atanmamış Payment Abonelikleri."
+msgstr "Bir hesap yöneticisine atanmamış abonelikler."
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_line__price_subtotal
@@ -2760,14 +2681,12 @@ msgstr "Yinelenen aralık pozitif olmalıdır"
 #. module: payment_system_subscription
 #: model:res.groups,comment:payment_system_subscription.group_subscription_read
 msgid "The user will have read access to payment subscriptions."
-msgstr "Kullanıcı payment aboneliklerine okuma erişimine sahip olacaktır."
+msgstr "Kullanıcı aboneliklere okuma erişimine sahip olacaktır."
 
 #. module: payment_system_subscription
 #: model:res.groups,comment:payment_system_subscription.group_subscription_manager
-#, fuzzy
-#| msgid "The user will have write access to Payment Subscriptions."
 msgid "The user will have write access to payment subscriptions."
-msgstr "Kullanıcı Payment Aboneliklerine yazma erişimine sahip olacaktır."
+msgstr "Kullanıcı ödeme aboneliklerine yazma erişimine sahip olacaktır."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.kanban_subscription
@@ -2786,7 +2705,7 @@ msgstr "Bu fatura aşağıdaki dönemleri kapsar: %s - %s"
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "This renewal order has been created from the payment subscription "
-msgstr "Bu yenileme siparişi payment aboneliğinden oluşturulmuştur"
+msgstr "Bu yenileme siparişi ödeme aboneliğinden oluşturulmuştur "
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription_stage__fold
@@ -2800,7 +2719,7 @@ msgstr ""
 #: code:addons/payment_system_subscription/wizard/payment_subscription_wizard.py:0
 #, python-format
 msgid "This upsell order has been created from the subscription "
-msgstr "Bu satış emri abonelikten oluşturuldu"
+msgstr "Bu satış siparişi abonelikten oluşturuldu "
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/controllers/portal.py:0
@@ -2843,19 +2762,15 @@ msgstr "Kayıttaki istisna etkinliğinin türü."
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__uuid
 msgid "UUID"
-msgstr ""
+msgstr "ETTN"
 
 #. module: payment_system_subscription
 #: model:ir.model.constraint,message:payment_system_subscription.constraint_payment_subscription_uuid_uniq
-#, fuzzy
-#| msgid ""
-#| "UUIDs (Universally Unique IDentifier) for Payment Subscriptions should be "
-#| "unique!"
 msgid ""
 "UUIDs (Universally Unique IDentifier) should be unique for subscriptions!"
 msgstr ""
-"Payment Abonelikleri için UUID'ler (Evrensel Benzersiz Kimlik Tanımlayıcı) "
-"benzersiz olmalıdır!"
+"Abonelikleri için ETTN'ler (Evrensel Tekil Tanımlama Numarası) benzersiz "
+"olmalıdır!"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
@@ -2904,7 +2819,7 @@ msgstr "Arttırılmış Satış"
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
 #, python-format
 msgid "Upsell date: "
-msgstr "Artırılmış Satış Tarihi:"
+msgstr "Artırılmış Satış Tarihi: "
 
 #. module: payment_system_subscription
 #: model:ir.model.fields.selection,name:payment_system_subscription.selection__sale_order__payment_subscription_management__upsell
@@ -2913,24 +2828,13 @@ msgstr "Ek Satış"
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_subscription_filtered
-#, fuzzy
-#| msgid ""
-#| "Use payment subscriptions to follow tasks, issues, timesheets or "
-#| "invoicing based on\n"
-#| "                work done, expenses and/or sales orders. Odoo will "
-#| "automatically manage\n"
-#| "                the alerts for the renewal of the payment subscriptions "
-#| "to the right salesperson."
 msgid ""
 "Use subscriptions to follow tasks, issues, timesheets or invoicing based on\n"
 "                work done, expenses and/or sales orders."
 msgstr ""
 "Görevleri, sorunları, zaman çizelgelerini veya faturalandırmayı "
-"aşağıdakilere göre takip etmek için payment aboneliklerini kullanın\n"
-"                yapılan işler, harcamalar ve/veya satış siparişleri. Odoo "
-"otomatik olarak şunları yönetecektir\n"
-"                payment aboneliklerinin yenilenmesi için uyarıların doğru "
-"satış elemanına iletilmesi."
+"aşağıdakilere göre takip etmek için abonelikleri kullanın\n"
+"                yapılan işler, harcamalar ve/veya satış siparişleri."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
@@ -2939,16 +2843,12 @@ msgstr "Geçerlilik Tarihi:"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid ""
-#| "We always listen to our customer. Could you specify the reason for "
-#| "cancelling your payment subscription?"
 msgid ""
 "We always listen to our customer. Could you specify the reason for "
 "cancelling your subscription?"
 msgstr ""
-"Biz her zaman müşterimizi dinleriz. Payment aboneliğinizi iptal etme "
-"nedeninizi belirtir misiniz?"
+"Biz her zaman müşterimizi dinleriz. Aboneliğinizi iptal etme nedeninizi "
+"belirtir misiniz?"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription__website_message_ids
@@ -2974,13 +2874,8 @@ msgstr "Hafta"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,help:payment_system_subscription.field_payment_subscription__starred
-#, fuzzy
-#| msgid ""
-#| "Whether this payment subscription should be displayed on the dashboard or "
-#| "not"
 msgid "Whether this subscription should be displayed on the dashboard or not"
-msgstr ""
-"Bu payment aboneliğinin gösterge panelinde görüntülenip görüntülenmeyeceği"
+msgstr "Bu aboneliğin gösterge panelinde görüntülenip görüntülenmeyeceği"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_keep__wizard_id
@@ -3001,30 +2896,24 @@ msgstr "Yıl"
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/sale_order.py:0
-#, fuzzy, python-format
-#| msgid ""
-#| "You cannot set to draft a canceled quotation linked to payment "
-#| "subscriptions. Please create a new quotation."
+#, python-format
 msgid ""
 "You cannot set to draft a canceled quotation linked to subscriptions. Please "
 "create a new quotation."
 msgstr ""
-"Payment aboneliklerine bağlı iptal edilmiş bir teklifi taslak olarak "
-"ayarlayamazsınız. Lütfen yeni bir teklif oluşturun."
+"Aboneliklere bağlı iptal edilmiş bir teklifi taslak olarak ayarlayamazsınız. "
+"Lütfen yeni bir teklif oluşturun."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.portal_my_subscriptions
-#, fuzzy
-#| msgid "You don't have any payment subscriptions yet."
 msgid "You don't have any subscriptions yet."
-msgstr "Henüz payment aboneliğiniz bulunmamaktadır."
+msgstr "Henüz aboneliğiniz bulunmamaktadır."
 
 #. module: payment_system_subscription
 #: code:addons/payment_system_subscription/models/payment_subscription.py:0
-#, fuzzy, python-format
-#| msgid "You must first select a Customer for Payment Subscription %s!"
+#, python-format
 msgid "You must first select a customer for subscription %s!"
-msgstr "Payment Aboneliği için önce bir Müşteri seçmelisiniz %s!"
+msgstr "Abonelik için önce bir müşteri seçmelisiniz %s!"
 
 #. module: payment_system_subscription
 #: model_terms:ir.actions.act_window,help:payment_system_subscription.action_product
@@ -3045,15 +2934,13 @@ msgstr "Planınız"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
-#, fuzzy
-#| msgid "Your payment subscription is closed."
 msgid "Your subscription is closed."
-msgstr "Payment aboneliğiniz kapatıldı."
+msgstr "Aboneliğiniz kapatıldı."
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.form_subscription_template
 msgid "e.g. Monthly Subscription"
-msgstr "Örneğin. Aylık abone"
+msgstr "örn. Aylık abonelik"
 
 #. module: payment_system_subscription
 #: model:ir.model.fields,field_description:payment_system_subscription.field_payment_subscription_renew_wizard_option_keep__product_id
@@ -3063,38 +2950,32 @@ msgstr "id"
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "missing payments (from"
-msgstr "Kaçan ödemeler"
+msgstr "kaçan ödemeler ("
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_renew_wizard_option_keep
-#, fuzzy
-#| msgid "Payment Subscription Renew Lines Wizard"
-msgid "payment Subscription Renew Lines Wizard"
-msgstr "Payment Abonelik Yenileme Satırları Sihirbazı"
+msgid "Subscription Renew Lines Wizard"
+msgstr "Abonelik Yenileme Satırları Sihirbazı"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription_template
-msgid "payment Subscription Templates"
-msgstr ""
+msgid "Subscription Templates"
+msgstr "Abonelik Şablonları"
 
 #. module: payment_system_subscription
 #: model:ir.model,name:payment_system_subscription.model_payment_subscription_wizard_option
-#, fuzzy
-#| msgid "Payment Subscription Upsell Lines Wizard"
-msgid "payment Subscription Upsell Lines Wizard"
-msgstr "Payment Abonelik Üst Satış Kalemleri Sihirbazı"
+msgid "Subscription Upsell Lines Wizard"
+msgstr "Abonelik Üst Satış Kalemleri Sihirbazı"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.search_subscription
-#, fuzzy
-#| msgid "Payment Subscriptions"
-msgid "payment Subscriptions"
-msgstr "Payment Abonelikleri"
+msgid "Subscriptions"
+msgstr "Abonelikler"
 
 #. module: payment_system_subscription
 #: model_terms:ir.ui.view,arch_db:payment_system_subscription.subscription
 msgid "to this day) will be automatically processed."
-msgstr "bu güne) otomatik olarak işleşecek"
+msgstr "bu güne) otomatik olarak işlenecek."
 
 #~ msgid "Account UUID"
 #~ msgstr "Hesap UUID"
@@ -3112,7 +2993,7 @@ msgstr "bu güne) otomatik olarak işleşecek"
 #~ msgstr "Yapılandırma"
 
 #~ msgid "Create a new payment subscription"
-#~ msgstr "Yeni bir payment aboneliği oluşturun"
+#~ msgstr "Yeni bir abonelik oluşturun"
 
 #~ msgid "English"
 #~ msgstr "İngilizce"

@@ -204,7 +204,7 @@ class PaymentSystemProductController(SystemController):
 
     @route('/my/product', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_product(self, **kwargs):
-        self._check_advance_page(**kwargs)
+        self._check_product_page(**kwargs)
         w_id = request.website.id
         website_id = int(kwargs.get('id', w_id))
         if w_id != website_id:
