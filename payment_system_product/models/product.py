@@ -285,6 +285,9 @@ class ProductProduct(models.Model):
         self._broadcast_price()
         return super().unlink()
 
+    def toggle_payment_page(self):
+        self.payment_page_ok = not self.payment_page_ok
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
@@ -293,6 +296,7 @@ class ProductCategory(models.Model):
     sequence = fields.Integer(default=10)
     view_type = fields.Selection(selection=[
         ('list', 'List'),
+        ('card', 'Card'),
         ('table', 'Table'),
     ])
     system = fields.Selection(selection=[], readonly=True)

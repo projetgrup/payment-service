@@ -137,6 +137,16 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PaymentSystemProductController(SystemController):
 
+    def _get_tx_vals(self, **kwargs):
+        vals = super()._get_tx_vals(**kwargs)
+        products = kwargs.get('products', [])
+        if products:
+            vals.update({'paylox_product_ids': [(0, 0, {
+                'product_id': product['pid'],
+                'quantity': product['qty'],
+            }) for product in products]})
+        return vals
+
     def _check_product_page(self, **kwargs):
         if not request.env.company.system_product:
             raise werkzeug.exceptions.NotFound()
@@ -219,6 +229,10 @@ class PaymentSystemProductController(SystemController):
         else:
             companies = companies.filtered(lambda x: x.system_product and x.id in user.company_ids.ids)
 
+        categs = request.env['product.category'].sudo().search([
+            ('company_id', '=', company.id),
+            ('system', '=', company.system),
+        ])
         products = request.env['product.template'].sudo().search([
             ('company_id', '=', company.id),
             ('system', '=', company.system),
@@ -232,14 +246,19 @@ class PaymentSystemProductController(SystemController):
             'subsystem': company.subsystem,
             'vat': kwargs.get('vat'),
             'flow': 'dynamic',
+            'categs': categs,
             'products': products,
             'readonly': True,
+            'options': {
+                'save_order_active': False,
+                'listen_price_active': False,
+            }
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
             values.update({**kwargs['values']})
 
-        return request.render('payment_jetcheckout_system.page_payment', values, headers={
+        return request.render('payment_system_product.page_payment', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '-1'

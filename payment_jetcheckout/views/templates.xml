@@ -116,7 +116,7 @@
     </template>
 
     <template id="payment_sidebar" name="Paylox Payment Sidebar">
-        <div class="col-md-3 navbar-light payment-amount w-100 d-flex flex-column">
+        <div t-attf-class="col-#{size or 'md'}-3 navbar-light payment-amount w-100 d-flex flex-column">
             <div>
                 <div t-if="page in ['payment', 'result']" class="px-3 py-4 bg-white card my-4 shadow">
                     <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>

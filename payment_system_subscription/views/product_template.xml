@@ -55,4 +55,32 @@
         </field>
     </record>
 
+    <record id="form_subscription_product" model="ir.ui.view">
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="payment_system_product.form_product_template"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="after">
+                <field name="payment_recurring_invoice" invisible="1"/>
+                <field name="payment_subscription_template_id" attrs="{'invisible': [('payment_recurring_invoice', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_subscription_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="search_product"/>
+        <field name="domain">[('payment_subscription_template_id', '!=', False)]</field>
+        <field name="context">{"default_type": "service", "default_payment_recurring_invoice": True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No product found
+            </p>
+            <p>
+                You will find here all the products related to this subscription template.
+            </p>
+        </field>
+    </record>
+
 </odoo>

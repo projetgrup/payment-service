@@ -212,8 +212,8 @@
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
-            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
 
             <!--<t t-if="len(companies) > 1 and not request.session.get('company')">
                 <div class="payment-company d-flex justify-content-center mb256 mt80">

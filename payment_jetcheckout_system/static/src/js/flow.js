@@ -103,23 +103,22 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
     },
  
     start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
-            payloxPage.prototype._setCurrency.apply(self);
-            payloxPage.prototype._start.apply(self);
+        return this._super.apply(this, arguments).then(() => {
+            payloxPage.prototype._setCurrency.apply(this);
+            payloxPage.prototype._start.apply(this);
 
             // if (window.location.search) {
             //     window.history.replaceState(null, '', window.location.pathname);
             // } else {
-            //     self.wizard.vat.value = '';
+            //     this.wizard.vat.value = '';
             // }
 
-            self.wizard.vat.value = '';
-            self.wizard.page.login.$.addClass('show');
-            self.wizard.page.loading.$.removeClass('show');
-            setTimeout(function() {
-                self.wizard.vat.$.focus();
-                self.wizard.page.loading.$.addClass('invisible');
+            this.wizard.vat.value = '';
+            this.wizard.page.login.$.addClass('show');
+            this.wizard.page.loading.$.removeClass('show');
+            setTimeout(() => {
+                this.wizard.vat.$.focus();
+                this.wizard.page.loading.$.addClass('invisible');
             }, 500);
         });
     },
@@ -143,9 +142,8 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         this.wizard.page.login.$.removeClass('blur');
         this.wizard.page.loading.$.removeClass('show transparent');
 
-        const self = this;
-        setTimeout(function() {
-            self.wizard.page.loading.$.addClass('invisible');
+        setTimeout(() => {
+            this.wizard.page.loading.$.addClass('invisible');
         }, 500);
     },
 
@@ -369,7 +367,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         await this._onPause(500);
 
         $('.payment-system .payment-card input[name=amount]').val(format.float(amount)).change().trigger('update');
-        const page = $('.payment-dynamic');    
+        const page = $('.payment-dynamic');
         overlay.css('opacity', '0');
         page.css('opacity', '0');
         //await this._onPause(500);
