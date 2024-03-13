@@ -126,16 +126,16 @@ class PaymentSubscription(models.Model):
 
     stage_id = fields.Many2one('payment.subscription.stage', string='Stage', index=True, default=_default_stage, copy=False, group_expand='_read_group_stage_ids', tracking=True)
     stage_in_progress = fields.Boolean(related='stage_id.in_progress', store=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain="[('company_id', '=', company_id)]", check_company=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda s: s.env.company, required=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', required=True, auto_join=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    tag_ids = fields.Many2many('account.analytic.tag', string='Tags', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
-    pricelist_id = fields.Many2one('product.pricelist', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Pricelist', default=_default_pricelist, required=True, check_company=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', required=True, auto_join=True, domain="[('company_id', '=', company_id)]")
+    tag_ids = fields.Many2many('account.analytic.tag', string='Tags', domain="[('company_id', '=', company_id)]", check_company=True)
+    pricelist_id = fields.Many2one('product.pricelist', domain="[('company_id', '=', company_id)]", string='Pricelist', default=_default_pricelist, required=True, check_company=True)
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Currency', readonly=True)
     reason_id = fields.Many2one('payment.subscription.reason', string='Close Reason', copy=False, tracking=True)
-    template_id = fields.Many2one('payment.subscription.template', string='Subscription Template', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", required=True, default=_default_template, tracking=True, check_company=True)
+    template_id = fields.Many2one('payment.subscription.template', string='Subscription Template', domain="[('company_id', '=', company_id)]", required=True, default=_default_template, tracking=True, check_company=True)
     user_id = fields.Many2one('res.users', string='Salesperson', tracking=True, default=lambda self: self.env.user)
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_default_team, check_company=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_default_team, check_company=True, domain="[('company_id', '=', company_id)]")
     payment_token_id = fields.Many2one('payment.token', 'Payment Token', check_company=True, help='If not set, the automatic payment will fail.', domain="[('partner_id', '=', partner_id), ('company_id', '=', company_id)]")
     team_user_id = fields.Many2one('res.users', string='Team Leader', related='team_id.user_id', readonly=False)
     country_id = fields.Many2one('res.country', related='partner_id.country_id', store=True, readonly=False, compute_sudo=True)
@@ -268,11 +268,11 @@ class PaymentSubscription(models.Model):
     def onchange_date_start(self):
         if self.date_start and self.recurring_rule_boundary == 'limited':
             periods = {'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
-            self.date = fields.Date.from_string(self.date_start) + relativedelta(**{
-                periods[
-                    self.recurring_rule_type]: self.template_id.recurring_rule_count * self.template_id.recurring_interval})
+            self.date_end = fields.Date.from_string(self.date_start) + relativedelta(**{
+                periods[self.recurring_rule_type]: self.template_id.recurring_rule_count * self.template_id.recurring_interval
+            })
         else:
-            self.date = False
+            self.date_end = False
 
     @api.onchange('template_id')
     def onchange_template(self):
@@ -911,7 +911,7 @@ class PaymentSubscription(models.Model):
             'email_to': self.partner_id.email,
             'code': self.code,
             'currency': self.pricelist_id.currency_id.name,
-            'date_end': self.date,
+            'date_end': self.date_end,
         })
         _logger.debug('Sending Payment Confirmation Mail to %s for payment subscription %s', self.partner_id.email, self.id)
         template = template_res.browse(template_id)
@@ -927,7 +927,7 @@ class PaymentSubscription(models.Model):
             'email_to': self.partner_id.email,
             'code': self.code,
             'currency': self.pricelist_id.currency_id.name,
-            'date_end': self.date,
+            'date_end': self.date_end,
         })
         _logger.debug('Sending Invoice Mail to %s for payment subscription %s', self.partner_id.email, self.id)
         self.template_id.invoice_mail_template_id.with_context(email_context).send_mail(invoice.id)

@@ -278,4 +278,74 @@
             </t>
         </xpath>
     </template>
+
+    <template id="page_payment_system_product" inherit_id="payment_system_product.page_payment">
+        <xpath expr="//t[@t-set='labels']" position="inside">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
+                <label name="country" class="text-primary font-weight-bold mb-0 d-block">Country</label>
+                <span name="country" class="text-600" t-esc="partner and partner.country_id.name or '-'"/>
+                <label name="state" class="text-primary font-weight-bold mb-0 d-block">State</label>
+                <span name="state" class="text-600" t-esc="partner and partner.state_id.name or '-'"/>
+                <label name="city" class="text-primary font-weight-bold mb-0 d-block">City</label>
+                <span name="city" class="text-600" t-esc="partner and partner.city or '-'"/>
+                <label name="street" class="text-primary font-weight-bold mb-0 d-block">Street</label>
+                <span name="street" class="text-600" t-esc="partner and partner.street or '-'"/>
+                <label name="phone" class="text-primary font-weight-bold mb-0 d-block">Phone</label>
+                <span name="phone" class="text-600" t-esc="partner and partner.phone or '-'"/>
+                <label name="email" class="text-primary font-weight-bold mb-0 d-block">Email</label>
+                <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
+                <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
+                    <div class="field-container d-flex p-2 gap-5">
+                        <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
+                            <input type="radio" checked="checked"/><span t-translation="off"/><span>Individual</span>
+                        </button>
+                        <button class="btn" name="company" field="wizard.register.buttons.company_type">
+                            <input type="radio"/><span t-translation="off"/><span>Company</span>
+                        </button>
+                        <input type="hidden" value="person" field="wizard.register.company_type"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
+                <div class="field-container d-none">
+                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.paylox_tax_office"/>
+                    <span class="bar-container"/>
+                    <label class="text-primary"><span>Tax Office</span></label>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
+            <t t-if="flow == 'dynamic' and system == 'vendor'">
+                <div class="d-flex flex-column gap-5">
+                    <div class="field-container">
+                        <select class="text-center border-primary" required="required" field="wizard.register.state_id" placeholder="Select a state">
+                            <option/>
+                            <t t-foreach="company.env['res.country.state'].sudo().search_read([('country_id', '=', company.country_id.id)])" t-as="state">
+                                <option t-att-value="state['id']" t-esc="state['name']"/>
+                            </t>
+                        </select>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>State</span></label>
+                    </div>
+                    <div class="field-container">
+                        <input type="text" class="text-center border-primary" required="required" field="wizard.register.city"/>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>City</span></label>
+                    </div>
+                    <div class="field-container">
+                        <textarea type="text" class="text-center border-primary" required="required" field="wizard.register.street"/>
+                        <span class="bar-container"/>
+                        <label class="text-primary"><span>Address</span></label>
+                    </div>
+                    <input type="hidden" field="wizard.register.country_id" t-att-value="company.country_id.id"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
 </odoo>

@@ -404,6 +404,7 @@ class PayloxController(http.Controller):
                         })
 
                 elif type.startswith('c'):
+                    campaigns = client and client.campaign_ids.mapped('name')
                     if 't' in type:
                         if bin:
                             cols = list()
@@ -412,6 +413,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
+                                if campaigns and campaign not in campaigns:
+                                    continue
+
                                 cols.append(campaign)
                                 values.update({
                                     'card': {
@@ -449,6 +453,10 @@ class PayloxController(http.Controller):
 
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
+                                campaign = option.get('campaign_name', '')
+                                if campaigns and campaign not in campaigns:
+                                    continue
+
                                 line = {
                                     'type': option.get('card_type', ''),
                                     'currency': option.get('currency', ''),
@@ -506,6 +514,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
+                                if campaigns and campaign not in campaigns:
+                                    continue
+
                                 cols.append(campaign)
                                 values.update({
                                     'card': {
@@ -559,6 +570,10 @@ class PayloxController(http.Controller):
 
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
+                                campaign = option.get('campaign_name', '')
+                                if campaigns and campaign not in campaigns:
+                                    continue
+
                                 line = {
                                     'type': option.get('card_type', ''),
                                     'currency': option.get('currency', ''),

@@ -78,6 +78,14 @@ class fields {
         this.$.text();
     }
 
+    get json() {
+        try {
+            return JSON.parse(this.$.val());
+        } catch {
+            return {};
+        }
+    }
+
     get exist() {
         return !!this.$.length;
     }
