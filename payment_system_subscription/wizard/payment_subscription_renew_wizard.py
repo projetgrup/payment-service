@@ -47,7 +47,7 @@ class PaymentSubscriptionWizard(models.TransientModel):
 
 class PaymentSubscriptionRenewWizardOptionKeep(models.TransientModel):
     _name = 'payment.subscription.renew.wizard.option.keep'
-    _description = 'payment Subscription Renew Lines Wizard'
+    _description = 'Subscription Renew Lines Wizard'
 
     renew_product = fields.Boolean('Keep the product', default=True)
     name = fields.Char('Product')

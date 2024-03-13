@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-24 16:56+0000\n"
-"PO-Revision-Date: 2024-02-24 20:02+0300\n"
+"POT-Creation-Date: 2024-03-13 14:28+0000\n"
+"PO-Revision-Date: 2024-03-13 17:52+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -120,32 +120,38 @@ msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
 msgstr "<span class=\"text-600 font-weight-bold\">Tümünü Seç</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Address</span>"
 msgstr "<span>Adres</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>City</span>"
 msgstr "<span>İlçe</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Company</span>"
 msgstr "<span>Kurumsal</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Individual</span>"
 msgstr "<span>Bireysel</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>State</span>"
 msgstr "<span>Şehir</span>"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "<span>Tax Office</span>"
 msgstr "<span>Vergi Dairesi</span>"
 
@@ -707,6 +713,11 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_report_pivot
+msgid "Analysis"
+msgstr "Analiz"
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_product_attribute
 msgid "Attributes"
 msgstr "Nitelikler"
@@ -740,7 +751,8 @@ msgid "Categories"
 msgstr "Kategoriler"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
 msgstr "İlçe"
@@ -780,7 +792,8 @@ msgid "Contacts"
 msgstr "Yetkililer"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Country"
 msgstr "Ülke"
@@ -794,6 +807,11 @@ msgstr "Bir bayi oluştur"
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_child
 msgid "Create a vendor contact"
 msgstr "Bir bayi yetkilisi oluştur"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Create subscription with chosen products"
+msgstr "Seçilen ürünler ile abonelik oluştur"
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
@@ -846,7 +864,8 @@ msgid "Editable Payment Amount"
 msgstr "Düzenlenebilir Ödeme Tutarı"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Email"
 msgstr "Eposta"
 
@@ -916,6 +935,11 @@ msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sale_order
+msgid "Orders"
+msgstr "Siparişler"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Other"
 msgstr "Diğer"
@@ -977,7 +1001,8 @@ msgid "Payments"
 msgstr "Ödemeler"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Phone"
 msgstr "Telefon"
 
@@ -1004,8 +1029,14 @@ msgstr "Ürün Şablonu"
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_product
 #: model:ir.ui.menu,name:payment_vendor.menu_product_template
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_product
 msgid "Products"
 msgstr "Ürünler"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_reason
+msgid "Reasons"
+msgstr "Gerekçeler"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -1016,6 +1047,11 @@ msgstr "Kaldır"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Remove Advance"
 msgstr "Avansı Kaldır"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription_report
+msgid "Reports"
+msgstr "Raporlar"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
@@ -1043,6 +1079,16 @@ msgid "SMS Templates"
 msgstr "SMS Şablonları"
 
 #. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_sale
+msgid "Sales"
+msgstr "Satışlar"
+
+#. module: payment_vendor
+#: model:ir.model,name:payment_vendor.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
 msgid "Sales Person"
 msgstr "Satış Temsilcisi"
@@ -1058,7 +1104,8 @@ msgid "Sales Teams"
 msgstr "Satış Ekipleri"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Select a state"
 msgstr "Bir il seçin"
 
@@ -1079,13 +1126,20 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_stage
+msgid "Stages"
+msgstr "Aşamalar"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "State"
 msgstr "Şehir"
 
 #. module: payment_vendor
-#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_advance
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 msgid "Street"
 msgstr "Adres"
 
@@ -1093,6 +1147,17 @@ msgstr "Adres"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Street..."
 msgstr "Cadde..."
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription
+msgid "Subscription Settings"
+msgstr "Abonelik Ayarları"
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_subscription
+#: model:ir.ui.menu,name:payment_vendor.menu_subscriptions
+msgid "Subscriptions"
+msgstr "Abonelikler"
 
 #. module: payment_vendor
 #: model:ir.model.fields,field_description:payment_vendor.field_payment_item__system
@@ -1103,6 +1168,7 @@ msgstr "Cadde..."
 #: model:ir.model.fields,field_description:payment_vendor.field_res_company__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_partner__system
 #: model:ir.model.fields,field_description:payment_vendor.field_res_users__system
+#: model:ir.model.fields,field_description:payment_vendor.field_sale_order__system
 msgid "System"
 msgstr "Sistem"
 
@@ -1115,6 +1181,11 @@ msgstr "Etiketler"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Tags..."
 msgstr "Etiketler..."
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_template
+msgid "Templates"
+msgstr "Şablonlar"
 
 #. module: payment_vendor
 #: model:mail.template,name:payment_vendor.mail_transaction_daily
@@ -1191,6 +1262,7 @@ msgstr "Bayi Tahsilat Epostası"
 #: model:ir.model.fields.selection,name:payment_vendor.selection__product_template__system__vendor
 #: model:ir.model.fields.selection,name:payment_vendor.selection__res_company__system__vendor
 #: model:ir.model.fields.selection,name:payment_vendor.selection__res_partner__system__vendor
+#: model:ir.model.fields.selection,name:payment_vendor.selection__sale_order__system__vendor
 #: model:ir.module.category,description:payment_vendor.module_category_vendor
 #: model:ir.module.category,name:payment_vendor.module_category_vendor
 msgid "Vendor Payment System"

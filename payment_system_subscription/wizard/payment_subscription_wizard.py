@@ -53,7 +53,7 @@ class PaymentSubscriptionWizard(models.TransientModel):
 
 class PaymentSubscriptionWizardOption(models.TransientModel):
     _name = 'payment.subscription.wizard.option'
-    _description = 'payment Subscription Upsell Lines Wizard'
+    _description = 'Subscription Upsell Lines Wizard'
 
     name = fields.Char(string='Description')
     wizard_id = fields.Many2one('payment.subscription.wizard', required=True, ondelete='cascade')
