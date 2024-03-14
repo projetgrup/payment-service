@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 
 class PaymentSubscriptionWizard(models.TransientModel):
     _name = 'payment.subscription.renew.wizard'
-    _description = 'Subscription Renew wizard'
+    _description = 'Subscription Renew Wizard'
 
     def _default_subscription(self):
         return self.env['payment.subscription'].browse(self._context.get('active_id'))

@@ -30,18 +30,19 @@ systemFlow.dynamic.include({
     _queryPartnerPostprocess: function (partner) {
         this._super(partner);
         if (this.system.value === 'vendor') {
-            $('.payment-system span[name=country]').text(Array.isArray(partner.country_id) ? partner.country_id[1] : partner.country_id || '-');
-            $('.payment-system span[name=state]').text(Array.isArray(partner.state) ? partner.state[1] : partner.state || '-');
-            $('.payment-system span[name=city]').text(partner.city || '-');
-            $('.payment-system span[name=street]').text(partner.street || '-');
-            $('.payment-system span[name=phone]').text(partner.phone || '-');
-            $('.payment-system span[name=email]').text(partner.email || '-');
+            $('.payment-page span[name=partner]').text(partner.name || '-');
+            $('.payment-page span[name=country]').text(Array.isArray(partner.country_id) ? partner.country_id[1] : partner.country_id || '-');
+            $('.payment-page span[name=state]').text(Array.isArray(partner.state) ? partner.state[1] : partner.state || '-');
+            $('.payment-page span[name=city]').text(partner.city || '-');
+            $('.payment-page span[name=street]').text(partner.street || '-');
+            $('.payment-page span[name=phone]').text(partner.phone || '-');
+            $('.payment-page span[name=email]').text(partner.email || '-');
         }
     },
 
     _onClickCompanyType: function(ev) {
         const button = $(ev.currentTarget);
-        const buttons = $('.payment-system button[field="wizard.register.buttons.company_type"]');
+        const buttons = $('.payment-page button[field="wizard.register.buttons.company_type"]');
         buttons.removeClass('selected').find('input').prop({'checked': false});
         button.addClass('selected').find('input').prop({'checked': true});
 

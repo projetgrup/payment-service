@@ -151,8 +151,10 @@ class PaymentSystemProductController(SystemController):
         if not request.env.company.system_product:
             raise werkzeug.exceptions.NotFound()
 
-        if request.env.user.share and not 'id' in kwargs:
-            raise werkzeug.exceptions.NotFound()
+    def _check_create_partner(self, **kwargs):
+        if request.env.company.system_product:
+            return False
+        return super()._check_product_page(**kwargs)
 
     def _redirect_product_page(self, website_id=None, company_id=None):
         website = False
@@ -204,6 +206,9 @@ class PaymentSystemProductController(SystemController):
 
     @route('/my/product', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_product(self, **kwargs):
+        #if request.env.user.share:
+        #    return request.redirect('/otp')
+
         self._check_product_page(**kwargs)
         w_id = request.website.id
         website_id = int(kwargs.get('id', w_id))
@@ -229,15 +234,8 @@ class PaymentSystemProductController(SystemController):
         else:
             companies = companies.filtered(lambda x: x.system_product and x.id in user.company_ids.ids)
 
-        categs = request.env['product.category'].sudo().search([
-            ('company_id', '=', company.id),
-            ('system', '=', company.system),
-        ])
-        products = request.env['product.template'].sudo().search([
-            ('company_id', '=', company.id),
-            ('system', '=', company.system),
-            ('payment_page_ok', '=', True),
-        ])
+        categs = request.env['product.category'].sudo().with_context(system=company.system).search([])
+        products = request.env['product.template'].sudo().with_context(system=company.system).search([('payment_page_ok', '=', True)])
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',

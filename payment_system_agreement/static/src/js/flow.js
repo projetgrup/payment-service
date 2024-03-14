@@ -3,7 +3,6 @@
 
 import rpc from 'web.rpc';
 import { _t, qweb } from 'web.core';
-import payloxPage from 'paylox.page';
 import systemFlow from 'paylox.system.page.flow';
 
 systemFlow.dynamic.include({

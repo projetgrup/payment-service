@@ -1,4 +1,17 @@
 .payment-page {
+    .payment-form-container {
+        grid-template-areas:
+            "name name"
+            "number number"
+            "expiration security"
+            "terms terms"
+            "agreement agreement";
+
+        .field-container:nth-of-type(6) {
+            grid-area: agreement;
+        }
+    }
+
     .btn-payment-agreement {
         gap: 6px;
         border: none;

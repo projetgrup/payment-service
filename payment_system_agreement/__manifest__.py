@@ -29,7 +29,7 @@
         'web.assets_frontend': [
             'payment_system_agreement/static/src/scss/page.scss',
             'payment_system_agreement/static/src/js/page.js',
-            'payment_system_agreement/static/src/js/flow.js',
+            #'payment_system_agreement/static/src/js/flow.js', #TODO examine
         ],
     },
     'images': ['static/description/icon.png'],

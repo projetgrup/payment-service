@@ -977,8 +977,7 @@
     .payment-form-container {
         background-color: #ffffff !important;
         display: grid;
-        gap: 10%;
-        grid-template-columns: 45% 45%;
+        gap: 1em;
         grid-template-areas: "name name""number number""expiration security""terms terms";
         padding: 20px;
         color: #707070;
@@ -1005,7 +1004,7 @@
     }
 
     .payment-gradient {
-        height: 400px;
+        min-height: 400px;
     }
 
     .ccicon {
