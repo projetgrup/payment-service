@@ -401,7 +401,7 @@
                                         <t t-set="variants" t-value="product.get_payment_variants(['brand', 'weight'])"/>
                                         <t t-if="brands">
                                             <t t-set="brand" t-value="brands[0]"/>
-                                            <div t-att-class="'payment-product-categ-card' if categ_id == product.categ_id.id else 'd-none'" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
+                                            <div t-attf-class="payment-product-categ-card #{'' if categ_id == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
                                                 <div class="payment-product-items-card">
                                                     <t t-foreach="brands" t-as="b">
                                                         <div t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
