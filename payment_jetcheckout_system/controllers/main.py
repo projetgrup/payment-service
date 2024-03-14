@@ -50,6 +50,10 @@ class PayloxSystemController(Controller):
         if request.env.user.share and not 'id' in kwargs:
             raise werkzeug.exceptions.NotFound()
 
+    def _check_create_partner(self, **kwargs):
+        if request.env.user.has_group('base.group_public'):
+            return {'error': _('Only registered users can create partners.<br/>Please contact with your system administrator.')}
+
     def _redirect_advance_page(self, website_id=None, company_id=None):
         website = False
         websites = request.env['website'].sudo()
@@ -758,8 +762,9 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
     def page_system_payment_create_partner(self, **kwargs):
-        if request.env.user.has_group('base.group_public'):
-            return {'error': _('Only registered users can create partners.<br/>Please contact with your system administrator.')}
+        message = self._check_create_partner(**kwargs)
+        if message:
+            return message
 
         company = request.env.company
         values = {**kwargs}

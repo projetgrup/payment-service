@@ -113,7 +113,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             //     this.wizard.vat.value = '';
             // }
 
-            this.wizard.vat.value = '';
+            //this.wizard.vat.value = '';
             this.wizard.page.login.$.addClass('show');
             this.wizard.page.loading.$.removeClass('show');
             setTimeout(() => {

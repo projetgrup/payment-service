@@ -87,7 +87,10 @@ payloxPage.include({
 
 publicWidget.registry.payloxSystemProduct = systemPage.extend({
     selector: '.payment-product #wrapwrap',
-    xmlDependencies: ['/payment_system_product/static/src/xml/page.xml'],
+    xmlDependencies: [
+        '/payment_system_product/static/src/xml/page.xml',
+        '/payment_jetcheckout_system/static/src/xml/system.xml',
+    ],
 
     init: function (parent, options) {
         this._super(parent, options);
@@ -350,7 +353,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this._saveOrder({ lines: Object.values(this.lines) });
     },
 
-    _onChangeQty(ev) {
+    _onChangeQty(ev, update=true) {
         let $qty = $(ev.currentTarget);
         let pid = $qty.data('id');
         this.product.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
@@ -366,20 +369,24 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $amount.data('value', value);
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
 
-        this._updateLines();
+        if (update) {
+            this._updateLines();
+        }
     },
 
     _onClickItem(ev) {
-        this.product.item.$.removeClass('bg-warning');
         this.product.qty.$.val(0);
+        this.product.item.$.removeClass('bg-warning');
 
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
-        let qty = this.product.qty.$.filter(`[data-id=${pid}]`);
+        let qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
 
         qty.val(1);
-        qty.trigger('change');
         btn.addClass('bg-warning');
+
+        this.product.qty.$.each((i, e) => this._onChangeQty({ currentTarget: e }, false))
+        this._updateLines();
     },
 
     _onClickCateg(ev) {
