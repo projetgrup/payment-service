@@ -7,177 +7,180 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-16 13:53+0000\n"
-"PO-Revision-Date: 2024-03-16 13:53+0000\n"
+"PO-Revision-Date: 2024-03-16 16:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: base_rest
 #: code:addons/base_rest/apispec/base_rest_service_apispec.py:0
 #, python-format
 msgid "%s REST Services"
-msgstr ""
+msgstr "%s REST Servisi"
 
 #. module: base_rest
 #: code:addons/base_rest/apispec/base_rest_service_apispec.py:0
 #, python-format
 msgid "API Description"
-msgstr ""
+msgstr "API Açıklamaları"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Array of "
-msgstr ""
+msgstr "Dizi "
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "BadRequest %s"
-msgstr ""
+msgstr "Geçersiz İstek %s"
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "BadRequest item %s :%s"
-msgstr ""
+msgstr "Geçersiz İstek eleman %s :%s"
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "BadRequest: Not enough items in the list (%s < %s)"
-msgstr ""
+msgstr "Geçersiz İstek: Listede yeterli eleman yok (%s < %s)"
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "BadRequest: Too many items in the list (%s > %s)"
-msgstr ""
+msgstr "Geçersiz İstek: Listede çok fazla eleman var (%s > %s)"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Callback responses"
-msgstr ""
+msgstr "Geri dönüş yanıtları"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Default"
-msgstr ""
+msgstr "Varsayılan"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Deprecated"
-msgstr ""
+msgstr "Kaldırıldı"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Download"
-msgstr ""
+msgstr "İndir"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Download OpenAPI specification"
-msgstr ""
+msgstr "OpenAPI tanımlamalarını indir"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Enum"
-msgstr ""
+msgstr "Enum"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Event"
-msgstr ""
+msgstr "Webhook"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Example"
-msgstr ""
+msgstr "Örnek"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Examples"
-msgstr ""
+msgstr "Örnekler"
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "Invalid Response %s"
-msgstr ""
+msgstr "Geçersiz yanıt %s"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Items"
-msgstr ""
+msgstr "Elemanlar"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "No results found"
-msgstr ""
+msgstr "Bir sonuç bulunamadı"
 
 #. module: base_rest
 #: model:ir.model,name:base_rest.model_rest_service_registration
 msgid "REST Services Registration Model"
-msgstr ""
+msgstr "REST Servisi Kayıt Modeli"
 
 #. module: base_rest
 #: model:ir.model,name:base_rest.model_ir_rule
 msgid "Record Rule"
-msgstr ""
+msgstr "Kayıt Kuralı"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Recursive"
-msgstr ""
+msgstr "Tekrarlayan"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Request samples"
-msgstr ""
+msgstr "İstek örnekleri"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Response samples"
-msgstr ""
+msgstr "Yanıt örnekleri"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Responses"
-msgstr ""
+msgstr "Yanıtlar"
 
 #. module: base_rest
 #: code:addons/base_rest/apispec/base_rest_service_apispec.py:0
 #, python-format
 msgid "Return a 200 status to indicate that the data was sent successfully"
 msgstr ""
+"Verinin başarılı bir şekilde gönderildiğini bildirmek için 200 durum kodu "
+"döner"
 
 #. module: base_rest
 #: code:addons/base_rest/restapi.py:0
 #, python-format
 msgid "Unable to get cerberus schema from %s"
-msgstr ""
+msgstr "%s tarafından cerberus şeması alınamadı"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0
-#: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Value"
-msgstr ""
+msgstr "Değer"

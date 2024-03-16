@@ -266,6 +266,14 @@ class PaymentResultOutput(Datamodel):
     transaction = NestedModel("payment.transaction", metadata={"title": "Transaction information related to request", "description": "Transaction details"})
 
 
+class PaymentResultWebhook(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.result.webhook"
+    _inherit = "payment.result.output"
+
+
 class PaymentStatusOutput(Datamodel):
     class Meta:
         ordered = True

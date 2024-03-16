@@ -29,14 +29,22 @@ class PaymentAPIService(Component):
     _name = "payment"
     _usage = "payment"
     _collection = "payment"
-    _description = """This API helps you create payments and query their states with your specially generated key"""
+    _description = _("""
+        <br/>
+        <h1 class="dCEJze">Description</h1>
+        <p style="text-indent:2em">This API helps you create payments and query their statuses with a special key which is privately generated for you.</p>
+        <p style="text-indent:2em">Firstly, use "Prepare Payment" method to initialize a payment request. Then, if everything goes well, server will send you a hash string.</p>
+        <p style="text-indent:2em">Now, you can navigate to <code>/payment/card?=&lt;hash&gt;</code> address to get payment form.</p>
+        <p style="text-indent:2em">When payment is done, its result will send to the address which you have specified when initializing the payment.</p>
+        <p style="text-indent:2em">Afterwards, you can use "Payment Operation" methods for cancelling, refunding, expiring or deleting the payment.</p>
+    """)
 
     @restapi.method(
         [(["/prepare"], "POST")],
         input_param=Datamodel("payment.prepare.input"),
         output_param=Datamodel("payment.prepare.output"),
         auth="public",
-        tags=['Payment Preparation']
+        tags=[_('Payment Initialization')]
     )
     def payment_prepare(self, params):
         """
@@ -66,7 +74,7 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.result.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Finalization')]
     )
     def payment_result(self, params):
         """
@@ -91,12 +99,23 @@ class PaymentAPIService(Component):
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
 
+    @restapi.webhook(
+        input_param=Datamodel("payment.result.webhook"),
+        auth="public",
+        tags=[_('Payment Finalization')]
+    )
+    def payment_webhook(self):
+        """
+        Payment Webhook
+        """
+        pass
+
     @restapi.method(
         [(["/status"], "GET")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.status.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Finalization')]
     )
     def payment_status(self, params):
         """
@@ -127,7 +146,7 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Operation')]
     )
     def payment_cancel(self, params):
         """
@@ -156,7 +175,7 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.refund.input"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Operation')]
     )
     def payment_refund(self, params):
         """
@@ -185,7 +204,7 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Operation')]
     )
     def payment_expire(self, params):
         """
@@ -215,7 +234,7 @@ class PaymentAPIService(Component):
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_('Payment Operation')]
     )
     def payment_delete(self, params):
         """

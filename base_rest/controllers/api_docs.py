@@ -4,8 +4,8 @@
 import json
 from contextlib import contextmanager
 
+from odoo import _
 from odoo.http import Controller, request, route
-
 from odoo.addons.component.core import WorkContext
 
 from ..core import _rest_services_databases
@@ -33,7 +33,29 @@ class ApiDocsController(Controller):
             urls = [url for url in urls if system in url['name']]
 
         settings = {"urls": urls}
-        return request.render("base_rest.openapi_redoc", {"settings": settings})
+        return request.render("base_rest.openapi_redoc", {
+            "settings": settings,
+            "labels": json.dumps({
+                "enum": _("Enum"),
+                "enumSingleValue": _("Value"),
+                "enumArray": _("Items"),
+                "default": _("Default"),
+                "deprecated": _("Deprecated"),
+                "example": _("Example"),
+                "examples": _("Examples"),
+                "recursive": _("Recursive"),
+                "arrayOf": _("Array of "),
+                "webhook": _("Event"),
+                "const": _("Value"),
+                "noResultsFound": _("No results found"),
+                "download": _("Download"),
+                "downloadSpecification": _("Download OpenAPI specification"),
+                "responses": _("Responses"),
+                "callbackResponses": _("Callback responses"),
+                "requestSamples": _("Request samples"),
+                "responseSamples": _("Response samples"),
+            })
+        })
 
     @route(
         ["/api/s"],
