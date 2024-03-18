@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-import requests
 import ast
+import requests
+from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 SENDURL = 'https://api.netgsm.com.tr/sms/send/xml'
 OTPSENDURL = 'https://api.netgsm.com.tr/sms/send/otp'
-CREDITURL = 'https://api.netgsm.com.tr/balance/list/xml'
+CREDITURL = 'https://api.netgsm.com.tr/balance'
 REPORTURL = 'https://api.netgsm.com.tr/sms/report'
-HEADERS = {'content-type': 'application/xml'}
+HEADERS = {'Content-Type': 'application/xml'}
 ERRORS = {
     None: ValidationError('Bir hata meydana geldi'),
     '20': UserError('Mesaj metni hatalı veya standart maksimum mesaj sayısını aşıyor'),
@@ -104,13 +105,16 @@ class SmsApi(models.AbstractModel):
                 <header>
                     <usercode>{username}</usercode>
                     <password>{password}</password>
-                    <stip>2</stip>
+                    <stip>1</stip>
+                    <view>1</view>
                 </header>
             </mainbody>"""
 
         response = requests.post(CREDITURL, data=data.encode('utf-8'), headers=HEADERS)
-        code, credit, *args = self._process_netgsm_sms(response.text)
-        if code.startswith('0'):
+        result = etree.fromstring(response.text)
+        credit = result.xpath('//balance_name[text()="Adet SMS"]/../amount')
+        if credit:
+            credit = credit[0].text
             try:
                 credit = float(credit)
             except:
@@ -118,4 +122,4 @@ class SmsApi(models.AbstractModel):
                 credit = ast.literal_eval(credit)
             return _('%s SMS credit(s) left') % int(credit)
         else:
-            raise ERRORS.get(code, ERRORS[None])
+            raise ERRORS.get('30', ERRORS[None])
