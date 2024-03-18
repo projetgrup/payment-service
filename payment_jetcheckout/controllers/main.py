@@ -276,8 +276,8 @@ class PayloxController(http.Controller):
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
+        client = self._get_partner(partner, parent=True)
         if not request.env.user.has_group('base.group_user'):
-            client = self._get_partner(partner, parent=True)
             if client and client.campaign_id:
                 campaign = client.campaign_id.name
 
