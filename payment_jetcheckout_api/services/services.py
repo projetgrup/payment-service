@@ -3,8 +3,8 @@ import base64
 import hashlib
 import logging
 
-from odoo import _
 from odoo.http import Response
+from odoo.tools.translate import _lt
 from odoo.exceptions import ValidationError
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest.controllers.main import RestController
@@ -29,19 +29,24 @@ class PaymentAPIService(Component):
     _name = "payment"
     _usage = "payment"
     _collection = "payment"
-    _description = """This API helps you create payments and query their states with your specially generated key"""
+    _description = _lt("""
+        <br/>
+        <h1 class="dCEJze">Description</h1>
+        <p>This API helps you create payments and query their statuses with a special key which is privately generated for you.</p>
+        <p>Firstly, use "Prepare Payment" method to initialize a payment request. Then, if everything goes well, server will send you a hash string.</p>
+        <p>Now, you can navigate to <code>/payment/card?=&lt;hash&gt;</code> address to get payment form.</p>
+        <p>When payment is done, its result will send to the address which you have specified when initializing the payment.</p>
+        <p>Afterwards, you can use "Payment Operation" methods for cancelling, refunding, expiring or deleting the payment.</p>
+    """)
 
     @restapi.method(
         [(["/prepare"], "POST")],
         input_param=Datamodel("payment.prepare.input"),
         output_param=Datamodel("payment.prepare.output"),
         auth="public",
-        tags=['Payment Preparation']
+        tags=[_lt("Payment Initialization")]
     )
     def payment_prepare(self, params):
-        """
-        Prepare Payment
-        """
         try:
             company = self.env.company.id
 
@@ -60,18 +65,16 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_prepare.__doc__ = _lt("Prepare Payment")
 
     @restapi.method(
         [(["/result"], "GET")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.result.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Finalization")]
     )
     def payment_result(self, params):
-        """
-        Payment Result
-        """
         try:
             company = self.env.company.id
 
@@ -90,18 +93,25 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_result.__doc__ = _lt("Payment Result")
+
+    @restapi.webhook(
+        input_param=Datamodel("payment.result.webhook"),
+        auth="public",
+        tags=[_lt("Payment Finalization")]
+    )
+    def payment_webhook(self):
+        pass
+    payment_webhook.__doc__ = _lt("Payment Webhook")
 
     @restapi.method(
         [(["/status"], "GET")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.status.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Finalization")]
     )
     def payment_status(self, params):
-        """
-        Payment Status
-        """
         try:
             company = self.env.company.id
             api = self._get_api(company, params.apikey)
@@ -121,18 +131,16 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_status.__doc__ = _lt("Payment Status")
 
     @restapi.method(
         [(["/cancel"], "PUT")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Operation")]
     )
     def payment_cancel(self, params):
-        """
-        Cancel Payment
-        """
         try:
             company = self.env.company.id
             api = self._get_api(company, params.apikey)
@@ -150,18 +158,16 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_cancel.__doc__ = _lt("Cancel Payment")
 
     @restapi.method(
         [(["/refund"], "PUT")],
         input_param=Datamodel("payment.refund.input"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Operation")]
     )
     def payment_refund(self, params):
-        """
-        Refund Payment
-        """
         try:
             company = self.env.company.id
             api = self._get_api(company, params.apikey)
@@ -179,18 +185,16 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_refund.__doc__ = _lt("Refund Payment")
 
     @restapi.method(
         [(["/expire"], "PUT")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Operation")]
     )
     def payment_expire(self, params):
-        """
-        Expire Payment
-        """
         try:
             company = self.env.company.id
 
@@ -209,18 +213,16 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_expire.__doc__ = _lt("Expire Payment")
 
     @restapi.method(
         [(["/delete"], "DELETE")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.output"),
         auth="public",
-        tags=['Payment Operation']
+        tags=[_lt("Payment Operation")]
     )
     def payment_delete(self, params):
-        """
-        Delete Payment
-        """
         try:
             company = self.env.company.id
 
@@ -237,6 +239,7 @@ class PaymentAPIService(Component):
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
+    payment_delete.__doc__ = _lt("Delete Payment")
 
     #
     # PRIVATE METHODS
@@ -333,7 +336,7 @@ class PaymentAPIService(Component):
                 'virtual_pos_name': tx.jetcheckout_vpos_name or '',
                 'order_id': tx.jetcheckout_order_id or '',
                 'transaction_id': tx.jetcheckout_transaction_id or '',
-                'message': tx.state_message if not tx.state == 'done' else _('Transaction is successful.'),
+                'message': tx.state_message if not tx.state == 'done' else _lt('Transaction is successful.'),
                 'partner': {
                     'name': tx.partner_id.name or '',
                     'ip_address': tx.jetcheckout_ip_address or '',
