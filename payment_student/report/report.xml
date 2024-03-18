@@ -23,6 +23,21 @@
                 <span name="system_student_phone" style="font-size:14px;color: #000000;display:block;width:322px;">Phone: <span t-field="doc.partner_phone"/></span>
             </t>
         </xpath>
+        <xpath expr="//table[@name='commission']" position="attributes">
+            <attribute name="t-if">not system_student_school</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='doc.jetcheckout_payment_amount']" position="attributes">
+            <attribute name="t-if">not system_student_school</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='doc.jetcheckout_payment_amount']" position="after">
+            <span t-else="" t-field="doc.jetcheckout_payment_paid"/>
+        </xpath>
+        <xpath expr="//span[@t-field='doc.jetcheckout_installment_amount']" position="attributes">
+            <attribute name="t-if">not system_student_school</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='doc.jetcheckout_installment_amount']" position="after">
+            <span t-else="" t-esc="doc.jetcheckout_payment_paid / doc.jetcheckout_installment_count if doc.jetcheckout_installment_count else 0" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+        </xpath>
         <xpath expr="//td[@name='receipt_id']" position="inside">
             <t t-if="system_student_university">
                 <br/>
@@ -33,7 +48,7 @@
                 Program: <strong style="color: #ff6b6b;"><span t-esc="doc.partner_id.system_student_program_id.name or '-'"/></strong>
             </t>
         </xpath>
-        <xpath expr="//tr[@t-if='is_conveyance']" position="before">
+        <!--<xpath expr="//tr[@t-if='is_conveyance']" position="before">
             <t t-if="system_student_school" t-call="payment_student.payment_table">
                 <t t-set="vals" t-value="doc.jetcheckout_item_ids.get_student_payment_table(installment=doc.jetcheckout_installment_count)"/>
                 <t t-set="discount_single" t-value="company._get_student_discount(installment=doc.jetcheckout_installment_count) if company.student_discount_advance_active else 0"/>
@@ -41,7 +56,7 @@
                 <t t-set="discount_sibling" t-value="company.student_discount_sibling_rate if company.student_discount_sibling_active else 0"/>
                 <t t-if="not discount_sibling % 1" t-set="discount_sibling" t-value="int(discount_sibling)"/>
             </t>
-        </xpath>
+        </xpath>-->
         <xpath expr="//td[@name='commission_amount']" position="before">
             <td t-if="system_student_university" name="system_student_commission_amount" width="110" height="25" style="width: 110px; height: 25px; background-color: #f3f3f3; text-align: center; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">Service Charge</td>
         </xpath>
