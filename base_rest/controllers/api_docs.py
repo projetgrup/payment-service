@@ -14,22 +14,24 @@ from .main import _PseudoCollection
 
 class ApiDocsController(Controller):
     def make_json_response(self, data, headers=None, cookies=None):
-        data = json.dumps(data)
+        data = json.dumps(data, default=str)
         if headers is None:
             headers = {}
         headers["Content-Type"] = "application/json"
         return request.make_response(data, headers=headers, cookies=cookies)
 
     @route(
-        ["/api", "/api/index.html"],
+        ["/api", "/api/<collection>", "/api/index.html"],
         methods=["GET"],
         type="http",
         auth="public",
     )
-    def index(self, **params):
+    def index(self, collection=None, **params):
         urls = self._get_api_urls()
         system = getattr(request.env.company, 'system', False)
-        if system:
+        if collection:
+            urls = [url for url in urls if collection in url['name']]
+        elif system:
             urls = [url for url in urls if system in url['name']]
 
         settings = {"urls": urls}

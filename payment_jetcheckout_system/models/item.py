@@ -147,26 +147,39 @@ class PaymentItem(models.Model):
         return res
 
     def get_due(self):
-        self = self.filtered(lambda x: not x.paid)
 
-        amounts = self.env.context.get('amounts', {})
-        total = 0
-        for item in self:
-            total += amounts.get(item.id, item.residual_amount)
+        values = {
+            'amount': 0.0,
+            'days': 0,
+            'date': False,
+            'campaign': '',
+            'advance_amount': 0.0,
+            'advance_campaign': '',
+            'hide_payment': False,
+            'hide_payment_message': '',
+        }
 
-        today = fields.Date.today()
-        amount = 0
-        days = 0
-        date = False
-        campaign = ''
-        advance_amount = 0
-        advance_campaign = ''
-        hide_payment = False
-        hide_payment_message = ''
+        tag = self.env.context.get('tag')
+        if tag and tag.campaign_id:
+            return values
 
         company = self.env.company
-        lang = get_lang(self.env)
         if company.payment_page_due_ok:
+            amount = 0
+            advance_amount = 0
+            advance_campaign = ''
+            hide_payment = False
+            hide_payment_message = ''
+
+            self = self.filtered(lambda x: not x.paid)
+            amounts = self.env.context.get('amounts', {})
+            total = 0
+            for item in self:
+                total += amounts.get(item.id, item.residual_amount)
+
+            today = fields.Date.today()
+            lang = get_lang(self.env)
+
             base = company.payment_page_due_base
             sign = -1 if base == 'date_document' else 1
             for item in self:
@@ -181,6 +194,7 @@ class PaymentItem(models.Model):
             date = (today + timedelta(days=days)).strftime(lang.date_format)
             days, campaign, line, advance, hide_payment = company.payment_page_due_ids.get_campaign(days * sign)
 
+
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
 
@@ -191,18 +205,20 @@ class PaymentItem(models.Model):
                 advance_amount = (sign * amount / due) - total if due else 0
                 advance_campaign = advance.campaign_id.name
 
-        values = {
-            'amount': amount,
-            'days': days,
-            'date': date,
-            'campaign': campaign,
-            'advance_amount': advance_amount or 0.0,
-            'advance_campaign': advance_campaign or '',
-            'hide_payment': hide_payment or False,
-            'hide_payment_message': hide_payment_message or '',
-        }
-        if self.env.context.get('show_extra'):
-            values.update({'line': line})
+            if self.env.context.get('show_extra'):
+                values.update({'line': line})
+
+            values.update({
+                'amount': amount,
+                'days': days,
+                'date': date,
+                'campaign': campaign,
+                'advance_amount': advance_amount or 0.0,
+                'advance_campaign': advance_campaign or '',
+                'hide_payment': hide_payment or False,
+                'hide_payment_message': hide_payment_message or '',
+            })
+
         return values
 
     @api.model

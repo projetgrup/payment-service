@@ -9,7 +9,7 @@
             <t t-set="body_classname" t-value="'payment-page payment-vendor navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
-            <t t-set="due" t-value="payments.get_due()"/>
+            <t t-set="due" t-value="payments.with_context(tag=payment_tags and payment_tags[0]).get_due()"/>
             <t t-set="due_amount" t-value="due['amount']"/>
             <t t-set="due_days" t-value="due['days']"/>
             <t t-set="due_date" t-value="due['date']"/>

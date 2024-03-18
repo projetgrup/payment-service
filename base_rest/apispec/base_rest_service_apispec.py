@@ -30,10 +30,10 @@ class BaseRestServiceAPISpec(APISpec):
 
         super(BaseRestServiceAPISpec, self).__init__(
             title=_("%s REST Services") % self._service._usage.capitalize(),
-            version="",
             openapi_version="3.0.0",
+            version="",
             info={
-                "description": textwrap.dedent(getattr(self._service, "_description", "") or ""),
+                "description": textwrap.dedent(str(getattr(self._service, "_description", "") or "")),
                 "x-logo": dict(url=url)
             },
             servers=self._get_servers(),
@@ -79,13 +79,11 @@ class BaseRestServiceAPISpec(APISpec):
         ]
 
     def _get_method_values(self, method):
-        summary = textwrap.dedent(method.__doc__ or "")
+        summary = textwrap.dedent(str(method.__doc__ or ""))
         values = {'summary': summary}
-
         tags = method.routing.get('tags')
         if tags:
-            values['tags'] = tags
-
+            values.update({'tags': tags})
         return values
 
     def _add_path(self, method):
