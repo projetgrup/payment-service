@@ -4,8 +4,8 @@
 import json
 from contextlib import contextmanager
 
+from odoo import _
 from odoo.http import Controller, request, route
-
 from odoo.addons.component.core import WorkContext
 
 from ..core import _rest_services_databases
@@ -14,26 +14,50 @@ from .main import _PseudoCollection
 
 class ApiDocsController(Controller):
     def make_json_response(self, data, headers=None, cookies=None):
-        data = json.dumps(data)
+        data = json.dumps(data, default=str)
         if headers is None:
             headers = {}
         headers["Content-Type"] = "application/json"
         return request.make_response(data, headers=headers, cookies=cookies)
 
     @route(
-        ["/api", "/api/index.html"],
+        ["/api", "/api/<collection>", "/api/index.html"],
         methods=["GET"],
         type="http",
         auth="public",
     )
-    def index(self, **params):
+    def index(self, collection=None, **params):
         urls = self._get_api_urls()
         system = getattr(request.env.company, 'system', False)
-        if system:
+        if collection:
+            urls = [url for url in urls if collection in url['name']]
+        elif system:
             urls = [url for url in urls if system in url['name']]
 
         settings = {"urls": urls}
-        return request.render("base_rest.openapi_redoc", {"settings": settings})
+        return request.render("base_rest.openapi_redoc", {
+            "settings": settings,
+            "labels": json.dumps({
+                "enum": _("Enum"),
+                "enumSingleValue": _("Value"),
+                "enumArray": _("Items"),
+                "default": _("Default"),
+                "deprecated": _("Deprecated"),
+                "example": _("Example"),
+                "examples": _("Examples"),
+                "recursive": _("Recursive"),
+                "arrayOf": _("Array of "),
+                "webhook": _("Event"),
+                "const": _("Value"),
+                "noResultsFound": _("No results found"),
+                "download": _("Download"),
+                "downloadSpecification": _("Download OpenAPI specification"),
+                "responses": _("Responses"),
+                "callbackResponses": _("Callback responses"),
+                "requestSamples": _("Request samples"),
+                "responseSamples": _("Response samples"),
+            })
+        })
 
     @route(
         ["/api/s"],

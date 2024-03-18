@@ -154,7 +154,7 @@ class PaymentSystemProductController(SystemController):
     def _check_create_partner(self, **kwargs):
         if request.env.company.system_product:
             return False
-        return super()._check_product_page(**kwargs)
+        return super()._check_create_partner(**kwargs)
 
     def _redirect_product_page(self, website_id=None, company_id=None):
         website = False
