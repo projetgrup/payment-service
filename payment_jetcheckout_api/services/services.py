@@ -4,7 +4,7 @@ import hashlib
 import logging
 
 from odoo.http import Response
-from odoo.tools.translate import _lt
+from odoo.tools.translate import _, _lt
 from odoo.exceptions import ValidationError
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest.controllers.main import RestController
@@ -336,7 +336,7 @@ class PaymentAPIService(Component):
                 'virtual_pos_name': tx.jetcheckout_vpos_name or '',
                 'order_id': tx.jetcheckout_order_id or '',
                 'transaction_id': tx.jetcheckout_transaction_id or '',
-                'message': tx.state_message if not tx.state == 'done' else _lt('Transaction is successful.'),
+                'message': tx.state_message if not tx.state == 'done' else _('Transaction is successful.'),
                 'partner': {
                     'name': tx.partner_id.name or '',
                     'ip_address': tx.jetcheckout_ip_address or '',

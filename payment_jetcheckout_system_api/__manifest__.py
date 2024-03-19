@@ -9,5 +9,8 @@
     'license': 'LGPL-3',
     'category': 'Accounting/Payment Acquirers',
     'depends': ['payment_jetcheckout_system', 'payment_jetcheckout_api'],
-    'data': ['views/settings.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/settings.xml',
+    ],
 }
