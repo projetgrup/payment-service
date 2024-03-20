@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 14:26+0000\n"
-"PO-Revision-Date: 2024-03-13 14:26+0000\n"
+"POT-Creation-Date: 2024-03-20 10:42+0000\n"
+"PO-Revision-Date: 2024-03-20 10:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -491,6 +491,11 @@ msgid "Campaign Table on Payment Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Campaign(s)..."
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_preview
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Campaigns"
@@ -501,6 +506,21 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Campaigns Table"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_table_included
+msgid "Campaigns on Campaign Table Included on Payment Page"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_table_opt
+msgid "Campaigns on Campaign Table Included on Payment Page Option"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_table_ids
+msgid "Campaigns on Campaign Table on Payment Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3407,11 +3427,17 @@ msgid "e.g. email@yourcompany.com"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_campaign_table_opt__exclude
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_partner_opt__exclude
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_tag_opt__exclude
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_team_opt__exclude
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_user_opt__exclude
 msgid "exclude"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "following campaign(s)<br/>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3435,6 +3461,7 @@ msgid "following sales team(s)<br/>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_campaign_table_opt__include
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_partner_opt__include
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_tag_opt__include
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_settings__payment_page_due_reminder_team_opt__include
