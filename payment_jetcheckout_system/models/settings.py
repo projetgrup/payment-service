@@ -18,6 +18,11 @@ class PaymentSettings(models.TransientModel):
                     raise UserError(_('There must only one campaign tag without campaign selection'))
 
     @api.depends('company_id')
+    def _compute_payment_page_campaign_table_opt(self):
+        for setting in self:
+            setting.payment_page_campaign_table_opt = 'include' if setting.company_id.payment_page_campaign_table_included else 'exclude'
+
+    @api.depends('company_id')
     def _compute_payment_page_due_reminder_user_opt(self):
         for setting in self:
             setting.payment_page_due_reminder_user_opt = 'include' if setting.company_id.payment_page_due_reminder_user_ok else 'exclude'
@@ -36,6 +41,10 @@ class PaymentSettings(models.TransientModel):
     def _compute_payment_page_due_reminder_tag_opt(self):
         for setting in self:
             setting.payment_page_due_reminder_tag_opt = 'include' if setting.company_id.payment_page_due_reminder_tag_ok else 'exclude'
+
+    def _set_payment_page_campaign_table_opt(self):
+        for setting in self:
+            setting.company_id.payment_page_campaign_table_included = setting.payment_page_campaign_table_opt == 'include'
 
     def _set_payment_page_due_reminder_user_opt(self):
         for setting in self:
@@ -67,9 +76,14 @@ class PaymentSettings(models.TransientModel):
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
     payment_page_amount_editable = fields.Boolean(related='company_id.payment_page_amount_editable', readonly=False)
     payment_page_item_priority = fields.Boolean(related='company_id.payment_page_item_priority', readonly=False)
+
+    payment_page_campaign_tag_ids = fields.One2many(related='company_id.payment_page_campaign_tag_ids', readonly=False)
     payment_page_campaign_table_ok = fields.Boolean(related='company_id.payment_page_campaign_table_ok', readonly=False)
     payment_page_campaign_table_transpose = fields.Boolean(related='company_id.payment_page_campaign_table_transpose', readonly=False)
-    payment_page_campaign_tag_ids = fields.One2many(related='company_id.payment_page_campaign_tag_ids', readonly=False)
+    payment_page_campaign_table_ids = fields.Many2many(related='company_id.payment_page_campaign_table_ids', readonly=False)
+    payment_page_campaign_table_included = fields.Boolean(related='company_id.payment_page_campaign_table_included', readonly=False)
+    payment_page_campaign_table_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_campaign_table_opt', inverse='_set_payment_page_campaign_table_opt', string='Campaigns on Campaign Table Included on Payment Page Option')
+
     payment_page_advance_ok = fields.Boolean(related='company_id.payment_page_advance_ok', readonly=False)
     payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)

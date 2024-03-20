@@ -116,6 +116,10 @@
                                             <label for="payment_page_campaign_table_transpose" string="Transpose Table" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_campaign_table_transpose" widget="boolean_toggle"/>
                                         </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important">
+                                            Only <field name="payment_page_campaign_table_opt" attrs="{'required': [('payment_page_campaign_table_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following campaign(s)<br/><field name="payment_page_campaign_table_ids" domain="[('acquirer_id.company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Campaign(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_campaign_table_included" invisible="1"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
