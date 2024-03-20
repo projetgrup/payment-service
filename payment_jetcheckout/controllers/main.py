@@ -399,12 +399,32 @@ class PayloxController(http.Controller):
                             grids[grid['type']].append(grid)
 
                         values.update({
-                            'tabs': list(tabs),
+                            'tabs': sorted(list(tabs)),
                             'grids': grids,
                         })
 
                 elif type.startswith('c'):
-                    campaigns = client and client.campaign_ids.mapped('name')
+                    included_campaigns = False
+                    excluded_campaigns = False
+                    client_campaigns = client and set(client.campaign_ids.mapped('name')) or set()
+                    company_campaigns = set(acquirer.company_id.payment_page_campaign_table_ids.mapped('name'))
+                    if acquirer.company_id.payment_page_campaign_table_included:
+                        if client_campaigns and company_campaigns:
+                            included_campaigns = client_campaigns.intersection(company_campaigns)
+                        elif not client_campaigns and company_campaigns:
+                            included_campaigns = company_campaigns
+                        else:
+                            included_campaigns = set()
+                    else:
+                        if client_campaigns and company_campaigns:
+                            included_campaigns = client_campaigns.difference(company_campaigns)
+                        elif not client_campaigns and company_campaigns:
+                            excluded_campaigns = company_campaigns
+                        elif client_campaigns and not company_campaigns:
+                            included_campaigns = client_campaigns
+                        else:
+                            excluded_campaigns = set()
+
                     if 't' in type:
                         if bin:
                             cols = list()
@@ -413,7 +433,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
-                                if campaigns and campaign not in campaigns:
+                                if included_campaigns is not False and campaign not in included_campaigns:
+                                    continue
+                                if excluded_campaigns is not False and campaign in excluded_campaigns:
                                     continue
 
                                 cols.append(campaign)
@@ -454,7 +476,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
-                                if campaigns and campaign not in campaigns:
+                                if included_campaigns is not False and campaign not in included_campaigns:
+                                    continue
+                                if excluded_campaigns is not False and campaign in excluded_campaigns:
                                     continue
 
                                 line = {
@@ -500,7 +524,7 @@ class PayloxController(http.Controller):
                                 } for installment in option['installments']]
 
                             values.update({
-                                'tabs': list(tabs),
+                                'tabs': sorted(list(tabs)),
                                 'rows': list(rows),
                                 'cols': list(cols.values()),
                                 'lines': lines,
@@ -514,7 +538,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
-                                if campaigns and campaign not in campaigns:
+                                if included_campaigns is not False and campaign not in included_campaigns:
+                                    continue
+                                if excluded_campaigns is not False and campaign in excluded_campaigns:
                                     continue
 
                                 cols.append(campaign)
@@ -571,7 +597,9 @@ class PayloxController(http.Controller):
                             options = result.get('installment_options', result.get('installments', []))
                             for option in options:
                                 campaign = option.get('campaign_name', '')
-                                if campaigns and campaign not in campaigns:
+                                if included_campaigns is not False and campaign not in included_campaigns:
+                                    continue
+                                if excluded_campaigns is not False and campaign in excluded_campaigns:
                                     continue
 
                                 line = {
@@ -617,7 +645,7 @@ class PayloxController(http.Controller):
                                 } for installment in option['installments']]
 
                             values.update({
-                                'tabs': list(tabs),
+                                'tabs': sorted(list(tabs)),
                                 'rows': list(rows),
                                 'cols': list(cols.values()),
                                 'lines': lines,
