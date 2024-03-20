@@ -410,14 +410,16 @@ class PayloxController(http.Controller):
                     company_campaigns = set(acquirer.company_id.payment_page_campaign_table_ids.mapped('name'))
                     if acquirer.company_id.payment_page_campaign_table_included:
                         if client_campaigns and company_campaigns:
-                            included_campaigns = client_campaigns.intersection(company_campaigns)
+                            #included_campaigns = client_campaigns.intersection(company_campaigns)
+                            included_campaigns = client_campaigns
                         elif not client_campaigns and company_campaigns:
                             included_campaigns = company_campaigns
                         else:
                             included_campaigns = set()
                     else:
                         if client_campaigns and company_campaigns:
-                            included_campaigns = client_campaigns.difference(company_campaigns)
+                            #included_campaigns = client_campaigns.difference(company_campaigns)
+                            included_campaigns = client_campaigns
                         elif not client_campaigns and company_campaigns:
                             excluded_campaigns = company_campaigns
                         elif client_campaigns and not company_campaigns:
