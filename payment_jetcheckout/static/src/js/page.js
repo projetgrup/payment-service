@@ -722,22 +722,25 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 ...self.currency,
                             });
 
-                            if (result.card.family) {
-                                self.card.logo.html = '<img src="' + result.card.logo + '" alt="' + result.card.family + '"/>';
-                                self.card.logo.$.addClass('show');
-                                self.card.family = result.card.family;
-                            } else {
-                                self.card.logo.html = '';
-                                self.card.logo.$.removeClass('show');
-                                self.card.family = '';
+                            if (result.card) {
+                                if (result.card.family) {
+                                    self.card.logo.html = '<img src="' + result.card.logo + '" alt="' + result.card.family + '"/>';
+                                    self.card.logo.$.addClass('show');
+                                    self.card.family = result.card.family;
+                                } else {
+                                    self.card.logo.html = '';
+                                    self.card.logo.$.removeClass('show');
+                                    self.card.family = '';
+                                }
                             }
+
                             self.card.bin = bin;
                             if (!self.campaign.locked) {
                                 if (result.type[0] === 'c' && result.rows.length) {
-                                    self.campaign.name.value = result.rows[0]['campaign'];
+                                    self.campaign.name.value = result.rows[0]['campaign'] || '';
                                     self.campaign.name.$.trigger('change');
                                 } else {
-                                    self.campaign.name.value = result.card.campaign;
+                                    self.campaign.name.value = result.card?.campaign || '';
                                 }
                                 $('span#campaign').html(self.campaign.name.value || '-');
                             }
