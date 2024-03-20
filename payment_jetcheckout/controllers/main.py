@@ -414,6 +414,8 @@ class PayloxController(http.Controller):
                             included_campaigns = client_campaigns
                         elif not client_campaigns and company_campaigns:
                             included_campaigns = company_campaigns
+                        elif client_campaigns and not company_campaigns:
+                            included_campaigns = client_campaigns
                         else:
                             included_campaigns = set()
                     else:
