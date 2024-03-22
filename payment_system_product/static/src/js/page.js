@@ -234,16 +234,17 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     _processParams: function () {
         const params = new URLSearchParams(window.location.search);
         for (const param of params) {
-            if (param[0] === '') {
+            if (!param[0]) {
                 const values = JSON.parse(atob(param[1]));
                 if ('products' in values) {
                     this.product.qty.$.each((i, e) => {
                         if (e.dataset.id in values['products']) {
-                            e.value = values['products'][e.dataset.id]
+                            e.value = values['products'][e.dataset.id];
                             this._onChangeQty({ currentTarget: e }, false);
                         }
                     });
                 }
+                break;
             }
         }
 
