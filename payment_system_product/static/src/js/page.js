@@ -3,6 +3,7 @@
 
 import { _t, qweb } from 'web.core';
 import rpc from 'web.rpc';
+import utils from 'web.utils';
 import dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 
@@ -167,6 +168,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             this._getNumbers();
             this._getBrands();
             this._getProducts();
+            this._processParams();
             this._updateLines();
             this._listenPrices();
         });
@@ -227,6 +229,24 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                 background: e.dataset.background,
             }
         });
+    },
+
+    _processParams: function () {
+        const params = new URLSearchParams(window.location.search);
+        for (const param of params) {
+            if (param[0] === '') {
+                const values = JSON.parse(atob(param[1]));
+                if ('products' in values) {
+                    this.product.qty.$.each((i, e) => {
+                        if (e.dataset.id in values['products']) {
+                            e.value = values['products'][e.dataset.id]
+                            this._onChangeQty({ currentTarget: e }, false);
+                        }
+                    });
+                }
+            }
+        }
+
     },
 
     _listenPrices: function () {
@@ -530,6 +550,63 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this.product.pay.$.text(_t('Pay Now'));
         this.product.pay.$.removeClass('hide');
         this._stopPayment();
+    },
+
+    _onClickLink: async function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        const websiteID = $('html').data('websiteId') || 0;
+        const products = {};
+        for (const line of Object.values(this.lines)) {
+            products[line.pid] = line.qty;
+        }
+        const params = JSON.stringify({
+            id: websiteID,
+            products,
+        })
+
+        let link = window.location.origin + window.location.pathname + '?=' + btoa(params).replace('=', '');
+        navigator.clipboard.writeText(link);
+
+        let content = qweb.render('paylox.item.link', { link });
+        await this.displayNotification({
+            type: 'info',
+            title: _t('Payment link is ready'),
+            message: utils.Markup(content),
+            sticky: true,
+        });
+        setTimeout(() => {
+            $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
+                rpc.query({
+                    model: 'res.partner',
+                    method: 'send_payment_link',
+                    args: [ev.currentTarget.dataset.type, link],
+                }).then((result) => {
+                    if ('error' in result) {
+                        this.displayNotification({
+                            type: 'warning',
+                            title: _t('Warning'),
+                            message: _t('An error occured.') + ' ' + result.error,
+                        });
+                    } else {
+                        this.displayNotification({
+                            type: 'info',
+                            title: _t('Success'),
+                            message: result.message,
+                        });
+                    }
+                }).guardedCatch((error) => {
+                    this.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occured. Please contact with your system administrator.'),
+                    });
+                    if (config.isDebug()) {
+                        console.error(error);
+                    }
+                });
+            });
+        }, 1000);
     },
 
     _startPayment() {

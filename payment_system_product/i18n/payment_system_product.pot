@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 14:27+0000\n"
-"PO-Revision-Date: 2024-03-13 14:27+0000\n"
+"POT-Creation-Date: 2024-03-22 14:50+0000\n"
+"PO-Revision-Date: 2024-03-22 14:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -167,6 +167,7 @@ msgstr ""
 #. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #, python-format
@@ -175,6 +176,7 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/products.js:0
@@ -357,6 +359,7 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
@@ -646,6 +649,13 @@ msgid "Payment Validity Time"
 msgstr ""
 
 #. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
+#, python-format
+msgid "Payment link is ready"
+msgstr ""
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_payment_product_partner__percentage
 msgid "Percentage"
 msgstr ""
@@ -765,6 +775,8 @@ msgid "Product Attributes"
 msgstr ""
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_res_partner__payment_product_categ_ids
+#: model:ir.model.fields,field_description:payment_system_product.field_res_users__payment_product_categ_ids
 #: model_terms:ir.ui.view,arch_db:payment_system_product.form_product_category
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_category
 #: model_terms:ir.ui.view,arch_db:payment_system_product.tree_product_category
@@ -889,6 +901,7 @@ msgstr ""
 #. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/js/page.js:0
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/product.js:0
 #: code:addons/payment_system_product/static/src/js/products.js:0
 #, python-format
@@ -997,6 +1010,7 @@ msgstr ""
 
 #. module: payment_system_product
 #. openerp-web
+#: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #: code:addons/payment_system_product/static/src/js/products.js:0
 #, python-format
