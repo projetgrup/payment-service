@@ -32,7 +32,7 @@ systemFlow.dynamic.include({
         if (this.system.value === 'vendor') {
             $('.payment-page span[name=partner]').text(partner.name || '-');
             $('.payment-page span[name=country]').text(Array.isArray(partner.country_id) ? partner.country_id[1] : partner.country_id || '-');
-            $('.payment-page span[name=state]').text(Array.isArray(partner.state) ? partner.state[1] : partner.state || '-');
+            $('.payment-page span[name=state]').text(Array.isArray(partner.state_id) ? partner.state_id[1].replace(/\s\((.*)\)$/, '') : partner.state_id || '-');
             $('.payment-page span[name=city]').text(partner.city || '-');
             $('.payment-page span[name=street]').text(partner.street || '-');
             $('.payment-page span[name=phone]').text(partner.phone || '-');
