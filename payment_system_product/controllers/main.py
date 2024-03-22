@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+import base64
 import werkzeug
 from urllib.parse import urlparse
 
@@ -180,10 +182,17 @@ class PaymentSystemProductController(SystemController):
     def _prepare_system(self,  company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if company.system_product:
-            categs = request.env['product.category'].sudo().with_context(system=system).search([
-                ('system', '!=', False),
-                ('company_id', '=', company.id),
-            ])
+            if res['partner']['payment_product_categ_ids']:
+                categs = request.env['product.category'].sudo().with_context(system=system).search([
+                    ('system', '!=', False),
+                    ('company_id', '=', company.id),
+                    ('id', 'in', res['partner']['payment_product_categ_ids'].ids)
+                ])
+            else:
+                categs = request.env['product.category'].sudo().with_context(system=system).search([
+                    ('system', '!=', False),
+                    ('company_id', '=', company.id),
+                ])
             products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
                 ('system', '!=', False),
                 ('payment_page_ok', '=', True),
@@ -209,9 +218,13 @@ class PaymentSystemProductController(SystemController):
         #if request.env.user.share:
         #    return request.redirect('/otp')
 
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
         self._check_product_page(**kwargs)
         w_id = request.website.id
-        website_id = int(kwargs.get('id', w_id))
+        website_id = int(params.get('id', w_id))
         if w_id != website_id:
             return self._redirect_product_page(website_id=website_id)
 
@@ -234,15 +247,30 @@ class PaymentSystemProductController(SystemController):
         else:
             companies = companies.filtered(lambda x: x.system_product and x.id in user.company_ids.ids)
 
-        categs = request.env['product.category'].sudo().with_context(system=company.system).search([])
-        products = request.env['product.template'].sudo().with_context(system=company.system).search([('payment_page_ok', '=', True)])
+        if partner.payment_product_categ_ids:
+            categs = request.env['product.category'].sudo().with_context(system=company.system).search([
+                ('system', '!=', False),
+                ('company_id', '=', company.id),
+                ('id', 'in', partner.payment_product_categ_ids.ids)
+            ])
+        else:
+            categs = request.env['product.category'].sudo().with_context(system=company.system).search([
+                ('system', '!=', False),
+                ('company_id', '=', company.id),
+            ])
+
+        products = request.env['product.template'].sudo().with_context(system=company.system).search([
+            ('payment_page_ok', '=', True),
+            ('categ_id', 'in', categs.ids),
+        ])
+
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
             'companies': companies,
             'system': company.system,
             'subsystem': company.subsystem,
-            'vat': kwargs.get('vat'),
+            'vat': params.get('vat'),
             'flow': 'dynamic',
             'categs': categs,
             'products': products,
@@ -253,8 +281,8 @@ class PaymentSystemProductController(SystemController):
             }
         })
 
-        if 'values' in kwargs and isinstance(kwargs['values'], dict):
-            values.update({**kwargs['values']})
+        if 'values' in params and isinstance(params['values'], dict):
+            values.update({**params['values']})
 
         return request.render('payment_system_product.page_payment', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',

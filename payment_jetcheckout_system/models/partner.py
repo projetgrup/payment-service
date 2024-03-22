@@ -35,6 +35,11 @@ class Partner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'portal.mixin']
 
+    def _default_campaign_id(self):
+        if self.env.company.payment_page_due_ok:
+            return False
+        return super()._default_campaign_id()
+
     def _compute_payment(self):
         for partner in self:
             domain_items = []

@@ -107,6 +107,9 @@
         <xpath expr='//field[@name="email"]' position="attributes">
             <attribute name="required">1</attribute>
         </xpath>
+        <xpath expr='//field[@name="campaign_ids"]' position="after">
+            <field name="payment_product_categ_ids" domain="[('system', '!=', False), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" groups="payment_system_product.group_product"/>
+        </xpath>
         <xpath expr='//page[@name="siblings"]' position="replace"/>
         <xpath expr='//page[@name="children"]' position="attributes">
             <attribute name="string">Contacts</attribute>
