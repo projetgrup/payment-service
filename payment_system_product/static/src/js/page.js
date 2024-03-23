@@ -566,7 +566,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             products,
         })
 
-        let link = window.location.origin + window.location.pathname + '?=' + btoa(params).replace('=', '');
+        let link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
         navigator.clipboard.writeText(link);
 
         let content = qweb.render('paylox.item.link', { link });

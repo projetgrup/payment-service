@@ -2,6 +2,7 @@
 import base64
 import hashlib
 import logging
+from urllib.parse import quote
 
 from odoo.http import Response
 from odoo.tools.translate import _, _lt
@@ -61,7 +62,7 @@ class PaymentAPIService(Component):
             self._create_transaction(api, hash, params)
 
             ResponseOk = self.env.datamodels["payment.prepare.output"]
-            return ResponseOk(hash=hash, **RESPONSE[200])
+            return ResponseOk(hash=quote(hash), **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
