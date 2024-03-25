@@ -103,6 +103,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this.lines = {};
         this.brands = {};
         this.products = {};
+        this.locked = false;
         this.validity = 0;
         this.commission = 0;
         this.options = new fields.element();
@@ -237,12 +238,25 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             if (!param[0]) {
                 const values = JSON.parse(atob(param[1]));
                 if ('products' in values) {
+                    const categs = new Set();
                     this.product.qty.$.each((i, e) => {
+                        const item = e.closest('[field="product.items"]');
                         if (e.dataset.id in values['products']) {
                             e.value = values['products'][e.dataset.id];
+                            e.disabled = true;
                             this._onChangeQty({ currentTarget: e }, false);
+                            categs.add(item.dataset.categ);
+                        } else {
+                            item.remove();
                         }
                     });
+                    this.product.categ.$.each((i, e) => {
+                        if (!categs.has(e.value)) {
+                            e.parentNode.remove();
+                        }
+                    });
+                    this._updateLines();
+                    this.locked = true;
                 }
                 break;
             }
@@ -251,6 +265,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _listenPrices: function () {
+        if (this.locked) return;
+
         if (this._listenPriceActive) {
             const events = new EventSource('/longpolling/prices');
             console.log('Price service is active.');
@@ -289,6 +305,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _onChangePrice($price, update=true) {
+        if (this.locked) return;
+
         let $qty = this.product.qty.$.filter(`.base[data-id=${$price.data('id')}]`);
         let $amount = this.product.amount.$.filter(`[data-id=${$price.data('id')}]`);
 
@@ -307,6 +325,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _updateLines() {
+        if (this.locked) return;
         if (this.timeout) return;
 
         let subtotal = 0;
@@ -375,6 +394,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _onChangeQty(ev, update=true) {
+        if (this.locked) return;
+
         let $qty = $(ev.currentTarget);
         let pid = $qty.data('id');
         this.product.qty.$.filter(`[data-id=${pid}]`).val($qty.val());
@@ -396,6 +417,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _onClickItem(ev) {
+        if (this.locked) return;
+
         this.product.qty.$.val(0);
         this.product.item.$.removeClass('bg-warning');
 
@@ -422,6 +445,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _onClickPlus(ev) {
+        if (this.locked) return;
+
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
         let qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
@@ -432,6 +457,8 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
     },
 
     _onClickMinus(ev) {
+        if (this.locked) return;
+
         let btn = $(ev.currentTarget);
         let pid = btn.data('id');
         let qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
