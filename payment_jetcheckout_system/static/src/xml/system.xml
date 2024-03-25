@@ -7,6 +7,9 @@
         <div class="text-center small">
             <span class="font-weight-bold text-700">Payment link has been copied to clipboard</span>
         </div>
+        <div class="text-center small">
+            <img t-attf-src="/report/barcode/?type=QR&amp;width=200&amp;height=200&amp;value={{link}}" class="bg-white m-2 p-2 rounded"/>
+        </div>
         <div class="d-flex justify-content-center mt-2 text-center small" style="gap:5px">
             <button class="btn btn-info py-0 o_button_link_send" data-type="email"><i class="fa fa-envelope-o mr-1" t-translation="off"/>Email</button>
             <button class="btn btn-info py-0 o_button_link_send" data-type="sms"><i class="fa fa-mobile mr-1" t-translation="off"/>SMS</button>
