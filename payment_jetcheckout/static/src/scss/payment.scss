@@ -462,7 +462,10 @@
     .field-container {
         position: relative;
 
-        > input[type=text], > textarea {
+        > input[type=text],
+        > input[type=email],
+        > input[type=number],
+        > textarea {
             -webkit-box-sizing: border-box;
             min-height: 50px;
             box-sizing: border-box;
@@ -476,12 +479,18 @@
             box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
         }
 
-        > input[type=text]:focus, > textarea:focus {
+        > input[type=text]:focus,
+        > input[type=email]:focus,
+        > input[type=number]:focus,
+        > textarea:focus {
             outline: none;
             border-color: theme-color('primary');
         }
 
-        > input[type=text]::placeholder, > textarea::placeholder {
+        > input[type=text]::placeholder,
+        > input[type=email]::placeholder,
+        > input[type=number]::placeholder,
+        > textarea::placeholder {
             color: #cccccc;
         }
 
@@ -537,6 +546,10 @@
 
         > input[type=text]:focus ~ .bar-container:before,
         > input[type=text]:focus ~ .bar-container:after,
+        > input[type=email]:focus ~ .bar-container:before,
+        > input[type=email]:focus ~ .bar-container:after,
+        > input[type=number]:focus ~ .bar-container:before,
+        > input[type=number]:focus ~ .bar-container:after,
         > textarea:focus ~ .bar-container:before,
         > textarea:focus ~ .bar-container:after {
             width: 50%;
@@ -544,6 +557,10 @@
 
         > input[type=text].border-danger ~ .bar-container:before,
         > input[type=text].border-danger ~ .bar-container:after,
+        > input[type=email].border-danger ~ .bar-container:before,
+        > input[type=email].border-danger ~ .bar-container:after,
+        > input[type=number].border-danger ~ .bar-container:before,
+        > input[type=number].border-danger ~ .bar-container:after,
         > textarea.border-danger ~ .bar-container:before,
         > textarea.border-danger ~ .bar-container:after {
             background: theme-color('danger');
@@ -560,6 +577,8 @@
         }
 
         > input[type=text]:focus ~ .highlight-container,
+        > input[type=email]:focus ~ .highlight-container,
+        > input[type=number]:focus ~ .highlight-container,
         > textarea:focus ~ .highlight-container  {
             -webkit-animation: inputHighlighter 0.3s ease;
             -moz-animation: inputHighlighter 0.3s ease;

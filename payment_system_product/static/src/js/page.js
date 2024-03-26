@@ -589,61 +589,19 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this._onClickLink(ev);
     },
 
-    _onClickLink: async function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        const websiteID = $('html').data('websiteId') || 0;
-        const products = {};
-        for (const line of Object.values(this.lines)) {
-            products[line.pid] = line.qty;
-        }
-        const params = JSON.stringify({
-            id: websiteID,
-            products,
-        })
-
-        let link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
-        navigator.clipboard.writeText(link);
-
-        let content = qweb.render('paylox.item.link', { link });
-        await this.displayNotification({
-            type: 'info',
-            title: _t('Payment link is ready'),
-            message: utils.Markup(content),
-            sticky: true,
-        });
-        setTimeout(() => {
-            $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
-                rpc.query({
-                    model: 'res.partner',
-                    method: 'send_payment_link',
-                    args: [ev.currentTarget.dataset.type, link],
-                }).then((result) => {
-                    if ('error' in result) {
-                        this.displayNotification({
-                            type: 'warning',
-                            title: _t('Warning'),
-                            message: _t('An error occured.') + ' ' + result.error,
-                        });
-                    } else {
-                        this.displayNotification({
-                            type: 'info',
-                            title: _t('Success'),
-                            message: result.message,
-                        });
-                    }
-                }).guardedCatch((error) => {
-                    this.displayNotification({
-                        type: 'danger',
-                        title: _t('Error'),
-                        message: _t('An error occured. Please contact with your system administrator.'),
-                    });
-                    if (config.isDebug()) {
-                        console.error(error);
-                    }
-                });
+    _prepareLink: function() {
+        if (window.location.pathname.startsWith('/my/product')) {
+            const websiteID = $('html').data('websiteId') || 0;
+            const products = {};
+            for (const line of Object.values(this.lines)) {
+                products[line.pid] = line.qty;
+            }
+            return JSON.stringify({
+                id: websiteID,
+                products,
             });
-        }, 1000);
+        }
+        return this._super();
     },
 
     _startPayment() {

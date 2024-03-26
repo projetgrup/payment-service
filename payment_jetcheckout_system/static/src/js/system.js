@@ -762,18 +762,23 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         });
     },
 
+    _prepareLink: function() {
+        const websiteID = $('html').data('websiteId') || 0;
+        const amount = parseFloat(this.amount.$.data('value') || 0);
+        return JSON.stringify({
+            id: websiteID,
+            currency: this.currency.name,
+            vat: this.vat.value,
+            amount,
+        });
+    },
+
     _onClickLink: async function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const amount = parseFloat(this.amount.$.data('value') || 0);
-        const params = [
-            ['id', $('html').data('websiteId') || 0],
-            ['amount', amount],
-            ['currency', this.currency.name],
-            ['vat', this.vat.value],
-        ];
 
-        let link = window.location.href;
+        const params = this._prepareLink();
+        let link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
         for (let i=0; i<params.length; i++) {
             if (params[i][1]) {
                 if (!i) {
@@ -793,38 +798,61 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             message: utils.Markup(content),
             sticky: true,
         });
+
         setTimeout(() => {
+            $('.o_notification_manager').css('z-index', 999);
             $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
-                rpc.query({
-                    model: 'res.partner',
-                    method: 'send_payment_link',
-                    args: [ev.currentTarget.dataset.type, link],
-                }).then((result) => {
-                    if ('error' in result) {
-                        this.displayNotification({
-                            type: 'warning',
-                            title: _t('Warning'),
-                            message: _t('An error occured.') + ' ' + result.error,
-                        });
-                    } else {
-                        this.displayNotification({
-                            type: 'info',
-                            title: _t('Success'),
-                            message: result.message,
-                        });
-                    }
-                }).guardedCatch((error) => {
-                    this.displayNotification({
-                        type: 'danger',
-                        title: _t('Error'),
-                        message: _t('An error occured. Please contact with your system administrator.'),
-                    });
-                    if (config.isDebug()) {
-                        console.error(error);
-                    }
+                const type = ev.currentTarget.dataset.type;
+                const popup = new dialog(this, {
+                    title: _t('Share Payment Link'),
+                    size: 'small',
+                    buttons: [{
+                        text: _t('Share'),
+                        classes: 'btn-block btn-primary font-weight-bold',
+                    }],
+                    $content: qweb.render(`paylox.item.link.${type}`, {})
                 });
+
+                popup.opened(() => {
+                    popup.$modal.addClass('payment-page');
+                    const $button = popup.$modal.find('footer button');
+                    $button.click(() => {
+                        $button.prop('disabled', true);
+                        const $input = popup.$modal.find('input');
+                        const context = this._getContext();
+                        rpc.query({
+                            model: 'res.partner',
+                            method: 'send_payment_link',
+                            args: [type, link, context.lang, $input.val()],
+                        }).then((result) => {
+                            if ('error' in result) {
+                                this.displayNotification({
+                                    type: 'warning',
+                                    title: _t('Warning'),
+                                    message: _t('An error occured.') + ' ' + result.error,
+                                });
+                            } else {
+                                this.displayNotification({
+                                    type: 'info',
+                                    title: _t('Success'),
+                                    message: result.message,
+                                });
+                            }
+                        }).guardedCatch(() => {
+                            this.displayNotification({
+                                type: 'danger',
+                                title: _t('Error'),
+                                message: _t('An error occured. Please contact with your system administrator.'),
+                            });
+                        }).finally(() => {
+                            popup.destroy();
+                        });
+                    });
+                });
+
+                popup.open();
             });
-        }, 1000);
+        }, 500);
     },
 });
 

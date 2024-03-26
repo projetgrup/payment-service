@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
+import logging
 from datetime import date
+from urllib.parse import urlparse
 from collections import OrderedDict
 
 from odoo import _, api, fields, models
@@ -7,6 +10,10 @@ from odoo.exceptions import UserError
 from odoo.tools import email_normalize
 from .constants import PRIMEFACTOR
 
+_logger = logging.getLogger(__name__)
+
+EMAIL_PATTERN = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+PHONE_PATTERN = r'^[0-9]{10}$'
 
 class PartnerTeam(models.Model):
     _inherit = 'crm.team'
@@ -556,9 +563,70 @@ class Partner(models.Model):
             partner.message_unsubscribe([pid])
 
     @api.model
-    def send_payment_link(self, type, link):
+    def send_payment_link(self, type, link, lang, value):
         if type == 'email':
-            return {'error': ''}
+            if (not re.match(EMAIL_PATTERN, value)):
+                return {'error': _('Email address is not valid.')}
+
+            try:
+                with self.env.cr.savepoint():
+                    company = self.env.company
+                    template = self.env.ref('payment_jetcheckout_system.mail_template_payment_link_share')
+                    server = company.mail_server_id
+
+                    context = self.env.context.copy()
+                    context.update({
+                        'domain': urlparse(link).netloc,
+                        'sender': server.email_formatted or company.email_formatted,
+                        'receiver': value,
+                        'company': company,
+                        'link': link,
+                        'lang': lang,
+                        'server': server,
+                    })
+                    template.with_context(context).send_mail(self.env.user.partner_id.id, force_send=True, email_values={
+                        'mail_server_id': server.id,
+                    })
+                    return {'message': _('Email has been sent successfully.')}
+            except Exception as e:
+                _logger.error('Sending email for payment link is failed\n%s' % e)
+                return {'error': _('Email could not be sent.')}
+
         elif type == 'sms':
-            return {'error': ''}
+            if (not re.match(PHONE_PATTERN, value)):
+                return {'error': _('Phone number is not valid.')}
+
+            try:
+                with self.env.cr.savepoint():
+                    company = self.company_id or self.env.company
+                    template = self.env.ref('payment_jetcheckout_system.sms_template_payment_link_share')
+                    params = self.env['ir.config_parameter'].sudo().get_param
+                    provider = self.env['sms.provider'].get(company.id)
+                    if not provider and params('paylox.sms.default'):
+                        id = int(params('paylox.sms.provider', '0'))
+                        provider = self.env['sms.provider'].browse(id)
+
+                    context = self.env.context.copy()
+                    context.update({
+                        'domain': urlparse(link).netloc,
+                        'company': company,
+                        'link': link,
+                        'lang': lang,
+                    })
+
+                    body = template.with_context(context)._render_field('body', [self.env.user.partner_id.id], set_lang=self.env.context.get('lang'))[self.env.user.partner_id.id]
+                    sms = self.env['sms.sms'].create({
+                        'partner_id': self.env.user.partner_id.id,
+                        'body': body,
+                        'number': value,
+                        'state': 'outgoing',
+                        'provider_id': provider.id,
+                    })
+                    sms.send()
+                    return {'message': _('SMS has been sent successfully.')}
+
+            except Exception as e:
+                _logger.error('Sending sms for payment link is failed\n%s' % e)
+                return {'error': _('SMS could not be sent.')}
+
         return {'error': _('Unknown sending method')}

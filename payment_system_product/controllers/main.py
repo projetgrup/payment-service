@@ -281,8 +281,8 @@ class PaymentSystemProductController(SystemController):
             }
         })
 
-        if 'values' in params and isinstance(params['values'], dict):
-            values.update({**params['values']})
+        if 'values' in kwargs and isinstance(kwargs['values'], dict):
+            values.update({**kwargs['values']})
 
         return request.render('payment_system_product.page_payment', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
