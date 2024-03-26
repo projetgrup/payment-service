@@ -17,6 +17,21 @@
         </div>
     </t>
 
+    <t t-name="paylox.item.link.email">
+        <p class="m-0 text-center">Please enter an email address</p>
+        <div class="field-container m-0 text-center">
+            <input type="email"/>
+        </div>
+    </t>
+
+    <t t-name="paylox.item.link.sms">
+        <p class="m-0 text-center">Please enter a phone number</p>
+        <div class="field-container m-0 text-center">
+            <input type="number" style="padding-left: 50px;"/>
+            <span class="position-absolute" style="font-size: 18px; top: 37px; left: 40px;">+90</span>
+        </div>
+    </t>
+
     <t t-name="paylox.item.all">
         <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
             <t t-foreach="payments" t-as="payment">

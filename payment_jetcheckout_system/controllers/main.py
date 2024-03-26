@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import json
 import base64
 import werkzeug
 from urllib.parse import urlparse
@@ -601,6 +602,10 @@ class PayloxSystemController(Controller):
     def page_system_payment(self, **kwargs):
         self._check_payment_page()
 
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
         if not kwargs.get('values', {}).get('no_redirect'):
             if request.env.user.has_group('base.group_public'):
                 raise werkzeug.exceptions.NotFound()
@@ -611,17 +616,17 @@ class PayloxSystemController(Controller):
                 return redirect
 
         company = request.env.company
-        if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
-            currency = request.env['res.currency'].sudo().search([('name', '=', kwargs['currency'])], limit=1)
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
         else:
             currency = None
 
-        if 'pid' in kwargs:
-            partner = self._get_parent(kwargs['pid'])
-        elif 'vat' in kwargs and isinstance(kwargs['vat'], str) and 9 < len(kwargs['vat']) < 14:
+        if 'pid' in params:
+            partner = self._get_parent(params['pid'])
+        elif 'vat' in params and isinstance(params['vat'], str) and 9 < len(params['vat']) < 14:
             partner = request.env['res.partner'].sudo().search([
                 ('vat', '!=', False),
-                ('vat', '=', kwargs['vat']),
+                ('vat', '=', params['vat']),
                 ('company_id', '=', company.id),
                 ('system', '=', company.system)
             ])
@@ -641,14 +646,14 @@ class PayloxSystemController(Controller):
             'system': company.system,
             'subsystem': company.subsystem,
             'flow': company.payment_page_flow,
-            'vat': kwargs.get('vat'),
+            'vat': params.get('vat'),
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
             values.update({**kwargs['values']})
 
         try:
-            values.update({'amount': float(kwargs['amount'])})
+            values.update({'amount': float(params['amount'])})
         except:
             pass
 
