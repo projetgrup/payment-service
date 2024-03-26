@@ -353,3 +353,14 @@ class PaymentSystemProductController(SystemController):
         })
 
         return {}
+
+
+    @route(['/my/payment/query/partner'], type='json', auth='public', website=True)
+    def page_system_payment_query_partner(self, **kwargs):
+        res = super().page_system_payment_query_partner(**kwargs)
+        if 'id' in res:
+            path = urlparse(request.httprequest.referrer).path
+            if path.startswith('/my/product'):
+                partner = request.env['res.partner'].sudo().browse(res['id'])
+                res['categ_ids'] = partner.payment_product_categ_ids.ids
+        return res

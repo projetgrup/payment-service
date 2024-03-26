@@ -160,6 +160,9 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             back: new fields.element({
                 events: [['click', this._onClickBack]],
             }),
+            share: new fields.element({
+                events: [['click', this._onClickShare]],
+            }),
         }
     },
 
@@ -569,6 +572,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $(document.body).addClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
         $(ev.currentTarget).addClass('hide');
         this.product.back.$.removeClass('hide');
+        this.product.share.$.addClass('hide');
         this._startPayment();
     },
 
@@ -577,7 +581,12 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $(ev.currentTarget).addClass('hide');
         this.product.pay.$.text(_t('Pay Now'));
         this.product.pay.$.removeClass('hide');
+        this.product.share.$.removeClass('hide');
         this._stopPayment();
+    },
+
+    _onClickShare(ev) {
+        this._onClickLink(ev);
     },
 
     _onClickLink: async function (ev) {
