@@ -817,11 +817,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                     popup.$modal.addClass('payment-page');
                     const $button = popup.$modal.find('footer button');
                     $button.click(() => {
+                        $button.prop('disabled', true);
                         const $input = popup.$modal.find('input');
+                        const context = this._getContext();
                         rpc.query({
                             model: 'res.partner',
                             method: 'send_payment_link',
-                            args: [type, link, $input.val()],
+                            args: [type, link, context.lang, $input.val()],
                         }).then((result) => {
                             if ('error' in result) {
                                 this.displayNotification({
