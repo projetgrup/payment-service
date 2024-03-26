@@ -16,5 +16,23 @@ systemFlow.dynamic.include({
         } else {
             return this._super.apply(this, arguments);
         }
-    }
+    },
+
+    _queryPartnerPostprocess: function (partner) {
+        this._super(partner);
+        if (window.location.pathname.startsWith('/my/product')) {
+            if (partner.categ_ids.length) {
+                $('.payment-product [field="product.categ"]').each((i, e) => {
+                    if (!partner.categ_ids.includes(Number(e.value))) {
+                        e.parentNode.remove();
+                    }
+                });
+                $('.payment-product [field="product.items"]').each((i, e) => {
+                    if (!partner.categ_ids.includes(Number(e.dataset.categ))) {
+                        e.remove();
+                    }
+                });
+            }
+        }
+    },
 });
