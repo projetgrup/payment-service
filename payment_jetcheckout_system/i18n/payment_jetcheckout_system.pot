@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0-20230113\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 21:07+0000\n"
-"PO-Revision-Date: 2024-03-26 21:07+0000\n"
+"POT-Creation-Date: 2024-03-26 21:33+0000\n"
+"PO-Revision-Date: 2024-03-26 21:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -266,7 +266,7 @@ msgid ""
 "                            <a t-att-href=\"object.users_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
 "                            </a>\n"
-"                            <a t-att-href=\"object.users_id.signup_url.replace('signup','login')\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
+"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
 "                                <strong>Log in</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -757,6 +757,11 @@ msgid "Create Partners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_partner_team
+msgid "Create new belge"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__create_uid
@@ -1052,6 +1057,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_mail_thread
 msgid "Email Thread"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "Email address is not valid."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2261,14 +2272,9 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
 #: model:ir.module.category,name:payment_jetcheckout_system.module_category_system
+#: model:utm.source,name:payment_jetcheckout_system.send_source
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Payment System"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.module.category,description:payment_jetcheckout_system.module_category_system_partner
-#: model:ir.module.category,name:payment_jetcheckout_system.module_category_system_partner
-msgid "Payment System Partners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2350,6 +2356,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
 msgid "Phone"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "Phone number is not valid."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2966,6 +2978,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paylox_tax_office
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paylox_tax_office
 msgid "Tax Office"
@@ -3352,11 +3365,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_tree
 msgid "Vat"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__tax_office
-msgid "Vergi Dairesi"
 msgstr ""
 
 #. module: payment_jetcheckout_system
