@@ -2,6 +2,7 @@
 import re
 import json
 import base64
+import logging
 import werkzeug
 from urllib.parse import urlparse
 
@@ -10,6 +11,11 @@ from odoo.http import request
 from odoo.tools import html_escape
 from odoo.exceptions import AccessError, UserError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
+
+_logger = logging.getLogger(__name__)
+
+EMAIL_PATTERN = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+PHONE_PATTERN = r'^[0-9]{10}$'
 
 
 class PayloxSystemController(Controller):
@@ -44,11 +50,8 @@ class PayloxSystemController(Controller):
         if request.env.user.share or not request.env.user.payment_preview_ok or not request.env.company.payment_page_ok or not request.env.company.payment_advance_ok:
             raise werkzeug.exceptions.NotFound()
 
-    def _check_advance_page(self, **kwargs):
+    def _check_advance_page(self):
         if not request.env.company.payment_advance_ok:
-            raise werkzeug.exceptions.NotFound()
-
-        if request.env.user.share and not 'id' in kwargs:
             raise werkzeug.exceptions.NotFound()
 
     def _check_create_partner(self, **kwargs):
@@ -516,15 +519,23 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):
-        self._check_advance_page(**kwargs)
+        self._check_advance_page()
+
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
+        if request.env.user.share and not 'id' in params:
+            raise werkzeug.exceptions.NotFound()
+
         w_id = request.website.id
-        website_id = int(kwargs.get('id', w_id))
+        website_id = int(params.get('id', w_id))
         if w_id != website_id:
             return self._redirect_advance_page(website_id=website_id)
 
         company = request.env.company
-        if 'currency' in kwargs and isinstance(kwargs['currency'], str) and len(kwargs['currency']) == 3:
-            currency = request.env['res.currency'].sudo().search([('name', '=', kwargs['currency'])], limit=1)
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
         else:
             currency = None
 
@@ -552,7 +563,7 @@ class PayloxSystemController(Controller):
             'companies': companies,
             'system': company.system,
             'subsystem': company.subsystem,
-            'vat': kwargs.get('vat'),
+            'vat': params.get('vat'),
             'flow': 'dynamic',
             'advance': True,
             'readonly': user.share and company.payment_advance_amount_readonly,
@@ -562,7 +573,7 @@ class PayloxSystemController(Controller):
             values.update({**kwargs['values']})
 
         try:
-            values.update({'amount': float(kwargs['amount'])})
+            values.update({'amount': float(params['amount'])})
         except:
             pass
 
@@ -577,6 +588,10 @@ class PayloxSystemController(Controller):
         self._check_payment_preview_page()
         self._del()
 
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
         company = request.env.company
         values = self._prepare(company=company)
         values.update({
@@ -588,7 +603,7 @@ class PayloxSystemController(Controller):
             values.update({**kwargs['values']})
 
         try:
-            values.update({'amount': float(kwargs['amount'])})
+            values.update({'amount': float(params['amount'])})
         except:
             pass
 
@@ -806,3 +821,72 @@ class PayloxSystemController(Controller):
             return {'error': str(e)}
         except Exception as e:
             raise Exception(e)
+
+    @http.route(['/my/payment/share/link'], type='json', auth='public', website=True)
+    def page_system_share_link(self, type, link, lang, value):
+        if type == 'email':
+            if (not re.match(EMAIL_PATTERN, value)):
+                return {'error': _('Email address is not valid.')}
+
+            try:
+                with self.env.cr.savepoint():
+                    company = self.env.company
+                    template = self.env.ref('payment_jetcheckout_system.mail_template_payment_link_share')
+                    server = company.mail_server_id
+
+                    context = self.env.context.copy()
+                    context.update({
+                        'domain': urlparse(link).netloc,
+                        'sender': server.email_formatted or company.email_formatted,
+                        'receiver': value,
+                        'company': company,
+                        'link': link,
+                        'lang': lang,
+                        'server': server,
+                    })
+                    template.with_context(context).send_mail(self.env.user.partner_id.id, force_send=True, email_values={
+                        'mail_server_id': server.id,
+                    })
+                    return {'message': _('Email has been sent successfully.')}
+            except Exception as e:
+                _logger.error('Sending email for payment link is failed\n%s' % e)
+                return {'error': _('Email could not be sent.')}
+
+        elif type == 'sms':
+            if (not re.match(PHONE_PATTERN, value)):
+                return {'error': _('Phone number is not valid.')}
+
+            try:
+                with self.env.cr.savepoint():
+                    company = self.company_id or self.env.company
+                    template = self.env.ref('payment_jetcheckout_system.sms_template_payment_link_share')
+                    params = self.env['ir.config_parameter'].sudo().get_param
+                    provider = self.env['sms.provider'].get(company.id)
+                    if not provider and params('paylox.sms.default'):
+                        id = int(params('paylox.sms.provider', '0'))
+                        provider = self.env['sms.provider'].browse(id)
+
+                    context = self.env.context.copy()
+                    context.update({
+                        'domain': urlparse(link).netloc,
+                        'company': company,
+                        'link': link,
+                        'lang': lang,
+                    })
+
+                    body = template.with_context(context)._render_field('body', [self.env.user.partner_id.id], set_lang=self.env.context.get('lang'))[self.env.user.partner_id.id]
+                    sms = self.env['sms.sms'].create({
+                        'partner_id': self.env.user.partner_id.id,
+                        'body': body,
+                        'number': value,
+                        'state': 'outgoing',
+                        'provider_id': provider.id,
+                    })
+                    sms.send()
+                    return {'message': _('SMS has been sent successfully.')}
+
+            except Exception as e:
+                _logger.error('Sending sms for payment link is failed\n%s' % e)
+                return {'error': _('SMS could not be sent.')}
+
+        return {'error': _('Unknown sending method')}
