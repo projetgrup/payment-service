@@ -368,7 +368,7 @@
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
                         <div t-if="user and (not type or type == 'i')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'" field="campaign.text"/></div>
-                        <div t-if="not no_button" class="d-flex font-weight-bold text-uppercase">
+                        <div t-if="not no_button" class="row font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
                                 <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
@@ -380,7 +380,13 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 p-2">
-                                <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                <div>
+                                    <button class="align-items-center btn btn-primary d-flex d-sm-none h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis mb-3" field="payment.contactless">Pay Contactless<i class="fa fa-clone ml-2" t-translation="off"/></button>
+                                </div>
+                                <div>
+                                    <button class="align-items-center btn btn-primary d-none d-sm-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                    <button class="align-items-center btn btn-outline-primary d-flex d-sm-none h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay with Credit Card<i class="fa fa-credit-card ml-2" t-translation="off"/></button>
+                                </div>
                             </div>
                         </div>
                         <div t-else="" class="row font-weight-bold text-uppercase">
