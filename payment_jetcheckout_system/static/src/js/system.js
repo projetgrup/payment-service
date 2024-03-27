@@ -821,7 +821,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                         const $input = popup.$modal.find('input');
                         const context = this._getContext();
                         rpc.query({
-                            route: '/payment/payment/share/link',
+                            route: '/my/payment/share/link',
                             params: { type, link, lang: context.lang, value: $input.val() },
                         }).then((result) => {
                             if ('error' in result) {
