@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import werkzeug
-import json
-import requests
+import re
 import uuid
+import json
 import base64
 import hashlib
 import logging
-import re
+import werkzeug
+import requests
 from collections import OrderedDict
 
 from odoo import fields, models, http, SUPERUSER_ID, _

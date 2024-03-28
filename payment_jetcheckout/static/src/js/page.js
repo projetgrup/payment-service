@@ -125,7 +125,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }),
         };
         this.payment = {
-            button: new fields.string({
+            button: new fields.element({
                 events: [['click', this._onClickPaymentButton]],
             }),
             form: new fields.string({

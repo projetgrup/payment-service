@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
+        <xpath expr="//div[@name='payment_button']//button[@field='payment.button']" position="attributes">
+            <attribute name="class" add="d-none d-sm-flex" remove="d-flex"/>
+        </xpath>
+        <xpath expr="//div[@name='payment_button']//button[@field='payment.button']" position="after">
+            <button class="align-items-center btn btn-outline-primary d-flex d-sm-none h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay with Credit Card<i class="fa fa-credit-card ml-2" t-translation="off"/></button>
+        </xpath>
+        <xpath expr="//div[@name='payment_button']//button[@field='payment.button']/.." position="before">
+            <div>
+                <button class="align-items-center btn btn-primary d-flex d-sm-none h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis mb-3" field="payment.contactless">Pay Contactless<i class="fa fa-clone ml-2" t-translation="off"/></button>
+            </div>
+        </xpath>
+    </template>
+</odoo>
