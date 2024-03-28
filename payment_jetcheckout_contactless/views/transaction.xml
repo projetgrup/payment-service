@@ -5,7 +5,7 @@
     <field name="inherit_id" ref="payment_jetcheckout.transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='jetcheckout_installment_description_long']" position="before">
-            <field name="paylox_contactless_ok" attrs="{'invisible': [('paylox_contactless_ok', '=', False)]}" readonly="1" widget="boolean_toggle" style="pointer-events:none"/>
+            <field name="paylox_contactless_ok" string="Contactless" attrs="{'invisible': [('paylox_contactless_ok', '=', False)]}" readonly="1" widget="boolean_toggle" style="pointer-events:none"/>
         </xpath>
     </field>
     </record>
