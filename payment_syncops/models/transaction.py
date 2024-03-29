@@ -93,7 +93,12 @@ class PaymentTransaction(models.Model):
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
-        line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=self.create_uid)
+
+        user = self.create_uid
+        if user.share and self.partner_id:
+            user = self.partner_id.users_id
+
+        line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=user)
         offset = timedelta(hours=3) # Turkiye Timezone
         date = self.create_date + offset
         if not line or not line.account_code:
