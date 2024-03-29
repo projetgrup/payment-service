@@ -264,7 +264,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                 break;
             }
         }
-
     },
 
     _listenPrices: function () {

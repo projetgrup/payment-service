@@ -32,6 +32,7 @@ systemFlow.dynamic.include({
                         e.remove();
                     }
                 });
+                $('.payment-product [field="product.categ"]')[0].click();
             }
         }
     },
