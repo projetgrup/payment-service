@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import werkzeug
-import json
-import requests
+import re
 import uuid
+import json
 import base64
 import hashlib
 import logging
-import re
+import werkzeug
+import requests
 from collections import OrderedDict
 
 from odoo import fields, models, http, SUPERUSER_ID, _
@@ -755,7 +755,7 @@ class PayloxController(http.Controller):
         if 'order_id' not in kwargs:
             return '/404', None, True
 
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs.get('order_id'))], limit=1)
+        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs['order_id'])], limit=1)
         if not tx:
             return '/404', None, True
 

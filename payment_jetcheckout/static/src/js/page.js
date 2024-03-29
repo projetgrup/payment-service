@@ -22,6 +22,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        this.checklist = [];
         this.card = {
             number: new fields.string({
                 events: [
@@ -125,7 +126,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }),
         };
         this.payment = {
-            button: new fields.string({
+            button: new fields.element({
                 events: [['click', this._onClickPaymentButton]],
             }),
             form: new fields.string({
@@ -780,7 +781,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _checkData: function () {
-        if (!this.amount.value) {
+        if (!this.amount.value && (!this.checklist.length || this.checklist.includes('amount'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -788,7 +789,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.card.holder.value) {
+        } else if (!this.card.holder.value && (!this.checklist.length || this.checklist.includes('holder'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -796,7 +797,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.card.number.value) {
+        } else if (!this.card.number.value && (!this.checklist.length || this.checklist.includes('number'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -804,7 +805,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.card.valid) {
+        } else if (!this.card.valid && (!this.checklist.length || this.checklist.includes('valid'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -812,7 +813,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.card.date.value) {
+        } else if (!this.card.date.value && (!this.checklist.length || this.checklist.includes('date'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -820,7 +821,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this.card.code.value) {
+        } else if (!this.card.code.value && (!this.checklist.length || this.checklist.includes('code'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -828,7 +829,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (!this._getInstallmentInput().length) {
+        } else if (!this._getInstallmentInput().length && (!this.checklist.length || this.checklist.includes('installment'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -836,7 +837,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
             this._enableButton();
             return false;
-        } else if (this.terms.ok.exist && !this.terms.ok.checked) {
+        } else if (this.terms.ok.exist && !this.terms.ok.checked && (!this.checklist.length || this.checklist.includes('term'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
@@ -876,9 +877,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 single: this.discount.single.value,
             },
             installment: {
-                id: $input.data('id'),
-                index: $input.data('index'),
-                rows: this.installment.rows,
+                id: $input.data('id') || 1,
+                index: $input.data('index') || 0,
+                rows: this.installment.rows || [],
             },
             campaign: this.campaign.name.value,
             successurl: this.payment.successurl.value,
@@ -890,37 +891,34 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _onClickPaymentButton: async function () {
-        const self = this;
+    _onClickPaymentButton: function () {
         if (this._checkData()) {
             framework.showLoading();
-            await rpc.query({
+            return rpc.query({
                 route: '/payment/card/pay',
                 params: this._getParams(),
-            }).then(function (result) {
+            }).then((result) => {
                 if ('url' in result) {
                     window.location.assign(result.url);
                 } else {
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'danger',
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
                     framework.hideLoading();
                 }
-            }).guardedCatch(function (error) {
-                self.displayNotification({
+            }).guardedCatch(() => {
+                this.displayNotification({
                     type: 'danger',
                     title: _t('Error'),
                     message: _t('An error occured. Please contact with your system administrator.'),
                 });
-                if (config.isDebug()) {
-                    console.error(error);
-                }
-                self._enableButton();
+                this._enableButton();
                 framework.hideLoading();
             });
         }
+        return false;
     },
 });
 

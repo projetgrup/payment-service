@@ -56,7 +56,7 @@ payloxPage.include({
             return this._super.apply(this, arguments);
         }
 
-        if (!this.agreement.confirmed) {
+        if (!this.agreement.confirmed && (!this.checklist.length || this.checklist.includes('agreement'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),

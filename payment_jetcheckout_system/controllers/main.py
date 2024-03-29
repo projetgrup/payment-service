@@ -106,7 +106,11 @@ class PayloxSystemController(Controller):
         url, tx, status = super()._process(**kwargs)
         if not status and (tx.company_id.system or tx.partner_id.system):
             status = True
-            url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
+            if (urlparse(tx.jetcheckout_url_address).path == '/my/payment'):
+                path = '/my/payment/result'
+            else:
+                path = tx.partner_id._get_share_url()
+            url = '%s?=%s' % (path, kwargs.get('order_id'))
         return url, tx, status
 
     def _prepare(self, **kwargs):
