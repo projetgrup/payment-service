@@ -356,25 +356,25 @@
                     <div t-if="not s2s" class="payment-info-sub">
                         Installment details is placed here when you fill your card details
                     </div>
-                    <div t-attf-class="payment-gradient border card p-3 #{'installment-cols' if type == 'c' else 'installment-rows'}">
+                    <div t-attf-class="payment-gradient border card p-3 #{'installment-cols' if installment_type == 'c' else 'installment-rows'}">
                         <div>
                             <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
                                 <t t-call="payment_jetcheckout.payment_installment_header"/>
                             </div>
                             <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div class="d-none installment-row overflow-auto flex-fill" t-att-data-type="type" field="installment.row"/>
+                        <div class="d-none installment-row overflow-auto flex-fill" t-att-data-type="installment_type" field="installment.row"/>
                         <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
-                        <div t-if="user and (not type or type == 'i')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'" field="campaign.text"/></div>
+                        <div t-if="user and (not installment_type or installment_type == 'i')" class="row font-weight-bold justify-content-center small">Campaign: <span id="campaign" class="ml-2" t-esc="campaign or '-'" field="campaign.text"/></div>
                         <div t-if="not no_button" class="row font-weight-bold text-uppercase">
                             <div class="col-xl-6 p-2">
                                 <div field="installment.table">
                                     <button class="installment-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installment Options</button>
                                     <button class="installment-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-th mr-2" t-translation="off"></i>Installments</button>
                                 </div>
-                                <div t-if="user and (not type or type == 'i')" class="mt-2" field="campaign.table">
+                                <div t-if="user and (not installment_type or installment_type == 'i')" class="mt-2" field="campaign.table">
                                     <button class="campaign-container lg btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaign Options</button>
                                     <button class="campaign-container sm btn btn-primary shadow w-100 text-nowrap overflow-hidden h-100 align-items-center justify-content-center text-overflow-ellipsis"><i class="fa fa-gift mr-2" t-translation="off"></i>Campaigns</button>
                                 </div>
@@ -402,11 +402,11 @@
     </template>
 
     <template id="payment_installment_header" name="Paylox Installment Table Header">
-        <t t-if="type == 'c'">
+        <t t-if="installment_type == 'c'">
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div class="text-center">Campaign</div>
         </t>
-        <t t-elif="type == 'ct'">
+        <t t-elif="installment_type == 'ct'">
             <div class="text-center">Campaign</div>
             <div class="text-center"><t t-if="s2s">Install.</t><t t-else="">Installment</t></div>
             <div class="text-center">Monthly</div>
