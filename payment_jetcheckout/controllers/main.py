@@ -227,7 +227,7 @@ class PayloxController(http.Controller):
         partner = self._get_partner(partner)
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
-        type = self._get_type()
+        installment_type = self._get_type()
 
         campaign = self._get_campaign(partner=partner, transaction=transaction)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
@@ -244,10 +244,10 @@ class PayloxController(http.Controller):
             'company': company,
             'campaign': campaign,
             'user': user,
-            'type': type,
             'currency': currency,
             'currencies': currencies,
             'card_family': card_family,
+            'installment_type': installment_type,
             'no_terms': acquirer.jetcheckout_no_terms,
             'no_smart_buttons': acquirer.jetcheckout_no_smart_buttons,
         }
