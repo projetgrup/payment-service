@@ -83,7 +83,7 @@ class SyncopsConnector(models.Model):
                 'method': method,
                 'params': params,
                 'reference': reference,
-                'environment': self.environment and 'P' or 'T',
+                'environment': connector.environment and 'P' or 'T',
             })
             if response.status_code == 200:
                 results = response.json()
