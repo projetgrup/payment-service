@@ -121,7 +121,7 @@ class PayloxSystemController(Controller):
     def _prepare_system(self, company, system, partner, transaction, options={}):
         currency = company.currency_id
         acquirer = self._get_acquirer(False)
-        type = self._get_type()
+        installment_type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
@@ -156,8 +156,8 @@ class PayloxSystemController(Controller):
             'tx': transaction,
             'system': system,
             'token': token,
-            'type': type,
             'currency': currency,
+            'installment_type': installment_type,
             'no_terms': not acquirer.provider == 'jetcheckout' or acquirer.jetcheckout_no_terms,
         }
 
