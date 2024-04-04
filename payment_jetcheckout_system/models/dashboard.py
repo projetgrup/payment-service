@@ -277,20 +277,31 @@ class PaymentDasboard(models.Model):
     def has_payment_button(self):
         return {
             'show_payment_button': self.env.company.payment_dashboard_button_ok and self.env.user.payment_page_ok,
+            'show_contactless_button': self.env.company.payment_dashboard_button_contactless_ok and self.env.user.payment_contactless_ok,
             'show_preview_button': self.env.company.payment_dashboard_button_ok and self.env.user.payment_preview_ok,
         }
 
     @api.model    
-    def get_button_url(self, type=None):
-        if type:
-            return self.get_base_url() + '/my/payment/' + type
-
-        url = self.env.company.payment_dashboard_button_url
-        if url:
-            if url[0] == '/':
-                return self.get_base_url() + url
-            else:
+    def get_button_url(self, type):
+        if type == 'payment':
+            url = self.env.company.payment_dashboard_button_url
+            if url:
+                if url[0] == '/':
+                    return self.get_base_url() + url
                 return url
+            return self.get_base_url() + '/my/payment'
+
+        elif type == 'contactless':
+            url = self.env.company.payment_dashboard_button_contactless_url
+            if url:
+                if url[0] == '/':
+                    return self.get_base_url() + url
+                return url
+            return self.get_base_url() + '/m/payment'
+
+        elif type == 'preview':
+            return self.get_base_url() + '/my/payment/preview'
+
         return self.get_base_url() + '/my/payment'
 
     def action_transactions(self):

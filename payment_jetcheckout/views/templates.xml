@@ -118,16 +118,27 @@
     <template id="payment_sidebar" name="Paylox Payment Sidebar">
         <div t-attf-class="col-#{size or 'md'}-3 payment-amount w-100 d-flex flex-column">
             <div>
-                <div t-if="page in ['payment', 'result']" class="px-3 py-4 bg-white card my-4 shadow">
+                <div t-if="page in ['payment', 'result']" class="px-3 py-4 bg-white card my-4 shadow overflow-revert">
                     <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <t t-if="page == 'payment'">
-                        <div class="field-container">
-                            <input id="amount" name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None"/>
-                            <span class="bar-container"/>
-                            <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
-                            <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
-                            <label for="amount" class="text-primary"><span>Amount to Pay</span></label>
+                        <div class="amount">
+                            <div class="field-container w-100">
+                                <input id="amount" name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None"/>
+                                <span class="bar-container"/>
+                                <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                <label for="amount" class="text-primary"><span>Amount to Pay</span></label>
+                            </div>
+                            <button t-if="len(currencies) > 1 and not readonly" class="btn btn-primary shadow text-nowrap" field="button.currency">
+                                <span t-esc="currency.name"/>
+                                <i class="fa fa-caret-down ml4" t-translation="off"/>
+                                <ul>
+                                    <t t-foreach="currencies" t-as="curr">
+                                        <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
+                                    </t>
+                                </ul>
+                            </button>
                         </div>
                     </t>
                     <t t-elif="page == 'result'">

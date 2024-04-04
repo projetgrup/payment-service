@@ -2,7 +2,7 @@
 # Copyright © 2024 Projet (https://bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Paylox Contactless Payment',
+    'name': 'Paylox: Mobile',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
@@ -16,12 +16,12 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_jetcheckout_contactless/static/src/js/page.js',
+            'payment_jetcheckout_mobile/static/src/js/page.js',
         ],
     },
-    "external_dependencies": {
-        "python": [
-            "pycryptodome",
-        ]
-    },
+    #"external_dependencies": {
+    #    "python": [
+    #        "pycryptodome",
+    #    ]
+    #},
 }

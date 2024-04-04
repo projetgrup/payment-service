@@ -26,6 +26,8 @@ class Company(models.Model):
 
     payment_dashboard_button_ok = fields.Boolean(string='Dashboard Payment Button', default=True)
     payment_dashboard_button_url = fields.Char(string='Dashboard Payment Button URL')
+    payment_dashboard_button_contactless_ok = fields.Boolean(string='Dashboard Contactless Payment Button', default=True)
+    payment_dashboard_button_contactless_url = fields.Char(string='Dashboard Contactless Payment Button URL')
     payment_dashboard_field_amount = fields.Selection([
         ('jetcheckout_payment_paid', 'Paid Amount'),
         ('jetcheckout_payment_amount', 'Payable Amount'),
