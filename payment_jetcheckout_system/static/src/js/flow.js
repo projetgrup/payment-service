@@ -358,6 +358,8 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         $element.find('input[name=amount]').removeAttr('id');
         $element.find('input[name=amount]').val(format.float(amount));
         $element.find('input[name=amount] + span.symbol').removeClass('symbol-after symbol-before').addClass('symbol-' + this.currency.position).text(this.currency.symbol);
+        $element.find('button[field="button.currency"] span').text(this.currency.name);
+        $('button[field="button.currency"] span').text(this.currency.name);
 
         overlay.append($element);
         await this._onPause(100);

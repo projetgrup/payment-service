@@ -369,16 +369,14 @@
                                                 <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
                                                 <input type="hidden" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="currency.decimal_places" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                                             </div>
-                                            <button class="btn btn-primary shadow" field="wizard.button.amount.currency">
+                                            <button t-if="len(currencies) > 1 and not readonly" class="btn btn-primary shadow text-nowrap" field="wizard.button.amount.currency">
                                                 <span t-esc="currency.name"/>
-                                                <t t-if="len(currencies) > 1 and not readonly">
-                                                    <i class="fa fa-caret-down" t-translation="off"/>
-                                                    <ul>
-                                                        <t t-foreach="currencies" t-as="curr">
-                                                            <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
-                                                        </t>
-                                                    </ul>
-                                                </t>
+                                                <i class="fa fa-caret-down ml4" t-translation="off"/>
+                                                <ul>
+                                                    <t t-foreach="currencies" t-as="curr">
+                                                        <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
+                                                    </t>
+                                                </ul>
                                             </button>
                                         </div>
                                         <div class="py-5">
