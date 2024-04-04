@@ -67,6 +67,8 @@ class PaymentSettings(models.TransientModel):
 
     payment_dashboard_button_ok = fields.Boolean(related='company_id.payment_dashboard_button_ok', readonly=False)
     payment_dashboard_button_url = fields.Char(related='company_id.payment_dashboard_button_url', readonly=False)
+    payment_dashboard_button_contactless_ok = fields.Boolean(related='company_id.payment_dashboard_button_contactless_ok', readonly=False)
+    payment_dashboard_button_contactless_url = fields.Char(related='company_id.payment_dashboard_button_contactless_url', readonly=False)
     payment_dashboard_field_amount = fields.Selection(related='company_id.payment_dashboard_field_amount', readonly=False)
 
     payment_advance_amount_readonly = fields.Boolean(related='company_id.payment_advance_amount_readonly', readonly=False)

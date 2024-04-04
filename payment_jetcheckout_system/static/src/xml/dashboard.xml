@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 	<t t-name="Dashboard.Buttons">
-        <button t-if="show_payment_button" type="button" class="btn btn-primary o_button_payment_page">
+        <button t-if="show_payment_button" type="button" class="btn btn-primary o_button_dashboard" data-type="payment">
             Receive Payment
         </button>
-        <button t-if="show_preview_button" type="button" class="btn btn-primary o_button_preview_page">
+        <button t-if="show_contactless_button" type="button" class="btn btn-primary o_button_dashboard" data-type="contactless">
+            Contactless Payment
+        </button>
+        <button t-if="show_preview_button" type="button" class="btn btn-primary o_button_dashboard" data-type="preview">
             Preview Payment
         </button>
     </t>

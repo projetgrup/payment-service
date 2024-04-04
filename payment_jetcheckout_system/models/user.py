@@ -200,6 +200,7 @@ class Users(models.Model):
     group_show_campaign_button = fields.Boolean(string='Show Campaign Button', compute='_compute_group_show_campaign_button', inverse='_set_group_show_campaign_button')
 
     payment_page_ok = fields.Boolean(string='Payment Page Active', default=True)
+    payment_contactless_ok = fields.Boolean(string='Contactless Payment Page Active', default=True)
     payment_preview_ok = fields.Boolean(string='Payment Preview Page Active', default=True)
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
     payment_page_item_priority_selection = fields.Selection([

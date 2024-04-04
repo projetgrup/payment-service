@@ -25,20 +25,19 @@ const qweb = core.qweb;
 
 const DashboardController = KanbanController.extend({
     events: _.extend({
-        'click .o_button_payment_page': '_onClickPaymentPage',
-        'click .o_button_preview_page': '_onClickPreviewPage',
+        'click button.o_button_dashboard': '_onClickButton',
     }, KanbanController.prototype.events),
 
     willStart: function() {
-        const self = this;
         const ready = this._rpc({
             model: 'payment.dashboard',
             method: 'has_payment_button',
             args: [],
-        }).then(function ({ show_payment_button, show_preview_button}) {
-            self.show_payment_button = show_payment_button;
-            self.show_preview_button = show_preview_button;
-        }).guardedCatch(function (error) {
+        }).then(({ show_payment_button, show_contactless_button, show_preview_button }) => {
+            this.show_payment_button = show_payment_button;
+            this.show_contactless_button = show_contactless_button;
+            this.show_preview_button = show_preview_button;
+        }).guardedCatch((error) => {
             console.error(error);
         });
         return Promise.all([this._super.apply(this, arguments), ready]);
@@ -47,40 +46,23 @@ const DashboardController = KanbanController.extend({
     renderButtons: function () {
         this.$buttons = $(qweb.render('Dashboard.Buttons', {
             show_payment_button: this.show_payment_button,
+            show_contactless_button: this.show_contactless_button,
             show_preview_button: this.show_preview_button,
         }));
     },
 
-    _onClickPaymentPage: function () {
-        const self = this;
+    _onClickButton: function (ev) {
         this._rpc({
             model: 'payment.dashboard',
             method: 'get_button_url',
-            args: [],
-        }).then(function (url) {
-            self.do_action({
+            args: [ev.target.dataset.type],
+        }).then((url) => {
+            this.do_action({
                 type: 'ir.actions.act_url',
                 target: 'new',
                 url: url,
             });
-        }).guardedCatch(function (error) {
-            console.error(error);
-        });
-    },
-
-    _onClickPreviewPage: function () {
-        const self = this;
-        this._rpc({
-            model: 'payment.dashboard',
-            method: 'get_button_url',
-            args: ['preview'],
-        }).then(function (url) {
-            self.do_action({
-                type: 'ir.actions.act_url',
-                target: 'new',
-                url: url,
-            });
-        }).guardedCatch(function (error) {
+        }).guardedCatch((error) => {
             console.error(error);
         });
     },

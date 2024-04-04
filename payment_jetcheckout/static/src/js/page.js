@@ -90,10 +90,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             decimal: 2,
             name: '',
             separator: '.',
-            thousand: ',', 
+            thousand: ',',
             position: 'after',
-            symbol: '', 
-        },
+            symbol: '',
+        };
         this.amount = new fields.float({
             events: [
                 ['input', this._onInputAmount],
@@ -144,6 +144,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         this.partner = new fields.integer({
             default: 0,
         });
+        this.button = {
+            currency: new fields.element({
+                events: [['click', this._onClickAmountCurrency]],
+            }),
+        };
     },
 
     _setCurrency: function () {
@@ -304,7 +309,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this._setCurrency();
             this._start();
             const $currency = $('[field=currency]');
-            $currency.on('update', function () {
+            $currency.on('update', () => {
                 this._setCurrency();
             });
             framework.hideLoading();
@@ -395,6 +400,19 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         let campaign = $(ev.currentTarget).val();
         $('span#campaign').html(campaign || '-');
         if (this.installment.row.$.data('type') === 'i') {
+            this._getInstallment(true);
+            this.installment.grid = null;
+        }
+    },
+
+    _onClickAmountCurrency: function (ev) {
+        if (ev.target.nodeName === 'LI') {
+            this._updateCurrency(ev.target);
+            this._setCurrency();
+            const $symbol = $('.amount .symbol');
+            $symbol.removeClass('symbol-after symbol-before').addClass('symbol-' + ev.target.dataset.position);
+            $symbol.text(ev.target.dataset.symbol);
+            this.button.currency.$.find('span').text(ev.target.dataset.name);
             this._getInstallment(true);
             this.installment.grid = null;
         }
