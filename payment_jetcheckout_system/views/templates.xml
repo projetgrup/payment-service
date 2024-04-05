@@ -203,6 +203,47 @@
         </t>
     </template>
 
+    <template id="page_contactless_payment" name="Contactless Payment System Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="dynamic" t-value="flow == 'dynamic'"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div>
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+                <t t-call="payment_jetcheckout_system.payment_company"/>
+            </div>
+            <div class="payment-system position-relative overflow-hidden">
+                <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
+                    <t t-call="payment_jetcheckout.payment_sidebar">
+                        <t t-set="page" t-value="'payment'"/>
+                        <t t-set="no_payment_icons" t-value="True"/>
+                        <t t-set="no_card_preview" t-value="True"/>
+                        <t t-call="payment_jetcheckout_system.payment_contact"/>
+                        <t t-set="labels"/>
+                    </t>
+                    <div class="col-md-9 row justify-content-center mx-0 navbar-light">
+                        <t t-call="payment_jetcheckout.payment_form">
+                            <t t-set="no_smart_buttons" t-value="True"/>
+                        </t>
+                        <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
+                        <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
+                        <input type="hidden" field="payment.contactless"/>
+                    </div>
+                </div>
+            </div>
+            <t t-call="payment_jetcheckout_system.payment_agreement"/>
+            <t t-call="payment_jetcheckout_system.payment_footer"/>
+        </t>
+    </template>
+
     <template id="page_payment" name="Payment System Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>

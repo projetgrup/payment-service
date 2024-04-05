@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.page.contactless **/
+/** @odoo-module alias=paylox.page.mobile **/
 'use strict';
 
 import fields from 'paylox.fields';

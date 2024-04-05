@@ -10,7 +10,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['payment_jetcheckout'],
     'data': [
-        'views/templates.xml',
+        #'views/templates.xml',
         'views/acquirer.xml',
         'views/transaction.xml',
     ],
