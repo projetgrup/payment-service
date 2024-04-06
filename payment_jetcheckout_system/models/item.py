@@ -97,7 +97,7 @@ class PaymentItem(models.Model):
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
     system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, readonly=True)
-    currency_id = fields.Many2one('res.currency', readonly=True)
+    currency_id = fields.Many2one('res.currency', required=True, ondelete='restrict', default=lambda self: self.env.company.currency_id)
 
     def onchange(self, values, field_name, field_onchange):
         return super(PaymentItem, self.with_context(recursive_onchanges=False)).onchange(values, field_name, field_onchange)

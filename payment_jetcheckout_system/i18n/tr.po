@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-04 14:26+0000\n"
-"PO-Revision-Date: 2024-04-04 17:31+0300\n"
+"POT-Creation-Date: 2024-04-06 14:58+0000\n"
+"PO-Revision-Date: 2024-04-06 18:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -134,6 +134,11 @@ msgid ""
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Ara\" title=\"Ara\"/></span>"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "<span>Amount to Pay</span>"
+msgstr "<span>Ödenecek Tutar</span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
@@ -1103,6 +1108,7 @@ msgstr "Yapılandırma Ayarları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 msgid "Contact"
 msgstr "Yetkili"
 
@@ -1139,6 +1145,11 @@ msgstr "Temassız Ödeme Sayfası Aktif"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "Conveyance"
 msgstr "Temlikname"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Copy Link"
+msgstr "Bağlantıyı Kopyala"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
@@ -2199,6 +2210,11 @@ msgid "Other"
 msgstr "Diğer"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Other Payment Methods"
+msgstr "Diğer Ödeme Yöntemleri"
+
+#. module: payment_jetcheckout_system
 #: model:res.groups,name:payment_jetcheckout_system.group_system_own_partner
 msgid "Own Partners Only"
 msgstr "Sadece Kendi İş Ortakları"
@@ -2248,6 +2264,7 @@ msgstr "Veli"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__partner_id
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 msgid "Partner"
 msgstr "İş Ortağı"
 
@@ -2741,6 +2758,20 @@ msgid "Payment is successful. Thank you."
 msgstr "Ödeme başarılı. Teşekkür ederiz."
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: code:addons/payment_jetcheckout_system/wizards/item.py:0
+#, python-format
+msgid "Payment items must share one common currency"
+msgstr "Ödeme kalemlerinin para birimleri aynı olmalıdır"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Payment link has been copied"
+msgstr "Ödeme linki panoya kopyalandı"
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #, python-format
@@ -3159,6 +3190,11 @@ msgid "Send"
 msgstr "Gönder"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Send Email"
+msgstr "Eposta Gönder"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Send Message"
 msgstr "Mesaj Gönder"
@@ -3167,6 +3203,11 @@ msgstr "Mesaj Gönder"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send Password Reset Instructions"
 msgstr "Parola Sıfırlama Talimatlarını Gönder"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Send SMS"
+msgstr "SMS Gönder"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -3986,8 +4027,8 @@ msgstr "Öncelikle \"%s\" için portal yetkisi vermelisiniz."
 
 #. module: payment_jetcheckout_system
 #: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_link_share
-msgid "Your Payment Link | {{ ctx['domain'] }}"
-msgstr "Ödeme Bağlantınız | {{ ctx['domain'] }}"
+msgid "Your Payment Link | ctx['domain']"
+msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:mail.template,subject:payment_jetcheckout_system.portal_mail_template

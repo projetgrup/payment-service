@@ -71,6 +71,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
 
+    jetcheckout_contactless_ok = fields.Boolean('Paylox Contactless Payment', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from odoo import _
 from odoo.http import route, request
+from odoo.exceptions import UserError
 from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
@@ -47,10 +49,14 @@ class PayloxSystemVendorController(Controller):
 
         campaign = res['campaign']
         payments, payment_tags = partner._get_payments()
+        currency = payments.mapped('currency_id')
+        if len(currency) > 1:
+            raise UserError(_('Payment items must share one common currency'))
         if payment_tags and payment_tags[0].campaign_id:
             campaign = payment_tags[0].campaign_id.name
 
         res.update({
+            'currency': currency,
             'campaign': campaign,
             'payments': payments,
             'payment_tags': payment_tags,

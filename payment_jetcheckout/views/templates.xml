@@ -312,6 +312,10 @@
         </div>
     </template>
 
+    <template id="payment_contactless_form" name="Paylox Contactless Payment Form">
+        <button class="btn btn-primary btn-block px-2 py-4 font-weight-bold" field="payment.contactless">Pay Contactless</button>
+    </template>
+
     <template id="payment_form" name="Paylox Payment Form">
         <t t-call="payment_jetcheckout.payment_loading"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">

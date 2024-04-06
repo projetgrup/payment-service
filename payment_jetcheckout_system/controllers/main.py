@@ -3,7 +3,7 @@ import re
 import json
 import base64
 import werkzeug
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -33,6 +33,12 @@ class PayloxSystemController(Controller):
         if '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
             raise AccessError(_('Access Denied'))
         return super()._check_user()
+
+    def _check_contactless_payment_page(self):
+        if not request.env.company.payment_page_ok:
+            raise werkzeug.exceptions.NotFound()
+        if request.env.user.share or not request.env.user.payment_contactless_ok:
+            raise werkzeug.exceptions.NotFound()
 
     def _check_payment_page(self):
         if not request.env.company.payment_page_ok:
@@ -133,6 +139,9 @@ class PayloxSystemController(Controller):
             payments, payment_tags = False, False
         else:
             payments, payment_tags = partner._get_payments()
+            currency = payments.mapped('currency_id')
+            if len(currency) > 1:
+                raise UserError(_('Payment items must share one common currency'))
             if payment_tags and payment_tags[0].campaign_id:
                 campaign = payment_tags[0].campaign_id.name
 
@@ -606,6 +615,81 @@ class PayloxSystemController(Controller):
             pass
 
         return request.render('payment_jetcheckout_system.page_payment_preview', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
+    @http.route('/m/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
+    def page_system_contactless_payment(self, **kwargs):
+        self._check_contactless_payment_page()
+
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
+        if not kwargs.get('values', {}).get('no_redirect'):
+            if request.env.user.has_group('base.group_public'):
+                raise werkzeug.exceptions.NotFound()
+
+            partner = request.env.user.partner_id
+            redirect = self._check_redirect(partner)
+            if redirect:
+                return redirect
+
+        company = request.env.company
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
+        else:
+            currency = None
+
+        if 'pid' in params:
+            partner = self._get_parent(params['pid'])
+        elif 'vat' in params and isinstance(params['vat'], str) and 9 < len(params['vat']) < 14:
+            partner = request.env['res.partner'].sudo().search([
+                ('vat', '!=', False),
+                ('vat', '=', params['vat']),
+                ('company_id', '=', company.id),
+                ('system', '=', company.system)
+            ])
+            if len(partner) != 1:
+                partner = None
+        elif company.payment_page_flow == 'dynamic':
+            partner = request.website.user_id.partner_id.sudo()
+        else:
+            partner = self._get_partner()
+
+        self._del()
+
+        values = self._prepare(partner=partner, company=company, currency=currency)
+
+        link_params = json.dumps({
+            'id': request.website.id,
+            'currency': values['currency']['name'],
+            'vat': values['partner']['vat'],
+            'amount': float(params.get('amount', 0)),
+        })
+        link = '%s?%s' % (request.httprequest.url, urlencode({'': base64.b64encode(link_params.encode('utf-8'))}))
+
+        values.update({
+            'success_url': '/my/payment/success',
+            'fail_url': '/my/payment/fail',
+            'system': company.system,
+            'subsystem': company.subsystem,
+            'flow': company.payment_page_flow,
+            'vat': params.get('vat'),
+            'link': link,
+        })
+
+        if 'values' in kwargs and isinstance(kwargs['values'], dict):
+            values.update({**kwargs['values']})
+
+        try:
+            values.update({'amount': float(params['amount'])})
+        except:
+            pass
+
+        return request.render('payment_jetcheckout_system.page_contactless_payment', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '-1'
