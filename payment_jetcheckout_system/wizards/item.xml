@@ -17,13 +17,13 @@
                             <tree editable="top">
                                 <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="amount"/>
+                                <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="date" optional="hide"/>
                                 <field name="due_date" optional="hide"/>
                                 <field name="description" optional="hide"/>
                                 <field name="file" optional="hide"/>
                                 <field name="paid"/>
                                 <field name="parent_id" invisible="1"/>
-                                <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
                     </group>

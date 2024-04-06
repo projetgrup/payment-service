@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-20 10:38+0000\n"
-"PO-Revision-Date: 2024-03-20 13:46+0300\n"
+"POT-Creation-Date: 2024-04-06 14:58+0000\n"
+"PO-Revision-Date: 2024-04-06 18:05+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -916,6 +916,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Contact"
 msgstr "İlgili"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid "Contactless"
+msgstr "Temassız"
 
 #. module: payment_jetcheckout
 #: model:ir.actions.report,name:payment_jetcheckout.report_conveyance
@@ -1970,6 +1975,11 @@ msgid "Pay"
 msgstr "Öde"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_contactless_form
+msgid "Pay Contactless"
+msgstr "Temassız Öde"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payer:"
 msgstr "Ödeyen:"
@@ -2049,6 +2059,11 @@ msgstr "Paylox API Kampanya Satırları"
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_campaign
 msgid "Paylox Campaigns"
 msgstr "Paylox Kampanyalar"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_contactless_ok
+msgid "Paylox Contactless Payment"
+msgstr "Paylox Temassız Ödeme"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_journal_ids

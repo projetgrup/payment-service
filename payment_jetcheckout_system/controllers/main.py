@@ -3,7 +3,7 @@ import re
 import json
 import base64
 import werkzeug
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 
 from odoo import fields, http, _
 from odoo.http import request
@@ -139,6 +139,9 @@ class PayloxSystemController(Controller):
             payments, payment_tags = False, False
         else:
             payments, payment_tags = partner._get_payments()
+            currency = payments.mapped('currency_id')
+            if len(currency) > 1:
+                raise UserError(_('Payment items must share one common currency'))
             if payment_tags and payment_tags[0].campaign_id:
                 campaign = payment_tags[0].campaign_id.name
 
@@ -659,6 +662,15 @@ class PayloxSystemController(Controller):
         self._del()
 
         values = self._prepare(partner=partner, company=company, currency=currency)
+
+        link_params = json.dumps({
+            'id': request.website.id,
+            'currency': values['currency']['name'],
+            'vat': values['partner']['vat'],
+            'amount': float(params.get('amount', 0)),
+        })
+        link = '%s?%s' % (request.httprequest.url, urlencode({'': base64.b64encode(link_params.encode('utf-8'))}))
+
         values.update({
             'success_url': '/my/payment/success',
             'fail_url': '/my/payment/fail',
@@ -666,6 +678,7 @@ class PayloxSystemController(Controller):
             'subsystem': company.subsystem,
             'flow': company.payment_page_flow,
             'vat': params.get('vat'),
+            'link': link,
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):

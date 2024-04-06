@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-04 14:26+0000\n"
-"PO-Revision-Date: 2024-04-04 14:26+0000\n"
+"POT-Creation-Date: 2024-04-06 14:58+0000\n"
+"PO-Revision-Date: 2024-04-06 14:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -112,6 +112,11 @@ msgstr ""
 msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "<span>Amount to Pay</span>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -718,6 +723,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 msgid "Contact"
 msgstr ""
 
@@ -753,6 +759,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "Conveyance"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Copy Link"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1805,6 +1816,11 @@ msgid "Other"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Other Payment Methods"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:res.groups,name:payment_jetcheckout_system.group_system_own_partner
 msgid "Own Partners Only"
 msgstr ""
@@ -1854,6 +1870,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__partner_id
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 msgid "Partner"
 msgstr ""
 
@@ -2344,6 +2361,20 @@ msgid "Payment is successful. Thank you."
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: code:addons/payment_jetcheckout_system/wizards/item.py:0
+#, python-format
+msgid "Payment items must share one common currency"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Payment link has been copied"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #, python-format
@@ -2762,6 +2793,11 @@ msgid "Send"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Send Email"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 msgid "Send Message"
 msgstr ""
@@ -2769,6 +2805,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Send Password Reset Instructions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+msgid "Send SMS"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2975,6 +3016,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Success"
@@ -3579,7 +3621,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_link_share
-msgid "Your Payment Link | {{ ctx['domain'] }}"
+msgid "Your Payment Link | ctx['domain']"
 msgstr ""
 
 #. module: payment_jetcheckout_system

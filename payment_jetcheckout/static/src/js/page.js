@@ -22,7 +22,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
-        this.checklist = [];
         this.card = {
             number: new fields.string({
                 events: [
@@ -131,6 +130,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }),
             form: new fields.string({
                 events: [['click', this._onClickPaymentButton]],
+            }),
+            contactless: new fields.element({
+                events: [['click', this._onClickPaymentContactless]],
             }),
             successurl: new fields.string(),
             failurl: new fields.string(),
@@ -799,73 +801,71 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _checkData: function () {
-        if (!this.amount.value && (!this.checklist.length || this.checklist.includes('amount'))) {
+        let checked = true;
+        if (!this.amount.value && (!this._checklist?.length || this._checklist.includes('amount'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please enter an amount'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this.card.holder.value && (!this.checklist.length || this.checklist.includes('holder'))) {
+            checked = false;
+        } else if (!this.card.holder.value && (!this._checklist?.length || this._checklist.includes('holder'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please fill card holder name'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this.card.number.value && (!this.checklist.length || this.checklist.includes('number'))) {
+            checked = false;
+        } else if (!this.card.number.value && (!this._checklist?.length || this._checklist.includes('number'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please fill card number'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this.card.valid && (!this.checklist.length || this.checklist.includes('valid'))) {
+            checked = false;
+        } else if (!this.card.valid && (!this._checklist?.length || this._checklist.includes('valid'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please enter a valid card number'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this.card.date.value && (!this.checklist.length || this.checklist.includes('date'))) {
+            checked = false;
+        } else if (!this.card.date.value && (!this._checklist?.length || this._checklist.includes('date'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please fill card expiration date'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this.card.code.value && (!this.checklist.length || this.checklist.includes('code'))) {
+            checked = false;
+        } else if (!this.card.code.value && (!this._checklist?.length || this._checklist.includes('code'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please fill card security code'),
             });
-            this._enableButton();
-            return false;
-        } else if (!this._getInstallmentInput().length && (!this.checklist.length || this.checklist.includes('installment'))) {
+            checked = false;
+        } else if (!this._getInstallmentInput().length && (!this._checklist?.length || this._checklist.includes('installment'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please select whether payment is straight or installment'),
             });
-            this._enableButton();
-            return false;
-        } else if (this.terms.ok.exist && !this.terms.ok.checked && (!this.checklist.length || this.checklist.includes('term'))) {
+            checked = false;
+        } else if (this.terms.ok.exist && !this.terms.ok.checked && (!this._checklist?.length || this._checklist.includes('term'))) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('Please accept Terms & Conditions'),
             });
-            this._enableButton();
-            return false;
-        } else {
-            return true;
+            checked = false;
         }
+
+        if (!checked) {
+            this._enableButton();
+        }
+
+        this._checklist = undefined;
+        return checked;
     },
 
     _enableButton: function () {
@@ -899,6 +899,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 index: $input.data('index') || 0,
                 rows: this.installment.rows || [],
             },
+            contactless: this.payment.contactless.exist,
             campaign: this.campaign.name.value,
             successurl: this.payment.successurl.value,
             failurl: this.payment.failurl.value,
@@ -937,6 +938,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
         }
         return false;
+    },
+
+    _onClickPaymentContactless: function() {
+        this._checklist = ['amount', 'agreement'];
+        return this._onClickPaymentButton();
     },
 });
 

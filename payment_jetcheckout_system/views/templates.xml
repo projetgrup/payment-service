@@ -211,31 +211,101 @@
             <t t-set="dynamic" t-value="flow == 'dynamic'"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-contactless navbar-light'"/>
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
                 <div>
-                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo" style="max-height:50px"/>
                 </div>
+            </div>
+            <div class="p-1">
                 <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
-            <div class="payment-system position-relative overflow-hidden">
-                <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
-                    <t t-call="payment_jetcheckout.payment_sidebar">
-                        <t t-set="page" t-value="'payment'"/>
-                        <t t-set="no_payment_icons" t-value="True"/>
-                        <t t-set="no_card_preview" t-value="True"/>
-                        <t t-call="payment_jetcheckout_system.payment_contact"/>
-                        <t t-set="labels"/>
-                    </t>
-                    <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                        <t t-call="payment_jetcheckout.payment_form">
-                            <t t-set="no_smart_buttons" t-value="True"/>
+            <div class="payment-system position-relative overflow-hidden p-1">
+                <div class="payment-card mx-0">
+                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                    <div class="px-3 py-4 bg-white card shadow-sm">
+                        <label name="partner" class="text-primary font-weight-bold mb-0 d-block">
+                            <t t-if="partner_label" t-raw="partner_label"/>
+                            <t t-else="">Partner</t>
+                        </label>
+                        <span name="partner" class="text-600"><t t-esc="partner_name or '-'"/></span>
+                        <t t-if="contact">
+                            <label name="contact" class="text-primary font-weight-bold mt-2 mb-0 d-block">
+                                <t t-if="contact_label" t-raw="contact_label"/>
+                                <t t-else="">Contact</t>
+                            </label>
+                            <span name="contact" class="text-600"><t t-esc="contact.name or '-'"/></span>
                         </t>
-                        <input type="hidden" t-att-value="success_url" field="payment.successurl"/>
-                        <input type="hidden" t-att-value="fail_url" field="payment.failurl"/>
-                        <input type="hidden" field="payment.contactless"/>
+                        <t t-if="labels" t-raw="labels"/>
+                        <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
+                        <t t-if="buttons" t-raw="buttons"/>
+                        <div class="amount my-4">
+                            <div class="field-container w-100">
+                                <input id="amount" name="amount" type="text" inputmode="decimal" class="text-center border-primary" required="required" field="amount" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(currency.decimal_places), amount, grouping=True, monetary=True) or None"/>
+                                <span class="bar-container"/>
+                                <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                <label for="amount" class="text-primary"><span>Amount to Pay</span></label>
+                            </div>
+                            <button t-if="len(currencies) > 1 and not readonly" class="btn btn-primary shadow text-nowrap" field="button.currency">
+                                <span t-esc="currency.name"/>
+                                <i class="fa fa-caret-down ml4" t-translation="off"/>
+                                <ul>
+                                    <t t-foreach="currencies" t-as="curr">
+                                        <li t-esc="curr.name" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-decimal="curr.decimal_places" t-att-data-name="curr.name" t-att-data-id="curr.id" t-att-data-position="curr.position" t-att-data-symbol="curr.symbol"/>
+                                    </t>
+                                </ul>
+                            </button>
+                        </div>
+                        <div>
+                            <t t-call="payment_jetcheckout.payment_contactless_form"/>
+                            <a href="/my/payment" class="border-bottom border-primary text-primary small">Other Payment Methods</a>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row my-2 px-1 card shadow-sm">
+                        <div class="d-flex flex-column">
+                            <img t-attf-src="/report/barcode/?type=QR&amp;width=160&amp;height=160&amp;value={{link}}" class="bg-white m-2" field="payment.shareqr"/>
+                        </div>
+                        <div class="d-flex flex-column flex-fill">
+                            <div>
+                                <button class="btn btn-block btn-secondary my-2 font-weight-bold" field="payment.sharelink">
+                                    <div class="d-flex flex-row">
+                                        <div style="width:40px">
+                                            <i class="fa fa-copy" t-translation="off"/>
+                                        </div>
+                                        <div class="flex-fill">
+                                            Copy Link
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-block btn-secondary my-2 font-weight-bold" data-type="email" field="payment.sharemail">
+                                    <div class="d-flex flex-row">
+                                        <div style="width:40px">
+                                            <i class="fa fa-envelope-o" t-translation="off"/>
+                                        </div>
+                                        <div class="flex-fill">
+                                            Send Email
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-block btn-secondary my-2 font-weight-bold" data-type="sms" field="payment.sharesms">
+                                    <div class="d-flex flex-row">
+                                        <div style="width:40px">
+                                            <i class="fa fa-mobile" t-translation="off"/>
+                                        </div>
+                                        <div class="flex-fill">
+                                            Send SMS
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
