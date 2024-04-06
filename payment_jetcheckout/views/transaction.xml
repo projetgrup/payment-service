@@ -84,6 +84,7 @@
                     </div>
                 </group>
                 <group>
+                    <field name="jetcheckout_contactless_ok" string="Contactless" attrs="{'invisible': [('jetcheckout_contactless_ok', '=', False)]}" readonly="1" widget="boolean_toggle" style="pointer-events:none"/>
                     <field name="jetcheckout_installment_description_long" string="Installment" class="font-weight-bold text-primary" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
                     <field name="jetcheckout_card_name"/>
                     <field name="jetcheckout_card_number"/>

@@ -180,6 +180,17 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             link: new fields.element({
                 events: [['click', this._onClickLink]],
             }),
+            sharelink: new fields.element({
+                events: [['click', this._onClickLinkCopy]],
+            }),
+            sharemail: new fields.element({
+                events: [['click', this._onClickLinkShare]],
+            }),
+            sharesms: new fields.element({
+                events: [['click', this._onClickLinkShare]],
+            }),
+            shareqr: new fields.element(),
+            contactless: new fields.element(),
             pivot: new fields.element(),
             priority: new fields.element(),
             preview: {
@@ -232,6 +243,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 });
                 payloxPage.prototype._start.apply(self, ['amount']);
                 self._getPreviewGrid();
+            }
+            if (self.payment.shareqr.exist) {
+                self.amount.$.change(() => {
+                    const params = self._prepareLink();
+                    const link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
+                    self.payment.shareqr.$[0].src = '/report/barcode/?type=QR&width=160&height=160&value=' + link;
+                });
             }
         });
     },
@@ -764,7 +782,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     _prepareLink: function() {
         const websiteID = $('html').data('websiteId') || 0;
-        const amount = parseFloat(this.amount.$.data('value') || 0);
+        const amount = parseFloat(this.amount.value || 0);
         return JSON.stringify({
             id: websiteID,
             currency: this.currency.name,
@@ -773,85 +791,102 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         });
     },
 
-    _onClickLink: async function (ev) {
+    _onClickLink: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
-        const params = this._prepareLink();
-        let link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
-        for (let i=0; i<params.length; i++) {
-            if (params[i][1]) {
-                if (!i) {
-                    link += '?';
-                } else {
-                    link += '&';
-                }
-                link += params[i][0] + '=' + params[i][1];
-            }
-        }
-        navigator.clipboard.writeText(link);
-
-        let content = qweb.render('paylox.item.link', { link });
-        await this.displayNotification({
-            type: 'info',
-            title: _t('Payment link is ready'),
-            message: utils.Markup(content),
-            sticky: true,
-        });
+        this._onClickLinkCopy(ev, true);
 
         setTimeout(() => {
             $('.o_notification_manager').css('z-index', 999);
             $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
-                const type = ev.currentTarget.dataset.type;
-                const popup = new dialog(this, {
-                    title: _t('Share Payment Link'),
-                    size: 'small',
-                    buttons: [{
-                        text: _t('Share'),
-                        classes: 'btn-block btn-primary font-weight-bold',
-                    }],
-                    $content: qweb.render(`paylox.item.link.${type}`, {})
-                });
-
-                popup.opened(() => {
-                    popup.$modal.addClass('payment-page');
-                    const $button = popup.$modal.find('footer button');
-                    $button.click(() => {
-                        $button.prop('disabled', true);
-                        const $input = popup.$modal.find('input');
-                        const context = this._getContext();
-                        rpc.query({
-                            route: '/my/payment/share/link',
-                            params: { type, link, lang: context.lang, value: $input.val() },
-                        }).then((result) => {
-                            if ('error' in result) {
-                                this.displayNotification({
-                                    type: 'warning',
-                                    title: _t('Warning'),
-                                    message: _t('An error occured.') + ' ' + result.error,
-                                });
-                            } else {
-                                this.displayNotification({
-                                    type: 'info',
-                                    title: _t('Success'),
-                                    message: result.message,
-                                });
-                            }
-                        }).guardedCatch(() => {
-                            this.displayNotification({
-                                type: 'danger',
-                                title: _t('Error'),
-                                message: _t('An error occured. Please contact with your system administrator.'),
-                            });
-                        }).finally(() => {
-                            popup.destroy();
-                        });
-                    });
-                });
-
-                popup.open();
+                this._onClickLinkShare(ev, link);
             });
         }, 500);
+    },
+
+    _onClickLinkCopy: async function (ev, popup) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const params = this._prepareLink();
+        const link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
+        navigator.clipboard.writeText(link);
+
+        if (popup) {
+            let content = qweb.render('paylox.item.link', { link });
+            this.displayNotification({
+                type: 'info',
+                title: _t('Payment link is ready'),
+                message: utils.Markup(content),
+                sticky: true,
+            });
+        } else {
+            this.displayNotification({
+                type: 'info',
+                title: _t('Success'),
+                message: _t('Payment link has been copied'),
+            });
+        }
+    },
+
+    _onClickLinkShare: async function (ev, link) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        if (!link) {
+            const params = this._prepareLink();
+            link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
+        }
+
+        const type = ev.currentTarget.dataset.type;
+        const popup = new dialog(this, {
+            title: _t('Share Payment Link'),
+            size: 'small',
+            buttons: [{
+                text: _t('Share'),
+                classes: 'btn-block btn-primary font-weight-bold',
+            }],
+            $content: qweb.render(`paylox.item.link.${type}`, {})
+        });
+
+        popup.opened(() => {
+            popup.$modal.addClass('payment-page');
+            const $button = popup.$modal.find('footer button');
+            $button.click(() => {
+                $button.prop('disabled', true);
+                const $input = popup.$modal.find('input');
+                const context = this._getContext();
+                rpc.query({
+                    route: '/my/payment/share/link',
+                    params: { type, link, lang: context.lang, value: $input.val() },
+                }).then((result) => {
+                    if ('error' in result) {
+                        this.displayNotification({
+                            type: 'warning',
+                            title: _t('Warning'),
+                            message: _t('An error occured.') + ' ' + result.error,
+                        });
+                    } else {
+                        this.displayNotification({
+                            type: 'info',
+                            title: _t('Success'),
+                            message: result.message,
+                        });
+                    }
+                }).guardedCatch(() => {
+                    this.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occured. Please contact with your system administrator.'),
+                    });
+                }).finally(() => {
+                    popup.destroy();
+                });
+            });
+        });
+
+        popup.open();
     },
 });
 

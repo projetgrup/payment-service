@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields, _
+from odoo.exceptions import UserError
 
 
 class PaymentItemWizard(models.TransientModel):
@@ -24,6 +25,10 @@ class PaymentItemWizard(models.TransientModel):
         return res
 
     def confirm(self):
+        currency = self.line_ids.mapped('currency_id')
+        if len(currency) > 1:
+            raise UserError(_('Payment items must share one common currency'))
+
         return {
             'name': 'Payment Items',
             'type': 'ir.actions.act_url',
