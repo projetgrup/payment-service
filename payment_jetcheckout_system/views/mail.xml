@@ -6,6 +6,7 @@
     <field name="arch" type="xml">
         <xpath expr='//field[@name="model_id"]' position="after">
             <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <field name="system" widget="boolean_toggle" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="model_id"]' position="attributes">
             <attribute name="invisible">context.get('settings',False)</attribute>
@@ -19,6 +20,7 @@
     <field name="arch" type="xml">
         <xpath expr='//field[@name="lang"]' position="after">
             <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <field name="system" widget="boolean_toggle" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="model_id"]' position="attributes">
             <attribute name="invisible">context.get('settings',False)</attribute>

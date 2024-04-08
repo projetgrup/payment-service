@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from ast import literal_eval
 from odoo import api, fields, models, tools
 
 
@@ -7,6 +6,7 @@ class MailTemplate(models.Model):
     _inherit = 'mail.template'
 
     company_id = fields.Many2one('res.company')
+    system = fields.Boolean()
 
     @api.model
     def default_get(self, fields):
@@ -21,6 +21,7 @@ class SmsTemplate(models.Model):
     _inherit = 'sms.template'
 
     company_id = fields.Many2one('res.company')
+    system = fields.Boolean()
 
     @api.model
     def default_get(self, fields):

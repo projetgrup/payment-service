@@ -51,8 +51,8 @@
                 <group>
                     <label for="mail_template_id" string="Template"/>
                     <div class="o_row">
-                        <field name="mail_template_id" nolabel="1" options="{'no_create': True}" attrs="{'invisible': [('code','!=', 'email')]}" domain="[('company_id', '=', company_id)]"/>
-                        <field name="sms_template_id" nolabel="1" options="{'no_create': True}" attrs="{'invisible': [('code','!=', 'sms')]}" domain="[('company_id', '=', company_id)]"/>
+                        <field name="mail_template_id" nolabel="1" options="{'no_create': True}" attrs="{'invisible': [('code','!=', 'email')]}" domain="['|', ('system', '!=', False), ('company_id', '=', company_id)]"/>
+                        <field name="sms_template_id" nolabel="1" options="{'no_create': True}" attrs="{'invisible': [('code','!=', 'sms')]}" domain="['|', ('system', '!=', False), ('company_id', '=', company_id)]"/>
                         <p attrs="{'invisible': [('code','in', ('email', 'sms'))]}">This feature is going to be implemented soon</p>
                     </div>
                     <field name="code" invisible="1"/>
