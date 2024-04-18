@@ -327,7 +327,7 @@
                             Hello,<br/><br/>
                             Click on the button below to get your mobile application.
                             <div style="margin: 16px 0px 16px 0px; text-align: center;">
-                                <a href="https://jetcheckout.com/jet_checkout/static/src/app/paylox.apk" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                <a href="https://jetcheckout.com/m/apk" style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
                                     <strong>Download APK</strong>
                                 </a>
                             </div>
@@ -373,7 +373,7 @@
         <record id="sms_template_app_share" model="sms.template">
             <field name="name">Payment: Share Mobile Application</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Hello, you can get your mobile application by clicking the following link.\nhttps://jetcheckout.com/jet_checkout/static/src/app/paylox.apk</field>
+            <field name="body">Hello, you can get your mobile application by clicking the following link.\nhttps://jetcheckout.com/m/apk</field>
             <field name="system" eval="True"/>
             <field name="lang">{{ object.lang }}</field>
         </record>

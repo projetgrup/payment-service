@@ -202,7 +202,7 @@ msgid ""
 "                            Hello,<br/><br/>\n"
 "                            Click on the button below to get your mobile application.\n"
 "                            <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"                                <a href=\"https://jetcheckout.com/jet_checkout/static/src/app/paylox.apk\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <a href=\"https://jetcheckout.com/m/apk\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                    <strong>Download APK</strong>\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -1351,7 +1351,7 @@ msgstr ""
 #: model:sms.template,body:payment_jetcheckout_system.sms_template_app_share
 msgid ""
 "Hello, you can get your mobile application by clicking the following "
-"link.\\nhttps://jetcheckout.com/jet_checkout/static/src/app/paylox.apk"
+"link.\\nhttps://jetcheckout.com/m/apk"
 msgstr ""
 
 #. module: payment_jetcheckout_system
