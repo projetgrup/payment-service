@@ -26,6 +26,7 @@ class Website(models.Model):
     def _get_companies(self):
         self = self.sudo()
         if self.env.user.share:
+            return self.env.user.company_ids
             return self.search([('domain', '=', self.domain)]).mapped('company_id')
         else:
             return self.env.user.company_ids
