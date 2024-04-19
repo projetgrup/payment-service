@@ -22,6 +22,7 @@ class PayloxSystemController(Controller):
         if not request.website.company_id.id == company_id:
             website = request.env['website'].sudo().search([('company_id', '=', company_id)], limit=1)
             if website:
+                website._force()
                 path = urlparse(request.httprequest.url).path
                 return werkzeug.utils.redirect(website.domain + path)
             else:
