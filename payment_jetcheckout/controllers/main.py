@@ -768,7 +768,7 @@ class PayloxController(http.Controller):
             'code': kwargs.get('response_code', ''),
             'message': kwargs.get('response_message', ''),
             'amount': kwargs.get('amount', 0),
-            'vpos_id': kwargs.get('virtual_pos_id', ''),
+            'vpos_id': kwargs.get('virtual_pos_id', 0),
             'vpos_name': kwargs.get('virtual_pos_name', ''),
             'vpos_code': kwargs.get('auth_code', ''),
             'commission_rate': float(kwargs.get('expected_cost_rate', 0)),
@@ -1264,36 +1264,15 @@ class PayloxController(http.Controller):
                 values = {'error': message}
             return values
 
-    @http.route(['/payment/contactless/success', '/payment/contactless/fail'], type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True, save_session=False)
+    @http.route(['/payment/contactless/success', '/payment/contactless/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
     def finalize_contactless(self, **kwargs):
-        _logger.error(kwargs)
-        try:
-            result = json.loads(self._get_decrypted_vals(kwargs['returnData']))
-            result['contactless'] = True
-            result['order_id'] = result['conversationId']
-            url, tx, status = self._process(**result)
-            if not status and tx.jetcheckout_order_id:
-                url += '?=%s' % tx.jetcheckout_order_id
-            return request.redirect(url)
-        except Exception as e:
-            _logger.error('An error occured when getting contactless payment: %s' % e)
-            return request.redirect('/payment/card/result')
-
-    @http.route('/payment/contactless/callback', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True, save_session=False)
-    def callback_contactless(self, **kwargs):
-        try:
-            result = json.loads(self._get_decrypted_vals(kwargs['returnData']))
-            result['contactless'] = True
-            result['order_id'] = result['conversationId']
-            url, tx, status = self._process(**result)
-            if not status and tx.jetcheckout_order_id:
-                url += '?=%s' % tx.jetcheckout_order_id
-            return request.redirect(url)
-        except Exception as e:
-            _logger.error('An error occured when getting contactless payment: %s' % e)
-            return request.redirect('/payment/card/result')
+        kwargs['result_url'] = '/payment/card/result'
+        url, tx, status = self._process(**kwargs)
+        if not status and tx.jetcheckout_order_id:
+            url += '?=%s' % tx.jetcheckout_order_id
+        return werkzeug.utils.redirect(url)
  
-    @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], csrf=False, sitemap=False, save_session=False)
+    @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
     def finalize(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'
         url, tx, status = self._process(**kwargs)
