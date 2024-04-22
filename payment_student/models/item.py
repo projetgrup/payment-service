@@ -38,7 +38,7 @@ class PaymentItem(models.Model):
     system_student_department_id = fields.Many2one('res.student.department', related='parent_id.system_student_department_id', store=True, readonly=True, ondelete='restrict')
     system_student_program_id = fields.Many2one('res.student.program', related='parent_id.system_student_program_id', store=True, readonly=True, ondelete='restrict')
 
-    @api.onchange('child_id','term_id','payment_type_id')
+    @api.onchange('child_id', 'term_id', 'payment_type_id')
     def _onchange_student_id(self):
         if not self.system == 'student':
             return
