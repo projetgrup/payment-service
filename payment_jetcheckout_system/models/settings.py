@@ -142,6 +142,29 @@ class PaymentSettings(models.TransientModel):
         name = action.name or self._name
         return [(record.id, name) for record in self]
 
+    @api.model
+    def create(self, values):
+        for field in self._fields.values():
+            if not (field.name in values and field.related and not field.readonly):
+                continue
+
+            fname0, *fnames = field.related.split(".")
+            if fname0 not in values:
+                continue
+
+            field0 = self._fields[fname0]
+            old_value = field0.convert_to_record(field0.convert_to_cache(values[fname0], self), self)
+
+            for fname in fnames:
+                old_value = next(iter(old_value), old_value)[fname]
+
+            new_value = field.convert_to_record(field.convert_to_cache(values[field.name], self), self)
+
+            if old_value == new_value:
+                values.pop(field.name)
+
+        return super(PaymentSettings, self).create(values)
+
 
 class PaymentSettingsNotificationWebhook(models.Model):
     _name = 'payment.settings.notification.webhook'

@@ -22,10 +22,12 @@ class ResCompany(models.Model):
     @api.model
     def create(self, values):
         res = super().create(values)
-        res._update_system_product()
+        if 'system_product' in values:
+            res._update_system_product()
         return res
 
     def write(self, values):
         res = super().write(values)
-        self._update_system_product()
+        if 'system_product' in values:
+            self._update_system_product()
         return res
