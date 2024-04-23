@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+import json
+import base64
 import logging
 from datetime import date
 from urllib.parse import urlparse
@@ -114,6 +116,11 @@ class Partner(models.Model):
         for partner in self:
             partner.payment_page_url = partner.with_context(active_type='page')._get_payment_url()
 
+    def _compute_is_contactless(self):
+        is_contactless = self.env.user.payment_contactless_ok
+        for partner in self:
+            partner.is_contactless = is_contactless
+
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
         ids = group_portal.users.mapped('partner_id').ids
@@ -144,6 +151,7 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
+    is_contactless = fields.Boolean(compute='_compute_is_contactless', compute_sudo=True, readonly=True)
     acquirer_branch_id = fields.Many2one('payment.acquirer.jetcheckout.branch', string='Payment Acquirer Branch')
     users_id = fields.Many2one('res.users', compute='_compute_user_details', compute_sudo=True, readonly=True)
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
@@ -513,6 +521,15 @@ class Partner(models.Model):
             'type': 'ir.actions.act_url',
             'target': 'new',
             'url': '%s/my/payment/%s' % (self.get_base_url(), self._get_token())
+        }
+
+    def action_redirect_contactless_payment_page(self):
+        self.ensure_one()
+        params = json.dumps({'pid': self._get_token()}).encode('utf-8')
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': '%s/m/payment?=%s' % (self.get_base_url(), base64.b64encode(params).decode('utf-8'))
         }
 
     def action_send(self):

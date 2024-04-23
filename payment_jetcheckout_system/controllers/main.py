@@ -94,6 +94,7 @@ class PayloxSystemController(Controller):
         if not partner:
             raise werkzeug.exceptions.NotFound()
 
+        self._set('partner', partner.id)
         return partner
 
     def _get_tx_vals(self, **kwargs):
@@ -625,25 +626,15 @@ class PayloxSystemController(Controller):
     def page_system_contactless_payment(self, **kwargs):
         self._check_contactless_payment_page()
 
+        if not request.env.user.has_group('base.group_user'):
+            raise werkzeug.exceptions.NotFound()
+
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
 
-        if not kwargs.get('values', {}).get('no_redirect'):
-            if request.env.user.has_group('base.group_public'):
-                raise werkzeug.exceptions.NotFound()
-
-            partner = request.env.user.partner_id
-            redirect = self._check_redirect(partner)
-            if redirect:
-                return redirect
-
+        partner = None
         company = request.env.company
-        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
-            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
-        else:
-            currency = None
-
         if 'pid' in params:
             partner = self._get_parent(params['pid'])
         elif 'vat' in params and isinstance(params['vat'], str) and 9 < len(params['vat']) < 14:
@@ -657,10 +648,22 @@ class PayloxSystemController(Controller):
                 partner = None
         elif company.payment_page_flow == 'dynamic':
             partner = request.website.user_id.partner_id.sudo()
-        else:
+
+        if not partner:
             partner = self._get_partner()
 
+        if not kwargs.get('values', {}).get('no_redirect'):
+            redirect = self._check_redirect(partner)
+            if redirect:
+                return redirect
+
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
+        else:
+            currency = None
+
         self._del()
+        self._set('partner', partner.id)
 
         values = self._prepare(partner=partner, company=company, currency=currency)
 
@@ -700,25 +703,15 @@ class PayloxSystemController(Controller):
     def page_system_payment(self, **kwargs):
         self._check_payment_page()
 
+        if request.env.user.has_group('base.group_public'):
+            raise werkzeug.exceptions.NotFound()
+
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
 
-        if not kwargs.get('values', {}).get('no_redirect'):
-            if request.env.user.has_group('base.group_public'):
-                raise werkzeug.exceptions.NotFound()
-
-            partner = request.env.user.partner_id
-            redirect = self._check_redirect(partner)
-            if redirect:
-                return redirect
-
+        partner = None
         company = request.env.company
-        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
-            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
-        else:
-            currency = None
-
         if 'pid' in params:
             partner = self._get_parent(params['pid'])
         elif 'vat' in params and isinstance(params['vat'], str) and 9 < len(params['vat']) < 14:
@@ -732,10 +725,22 @@ class PayloxSystemController(Controller):
                 partner = None
         elif company.payment_page_flow == 'dynamic':
             partner = request.website.user_id.partner_id.sudo()
-        else:
+
+        if not partner:
             partner = self._get_partner()
 
+        if not kwargs.get('values', {}).get('no_redirect'):
+            redirect = self._check_redirect(partner)
+            if redirect:
+                return redirect
+
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
+        else:
+            currency = None
+
         self._del()
+        self._set('partner', partner.id)
 
         values = self._prepare(partner=partner, company=company, currency=currency)
         values.update({
