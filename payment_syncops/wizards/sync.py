@@ -75,7 +75,7 @@ class SyncopsSyncWizard(models.TransientModel):
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
         elif self.type == 'item':
-            self.env.cr.execute(f'UPDATE res_company SET syncops_sync_item_subtype="{self.type_item_subtype}" WHERE id={self.env.company.id}')
+            self.env.cr.execute(f"UPDATE res_company SET syncops_sync_item_subtype='{self.type_item_subtype}' WHERE id={self.env.company.id}")
             if self.type_item_subtype == 'balance':
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
