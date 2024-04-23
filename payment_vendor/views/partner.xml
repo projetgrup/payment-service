@@ -28,6 +28,7 @@
         <xpath expr='//field[@name="email"]' position="after">
             <field name="campaign_id" string="Campaign" optional="show"/>
             <field name="is_portal" string="Authorized"/>
+            <field name="is_contactless" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="user_id" optional="hide"/>
@@ -37,6 +38,7 @@
         <xpath expr='//tree' position="inside">
             <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link" groups="payment_jetcheckout_system.group_show_payment_link"/>
             <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card" attrs="{'invisible': [('is_portal', '=', False)]}"/>
+            <button name="action_redirect_contactless_payment_page" type="object" string="Contactless Payment" icon="fa-clone" attrs="{'invisible': [('is_contactless', '=', False)]}"/>
         </xpath>
     </field>
     </record>
