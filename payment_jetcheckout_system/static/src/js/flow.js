@@ -127,7 +127,9 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         await new Promise(resolve => setTimeout(resolve, time));
     },
 
-    _queryPartnerPostprocess: function(partner) {},
+    _queryPartnerPostprocess: function(partner) {
+        $('.payment-page span[name=partner]').text(partner.name || '-');
+    },
 
     _queryPartnerNew: async function() {
         await this._onPause(500);
@@ -179,7 +181,6 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.partner.value = partner.id;
             this.vat.value = this.wizard.vat.value;
             this.wizard.partner.html = partner.name || '-';
-            $('.payment-system span[name=partner]').text(partner.name || '-');
             this._queryPartnerPostprocess(partner);
 
             this.wizard.vat.$.removeClass('border-danger');
@@ -244,7 +245,6 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.partner.value = partner.id;
             this.vat.value = this.wizard.register.vat.value;
             this.wizard.partner.html = partner.name || '-';
-            $('.payment-system span[name=partner]').text(partner.name || '-');
             this._queryPartnerPostprocess(partner);
 
             this.wizard.register.name.$.removeClass('border-danger').siblings('label').removeClass('text-danger');
