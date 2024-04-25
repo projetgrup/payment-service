@@ -22,17 +22,21 @@ systemFlow.dynamic.include({
         this._super(partner);
         if (window.location.pathname.startsWith('/my/product')) {
             if (partner.categ_ids.length) {
-                $('.payment-product [field="product.categ"]').each((i, e) => {
-                    if (!partner.categ_ids.includes(Number(e.value))) {
-                        e.parentNode.remove();
-                    }
-                });
-                $('.payment-product [field="product.items"]').each((i, e) => {
-                    if (!partner.categ_ids.includes(Number(e.dataset.categ))) {
-                        e.remove();
-                    }
-                });
-                $('.payment-product [field="product.categ"]')[0].click();
+                const $categs = $('.payment-product [field="product.categ"]');
+                if ($categs.length) {
+                    $categs.each((i, e) => {
+                        if (!partner.categ_ids.includes(Number(e.value))) {
+                            e.parentNode.remove();
+                        }
+                    });
+                    const $items = $('.payment-product [field="product.items"]');
+                    $items.each((i, e) => {
+                        if (!partner.categ_ids.includes(Number(e.dataset.categ))) {
+                            e.remove();
+                        }
+                    });
+                    $categs[0].click();
+                }
             }
         }
     },

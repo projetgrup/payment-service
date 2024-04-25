@@ -182,21 +182,16 @@ class PaymentSystemProductController(SystemController):
     def _prepare_system(self,  company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if company.system_product:
-            if res['partner']['payment_product_categ_ids']:
-                categs = request.env['product.category'].sudo().with_context(system=system).search([
-                    ('system', '!=', False),
-                    ('company_id', '=', company.id),
-                    ('id', 'in', res['partner']['payment_product_categ_ids'].ids)
-                ])
-            else:
-                categs = request.env['product.category'].sudo().with_context(system=system).search([
-                    ('system', '!=', False),
-                    ('company_id', '=', company.id),
-                ])
-            products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
+            domain = [
                 ('system', '!=', False),
-                ('payment_page_ok', '=', True),
                 ('company_id', '=', company.id),
+            ]
+            if res['partner']['payment_product_categ_ids']:
+                domain.append(('id', 'in', res['partner']['payment_product_categ_ids'].ids))
+            categs = request.env['product.category'].sudo().with_context(system=system).search(domain)
+            products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
+                ('payment_page_ok', '=', True),
+                ('categ_id', 'in', categs.ids),
             ])
 
             try:
@@ -247,18 +242,14 @@ class PaymentSystemProductController(SystemController):
         else:
             companies = companies.filtered(lambda x: x.system_product and x.id in user.company_ids.ids)
 
+        domain = [
+            ('system', '!=', False),
+            ('company_id', '=', company.id),
+        ]
         if partner.payment_product_categ_ids:
-            categs = request.env['product.category'].sudo().with_context(system=company.system).search([
-                ('system', '!=', False),
-                ('company_id', '=', company.id),
-                ('id', 'in', partner.payment_product_categ_ids.ids)
-            ])
-        else:
-            categs = request.env['product.category'].sudo().with_context(system=company.system).search([
-                ('system', '!=', False),
-                ('company_id', '=', company.id),
-            ])
+            domain.append(('id', 'in', partner.payment_product_categ_ids.ids))
 
+        categs = request.env['product.category'].sudo().with_context(system=company.system).search(domain)
         products = request.env['product.template'].sudo().with_context(system=company.system).search([
             ('payment_page_ok', '=', True),
             ('categ_id', 'in', categs.ids),

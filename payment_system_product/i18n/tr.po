@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-02 10:27+0000\n"
-"PO-Revision-Date: 2024-04-02 13:28+0300\n"
+"POT-Creation-Date: 2024-04-25 16:49+0000\n"
+"PO-Revision-Date: 2024-04-25 20:09+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -100,6 +100,11 @@ msgstr ""
 "<span>\n"
 "                                            saniye.\n"
 "                                        </span>"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>0</span> gr<br/>added"
+msgstr "<span>0</span> gr<br/>eklendi"
 
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
@@ -393,6 +398,11 @@ msgstr "Hata"
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Favorites"
 msgstr "Favoriler"
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_category__view_type__flex
+msgid "Flex"
+msgstr "Esnek"
 
 #. module: payment_system_product
 #: model:ir.model.fields.selection,name:payment_system_product.selection__product_template__payment_price_method__formula
@@ -849,6 +859,11 @@ msgid "Register"
 msgstr "Kaydol"
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Reset"
+msgstr "Sıfırla"
+
+#. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #, python-format
@@ -1045,10 +1060,20 @@ msgid "Welcome"
 msgstr "Hoşgeldiniz"
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "You can continue payment by entering the quantity or amount"
+msgstr "Tutar veya miktar girerek işlem yapabilirsiniz"
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
 msgid "You must define a product for everything"
 msgstr "Herşey için bir ürün tanımlayabilirsiniz"
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "gr"
+msgstr "gr"
 
 #. module: payment_system_product
 #. openerp-web

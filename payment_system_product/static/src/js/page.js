@@ -111,9 +111,9 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             price: new fields.float({
                 default: 0,
             }),
-            qty: new fields.integer({
+            qty: new fields.float({
                 default: 0,
-                events: [['change', this._onChangeQty]],
+                events: [['change', this._onChangeProductQty]],
             }),
             amount: new fields.float({
                 default: 0,
@@ -163,6 +163,31 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             share: new fields.element({
                 events: [['click', this._onClickShare]],
             }),
+            flex: {
+                amount: new fields.element({
+                    events: [
+                        ['input', this._onInputProductFlexAmount],
+                        ['update', this._onUpdateProductFlexAmount],
+                        //['change', this._onChangeProductFlexAmount],
+                    ],
+                    mask: payloxPage.prototype._maskAmount.bind(this),
+                }),
+                qty: new fields.element({
+                    events: [
+                        ['input', this._onInputProductFlexQty],
+                        ['update', this._onUpdateProductFlexQty],
+                        //['change', this._onChangeProductFlexQty],
+                    ],
+                    mask: this._maskFlexQuantity.bind(this),
+                }),
+                add: new fields.element({
+                    events: [['click', this._onClickFlexAdd]],
+                }),
+                reset: new fields.element({
+                    events: [['click', this._onClickFlexReset]],
+                }),
+                decimal: 10,
+            }
         }
     },
 
@@ -176,6 +201,21 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             this._updateLines();
             this._listenPrices();
         });
+    },
+
+
+    _maskFlexQuantity: function () {
+        return {
+            mask: Number,
+            min: 0,
+            signed: false,
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            scale: 10,
+            radix: this.currency.separator,
+            mapToRadix: [],
+            thousandsSeparator: this.currency.thousand,
+        }
     },
 
     _save: function (values) {
@@ -247,7 +287,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                         if (e.dataset.id in values['products']) {
                             e.value = values['products'][e.dataset.id];
                             e.disabled = true;
-                            this._onChangeQty({ currentTarget: e }, false);
+                            this._onChangeProductQty({ currentTarget: e }, false);
                             categs.add(item.dataset.categ);
                         } else {
                             item.remove();
@@ -287,7 +327,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                     } else if (price < value) {
                         $price.css({ backgroundColor: '#eccfd1' });
                     }
-    
+
                     changed = true;
                     $price.animate({ backgroundColor: '#ffffff' }, 'slow');
                     $price.data('value', price);
@@ -320,6 +360,11 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $amount.data('price', price);
         $amount.data('value', value);
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
+
+        if (this.product.flex.amount.$.data('id') === $price.data('id')) {
+            this.product.flex.amount.value = format.float(value, this.currency.decimal);
+            this.product.flex.amount._.updateValue();
+        }
 
         if (update) {
             this._updateLines();
@@ -395,7 +440,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this._saveOrder({ lines: Object.values(this.lines) });
     },
 
-    _onChangeQty(ev, update=true) {
+    _onChangeProductQty(ev, update=true) {
         if (this.locked) return;
 
         let $qty = $(ev.currentTarget);
@@ -418,6 +463,76 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         }
     },
 
+    _onInputProductFlexAmount(ev) {
+        if (this.locked) return;
+
+        let amount = this.product.flex.amount;
+        let pid = amount.$.data('id');
+
+        let $qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
+        let $price = this.product.price.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.product.amount.$.filter(`.base[data-id=${pid}]`);
+
+        let price = parseFloat($price.data('value'));
+        let qty = price ? amount.value / price : 0;
+
+        this.product.flex.qty.value = format.float(qty, this.product.flex.decimal);
+        this.product.flex.qty._.updateValue();
+
+        $amount.data('value', amount.value);
+        $amount.data('qty', qty);
+        $amount.data('weight', 1);
+        $amount.val(amount.value);
+        $qty.val(qty);
+        $qty.trigger('change');
+
+        this.product.flex.add.$.find('span').text(this.product.flex.qty.$.val());
+    },
+
+    _onUpdateProductFlexAmount() {
+        if (this.locked) return;
+        this.product.flex.amount._.updateValue();
+    },
+
+    _onChangeProductFlexAmount(ev, update=true) {
+        if (this.locked) return;
+    },
+
+    _onInputProductFlexQty(ev) {
+        if (this.locked) return;
+
+        let qty = this.product.flex.qty;
+        let pid = qty.$.data('id');
+
+        let $qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
+        let $price = this.product.price.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.product.amount.$.filter(`.base[data-id=${pid}]`);
+
+        let price = parseFloat($price.data('value'));
+        let amount = qty.value * price;
+
+        this.product.flex.amount.value = format.float(amount, this.currency.decimal);
+        this.product.flex.amount._.updateValue();
+
+        $amount.data('qty', qty.value);
+        $amount.data('value', amount);
+        $amount.data('weight', 1);
+        $amount.val(amount);
+        $qty.val(qty.value);
+        $qty.trigger('change');
+
+        this.product.flex.add.$.find('span').text(this.product.flex.qty.$.val());
+    },
+
+    _onUpdateProductFlexQty() {
+        if (this.locked) return;
+        this.product.flex.qty._.updateValue();
+    },
+
+    _onChangeProductFlexQty(ev, update=true) {
+        if (this.locked) return;
+    },
+
     _onClickItem(ev) {
         if (this.locked) return;
 
@@ -431,7 +546,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         qty.val(1);
         btn.addClass('bg-warning');
 
-        this.product.qty.$.each((i, e) => this._onChangeQty({ currentTarget: e }, false))
+        this.product.qty.$.each((i, e) => this._onChangeProductQty({ currentTarget: e }, false))
         this._updateLines();
     },
 
@@ -565,6 +680,29 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             });
             framework.hideLoading();
         });
+    },
+
+    _onClickFlexAdd(ev) {
+    },
+
+    _onClickFlexReset(ev) {
+        if (this.locked) return;
+
+        let pid = this.product.flex.reset.$.data('id');
+        let $qty = this.product.qty.$.filter(`.base[data-id=${pid}]`);
+        let $amount = this.product.amount.$.filter(`.base[data-id=${pid}]`);
+
+        this.product.flex.amount.value = format.float(0, this.currency.decimal);
+        this.product.flex.qty.value = format.float(0, this.product.flex.decimal);
+        this.product.flex.add.$.find('span').text(0);
+        this.product.flex.amount._.updateValue();
+        this.product.flex.qty._.updateValue();
+
+        $amount.data('qty', 0);
+        $amount.data('value', 0);
+        $amount.val(0);
+        $qty.val(0);
+        $qty.trigger('change');
     },
 
     _onClickPay(ev) {
