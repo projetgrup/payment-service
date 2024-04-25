@@ -52,7 +52,7 @@ class SyncopsSyncWizard(models.TransientModel):
     def confirm(self):
         res = super().confirm()
         params = {'company': self.env.company.sudo().partner_id.ref}
-        if self.type == 'partner':
+        if not self.env.context.get('partner') and self.type == 'partner':
             lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
             if lines == None:
                 raise ValidationError(_('An error occured. Please try again.'))
@@ -75,8 +75,10 @@ class SyncopsSyncWizard(models.TransientModel):
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
         elif self.type == 'item':
-            self.env.cr.execute(f"UPDATE res_company SET syncops_sync_item_subtype='{self.type_item_subtype}' WHERE id={self.env.company.id}")
-            if self.type_item_subtype == 'balance':
+            if not self.env.context.get('partner'):
+                self.env.cr.execute(f"UPDATE res_company SET syncops_sync_item_subtype='{self.type_item_subtype}' WHERE id={self.env.company.id}")
+
+            if not self.env.context.get('partner') and self.type_item_subtype == 'balance':
                 lines = self.env['syncops.connector']._execute('payment_get_partner_list', params=params)
                 if lines == None:
                     lines = []

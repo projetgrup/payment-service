@@ -30,7 +30,6 @@ systemFlow.dynamic.include({
     _queryPartnerPostprocess: function (partner) {
         this._super(partner);
         if (this.system.value === 'vendor') {
-            $('.payment-page span[name=partner]').text(partner.name || '-');
             $('.payment-page span[name=country]').text(Array.isArray(partner.country_id) ? partner.country_id[1] : partner.country_id || '-');
             $('.payment-page span[name=state]').text(Array.isArray(partner.state_id) ? partner.state_id[1].replace(/\s\((.*)\)$/, '') : partner.state_id || '-');
             $('.payment-page span[name=city]').text(partner.city || '-');
