@@ -34,7 +34,10 @@
 }
 
 .payment-page, .o_payment_form {
-    padding-top: 0 !important;
+
+    &.o_connected_user {
+        padding-top: 0 !important;
+    }
 
     &::-webkit-scrollbar {
         width: 10px;
