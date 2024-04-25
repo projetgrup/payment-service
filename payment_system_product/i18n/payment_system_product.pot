@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-02 10:27+0000\n"
-"PO-Revision-Date: 2024-04-02 10:27+0000\n"
+"POT-Creation-Date: 2024-04-25 16:49+0000\n"
+"PO-Revision-Date: 2024-04-25 16:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,11 @@ msgid ""
 "<span>\n"
 "                                            seconds.\n"
 "                                        </span>"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "<span>0</span> gr<br/>added"
 msgstr ""
 
 #. module: payment_system_product
@@ -372,6 +377,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Favorites"
+msgstr ""
+
+#. module: payment_system_product
+#: model:ir.model.fields.selection,name:payment_system_product.selection__product_category__view_type__flex
+msgid "Flex"
 msgstr ""
 
 #. module: payment_system_product
@@ -827,6 +837,11 @@ msgid "Register"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "Reset"
+msgstr ""
+
+#. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/js/page.js:0
 #, python-format
@@ -1023,9 +1038,19 @@ msgid "Welcome"
 msgstr ""
 
 #. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "You can continue payment by entering the quantity or amount"
+msgstr ""
+
+#. module: payment_system_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_product
 #: model_terms:ir.actions.act_window,help:payment_system_product.action_product_variant
 msgid "You must define a product for everything"
+msgstr ""
+
+#. module: payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
+msgid "gr"
 msgstr ""
 
 #. module: payment_system_product

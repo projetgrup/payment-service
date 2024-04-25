@@ -294,6 +294,7 @@ class ProductCategory(models.Model):
     view_type = fields.Selection(selection=[
         ('list', 'List'),
         ('card', 'Card'),
+        ('flex', 'Flex'),
         ('table', 'Table'),
     ])
     system = fields.Selection(selection=[], readonly=True)

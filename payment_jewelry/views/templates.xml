@@ -44,6 +44,7 @@
 
     <template id="page_payment" name="Jewelry Payment Page">
         <t t-call="payment_system_product.page_payment">
+            <t t-set="currency" t-value="company.currency_id"/>
             <t t-set="options" t-value="{'listen_price_active': True, 'save_order_active': True}"/>
             <t t-set="header_details">
                 <table class="m-0 table w-auto">
