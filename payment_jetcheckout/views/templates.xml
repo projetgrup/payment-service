@@ -378,7 +378,7 @@
                             </div>
                             <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                         </div>
-                        <div class="d-none installment-row overflow-auto flex-fill" t-att-data-type="installment_type" field="installment.row"/>
+                        <div class="d-none installment-row overflow-auto flex-fill" t-att-data-type="installment_type or 'i'" field="installment.row"/>
                         <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
                             <i class="fa fa-info-circle mb-3" t-translation="off"></i><br/>Appliable installment options will be displayed here after you enter your credit card number
                         </div>
