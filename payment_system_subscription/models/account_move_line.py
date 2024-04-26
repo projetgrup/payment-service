@@ -27,7 +27,6 @@ class AccountMoveLine(models.Model):
     payment_subscription_mrr = fields.Monetary(
         string='Monthly Recurring Revenue',
         compute='_compute_mrr',
-        store=True,
         help='The MRR is computed by dividing the signed amount (in company currency) by the '
         'amount of time between the start and end dates converted in months.\nThis allows '
         'comparison of invoice lines created by subscriptions with different temporalities.\n'
