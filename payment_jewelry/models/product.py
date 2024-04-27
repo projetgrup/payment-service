@@ -11,7 +11,7 @@ class PaymentProduct(models.AbstractModel):
     def show_buttons(self):
         if self.env.company.system == 'jewelry':
             return {
-                'show_update_price_button': self.env['syncops.connector'].sudo().count('product_get_products')
+                'show_update_price_button': self.env['syncops.connector'].sudo().count('product_get_prices')
             }
         return super().show_buttons()
 
@@ -19,7 +19,7 @@ class PaymentProduct(models.AbstractModel):
     def update_price(self):
         company = self.env.company
         if company.system == 'jewelry':
-            prices, message = self.env['syncops.connector'].sudo()._execute('product_get_products', company=company, message=True)
+            prices, message = self.env['syncops.connector'].sudo()._execute('product_get_prices', company=company, message=True)
             if prices is None:
                 return {'error': _('An error occured:\n%s') % message}
 
@@ -57,4 +57,7 @@ class ProductAttribute(models.Model):
     _inherit = 'product.attribute'
 
     system = fields.Selection(selection_add=[('jewelry', 'Jewelry Payment System')])
-    payment_type = fields.Selection(selection_add=[('weight', 'Weight')])
+    payment_type = fields.Selection(selection_add=[
+        ('weight', 'Weight'),
+        ('purity', 'Purity'),
+    ])

@@ -172,6 +172,7 @@ class ProductTemplate(models.Model):
                 'currency': variant.currency_id,
                 'code': variant.default_code or '-',
             }
+
         return result
 
     def toggle_payment_page(self):
