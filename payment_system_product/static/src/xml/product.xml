@@ -4,5 +4,8 @@
         <button t-if="show_update_price_button" type="button" class="btn btn-secondary o_button_update_price">
             Update Prices
         </button>
+        <button t-if="show_update_product_button" type="button" class="btn btn-secondary o_button_update_product">
+            Update Products
+        </button>
     </t>
 </templates>
