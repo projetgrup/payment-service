@@ -136,6 +136,7 @@ class PayloxSystemController(Controller):
         tags = partner._get_tags()
         websites = request.website._get_companies()
         companies = partner._get_companies().filtered(lambda x: x.id in websites.ids)
+        language = request.env['res.lang']._lang_get(request.env.lang)
 
         if options.get('no_compute_payment_tags'):
             payments, payment_tags = False, False
@@ -160,6 +161,7 @@ class PayloxSystemController(Controller):
             'acquirer': acquirer,
             'campaign': campaign,
             'payments': payments,
+            'language': language,
             'payment_tags': payment_tags,
             'card_family': card_family,
             'success_url': '/payment/card/success',
