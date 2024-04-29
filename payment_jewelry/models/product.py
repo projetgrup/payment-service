@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from types import SimpleNamespace
-
-from psycopg2 import DateFromTicks
 from odoo import models, fields, api, _
-
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class PaymentProduct(models.AbstractModel):
