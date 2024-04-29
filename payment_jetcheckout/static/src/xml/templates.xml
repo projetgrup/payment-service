@@ -131,7 +131,7 @@
                 </div>
             </t>
         </main>
-        <main t-else="" class="text-center h2">
+        <main t-else="" class="text-center h2 p-4 text-muted">
             No installment table found
         </main>
     </t>

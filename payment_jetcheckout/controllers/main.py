@@ -232,6 +232,7 @@ class PayloxController(http.Controller):
         partner_contact = partner if partner.parent_id else False
         installment_type = self._get_type()
 
+        language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner, transaction=transaction)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
@@ -247,6 +248,7 @@ class PayloxController(http.Controller):
             'company': company,
             'campaign': campaign,
             'user': user,
+            'language': language,
             'currency': currency,
             'currencies': currencies,
             'card_family': card_family,

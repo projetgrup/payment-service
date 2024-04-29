@@ -14,6 +14,7 @@ const View = (view, controller) => {
             Controller: controller.extend({
                 events: _.extend({
                     'click .o_button_update_price': '_onClickUpdatePrice',
+                    'click .o_button_update_product': '_onClickUpdateProduct',
                 }, controller.prototype.events),
 
                 willStart: function() {
@@ -21,8 +22,9 @@ const View = (view, controller) => {
                         model: 'payment.product',
                         method: 'show_buttons',
                         args: [],
-                    }).then(({ show_update_price_button }) => {
+                    }).then(({ show_update_price_button, show_update_product_button }) => {
                         this.show_update_price_button = show_update_price_button;
+                        this.show_update_product_button = show_update_product_button;
                     }).guardedCatch((error) => {
                         console.error(error);
                     });
@@ -33,6 +35,7 @@ const View = (view, controller) => {
                     this._super.apply(this, arguments);
                     let $buttons = $(qweb.render('Payment.Product.Buttons', {
                         show_update_price_button: this.show_update_price_button,
+                        show_update_product_button: this.show_update_product_button,
                     }));
                     if (this.$buttons) {
                         let $export = this.$buttons.find('.o_list_export_xlsx');
@@ -63,6 +66,35 @@ const View = (view, controller) => {
                                 type: 'info',
                                 title: _t('Success'),
                                 message: _t('Prices have been updated.'),
+                            });
+                            this.reload();
+                        }
+                    }).guardedCatch((error) => {
+                        this.displayNotification({
+                            type: 'danger',
+                            title: _t('Error'),
+                            message: _t('An error occured.'),
+                        });
+                    });
+                },
+
+                _onClickUpdateProduct: function () {
+                    this._rpc({
+                        model: 'payment.product',
+                        method: 'update_product',
+                        args: [],
+                    }).then((res) => {
+                        if (res.error) {
+                            this.displayNotification({
+                                type: 'danger',
+                                title: _t('Error'),
+                                message: _t('An error occured.'),
+                            });
+                        } else {
+                            this.displayNotification({
+                                type: 'info',
+                                title: _t('Success'),
+                                message: _t('Products have been updated.'),
                             });
                             this.reload();
                         }

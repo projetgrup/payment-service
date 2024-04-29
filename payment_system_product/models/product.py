@@ -26,6 +26,10 @@ class PaymentProduct(models.AbstractModel):
         return False
 
     @api.model
+    def update_product(self):
+        return False
+
+    @api.model
     def get_price(self, products):
         company = self.env.company
         products = products.filtered(lambda p: p.company_id.id == company.id and p.system == company.system)
@@ -172,6 +176,7 @@ class ProductTemplate(models.Model):
                 'currency': variant.currency_id,
                 'code': variant.default_code or '-',
             }
+
         return result
 
     def toggle_payment_page(self):
@@ -194,6 +199,9 @@ class ProductProduct(models.Model):
                 product.payment_price_method_result = 0
 
     price_dynamic = fields.Float('Price Dynamic', digits='Product Price')
+    payment_name = fields.Char()
+    payment_pid = fields.Integer()
+    payment_page_ok = fields.Boolean()
     payment_price_method_product_id = fields.Many2one('product.template')
     payment_price_method_formula = fields.Char()
     payment_price_method_result = fields.Monetary(compute='_compute_payment_price_method_result')
@@ -368,6 +376,7 @@ class ProductAttribute(models.Model):
             res['system'] = system
             res['company_id'] = company.id
             res['payment_type'] = 'other'
+            res['create_variant'] = 'dynamic'
         return res
 
     @api.onchange('payment_type')
