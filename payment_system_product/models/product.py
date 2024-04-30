@@ -122,9 +122,9 @@ class ProductTemplate(models.Model):
         if system:
             res['system'] = system
             res['company_id'] = company.id
-            res['sale_ok'] = False
+            res['sale_ok'] = True
             res['purchase_ok'] = False
-            res['detailed_type'] = 'service'
+            res['detailed_type'] = 'consu'
         return res
 
     @api.model
