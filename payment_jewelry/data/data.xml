@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--<data noupdate="1">
-    </data>-->
-
     <data>
         <record id="mail_policy" model="mail.template">
             <field name="name">Jewelry: PoS Policy Email</field>
