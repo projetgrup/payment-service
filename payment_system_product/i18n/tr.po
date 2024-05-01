@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-25 16:49+0000\n"
-"PO-Revision-Date: 2024-04-25 20:09+0300\n"
+"POT-Creation-Date: 2024-05-01 18:40+0000\n"
+"PO-Revision-Date: 2024-05-01 21:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -110,11 +110,6 @@ msgstr "<span>0</span> gr<br/>eklendi"
 #: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
 msgid "<span>Email</span>"
 msgstr "<span>Eposta</span>"
-
-#. module: payment_system_product
-#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
-msgid "<span>Gram</span>"
-msgstr "<span>Gram</span>"
 
 #. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
@@ -420,11 +415,6 @@ msgid "Go Back"
 msgstr "Geri Dön"
 
 #. module: payment_system_product
-#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
-msgid "Gram"
-msgstr "Gram"
-
-#. module: payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_product
 #: model_terms:ir.ui.view,arch_db:payment_system_product.search_product_template
 msgid "Groupby"
@@ -598,10 +588,20 @@ msgid "Payment Color Foreground"
 msgstr "Ödeme Yazı Rengi"
 
 #. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_name
+msgid "Payment Name"
+msgstr "Ödeme Ürün Adı"
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_page_ok
 #: model:ir.model.fields,field_description:payment_system_product.field_product_template__payment_page_ok
 msgid "Payment Page Ok"
 msgstr "Ödeme Sayfası"
+
+#. module: payment_system_product
+#: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_pid
+msgid "Payment Pid"
+msgstr "Ödeme Ürün No"
 
 #. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_product_product__payment_price_flow
@@ -848,6 +848,13 @@ msgid "Products"
 msgstr "Ürünler"
 
 #. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/js/product.js:0
+#, python-format
+msgid "Products have been updated."
+msgstr "Ürünler güncellendi."
+
+#. module: payment_system_product
 #: model:ir.model.fields,field_description:payment_system_product.field_payment_transaction_product__quantity
 #: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
 msgid "Quantity"
@@ -1005,16 +1012,18 @@ msgid "Type a product name..."
 msgstr "Type a ürün name..."
 
 #. module: payment_system_product
-#: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
-msgid "Unit(s)"
-msgstr "Birim"
-
-#. module: payment_system_product
 #. openerp-web
 #: code:addons/payment_system_product/static/src/xml/product.xml:0
 #, python-format
 msgid "Update Prices"
 msgstr "Fiyatları Güncelle"
+
+#. module: payment_system_product
+#. openerp-web
+#: code:addons/payment_system_product/static/src/xml/product.xml:0
+#, python-format
+msgid "Update Products"
+msgstr "Ürünleri Güncelle"
 
 #. module: payment_system_product
 #. openerp-web
@@ -1086,6 +1095,15 @@ msgstr "gr)"
 #: model_terms:ir.ui.view,arch_db:payment_system_product.page_payment
 msgid "included"
 msgstr "dahil"
+
+#~ msgid "<span>Gram</span>"
+#~ msgstr "<span>Gram</span>"
+
+#~ msgid "Gram"
+#~ msgstr "Gram"
+
+#~ msgid "Unit(s)"
+#~ msgstr "Birim"
 
 #, python-format
 #~ msgid "Payment link is ready"
