@@ -250,13 +250,15 @@
                     <div field="wizard.page.overlay"/>
                 </t>
                 <div class="d-flex">
-                    <t t-call="payment_jetcheckout.payment_sidebar">
-                        <t t-set="page" t-value="'payment'"/>
-                        <t t-set="size" t-value="'xl'"/>
-                        <t t-set="no_payment_icons" t-value="True"/>
-                        <t t-set="no_card_preview" t-value="True"/>
-                        <t t-call="payment_jetcheckout_system.payment_contact"/>
-                        <t t-set="labels"/>
+                    <t t-if="not no_sidebar">
+                        <t t-call="payment_jetcheckout.payment_sidebar">
+                            <t t-set="page" t-value="'payment'"/>
+                            <t t-set="size" t-value="'xl'"/>
+                            <t t-set="no_payment_icons" t-value="True"/>
+                            <t t-set="no_card_preview" t-value="True"/>
+                            <t t-call="payment_jetcheckout_system.payment_contact"/>
+                            <t t-set="labels"/>
+                        </t>
                     </t>
                     <div class="mx-0 my-4 card border shadow payment-product-container">
                         <div class="payment-product-items">
@@ -265,7 +267,7 @@
                                     <t t-set="i" t-value="0"/>
                                     <t t-set="categ_id" t-value="0"/>
                                     <t t-foreach="categs" t-as="categ">
-                                        <t t-if ="not categ_id" t-set="categ_id" t-value="categ.id"/>
+                                        <t t-if="not categ_id" t-set="categ_id" t-value="categ.id"/>
                                         <div>
                                             <input type="radio" name="categ" t-att-id="'categ_%s' % i" t-att-value="categ.id" t-att-checked="'true' if not i else None" field="product.categ"/>
                                             <label t-att-for="'categ_%s' % i" class="btn" t-esc="categ.name"/>
