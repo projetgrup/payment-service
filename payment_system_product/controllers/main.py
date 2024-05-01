@@ -187,7 +187,7 @@ class PaymentSystemProductController(SystemController):
                 ('company_id', '=', company.id),
                 ('payment_page_ok', '=', True),
             ])
-            categs = products.mapped('categ_id')
+            categs = products.mapped('categ_id').sorted(lambda c: (c.sequence, c.id))
             if res['partner']['payment_product_categ_ids']:
                 categs = categs.filtered(lambda c: c.id in res['partner']['payment_product_categ_ids'].ids)
 
