@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import re
 from odoo import models, fields, api, _
 
-import logging
-_logger = logging.getLogger(__name__)
 
 class PaymentProduct(models.AbstractModel):
     _inherit = 'payment.product'
@@ -57,7 +56,8 @@ class PaymentProduct(models.AbstractModel):
                 return str(w)
 
             def _provider(p):
-                return p.title()
+                p = p.title()
+                return re.sub(r'[^a-zA-Z\s]+', '', p)
 
             def _purity(p):
                 return str(p)
@@ -431,18 +431,6 @@ class PaymentProduct(models.AbstractModel):
                                             {'attribute_id': purities_id.id, 'value_ids': [(4, purity.id)]}
                                         )],
                                     })
-                                    _logger.error('g/s')
-                                    _logger.error({
-                                        'attribute_line_ids': [(
-                                            attribute_purity_id and 1 or 0, attribute_purity_id.id or 0,
-                                            {'attribute_id': purities_id.id, 'value_ids': [(4, purity.id)]}
-                                        )],
-                                    })
-                                    _logger.error('----')
-                                    _logger.error(bars.id)
-                                    _logger.error(bars.name)
-                                    _logger.error(prod['purity'])
-                                    _logger.error(attribute_purity_id.mapped('value_ids.name'))
                                 
                                 attributes['purity'][prod['purity']] = purity.id
                                 attribute_value_ids[2] = purity.id
@@ -460,17 +448,8 @@ class PaymentProduct(models.AbstractModel):
                     values['product_template_attribute_value_ids'] = [(6, 0, attribute_values.ids)]
 
                     if product:
-                        _logger.error('1')
-                        _logger.error(template.id)
-                        _logger.error(attribute_value_ids)
-                        _logger.error(values)
                         product.write(values)
                     else:
-                        _logger.error('2')
-                        _logger.error(template.id)
-                        _logger.error(template.name)
-                        _logger.error(attribute_value_ids)
-                        _logger.error(values)
                         products.create({
                             'product_tmpl_id': template.id,
                             'default_code': prod['code'],
@@ -484,9 +463,14 @@ class PaymentProduct(models.AbstractModel):
                         'default_code': prod['code'],
                         'weight': float(prod['weight']),
                     }
+                    if prod['metal'] == 'Gold':
+                        values['payment_price_method_product_id'] = base_gold.id
+                        values['payment_price_method_formula'] = 'x*%s' % prod.get('base', '1')
+                    elif prod['metal'] == 'Silver':
+                        values['payment_price_method_product_id'] = base_silver.id
+                        values['payment_price_method_formula'] = 'x*%s' % prod.get('base', '1')
+
                     if product:
-                        _logger.error('3')
-                        _logger.error(values)
                         product.write(values)
                     else:
                         template = products_all.filtered(lambda p: p.default_code == prod['code'])
@@ -503,8 +487,6 @@ class PaymentProduct(models.AbstractModel):
                             ('product_attribute_value_id', 'in', attribute_value_ids),
                         ])
                         values['product_template_attribute_value_ids'] = [(6, 0, attribute_values.ids)]
-                        _logger.error('4')
-                        _logger.error(values)
                         products.create({
                             'product_tmpl_id': template.id,
                             'name': prod['name'],
@@ -519,6 +501,65 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     system = fields.Selection(selection_add=[('jewelry', 'Jewelry Payment System')])
+
+    def get_payment_attribute(self, type=None):
+        if self.env.company.system == 'jewelry':
+            if type == 'brand':
+                attributes = self.product_variant_ids.mapped('product_template_attribute_value_ids')
+
+            lines = self.attribute_line_ids.filtered(lambda x: x.attribute_id.payment_type == type)
+            result = []
+            for line in lines:
+                for value in line.value_ids:
+                    if type == 'brand':
+                        if attributes.filtered(lambda a: a.product_attribute_value_id.id == value.id).exists():
+                            result.append({
+                                'id': value.id,
+                                'name': value.name,
+                                'color': value.color,
+                                'image': value.image_128 and value.image_128.decode('utf-8') or False,
+                            })
+            if not result:
+                result.append({
+                    'id': 0,
+                    'name': '',
+                    'color': '',
+                    'image': False,
+                })
+            return result
+        return super().get_payment_attribute(type=type)
+
+    def get_payment_variants(self, types=None):
+        if self.env.company.system == 'jewelry':
+            result = {'': []}
+            for variant in self.product_variant_ids:
+                brand, weight, purity = '', 0, 0
+
+                values = variant.product_template_attribute_value_ids.mapped('product_attribute_value_id')
+                for value in values:
+                    if value.attribute_id.payment_type == 'brand':
+                        brand = value.id
+                        if brand not in result:
+                            result[brand] = []
+                    elif value.attribute_id.payment_type == 'weight':
+                        weight = value.name
+                    elif value.attribute_id.payment_type == 'purity':
+                        purity = value.name
+
+                result[brand].append({
+                    'id': variant.id,
+                    'name': variant.name,
+                    'price': variant.price or 0,
+                    'currency': variant.currency_id,
+                    'code': variant.default_code or '-',
+                    'weight': weight or 0,
+                    'purity': str(float(purity or 0))[1:],
+                })
+    
+            for key, val in result.items():
+                val.sort(key=lambda k: k['weight'])
+            return result
+        return super().get_payment_variants(types=types)
 
 
 class ProductCategory(models.Model):
