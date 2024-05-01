@@ -275,7 +275,7 @@ class PaymentProduct(models.AbstractModel):
                     'name': 'Base Silver',
                     'default_code': 'XAGTRY',
                     'categ_id': categ_base_silver.id,
-                    'payment_page_ok': True,
+                    'payment_page_ok': False,
                     'payment_price_flow': True,
                     'payment_price_method': 'constant',
                     'payment_color_foreground': '#000000',
@@ -557,7 +557,7 @@ class ProductTemplate(models.Model):
                 })
     
             for key, val in result.items():
-                val.sort(key=lambda k: k['weight'])
+                val.sort(key=lambda k: float(k['weight']))
             return result
         return super().get_payment_variants(types=types)
 
