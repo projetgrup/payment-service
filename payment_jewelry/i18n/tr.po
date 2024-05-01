@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-14 16:17+0000\n"
-"PO-Revision-Date: 2024-02-14 19:21+0300\n"
+"POT-Creation-Date: 2024-05-01 18:40+0000\n"
+"PO-Revision-Date: 2024-05-01 21:45+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -38,20 +38,22 @@ msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
 msgstr "<i class=\"fa fa-link mr-2\"/>Ödeme Linki"
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
 msgid ""
-"<span class=\"mb8\">\n"
-"                                        The price has been locked for\n"
-"                                    </span>"
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '!=', False)]}\">off</span>"
 msgstr ""
-"<span class=\"mb8\">\n"
-"                                        Seçili ürünlerde fiyatlar\n"
-"                                    </span>"
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '!=', False)]}\">kapalı</span>"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "<span class=\"ml4\">Second(s)</span>"
-msgstr "<span class=\"ml4\">Saniye</span>"
+msgid ""
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '=', False)]}\">Second(s)</span>"
+msgstr ""
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '=', False)]}\">Saniye</span>"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
@@ -66,19 +68,8 @@ msgstr ""
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid ""
-"<span>\n"
-"                                        seconds.\n"
-"                                    </span>"
-msgstr ""
-"<span>\n"
-"                                        saniye boyunca sabitlenmiştir.\n"
-"                                    </span>"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "<span>Gram</span>"
-msgstr "<span>Gram</span>"
+msgid "<span>0</span> gr<br/>added"
+msgstr "<span>0</span> gr<br/>ekledi"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
@@ -272,11 +263,6 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Amount to Pay"
-msgstr "Ödenecek Tutar"
-
-#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
@@ -285,12 +271,28 @@ msgid "An error occured."
 msgstr "Bir hata meydana geldi."
 
 #. module: payment_jewelry
+#: code:addons/payment_jewelry/controllers/main.py:0
+#, python-format
+msgid "An error occured. Please contact with system administrator."
+msgstr "Bir hata meydana geldi. Lütfen sistem yöneticisi ile irtibata geçiniz."
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #, python-format
 msgid "An error occured. Please contact with your system administrator."
 msgstr "Bir hata meydana geldi. Lütfen sistem yöneticisi ile irtibata geçiniz."
+
+#. module: payment_jewelry
+#: code:addons/payment_jewelry/models/product.py:0
+#, python-format
+msgid ""
+"An error occured:\n"
+"%s"
+msgstr ""
+"Bir hata meydana geldi.\n"
+"%s"
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_attribute
@@ -427,6 +429,16 @@ msgid "Dashboard"
 msgstr "Panel"
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Define agreements to facilitate receiving payments"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Define products to facilitate receiving payments"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_mail
 msgid "Email Settings"
 msgstr "Eposta Ayarları"
@@ -448,11 +460,6 @@ msgstr "Hata"
 #: model:ir.ui.menu,name:payment_jewelry.menu_main
 msgid "GPS"
 msgstr "APS"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Go Back"
-msgstr "Geri Dön"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -485,25 +492,7 @@ msgstr "Mücevherat"
 #: model:ir.module.category,description:payment_jewelry.module_category_jewelry
 #: model:ir.module.category,name:payment_jewelry.module_category_jewelry
 msgid "Jewelry Payment System"
-msgstr "Mücevherat Ödeme Sistemi "
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_ok
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_ok
-msgid "Jewelry Payment Validity"
-msgstr "Mücevherat Ödeme Geçerliliği"
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_time
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_time
-msgid "Jewelry Payment Validity Time"
-msgstr "Mücevherat Ödeme Geçerlilik Süresi"
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system_jewelry_price_margin
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_users__system_jewelry_price_margin
-msgid "Jewelry Price Margin"
-msgstr "Mücevherat Fiyat Marjı"
+msgstr "Mücevherat Ödeme Sistemi"
 
 #. module: payment_jewelry
 #: model:mail.template,name:payment_jewelry.mail_policy
@@ -553,16 +542,6 @@ msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Order Details"
-msgstr "Sipariş Detayları"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Order Net Amount"
-msgstr "Sipariş Net Tutarı"
-
-#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_sale_order
 msgid "Orders"
 msgstr "Siparişler"
@@ -570,7 +549,6 @@ msgstr "Siparişler"
 #. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 #, python-format
 msgid "Pay Now"
 msgstr "Hemen Öde"
@@ -596,7 +574,6 @@ msgid "Payment Page"
 msgstr "Ödeme Sayfası"
 
 #. module: payment_jewelry
-#: model:ir.model,name:payment_jewelry.model_payment_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_acquirers
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
@@ -633,12 +610,6 @@ msgid "Please check your VAT number and try again."
 msgstr "Lütfen vergi kimlik numaranızı kontrol edin ve tekrar deneyin."
 
 #. module: payment_jewelry
-#: code:addons/payment_jewelry/controllers/main.py:0
-#, python-format
-msgid "Please specify an email address before proceeding."
-msgstr "Devam etmeden önce lütfen eposta adresi belirtiniz."
-
-#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #, python-format
@@ -649,11 +620,6 @@ msgstr "Poliçe başarıyla gönderildi."
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Price"
 msgstr "Fiyat"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
-msgid "Price Margin"
-msgstr "Fiyat Marjı"
 
 #. module: payment_jewelry
 #. openerp-web
@@ -689,8 +655,15 @@ msgstr "Ürün Şablonu"
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_product
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_template
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid "Products"
 msgstr "Ürünler"
+
+#. module: payment_jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_attribute__payment_type__purity
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Purity"
+msgstr "Saflık"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -698,11 +671,21 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Reset"
+msgstr "Sıfırla"
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #, python-format
 msgid "Restart Payment"
 msgstr "Yeniden Başlat"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "SKU:"
+msgstr "SKU:"
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_sms_provider
@@ -735,20 +718,10 @@ msgid "Search"
 msgstr "Ara"
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Service Fee"
-msgstr "Hizmet Bedeli"
-
-#. module: payment_jewelry
 #: model:ir.actions.act_window,name:payment_jewelry.action_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_settings
 msgid "Settings"
 msgstr "Ayarlar"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "Show a countdown and lock the price during payment."
-msgstr "Ödeme süresince bir sayaç gösterin ve fiyatları sabitleyin."
 
 #. module: payment_jewelry
 #. openerp-web
@@ -795,9 +768,14 @@ msgid "Tags..."
 msgstr "Etiketler..."
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "Time"
-msgstr "Süre"
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Taxes:"
+msgstr "Vergiler:"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Total"
+msgstr "Toplam"
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_transaction
@@ -817,11 +795,6 @@ msgid ""
 msgstr ""
 "<strong>Vergi kimlik numaranızı</strong> giriniz ve <strong>Ara</strong> "
 "butonuna tıklayınız"
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Unit(s)"
-msgstr "Adet"
 
 #. module: payment_jewelry
 #. openerp-web
@@ -890,9 +863,19 @@ msgid "Welcome"
 msgstr "Hoşgeldiniz"
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "You can continue payment by entering the quantity or amount"
+msgstr "Tutar veya miktar girerek işlem yapabilirsiniz"
+
+#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid "ZIP"
 msgstr "Posta Kodu"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "gr"
+msgstr "gr"
 
 #. module: payment_jewelry
 #. openerp-web
@@ -900,6 +883,11 @@ msgstr "Posta Kodu"
 #, python-format
 msgid "gr)"
 msgstr "gr)"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "included"
+msgstr "dahil"
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_syncops_connector
@@ -910,6 +898,70 @@ msgstr "syncOPS Entegrasyonu"
 #: model:mail.template,subject:payment_jewelry.mail_policy
 msgid "{{ ctx['company'].name }} | PoS Policy"
 msgstr "{{ ctx['company'].name }} | PoS Poliçeniz"
+
+#~ msgid ""
+#~ "<span class=\"mb8\">\n"
+#~ "                                        The price has been locked for\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span class=\"mb8\">\n"
+#~ "                                        Seçili ürünlerde fiyatlar\n"
+#~ "                                    </span>"
+
+#~ msgid "<span class=\"ml4\">Second(s)</span>"
+#~ msgstr "<span class=\"ml4\">Saniye</span>"
+
+#~ msgid ""
+#~ "<span>\n"
+#~ "                                        seconds.\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span>\n"
+#~ "                                        saniye boyunca sabitlenmiştir.\n"
+#~ "                                    </span>"
+
+#~ msgid "<span>Gram</span>"
+#~ msgstr "<span>Gram</span>"
+
+#~ msgid "Amount to Pay"
+#~ msgstr "Ödenecek Tutar"
+
+#~ msgid "Go Back"
+#~ msgstr "Geri Dön"
+
+#~ msgid "Jewelry Payment Validity"
+#~ msgstr "Mücevherat Ödeme Geçerliliği"
+
+#~ msgid "Jewelry Payment Validity Time"
+#~ msgstr "Mücevherat Ödeme Geçerlilik Süresi"
+
+#~ msgid "Jewelry Price Margin"
+#~ msgstr "Mücevherat Fiyat Marjı"
+
+#~ msgid "Order Details"
+#~ msgstr "Sipariş Detayları"
+
+#~ msgid "Order Net Amount"
+#~ msgstr "Sipariş Net Tutarı"
+
+#, python-format
+#~ msgid "Please specify an email address before proceeding."
+#~ msgstr "Devam etmeden önce lütfen eposta adresi belirtiniz."
+
+#~ msgid "Price Margin"
+#~ msgstr "Fiyat Marjı"
+
+#~ msgid "Service Fee"
+#~ msgstr "Hizmet Bedeli"
+
+#~ msgid "Show a countdown and lock the price during payment."
+#~ msgstr "Ödeme süresince bir sayaç gösterin ve fiyatları sabitleyin."
+
+#~ msgid "Time"
+#~ msgstr "Süre"
+
+#~ msgid "Unit(s)"
+#~ msgstr "Adet"
 
 #~ msgid "No setting found"
 #~ msgstr "Bir ayar bulunamadı"
