@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-01 18:40+0000\n"
-"PO-Revision-Date: 2024-05-01 21:45+0300\n"
+"PO-Revision-Date: 2024-05-01 22:03+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -69,7 +69,7 @@ msgstr ""
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "<span>0</span> gr<br/>added"
-msgstr "<span>0</span> gr<br/>ekledi"
+msgstr "<span>0</span> gr<br/>eklendi"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter

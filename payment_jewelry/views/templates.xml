@@ -179,7 +179,7 @@
                                                                 <input class="base font-weight-bold" type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" t-att-data-brand="b['id']" field="product.qty"/>
                                                             </div>
                                                             <div class="payment-product-items-cell">
-                                                                <span class="base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="w['name'].replace(',','.')" t-att-data-product="product['id']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+                                                                <span class="base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight'].replace(',','.')" t-att-data-product="product['id']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
                                                             </div>
                                                         </t>
                                                     </t>
@@ -205,7 +205,7 @@
                                         </div>
                                         <div class="d-none">
                                             <input class="base" type="hidden" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                            <span class="d-none base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="w['name'].replace(',','.')" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+                                            <span class="d-none base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight'].replace(',','.')" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
                                         </div>
                                     </div>
                                 </div>
@@ -229,9 +229,9 @@
                                         <div class="payment-product-items-qty">
                                             <div class="h2 font-weight-500">Price</div>
                                             <span class="base h1" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                            <button class="btn px-5 py-1 my-3 font-weight-500" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="w['name'].replace(',','.')" t-att-data-product="product['id']" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};" field="product.flex.add"><span>0</span> gr<br/>added</button>
+                                            <button class="btn px-5 py-1 my-3 font-weight-500" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};" field="product.flex.add"><span>0</span> gr<br/>added</button>
                                             <button class="btn btn-secondary px-5 py-1 my-3 font-weight-500" t-att-data-id="variant['id']" t-att-data-product="product['id']" field="product.flex.reset">Reset</button>
-                                            <input type="hidden" class="base" value="0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="w['name'].replace(',','.')" t-att-data-product="product['id']" field="product.amount"/>
+                                            <input type="hidden" class="base" value="0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" field="product.amount"/>
                                             <input type="hidden" class="base" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
                                         </div>
                                         <div class="pb-3">
