@@ -182,17 +182,14 @@ class PaymentSystemProductController(SystemController):
     def _prepare_system(self,  company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if company.system_product:
-            domain = [
+            products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
                 ('system', '!=', False),
                 ('company_id', '=', company.id),
-            ]
-            if res['partner']['payment_product_categ_ids']:
-                domain.append(('id', 'in', res['partner']['payment_product_categ_ids'].ids))
-            categs = request.env['product.category'].sudo().with_context(system=system).search(domain)
-            products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([
                 ('payment_page_ok', '=', True),
-                ('categ_id', 'in', categs.ids),
             ])
+            categs = products.mapped('categ_id')
+            if res['partner']['payment_product_categ_ids']:
+                categs = categs.filtered(lambda c: c.id in res['partner']['payment_product_categ_ids'].ids)
 
             try:
                 installment = self._prepare_installment()
