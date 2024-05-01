@@ -7,6 +7,7 @@ import odoo
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 
+
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
     company = env.company
@@ -192,7 +193,9 @@ class ProductProduct(models.Model):
             base = product.payment_price_method_product_id
             formula = product.payment_price_method_formula
             if base and formula:
-                price = base.product_variant_ids[0].price
+                #price = base.product_variant_id.price 
+                price = base.product_variant_id.lst_price
+
                 formula = formula.replace('x', str(price))
                 product.payment_price_method_result = safe_eval(formula)
             else:
@@ -244,7 +247,7 @@ class ProductProduct(models.Model):
             margins = {}
 
         for product in products:
-            margin = (100 + margins.get(product.id, 0)) / 100 if margins else 1
+            margin = (100 + margins.get(product.id, 0)) / 100 if margins else 1                    
             if product.payment_price_flow and product.payment_price_method == 'formula':
                 product.price = product.payment_price_method_result * margin
             elif len(product.product_tmpl_id.product_variant_ids) > 1:
