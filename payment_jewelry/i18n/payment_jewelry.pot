@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-14 16:17+0000\n"
-"PO-Revision-Date: 2024-02-14 16:17+0000\n"
+"POT-Creation-Date: 2024-05-01 18:40+0000\n"
+"PO-Revision-Date: 2024-05-01 18:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,16 +36,17 @@ msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
 msgid ""
-"<span class=\"mb8\">\n"
-"                                        The price has been locked for\n"
-"                                    </span>"
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '!=', False)]}\">off</span>"
 msgstr ""
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "<span class=\"ml4\">Second(s)</span>"
+msgid ""
+"<span class=\"ml4 font-weight-bold\" attrs=\"{'invisible': "
+"[('system_product_payment_validity_ok', '=', False)]}\">Second(s)</span>"
 msgstr ""
 
 #. module: payment_jewelry
@@ -58,15 +59,7 @@ msgstr ""
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid ""
-"<span>\n"
-"                                        seconds.\n"
-"                                    </span>"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "<span>Gram</span>"
+msgid "<span>0</span> gr<br/>added"
 msgstr ""
 
 #. module: payment_jewelry
@@ -154,16 +147,17 @@ msgid "Amount"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Amount to Pay"
-msgstr ""
-
-#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "An error occured."
+msgstr ""
+
+#. module: payment_jewelry
+#: code:addons/payment_jewelry/controllers/main.py:0
+#, python-format
+msgid "An error occured. Please contact with system administrator."
 msgstr ""
 
 #. module: payment_jewelry
@@ -174,6 +168,15 @@ msgstr ""
 #: code:addons/payment_jewelry/static/src/js/register.js:0
 #, python-format
 msgid "An error occured. Please contact with your system administrator."
+msgstr ""
+
+#. module: payment_jewelry
+#: code:addons/payment_jewelry/models/product.py:0
+#: code:addons/payment_jewelry/models/product.py:0
+#, python-format
+msgid ""
+"An error occured:\n"
+"%s"
 msgstr ""
 
 #. module: payment_jewelry
@@ -311,6 +314,16 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Define agreements to facilitate receiving payments"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
+msgid "Define products to facilitate receiving payments"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_mail
 msgid "Email Settings"
 msgstr ""
@@ -335,11 +348,6 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_main
 msgid "GPS"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Go Back"
 msgstr ""
 
 #. module: payment_jewelry
@@ -373,24 +381,6 @@ msgstr ""
 #: model:ir.module.category,description:payment_jewelry.module_category_jewelry
 #: model:ir.module.category,name:payment_jewelry.module_category_jewelry
 msgid "Jewelry Payment System"
-msgstr ""
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_ok
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_ok
-msgid "Jewelry Payment Validity"
-msgstr ""
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_payment_settings__jewelry_payment_validity_time
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_company__jewelry_payment_validity_time
-msgid "Jewelry Payment Validity Time"
-msgstr ""
-
-#. module: payment_jewelry
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_partner__system_jewelry_price_margin
-#: model:ir.model.fields,field_description:payment_jewelry.field_res_users__system_jewelry_price_margin
-msgid "Jewelry Price Margin"
 msgstr ""
 
 #. module: payment_jewelry
@@ -441,16 +431,6 @@ msgid "No payments yet"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Order Details"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Order Net Amount"
-msgstr ""
-
-#. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_sale_order
 msgid "Orders"
 msgstr ""
@@ -458,7 +438,6 @@ msgstr ""
 #. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -484,7 +463,6 @@ msgid "Payment Page"
 msgstr ""
 
 #. module: payment_jewelry
-#: model:ir.model,name:payment_jewelry.model_payment_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_acquirers
 msgid "Payment Settings"
 msgstr ""
@@ -521,12 +499,6 @@ msgid "Please check your VAT number and try again."
 msgstr ""
 
 #. module: payment_jewelry
-#: code:addons/payment_jewelry/controllers/main.py:0
-#, python-format
-msgid "Please specify an email address before proceeding."
-msgstr ""
-
-#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #, python-format
@@ -536,11 +508,6 @@ msgstr ""
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Price"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
-msgid "Price Margin"
 msgstr ""
 
 #. module: payment_jewelry
@@ -575,7 +542,14 @@ msgstr ""
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_product
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_template
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid "Products"
+msgstr ""
+
+#. module: payment_jewelry
+#: model:ir.model.fields.selection,name:payment_jewelry.selection__product_attribute__payment_type__purity
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Purity"
 msgstr ""
 
 #. module: payment_jewelry
@@ -584,10 +558,20 @@ msgid "Quantity"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Reset"
+msgstr ""
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/js/page.js:0
 #, python-format
 msgid "Restart Payment"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "SKU:"
 msgstr ""
 
 #. module: payment_jewelry
@@ -621,19 +605,9 @@ msgid "Search"
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Service Fee"
-msgstr ""
-
-#. module: payment_jewelry
 #: model:ir.actions.act_window,name:payment_jewelry.action_settings
 #: model:ir.ui.menu,name:payment_jewelry.menu_settings
 msgid "Settings"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "Show a countdown and lock the price during payment."
 msgstr ""
 
 #. module: payment_jewelry
@@ -681,8 +655,13 @@ msgid "Tags..."
 msgstr ""
 
 #. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.settings_form
-msgid "Time"
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Taxes:"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Total"
 msgstr ""
 
 #. module: payment_jewelry
@@ -700,11 +679,6 @@ msgstr ""
 msgid ""
 "Type your <strong>VAT number</strong> and click <strong>Search</strong> "
 "button"
-msgstr ""
-
-#. module: payment_jewelry
-#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-msgid "Unit(s)"
 msgstr ""
 
 #. module: payment_jewelry
@@ -774,8 +748,18 @@ msgid "Welcome"
 msgstr ""
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "You can continue payment by entering the quantity or amount"
+msgstr ""
+
+#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
 msgid "ZIP"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "gr"
 msgstr ""
 
 #. module: payment_jewelry
@@ -783,6 +767,11 @@ msgstr ""
 #: code:addons/payment_jewelry/static/src/xml/page.xml:0
 #, python-format
 msgid "gr)"
+msgstr ""
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "included"
 msgstr ""
 
 #. module: payment_jewelry
