@@ -951,6 +951,7 @@
                         border-radius: 10px !important;
                         margin-top: -5px !important;
                         border: none !important;
+                        width: 100% !important;
                         gap: 10px !important;
 
                         button {
@@ -962,7 +963,7 @@
                             padding: 2px;
                             overflow: hidden;
                             transition: filter 0.2s;
-                            box-shadow: 0 0 2px 2px #00000022 inset;
+                            //box-shadow: 0 0 2px 2px #00000022 inset;
     
                             &:hover {
                                 filter: brightness(0.9);
