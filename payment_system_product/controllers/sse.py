@@ -2,8 +2,6 @@
 import threading
 import selectors
 import contextlib
-from time import mktime
-from datetime import datetime, timedelta
 
 import odoo
 import odoo.service.server as servermod
@@ -37,17 +35,12 @@ class ServerSentEvents(threading.Thread):
                     conn.poll()
                     while conn.notifies:
                         conn.notifies.pop()
-                        now = datetime.utcnow()
                         with registry.cursor() as cur:
                             env = api.Environment(cur, SUPERUSER_ID, {})
+                            data = env['payment.product'].with_company(cid).with_context(ctx).poll()
+                            if data:
+                                yield data
 
-                            products = env['product.product'].sudo().with_context(ctx).search([('write_date', '>', now - timedelta(minutes=1))])
-                            if products:
-                                products += env['product.product'].sudo().with_context(ctx).search([('payment_price_method_product_id', 'in', products.mapped('product_tmpl_id').ids)])
-                                data = ['id:%s' % int(mktime(now.timetuple()))]
-                                for product in products:
-                                    data.append('data:%s;%s' % (product.id, product.price))
-                                yield '%s\n\n' % '\n'.join(data)
 
 dispatch = ServerSentEvents()
 stop_event = threading.Event()
