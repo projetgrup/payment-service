@@ -218,6 +218,11 @@ class Partner(models.Model):
                         pid = self.env['res.users'].browse(values['user_id']).partner_id.id
                         partner.message_subscribe([pid])
 
+        if 'email' in values:
+            for partner in self:
+                if partner.users_id:
+                    partner.users_id.login = values['email']
+
         return res
 
     def _get_name(self):
