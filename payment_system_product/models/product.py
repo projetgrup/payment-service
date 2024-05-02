@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
 from psycopg2 import sql
-from datetime import datetime
 
 import odoo
 from odoo import models, fields, api, _
@@ -31,29 +29,15 @@ class PaymentProduct(models.AbstractModel):
         return False
 
     @api.model
-    def get_price(self, products):
-        company = self.env.company
-        products = products.filtered(lambda p: p.company_id.id == company.id and p.system == company.system)
-        return [(product.id, product.price) for product in products]
-
-    @api.model
     def broadcast_price(self, products):
         if self.env.context.get('no_broadcast'):
             return
 
-        prices = self.get_price(products)
-        if prices:
-            now = datetime.utcnow()
-            pid = int(time.mktime(now.timetuple()))
-            data = ['id:%s' % pid]
-            for code, price in prices:
-                data.append('data:%s;%s' % (code, price))
-
-            @self.env.cr.postcommit.add
-            def notify():
-                with odoo.sql_db.db_connect('postgres').cursor() as cr:
-                    query = sql.SQL("SELECT {}('sse', %s)").format(sql.Identifier('pg_notify'))
-                    cr.execute(query, ('%s\n\n' % '\n'.join(data),))
+        @self.env.cr.postcommit.add
+        def notify():
+            with odoo.sql_db.db_connect('postgres').cursor() as cr:
+                query = sql.SQL("SELECT {}('sse', NULL)").format(sql.Identifier('pg_notify'))
+                cr.execute(query)
 
 
 class PaymentProductPartner(models.Model):
