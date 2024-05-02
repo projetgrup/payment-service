@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from psycopg2 import sql
+from time import mktime
+from datetime import datetime, timedelta
 
 import odoo
 from odoo import models, fields, api, _
@@ -38,6 +40,17 @@ class PaymentProduct(models.AbstractModel):
             with odoo.sql_db.db_connect('postgres').cursor() as cr:
                 query = sql.SQL("SELECT {}('sse', NULL)").format(sql.Identifier('pg_notify'))
                 cr.execute(query)
+    @api.model
+    def poll(self):
+        now = datetime.utcnow()
+        products = self.env['product.product'].sudo().search([('write_date', '>', now - timedelta(minutes=1))])
+        if products:
+            products += self.env['product.product'].sudo().search([('payment_price_method_product_id', 'in', products.mapped('product_tmpl_id').ids)])
+            data = ['id:%s' % int(mktime(now.timetuple()))]
+            for product in products:
+                data.append('data:%s;%s' % (product.id, product.price))
+            return '%s\n\n' % '\n'.join(data)
+        return False
 
 
 class PaymentProductPartner(models.Model):
