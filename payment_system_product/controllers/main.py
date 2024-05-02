@@ -43,7 +43,7 @@ class CustomerPortal(portal.CustomerPortal):
         domain = [
             ('company_id', '=', company.id),
             ('system', '=', company.system),
-            ('payment_page_ok', '=', True),
+            ('product_tmpl_id.payment_page_ok', '=', True),
         ]
         Products = request.env['product.product'].sudo().with_context(system=company.system)
 

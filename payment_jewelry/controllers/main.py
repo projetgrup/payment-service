@@ -48,3 +48,10 @@ class PayloxSystemJewelryController(Controller):
         if result is None:
             return {'error': _('An error occured. Please contact with system administrator.')}
         return result[0]
+
+    @route('/my/product', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
+    def page_product(self, **kwargs):
+        system = request.env.company.system
+        if system == 'jewelry':
+            raise NotFound()
+        return super().page_product(**kwargs)
