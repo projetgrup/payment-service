@@ -272,7 +272,7 @@ class ProductProduct(models.Model):
             self.env['payment.product'].broadcast_price(self)
         elif 'base_unit_count' in values:
             products = self.search([('payment_price_method_product_id', 'in', self.mapped('product_tmpl_id').ids)])
-            self.env['payment.product'].broadcast_price(products)
+            self.env['payment.product'].broadcast_price(self + products)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
