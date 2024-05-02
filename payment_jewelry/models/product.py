@@ -39,6 +39,7 @@ class PaymentProduct(models.AbstractModel):
                 except:
                     continue
 
+            products += products.search([('payment_price_method_product_id', 'in', products.mapped('product_tmpl_id').ids)])
             self.broadcast_price(products)
             return {}
         return super().update_price()

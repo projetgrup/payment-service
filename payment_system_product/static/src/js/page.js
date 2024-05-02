@@ -361,7 +361,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $amount.data('value', value);
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
 
-        if (this.product.flex.amount.$.data('id') === $price.data('id')) {
+        if (this.product.flex.amount.exist && this.product.flex.amount.$.data('id') === $price.data('id')) {
             this.product.flex.amount.value = format.float(value, this.currency.decimal);
             this.product.flex.amount._.updateValue();
         }
