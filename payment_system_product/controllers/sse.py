@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-import time
-import json
-import logging
 import threading
 import selectors
 import contextlib
-from psycopg2 import InterfaceError
+from time import mktime
+from datetime import datetime, timedelta
 
 import odoo
 import odoo.service.server as servermod
+from odoo import api, SUPERUSER_ID
 
 TIMEOUT = 50
-_logger = logging.getLogger(__name__)
 
 
 class ServerSentEvents(threading.Thread):
@@ -21,6 +19,8 @@ class ServerSentEvents(threading.Thread):
 
     def poll(self, db, cid, uid, ctx):
         yield 'retry: 10000\n\n' # 10 sec
+
+        registry = odoo.registry(db)
 
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
@@ -36,7 +36,18 @@ class ServerSentEvents(threading.Thread):
                 if sel.select(TIMEOUT):
                     conn.poll()
                     while conn.notifies:
-                        yield conn.notifies.pop().payload
+                        conn.notifies.pop()
+                        now = datetime.utcnow()
+                        with registry.cursor() as cur:
+                            env = api.Environment(cur, SUPERUSER_ID, {})
+
+                            products = env['product.product'].sudo().with_context(ctx).search([('write_date', '>', now - timedelta(minutes=1))])
+                            if products:
+                                products += env['product.product'].sudo().with_context(ctx).search([('payment_price_method_product_id', 'in', products.mapped('product_tmpl_id').ids)])
+                                data = ['id:%s' % int(mktime(now.timetuple()))]
+                                for product in products:
+                                    data.append('data:%s;%s' % (product.id, product.price))
+                                yield '%s\n\n' % '\n'.join(data)
 
 dispatch = ServerSentEvents()
 stop_event = threading.Event()
