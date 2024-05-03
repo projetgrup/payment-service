@@ -57,7 +57,12 @@
                         <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="px-0 py-1"></td>
+                        <td colspan="2" class="px-0 py-1">
+                            <button class="btn btn-block font-weight-bold rounded-0 payment-product-currency-button" field="product.currency.button">
+                                <div class="active" data-name="try">TRY</div>
+                                <div data-name="has">HAS</div>
+                            </button>
+                        </td>
                         <td class="border-0"/>
                         <td colspan="2" class="px-0 py-1">
                             <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="product.policy">
@@ -172,6 +177,7 @@
                                                         </div>
                                                         <div class="payment-product-items-cell">
                                                             <span class="base" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                                            <span t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
                                                         </div>
                                                         <div class="font-weight-bold payment-product-items-cell payment-product-items-qty" t-attf-style="border: 2px solid #{product.payment_color_background};">
                                                             <input class="base font-weight-bold" type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" t-att-data-brand="b['id']" field="product.qty"/>

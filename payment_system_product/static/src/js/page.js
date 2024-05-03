@@ -187,6 +187,11 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                     events: [['click', this._onClickFlexReset]],
                 }),
                 decimal: 10,
+            },
+            currency: {
+                button: new fields.element({
+                    events: [['click', this._onClickCurrencyButton]],
+                }),
             }
         }
     },
@@ -705,6 +710,23 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         $qty.trigger('change');
     },
 
+    _onClickCurrencyButton(ev) {
+        const $button = $(ev.currentTarget);
+        let $current = $button.find('.active');
+        if (!$current.length) {
+            let $next = $button.children().first();
+            $next.addClass('active');
+            return;
+        }
+
+        let $next = $current.next();
+        if (!$next.length) {
+            $next = $button.children().first();
+        }
+        $current.removeClass('active');
+        $next.addClass('active');
+    },
+
     _onClickPay(ev) {
         $(document.body).addClass(['payment-form', this.validity > 0 ? 'payment-counter' : '']);
         $(ev.currentTarget).addClass('hide');
@@ -781,3 +803,5 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this._updateLines();
     },
 });
+
+export default publicWidget.registry.payloxSystemProduct;
