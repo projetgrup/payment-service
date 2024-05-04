@@ -52,6 +52,26 @@
         font-size: 1.25em;
     }
 
+    .payment-product-currency-button {
+        cursor: pointer;
+        display: flex;
+        padding: 0;
+        border: 1px solid #eee;
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        > div {
+            flex: 1 1 auto;
+            padding: 0.375rem 0.75rem;
+        }
+
+        .active {
+            background-color: var(--warning);
+        }
+    }
+
     .payment-option {
         cursor: pointer;
     }

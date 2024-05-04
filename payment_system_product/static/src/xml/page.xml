@@ -9,7 +9,7 @@
                 <t t-foreach="brand.products" t-as="product">
                     <tr>
                         <td class="py-0"><span t-esc="product.name"/><t t-if="product.weight"> (<span t-esc="product.weight"/> gr)</t></td>
-                        <td class="text-nowrap text-right py-0"><span t-esc="format.currency(product.value, currency.position, currency.symbol, currency.decimal)"/></td>
+                        <td class="text-nowrap text-right py-0"><span t-att-class="currencyBase ? 'd-none' : undefined" t-esc="format.currency(product.value, currency.position, currency.symbol, currency.decimal)" field="payment.lines.price"/><span t-att-class="!currencyBase ? 'd-none' : undefined" t-esc="format.currency(product.base, 'after', 'gr', 4)" field="payment.lines.base"/></td>
                     </tr>
                 </t>
             </t>

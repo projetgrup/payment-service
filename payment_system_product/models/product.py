@@ -31,7 +31,7 @@ class PaymentProduct(models.AbstractModel):
         return False
 
     @api.model
-    def broadcast_price(self, products):
+    def broadcast_price(self):
         if self.env.context.get('no_broadcast'):
             return
 
@@ -185,7 +185,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     @api.onchange('payment_price_method_product_id', 'payment_price_method_formula')
-    def _compute_payment_price_method_result(self):
+    def _compute_payment_price_method(self):
         for product in self:
             base = product.payment_price_method_product_id
             formula = product.payment_price_method_formula
@@ -204,7 +204,8 @@ class ProductProduct(models.Model):
     payment_page_ok = fields.Boolean()
     payment_price_method_product_id = fields.Many2one('product.template')
     payment_price_method_formula = fields.Char()
-    payment_price_method_result = fields.Monetary(compute='_compute_payment_price_method_result')
+    payment_price_method_result = fields.Monetary(compute='_compute_payment_price_method')
+    payment_price_base = fields.Float()
     payment_partner_attribute_ids = fields.One2many('payment.product.partner', 'product_id', 'Partner Attributes')
 
     @api.model
@@ -265,11 +266,12 @@ class ProductProduct(models.Model):
         super(ProductProduct, self - products)._set_product_price()
 
     def _broadcast_price(self, values={}):
-        if 'lst_price' in values or 'price_dynamic' in values or 'payment_price_method_product_id' in values or 'payment_price_method_formula' in values:
-            self.env['payment.product'].broadcast_price(self)
-        elif 'base_unit_count' in values:
-            products = self.search([('payment_price_method_product_id', 'in', self.mapped('product_tmpl_id').ids)])
-            self.env['payment.product'].broadcast_price(self + products)
+        if 'base_unit_count' in values or \
+           'lst_price' in values or \
+           'price_dynamic' in values or \
+           'payment_price_method_product_id' in values or \
+           'payment_price_method_formula' in values:
+            self.env['payment.product'].broadcast_price()
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

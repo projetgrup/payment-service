@@ -15,8 +15,8 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as
 class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
-        if not request.env.user.share or not partner.system:
-            return False
+        #if not request.env.user.share or not partner.system:
+        #    return False
 
         company_id = partner.company_id.id or request.env.company.id
         if not request.website.company_id.id == company_id:
@@ -632,6 +632,11 @@ class PayloxSystemController(Controller):
         if not request.env.user.has_group('base.group_user'):
             raise werkzeug.exceptions.NotFound()
 
+        if not kwargs.get('values', {}).get('no_redirect'):
+            redirect = self._check_redirect(request.env.user.partner_id)
+            if redirect:
+                return redirect
+
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
@@ -654,11 +659,6 @@ class PayloxSystemController(Controller):
 
         if not partner:
             partner = self._get_partner()
-
-        if not kwargs.get('values', {}).get('no_redirect'):
-            redirect = self._check_redirect(partner)
-            if redirect:
-                return redirect
 
         if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
             currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
@@ -709,6 +709,11 @@ class PayloxSystemController(Controller):
         if request.env.user.has_group('base.group_public'):
             raise werkzeug.exceptions.NotFound()
 
+        if not kwargs.get('values', {}).get('no_redirect'):
+            redirect = self._check_redirect(request.env.user.partner_id)
+            if redirect:
+                return redirect
+
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
@@ -731,11 +736,6 @@ class PayloxSystemController(Controller):
 
         if not partner:
             partner = self._get_partner()
-
-        if not kwargs.get('values', {}).get('no_redirect'):
-            redirect = self._check_redirect(partner)
-            if redirect:
-                return redirect
 
         if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
             currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)

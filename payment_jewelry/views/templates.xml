@@ -42,302 +42,353 @@
         </t>
     </template>
 
-    <template id="page_payment" name="Jewelry Payment Page">
-        <t t-call="payment_system_product.page_payment">
+    <template id="page_payment" name="Jewelry Payment Page" inherit_id="payment_system_product.page_payment" primary="True">
+        <xpath expr="//div[hasclass('header')]" position="before">
             <t t-set="currency" t-value="company.currency_id"/>
-            <t t-set="options" t-value="{'listen_price_active': True, 'save_order_active': True}"/>
-            <t t-set="no_sidebar" t-value="True"/>
-            <t t-set="header_details">
-                <table class="m-0 table w-auto">
-                    <tr>
-                        <td class="bg-100 border-right text-right align-middle"><em>Partner : </em></td>
-                        <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
-                        <td class="border-0"/>
-                        <td class="bg-100 border-right text-right align-middle"><em>Balance : </em></td>
-                        <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="px-0 py-1"></td>
-                        <td class="border-0"/>
-                        <td colspan="2" class="px-0 py-1">
-                            <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="product.policy">
-                                My PoS Policy
-                            </button>
-                        </td>
-                    </tr>
-                </table>
-            </t>
-            <t t-set="product_views">
-                <t t-foreach="products" t-as="product">
-                    <t t-set="brands" t-value="product.get_payment_attribute('brand')"/>
-                    <t t-set="weights" t-value="product.get_payment_attribute('weight')"/>
-                    <t t-set="purities" t-value="product.get_payment_attribute('purity')"/>
-                    <t t-set="variants" t-value="product.get_payment_variants(['brand', 'weight', 'purity'])"/>
-                    <t t-if="product.categ_id.view_type == 'table'">
-                        <t t-if="brands">
-                            <t t-set="brand" t-value="brands[0]"/>
-                            <div t-attf-class="payment-product-categ-table #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
-                                <div class="payment-product-items-card">
-                                    <div>
-                                        <div class="text-nowrap payment-product-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
-                                            <span t-esc="product.name"/>
-                                        </div>
-                                        <div class="justify-content-start payment-product-items-brand">
-                                            <t t-foreach="brands" t-as="b">
-                                                <button t-attf-class="btn #{'active' if b['id'] == brand['id'] else ''}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="product.brands">
-                                                    <img t-attf-src="data:image/png;base64, #{b['image']}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
-                                                    <span class="d-none" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};"/>
-                                                </button>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <t t-foreach="brands" t-as="b">
-                                        <div t-if="b['id'] in variants" t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
-                                            <t t-foreach="variants[b['id']]" t-as="variant">
-                                                <div t-attf-style="border: 2px solid #{product.payment_color_background};">
-                                                    <div class="font-weight-bold payment-product-items-weight">
-                                                        <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
-                                                        <span class="mr4" t-esc="variant['weight']"/><span>Gram</span>
-                                                    </div>
-                                                    <div class="font-weight-500">Price</div>
-                                                    <div class="payment-product-items-qty">
-                                                        <div class="font-weight-bold">
-                                                            <button class="btn" t-att-data-id="variant['id']" field="product.plus">
-                                                                <i class="fa fa-2x fa-chevron-up"/>
-                                                            </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                                        </div>
-                                                        <div>
-                                                            Unit(s)
-                                                        </div>
-                                                        <div class="font-weight-bold">
-                                                            <button class="btn" t-att-data-id="variant['id']" field="product.minus">
-                                                                <i class="fa fa-2x fa-chevron-down"/>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="font-size-125" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                                    </div>
-                                                    <div class="font-weight-500 payment-product-items-amount">Amount</div>
-                                                    <div>
-                                                        <span class="font-size-125" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </t>
-                                </div>
-                                <div class="payment-product-items-table">
-                                    <div>
-                                        <div class="text-nowrap payment-product-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
-                                            <span t-esc="product.name"/>
-                                        </div>
-                                        <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
-                                            Gram
-                                        </div>
-                                        <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
-                                            Purity
-                                        </div>
-                                        <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
-                                            Price
-                                        </div>
-                                        <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
-                                            Quantity
-                                        </div>
-                                        <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background}; border-bottom: 2px solid #{product.payment_color_background}; border-radius: 0 0 10px 10px;">
-                                            Amount
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="justify-content-start payment-product-items-brand">
-                                            <t t-foreach="brands" t-as="b">
-                                                <button t-attf-class="base btn #{'active' if b['id'] == brand['id'] else ''}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="product.brands">
-                                                    <img t-attf-src="data:image/png;base64, #{b['image']}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
-                                                    <span class="d-none" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};"/>
-                                                </button>
-                                            </t>
-                                        </div>
-                                        <div>
-                                            <t t-foreach="brands" t-as="b">
-                                                <div t-if="b['id'] in variants" t-attf-class="payment-product-items-grid #{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
-                                                    <t t-foreach="variants[b['id']]" t-as="variant">
-                                                        <div class="font-weight-bold payment-product-items-cell payment-product-items-weight" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
-                                                            <span t-esc="variant['weight']"/>
-                                                        </div>
-                                                        <div class="payment-product-items-cell payment-product-items-purity">
-                                                            <span t-esc="variant['purity']"/>
-                                                        </div>
-                                                        <div class="payment-product-items-cell">
-                                                            <span class="base" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                                        </div>
-                                                        <div class="font-weight-bold payment-product-items-cell payment-product-items-qty" t-attf-style="border: 2px solid #{product.payment_color_background};">
-                                                            <input class="base font-weight-bold" type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" t-att-data-brand="b['id']" field="product.qty"/>
-                                                        </div>
-                                                        <div class="payment-product-items-cell">
-                                                            <span class="base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
-                                                        </div>
-                                                    </t>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </t>
-                    <t t-elif="product.categ_id.view_type == 'card'">
-                        <div t-attf-class="payment-product-categ-card #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
-                            <div class="payment-product-items-card">
-                                <div t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
-                                    <div class="d-block" t-attf-style="border: 2px solid #{product.payment_color_background};" t-att-data-id="variant['id']" field="product.item">
-                                        <div class="font-weight-bold">
-                                            <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
-                                            <span class="mr4" t-esc="product['name']"/>
-                                        </div>
-                                        <div class="small">
-                                            <span class="font-size-125 base" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                        </div>
-                                        <div class="d-none">
-                                            <input class="base" type="hidden" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                            <span class="d-none base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-elif="product.categ_id.view_type == 'flex'">
-                        <div t-attf-class="payment-product-categ-card #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" style="width: unset; min-width: unset; max-width: unset; float: unset;" field="product.items">
-                            <div class="alert alert-warning text-center">
-                                You can continue payment by entering the quantity or amount
-                            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('header')]" position="inside">
+            <table class="m-0 table w-auto">
+                <tr>
+                    <td class="bg-100 border-right text-right align-middle"><em>Partner : </em></td>
+                    <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
+                    <td class="border-0"/>
+                    <td class="bg-100 border-right text-right align-middle"><em>Balance : </em></td>
+                    <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="px-0 py-1">
+                        <button class="btn btn-block font-weight-bold rounded-0 payment-product-currency-button" field="product.currency.button">
+                            <div class="active" data-name="try">TRY</div>
+                            <div data-name="base">HAS</div>
+                        </button>
+                    </td>
+                    <td class="border-0"/>
+                    <td colspan="2" class="px-0 py-1">
+                        <button class="btn btn-warning btn-block font-weight-bold rounded-0" field="product.policy">
+                            My PoS Policy
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </xpath>
+        <xpath expr="//t[@t-call='payment_jetcheckout.payment_sidebar']" position="replace"/>
+        <xpath expr="//t[@t-foreach='products']" position="replace">
+            <t t-foreach="products" t-as="product">
+                <t t-set="brands" t-value="product.get_payment_attribute('brand')"/>
+                <t t-set="weights" t-value="product.get_payment_attribute('weight')"/>
+                <t t-set="purities" t-value="product.get_payment_attribute('purity')"/>
+                <t t-set="variants" t-value="product.get_payment_variants(['brand', 'weight', 'purity'])"/>
+                <t t-if="product.categ_id.view_type == 'table'">
+                    <t t-if="brands">
+                        <t t-set="brand" t-value="brands[0]"/>
+                        <div t-attf-class="payment-product-categ-table #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
                             <div class="payment-product-items-card">
                                 <div>
-                                    <div t-attf-style="border: 2px solid #{product.payment_color_background} !important;">
-                                        <t t-set="variant" t-value="variants[''][0]"/>
-                                        <div class="font-weight-bold payment-product-items-weight">
-                                            <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
-                                            <span class="mr4" t-esc="product['name']"/>
-                                        </div>
-                                        <div class="pt-3 font-weight-500">Amount</div>
-                                        <div class="payment-product-items-qty">
-                                            <div class="h2 font-weight-500">Price</div>
-                                            <span class="base h1" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                            <button class="btn px-5 py-1 my-3 font-weight-500" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};" field="product.flex.add"><span>0</span> gr<br/>added</button>
-                                            <button class="btn btn-secondary px-5 py-1 my-3 font-weight-500" t-att-data-id="variant['id']" t-att-data-product="product['id']" field="product.flex.reset">Reset</button>
-                                            <input type="hidden" class="base" value="0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" field="product.amount"/>
-                                            <input type="hidden" class="base" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                        </div>
-                                        <div class="pb-3">
-                                            <div class="field-container">
-                                                <input type="text" inputmode="decimal" class="text-center text-muted" t-attf-style="border-color:#{product.payment_color_background}" required="required" t-att-placeholder="language.format('%.{0}f'.format(variant['currency'].decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(variant['currency'].decimal_places), amount, grouping=True, monetary=True) or None" t-att-data-id="variant['id']" field="product.flex.amount"/>
-                                                <span t-if="variant['currency'].position == 'before'" class="symbol symbol-before" t-esc="variant['currency'].symbol" style="top: 8px;"/>
-                                                <span t-else="" class="symbol symbol-after" t-esc="variant['currency'].symbol" style="top: 8px;"/>
+                                    <div class="text-nowrap payment-product-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                        <span t-esc="product.name"/>
+                                    </div>
+                                    <div class="justify-content-start payment-product-items-brand">
+                                        <t t-foreach="brands" t-as="b">
+                                            <button t-attf-class="btn #{'active' if b['id'] == brand['id'] else ''}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="product.brands">
+                                                <img t-attf-src="data:image/png;base64, #{b['image']}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
+                                                <span class="d-none" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};"/>
+                                            </button>
+                                        </t>
+                                    </div>
+                                </div>
+                                <t t-foreach="brands" t-as="b">
+                                    <div t-if="b['id'] in variants" t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
+                                        <t t-foreach="variants[b['id']]" t-as="variant">
+                                            <div t-attf-style="border: 2px solid #{product.payment_color_background};">
+                                                <div class="font-weight-bold payment-product-items-weight">
+                                                    <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
+                                                    <span class="mr4" t-esc="variant['weight']"/><span>Gram</span>
+                                                </div>
+                                                <div class="font-weight-500">Price</div>
+                                                <div class="payment-product-items-qty">
+                                                    <div class="font-weight-bold">
+                                                        <button class="btn" t-att-data-id="variant['id']" field="product.plus">
+                                                            <i class="fa fa-2x fa-chevron-up"/>
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <input type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
+                                                    </div>
+                                                    <div>
+                                                        Unit(s)
+                                                    </div>
+                                                    <div class="font-weight-bold">
+                                                        <button class="btn" t-att-data-id="variant['id']" field="product.minus">
+                                                            <i class="fa fa-2x fa-chevron-down"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span class="font-size-125" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="variant['base']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                                    <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="price" field="product.base">
+                                                        <span t-esc="variant['base']" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                    </span>
+                                                </div>
+                                                <div class="font-weight-500 payment-product-items-amount">Amount</div>
+                                                <div>
+                                                    <span class="font-size-125" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+                                                    <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="amount" field="product.base">
+                                                        <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="pt-3 font-weight-500 payment-product-items-amount">Quantity</div>
-                                        <div class="pb-3">
-                                            <div class="field-container">
-                                                <input type="text" inputmode="decimal" class="text-center text-muted" t-attf-style="border-color:#{product.payment_color_background}" required="required" t-att-placeholder="language.format('%.{0}f'.format(variant['currency'].decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(variant['currency'].decimal_places), amount, grouping=True, monetary=True) or None" t-att-data-id="variant['id']" field="product.flex.qty"/>
-                                                <span t-if="variant['currency'].position == 'before'" class="symbol symbol-before" style="top: 8px;">gr</span>
-                                                <span t-else="" class="symbol symbol-after" style="top: 8px;">gr</span>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="payment-product-items-table">
+                                <div>
+                                    <div class="text-nowrap payment-product-items-name" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                        <span t-esc="product.name"/>
+                                    </div>
+                                    <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                        Gram
+                                    </div>
+                                    <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                        Purity
+                                    </div>
+                                    <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                        Price
+                                    </div>
+                                    <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background};">
+                                        Quantity
+                                    </div>
+                                    <div class="payment-product-items-caption" t-attf-style="border-right: 2px solid #{product.payment_color_background}; border-left: 2px solid #{product.payment_color_background}; border-bottom: 2px solid #{product.payment_color_background}; border-radius: 0 0 10px 10px;">
+                                        Amount
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="justify-content-start payment-product-items-brand">
+                                        <t t-foreach="brands" t-as="b">
+                                            <button t-attf-class="base btn #{'active' if b['id'] == brand['id'] else ''}" t-att-data-id="b['id']" t-att-data-name="b['name']" t-att-data-image="b['image']" t-att-data-product="product.id" field="product.brands">
+                                                <img t-attf-src="data:image/png;base64, #{b['image']}" t-att-alt="b['name']" t-att-data-id="b['id']" draggable="false"/>
+                                                <span class="d-none" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};"/>
+                                            </button>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <t t-foreach="brands" t-as="b">
+                                            <div t-if="b['id'] in variants" t-attf-class="payment-product-items-grid #{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
+                                                <t t-foreach="variants[b['id']]" t-as="variant">
+                                                    <div class="font-weight-bold payment-product-items-cell payment-product-items-weight" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};">
+                                                        <span t-esc="variant['weight']"/>
+                                                    </div>
+                                                    <div class="payment-product-items-cell payment-product-items-purity">
+                                                        <span t-esc="variant['purity']"/>
+                                                    </div>
+                                                    <div class="payment-product-items-cell">
+                                                        <span class="base" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                                        <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="price" field="product.base">
+                                                            <span t-esc="variant['base']" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                        </span>
+                                                    </div>
+                                                    <div class="font-weight-bold payment-product-items-cell payment-product-items-qty" t-attf-style="border: 2px solid #{product.payment_color_background};">
+                                                        <input class="base font-weight-bold" type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" t-att-data-brand="b['id']" field="product.qty"/>
+                                                    </div>
+                                                    <div class="payment-product-items-cell">
+                                                        <span class="base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-att-data-brand="b['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+
+                                                        <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="amount" field="product.base">
+                                                            <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                        </span>
+                                                    </div>
+                                                </t>
                                             </div>
-                                        </div>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </t>
-                    <t t-else="">
-                        <t t-if="brands">
-                            <t t-set="brand" t-value="brands[0]"/>
-                            <div t-attf-class="payment-product-categ-list #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
-                                <div class="payment-product-items-card">
-                                    <t t-foreach="brands" t-as="b">
-                                        <div t-if="b['id'] in variants" t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
-                                            <t t-foreach="variants[b['id']]" t-as="variant">
-                                                <div t-attf-style="border: 2px solid #{product.payment_color_background};">
-                                                    <div class="font-weight-bold payment-product-items-weight">
-                                                        <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
-                                                        <span class="mr4" t-esc="product['name']"/>
-                                                    </div>
-                                                    <div class="font-weight-500">Price</div>
-                                                    <div class="payment-product-items-qty">
-                                                        <div class="font-weight-bold">
-                                                            <button class="btn" t-att-data-id="variant['id']" field="product.plus">
-                                                                <i class="fa fa-2x fa-chevron-up"/>
-                                                            </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                                        </div>
-                                                        <div class="font-weight-bold">
-                                                            <button class="btn" t-att-data-id="variant['id']" field="product.minus">
-                                                                <i class="fa fa-2x fa-chevron-down"/>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="font-size-125" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
-                                                    </div>
-                                                    <div class="font-weight-500 payment-product-items-amount">Amount</div>
-                                                    <div>
-                                                        <span class="font-size-125" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </t>
-                                </div>
-                                <div class="payment-product-items-list">
-                                    <t t-foreach="product.product_variant_ids" t-as="variant">
-                                        <div>
-                                            <div class="text-nowrap payment-product-items-name">
-                                                <img t-attf-src="data:image/png;base64, #{variant.image_256}" t-att-alt="variant['name']" t-att-data-id="variant['id']" draggable="false" onerror="this.style.display='none'"/>
-                                            </div>
-                                            <div>
-                                                <div><strong t-esc="variant['name']"/></div>
-                                                <div class="small">SKU: <span t-esc="variant['default_code'] or '-'"/></div>
-                                                <div class="small">Taxes: <span t-esc="', '.join([tax.name for tax in variant['taxes_id']])"/> included</div>
-                                            </div>
-                                            <div class="payment-product-items-price">
-                                                <div>
-                                                    <div class="base font-weight-bold text-right text-nowrap" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency_id']}" field="product.price"/>
-                                                    <div class="small text-center">/</div>
-                                                    <div class="small" t-esc="variant['uom_id']['name']"/>
-                                                </div>
-                                                <div>
-                                                    <div class="base font-weight-bold text-right text-nowrap" t-esc="0.0" t-att-data-name="product['name']" t-att-data-product="product['id']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-options="{'widget': 'monetary', 'display_currency': variant['currency_id']}" field="product.amount"/>
-                                                    <div class="small text-center">/</div>
-                                                    <div class="small">Total</div>
-                                                </div>
-                                            </div>
-                                            <div class="payment-product-items-qty">
-                                                <div class="font-weight-bold">
-                                                    <button class="btn" t-att-data-id="variant['id']" field="product.minus">
-                                                        <i class="fa fa-minus"/>
-                                                    </button>
-                                                </div>
-                                                <div class="flex-fill font-size-125 pl-2">
-                                                    <input type="number" class="base" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
-                                                </div>
-                                                <div class="font-weight-bold">
-                                                    <button class="btn" t-att-data-id="variant['id']" field="product.plus">
-                                                        <i class="fa fa-plus"/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </t>
+                </t>
+                <t t-elif="product.categ_id.view_type == 'card'">
+                    <div t-attf-class="payment-product-categ-card #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
+                        <div class="payment-product-items-card">
+                            <div t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
+                                <div class="d-block" t-attf-style="border: 2px solid #{product.payment_color_background};" t-att-data-id="variant['id']" field="product.item">
+                                    <div class="font-weight-bold">
+                                        <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
+                                        <span class="mr4" t-esc="product['name']"/>
+                                    </div>
+                                    <div class="small">
+                                        <span class="font-size-125 base" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="variant['base']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                        <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="price" field="product.base">
+                                            <span t-esc="variant['base']" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                        </span>
+                                    </div>
+                                    <div class="d-none">
+                                        <input class="base" type="hidden" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
+                                        <span class="d-none base" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+                                        <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="amount" field="product.base">
+                                            <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-elif="product.categ_id.view_type == 'flex'">
+                    <div t-attf-class="payment-product-categ-card #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" style="width: unset; min-width: unset; max-width: unset; float: unset;" field="product.items">
+                        <div class="alert alert-warning text-center">
+                            You can continue payment by entering the quantity or amount
+                        </div>
+                        <div class="payment-product-items-card">
+                            <div>
+                                <div t-attf-style="border: 2px solid #{product.payment_color_background} !important;">
+                                    <t t-set="variant" t-value="variants[''][0]"/>
+                                    <div class="font-weight-bold payment-product-items-weight">
+                                        <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
+                                        <span class="mr4" t-esc="product['name']"/>
+                                    </div>
+                                    <div class="pt-3 font-weight-500">Amount</div>
+                                    <div class="payment-product-items-qty">
+                                        <div class="h2 font-weight-500">Price</div>
+                                        <span class="base h1" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="1" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                        <button class="btn px-5 py-1 my-3 font-weight-500" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" t-attf-style="background-color: #{product.payment_color_background}; color: #{product.payment_color_foreground};" field="product.flex.add"><span>0</span> gr<br/>added</button>
+                                        <button class="btn btn-secondary px-5 py-1 my-3 font-weight-500" t-att-data-id="variant['id']" t-att-data-product="product['id']" field="product.flex.reset">Reset</button>
+                                        <input type="hidden" class="base" value="0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-att-data-weight="0" t-att-data-product="product['id']" field="product.amount"/>
+                                        <input type="hidden" class="base" value="0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-weight="0" t-att-data-product="product['id']" field="product.base"/>
+                                        <input type="hidden" class="base" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
+                                    </div>
+                                    <div class="pb-3">
+                                        <div class="field-container">
+                                            <input type="text" inputmode="decimal" class="text-center text-muted" t-attf-style="border-color:#{product.payment_color_background}" required="required" t-att-placeholder="language.format('%.{0}f'.format(variant['currency'].decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(variant['currency'].decimal_places), amount, grouping=True, monetary=True) or None" t-att-data-id="variant['id']" field="product.flex.amount"/>
+                                            <span t-if="variant['currency'].position == 'before'" class="symbol symbol-before" t-esc="variant['currency'].symbol" style="top: 8px;"/>
+                                            <span t-else="" class="symbol symbol-after" t-esc="variant['currency'].symbol" style="top: 8px;"/>
+                                        </div>
+                                    </div>
+                                    <div class="pt-3 font-weight-500 payment-product-items-amount">Quantity</div>
+                                    <div class="pb-3">
+                                        <div class="field-container">
+                                            <input type="text" inputmode="decimal" class="text-center text-muted" t-attf-style="border-color:#{product.payment_color_background}" required="required" t-att-placeholder="language.format('%.{0}f'.format(variant['currency'].decimal_places), 0, grouping=True, monetary=True)" t-att-value="amount and language.format('%.{0}f'.format(variant['currency'].decimal_places), amount, grouping=True, monetary=True) or None" t-att-data-id="variant['id']" field="product.flex.qty"/>
+                                            <span t-if="variant['currency'].position == 'before'" class="symbol symbol-before" style="top: 8px;">gr</span>
+                                            <span t-else="" class="symbol symbol-after" style="top: 8px;">gr</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-if="brands">
+                        <t t-set="brand" t-value="brands[0]"/>
+                        <div t-attf-class="payment-product-categ-list #{'' if categs[0]['id'] == product.categ_id.id else 'd-none'}" t-att-data-id="product.id" t-att-data-name="product.name" t-att-data-categ="product.categ_id.id" t-att-data-foreground="product.payment_color_foreground" t-att-data-background="product.payment_color_background" field="product.items">
+                            <div class="payment-product-items-card">
+                                <t t-foreach="brands" t-as="b">
+                                    <div t-if="b['id'] in variants" t-attf-class="#{'' if b['id'] == brand['id'] else 'd-none'}" t-att-data-brand="b['id']">
+                                        <t t-foreach="variants[b['id']]" t-as="variant">
+                                            <div t-attf-style="border: 2px solid #{product.payment_color_background};">
+                                                <div class="font-weight-bold payment-product-items-weight">
+                                                    <span t-attf-style="border-color: #{product.payment_color_background} transparent transparent transparent;"/>
+                                                    <span class="mr4" t-esc="product['name']"/>
+                                                </div>
+                                                <div class="font-weight-500">Price</div>
+                                                <div class="payment-product-items-qty">
+                                                    <div class="font-weight-bold">
+                                                        <button class="btn" t-att-data-id="variant['id']" field="product.plus">
+                                                            <i class="fa fa-2x fa-chevron-up"/>
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <input type="number" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
+                                                    </div>
+                                                    <div class="font-weight-bold">
+                                                        <button class="btn" t-att-data-id="variant['id']" field="product.minus">
+                                                            <i class="fa fa-2x fa-chevron-down"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span class="font-size-125" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="variant['base']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" style="border-radius: 3px; padding: 3px;" field="product.price"/>
+                                                    <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="price" field="product.base">
+                                                        <span t-esc="variant['base']" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                    </span>
+                                                </div>
+                                                <div class="font-weight-500 payment-product-items-amount">Amount</div>
+                                                <div>
+                                                    <span class="font-size-125" t-esc="0.0" t-att-data-name="product['name']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-att-data-weight="variant['weight']" t-att-data-product="product['id']" t-options="{'widget': 'monetary', 'display_currency': variant['currency']}" field="product.amount"/>
+                                                    <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['base']" t-att-data-name="variant['code']" t-att-data-brand="b['id']" data-type="amount" field="product.base">
+                                                        <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="payment-product-items-list">
+                                <t t-foreach="product.product_variant_ids" t-as="variant">
+                                    <div>
+                                        <div class="text-nowrap payment-product-items-name">
+                                            <img t-attf-src="data:image/png;base64, #{variant.image_256}" t-att-alt="variant['name']" t-att-data-id="variant['id']" draggable="false" onerror="this.style.display='none'"/>
+                                        </div>
+                                        <div>
+                                            <div><strong t-esc="variant['name']"/></div>
+                                            <div class="small">SKU: <span t-esc="variant['default_code'] or '-'"/></div>
+                                            <div class="small">Taxes: <span t-esc="', '.join([tax.name for tax in variant['taxes_id']])"/> included</div>
+                                        </div>
+                                        <div class="payment-product-items-price">
+                                            <div>
+                                                <div class="base font-weight-bold text-right text-nowrap" t-esc="variant['price']" t-att-data-id="variant['id']" t-att-data-value="variant['price']" t-att-data-base="variant['payment_price_base']" t-att-data-name="variant['code']" t-options="{'widget': 'monetary', 'display_currency': variant['currency_id']}" field="product.price"/>
+                                                <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['payment_price_base']" t-att-data-name="variant['default_code']" t-att-data-brand="b['id']" data-type="price" field="product.base">
+                                                    <span t-esc="variant['payment_price_base']" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                </span>
+                                                <div class="small text-center">/</div>
+                                                <div class="small" t-esc="variant['uom_id']['name']"/>
+                                            </div>
+                                            <div>
+                                                <div class="base font-weight-bold text-right text-nowrap" t-esc="0.0" t-att-data-name="product['name']" t-att-data-product="product['id']" t-att-data-id="variant['id']" t-att-data-qty="0.0" t-att-data-value="0.0" t-att-data-base="0.0" t-options="{'widget': 'monetary', 'display_currency': variant['currency_id']}" field="product.amount"/>
+                                                <span class="text-nowrap d-none" t-att-data-id="variant['id']" t-att-data-value="variant['payment_price_base']" t-att-data-name="variant['default_code']" t-att-data-brand="b['id']" data-type="amount" field="product.base">
+                                                    <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+                                                </span>
+                                                <div class="small text-center">/</div>
+                                                <div class="small">Total</div>
+                                            </div>
+                                        </div>
+                                        <div class="payment-product-items-qty">
+                                            <div class="font-weight-bold">
+                                                <button class="btn" t-att-data-id="variant['id']" field="product.minus">
+                                                    <i class="fa fa-minus"/>
+                                                </button>
+                                            </div>
+                                            <div class="flex-fill font-size-125 pl-2">
+                                                <input type="number" class="base" min="0" step="1" inputmode="numeric" value="0" t-att-data-id="variant['id']" t-att-data-name="variant['name']" t-att-data-product="product['id']" field="product.qty"/>
+                                            </div>
+                                            <div class="font-weight-bold">
+                                                <button class="btn" t-att-data-id="variant['id']" field="product.plus">
+                                                    <i class="fa fa-plus"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
                     </t>
                 </t>
             </t>
-        </t>
+        </xpath>
+        <xpath expr="//span[@field='product.subtotal']" position="after">
+            <span class="text-nowrap d-none" data-type="subtotal" field="product.base">
+                <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+            </span>
+        </xpath>
+        <xpath expr="//span[@field='product.fee']" position="after">
+            <span class="text-nowrap d-none" data-type="fee" field="product.base">
+                <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+            </span>
+        </xpath>
+        <xpath expr="//span[@field='product.total']" position="after">
+            <span class="text-nowrap d-none" data-type="total" field="product.base">
+                <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
+            </span>
+        </xpath>
     </template>
 </odoo>

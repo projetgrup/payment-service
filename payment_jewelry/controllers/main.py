@@ -32,6 +32,18 @@ class PayloxSystemJewelryController(Controller):
 #            pass
 #        return res
 
+    def _prepare_system(self, company, system, partner, transaction, options={}):
+        res = super()._prepare_system(company, system, partner, transaction, options=options)
+        if system == 'jewelry':
+            res.update({
+                'currency': company.currency_id,
+                'options': {
+                    'listen_price_active': True,
+                    'save_order_active': True
+                },
+            })
+        return res
+
     @route(['/my/jewelry/register'], type='http', auth='public', website=True)
     def page_jewelry_register(self, **kwargs):
         system = request.env.company.system
