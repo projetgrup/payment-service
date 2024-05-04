@@ -108,6 +108,9 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this.commission = 0;
         this.options = new fields.element();
         this.product = {
+            base: new fields.float({
+                default: 0,
+            }),
             price: new fields.float({
                 default: 0,
             }),
@@ -381,11 +384,13 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         if (this.timeout) return;
 
         let subtotal = 0;
+        let subtotalbase = 0;
         let brands = {};
         let currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
         this.product.amount.$.filter(`.base`).each((i, e) => {
             let $e = $(e);
             let value = parseFloat($e.data('value'));
+            let base = parseFloat($e.data('base'));
             if (value > 0) {
                 let vid = $e.data('id') || 0;
                 let bid = $e.data('brand') || 0;
@@ -399,11 +404,13 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
                     brands[bid] = { products: {}, name: this.brands?.[pid]?.[bid]?.['name'] || '' };
                 }
                 if (!(pid in brands[bid]['products'])) {
-                    brands[bid]['products'][pid] = { weight: 0, value: 0, name: this.products[pid]['name'] };
+                    brands[bid]['products'][pid] = { weight: 0, value: 0, base:0, name: this.products[pid]['name'] };
                 }
                 brands[bid]['products'][pid]['weight'] += qty * weight;
                 brands[bid]['products'][pid]['value'] += value;
+                brands[bid]['products'][pid]['base'] += base;
                 subtotal += value;
+                subtotalbase += base;
             }
         });
 
@@ -427,20 +434,28 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
             brand.products = Object.values(brand.products);
         }
 
+        let base = this.product.currency.button.$.find('.active').data('name') === 'base';
         this.product.lines.html = qweb.render('paylox.product.lines', {
             format,
             brands,
             currency: this.currency,
+            currencyBase: base, 
         });
 
         let fee = subtotal * this.commission;
+        let feebase = subtotalbase * this.commission;
         let total = subtotal + fee;
+        let totalbase = subtotalbase + feebase;
         this.amount.value = format.float(total);
         this.amount.$.trigger('update');
 
         this.product.subtotal.text = format.currency(subtotal, ...currency);
         this.product.fee.text = format.currency(fee, ...currency);
         this.product.total.text = format.currency(total, ...currency);
+
+        this.product.subtotal.$.next().text(format.currency(subtotalbase, 'after', 'gr', 4));
+        this.product.fee.$.next().text(format.currency(feebase, 'after', 'gr', 4));
+        this.product.total.$.next().text(format.currency(totalbase, 'after', 'gr', 4));
 
         this._saveOrder({ lines: Object.values(this.lines) });
     },
@@ -457,11 +472,15 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
         let qty = parseFloat($qty.val());
         let price = parseFloat($price.data('value'));
+        let base = parseFloat($price.data('base'));
         let value = qty * price;
+        let cbase = qty * base;
 
         $amount.data('qty', qty);
         $amount.data('value', value);
+        $amount.data('base', cbase);
         $amount.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
+        $amount.next().filter('span').text(format.currency(cbase, 'after', 'gr', 4));
 
         if (update) {
             this._updateLines();
@@ -486,6 +505,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
         $amount.data('value', amount.value);
         $amount.data('qty', qty);
+        $amount.data('base', qty);
         $amount.data('weight', 1);
         $amount.val(amount.value);
         $qty.val(qty);
@@ -520,6 +540,7 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         this.product.flex.amount._.updateValue();
 
         $amount.data('qty', qty.value);
+        $amount.data('base', qty.value);
         $amount.data('value', amount);
         $amount.data('weight', 1);
         $amount.val(amount);
@@ -716,15 +737,24 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
         if (!$current.length) {
             let $next = $button.children().first();
             $next.addClass('active');
-            return;
+        } else {
+            let $next = $current.next();
+            if (!$next.length) {
+                $next = $button.children().first();
+            }
+            $current.removeClass('active');
+            $next.addClass('active');
         }
 
-        let $next = $current.next();
-        if (!$next.length) {
-            $next = $button.children().first();
-        }
-        $current.removeClass('active');
-        $next.addClass('active');
+        const base = $button.find('.active').data('name') === 'base';
+        this.product.price.$.filter(':not(.h1)').toggleClass('d-none', base);
+        this.product.amount.$.toggleClass('d-none', base);
+        this.product.subtotal.$.toggleClass('d-none', base);
+        this.product.fee.$.toggleClass('d-none', base);
+        this.product.total.$.toggleClass('d-none', base);
+        this.product.base.$.toggleClass('d-none', !base);
+        $('[field="payment.lines.price"]').toggleClass('d-none', base);
+        $('[field="payment.lines.base"]').toggleClass('d-none', !base);
     },
 
     _onClickPay(ev) {

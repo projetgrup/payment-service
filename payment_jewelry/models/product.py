@@ -393,6 +393,7 @@ class PaymentProduct(models.AbstractModel):
                     elif prod['metal'] == 'Silver':
                         values['payment_price_method_product_id'] = base_silver.id
                         values['payment_price_method_formula'] = 'x*%s' % prod.get('base', '1')
+                    values['payment_price_base'] = prod.get('base', 1)
 
                     if product:
                         template = product.product_tmpl_id
@@ -470,6 +471,7 @@ class PaymentProduct(models.AbstractModel):
                     elif prod['metal'] == 'Silver':
                         values['payment_price_method_product_id'] = base_silver.id
                         values['payment_price_method_formula'] = 'x*%s' % prod.get('base', '1')
+                    values['payment_price_base'] = prod.get('base', 1)
 
                     if product:
                         product.write(values)
@@ -555,6 +557,7 @@ class ProductTemplate(models.Model):
                     'code': variant.default_code or '-',
                     'weight': weight or 0,
                     'purity': str(float(purity or 0))[1:],
+                    'base': variant.payment_price_base,
                 })
     
             for key, val in result.items():
