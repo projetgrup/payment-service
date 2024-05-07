@@ -35,7 +35,10 @@ class PayloxSystemJewelryController(Controller):
     def _prepare_system(self, company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if system == 'jewelry':
+            result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_balance', params={'ref': partner.ref})
+            balances = result if result and len(result) > 1 else [{'name': 'TRY', 'balance': 0.0}]
             res.update({
+                'balances': balances,
                 'currency': company.currency_id,
                 'options': {
                     'listen_price_active': True,
