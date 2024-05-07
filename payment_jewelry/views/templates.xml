@@ -53,7 +53,16 @@
                     <td class="font-weight-bold align-middle"><span t-esc="partner.name"/></td>
                     <td class="border-0"/>
                     <td class="bg-100 border-right text-right align-middle"><em>Balance : </em></td>
-                    <td class="font-weight-bold align-middle"><span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/></td>
+                    <td class="font-weight-bold align-middle small d-flex flex-column p-2">
+                        <t t-foreach="balances" t-as="balance">
+                            <t t-if="balance['name'] in ('TRY', 'TL')">
+                                <span t-esc="balance['balance']" t-options="{'widget': 'monetary', 'display_currency': company.currency_id}"/>
+                            </t> 
+                            <t t-elif="balance['name'] == 'HAS'">
+                                <span><span t-esc="balance['balance']" t-options="{'widget': 'float', 'precision': 4}"/> HAS</span>
+                            </t> 
+                        </t>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="px-0 py-1">

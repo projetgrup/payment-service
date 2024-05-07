@@ -4,6 +4,8 @@ import base64
 import werkzeug
 from urllib.parse import urlparse
 
+from werkzeug.exceptions import NotFound
+
 from .sse import dispatch
 from odoo import _
 from odoo.http import route, request, Response, Controller
@@ -36,8 +38,25 @@ class CustomerPortal(portal.CustomerPortal):
             ]) if Products.check_access_rights('read', raise_exception=False) else 0
         return values
 
+    @route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth='public', website=True)
+    def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+        company = request.env.company
+        user = request.env.user
+        if not company.system:
+            if not user.share:
+                return super().portal_my_orders(page=page, date_begin=date_begin, date_end=date_end, sortby=sortby, **kw)
+            else:
+                raise NotFound()
+        
+        values = self._prepare_portal_layout_values()
+        return request.render('payment_system_product.portal_my_orders', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
     @route('/my/products', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
-    def page_products(self, page=1, sortby=None, filterby=None, **kw):
+    def portal_my_products(self, page=1, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         company = request.env.company
         domain = [
@@ -107,7 +126,7 @@ class CustomerPortal(portal.CustomerPortal):
         })
 
     @route('/my/products/save', type='json', auth='user', website=True)
-    def page_products_save(self, products):
+    def portal_my_products_save(self, products):
         paid = request.env.user.partner_id.id
         pids = list(map(int, products.keys()))
         lines = request.env['payment.product.partner'].sudo().search([
