@@ -399,5 +399,8 @@
                 <span t-esc="0.0" t-options="{'widget': 'float', 'precision': 4}"/> gr
             </span>
         </xpath>
+        <xpath expr="//button[@field='product.pay']" position="after">
+            <button class="btn btn-block btn-warning font-weight-bold hide" field="product.deduct">Pay with HAS Balance</button>
+        </xpath>
     </template>
 </odoo>

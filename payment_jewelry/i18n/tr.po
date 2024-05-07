@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-01 18:40+0000\n"
-"PO-Revision-Date: 2024-05-01 22:03+0300\n"
+"POT-Creation-Date: 2024-05-07 10:38+0000\n"
+"PO-Revision-Date: 2024-05-07 13:39+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -70,6 +70,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "<span>0</span> gr<br/>added"
 msgstr "<span>0</span> gr<br/>eklendi"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "<span>Gram</span>"
+msgstr "<span>Gram</span>"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_regsiter
@@ -264,7 +269,6 @@ msgstr "Tutar"
 
 #. module: payment_jewelry
 #. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: code:addons/payment_jewelry/static/src/xml/register.xml:0
 #, python-format
 msgid "An error occured."
@@ -327,13 +331,6 @@ msgstr "Sepet boş"
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_category
 msgid "Categories"
 msgstr "Kategoriler"
-
-#. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Choose a brand"
-msgstr "Bir marka seçin"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.parent_form
@@ -467,6 +464,11 @@ msgid "Gram"
 msgstr "Gram"
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "HAS"
+msgstr ""
+
+#. module: payment_jewelry
 #: model:ir.model,name:payment_jewelry.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
@@ -522,10 +524,7 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
-#, python-format
 msgid "My PoS Policy"
 msgstr "PoS Poliçem"
 
@@ -547,11 +546,9 @@ msgid "Orders"
 msgstr "Siparişler"
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Pay Now"
-msgstr "Hemen Öde"
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Pay with HAS Balance"
+msgstr "HAS Bakiyesi ile Öde"
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_acquirer
@@ -610,27 +607,9 @@ msgid "Please check your VAT number and try again."
 msgstr "Lütfen vergi kimlik numaranızı kontrol edin ve tekrar deneyin."
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Policy has been sent succesfully."
-msgstr "Poliçe başarıyla gönderildi."
-
-#. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Price"
 msgstr "Fiyat"
-
-#. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid ""
-"Price locked has been removed.\n"
-"Please start the payment procedure all over."
-msgstr ""
-"Fiyat kilidi kaldırılmıştır.\n"
-"Lütfen ödeme sürecini tekrar başlatınız."
 
 #. module: payment_jewelry
 #: model:ir.model,name:payment_jewelry.model_product_attribute
@@ -674,13 +653,6 @@ msgstr "Miktar"
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
 msgid "Reset"
 msgstr "Sıfırla"
-
-#. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Restart Payment"
-msgstr "Yeniden Başlat"
 
 #. module: payment_jewelry
 #: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
@@ -738,13 +710,6 @@ msgid "Street..."
 msgstr "Cadde..."
 
 #. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Success"
-msgstr "Başarılı"
-
-#. module: payment_jewelry
 #: model:ir.model.fields,field_description:payment_jewelry.field_payment_item__system
 #: model:ir.model.fields,field_description:payment_jewelry.field_product_attribute__system
 #: model:ir.model.fields,field_description:payment_jewelry.field_product_category__system
@@ -756,6 +721,11 @@ msgstr "Başarılı"
 #: model:ir.model.fields,field_description:payment_jewelry.field_sale_order__system
 msgid "System"
 msgstr "Sistem"
+
+#. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "TRY"
+msgstr ""
 
 #. module: payment_jewelry
 #: model:ir.ui.menu,name:payment_jewelry.menu_tags
@@ -797,6 +767,11 @@ msgstr ""
 "butonuna tıklayınız"
 
 #. module: payment_jewelry
+#: model_terms:ir.ui.view,arch_db:payment_jewelry.page_payment
+msgid "Unit(s)"
+msgstr "Adet"
+
+#. module: payment_jewelry
 #. openerp-web
 #: code:addons/payment_jewelry/static/src/xml/dashboard.xml:0
 #: code:addons/payment_jewelry/static/src/xml/product.xml:0
@@ -826,13 +801,6 @@ msgstr "Vergi No"
 #: model:ir.ui.menu,name:payment_jewelry.menu_product_product
 msgid "Variants"
 msgstr "Varyantlar"
-
-#. module: payment_jewelry
-#. openerp-web
-#: code:addons/payment_jewelry/static/src/js/page.js:0
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
 
 #. module: payment_jewelry
 #. openerp-web
@@ -899,6 +867,38 @@ msgstr "syncOPS Entegrasyonu"
 msgid "{{ ctx['company'].name }} | PoS Policy"
 msgstr "{{ ctx['company'].name }} | PoS Poliçeniz"
 
+#, python-format
+#~ msgid "Choose a brand"
+#~ msgstr "Bir marka seçin"
+
+#, python-format
+#~ msgid "Pay Now"
+#~ msgstr "Hemen Öde"
+
+#, python-format
+#~ msgid "Policy has been sent succesfully."
+#~ msgstr "Poliçe başarıyla gönderildi."
+
+#, python-format
+#~ msgid ""
+#~ "Price locked has been removed.\n"
+#~ "Please start the payment procedure all over."
+#~ msgstr ""
+#~ "Fiyat kilidi kaldırılmıştır.\n"
+#~ "Lütfen ödeme sürecini tekrar başlatınız."
+
+#, python-format
+#~ msgid "Restart Payment"
+#~ msgstr "Yeniden Başlat"
+
+#, python-format
+#~ msgid "Success"
+#~ msgstr "Başarılı"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Uyarı"
+
 #~ msgid ""
 #~ "<span class=\"mb8\">\n"
 #~ "                                        The price has been locked for\n"
@@ -919,9 +919,6 @@ msgstr "{{ ctx['company'].name }} | PoS Poliçeniz"
 #~ "<span>\n"
 #~ "                                        saniye boyunca sabitlenmiştir.\n"
 #~ "                                    </span>"
-
-#~ msgid "<span>Gram</span>"
-#~ msgstr "<span>Gram</span>"
 
 #~ msgid "Amount to Pay"
 #~ msgstr "Ödenecek Tutar"
@@ -959,9 +956,6 @@ msgstr "{{ ctx['company'].name }} | PoS Poliçeniz"
 
 #~ msgid "Time"
 #~ msgstr "Süre"
-
-#~ msgid "Unit(s)"
-#~ msgstr "Adet"
 
 #~ msgid "No setting found"
 #~ msgstr "Bir ayar bulunamadı"
