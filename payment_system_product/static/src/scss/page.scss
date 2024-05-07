@@ -1128,22 +1128,25 @@
         .payment-product-items {
             display: grid;
             grid-template-rows: 1fr;
-            flex: 0 0 100%;
             max-width: 100%;
             border-right-color: transparent;
+            //flex: 0 0 100%;
+            flex: unset;
         }
  
         .payment-product-sidebar {
-            flex: 0 0 100%;
             max-width: 100%;
             border-right-color: transparent;
+            //flex: 0 0 100%;
+            flex: unset;
         }
 
         .payment-product-payment {
             display: grid;
             grid-template-rows: 0fr;
-            flex: 0 0 100%;
             max-width: 100%;
+            //flex: 0 0 100%;
+            flex: unset;
         }
 
         &.payment-form {
