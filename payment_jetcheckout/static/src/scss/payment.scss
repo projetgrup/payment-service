@@ -748,7 +748,20 @@
             top: 0;
         }
     }
-    
+
+    .payment-type {
+        display: flex;
+        gap: 4px;
+        margin: 1em 1em 4px;
+        padding: 4px 0;
+        border-bottom: 2px solid var(--primary);
+
+        button {
+            background-color: #ffffff;
+            border: none;
+        }
+    }
+
     .installment-tabs {
         text-align:center;
     

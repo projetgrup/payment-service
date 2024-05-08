@@ -124,6 +124,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 default: 0,
             }),
         };
+        this.type = new fields.element({
+            events: [['click', this._onClickPaymentType]],
+        });
         this.payment = {
             button: new fields.element({
                 events: [['click', this._onClickPaymentButton]],
@@ -908,6 +911,17 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             invoice: this.payment.invoice.value,
             subscription: this.payment.subscription.value,
         }
+    },
+
+    _onClickPaymentType: function (ev) {
+        const code = ev.currentTarget.dataset.name;
+        $('div[id^=payment_type_]').each((_, e) => {
+            if (e.id === `payment_type_${code}`) {
+                e.classList.remove('d-none');
+            } else {
+                e.classList.add('d-none');
+            }
+        })
     },
 
     _onClickPaymentButton: function () {

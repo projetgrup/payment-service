@@ -234,6 +234,14 @@ class PayloxController(http.Controller):
 
         language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner, transaction=transaction)
+        types = self._get_payment_types(acquirer=acquirer)
+        wallets = []
+        transfers = []
+        for ptype in types:
+            if ptype['code'] == 'wallet':
+                wallets = self._prepare_wallet(acquirer=acquirer)
+            elif ptype['code'] == 'wire_transfer':
+                transfers = self._prepare_wiretransfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
         if currencies and currency not in currencies:
@@ -250,6 +258,9 @@ class PayloxController(http.Controller):
             'user': user,
             'language': language,
             'currency': currency,
+            'types': types,
+            'wallets': wallets,
+            'transfers': transfers,
             'currencies': currencies,
             'card_family': card_family,
             'installment_type': installment_type,
@@ -278,6 +289,100 @@ class PayloxController(http.Controller):
             return _('Business Card')
         else:
             return _('General')
+
+    def _get_payment_types(self, acquirer):
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        url = '%s/api/v1/prepayment/payment_types' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "language": "tr",
+        }
+
+        types = []
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                for payment_type in result['payment_types']:
+                    if payment_type == 'Virtual':
+                        types.append({
+                            'name': _('Pay with Credit Card'),
+                            'code': 'virtual_pos'
+                        })
+                    #elif payment_type == 'Physical':
+                    #    types.append({
+                    #        'name': _('Pay with Physical PoS'),
+                    #        'code': 'physical_pos'
+                    #    })
+                    elif payment_type == 'Wallet':
+                        types.append({
+                            'name': _('Pay with Wallet'),
+                            'code': 'wallet'
+                        })
+                    elif payment_type == 'WireTransfer':
+                        types.append({
+                            'name': _('Pay with Wire Transfer'),
+                            'code': 'wire_transfer'
+                        })
+                    #elif payment_type == 'SoftPOS':
+                    #    types.append({
+                    #        'name': _('Pay with Soft PoS'),
+                    #        'code': 'soft_pos'
+                    #    })
+                    elif payment_type == 'ShoppingCredit':
+                        types.append({
+                            'name': _('Pay with Shopping Credit'),
+                            'code': 'shopping_credit'
+                        })
+        return types
+    
+    def _prepare_wallet(self, acquirer=None):
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        url = '%s/api/v1/prepayment/wallet_options' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "language": "tr",
+        }
+
+        wallets = []
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                for service in result['services']:
+                    wallets.append({
+                        'name': service['service_name'],
+                        'wallets': [{
+                            'id': wallet['wallet_id'],
+                            'name': wallet['name'],
+                            'image': wallet['image_url'],
+                            'description': wallet['description'],
+                        } for wallet in service.get('wallets', [])]
+                    })
+        return wallets
+
+    def _prepare_wiretransfer(self, acquirer=None):
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        url = '%s/api/v1/prepayment/wiretransfer_options' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "language": "tr",
+        }
+
+        providers = []
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                for service in result['services']:
+                    providers.append({
+                        'name': service['name'],
+                        'image': service['logo_url']
+                    })
+        return providers
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
         self._check_user()
