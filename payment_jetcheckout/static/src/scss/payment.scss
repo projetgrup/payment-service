@@ -762,6 +762,83 @@
         }
     }
 
+    .payment-type-credit, .payment-type-wallet, .payment-type-transfer {
+        > div {
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            padding-left: 0.5em;
+            padding-bottom: 1em;
+            border-bottom: 1px solid #cccccc;
+
+            > div:first-of-type {
+                display: flex;
+
+                > div:first-child {
+                    flex: 1 1 auto;
+                    display: flex;
+                    padding: 1em 0;
+                    position: relative;
+                    align-items: center;
+                    gap: 1em;
+                    
+                    > input {
+                        position: absolute;
+                        opacity: 0;
+                        height: 0;
+                        width: 0;
+
+                        &+span {
+                            position: absolute;
+                            //top: 0;
+                            //left: 0;
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                            background-color: #eee;
+
+                            &:after {
+                                content: "";
+                                position: absolute;
+                                display: none;
+                                top: 5px;
+                                left: 5px;
+                                width: 10px;
+                                height: 10px;
+                                border-radius: 50%;
+                                background-color: var(--primary);
+                            }
+                        }
+
+                        &:checked {
+                            &+span:after {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    > strong {
+                        margin-left: 2em;
+                    }
+                }
+            }
+
+            > div:last-of-type {
+                display: flex;
+                font-size: 0.9em;
+            }
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+
+            img {
+                max-height: 75px;
+            }
+        };
+    }
+
     .installment-tabs {
         text-align:center;
     

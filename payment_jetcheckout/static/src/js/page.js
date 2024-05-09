@@ -103,11 +103,14 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             default: 0,
         });
         this.installment = {
+            row: new fields.string({
+                events: [['click', this._onClickRow]],
+            }),
             table: new fields.string({
                 events: [['click', this._onClickInstallmentTable]],
             }),
-            row: new fields.string({
-                events: [['click', this._onClickRow]],
+            credit: new fields.string({
+                events: [['click', this._onClickInstallmentCredit]],
             }),
             rowempty: new fields.string(),
             col: new fields.string(),
@@ -124,9 +127,20 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 default: 0,
             }),
         };
-        this.type = new fields.element({
-            events: [['click', this._onClickPaymentType]],
-        });
+        this.type = {
+            all: new fields.element({
+                events: [['click', this._onClickPaymentType]],
+            }),
+            credit: new fields.element({
+                events: [['click', this._onClickPaymentTypeCredit]],
+            }),
+            wallet: new fields.element({
+                events: [['click', this._onClickPaymentTypeWallet]],
+            }),
+            transfer: new fields.element({
+                events: [['click', this._onClickPaymentTypeTransfer]],
+            }),
+        }
         this.payment = {
             button: new fields.element({
                 events: [['click', this._onClickPaymentButton]],
@@ -611,6 +625,16 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         } 
     },
 
+    _onClickInstallmentCredit: function (ev) {
+        const $rows = this.installment.credit.$.find('div');
+        $rows.removeClass('installment-selected');
+        $rows.find('input').prop({'checked': false});
+
+        const $el = $(ev.target).closest('div.installment-line');
+        $el.addClass('installment-selected');
+        $el.find('input').prop({'checked': true});
+    },
+
     _onInputHolder: function () {
         try {
             if (this.card.holder.value) {
@@ -632,6 +656,21 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 s2s: this.payment.s2s.value,
                 format: format,
                 ...this.currency,
+            });
+        }
+
+        if (this.installment.credit.exist) {
+            this.installment.credit.$.each((_, e) => {
+                const $e = $(e);
+                const $row = $e.find('.installment-line');
+                const $amount = $row.find('[name=payment_type_credit_installment_amount]'); 
+                const $total = $row.find('[name=payment_type_credit_installment_total]'); 
+                const count = Number($row.data('id') || 1);
+                const rate = Number($row.data('rate') || 0);
+                const amount = this.amount.value * (1 + (rate/100));
+                const currency = [this.currency.position, this.currency.symbol, this.currency.decimal];
+                $amount.html(format.currency(amount/count, ...currency));
+                $total.html(format.currency(amount, ...currency));
             });
         }
     },
@@ -924,6 +963,44 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         })
     },
 
+    _onClickPaymentTypeCredit: function (ev) {
+        const id = ev.currentTarget.dataset.id;
+        this.type.credit.$.each((_, e) => {
+            if (e.dataset.id === id) {
+                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.querySelector('input').checked = true;
+            } else {
+                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.querySelector('input').checked = false;
+            }
+        })
+    },
+
+    _onClickPaymentTypeWallet: function (ev) {
+        const id = ev.currentTarget.dataset.id;
+        this.type.wallet.$.each((_, e) => {
+            if (e.dataset.id === id) {
+                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.querySelector('input').checked = true;
+            } else {
+                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.querySelector('input').checked = false;
+            }
+        })
+    },
+
+    _onClickPaymentTypeTransfer: function (ev) {
+        const id = ev.currentTarget.dataset.id;
+        this.type.transfer.$.each((_, e) => {
+            if (e.dataset.id === id) {
+                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.querySelector('input').checked = true;
+            } else {
+                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.querySelector('input').checked = false;
+            }
+        })
+    },
     _onClickPaymentButton: function () {
         if (this._checkData()) {
             framework.showLoading();

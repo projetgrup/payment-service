@@ -235,10 +235,13 @@ class PayloxController(http.Controller):
         language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner, transaction=transaction)
         types = self._get_payment_types(acquirer=acquirer)
+        shopping_credits = []
         wallets = []
         transfers = []
         for ptype in types:
-            if ptype['code'] == 'wallet':
+            if ptype['code'] == 'shopping_credit':
+                shopping_credits = self._prepare_credit(acquirer=acquirer, currency=currency)
+            elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
             elif ptype['code'] == 'wire_transfer':
                 transfers = self._prepare_wiretransfer(acquirer=acquirer)
@@ -259,6 +262,7 @@ class PayloxController(http.Controller):
             'language': language,
             'currency': currency,
             'types': types,
+            'shopping_credits': shopping_credits,
             'wallets': wallets,
             'transfers': transfers,
             'currencies': currencies,
@@ -337,6 +341,45 @@ class PayloxController(http.Controller):
                         })
         return types
     
+    def _prepare_credit(self, acquirer=None, currency=None):
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        if not currency:
+            currency = self._get_currency(currency, acquirer)
+        url = '%s/api/v1/prepayment/shoppingcredit_options' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "currency": currency.name,
+            "language": "tr",
+        }
+
+        shopping_credits = []
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                for installment in result['installment_options']:
+                    shopping_credits.append({
+                        'name': 'Shopping Credit',
+                        'code': installment['bank_code'],
+                        'image': '',
+                        'desc': '',
+                        'currency': installment['currency'],
+                        'campaign': installment['campaign_name'],
+                        'new': installment['bank_supports_new_customer'],
+                        'rows': [{
+                            'id': i['installment_count'],
+                            'amount': i['installment_amount'],
+                            'corate': i['cost_rate'],
+                            'crate': i['customer_rate'],
+                            'mincrate': i['min_customer_rate'],
+                            'maxcrate': i['max_customer_rate'],
+                            'minamount': i['min_amount'],
+                            'maxamount': i['max_amount'],
+                        } for i in installment.get('installments', [])]
+                    })
+        return shopping_credits
+ 
     def _prepare_wallet(self, acquirer=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         url = '%s/api/v1/prepayment/wallet_options' % acquirer._get_paylox_api_url()
@@ -358,7 +401,7 @@ class PayloxController(http.Controller):
                             'id': wallet['wallet_id'],
                             'name': wallet['name'],
                             'image': wallet['image_url'],
-                            'description': wallet['description'],
+                            'desc': wallet['description'],
                         } for wallet in service.get('wallets', [])]
                     })
         return wallets

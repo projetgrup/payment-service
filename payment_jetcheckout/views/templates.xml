@@ -324,7 +324,7 @@
             </t>
             <div t-if="len(types) &gt; 1" id="payment_type" class="payment-type">
                 <t t-foreach="types" t-as="ptype">
-                    <button class="btn btn-secondary text-primary" t-esc="ptype['name']" t-att-data-name="ptype['code']" field="type"/>
+                    <button class="btn btn-secondary text-primary" t-esc="ptype['name']" t-att-data-name="ptype['code']" field="type.all"/>
                 </t>
             </div>
             <t t-foreach="types" t-as="ptype">
@@ -421,27 +421,122 @@
                 </div>
                 <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
                 </div>
-                <div t-elif="ptype['code'] == 'wallet'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'wallet' else ''}">
+                <div t-elif="ptype['code'] == 'wallet'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-wallet px-3 #{'d-none' if types and types[0]['code'] != 'wallet' else ''}">
                     <t t-foreach="wallets" t-as="wallet">
                         <t t-foreach="wallet['wallets']" t-as="w">
-                            <div t-att-data-id="w['id']" t-att-data-name="wallet['name']" class="d-flex flex-column justify-content-center align-items-center">
-                                <img t-att-src="w['image']"/>
-                                <span t-esc="w['name']"/>
+                            <div t-att-data-id="w['id']" t-att-data-name="wallet['name']" field="type.wallet">
+                                <div>
+                                    <div>
+                                        <input type="radio" name="payment_type_wallet"/>
+                                        <span/>
+                                        <strong t-esc="w['name']"/>
+                                    </div>
+                                    <div>
+                                        <img t-att-src="w['image']"/>
+                                    </div>
+                                </div>
+                                <div class="d-none">
+                                    <div class="flex-fill" t-raw="w['desc']"/>
+                                    <div class="align-items-end d-flex" style="min-width: 200px;">
+                                        <button class="align-items-center btn btn-primary d-flex justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                    </div>
+                                </div>
                             </div>
                         </t>
                     </t>
                 </div>
-                <div t-elif="ptype['code'] == 'wire_transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'wire_transfer' else ''}">
+                <div t-elif="ptype['code'] == 'wire_transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'wire_transfer' else ''}">
                     <t t-foreach="transfers" t-as="transfer">
-                        <div class="d-flex flex-column justify-content-center align-items-center">
-                            <img t-att-src="transfer['image']"/>
-                            <span t-esc="transfer['name']"/>
+                        <div t-att-data-id="0" field="type.transfer">
+                            <div>
+                                <div>
+                                    <input type="radio" name="payment_type_transfer"/>
+                                    <span/>
+                                    <strong t-esc="transfer['name']"/>
+                                </div>
+                                <div>
+                                    <img t-att-src="transfer['image']"/>
+                                </div>
+                            </div>
+                            <div class="d-none"/>
                         </div>
                     </t>
                 </div>
                 <div t-elif="ptype['code'] == 'soft_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'soft_pos' else ''}">
                 </div>
-                <div t-elif="ptype['code'] == 'shopping_credit'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'shopping_credit' else ''}">
+                <div t-elif="ptype['code'] == 'shopping_credit'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-credit px-3 #{'d-none' if types and types[0]['code'] != 'shopping_credit' else ''}">
+                    <t t-foreach="shopping_credits" t-as="credit">
+                        <div t-att-data-id="credit['code']" field="type.credit">
+                            <div>
+                                <div>
+                                    <input type="radio" name="payment_type_credit"/>
+                                    <span/>
+                                    <strong t-esc="credit['name']"/>
+                                </div>
+                                <div>
+                                    <img t-att-src="credit['image']"/>
+                                </div>
+                            </div>
+                            <div class="d-none">
+                                <div class="col-md-8" t-raw="credit['desc']"/>
+                                <div class="col-md-4">
+                                    <div class="payment-table mt-2">
+                                        <div class="payment-gradient border card p-3 installment-rows">
+                                            <div>
+                                                <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header">
+                                                    <t t-call="payment_jetcheckout.payment_installment_header">
+                                                        <t t-set="installment_type" t-value="i"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                            <div class="installment-row overflow-auto flex-fill" t-att-data-id="credit['code']" t-att-data-type="'i'" field="installment.credit">
+                                                <t t-set="selected" t-value="True"/>
+                                                <t t-foreach="credit['rows']" t-as="row">
+                                                    <div t-attf-class="installment-line #{selected and 'installment-selected' or ''}" t-att-data-id="row['id']" t-att-data-rate="row['crate']">
+                                                        <div class="installment-cell">
+                                                            <div class="text-center">
+                                                                <input type="radio" t-attf-name="payment_type_credit_installment_#{row['id']}" t-att-value="row['id']" t-att-checked="selected and 'checked' or None" t-att-data-id="row['id']" class="d-block mx-auto"/>
+                                                                <span class="installment-radio"/>
+                                                            </div>
+                                                            <div class="flex-fill">
+                                                                <span class="position-relative">
+                                                                    <span t-esc="row['id']"/>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div t-if="not s2s" class="text-center side-border">
+                                                            % <span t-esc="row['crate']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                        </div>
+                                                        <div t-attf-name="payment_type_credit_installment_amount" class="text-center side-border">
+                                                            <span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                                        </div>
+                                                        <div t-attf-name="payment_type_credit_installment_total" class="text-center">
+                                                            <span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                                        </div>
+                                                    </div>
+                                                    <t t-set="selected" t-value="False"/>
+                                                </t>
+                                            </div>
+                                            <div t-if="user" class="row font-weight-bold justify-content-center small">Campaign: <span class="ml-2" t-esc="credit['campaign'] or '-'" field="type.credit.campaign"/></div>
+                                            <div t-if="not no_button" class="font-weight-bold text-uppercase">
+                                                <div class="p-2" name="payment_button">
+                                                    <div>
+                                                        <button class="align-items-center btn btn-primary d-flex h-100 justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div t-else="" class="row font-weight-bold text-uppercase">
+                                                <div class="d-none">
+                                                    <button class="d-none" field="payment.button"/>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" t-att-value="credit['campaign']"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                 </div>
             </t>
         </div>
