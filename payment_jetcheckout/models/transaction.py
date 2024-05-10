@@ -71,7 +71,18 @@ class PaymentTransaction(models.Model):
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
 
-    jetcheckout_contactless_ok = fields.Boolean('Paylox Contactless Payment', readonly=True, copy=False)
+    jetcheckout_contactless_ok = fields.Boolean('Paylox Contactless Payment', readonly=True, copy=False) #TODO remove
+    jetcheckout_payment_type = fields.Selection(selection=[
+        ('virtual_pos', 'Virtual PoS'),
+        ('physical_pos', 'Physical PoS'),
+        ('soft_pos', 'Soft PoS'),
+        ('credit', 'Shopping Credit'),
+        ('transfer', 'Wire Transfer'),
+        ('wallet', 'Wallet'),
+    ], string='Paylox Payment Type', default='virtual_pos', readonly=True, copy=False)
+    jetcheckout_payment_type_credit_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
+    jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
+    jetcheckout_payment_type_wallet_name = fields.Char('Paylox Payment Type Wallet Name', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)

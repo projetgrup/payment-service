@@ -168,6 +168,46 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickAmountCurrency]],
             }),
         };
+        Object.defineProperty(this.type, 'selected', {
+            get () {
+                return payment_type.querySelector('input:checked').value;
+            },
+        });
+        Object.defineProperty(this.type.wallet, 'selected', {
+            get () {
+                return payment_type_wallet.querySelector('input:checked');
+            },
+        });
+        Object.defineProperty(this.type.credit, 'selected', {
+            get () {
+                return payment_type_credit.querySelector('input:checked');
+            },
+        });
+        Object.defineProperty(this.installment.credit, 'selected', {
+            get () {
+                const credit = payment_type_credit.querySelector('input:checked').closest('[field="type.credit"]');
+                return credit.querySelector('.installment-line input:checked');
+            },
+        });
+        Object.defineProperty(this.installment.credit, 'rows', {
+            get () {
+                const credit = payment_type_credit.querySelector('input:checked').closest('[field="type.credit"]');
+                const rows = credit.querySelectorAll('.installment-line input');
+                const result = [];
+                for (const row of rows) {
+                    const id = parseInt(row.dataset.id);
+                    const crate = parseFloat(row.dataset.crate);
+                    const corate = parseFloat(row.dataset.corate);
+                    result.push({
+                        id: id,
+                        count: id,
+                        crate: crate || 0,
+                        corate: corate || 0,
+                    })
+                }
+                return result;
+            },
+        });
     },
 
     _setCurrency: function () {
@@ -844,61 +884,93 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _checkData: function () {
         let checked = true;
-        if (!this.amount.value && (!this._checklist?.length || this._checklist.includes('amount'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please enter an amount'),
-            });
-            checked = false;
-        } else if (!this.card.holder.value && (!this._checklist?.length || this._checklist.includes('holder'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please fill card holder name'),
-            });
-            checked = false;
-        } else if (!this.card.number.value && (!this._checklist?.length || this._checklist.includes('number'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please fill card number'),
-            });
-            checked = false;
-        } else if (!this.card.valid && (!this._checklist?.length || this._checklist.includes('valid'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please enter a valid card number'),
-            });
-            checked = false;
-        } else if (!this.card.date.value && (!this._checklist?.length || this._checklist.includes('date'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please fill card expiration date'),
-            });
-            checked = false;
-        } else if (!this.card.code.value && (!this._checklist?.length || this._checklist.includes('code'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please fill card security code'),
-            });
-            checked = false;
-        } else if (!this._getInstallmentInput().length && (!this._checklist?.length || this._checklist.includes('installment'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please select whether payment is straight or installment'),
-            });
-            checked = false;
-        } else if (this.terms.ok.exist && !this.terms.ok.checked && (!this._checklist?.length || this._checklist.includes('term'))) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please accept Terms & Conditions'),
-            });
+        const type = this.type.selected;
+        if (type === 'virtual_pos') {
+            if (!this.amount.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter an amount'),
+                });
+                checked = false;
+            } else if (!this.card.holder.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please fill card holder name'),
+                });
+                checked = false;
+            } else if (!this.card.number.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please fill card number'),
+                });
+                checked = false;
+            } else if (!this.card.valid) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter a valid card number'),
+                });
+                checked = false;
+            } else if (!this.card.date.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please fill card expiration date'),
+                });
+                checked = false;
+            } else if (!this.card.code.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please fill card security code'),
+                });
+                checked = false;
+            } else if (!this._getInstallmentInput().length) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please select whether payment is straight or installment'),
+                });
+                checked = false;
+            } else if (this.terms.ok.exist && !this.terms.ok.checked) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please accept Terms & Conditions'),
+                });
+                checked = false;
+            }
+        } else if (type === 'soft_pos') {
+            if (!this.amount.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter an amount'),
+                });
+                checked = false;
+            }
+        } else if (type === 'credit') {
+            if (!this.amount.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter an amount'),
+                });
+                checked = false;
+            }
+        } else if (type === 'wallet') {
+            if (!this.amount.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter an amount'),
+                });
+                checked = false;
+            }
+        } else {
             checked = false;
         }
 
@@ -906,7 +978,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this._enableButton();
         }
 
-        this._checklist = undefined;
         return checked;
     },
 
@@ -922,38 +993,91 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _getParams: function () {
         const $input = this._getInstallmentInput();
-        return {
-            card: {
-                type: this.card.type || '',
-                family: this.card.family || '',
-                code: this.card.code.value,
-                holder: this.card.holder.value,
-                date: this.card.date.value,
-                number: this.card.number.value,
-            },
-            amount: this.amount.value,
-            currency: this.currency.id,
-            discount: {
-                single: this.discount.single.value,
-            },
-            installment: {
-                id: $input.data('id') || 1,
-                index: $input.data('index') || 0,
-                rows: this.installment.rows || [],
-            },
-            contactless: this.payment.contactless.exist,
-            campaign: this.campaign.name.value,
-            successurl: this.payment.successurl.value,
-            failurl: this.payment.failurl.value,
-            partner: parseInt(this.partner.value || 0),
-            order: this.payment.order.value,
-            invoice: this.payment.invoice.value,
-            subscription: this.payment.subscription.value,
+        const type = this.type.selected;
+        if (type === 'virtual_pos') {
+            return {
+                type,
+                card: {
+                    type: this.card.type || '',
+                    family: this.card.family || '',
+                    code: this.card.code.value,
+                    holder: this.card.holder.value,
+                    date: this.card.date.value,
+                    number: this.card.number.value,
+                },
+                amount: this.amount.value,
+                currency: this.currency.id,
+                discount: {
+                    single: this.discount.single.value,
+                },
+                installment: {
+                    id: $input.data('id') || 1,
+                    index: $input.data('index') || 0,
+                    rows: this.installment.rows || [],
+                },
+                campaign: this.campaign.name.value,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
+                partner: parseInt(this.partner.value || 0),
+                order: this.payment.order.value,
+                invoice: this.payment.invoice.value,
+                subscription: this.payment.subscription.value,
+            }
+        } else if (type === 'soft_pos') {
+            return {
+                type,
+                amount: this.amount.value,
+                currency: this.currency.id,
+                campaign: this.campaign.name.value,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
+                partner: parseInt(this.partner.value || 0),
+                order: this.payment.order.value,
+                invoice: this.payment.invoice.value,
+                subscription: this.payment.subscription.value,
+            }
+
+        } else if (type === 'credit') {
+            return {
+                type,
+                code: this.type.credit.selected.value,
+                amount: this.amount.value,
+                currency: this.currency.id,
+                installment: {
+                    id: parseInt(this.installment.credit.selected.value),
+                    rows: this.installment.credit.rows,
+                },
+                campaign: this.type.credit.selected.dataset.campaign,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
+                partner: parseInt(this.partner.value || 0),
+                order: this.payment.order.value,
+                invoice: this.payment.invoice.value,
+                subscription: this.payment.subscription.value,
+            }
+        } else if (type === 'wallet') {
+            return {
+                type,
+                id: parseInt(this.type.wallet.selected.value),
+                name: this.type.wallet.selected.dataset.value,
+                amount: this.amount.value,
+                currency: this.currency.id,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
+                partner: parseInt(this.partner.value || 0),
+                order: this.payment.order.value,
+                invoice: this.payment.invoice.value,
+                subscription: this.payment.subscription.value,
+            }
         }
+        return {}
     },
 
     _onClickPaymentType: function (ev) {
-        const code = ev.currentTarget.dataset.name;
+        const el = ev.currentTarget;
+        const code = el.dataset.name;
+
+        el.querySelector('input').checked = true;
         $('div[id^=payment_type_]').each((_, e) => {
             if (e.id === `payment_type_${code}`) {
                 e.classList.remove('d-none');
@@ -1005,7 +1129,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         if (this._checkData()) {
             framework.showLoading();
             return rpc.query({
-                route: '/payment/card/pay',
+                route: '/payment/init',
                 params: this._getParams(),
             }).then((result) => {
                 if ('url' in result) {
@@ -1032,7 +1156,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _onClickPaymentContactless: function() {
-        this._checklist = ['amount', 'agreement'];
         return this._onClickPaymentButton();
     },
 });
