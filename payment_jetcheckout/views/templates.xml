@@ -426,12 +426,14 @@
                 <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
                 </div>
                 <div t-elif="ptype['code'] == 'wallet'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-wallet px-3 #{'d-none' if types and types[0]['code'] != 'wallet' else ''}">
+                    <t t-set="wallet_id" t-value="1"/>
+                    <t t-set="wallet_selected" t-value="True"/>
                     <t t-foreach="wallets" t-as="wallet">
                         <t t-foreach="wallet['wallets']" t-as="w">
-                                <div t-att-data-id="w['id']" t-att-data-name="wallet['name']" field="type.wallet">
+                            <div t-attf-data-id="wallet_id" t-att-data-name="wallet['name']" field="type.wallet">
                                 <div>
                                     <div>
-                                        <input type="radio" name="payment_type_wallet" t-att-value="w['id']" t-att-data-value="wallet['name']"/>
+                                        <input type="radio" name="payment_type_wallet" t-att-value="w['id']" t-att-data-value="wallet['name']" t-att-checked="wallet_selected and 'checked' or None"/>
                                         <span/>
                                         <strong t-esc="w['name']"/>
                                     </div>
@@ -439,22 +441,26 @@
                                         <img t-att-src="w['image']"/>
                                     </div>
                                 </div>
-                                <div class="d-none">
+                                <div t-attf-class="#{'' if wallet_selected else 'd-none'}">
                                     <div class="flex-fill" t-raw="w['desc']"/>
                                     <div class="align-items-end d-flex" style="min-width: 200px;">
                                         <button class="align-items-center btn btn-primary d-flex justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
                                     </div>
                                 </div>
                             </div>
+                            <t t-set="wallet_id" t-value="wallet_id+1"/>
+                            <t t-set="wallet_selected" t-value="False"/>
                         </t>
                     </t>
                 </div>
                 <div t-elif="ptype['code'] == 'wire_transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'wire_transfer' else ''}">
+                    <t t-set="transfer_id" t-value="1"/>
+                    <t t-set="transfer_selected" t-value="True"/>
                     <t t-foreach="transfers" t-as="transfer">
-                        <div t-att-data-id="0" field="type.transfer">
+                        <div t-att-data-id="transfer_id" field="type.transfer">
                             <div>
                                 <div>
-                                    <input type="radio" name="payment_type_transfer"/>
+                                    <input type="radio" name="payment_type_transfer" t-att-checked="transfer_selected and 'checked' or None"/>
                                     <span/>
                                     <strong t-esc="transfer['name']"/>
                                 </div>
@@ -462,19 +468,22 @@
                                     <img t-att-src="transfer['image']"/>
                                 </div>
                             </div>
-                            <div class="d-none"/>
+                            <div t-attf-class="#{'' if transfer_selected else 'd-none'}" class="d-none"/>
                         </div>
+                        <t t-set="transfer_id" t-value="transfer_id+1"/>
+                        <t t-set="transfer_selected" t-value="False"/>
                     </t>
                 </div>
                 <div t-elif="ptype['code'] == 'soft_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'soft_pos' else ''}">
                 </div>
                 <div t-elif="ptype['code'] == 'credit'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-credit px-3 #{'d-none' if types and types[0]['code'] != 'credit' else ''}">
                     <t t-set="credit_id" t-value="1"/>
+                    <t t-set="credit_selected" t-value="True"/>
                     <t t-foreach="shopping_credits" t-as="credit">
                         <div t-attf-data-id="credit_id" t-att-data-code="credit['code']" field="type.credit">
                             <div>
                                 <div>
-                                    <input type="radio" name="payment_type_credit" t-att-value="credit['code']" t-att-data-campaign="credit['campaign']"/>
+                                    <input type="radio" name="payment_type_credit" t-att-value="credit['code']" t-att-data-campaign="credit['campaign']" t-att-checked="credit_selected and 'checked' or None"/>
                                     <span/>
                                     <strong t-esc="credit['name']"/>
                                 </div>
@@ -482,7 +491,7 @@
                                     <img t-att-src="credit['image']"/>
                                 </div>
                             </div>
-                            <div class="d-none">
+                            <div t-attf-class="#{'' if credit_selected else 'd-none'}">
                                 <div class="col-md-8" t-raw="credit['desc']"/>
                                 <div class="col-md-4">
                                     <div class="payment-table mt-2">
@@ -495,12 +504,12 @@
                                                 </div>
                                             </div>
                                             <div class="installment-row overflow-auto flex-fill" t-att-data-id="credit['code']" t-att-data-type="'i'" field="installment.credit">
-                                                <t t-set="selected" t-value="True"/>
+                                                <t t-set="installment_selected" t-value="True"/>
                                                 <t t-foreach="credit['rows']" t-as="row">
-                                                    <div t-attf-class="installment-line #{selected and 'installment-selected' or ''}" t-att-data-id="row['id']">
+                                                    <div t-attf-class="installment-line #{installment_selected and 'installment-selected' or ''}" t-att-data-id="row['id']">
                                                         <div class="installment-cell">
                                                             <div class="text-center">
-                                                                <input type="radio" t-attf-name="payment_type_credit_installment_#{credit_id}" t-att-value="row['id']" t-att-checked="selected and 'checked' or None" t-att-data-id="row['id']" t-att-data-crate="row['crate']" t-att-data-corate="row['corate']" class="d-block mx-auto"/>
+                                                                <input type="radio" t-attf-name="payment_type_credit_installment_#{credit_id}" t-att-value="row['id']" t-att-checked="installment_selected and 'checked' or None" t-att-data-id="row['id']" t-att-data-crate="row['crate']" t-att-data-corate="row['corate']" class="d-block mx-auto"/>
                                                                 <span class="installment-radio"/>
                                                             </div>
                                                             <div class="flex-fill">
@@ -519,7 +528,7 @@
                                                             <span t-esc="0.0" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                                         </div>
                                                     </div>
-                                                    <t t-set="selected" t-value="False"/>
+                                                    <t t-set="installment_selected" t-value="False"/>
                                                 </t>
                                             </div>
                                             <div t-if="user" class="row font-weight-bold justify-content-center small">Campaign: <span class="ml-2" t-esc="credit['campaign'] or '-'" field="type.credit.campaign"/></div>
@@ -542,6 +551,7 @@
                             </div>
                         </div>
                         <t t-set="credit_id" t-value="credit_id+1"/>
+                        <t t-set="credit_selected" t-value="False"/>
                     </t>
                 </div>
             </t>

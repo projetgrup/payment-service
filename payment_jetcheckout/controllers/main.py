@@ -323,11 +323,11 @@ class PayloxController(http.Controller):
                             'name': _('Pay with Wallet'),
                             'code': 'wallet'
                         })
-                    elif payment_type == 'WireTransfer':
-                        types.append({
-                            'name': _('Pay with Wire Transfer'),
-                            'code': 'wire_transfer'
-                        })
+                    #elif payment_type == 'WireTransfer':
+                    #    types.append({
+                    #        'name': _('Pay with Wire Transfer'),
+                    #        'code': 'wire_transfer'
+                    #    })
                     #elif payment_type == 'SoftPOS':
                     #    types.append({
                     #        'name': _('Pay with Soft PoS'),

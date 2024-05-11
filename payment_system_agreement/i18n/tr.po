@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 11:39+0000\n"
-"PO-Revision-Date: 2024-02-26 14:41+0300\n"
+"POT-Creation-Date: 2024-05-11 09:40+0000\n"
+"PO-Revision-Date: 2024-05-11 12:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -414,6 +414,12 @@ msgstr "Metin"
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__transaction_id
 msgid "Transaction"
 msgstr "İşlem"
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__type_ids
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Types"
+msgstr "Türler"
 
 #. module: payment_system_agreement
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__uuid
