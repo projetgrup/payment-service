@@ -125,6 +125,9 @@
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
                     <div t-if="request.env.company.payment_page_ok and (request.env.user.share or not request.env.user.share and request.env.user.payment_page_ok)" class="m-1" style="width:200px;"><a href="/my/payment" class="btn btn-secondary btn-block font-weight-bold text-uppercase"><i class="fa fa-money mr-2" t-translation="off"/>New Payment</a></div>
                 </div>
+                <div class="w-100">
+                    <iframe t-attf-src="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="border-0 mt-3 rounded w-75" style="height: 600px;"/>
+                </div>
             </div>
             <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center flex-column #{classes}">
                 <div>Your transaction status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>

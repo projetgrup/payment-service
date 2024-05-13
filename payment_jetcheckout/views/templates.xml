@@ -322,7 +322,7 @@
             <t t-call="payment_jetcheckout.payment_smart_button">
                 <t t-set="page" t-value="'payment'"/>
             </t>
-            <div id="payment_type" t-attf-class="payment-type #{'' if len(types) &gt; 1 else 'd-none'}">
+            <div id="payment_type" t-attf-class="payment-type #{'' if len(types or ['virtual_pos']) &gt; 1 else 'd-none'}">
                 <t t-set="ptype_selected" t-as="False"/>
                 <t t-foreach="types" t-as="ptype">
                     <button class="btn btn-secondary text-primary" t-att-data-name="ptype['code']" field="type.all">

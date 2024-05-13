@@ -4,7 +4,7 @@
 		<t t-call="web.html_container">
             <t t-foreach="docs.filtered(lambda x: x.state == 'done')" t-as="doc">
                 <t t-set="company" t-value="doc.company_id or doc.env.company"/>
-                <t t-set="website" t-value="doc.acquirer_id.website_id"/>
+                <t t-set="website" t-value="doc.jetcheckout_website_id or doc.acquirer_id.website_id"/>
                 <div class="header">
                     <div class="row">
                         <table width="709" border="0" class="d-block mx-auto" cellpadding="0" cellspacing="0">
@@ -19,8 +19,13 @@
                                                 <img t-if="website" t-att-src="'%s/web/image/website/%s/logo' % (website.domain, website.id)" t-att-alt="website.name" class="w-100"/>
                                                 <img t-else="" t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="w-100"/>
                                             </td>
-                                            <td width="454" height="96" style="width: 454px; height: 96px; text-align: right; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
-                                                <div style="width: 454px; height: 96px;overflow:hidden;">
+                                            <td width="150" height="96" style="width: 150px;height: 96px;text-align: center;font-size: 12px;color: #000000;font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="center" valign="middle">
+                                                <div style="width: 96px;height: 96px;overflow:hidden;margin:0 auto;">
+                                                    <img t-attf-src="/report/barcode/?type=QR&amp;width=96&amp;height=96&amp;value=#{website.domain}/payment/card/report/receipt/#{doc.jetcheckout_order_id}"/>
+                                                </div>
+                                            </td>
+                                            <td width="304" height="96" style="width: 304px; height: 96px; text-align: right; font-size: 12px; color: #000000; font-family: 'Trebuchet MS', Arial, Verdana, sans-serif;" align="left" valign="middle">
+                                                <div style="width: 304px; height: 96px;overflow:hidden;">
                                                     <span t-field="company.name"/><br/>
                                                     <span t-field="company.street"/><br/>
                                                     <span t-field="company.city"/> - <span t-field="company.state_id"/><br/>Vat: <span t-field="company.vat"/><br/>Tel: <span t-field="company.phone"/>
