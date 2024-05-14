@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-06 14:58+0000\n"
-"PO-Revision-Date: 2024-04-06 18:05+0300\n"
+"POT-Creation-Date: 2024-05-11 09:39+0000\n"
+"PO-Revision-Date: 2024-05-11 12:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -39,17 +39,137 @@ msgstr "%s taksit"
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__10
 msgid "10"
-msgstr "10"
+msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__11
 msgid "11"
-msgstr "11"
+msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__12
 msgid "12"
-msgstr "12"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__13
+msgid "13"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__14
+msgid "14"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__15
+msgid "15"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__16
+msgid "16"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__17
+msgid "17"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__18
+msgid "18"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__19
+msgid "19"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__20
+msgid "20"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__21
+msgid "21"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__22
+msgid "22"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__23
+msgid "23"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__24
+msgid "24"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__25
+msgid "25"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__26
+msgid "26"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__27
+msgid "27"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__28
+msgid "28"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__29
+msgid "29"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__30
+msgid "30"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__31
+msgid "31"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__32
+msgid "32"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__33
+msgid "33"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__34
+msgid "34"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__35
+msgid "35"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_installment__installment_type__36
+msgid "36"
+msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__mandatory_3d
@@ -582,6 +702,11 @@ msgid "Balance"
 msgstr "Bakiye"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid "Bank Code"
+msgstr "Banka Kodu"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__bank_code
 msgid "Bank Name"
 msgstr "Banka Adı"
@@ -916,11 +1041,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Contact"
 msgstr "İlgili"
-
-#. module: payment_jetcheckout
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
-msgid "Contactless"
-msgstr "Temassız"
 
 #. module: payment_jetcheckout
 #: model:ir.actions.report,name:payment_jetcheckout.report_conveyance
@@ -1980,6 +2100,24 @@ msgid "Pay Contactless"
 msgstr "Temassız Öde"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Pay with Credit Card"
+msgstr "Kredi Kartı ile Öde"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Pay with Shopping Credit"
+msgstr "Alışveriş Kredisi ile Öde"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Pay with Wallet"
+msgstr "Cüzdan ile Öde"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payer:"
 msgstr "Ödeyen:"
@@ -2079,6 +2217,26 @@ msgstr "Paylox Yevmiye Satırları"
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_journal
 msgid "Paylox Journals"
 msgstr "Paylox Yevmiyeler"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_type
+msgid "Paylox Payment Type"
+msgstr "Paylox Ödeme Türü"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_type_credit_code
+msgid "Paylox Payment Type Credit Bank Code"
+msgstr "Paylox Ödeme Türü Kredi Banka Kodu"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_type_wallet_id
+msgid "Paylox Payment Type Wallet ID"
+msgstr "Paylox Ödeme Türü Cüzdan No"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_payment_type_wallet_name
+msgid "Paylox Payment Type Wallet Name"
+msgstr "Paylox Ödeme Türü Cüzdan Adı"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_poses
@@ -2258,6 +2416,11 @@ msgstr "Beklemede"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__is_physical
 msgid "Physical POS"
 msgstr "Fiziksel POS"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__physical_pos
+msgid "Physical PoS"
+msgstr "Fiziksel PoS"
 
 #. module: payment_jetcheckout
 #. openerp-web
@@ -2615,6 +2778,11 @@ msgid "Shipping Address Country"
 msgstr "Alışveriş Adresi Ülke"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__credit
+msgid "Shopping Credit"
+msgstr "Alışveriş Kredisi"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__jetcheckout_payment_page
 msgid "Show Payment Page"
 msgstr "Ödeme Sayfasını Göster"
@@ -2640,6 +2808,11 @@ msgstr "Bir hesap ile giriş yap"
 #, python-format
 msgid "Single payment"
 msgstr "Tek çekim"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__soft_pos
+msgid "Soft PoS"
+msgstr "Soft PoS"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__from_date
@@ -2889,6 +3062,11 @@ msgid "Tx"
 msgstr "İşlem"
 
 #. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid "Type"
+msgstr "Tür"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_url_address
 msgid "URL Address"
 msgstr "URL Adresi"
@@ -2950,6 +3128,7 @@ msgstr "Görünüm"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_vpos_name
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__virtual_pos
 msgid "Virtual PoS"
 msgstr "Sanal Pos"
 
@@ -3007,6 +3186,16 @@ msgid "Vpos Ref"
 msgstr "Pos Referansı"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__wallet
+msgid "Wallet"
+msgstr "Cüzdan"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
+msgid "Wallet Name"
+msgstr "Cüzdan Adı"
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
@@ -3019,6 +3208,11 @@ msgstr "Uyarı"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_website_id
 msgid "Website"
 msgstr "Website"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_payment_type__transfer
+msgid "Wire Transfer"
+msgstr "Banka Transferi"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_import_line__wizard_id
@@ -3088,6 +3282,9 @@ msgstr "https://app.jetcheckout.com"
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer__provider__jetcheckout
 msgid "jetcheckout"
 msgstr "jetcheckout"
+
+#~ msgid "Contactless"
+#~ msgstr "Temassız"
 
 #~ msgid "PoS Campaign"
 #~ msgstr "PoS Kampanya"
