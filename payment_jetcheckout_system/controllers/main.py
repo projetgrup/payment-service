@@ -138,6 +138,18 @@ class PayloxSystemController(Controller):
         companies = partner._get_companies().filtered(lambda x: x.id in websites.ids)
         language = request.env['res.lang']._lang_get(request.env.lang)
 
+        types = self._get_payment_types(acquirer=acquirer)
+        shopping_credits = []
+        wallets = []
+        transfers = []
+        for ptype in types:
+            if ptype['code'] == 'credit':
+                shopping_credits = self._prepare_credit(acquirer=acquirer, currency=currency)
+            elif ptype['code'] == 'wallet':
+                wallets = self._prepare_wallet(acquirer=acquirer)
+            elif ptype['code'] == 'wire_transfer':
+                transfers = self._prepare_wiretransfer(acquirer=acquirer)
+
         if options.get('no_compute_payment_tags'):
             payments, payment_tags = False, False
         else:
@@ -169,6 +181,10 @@ class PayloxSystemController(Controller):
             'tx': transaction,
             'system': system,
             'token': token,
+            'types': types,
+            'shopping_credits': shopping_credits,
+            'wallets': wallets,
+            'transfers': transfers,
             'currency': currency,
             'currencies': currency,
             'installment_type': installment_type,
