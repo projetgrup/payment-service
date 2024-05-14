@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
-        <xpath expr="//div[@id='payment_card']/div" position="inside">
+        <xpath expr="//div[@id='payment_type']" position="after">
             <input t-if="advance" type="hidden" t-att-value="advance" field="advance"/>
             <input t-if="system" type="hidden" t-att-value="system" field="system"/>
             <input t-if="subsystem" type="hidden" t-att-value="subsystem" field="subsystem"/>
@@ -125,6 +125,9 @@
                     <div class="m-1" style="width:200px;"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
                     <div t-if="request.env.company.payment_page_ok and (request.env.user.share or not request.env.user.share and request.env.user.payment_page_ok)" class="m-1" style="width:200px;"><a href="/my/payment" class="btn btn-secondary btn-block font-weight-bold text-uppercase"><i class="fa fa-money mr-2" t-translation="off"/>New Payment</a></div>
                 </div>
+                <div class="w-100">
+                    <iframe t-attf-src="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="border-0 mt-3 rounded w-75" style="height: 600px;"/>
+                </div>
             </div>
             <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center flex-column #{classes}">
                 <div>Your transaction status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
@@ -157,7 +160,6 @@
         </div>
     </template>
 
-
     <template id="page_payment_preview" name="Payment Preview System Page">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
@@ -167,11 +169,11 @@
             <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
-
             <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
                 </div>
+                <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
             <div class="payment-system position-relative overflow-hidden">
                 <div class="payment-card row justify-content-center mx-0">
@@ -225,6 +227,11 @@
             <div class="payment-system position-relative overflow-hidden p-1">
                 <div class="payment-card mx-0">
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                    <div id="payment_type" class="d-none">
+                        <span data-name="soft_pos" field="type.all">
+                            <input type="radio" class="d-none" name="payment_type" checked="checked" t-att-value="soft_pos"/>
+                        </span>
+                    </div>
                     <div class="px-3 py-4 bg-white card shadow-sm">
                         <label name="partner" class="text-primary font-weight-bold mb-0 d-block">
                             <t t-if="partner_label" t-raw="partner_label"/>

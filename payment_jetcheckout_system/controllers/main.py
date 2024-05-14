@@ -598,13 +598,22 @@ class PayloxSystemController(Controller):
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
         self._check_payment_preview_page()
-        self._del()
 
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
 
+        user = request.env.user
         company = request.env.company
+        companies = user.company_ids
+        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
+            return self._redirect_advance_page(company_id=user.company_id.id)
+
+        if company.id != request.website.company_id.id:
+            return self._redirect_advance_page(company_id=company.id)
+
+        self._del()
+
         values = self._prepare(company=company)
         values.update({
             'system': company.system,

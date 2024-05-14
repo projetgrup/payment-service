@@ -27,6 +27,8 @@
                         <field name="page_ids" widget="many2many_checkboxes" options="{'no_create': True, 'no_open': True}" colspan="2" nolabel="1"/>
                         <separator string="Products" class="mt16"/>
                         <field name="product_ids" widget="many2many_checkboxes" options="{'no_create': True, 'no_open': True}" colspan="2" nolabel="1"/>
+                        <separator string="Types" class="mt16"/>
+                        <field name="type_ids" widget="many2many_checkboxes" options="{'no_create': True, 'no_open': True}" colspan="2" nolabel="1"/>
                         <separator string="Start Date"/>
                         <field name="date_start" colspan="2" nolabel="1"/>
                         <separator string="End Date"/>
