@@ -15,18 +15,17 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as
 class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
-        #if not request.env.user.share or not partner.system:
-        #    return False
+        if not request.env.user.share or not partner.system:
+            if 'cids' in request.httprequest.cookies:
+                company_ids = request.httprequest.cookies['cids'].split(',')
+                company_id = int(company_ids[0])
+                if not company_id == request.env.company.id:
+                    return self._redirect(company_id=company_id)
+        else:
+            company_id = partner.company_id.id or request.env.company.id
+            if not request.website.company_id.id == company_id:
+                return self._redirect(company_id=company_id)
 
-        company_id = partner.company_id.id or request.env.company.id
-        if not request.website.company_id.id == company_id:
-            website = request.env['website'].sudo().search([('company_id', '=', company_id)], limit=1)
-            if website:
-                website._force()
-                path = urlparse(request.httprequest.url).path
-                return werkzeug.utils.redirect(website.domain + path)
-            else:
-                raise werkzeug.exceptions.NotFound()
         return False
 
     def _check_user(self):
@@ -58,27 +57,6 @@ class PayloxSystemController(Controller):
     def _check_create_partner(self, **kwargs):
         if request.env.user.has_group('base.group_public'):
             return {'error': _('Only registered users can create partners.<br/>Please contact with your system administrator.')}
-
-    def _redirect_advance_page(self, website_id=None, company_id=None):
-        website = False
-        websites = request.env['website'].sudo()
-        if website_id:
-            website = websites.browse(website_id)
-        elif company_id:
-            website = websites.search([
-                ('domain', '=', request.website.domain),
-                ('company_id', '=', company_id)
-            ], limit=1)
-
-        if not website:
-            raise werkzeug.exceptions.NotFound()
-
-        website._force()
-        path = request.httprequest.path
-        query = request.httprequest.query_string
-        if query:
-            path += '?' + query.decode('utf-8')
-        return werkzeug.utils.redirect(path)
 
     def _get_parent(self, token):
         id, token = request.env['res.partner'].sudo()._resolve_token(token)
@@ -559,7 +537,7 @@ class PayloxSystemController(Controller):
         w_id = request.website.id
         website_id = int(params.get('id', w_id))
         if w_id != website_id:
-            return self._redirect_advance_page(website_id=website_id)
+            return self._redirect(website_id=website_id)
 
         company = request.env.company
         if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
@@ -570,10 +548,10 @@ class PayloxSystemController(Controller):
         user = request.env.user
         companies = user.company_ids
         if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
-            return self._redirect_advance_page(company_id=user.company_id.id)
+            return self._redirect(company_id=user.company_id.id)
 
         if company.id != request.website.company_id.id:
-            return self._redirect_advance_page(company_id=company.id)
+            return self._redirect(company_id=company.id)
 
         self._del()
 
@@ -613,20 +591,20 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
+        user = request.env.user
+        company = request.env.company
+        companies = user.company_ids
+        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
+            return self._redirect(company_id=user.company_id.id)
+
+        if company.id != request.website.company_id.id:
+            return self._redirect(company_id=company.id)
+
         self._check_payment_preview_page()
 
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
-
-        user = request.env.user
-        company = request.env.company
-        companies = user.company_ids
-        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
-            return self._redirect_advance_page(company_id=user.company_id.id)
-
-        if company.id != request.website.company_id.id:
-            return self._redirect_advance_page(company_id=company.id)
 
         self._del()
 
@@ -652,8 +630,6 @@ class PayloxSystemController(Controller):
 
     @http.route('/m/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_contactless_payment(self, **kwargs):
-        self._check_contactless_payment_page()
-
         if not request.env.user.has_group('base.group_user'):
             raise werkzeug.exceptions.NotFound()
 
@@ -661,6 +637,8 @@ class PayloxSystemController(Controller):
             redirect = self._check_redirect(request.env.user.partner_id)
             if redirect:
                 return redirect
+
+        self._check_contactless_payment_page()
 
         params = kwargs.get('', {})
         if params:
@@ -729,8 +707,6 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
-        self._check_payment_page()
-
         if request.env.user.has_group('base.group_public'):
             raise werkzeug.exceptions.NotFound()
 
@@ -738,6 +714,8 @@ class PayloxSystemController(Controller):
             redirect = self._check_redirect(request.env.user.partner_id)
             if redirect:
                 return redirect
+
+        self._check_payment_page()
 
         params = kwargs.get('', {})
         if params:
@@ -796,13 +774,13 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_login(self, token, **kwargs):
-        self._check_payment_page()
-        self._del()
-
         partner = self._get_parent(token)
         redirect = self._check_redirect(partner)
         if redirect:
             return redirect
+
+        self._check_payment_page()
+        self._del()
 
         if partner.is_portal:
             if request.env.user.has_group('base.group_public'):
