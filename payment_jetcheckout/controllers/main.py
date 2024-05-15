@@ -359,10 +359,10 @@ class PayloxController(http.Controller):
             if result['response_code'] == "00":
                 for installment in result['installment_options']:
                     shopping_credits.append({
-                        'name': 'Shopping Credit',
+                        'name': installment['bank_name'],
                         'code': installment['bank_code'],
-                        'image': '',
-                        'desc': '',
+                        'image': installment['bank_logo'],
+                        'desc': installment['bank_credit_desc'],
                         'currency': installment['currency'],
                         'campaign': installment['campaign_name'],
                         'new': installment['bank_supports_new_customer'],
