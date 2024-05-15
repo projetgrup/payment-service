@@ -8,6 +8,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, _
+from odoo.http import request
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.tools.misc import formatLang
@@ -283,6 +284,11 @@ class PaymentDasboard(models.Model):
 
     @api.model    
     def get_button_url(self, type):
+        try:
+            del request.session['company_selected']
+        except:
+            pass
+
         if type == 'payment':
             url = self.env.company.payment_dashboard_button_url
             if url:

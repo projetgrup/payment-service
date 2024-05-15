@@ -15,7 +15,10 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as
 class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
-        if not request.env.user.share or not partner.system:
+        if request.session.get('company_selected'):
+            return False
+
+        if not request.env.user.share:
             if 'cids' in request.httprequest.cookies:
                 company_ids = request.httprequest.cookies['cids'].split(',')
                 company_id = int(company_ids[0])
@@ -525,8 +528,6 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/advance', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_advance(self, **kwargs):
-        self._check_advance_page()
-
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
@@ -539,23 +540,21 @@ class PayloxSystemController(Controller):
         if w_id != website_id:
             return self._redirect(website_id=website_id)
 
-        company = request.env.company
+        user = request.env.user
+        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        redirect = self._check_redirect(partner)
+        if redirect:
+            return redirect
+
+        self._check_advance_page()
+        self._del()
+
         if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
             currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
         else:
             currency = None
 
-        user = request.env.user
-        companies = user.company_ids
-        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
-            return self._redirect(company_id=user.company_id.id)
-
-        if company.id != request.website.company_id.id:
-            return self._redirect(company_id=company.id)
-
-        self._del()
-
-        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        company = request.env.company
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
         if user.share:
@@ -592,27 +591,24 @@ class PayloxSystemController(Controller):
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
         user = request.env.user
-        company = request.env.company
-        companies = user.company_ids
-        if len(companies) == 1 and request.website.company_id.id != user.company_id.id:
-            return self._redirect(company_id=user.company_id.id)
-
-        if company.id != request.website.company_id.id:
-            return self._redirect(company_id=company.id)
+        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        redirect = self._check_redirect(partner)
+        if redirect:
+            return redirect
 
         self._check_payment_preview_page()
-
-        params = kwargs.get('', {})
-        if params:
-            params = json.loads(base64.b64decode(params))
-
         self._del()
 
+        company = request.env.company
         values = self._prepare(company=company)
         values.update({
             'system': company.system,
             'subsystem': company.subsystem,
         })
+
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
             values.update({**kwargs['values']})
@@ -793,7 +789,7 @@ class PayloxSystemController(Controller):
     @http.route(['/my/payment/company'], type='json', auth='public', website=True, csrf=False)
     def page_system_page_company(self, cid):
         if cid == request.env.company.id:
-            if request.session.get('company'):
+            if request.session.get('company_selected'):
                 return False
 
         else:
@@ -805,7 +801,7 @@ class PayloxSystemController(Controller):
                 return False
             website._force()
 
-        request.session['company'] = True
+        request.session['company_selected'] = True
         return True
 
     @http.route(['/my/payment/company/<int:id>/logo'], type='http', auth='public')
