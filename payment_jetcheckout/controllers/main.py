@@ -85,6 +85,27 @@ class PayloxController(http.Controller):
         except:
             pass
 
+    def _redirect(self, website_id=None, company_id=None):
+        website = False
+        websites = request.env['website'].sudo()
+        if website_id:
+            website = websites.browse(website_id)
+        elif company_id:
+            website = websites.search([
+                ('domain', '=', request.website.domain),
+                ('company_id', '=', company_id)
+            ], limit=1)
+
+        if not website:
+            raise werkzeug.exceptions.NotFound()
+
+        website._force()
+        path = request.httprequest.path
+        query = request.httprequest.query_string
+        if query:
+            path += '?' + query.decode('utf-8')
+        return werkzeug.utils.redirect(path)
+
     @staticmethod
     def _get_acquirer(acquirer=None, providers=['jetcheckout'], limit=1):
         if acquirer == None:
