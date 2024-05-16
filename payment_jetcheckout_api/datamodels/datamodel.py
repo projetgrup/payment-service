@@ -146,6 +146,63 @@ class PaymentUrl(Datamodel):
     bank = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by bank payment method"), "description": _lt("URL addresses when bank payment is selected")})
 
 
+class PaymentInstallmentOption(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.installment.option"
+
+    count = fields.Integer(metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 1})
+    amount = fields.Float(metadata={"title": _lt("Installment Amount"), "description": _lt("Installment amount"), "example": 123.45})
+    rate_cost = fields.Float(metadata={"title": _lt("Cost Rate"), "description": _lt("Cost rate"), "example": 1})
+    rate_customer = fields.Float(metadata={"title": _lt("Customer Rate"), "description": _lt("Customer rate"), "example": 2})
+    plus_count = fields.Integer(metadata={"title": _lt("Plus Installment Count"), "description": _lt("Plus installment count"), "example": 3})
+    plus_desc = fields.String(metadata={"title": _lt("Plus Installment Description"), "description": _lt("Plus installment description"), "example": "+3 Installment"})
+    min_amount = fields.Float(metadata={"title": _lt("Minimum Amount"), "description": _lt("Minimum amount limit for this option to be used"), "example": 100.0})
+    max_amount = fields.Float(metadata={"title": _lt("Maximum Amount"), "description": _lt("Maximum amount limit for this option to be used"), "example": 0.0})
+    min_rate_customer = fields.Float(metadata={"title": _lt("Minimum Customer Rate"), "description": _lt("Minimum customer rate for this installment option"), "example": 1.0})
+    max_rate_customer = fields.Float(metadata={"title": _lt("Maximum Customer Rate"), "description": _lt("Maximum customer rate for this installment option"), "example": 0.0})
+
+
+class PaymentInstallmentList(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.installment.list"
+
+    family = fields.String(metadata={"title": _lt("Card Family"), "description": _lt("Card family name"), "example": "Bankkart"})
+    logo = fields.String(metadata={"title": _lt("Card Logo"), "description": _lt("Card family logo address"), "example": "https://paylox/card/logo"})
+    type = fields.String(allow_none=True, metadata={"title": _lt("Card Type"), "description": _lt("Card type information"), "example": "Credit"})
+    currency = fields.String(metadata={"title": _lt("Currency Code"), "description": _lt("ISO Code of currency"), "example": "TRY"})
+    campaign = fields.String(metadata={"title": _lt("Campaign Name"), "description": _lt("Name of campaign"), "example": "Standard"})
+    period = fields.Integer(metadata={"title": _lt("Installment Period"), "description": _lt("Installment period"), "example": 1})
+    excluded = fields.List(fields.String(), allow_none=True, metadata={"title": _lt("Excluded BINs"), "description": _lt("Excluded BIN numbers which are not going to benefit from related installment options"), "example": "456789"})
+    options = fields.List(NestedModel("payment.installment.option"), metadata={"title": _lt("Installment Options"), "description": _lt("All installment options related to given installment information")})
+
+
+class PaymentInstallmentInput(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.installment.input"
+    _inherit = "payment.credential.apikey"
+
+    amount = fields.Float(metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3, "default": 0.0})
+    currency = fields.String(metadata={"title": _lt("Currency Code"), "description": _lt("ISO Code of currency to be used in getting installment options"), "example": "TRY", "default": "TRY"})
+    campaign = fields.String(metadata={"title": _lt("Campaign Name"), "description": _lt("Name of campaign to be used in getting installment options"), "example": "Standard", "default": ""})
+    type = fields.String(metadata={"title": _lt("Card Type"), "description": _lt("Information whether card is debit or credit or something else"), "example": "AllTypes", "default": "AllTypes"})
+    bin = fields.String(allow_none=False, metadata={"title": _lt("BIN Number"), "description": _lt("First six digits of card number (Do not use this parameter if you want to get all installment options)"), "example": "456789"})
+
+class PaymentInstallmentOutput(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.installment.output"
+    _inherit = "payment.output"
+
+    installments = fields.List(NestedModel("payment.installment.list"), metadata={"title": _lt("Installment List"), "description": _lt("List of all installments related to request")})
+
+
 class PaymentPrepareInput(Datamodel):
     class Meta:
         ordered = True

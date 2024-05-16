@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 09:22+0000\n"
-"PO-Revision-Date: 2024-03-18 12:23+0300\n"
+"POT-Creation-Date: 2024-05-16 12:33+0000\n"
+"PO-Revision-Date: 2024-05-16 16:09+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -190,6 +190,12 @@ msgstr "Ödeme işlemi sahibi ile ilişkili adres"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "All installment options related to given installment information"
+msgstr "Verilen taksit bilgilerine göre gelen tüm taksit seçenekleri"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Amount"
 msgstr "Tutar"
 
@@ -237,6 +243,7 @@ msgstr "Bir hata meydana geldi. Lütfen ödeme işlemi tekrar başlatın."
 
 #. module: payment_jetcheckout_api
 #. openerp-web
+#: code:addons/payment_jetcheckout_api/services/services.py:0
 #: code:addons/payment_jetcheckout_api/static/src/js/page.js:0
 #, python-format
 msgid "An error occured. Please try again."
@@ -270,6 +277,12 @@ msgstr "İşlemi onaylıyor musunuz?"
 #, python-format
 msgid "Authorization Code"
 msgstr "Yetki Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "BIN Number"
+msgstr "BIN Numarası"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
@@ -331,6 +344,42 @@ msgstr "İptal"
 #, python-format
 msgid "Cancel Payment"
 msgstr "Ödeme İptal Et"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card Family"
+msgstr "Kart Ailesi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card Logo"
+msgstr "Kart Logo"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card Type"
+msgstr "Kart Türü"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card family logo address"
+msgstr "Kart ailesi logo adresi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card family name"
+msgstr "Kart ailesi adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card type information"
+msgstr "Kart tür bilgisi"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
@@ -432,6 +481,12 @@ msgstr "Maliyet Komisyon Oranı"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Cost Rate"
+msgstr "Maliyet Komisyon Oranı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Cost commission details"
 msgstr "Maliyet komisyonu detayları"
 
@@ -440,6 +495,12 @@ msgstr "Maliyet komisyonu detayları"
 #, python-format
 msgid "Cost commission information"
 msgstr "Maliyet komisyon bilgisi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Cost rate"
+msgstr "Maliyet oranı"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
@@ -512,6 +573,12 @@ msgstr "Ödeme işlemi ile ilgili kredi kartı bilgisi"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Currency Code"
+msgstr "Para Birimi Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Currency which is used in related payment transaction"
 msgstr "İlgili ödeme işleminde kullanılacak para birimi"
 
@@ -542,6 +609,12 @@ msgstr "Müşteri Komisyon Oranı"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Customer Rate"
+msgstr "Müşteri Komisyon Oranı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Customer commission details"
 msgstr "Müşteri komisyon detayları"
 
@@ -550,6 +623,12 @@ msgstr "Müşteri komisyon detayları"
 #, python-format
 msgid "Customer commission information"
 msgstr "Müşteri komisyon bilgisi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Customer rate"
+msgstr "Müşteri komisyon oranı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -611,6 +690,21 @@ msgstr "Hata"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid ""
+"Excluded BIN numbers which are not going to benefit from related installment "
+"options"
+msgstr ""
+"İlgili taksit seçeneklerinden yararlanamayacak hariç tutulan BIN numaraları"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Excluded BINs"
+msgstr "Hariç BINler"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Expiration Date"
 msgstr "Geçerlilik Tarihi"
 
@@ -619,6 +713,22 @@ msgstr "Geçerlilik Tarihi"
 #, python-format
 msgid "Expire Payment"
 msgstr "Ödeme Geçersiz Kıl"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"First six digits of card number (Do not use this parameter if you want to "
+"get all installment options)"
+msgstr ""
+"Kart numarasının ilk altı rakamı (Tüm taksit seçeneklerini almak için bu "
+"parametreyi kullanmayınız)"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
+#, python-format
+msgid "Get Installments"
+msgstr "Taksitleri Getir"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model,name:payment_jetcheckout_api.model_ir_http
@@ -666,6 +776,26 @@ msgstr "IP Adresi"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "ISO Code of currency"
+msgstr "Para birimi ISO kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "ISO Code of currency to be used in getting installment options"
+msgstr "Taksit seçeneklerini getirmek için kullanılan para birimi ISO kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Information whether card is debit or credit or something else"
+msgstr ""
+"Kartın kredi kartı, banka kartı veya başka bir tür kart olduğunu gösteren "
+"bilgi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Installment Amount"
 msgstr "Taksit Tutarı"
 
@@ -684,6 +814,36 @@ msgstr "Taksit Açıklamaları"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Installment List"
+msgstr "Taksit Listesi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Installment Options"
+msgstr "Taksit Seçenekleri"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Installment Period"
+msgstr "Taksit Dönemi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Installment amount"
+msgstr "Taksit tutarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Installment count"
+msgstr "Taksit miktarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Installment details"
 msgstr "Taksit detayları"
 
@@ -692,6 +852,12 @@ msgstr "Taksit detayları"
 #, python-format
 msgid "Installment information related to transaction"
 msgstr "Ödeme işlemi ile ilgili taksit bilgisi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Installment period"
+msgstr "Taksit dönemi"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -722,6 +888,12 @@ msgstr "Son Güncelleme Tarihi"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "List of all installments related to request"
+msgstr "İstek ile ilgili tüm taksitlerin listesi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "List of codes of methods. Possible values are 'card' and 'bank'."
 msgstr "Metot kodları listesi. Geçerli değerler 'card' ve 'bank'."
 
@@ -738,6 +910,30 @@ msgid "Masked number of related credit card"
 msgstr "İlgili kredi kartı maskelenmiş numarası"
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Maximum Amount"
+msgstr "Maksimum Tutar"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Maximum Customer Rate"
+msgstr "Maksimum Müşteri Komisyon Oranı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Maximum amount limit for this option to be used"
+msgstr "Bu seçenekte kullanılacak maksimum tutar limiti"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Maximum customer rate for this installment option"
+msgstr "Bu taksit seçeneği için maksimum müşteri komisyon oranı"
+
+#. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
 msgid "Method"
 msgstr "Metot"
@@ -747,6 +943,30 @@ msgstr "Metot"
 #, python-format
 msgid "Method List"
 msgstr "Metot Listesi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Minimum Amount"
+msgstr "Minimum Tutar"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Minimum Customer Rate"
+msgstr "Minimum Müşteri Oranı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Minimum amount limit for this option to be used"
+msgstr "Bu seçenekte kullanılacak minimum tutar limiti"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Minimum customer rate for this installment option"
+msgstr "Bu taksit seçeneği için minimum müşteri komisyon oranı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -764,6 +984,12 @@ msgstr "Ad"
 #, python-format
 msgid "Name field which is placed on front side of the card"
 msgstr "Kredi kartının ön yüzünde bulunan kart sahibi adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Name of campaign"
+msgstr "Kampanya adı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1051,6 +1277,30 @@ msgid ""
 msgstr ""
 "İşlemi tamamlamak için lütfen bu kodu banka transferi açıklama kısmında "
 "belirtiniz."
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Plus Installment Count"
+msgstr "Artı Taksit Miktarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Plus Installment Description"
+msgstr "Artı Taksit Açıklaması"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Plus installment count"
+msgstr "Artı taksit miktarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Plus installment description"
+msgstr "Artı taksit açıklaması"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
