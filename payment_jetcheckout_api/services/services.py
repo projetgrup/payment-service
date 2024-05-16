@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import json
 import base64
 import hashlib
 import logging
+import requests
 from urllib.parse import quote
 
 from odoo.http import Response
@@ -39,6 +41,30 @@ class PaymentAPIService(Component):
         <p>When payment is done, its result will send to the address which you have specified when initializing the payment.</p>
         <p>Afterwards, you can use "Payment Operation" methods for cancelling, refunding, expiring or deleting the payment.</p>
     """)
+
+    @restapi.method(
+        [(["/installments"], "GET")],
+        input_param=Datamodel("payment.installment.input"),
+        output_param=Datamodel("payment.installment.output"),
+        auth="public",
+        tags=[_lt("Payment Initialization")]
+    )
+    def payment_installments(self, params):
+        try:
+            company = self.env.company.id
+
+            api = self._get_api(company, params.apikey)
+            if not api:
+                return Response("Application key is not matched", status=401, mimetype="application/json")
+
+            installments = self._get_installments(api, params)
+
+            ResponseOk = self.env.datamodels["payment.installment.output"]
+            return ResponseOk(**installments, **RESPONSE[200])
+        except Exception as e:
+            _logger.error(e)
+            return Response("Server Error", status=500, mimetype="application/json")
+    payment_installments.__doc__ = _lt("Get Installments")
 
     @restapi.method(
         [(["/prepare"], "POST")],
@@ -257,6 +283,53 @@ class PaymentAPIService(Component):
         if hashed != hash:
             return False
         return hash
+
+    def _get_installments(self, api, params):
+        bin = getattr(params, 'bin')
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=['jetcheckout'], limit=1)
+        url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "amount": getattr(params, 'amount', 0) or 0,
+            "campaign": getattr(params, 'campaign_name', '') or '',
+            "currency": getattr(params, 'currency', 'TRY') or 'TRY',
+            "card_type": getattr(params, 'type', 'AllTypes') or 'AllTypes',
+            "language": "tr",
+        }
+        if bin:
+            data.update({"bin": bin})
+
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                installments = result['installments'] if bin else result['installment_options']
+                return {
+                    'installments': [{
+                        'family': installment['card_family'],
+                        'logo': installment['card_family_logo'],
+                        'currency': installment['currency'],
+                        'campaign': installment['campaign_name'],
+                        'period': installment['inst_period'],
+                        'type': None if bin else installment['card_type'],
+                        'excluded': None if bin else installment['excluded_bins'],
+                        'options': [{
+                            'count': i['installment_count'],
+                            'amount': i['installment_amount'],
+                            'rate_cost': i['cost_rate'],
+                            'rate_customer': i['customer_rate'],
+                            'plus_count': i['plus_installment'],
+                            'plus_desc': i['plus_installment_description'],
+                            'min_amount': i['min_amount'],
+                            'max_amount': i['max_amount'],
+                            'min_rate_customer': i['min_customer_rate'],
+                            'max_rate_customer': i['max_customer_rate'],
+                        } for i in installment['installments']],
+                    } for installment in installments]
+                }
+            raise Exception(result.get('message', _('An error occured. Please try again.')))
+        raise Exception(_('An error occured. Please try again.'))
 
     def _create_transaction(self, api, hash, params):
         if hasattr(params.partner, 'country'):

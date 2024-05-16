@@ -77,6 +77,13 @@ class PayloxSystemController(Controller):
 
         self._set('partner', partner.id)
         return partner
+    
+    def _get_website_partner(self):
+        user = request.env.user
+        if user.has_group('base.group_portal'):
+            return user.partner_id
+        else:
+            return request.website.sudo().user_id.partner_id 
 
     def _get_tx_vals(self, **kwargs):
         vals = super()._get_tx_vals(**kwargs)
@@ -540,8 +547,7 @@ class PayloxSystemController(Controller):
         if w_id != website_id:
             return self._redirect(website_id=website_id)
 
-        user = request.env.user
-        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        partner = self._get_website_partner()
         redirect = self._check_redirect(partner)
         if redirect:
             return redirect
@@ -557,7 +563,7 @@ class PayloxSystemController(Controller):
         company = request.env.company
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
-        if user.share:
+        if request.env.user.share:
             companies = []
         else:
             companies = companies.filtered(lambda x: x.payment_advance_ok and x.id in user.company_ids.ids)
@@ -571,7 +577,7 @@ class PayloxSystemController(Controller):
             'vat': params.get('vat'),
             'flow': 'dynamic',
             'advance': True,
-            'readonly': user.share and company.payment_advance_amount_readonly,
+            'readonly': request.env.user.share and company.payment_advance_amount_readonly,
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
@@ -590,8 +596,7 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/preview', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_preview(self, **kwargs):
-        user = request.env.user
-        partner = user.partner_id if user.has_group('base.group_portal') else request.website.user_id.partner_id.sudo()
+        partner = self._get_website_partner()
         redirect = self._check_redirect(partner)
         if redirect:
             return redirect
