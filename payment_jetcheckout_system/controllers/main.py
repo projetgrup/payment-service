@@ -560,10 +560,11 @@ class PayloxSystemController(Controller):
         else:
             currency = None
 
+        user = request.env.user
         company = request.env.company
         values = self._prepare(partner=partner, company=company, currency=currency)
         companies = values['companies']
-        if request.env.user.share:
+        if user.share:
             companies = []
         else:
             companies = companies.filtered(lambda x: x.payment_advance_ok and x.id in user.company_ids.ids)
@@ -577,7 +578,7 @@ class PayloxSystemController(Controller):
             'vat': params.get('vat'),
             'flow': 'dynamic',
             'advance': True,
-            'readonly': request.env.user.share and company.payment_advance_amount_readonly,
+            'readonly': user.share and company.payment_advance_amount_readonly,
         })
 
         if 'values' in kwargs and isinstance(kwargs['values'], dict):
