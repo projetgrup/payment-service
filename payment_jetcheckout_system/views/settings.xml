@@ -274,11 +274,12 @@
                                     <div class="content-group">
                                         <div class="mt16">
                                             <field name="payment_page_campaign_tag_ids" class="w-100">
-                                                <tree>
+                                                <tree editable="bottom">
                                                     <field name="sequence" widget="handle"/>
                                                     <field name="name" decoration-bf="1"/>
                                                     <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
                                                     <field name="campaign_ids" invisible="1"/>
+                                                    <button name="action_show_lines" type="object" icon="fa-list" attrs="{'invisible': [('campaign_id', '=', False)]}"/>
                                                 </tree>
                                                 <form>
                                                     <sheet>
@@ -387,6 +388,38 @@
                 </div>
             </div>
         </form>
+    </field>
+    </record>
+
+    <record id="campaign_tag_form" model="ir.ui.view">
+    <field name="name">payment.settings.campaign.tag.form</field>
+    <field name="model">payment.settings.campaign.tag</field>
+    <field name="arch" type="xml">
+        <form string="Campaign Tags" class="o_settings_campaign_tag">
+            <sheet class="p-0">
+                <field name="line_ids">
+                    <tree editable="bottom">
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </sheet>
+            <footer>
+                <button name="confirm" type="object" class="btn-primary text-uppercase" string="Save"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <record id="campaign_tag_line_tree" model="ir.ui.view">
+    <field name="name">payment.settings.campaign.tag.line.tree</field>
+    <field name="model">payment.settings.campaign.tag</field>
+    <field name="arch" type="xml">
+        <tree string="Campaign Tags" editable="bottom">
+            <field name="name"/>
+            <field name="campaign_id" invisible="1"/>
+            <field name="campaign_ids" invisible="1"/>
+        </tree>
     </field>
     </record>
  
