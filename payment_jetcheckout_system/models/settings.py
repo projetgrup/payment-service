@@ -264,6 +264,34 @@ class PaymentSettingsCampaignTag(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     line_ids = fields.One2many('payment.settings.campaign.tag.line', 'campaign_id', 'Tags')
 
+    def action_show_lines(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'name': self.name,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'dialog_size': 'small'}
+        }
+
+        '''return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'payment.settings.campaign.tag.line',
+            'name': self.name,
+            'view_mode': 'tree',
+            'target': 'new',
+            'domain': [('campaign_id', '=', self.id)],
+            'context': {
+                'default_campaign_id': self.id,
+                'dialog_size': 'small',
+                'no_breadcrumbs': True
+            }
+        }'''
+
+    def confirm(self):
+        return
+
 
 class PaymentSettingsCampaignTagLine(models.Model):
     _name = 'payment.settings.campaign.tag.line'
