@@ -397,6 +397,7 @@ class PayloxSyncopsController(Controller):
                 ('company_id', '=', company.id),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
+                ('jetcheckout_payment_type', '=', 'virtual_pos'),
             ]
             if 'payment_type' in data:
                 if data['payment_type'] == 'payment':
@@ -457,6 +458,7 @@ class PayloxSyncopsController(Controller):
 
         transactions = request.env['payment.transaction'].sudo().search([
             ('id', 'in', list(map(int, data[''].split(',')))),
+            ('jetcheckout_payment_type', '=', 'virtual_pos'),
             ('company_id', '=', request.env.user.company_ids.ids)
         ])
         row = 0
