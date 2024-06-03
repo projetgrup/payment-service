@@ -130,6 +130,10 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.itemPriority = false;
         this.amountEditable = false;
         this.amount = new fields.float({
+            events: [
+                ['update', function() { this.amount._.updateValue(); }],
+            ],
+            mask: payloxPage.prototype._maskAmount.bind(this),
             default: 0,
         });
         this.vat = new fields.string();

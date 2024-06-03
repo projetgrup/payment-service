@@ -22,11 +22,11 @@ class PayloxSystemController(Controller):
             if 'cids' in request.httprequest.cookies:
                 company_ids = request.httprequest.cookies['cids'].split(',')
                 company_id = int(company_ids[0])
-                if not company_id == request.env.company.id:
+                if not company_id == request.website.company_id.id:
                     return self._redirect(company_id=company_id)
         else:
             company_id = partner.company_id.id or request.env.company.id
-            if not request.website.company_id.id == company_id:
+            if not company_id == request.website.company_id.id:
                 return self._redirect(company_id=company_id)
 
         return False
