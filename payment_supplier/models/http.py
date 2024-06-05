@@ -8,4 +8,4 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_translation_frontend_modules_name(self):
         mods = super(IrHttp, self)._get_translation_frontend_modules_name()
-        return mods + ['payment_vendor']
+        return mods + ['payment_supplier']

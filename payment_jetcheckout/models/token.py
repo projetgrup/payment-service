@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+import uuid
+from odoo import fields, models, api, _
+#from odoo.exceptions import UserError
+
 
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
@@ -14,3 +17,17 @@ class PaymentToken(models.Model):
     jetcheckout_card_installment = fields.Char('Credit Card Installment')
     jetcheckout_card_3d = fields.Boolean('Credit Card 3D')
     jetcheckout_card_save = fields.Boolean('Credit Card Save')
+    jetcheckout_limit_card = fields.Float(string='Credit Card Limit')
+    jetcheckout_limit_tx = fields.Float(string='Transaction Based Limit')
+
+    @api.model
+    def create(self, values):
+        res = super().create(values)
+        res['jetcheckout_card_token'] = str(uuid.uuid4())
+        return res
+
+    #def unlink(self):
+    #    for token in self:
+    #        if token.transaction_ids:
+    #            raise UserError(_('Token "%s" cannot be deleted because of it has been used in a transaction.'))
+    #    return super().unlink()

@@ -1144,7 +1144,7 @@
     }
 }
 
-.payment-card {
+#payment_card, .payment-card {
     color: #707070;
     .card {
         border-radius: 5px !important;
@@ -1480,7 +1480,7 @@
 }
 
 @media (max-width: 460px), (min-width: 768px) and (max-width: 1125px) {
-    .payment-card {
+    #payment_card, .payment-card {
         .ccicon {
             top: auto !important;
             bottom: -20px !important;

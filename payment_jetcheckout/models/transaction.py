@@ -289,8 +289,16 @@ class PaymentTransaction(models.Model):
     def _paylox_done_postprocess(self):
         if not self.state == 'done':
             self.write(self._paylox_done_postprocess_values())
+        self.paylox_verify_token()
         self.paylox_order_confirm()
         self.paylox_payment()
+
+    def paylox_verify_token(self):
+        try:
+            if self.token_id and not self.token_id.verified:
+                self.token_id.verified = True
+        except:
+            pass
 
     def paylox_order_confirm(self):
         self.ensure_one()

@@ -176,7 +176,7 @@
                 <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
             <div class="payment-system position-relative overflow-hidden">
-                <div class="payment-card row justify-content-center mx-0">
+                <div id="payment_card" class="row justify-content-center mx-0">
                     <t t-call="payment_jetcheckout.payment_sidebar">
                         <t t-set="page" t-value="'payment'"/>
                         <t t-set="no_payment_icons" t-value="True"/>
@@ -225,7 +225,7 @@
                 <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
             <div class="payment-system position-relative overflow-hidden p-1">
-                <div class="payment-card mx-0">
+                <div id="payment_card" class="mx-0">
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <div id="payment_type" class="d-none">
                         <span data-name="soft_pos" field="type.all">
@@ -510,7 +510,7 @@
                     </div>
                     <div field="wizard.page.overlay"/>
                 </t>
-                <div t-attf-class="payment-card row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
+                <div id="payment_card" t-attf-class="row justify-content-center mx-0 #{dynamic and 'flex-row-reverse' or ''}">
                     <t t-if="dynamic">
                         <div class="col-md-9 row justify-content-center mx-0 navbar-light">
                             <t t-call="payment_jetcheckout.payment_form">

@@ -104,7 +104,7 @@
         <input type="hidden" name="success_url" t-att-value="success_url" field="payment.successurl"/>
         <input type="hidden" name="fail_url" t-att-value="fail_url" field="payment.failurl"/>
         <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
-        <div class="payment-card">
+        <div id="payment_card">
             <t t-call="payment_jetcheckout.payment_form">
                 <t t-set="s2s" t-value="True"/>
                 <t t-set="no_button" t-value="no_button"/>
@@ -213,7 +213,7 @@
     </template>
 
     <template id="payment_card" name="Paylox Payment Card">
-        <div class="payment-card row justify-content-center mx-0 h-100">
+        <div id="payment_card" class="row justify-content-center mx-0 h-100">
             <t t-call="payment_jetcheckout.payment_sidebar">
                 <t t-set="page" t-value="'payment'"/>
             </t>

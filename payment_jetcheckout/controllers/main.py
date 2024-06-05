@@ -1103,19 +1103,20 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': amount_customer,
             }
 
+            if 'token' in kwargs['card']:
+                vals.update({
+                    'token_id': kwargs['card']['token']
+                })
+
+            vals.update(self._get_tx_vals(**kwargs))
             if tx:
-                vals.update(self._get_tx_vals(**kwargs))
                 tx.write(vals)
             else:
                 vals.update({
-                    'amount': amount_total,
-                    'fees': amount_cost,
                     'currency_id': currency.id,
                     'acquirer_id': acquirer.id,
                     'partner_id': partner.id,
-                    'operation': 'online_direct',
                 })
-                vals.update(self._get_tx_vals(**kwargs))
                 tx = request.env['payment.transaction'].sudo().create(vals)
 
             if sale_id:
@@ -1201,6 +1202,14 @@ class PayloxController(http.Controller):
                     "country": tx.partner_country_id and tx.partner_country_id.name or "",
                 },
             })
+
+            if tx.token_id and not tx.token_id.verified:
+                data.update({
+                    "save_card": True,
+                    "card_alias": tx.token_id.name,
+                    "card_owner_key": tx.token_id.jetcheckout_card_token,
+                    "card_owner_email": tx.token_id.partner_id.email,
+                })
 
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
@@ -1300,19 +1309,15 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': 0,
             }
 
+            vals.update(self._get_tx_vals(**kwargs))
             if tx:
-                vals.update(self._get_tx_vals(**kwargs))
                 tx.write(vals)
             else:
                 vals.update({
-                    'amount': amount,
-                    'fees': 0,
                     'currency_id': currency.id,
                     'acquirer_id': acquirer.id,
                     'partner_id': partner.id,
-                    'operation': 'online_direct',
                 })
-                vals.update(self._get_tx_vals(**kwargs))
                 tx = request.env['payment.transaction'].sudo().create(vals)
 
             if sale_id:
@@ -1492,19 +1497,15 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': amount_customer,
             }
 
+            vals.update(self._get_tx_vals(**kwargs))
             if tx:
-                vals.update(self._get_tx_vals(**kwargs))
                 tx.write(vals)
             else:
                 vals.update({
-                    'amount': amount_total,
-                    'fees': amount_cost,
                     'currency_id': currency.id,
                     'acquirer_id': acquirer.id,
                     'partner_id': partner.id,
-                    'operation': 'online_direct',
                 })
-                vals.update(self._get_tx_vals(**kwargs))
                 tx = request.env['payment.transaction'].sudo().create(vals)
 
             if sale_id:
@@ -1683,19 +1684,15 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': 0,
             }
 
+            vals.update(self._get_tx_vals(**kwargs))
             if tx:
-                vals.update(self._get_tx_vals(**kwargs))
                 tx.write(vals)
             else:
                 vals.update({
-                    'amount': amount,
-                    'fees': 0,
                     'currency_id': currency.id,
                     'acquirer_id': acquirer.id,
                     'partner_id': partner.id,
-                    'operation': 'online_direct',
                 })
-                vals.update(self._get_tx_vals(**kwargs))
                 tx = request.env['payment.transaction'].sudo().create(vals)
 
             if sale_id:
