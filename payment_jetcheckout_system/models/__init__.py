@@ -10,8 +10,10 @@ from . import menu
 from . import user
 from . import rule
 from . import partner
-from . import item
 from . import page
+from . import item
+from . import plan
 from . import website
 from . import settings
 from . import payment
+from . import token

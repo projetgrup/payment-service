@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_token" model="ir.ui.view">
+    <field name="name">payment.token.tree</field>
+    <field name="model">payment.token</field>
+    <field name="arch" type="xml">
+        <tree editable="top" sample="1" decoration-muted="active == False">
+            <field name="name" decoration-bf="1"/>
+            <field name="jetcheckout_limit_card"/>
+            <field name="jetcheckout_limit_tx"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
+            <field name="active" widget="boolean_toggle"/>
+            <button name="action_verify" string="Verify" type="object" class="btn btn-link" icon="fa-credit-card mr-1" attrs="{'invisible': [('verified', '=', True)]}"/>
+            <button name="action_verify" string="Verified" type="object" class="btn btn-link text-muted mr-1" icon="fa-credit-card-alt mr-1" attrs="{'invisible': [('verified', '=', False)]}"/>
+            <field name="verified" invisible="1"/>
+            <field name="system" invisible="1" force_save="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="form_token_verify" model="ir.ui.view">
+    <field name="name">payment.token.verify.form</field>
+    <field name="model">payment.token.verify</field>
+    <field name="arch" type="xml">
+        <form class="o_form_payment_token_verify">
+            <sheet>
+                <div class="position-absolute"><i class="fa fa-5x fa-spin fa-circle-o-notch text-primary"/></div>
+                <iframe src="/payment/token/verify" class="position-absolute w-100 h-100 border-0"/>
+                <field name="data" class="d-none"/>
+            </sheet>
+            <footer/>
+        </form>
+    </field>
+    </record>
+</odoo>

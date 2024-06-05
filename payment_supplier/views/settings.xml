@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.supplier.form</field>
+    <field name="model">payment.settings</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@data-key='general_settings']" position="after">
+            <div class="app_settings_block" data-string="Suppliers" string="Suppliers" data-key="payment_supplier" invisible="context.get('active_system') != 'supplier'">
+                <h2>Suppliers</h2>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

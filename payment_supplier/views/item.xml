@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_tree" model="ir.ui.view">
+    <field name="name">payment.item.supplier.tree</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field' position="before">
+            <header>
+                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o"/>
+            </header>
+        </xpath>
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="campaign_id"]' position="replace">
+            <field name="parent_id" string="Supplier" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'supplier'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" required="1"/>
+            <field name="child_id" string="Authorized" invisible="1" readonly="1" force_save="1" context="{'active_system': 'supplier'}" options="{'no_open': True, 'no_create': True}"/>
+        </xpath>
+        <xpath expr='//field[@name="date"]' position="attributes">
+            <attribute name="optional">show</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="item_search" model="ir.ui.view">
+    <field name="name">payment.item.supplier.search</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace">
+            <field name="parent_id" string="Supplier"/>
+            <!--<field name="child_id" string="Authorized"/>-->
+        </xpath>
+        <xpath expr='//filter[@name="groupby_child"]' position="replace"/>
+        <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
+            <attribute name="string">Supplier</attribute>
+        </xpath>
+    </field>
+    </record>
+</odoo>

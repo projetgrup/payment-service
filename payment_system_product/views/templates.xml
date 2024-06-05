@@ -572,7 +572,7 @@
                         </div>
                         <div class="payment-product-payment">
                             <div>
-                                <div class="payment-card">
+                                <div id="payment_card">
                                     <t t-call="payment_jetcheckout.payment_form">
                                         <t t-set="no_border" t-value="True"/>
                                         <t t-set="no_loading" t-value="True"/>
