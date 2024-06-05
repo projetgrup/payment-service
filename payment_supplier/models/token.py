@@ -7,8 +7,6 @@ class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     system = fields.Selection(selection_add=[('supplier', 'Supplier Payment System')])
-    limit_card = fields.Float(string='Credit Card Limit')
-    limit_tx = fields.Float(string='Transaction Based Limit')
 
     @api.model
     def default_get(self, fields):

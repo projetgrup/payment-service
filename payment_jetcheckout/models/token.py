@@ -17,6 +17,8 @@ class PaymentToken(models.Model):
     jetcheckout_card_installment = fields.Char('Credit Card Installment')
     jetcheckout_card_3d = fields.Boolean('Credit Card 3D')
     jetcheckout_card_save = fields.Boolean('Credit Card Save')
+    jetcheckout_limit_card = fields.Float(string='Credit Card Limit')
+    jetcheckout_limit_tx = fields.Float(string='Transaction Based Limit')
 
     @api.model
     def create(self, values):

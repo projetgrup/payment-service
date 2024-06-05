@@ -147,7 +147,7 @@
             <field name="ref"/>
         </xpath>
         <xpath expr='//filter[@name="groupby_company"]' position="before">
-            <filter string="supplier" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
+            <filter string="Supplier" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
         </xpath>
         <xpath expr='//separator' position="replace"/>
         <xpath expr='//filter[@name="filterby_payment"]' position="replace"/>

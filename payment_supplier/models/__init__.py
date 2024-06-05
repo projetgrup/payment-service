@@ -4,5 +4,4 @@ from . import company
 from . import menu
 from . import partner
 from . import item
-from . import plan
 from . import token

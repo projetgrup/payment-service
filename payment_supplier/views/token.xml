@@ -6,8 +6,8 @@
     <field name="arch" type="xml">
         <tree editable="top" sample="1" decoration-muted="active == False">
             <field name="name" decoration-bf="1"/>
-            <field name="limit_card"/>
-            <field name="limit_tx"/>
+            <field name="jetcheckout_limit_card"/>
+            <field name="jetcheckout_limit_tx"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="active" widget="boolean_toggle"/>
             <button name="action_verify" string="Verify" type="object" class="btn btn-link" icon="fa-credit-card mr-1" attrs="{'invisible': [('verified', '=', True)]}"/>
