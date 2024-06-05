@@ -1,0 +1,1375 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_supplier
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220110\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-02 09:53+0000\n"
+"PO-Revision-Date: 2024-05-02 12:55+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<em>Select All</em>"
+msgstr "<em>Tümünü Seç</em>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_kanban
+msgid "<i class=\"fa fa-clone mr-2\"/>Contactless Payment"
+msgstr "<i class=\"fa fa-clone mr-2\"/>Temassız Ödeme"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_kanban
+msgid "<i class=\"fa fa-credit-card mr-2\"/>Payment Page"
+msgstr "<i class=\"fa fa-credit-card mr-2\"/>Ödeme Sayfası"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_kanban
+msgid "<i class=\"fa fa-link mr-2\"/>Payment Link"
+msgstr "<i class=\"fa fa-link mr-2\"/>Ödeme Linki"
+
+#. module: payment_supplier
+#: model:mail.template,body_html:payment_supplier.supplier_mail
+#, fuzzy
+#| msgid ""
+#| "<p>\n"
+#| "    <strong>Dear <i t-out=\"object.name\"/></strong>,\n"
+#| "    <br/><br/>\n"
+#| "    If you want to view and pay online, <a t-att-href=\"object."
+#| "_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">click here."
+#| "</a>\n"
+#| "    <br/><br/>    <a t-att-href=\"object._get_payment_url()\" "
+#| "style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:"
+#| "#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Go to "
+#| "Payment</span>❯</a>    <br/><br/>\n"
+#| "    Have a nice day.\n"
+#| "    <br/><br/>\n"
+#| "    Sincerely...\n"
+#| "    <br/><br/>\n"
+#| "    <span t-out=\"object._get_payment_company()\"/>\n"
+#| "</p>"
+msgid ""
+"<p>\n"
+"    <strong>Dear <i t-out=\"object.name\"/></strong>,\n"
+"    <br/><br/>\n"
+"    If you want to view and pay online, <a t-att-href=\"object."
+"_get_payment_url()\" style=\"color:#3079ed;\">click here.</a>\n"
+"    <br/><br/>\n"
+"    Have a nice day.\n"
+"    <br/><br/>\n"
+"    Sincerely...\n"
+"    <br/><br/>\n"
+"    <span t-out=\"object._get_payment_company()\"/>\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
+"    <br/><br/>\n"
+"    İncelemek ve Online Ödeme için <a t-att-href=\"object."
+"_get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">tıklayınız.</"
+"a>\n"
+"    <br/><br/>    <a t-att-href=\"object._get_payment_url()\" "
+"style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:"
+"#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Ödemeye Git</"
+"span>❯</a>    <br/><br/>\n"
+"    İyi günler dileriz.\n"
+"    <br/><br/>\n"
+"    Saygılarımızla...\n"
+"    <br/><br/>\n"
+"    <span t-out=\"object._get_payment_company()\"/>\n"
+"</p>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Address</b>\n"
+"            </span>"
+msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                <b>Adres</b>\n"
+"            </span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<span class=\"text-500\">Amount</span>"
+msgstr "<span class=\"text-500\">Tutar</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<span class=\"text-500\">Date</span>"
+msgstr "<span class=\"text-500\">Tarih</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<span class=\"text-500\">Due Date</span>"
+msgstr "<span class=\"text-500\">Vade Tarihi</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<span class=\"text-500\">Residual</span>"
+msgstr "<span class=\"text-500\">Kalan</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<span class=\"text-600 font-weight-bold\">Select All</span>"
+msgstr "<span class=\"text-600 font-weight-bold\">Tümünü Seç</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>Address</span>"
+msgstr "<span>Adres</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>City</span>"
+msgstr "<span>İlçe</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>Company</span>"
+msgstr "<span>Kurumsal</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>Individual</span>"
+msgstr "<span>Bireysel</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>State</span>"
+msgstr "<span>Şehir</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "<span>Tax Office</span>"
+msgstr "<span>Vergi Dairesi</span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"h4\">Thank You!</strong><br/>There is not any unpaid "
+"transaction related to you"
+msgstr ""
+"<strong class=\"h4\">Teşekkür Ederiz!</strong><br/>Size ait ödenmemiş bir "
+"işlem yok"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</"
+"strong>\n"
+"                                <strong class=\"text-primary font-weight-"
+"bold text-right z-index-1 mt-3\">Amount</strong>"
+msgstr ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Ödeme</"
+"strong>\n"
+"                                <strong class=\"text-primary font-weight-"
+"bold text-right z-index-1 mt-3\">Tutar</strong>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
+msgstr "<strong class=\"text-primary font-weight-bold\">Bilgiler</strong>"
+
+#. module: payment_supplier
+#: model:mail.template,body_html:payment_supplier.mail_transaction_successful
+#, fuzzy
+#| msgid ""
+#| "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#| "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#| "serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+#| "align=\"center\">\n"
+#| "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#| "style=\"padding: 16px; background-color: white; color: #454748; border-"
+#| "collapse:separate;\">\n"
+#| "<tbody>\n"
+#| "    <tr>\n"
+#| "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#| "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#| "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#| "0px 8px 0px 8px; border-collapse:separate;\">\n"
+#| "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+#| "                    <div>\n"
+#| "                        Hello <strong t-out=\"object.name or ''\">Marc "
+#| "Demo</strong>,<br/><br/>\n"
+#| "                        Successful transaction information as follows.<br/"
+#| "><br/>\n"
+#| "                        Transaction Owner Company : <t t-"
+#| "out=\"ctx['partner'].name or ''\"/><br/>\n"
+#| "                        Transaction Date : <t t-out=\"ctx['tx']."
+#| "last_state_change.strftime('%d.%m.%Y %H:%M:%S')\">01.01.2022 00:00:00</"
+#| "t><br/>\n"
+#| "                        Transaction Amount : <t t-"
+#| "out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx']."
+#| "currency_id) or ''\"/><br/>\n"
+#| "                        Installment Count : <t t-out=\"ctx['tx']."
+#| "jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
+#| "                        <div style=\"margin: 16px 0px 16px 0px; text-"
+#| "align: center;\">\n"
+#| "                            <a t-att-href=\"'%s/payment/card/report/"
+#| "receipt/%s' % (ctx['url'], ctx['tx'].jetcheckout_order_id)\" "
+#| "style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+#| "size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;"
+#| "\">\n"
+#| "                                <strong>Receipt</strong>\n"
+#| "                            </a>\n"
+#| "                            <a t-att-href=\"'%s/payment/card/report/"
+#| "conveyance/%s' % (ctx['url'], ctx['tx'].jetcheckout_order_id)\" "
+#| "style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+#| "size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;"
+#| "\">\n"
+#| "                                <strong>Conveyance</strong>\n"
+#| "                            </a>\n"
+#| "                        </div>\n"
+#| "                    </div>\n"
+#| "                </td></tr>\n"
+#| "                <tr><td style=\"text-align:center;\">\n"
+#| "                  <hr width=\"100%\" style=\"background-color:"
+#| "rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#| "size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+#| "                </td></tr>\n"
+#| "            </table>\n"
+#| "        </td>\n"
+#| "    </tr>\n"
+#| "    <tr>\n"
+#| "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#| "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#| "width=\"590\" style=\"min-width: 590px; background-color: white; font-"
+#| "size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+#| "                <tr><td valign=\"middle\" align=\"left\">\n"
+#| "                    <t t-out=\"ctx['company'].name or ''\">YourCompany</"
+#| "t>\n"
+#| "                </td></tr>\n"
+#| "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+#| "0.7;\">\n"
+#| "                    <t t-out=\"ctx['company'].phone or ''\">+1 "
+#| "650-123-4567</t>\n"
+#| "                    <t t-if=\"ctx['company'].email\">\n"
+#| "                        | <a t-attf-href=\"mailto:{{ ctx['company']."
+#| "email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+#| "out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+#| "                    </t>\n"
+#| "                    <t t-if=\"ctx['company'].website\">\n"
+#| "                        | <a t-attf-href=\"{{ ctx['company'].website }}\" "
+#| "style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']."
+#| "website or ''\">http://www.example.com</a>\n"
+#| "                    </t>\n"
+#| "                </td></tr>\n"
+#| "            </table>\n"
+#| "        </td>\n"
+#| "    </tr>\n"
+#| "</tbody>\n"
+#| "</table>\n"
+#| "</td></tr>\n"
+#| "</table>"
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hello <strong t-out=\"object.name or ''\">Marc Demo</"
+"strong>,<br/><br/>\n"
+"                        Successful transaction information as follows.<br/"
+"><br/>\n"
+"                        Transaction Owner Company : <t t-"
+"out=\"ctx['partner'].name or ''\"/><br/>\n"
+"                        Transaction Date : <t t-"
+"out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:"
+"ss')\">01.01.2023 00:00:00</t><br/>\n"
+"                        Transaction Amount : <t t-"
+"out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx']."
+"currency_id) or ''\"/><br/>\n"
+"                        Installment Count : <t t-out=\"ctx['tx']."
+"jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"'%s/report/html/"
+"payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)\" "
+"style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+"size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Receipt</strong>\n"
+"                            </a>\n"
+"                            <a t-att-href=\"'%s/report/html/"
+"payment_jetcheckout.payment_conveyance/%s' % (ctx['url'], ctx['tx'].id)\" "
+"style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+"size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Conveyance</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"mailto:{{ ctx['company']."
+"email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"{{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']."
+"website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Merhaba <strong t-out=\"object.name or ''\">Marc "
+"Demo</strong>,<br/><br/>\n"
+"                        Başarılı işlem bilgileri aşağıdaki gibidir.<br/>\n"
+"                        İşlem Geçen Firma : <t t-esc=\"ctx['partner'].name "
+"or ''\"/><br/>\n"
+"                        İşlem Tarihi : <t t-out=\"format_datetime(ctx['tx']."
+"last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')\">01.01.2023 00:00:00</t><br/"
+">\n"
+"                        İşlem Tutarı : <t t-esc=\"format_amount(ctx['tx']."
+"jetcheckout_payment_amount, ctx['tx'].currency_id) or ''\"/><br/>\n"
+"                        Taksit Sayısı : <t t-esc=\"ctx['tx']."
+"jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"'%s/report/html/"
+"payment_jetcheckout.payment_receipt/%s' % (ctx['url'], ctx['tx'].id)\" "
+"style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+"size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Makbuz</strong>\n"
+"                            </a>\n"
+"                            <a t-att-href=\"'%s/report/html/"
+"payment_jetcheckout.payment_conveyance/%s' % (ctx['url'], ctx['tx'].id)\" "
+"style=\"display: inline-block; padding: 10px; text-decoration: none; font-"
+"size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Temlikname</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"mailto:{{ ctx['company']."
+"email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"{{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']."
+"website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+
+#. module: payment_supplier
+#: model:mail.template,body_html:payment_supplier.mail_transaction_daily
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"700\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 700px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"700\" style=\"min-width: 700px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello <strong t-out=\"object.name or ''\">Marc "
+"Demo</strong>,<br/><br/>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <t t-if=\"ctx['total'] &gt; 0 and len(ctx['transactions']) "
+"&gt; 0\">\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                            <div>\n"
+"                                Summary of transactions related to your "
+"company on <t t-out=\"ctx['date']\"/> as follows.<br/><br/>\n"
+"                            </div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px; text-"
+"align: center;\">\n"
+"                            <table style=\"table-layout: fixed; width: 90%;"
+"\">\n"
+"                                <thead>\n"
+"                                    <tr>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: left;\">Supplier/Customer Name</th>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: right;\">Amount of payment</th>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: right;\">Share of payment</th>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody>\n"
+"                                    <t t-foreach=\"ctx['transactions']\" t-"
+"as=\"line\">\n"
+"                                        <tr>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: left;\"><t t-out=\"line['name']\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: right;\"><t t-out=\"format_amount(line['amount'], "
+"ctx['company'].currency_id) or ''\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * "
+"line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
+"                                        </tr>\n"
+"                                    </t>\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"text-align: left;"
+"\">Total</td>\n"
+"                                        <td style=\"text-align: right;\"><t "
+"t-out=\"format_amount(ctx['total'], ctx['company'].currency_id) or ''\"/></"
+"td>\n"
+"                                        <td style=\"text-align: right;\">% "
+"<t t-out=\"'%.2f' % 100\"/></td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                            <div>\n"
+"                                There is no payment transactions related to "
+"your company on <t t-out=\"ctx['date']\"/><br/><br/>\n"
+"                            </div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </t>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"mailto:{{ ctx['company']."
+"email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"{{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']."
+"website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"700\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 700px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"700\" style=\"min-width: 700px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Merhaba <strong t-out=\"object.name or ''\">Marc "
+"Demo</strong>,<br/><br/>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <t t-if=\"ctx['total'] &gt; 0 and len(ctx['transactions']) "
+"&gt; 0\">\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                            <div>\n"
+"                                <t t-out=\"ctx['date']\"/> tarihindeki işlem "
+"toplamınız aşağıdaki gibidir.<br/><br/>\n"
+"                            </div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px; text-"
+"align: center;\">\n"
+"                            <table style=\"table-layout: fixed; width: 90%;"
+"\">\n"
+"                                <thead>\n"
+"                                    <tr>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: left;\">Bayi/Müşteri Adı</th>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: right;\">Tahsilat Tutarı</th>\n"
+"                                        <th style=\"border-bottom: 2px solid "
+"#ccc; text-align: right;\">Tahsilattaki Payı</th>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody>\n"
+"                                    <t t-foreach=\"ctx['transactions']\" t-"
+"as=\"line\">\n"
+"                                        <tr>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: left;\"><t t-out=\"line['name']\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: right;\"><t t-out=\"format_amount(line['amount'], "
+"ctx['company'].currency_id) or ''\"/></td>\n"
+"                                            <td style=\"border-bottom: 1px "
+"solid #ccc; text-align: right;\">% <t t-out=\"'%.2f' % round(100 * "
+"line['amount']/ctx['total'], 2) if ctx['total'] != 0 else 0\"/></td>\n"
+"                                        </tr>\n"
+"                                    </t>\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"text-align: left;"
+"\">Toplam</td>\n"
+"                                        <td style=\"text-align: right;\"><t "
+"t-out=\"format_amount(ctx['total'], ctx['company'].currency_id) or ''\"/></"
+"td>\n"
+"                                        <td style=\"text-align: right;\">% "
+"<t t-out=\"'%.2f' % 100\"/></td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <tr>\n"
+"                        <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                            <div>\n"
+"                                <t t-out=\"ctx['date']\"/> tarihinde "
+"gerçekleşen bir işlem bulunmuyor.<br/><br/>\n"
+"                            </div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </t>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"mailto:{{ ctx['company']."
+"email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"{{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']."
+"website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_agreements
+msgid "Agreement Settings"
+msgstr "Sözleşme Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_agreement
+#: model:ir.ui.menu,name:payment_supplier.menu_transaction_agreement
+msgid "Agreements"
+msgstr "Sözleşmeler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Allow dealers to edit payable amount on payment link"
+msgstr "Bayilerin ödeme linkindeki ödenebilir tutarı düzenlemesine izin verin"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_subscription_report_pivot
+msgid "Analysis"
+msgstr "Analiz"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_product_attribute
+msgid "Attributes"
+msgstr "Nitelikler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.item_search
+#: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_tree
+msgid "Authorized"
+msgstr "Yetkili"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Average Due:"
+msgstr "Ortalama Vade:"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_form
+msgid "Branch"
+msgstr "Şube"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_tree
+msgid "Campaign"
+msgstr "Kampanya"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_product_category
+msgid "Categories"
+msgstr "Kategoriler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "City"
+msgstr "İlçe"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_res_company
+#: model:ir.ui.menu,name:payment_supplier.menu_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: payment_supplier
+#. openerp-web
+#: code:addons/payment_supplier/static/src/js/page.js:0
+#, python-format
+msgid "Company Name"
+msgstr "Şirket Adı"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_companies
+msgid "Company Settings"
+msgstr "Şirket Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_conf
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_res_partner
+msgid "Contact"
+msgstr "Yetkili"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_tree
+msgid "Contactless Payment"
+msgstr "Temassız Ödeme"
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_child
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Contacts"
+msgstr "Yetkililer"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Country"
+msgstr "Ülke"
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_parent
+msgid "Create a supplier"
+msgstr "Bir tedarikçi oluştur"
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_child
+msgid "Create a supplier contact"
+msgstr "Bir tedarikçi yetkilisi oluştur"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Create subscription with chosen products"
+msgstr "Seçilen ürünler ile abonelik oluştur"
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_item
+msgid "Created payments are listed here"
+msgstr "Oluşturulan ödemeler burada listelenir"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_dashboard
+msgid "Dashboard"
+msgstr "Panel"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Date"
+msgstr "Tarih"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Days)"
+msgstr "Gün)"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Define agreements to facilitate receiving payments"
+msgstr "Ödeme alırken onaylanacak sözleşmeleri tanımlayın"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Define products to facilitate receiving payments"
+msgstr "Ödeme alırken seçilecek ürünleri tanımlayın"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Document"
+msgstr "Belge"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Due Date"
+msgstr "Vade Tarihi"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Editable Payment Amount"
+msgstr "Düzenlenebilir Ödeme Tutarı"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "Email"
+msgstr "Eposta"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_mail
+msgid "Email Settings"
+msgstr "Eposta Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_mail_template
+msgid "Email Templates"
+msgstr "Eposta Şablonları"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Yönlendirme"
+
+#. module: payment_supplier
+#: model:sms.template,body:payment_supplier.sms_transaction_successful
+msgid ""
+"Hello {{ object.name }}, successful transaction information as follows."
+"\\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\\nTransaction "
+"Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:"
+"mm:ss') }}\\nTransaction Amount: {{ ctx['amount'] }} {{ ctx['tx']."
+"currency_id.name }}\\nInstallment Count: {{ ctx['tx']."
+"with_context(lang=ctx['lang']).jetcheckout_installment_description_long or "
+"'' }}"
+msgstr ""
+"Merhaba {{ object.name }}, başarılı işlem bilgileri aşağıdaki gibidir."
+"\\nİşlem Geçen Firma: {{ ctx['partner'].name or '' }}\\nİşlem Tarihi: "
+"{{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:"
+"ss') }}\\nİşlem Tutarı: {{ ctx['amount'] }} {{ ctx['tx'].currency_id."
+"name }}\\nTaksit Sayısı: {{ ctx['tx'].with_context(lang=ctx['lang'])."
+"jetcheckout_installment_description_long or '' }}"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_integrations
+msgid "Integration Settings"
+msgstr "Entegrasyon Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_mail_server
+msgid "Mail Servers"
+msgstr "Eposta Sunucuları"
+
+#. module: payment_supplier
+#: model:res.groups,name:payment_supplier.group_supplier_manager
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menü"
+
+#. module: payment_supplier
+#. openerp-web
+#: code:addons/payment_supplier/static/src/js/page.js:0
+#, python-format
+msgid "Name"
+msgstr "Adı"
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_item
+msgid "No payments yet"
+msgstr "Henüz bir ödeme yok"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_sale_order
+msgid "Orders"
+msgstr "Siparişler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Other"
+msgstr "Diğer"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Paid"
+msgstr "Ödenecek"
+
+#. module: payment_supplier
+#: model:ir.model.fields,field_description:payment_supplier.field_payment_transaction__paylox_notif_mail_state
+msgid "Paylox Email Notification State"
+msgstr "Paylox Eposta Bildirim Durumu"
+
+#. module: payment_supplier
+#: model:ir.model.fields,field_description:payment_supplier.field_payment_transaction__paylox_notif_sms_state
+msgid "Paylox SMS Notification State"
+msgstr "Paylox SMS Bildirim Durumu"
+
+#. module: payment_supplier
+#: model:mail.template,subject:payment_supplier.supplier_mail
+msgid "Payment - {{ object.company_id.name }}"
+msgstr "Ödeme - {{ object.company_id.name }}"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_acquirer
+msgid "Payment Acquirers"
+msgstr "Ödeme Alıcıları"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_payment_item
+msgid "Payment Items"
+msgstr "Ödeme Kalemleri"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_tree
+msgid "Payment Link"
+msgstr "Ödeme Linki"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_tree
+msgid "Payment Page"
+msgstr "Ödeme Sayfası"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_acquirers
+msgid "Payment Settings"
+msgstr "Ödeme Ayarları"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemleri"
+
+#. module: payment_supplier
+#: code:addons/payment_supplier/controllers/main.py:0
+#, python-format
+msgid "Payment items must share one common currency"
+msgstr "Ödeme kalemlerinin para birimleri aynı olmalıdır"
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_item
+#: model:ir.ui.menu,name:payment_supplier.menu_payment
+msgid "Payments"
+msgstr "Ödemeler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_product_attribute
+msgid "Product Attribute"
+msgstr "Ürün Niteliği"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_product_category
+msgid "Product Category"
+msgstr "Ürün Kategorisi"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_products
+msgid "Product Settings"
+msgstr "Ürün Ayarları"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_product_template
+msgid "Product Template"
+msgstr "Ürün Şablonu"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_product
+#: model:ir.ui.menu,name:payment_supplier.menu_product_template
+#: model:ir.ui.menu,name:payment_supplier.menu_subscription_product
+msgid "Products"
+msgstr "Ürünler"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_conf_subscription_reason
+msgid "Reasons"
+msgstr "Gerekçeler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Remove"
+msgstr "Kaldır"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Remove Advance"
+msgstr "Avansı Kaldır"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_subscription_report
+msgid "Reports"
+msgstr "Raporlar"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Representatives"
+msgstr "Temsilciler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Residual"
+msgstr "Kalan"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_sms_provider
+msgid "SMS Providers"
+msgstr "SMS Sağlayıcılar"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_sms
+msgid "SMS Settings"
+msgstr "SMS Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_sms_template
+msgid "SMS Templates"
+msgstr "SMS Şablonları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_sale
+msgid "Sales"
+msgstr "Satışlar"
+
+#. module: payment_supplier
+#: model:ir.model,name:payment_supplier.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_search
+msgid "Sales Person"
+msgstr "Satış Temsilcisi"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_search
+msgid "Sales Team"
+msgstr "Satış Ekibi"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_team
+msgid "Sales Teams"
+msgstr "Satış Ekipleri"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "Select a state"
+msgstr "Bir il seçin"
+
+#. module: payment_supplier
+#: model:ir.actions.server,name:payment_supplier.crom_transaction_daily_ir_actions_server
+#: model:ir.actions.server,name:payment_supplier.cron_transaction_daily_ir_actions_server
+#: model:ir.cron,cron_name:payment_supplier.crom_transaction_daily
+#: model:ir.cron,cron_name:payment_supplier.cron_transaction_daily
+#: model:ir.cron,name:payment_supplier.crom_transaction_daily
+#: model:ir.cron,name:payment_supplier.cron_transaction_daily
+msgid "Send daily report email of transactions"
+msgstr "Ödeme işlemleri için günlük rapor epostası gönder"
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_settings
+#: model:ir.ui.menu,name:payment_supplier.menu_settings
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_conf_subscription_stage
+msgid "Stages"
+msgstr "Aşamalar"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "State"
+msgstr "Şehir"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment_system_product
+msgid "Street"
+msgstr "Adres"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Street..."
+msgstr "Cadde..."
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_conf_subscription
+msgid "Subscription Settings"
+msgstr "Abonelik Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_subscription
+#: model:ir.ui.menu,name:payment_supplier.menu_subscriptions
+msgid "Subscriptions"
+msgstr "Abonelikler"
+
+#. module: payment_supplier
+#: model:ir.model.fields,field_description:payment_supplier.field_payment_item__system
+#: model:ir.model.fields,field_description:payment_supplier.field_product_attribute__system
+#: model:ir.model.fields,field_description:payment_supplier.field_product_category__system
+#: model:ir.model.fields,field_description:payment_supplier.field_product_product__system
+#: model:ir.model.fields,field_description:payment_supplier.field_product_template__system
+#: model:ir.model.fields,field_description:payment_supplier.field_res_company__system
+#: model:ir.model.fields,field_description:payment_supplier.field_res_partner__system
+#: model:ir.model.fields,field_description:payment_supplier.field_res_users__system
+#: model:ir.model.fields,field_description:payment_supplier.field_sale_order__system
+msgid "System"
+msgstr "Sistem"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_tags
+msgid "Tags"
+msgstr "Etiketler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Tags..."
+msgstr "Etiketler..."
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_conf_subscription_template
+msgid "Templates"
+msgstr "Şablonlar"
+
+#. module: payment_supplier
+#: model:mail.template,name:payment_supplier.mail_transaction_daily
+msgid "Transaction: Daily Report"
+msgstr "Ödeme İşlemi: Günlük Rapor"
+
+#. module: payment_supplier
+#: model:mail.template,name:payment_supplier.mail_transaction_successful
+msgid "Transaction: Successful Email"
+msgstr "Ödeme İşlemi: Başarılı Epostası"
+
+#. module: payment_supplier
+#: model:sms.template,name:payment_supplier.sms_transaction_successful
+msgid "Transaction: Successful Payment SMS"
+msgstr "Ödeme İşlemi: Başarılı Ödeme SMS Mesajı"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_transaction
+msgid "Transactions"
+msgstr "İşlemler"
+
+#. module: payment_supplier
+#: model:res.groups,name:payment_supplier.group_supplier_user
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_user
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: payment_supplier
+#. openerp-web
+#: code:addons/payment_supplier/static/src/js/page.js:0
+#, python-format
+msgid "VAT"
+msgstr "VKN"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_main
+msgid "VPS"
+msgstr "BTS"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_product_product
+msgid "Variants"
+msgstr "Varyantlar"
+
+#. module: payment_supplier
+#. openerp-web
+#: code:addons/payment_supplier/static/src/js/page.js:0
+#, python-format
+msgid "Vat"
+msgstr "TCKN"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_form
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_search
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_tree
+#: model_terms:ir.ui.view,arch_db:payment_supplier.item_search
+#: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
+msgid "Supplier"
+msgstr "Tedarikçi"
+
+#. module: payment_supplier
+#: model:mail.template,name:payment_supplier.supplier_mail
+msgid "Supplier Payment Email"
+msgstr "Tedarikçi Tahsilat Epostası"
+
+#. module: payment_supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__payment_item__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__product_attribute__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__product_category__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__product_template__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__res_company__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__res_partner__system__supplier
+#: model:ir.model.fields.selection,name:payment_supplier.selection__sale_order__system__supplier
+#: model:ir.module.category,description:payment_supplier.module_category_supplier
+#: model:ir.module.category,name:payment_supplier.module_category_supplier
+msgid "Supplier Payment System"
+msgstr "Tedarikçi Tahsilat Sistemi"
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_parent
+#: model:ir.ui.menu,name:payment_supplier.menu_parent
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Suppliers"
+msgstr "Bayiler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Warning"
+msgstr "Uyarı"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_websites
+msgid "Website Settings"
+msgstr "Website Ayarları"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_website
+msgid "Websites"
+msgstr "Websiteler"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "ZIP"
+msgstr "Posta Kodu"
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_syncops_connector
+msgid "syncOPS Integrations"
+msgstr "syncOPS Entegrasyonları"
+
+#. module: payment_supplier
+#: model:mail.template,subject:payment_supplier.mail_transaction_daily
+msgid "{{ ctx['domain'] }} | About payment transactions on {{ ctx['date'] }}"
+msgstr ""
+"{{ ctx['domain'] }} | {{ ctx['date'] }} tarihindeki ödeme işlemleriniz "
+"hakkında"
+
+#. module: payment_supplier
+#: model:mail.template,subject:payment_supplier.mail_transaction_successful
+msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
+msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid "Standard"
+#~ msgstr "Standart"
+
+#~ msgid "Select a tax office"
+#~ msgstr "Bir vergi dairesi seçin"
+
+#~ msgid ""
+#~ "<select class=\"text-center border-primary\" required=\"required\" "
+#~ "field=\"wizard.register.company_type\" placeholder=\"Select partner "
+#~ "type\">\n"
+#~ "                            <option value=\"person\" "
+#~ "selected=\"selected\">Individual</option>\n"
+#~ "                            <option value=\"company\">Company</option>\n"
+#~ "                        </select>\n"
+#~ "                        <span class=\"bar-container\"/>"
+#~ msgstr ""
+#~ "<select class=\"text-center border-primary\" required=\"required\" "
+#~ "field=\"wizard.register.company_type\" placeholder=\"İş ortağı türü "
+#~ "seçin\">\n"
+#~ "                            <option value=\"person\" "
+#~ "selected=\"selected\">Bireysel</option>\n"
+#~ "                            <option value=\"company\">Kurumsal</option>\n"
+#~ "                        </select>\n"
+#~ "                        <span class=\"bar-container\"/>"
+
+#~ msgid "No setting found"
+#~ msgstr "Ayar bulunamadı"
+
+#~ msgid "Try searching for another keyword"
+#~ msgstr "Başka bir şey aramayı deneyin"
+
+#~ msgid "Database Settings"
+#~ msgstr "Veritabanı Ayarları"
+
+#~ msgid "External Databases"
+#~ msgstr "Harici Veritabanları"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "SMS"
+#~ msgstr "SMS"
+
+#~ msgid "Parent"
+#~ msgstr "Bayi"

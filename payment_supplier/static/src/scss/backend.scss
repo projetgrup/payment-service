@@ -1,0 +1,26 @@
+.o_dialog {
+    .o_form_payment_token_verify {
+        .o_form_sheet {
+            height: 400px;
+
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                inset: 0;
+                cursor: wait;
+            }
+
+            > iframe {
+                inset: 0;
+                z-index: 9;
+            }
+        }
+    }
+
+    &:has(.o_form_payment_token_verify) {
+        footer {
+            display: none;
+        }
+    }
+}

@@ -90,7 +90,7 @@ class PayloxSyncopsController(Controller):
             }
 
     def _connector_get_partner_balance(self, vat, ref, company=None):
-        balances, show_total = [], False
+        balances, show_total = {}, False
         company = company or request.env.company
         company_id = company.sudo().partner_id.ref
         result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_balance', params={
@@ -106,6 +106,13 @@ class PayloxSyncopsController(Controller):
                     continue
 
                 amount = isinstance(res.get('amount'), float) and res['amount'] or 0
+                if currency_name in balances:
+                    amount += balances[currency_name]['value']
+                else:
+                    balances[currency_name] = {
+                        'note': res.get('note', ''),
+                    }
+
                 amount_formatted = formatLang(request.env, amount, currency_obj=currency)
                 if 'amount_total' in res:
                     show_total = True
@@ -114,25 +121,25 @@ class PayloxSyncopsController(Controller):
                 else:
                     amount_total = formatLang(request.env, 0, currency_obj=currency)
 
-                balances.append({
+                balances[currency_name].update({
                     'value': amount,
                     'amount': amount_formatted,
                     'amount_total': amount_total,
-                    'note': res.get('note', ''),
                 })
 
         if not balances:
             amount = 0
             amount_formatted = formatLang(request.env, 0, currency_obj=company.currency_id)
             amount_total = formatLang(request.env, 0, currency_obj=company.currency_id)
-            balances.append({
+
+            balances[company.currency_id.name] = {
                 'value': amount,
                 'amount': amount_formatted,
                 'amount_total': amount_total,
                 'note': '',
-            })
+            }
 
-        return balances, show_total
+        return list(balances.values()), show_total
 
     def _connector_get_partner_ledger(self, vat, ref, date_start, date_end, company=None):
         company = company or request.env.company

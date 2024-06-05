@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_tree" model="ir.ui.view">
+    <field name="name">payment.item.supplier.tree</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field' position="before">
+            <header>
+                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o"/>
+            </header>
+        </xpath>
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="campaign_id"]' position="replace">
+            <field name="parent_id" string="supplier" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'supplier'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" required="1"/>
+            <field name="child_id" string="Authorized" invisible="1" readonly="1" force_save="1" context="{'active_system': 'supplier'}" options="{'no_open': True, 'no_create': True}"/>
+        </xpath>
+        <xpath expr='//field[@name="date"]' position="attributes">
+            <attribute name="optional">show</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="item_search" model="ir.ui.view">
+    <field name="name">payment.item.supplier.search</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace">
+            <field name="parent_id" string="Supplier"/>
+            <!--<field name="child_id" string="Authorized"/>-->
+        </xpath>
+        <xpath expr='//filter[@name="groupby_child"]' position="replace"/>
+        <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
+            <attribute name="string">Supplier</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="plan_tree" model="ir.ui.view">
+    <field name="name">payment.plan.supplier.tree</field>
+    <field name="model">payment.plan</field>
+    <field name="arch" type="xml">
+        <tree editable="top" sample="1">
+            <field name="partner_id" string="Partner" options="{'no_create': True}"/>
+            <field name="amount"/>
+            <field name="date"/>
+            <field name="paid"/>
+            <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
+            <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
+            <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
+            <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <button name="action_receipt" string="Receipt" type="object" icon="fa-file-text-o" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
+            <field name="system" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="plan_wizard" model="ir.ui.view">
+    <field name="name">payment.plan.wizard.supplier.form</field>
+    <field name="model">payment.plan.wizard</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group class="text-center col-md-6">
+                        <div colspan="2" class="my-3"><i class="fa fa-calendar-plus-o fa-2x text-primary"/></div>
+                        <p colspan="2" class="h3 text-600">Please select a method to create payment plans</p>
+                    </group>
+                    <group class="col-md-6 w-100">
+                        <field name="method_supplier" string="Method" widget="radio"/>
+                    </group>
+                </group>
+                <field name="item_ids" invisible="1"/>
+            </sheet>
+            <footer>
+                <button name="action_confirm" string="Confirm" type="object" class="btn btn-primary"/>
+                <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+</odoo>

@@ -5,4 +5,4 @@ from odoo import models, fields
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    system = fields.Selection(selection_add=[('jewelry', 'Jewelry Payment System')])
+    system = fields.Selection(selection_add=[('supplier', 'Supplier Payment System')])

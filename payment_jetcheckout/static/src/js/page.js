@@ -15,7 +15,7 @@ const _t = core._t;
 const qweb = core.qweb;
 
 publicWidget.registry.payloxPage = publicWidget.Widget.extend({
-    selector: '.payment-card',
+    selector: '#payment_card',
     jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
@@ -1015,7 +1015,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     index: $input.data('index') || 0,
                     rows: this.installment.rows || [],
                 },
-                campaign: this.campaign.name.value,
+                campaign: this.campaign.name.value || '',
                 successurl: this.payment.successurl.value,
                 failurl: this.payment.failurl.value,
                 partner: parseInt(this.partner.value || 0),
@@ -1125,6 +1125,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }
         })
     },
+
     _onClickPaymentButton: function () {
         if (this._checkData()) {
             framework.showLoading();
