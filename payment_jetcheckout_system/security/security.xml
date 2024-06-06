@@ -86,6 +86,16 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+        <record id="token_company_admin_rule" model="ir.rule">
+            <field name="name">Access only tokens belonging to commercial partner for system managers</field>
+            <field name="model_id" ref="mail.model_mail_template"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
         <record id="mail_server_company_rule" model="ir.rule">
             <field name="name">Access only related mail servers for users</field>
             <field name="model_id" ref="base.model_ir_mail_server"/>

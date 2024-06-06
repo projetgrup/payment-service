@@ -94,7 +94,8 @@
                         </span>
                     </div>
                     <field name="jetcheckout_installment_description_long" string="Installment" class="font-weight-bold text-primary" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
-                    <field name="jetcheckout_card_name"/>
+                    <field name="jetcheckout_card_name" attrs="{'invisible': [('jetcheckout_card_name', '=', False)]}"/>
+                    <field name="token_id" attrs="{'invisible': [('token_id', '=', False)]}" options="{'no_create': True, 'no_open': True}"/>
                     <field name="jetcheckout_card_number"/>
                     <field name="jetcheckout_card_type"/>
                     <field name="jetcheckout_card_family"/>

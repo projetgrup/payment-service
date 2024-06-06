@@ -88,10 +88,10 @@ class PaymentPlan(models.Model):
         response = requests.post(url, json=data)
         if response.status_code == 200:
             result = response.json()
-            if result['response_code'] in ("00"):
+            if result.get('response_code', '') in ("00"):
                 self.message = _('Success')
             else:
-                self.message = result['message']
+                self.message = result.get('message', _('An error occured'))
         else:
             self.message = response.reason
 

@@ -43,12 +43,26 @@ class PartnerBank(models.Model):
             else:
                 bank.api_result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
 
-    api_ref = fields.Char('Reference', default=lambda self: str(uuid.uuid4()))
+    api_ref = fields.Char('Reference')
     api_state = fields.Boolean('State')
     api_message = fields.Char('Message')
     api_result = fields.Html('Result', sanitize=False, compute='_compute_api_result')
 
-    def action_api_save(self):
+    @api.model
+    def create(self, values):
+        values['api_ref'] = str(uuid.uuid4())
+        res = super().create(values)
+        res.action_api_save(create=True)
+        return res
+
+    def write(self, values):
+        res = super().write(values)
+        for bank in self:
+            if bank.api_ref:
+                bank.action_api_save()
+        return res
+
+    def action_api_save(self, create=False):
         if self.partner_id.system:
             company = self.partner_id.company_id or self.env.company
             acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
@@ -57,16 +71,17 @@ class PartnerBank(models.Model):
             else:
                 vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
                 mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
-                if len(vat) > 10:
-                    if self.partner_id.is_company:
-                        partner_type = "PersonalCompany"
+                if create:
+                    if len(vat) > 10:
+                        if self.partner_id.is_company:
+                            partner_type = "PersonalCompany"
+                        else:
+                            partner_type = "Individual"
                     else:
-                        partner_type = "Individual"
-                else:
-                    if self.partner_id.is_company:
-                        partner_type = "Company"
-                    else:
-                        partner_type = "Individual"
+                        if self.partner_id.is_company:
+                            partner_type = "Company"
+                        else:
+                            partner_type = "Individual"
 
                 url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
                 data = {
@@ -75,7 +90,6 @@ class PartnerBank(models.Model):
                     "iban": self.acc_number.replace(' ', ''),
                     "name": self.partner_id.name,
                     "title": self.partner_id.name,
-                    "type": partner_type,
                     "tax_number": vat,
                     "gsm_number": mobile,
                     "tax_office": self.partner_id.paylox_tax_office or '',
@@ -86,6 +100,8 @@ class PartnerBank(models.Model):
                     "currency": "TRY",
                     "language": "tr",
                 }
+                if create:
+                    data.update({"type": partner_type})
 
                 response = requests.post(url, data=json.dumps(data))
                 if response.status_code == 200:
