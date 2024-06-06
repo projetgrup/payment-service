@@ -233,6 +233,10 @@ class PayloxController(http.Controller):
         except:
             return False
 
+    @staticmethod
+    def _get_token(token):
+        return request.env['payment.token'].sudo().browse(token)
+
     def _check_user(self):
         return True
 
@@ -1054,21 +1058,27 @@ class PayloxController(http.Controller):
             currency = self._get_currency(kwargs['currency'], acquirer)
             partner = self._get_partner(kwargs['partner'], parent=True)
             year = str(fields.Date.today().year)[:2]
-            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, str(kwargs['card']['number']), str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
+            token = 'token' in kwargs['card'] and self._get_token(kwargs['card']['token']) or False
+            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
             data = {
                 "application_key": acquirer.jetcheckout_api_key,
                 "mode": acquirer._get_paylox_env(),
                 "campaign_name": campaign,
                 "amount": amount_integer,
                 "currency": currency.name,
+                "card_number": number,
                 "installment_count": installment['count'],
-                "card_number": kwargs['card']['number'],
                 "expire_month": kwargs['card']['date'][:2],
                 "expire_year": year + kwargs['card']['date'][-2:],
                 "is_3d": True,
                 "hash_data": hash,
                 "language": "tr",
             }
+            if number:
+                data.update({'card_number': number})
+            elif token:
+                data.update({'card_token': token.jetcheckout_ref})
 
             if getattr(partner, 'tax_office_id', False):
                 data.update({'billing_tax_office': partner.tax_office_id.name})
@@ -1091,13 +1101,14 @@ class PayloxController(http.Controller):
                 'amount': amount_total,
                 'fees': amount_cost,
                 'operation': 'online_direct',
+                'token_id': token.id,
                 'jetcheckout_payment_type': payment_type,
                 'jetcheckout_website_id': request.website.id,
                 'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
                 'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
                 'jetcheckout_campaign_name': campaign,
                 'jetcheckout_card_name': kwargs['card']['holder'],
-                'jetcheckout_card_number': ''.join([kwargs['card']['number'][:6], '*'*6, kwargs['card']['number'][-4:]]),
+                'jetcheckout_card_number': number and  ''.join([number[:6], '*'*6, number[-4:]]) or False,
                 'jetcheckout_card_type': kwargs['card']['type'].capitalize(),
                 'jetcheckout_card_family': kwargs['card']['family'].capitalize(),
                 'jetcheckout_order_id': order_id,
@@ -1111,11 +1122,6 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_rate': installment['crate'],
                 'jetcheckout_customer_amount': amount_customer,
             }
-
-            if 'token' in kwargs['card']:
-                vals.update({
-                    'token_id': kwargs['card']['token']
-                })
 
             vals.update(self._get_tx_values(**kwargs))
             if tx:

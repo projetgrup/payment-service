@@ -5,18 +5,18 @@ import requests
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round
 
 
 class PaymentPlan(models.Model):
     _name = 'payment.plan'
     _description = 'Payment Plans'
-    _order = 'date desc'
+    _order = 'date desc, id'
 
     def _compute_name(self):
         for payment in self:
             payment.name = payment.partner_id.name
 
+    @api.depends('paid', 'message')    
     def _compute_result(self):
         for plan in self:
             if plan.paid and plan.message:
@@ -34,7 +34,7 @@ class PaymentPlan(models.Model):
     amount = fields.Monetary(readonly=True)
     date = fields.Date(readonly=True)
     message = fields.Char(readonly=True)
-    result = fields.Html(sanitize=False, readonly=True)
+    result = fields.Html(sanitize=False, readonly=True, compute='_compute_result')
     paid = fields.Boolean(readonly=True)
     paid_date = fields.Datetime(readonly=True)
     installment_count = fields.Integer(readonly=True)
@@ -64,7 +64,7 @@ class PaymentPlan(models.Model):
                 'code': self.token_id.jetcheckout_security or '',
                 'date': self.token_id.jetcheckout_expiry or '',
                 'holder': self.token_id.jetcheckout_holder or '',
-                'token': self.token_id.jetcheckout_ref,
+                'token': self.token_id.id or 0,
             },
             'amount': self.amount,
             'partner': self.partner_id.id,
@@ -87,11 +87,11 @@ class PaymentPlan(models.Model):
 
         response = requests.post(url, json=data)
         if response.status_code == 200:
-            result = response.json()
-            if result.get('response_code', '') in ("00"):
+            result = response.json().get('result', {})
+            if result.get('response_code') == '00':
                 self.message = _('Success')
             else:
-                self.message = result.get('message', _('An error occured'))
+                self.message = result.get('message') or result.get('error') or _('An error occured')
         else:
             self.message = response.reason
 

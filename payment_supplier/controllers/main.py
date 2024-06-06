@@ -29,7 +29,6 @@ class PayloxSystemSupplierController(Controller):
                 'is_submerchant_payment': True,
                 'submerchant_external_id': partner.bank_ids[0]['api_ref'],
                 'submerchant_price': data['amount']/100,
-                'card_token': True
             })
         return values
 
