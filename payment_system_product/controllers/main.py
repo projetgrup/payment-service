@@ -158,8 +158,8 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PaymentSystemProductController(SystemController):
 
-    def _get_tx_vals(self, **kwargs):
-        vals = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        vals = super()._get_tx_values(**kwargs)
         products = kwargs.get('products', [])
         if products:
             vals.update({'paylox_product_ids': [(0, 0, {

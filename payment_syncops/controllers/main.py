@@ -16,12 +16,11 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystem
 
 class PayloxSyncopsController(Controller):
 
-    def _connector_auth(self, company, header):
+    def _connector_auth(self, header):
         code = header.split(' ', 1)[1]
         auth = base64.b64decode(code).decode('utf-8')
         username, password = auth.split(':', 1)
         connector = request.env['syncops.connector'].sudo().search([
-            ('company_id', '=', company.id),
             ('active', '=', True),
             ('connected', '=', True),
             ('username', '=', username),
@@ -205,8 +204,8 @@ class PayloxSyncopsController(Controller):
         company = company or request.env.company
         return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list_page', company=company)
 
-    def _get_tx_vals(self, **kwargs):
-        vals = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        vals = super()._get_tx_values(**kwargs)
         partner = self._get('syncops')
         path = urlparse(request.httprequest.referrer).path
         if path == '/my/payment':
@@ -388,8 +387,7 @@ class PayloxSyncopsController(Controller):
         if 'Authorization' not in headers:
             return Response('Access Denied', status=401)
 
-        company = request.env.company
-        connector = self._connector_auth(company, headers['Authorization'])
+        connector = self._connector_auth(headers['Authorization'])
         if not connector:
             return Response('Access Denied', status=401)
 
@@ -401,7 +399,7 @@ class PayloxSyncopsController(Controller):
             tz = pytz.timezone('Europe/Istanbul')
             offset = tz.utcoffset(now)
             domain = [
-                ('company_id', '=', company.id),
+                ('company_id', '=', connector.company_id.id),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
                 ('jetcheckout_payment_type', '=', 'virtual_pos'),

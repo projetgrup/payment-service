@@ -124,6 +124,21 @@
             <field name="paylox_tax_office"/>
             <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
         </xpath>
+        <xpath expr="//group[@name='payment']" position="replace">
+            <group string="Bank Accounts" name="banks">
+                <field name="bank_ids" nolabel="1">
+                    <tree editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="acc_number"/>
+                        <field name="api_result" string=" "/>
+                        <field name="api_message" optional="hide"/>
+                        <field name="api_state" invisible="1"/>
+                        <button name="action_api_save" string="Save" type="object" class="btn btn-link text-primary" icon="fa-save mr-1" attrs="{'invisible': [('api_state', '=', True)]}"/>
+                    </tree>
+                </field>
+                <button type="action" class="btn-link" name="64" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}" string="View accounts detail" colspan="2"/>
+            </group>
+        </xpath>
         <xpath expr="//notebook" position="inside">
             <page name="other" string="Other">
                 <group>

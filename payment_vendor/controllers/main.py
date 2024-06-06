@@ -17,8 +17,8 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PayloxSystemVendorController(Controller):
 
-    def _get_tx_vals(self, **kwargs):
-        res = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'vendor':
             items = kwargs.get('items', [])

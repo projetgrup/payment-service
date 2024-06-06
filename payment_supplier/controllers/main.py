@@ -21,6 +21,18 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PayloxSystemSupplierController(Controller):
 
+    def _get_data_values(self, data, **kwargs):
+        values = super()._get_data_values(data, **kwargs)
+        if request.env.company.system == 'supplier' and not kwargs.get('verify'):
+            partner = self._get_partner(kwargs['partner'], parent=True)
+            values.update({
+                'is_submerchant_payment': True,
+                'submerchant_external_id': partner.bank_ids[0]['api_ref'],
+                'submerchant_price': data['amount']/100,
+                'card_token': True
+            })
+        return values
+
     @route(['/payment/token/verify'], type='http', auth='user', website=True, sitemap=False)
     def payment_token_verify(self, **kwargs):
         acquirer = self._get_acquirer()
