@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+import base64
+import hashlib
+import requests
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 
 
 class PaymentPlan(models.Model):
@@ -13,12 +17,24 @@ class PaymentPlan(models.Model):
         for payment in self:
             payment.name = payment.partner_id.name
 
+    def _compute_result(self):
+        for plan in self:
+            if plan.paid and plan.message:
+                plan.result = '<i class="fa fa-check text-primary" title="%s"/>' % plan.message
+            elif plan.message:
+                plan.result = '<i class="fa fa-times text-danger" title="%s"/>' % plan.message
+            else:
+                #plan.result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
+                plan.result = ''
+
     name = fields.Char(compute='_compute_name')
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
     partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True)
     token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True)
     amount = fields.Monetary(readonly=True)
     date = fields.Date(readonly=True)
+    message = fields.Char(readonly=True)
+    result = fields.Html(sanitize=False, readonly=True)
     paid = fields.Boolean(readonly=True)
     paid_date = fields.Datetime(readonly=True)
     installment_count = fields.Integer(readonly=True)
@@ -26,6 +42,62 @@ class PaymentPlan(models.Model):
     system = fields.Selection(related='item_id.system', readonly=True)
     company_id = fields.Many2one(related='item_id.company_id', readonly=True)
     currency_id = fields.Many2one(related='item_id.currency_id', readonly=True)
+
+    def payment(self):
+        company = self.partner_id.company_id or self.env.company
+        acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
+        if not acquirer:
+            self.message = _('No acquirer found')
+            return
+
+        website = self.env['website'].sudo().search([('company_id', '=', company.id)])
+        if not website:
+            self.message = _('No website found')
+            return
+        
+        url = '%s/payment/init' % website.domain
+        data = {
+            'type': 'virtual_pos',
+            'card': {
+                'type': self.token_id.jetcheckout_type or '',
+                'family': self.token_id.jetcheckout_family or '',
+                'code': self.token_id.jetcheckout_security or '',
+                'date': self.token_id.jetcheckout_expiry or '',
+                'holder': self.token_id.jetcheckout_holder or '',
+                'token': self.token_id.jetcheckout_ref,
+            },
+            'amount': self.amount,
+            'partner': self.partner_id.id,
+            'currency': self.currency_id.id,
+            'installment': {
+                'id': 1,
+                'index': 0,
+                'rows': [{
+                    'id': 1,
+                    'count': 1,
+                    'plus': 0,
+                    'irate': 0.0,
+                    'crate': 0.0,
+                    'corate': 0.0,
+                    'idesc': _('Single Payment'),
+                }],
+            },
+            'campaign': '',
+        }
+
+        response = requests.post(url, json=data)
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] in ("00"):
+                self.message = _('Success')
+            else:
+                self.message = result['message']
+        else:
+            self.message = response.reason
+
+    def action_payment(self):
+        for plan in self:
+            plan.payment()
 
     def action_transaction(self):
         self.ensure_one()

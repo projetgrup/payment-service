@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
 import json
+import uuid
 import base64
 import logging
+import requests
 from datetime import date
 from urllib.parse import urlparse
 from collections import OrderedDict
@@ -26,6 +28,77 @@ class PartnerTeam(models.Model):
         if self.env.context.get('settings'):
             res['company_id'] = self.env.company.id
         return res
+
+
+class PartnerBank(models.Model):
+    _inherit = 'res.partner.bank'
+
+    @api.depends('api_state', 'api_message')
+    def _compute_api_result(self):
+        for bank in self:
+            if bank.api_state:
+                bank.api_result = '<i class="fa fa-check text-primary" title="%s"/>' % bank.api_message
+            elif bank.api_message:
+                bank.api_result = '<i class="fa fa-times text-danger" title="%s"/>' % bank.api_message
+            else:
+                bank.api_result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
+
+    api_ref = fields.Char('Reference', default=lambda self: str(uuid.uuid4()))
+    api_state = fields.Boolean('State')
+    api_message = fields.Char('Message')
+    api_result = fields.Html('Result', sanitize=False, compute='_compute_api_result')
+
+    def action_api_save(self):
+        if self.partner_id.system:
+            company = self.partner_id.company_id or self.env.company
+            acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
+            if not acquirer:
+                self.api_message = _('No acquirer found')
+            else:
+                vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
+                mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
+                if len(vat) > 10:
+                    if self.partner_id.is_company:
+                        partner_type = "PersonalCompany"
+                    else:
+                        partner_type = "Individual"
+                else:
+                    if self.partner_id.is_company:
+                        partner_type = "Company"
+                    else:
+                        partner_type = "Individual"
+
+                url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
+                data = {
+                    "application_key": acquirer.jetcheckout_api_key,
+                    "external_id": self.api_ref,
+                    "iban": self.acc_number.replace(' ', ''),
+                    "name": self.partner_id.name,
+                    "title": self.partner_id.name,
+                    "type": partner_type,
+                    "tax_number": vat,
+                    "gsm_number": mobile,
+                    "tax_office": self.partner_id.tax_office or '',
+                    "email": self.partner_id.email or '',
+                    "address": self.partner_id._get_address_format(),
+                    "contact_name": "",
+                    "contact_surname": "",
+                    "currency": "TRY",
+                    "language": "tr",
+                }
+
+                response = requests.post(url, data=json.dumps(data))
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] in ("00"):
+                        self.api_message = _('Success')
+                        self.api_state = True
+                    else:
+                        self.api_message = result['message']
+                        self.api_state = False
+                else:
+                    self.api_message = response.reason
+                    self.api_state = False
 
 
 class PartnerCategory(models.Model):

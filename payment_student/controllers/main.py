@@ -7,8 +7,8 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystem
 
 class PayloxSystemStudentController(Controller):
 
-    def _get_tx_vals(self, **kwargs):
-        res = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'student':
             items = []

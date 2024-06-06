@@ -5,10 +5,13 @@
     <field name="model">payment.plan</field>
     <field name="arch" type="xml">
         <tree editable="top" sample="1">
+            <header>
+                <button name="action_payment" string="Pay" type="object"/>
+            </header>
+            <field name="date" decoration-bf="1"/>
             <field name="partner_id" string="Partner" options="{'no_create': True}"/>
             <field name="token_id" options="{'no_create': True, 'no_open': True}"/>
             <field name="amount"/>
-            <field name="date"/>
             <field name="paid"/>
             <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
             <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
@@ -18,6 +21,8 @@
             <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="system" invisible="1"/>
+            <field name="result" string=" "/>
+            <field name="message" optional="hide"/>
         </tree>
     </field>
     </record>

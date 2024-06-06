@@ -236,10 +236,13 @@ class PayloxController(http.Controller):
     def _check_user(self):
         return True
 
-    def _get_tx_vals(self, **kwargs):
+    def _get_tx_values(self, **kwargs):
         return {
             'jetcheckout_payment_ok': kwargs.get('payment_ok', True),
         }
+
+    def _get_data_values(self, data, **kwargs):
+        return {}
 
     def _prepare(self, acquirer=None, company=None, partner=None, currency=None, transaction=None, balance=True):
         acquirer = self._get_acquirer(acquirer=acquirer)
@@ -1012,6 +1015,12 @@ class PayloxController(http.Controller):
 
     @http.route(['/payment/init'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def initialize(self, **kwargs):
+        if not kwargs:
+            kwargs = json.loads(request.httprequest.get_data())
+
+        if not kwargs:
+            raise
+
         self._check_user()
         payment_type = kwargs.get('type', '')
 
@@ -1108,7 +1117,7 @@ class PayloxController(http.Controller):
                     'token_id': kwargs['card']['token']
                 })
 
-            vals.update(self._get_tx_vals(**kwargs))
+            vals.update(self._get_tx_values(**kwargs))
             if tx:
                 tx.write(vals)
             else:
@@ -1207,10 +1216,19 @@ class PayloxController(http.Controller):
                 data.update({
                     "save_card": True,
                     "card_alias": tx.token_id.name,
-                    "card_owner_key": tx.token_id.jetcheckout_card_token,
+                    "card_owner_key": tx.token_id.jetcheckout_ref,
                     "card_owner_email": tx.token_id.partner_id.email,
                 })
+                tx.token_id.write({
+                    'jetcheckout_number': tx.jetcheckout_card_number,
+                    'jetcheckout_type': kwargs['card']['type'],
+                    'jetcheckout_holder': kwargs['card']['holder'],
+                    'jetcheckout_family': kwargs['card']['family'],
+                    'jetcheckout_expiry': kwargs['card']['date'],
+                    'jetcheckout_security': kwargs['card']['code'],
+                })
 
+            data.update(self._get_data_values(data, **kwargs))
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
@@ -1309,7 +1327,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': 0,
             }
 
-            vals.update(self._get_tx_vals(**kwargs))
+            vals.update(self._get_tx_values(**kwargs))
             if tx:
                 tx.write(vals)
             else:
@@ -1497,7 +1515,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': amount_customer,
             }
 
-            vals.update(self._get_tx_vals(**kwargs))
+            vals.update(self._get_tx_values(**kwargs))
             if tx:
                 tx.write(vals)
             else:
@@ -1684,7 +1702,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_customer_amount': 0,
             }
 
-            vals.update(self._get_tx_vals(**kwargs))
+            vals.update(self._get_tx_values(**kwargs))
             if tx:
                 tx.write(vals)
             else:
