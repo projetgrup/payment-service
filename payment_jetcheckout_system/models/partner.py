@@ -63,7 +63,13 @@ class PartnerBank(models.Model):
                     bank.action_api_save(mode='update')
         return res
 
-    def action_api_save(self, mode):
+    def action_api_save(self, mode=None):
+        if not mode:
+            if not self.api_message:
+                mode = 'create'
+            else:
+                mode = 'update'
+
         if self.partner_id.system:
             company = self.partner_id.company_id or self.env.company
             acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
