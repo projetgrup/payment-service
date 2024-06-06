@@ -57,9 +57,10 @@ class PartnerBank(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        for bank in self:
-            if bank.api_ref:
-                bank.action_api_save()
+        if 'api_ref' in values:
+            for bank in self:
+                if bank.api_ref:
+                    bank.action_api_save()
         return res
 
     def action_api_save(self, create=False):
