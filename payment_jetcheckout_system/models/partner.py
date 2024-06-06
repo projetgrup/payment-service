@@ -52,7 +52,7 @@ class PartnerBank(models.Model):
     def create(self, values):
         values['api_ref'] = str(uuid.uuid4())
         res = super().create(values)
-        res.action_api_save(create=True)
+        res.action_api_save(mode='create')
         return res
 
     def write(self, values):
@@ -60,10 +60,10 @@ class PartnerBank(models.Model):
         if 'api_ref' in values:
             for bank in self:
                 if bank.api_ref:
-                    bank.action_api_save()
+                    bank.action_api_save(mode='update')
         return res
 
-    def action_api_save(self, create=False):
+    def action_api_save(self, mode):
         if self.partner_id.system:
             company = self.partner_id.company_id or self.env.company
             acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
@@ -72,7 +72,8 @@ class PartnerBank(models.Model):
             else:
                 vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
                 mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
-                if create:
+                if mode == 'create':
+                    method = 'post'
                     if len(vat) > 10:
                         if self.partner_id.is_company:
                             partner_type = "PersonalCompany"
@@ -83,6 +84,8 @@ class PartnerBank(models.Model):
                             partner_type = "Company"
                         else:
                             partner_type = "Individual"
+                else:
+                    method = 'put'
 
                 url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
                 data = {
@@ -101,10 +104,10 @@ class PartnerBank(models.Model):
                     "currency": "TRY",
                     "language": "tr",
                 }
-                if create:
+                if mode == 'create':
                     data.update({"type": partner_type})
 
-                response = requests.post(url, data=json.dumps(data))
+                response = getattr(requests, method)(url, data=json.dumps(data))
                 if response.status_code == 200:
                     result = response.json()
                     if result['response_code'] in ("00"):
