@@ -78,7 +78,7 @@ class PartnerBank(models.Model):
                     "type": partner_type,
                     "tax_number": vat,
                     "gsm_number": mobile,
-                    "tax_office": self.partner_id.tax_office or '',
+                    "tax_office": self.partner_id.paylox_tax_office or '',
                     "email": self.partner_id.email or '',
                     "address": self.partner_id._get_address_format(),
                     "contact_name": "",
