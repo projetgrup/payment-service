@@ -1016,10 +1016,12 @@ class PayloxController(http.Controller):
     @http.route(['/payment/init'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def initialize(self, **kwargs):
         if not kwargs:
-            kwargs = json.loads(request.httprequest.get_data())
+            kwargs = request.httprequest.get_json()
 
         if not kwargs:
             raise
+
+        _logger.error(kwargs)
 
         self._check_user()
         payment_type = kwargs.get('type', '')
