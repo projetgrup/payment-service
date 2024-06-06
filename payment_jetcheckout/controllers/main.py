@@ -1021,15 +1021,14 @@ class PayloxController(http.Controller):
         if not kwargs:
             raise
 
-        _logger.error(kwargs)
-
         self._check_user()
-        payment_type = kwargs.get('type', '')
+        acquirer = self._get_acquirer()
 
+        payment_type = kwargs.get('type', '')
         if payment_type == 'virtual_pos':
             rows = kwargs['installment']['rows']
             installment = kwargs['installment']['id']
-            campaign = kwargs.get('campaign', '')
+            campaign = kwargs.get('campaign') or acquirer.jetcheckout_campaign_id.name or ''
 
             amount = float(kwargs['amount'])
             rate = float(kwargs.get('discount', {}).get('single', 0))
@@ -1052,7 +1051,6 @@ class PayloxController(http.Controller):
             amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
             amount_integer = round(amount_total * 100)
 
-            acquirer = self._get_acquirer()
             currency = self._get_currency(kwargs['currency'], acquirer)
             partner = self._get_partner(kwargs['partner'], parent=True)
             year = str(fields.Date.today().year)[:2]
@@ -1275,7 +1273,6 @@ class PayloxController(http.Controller):
             amount_integer = round(amount * 100)
             amount_customer = 0
 
-            acquirer = self._get_acquirer()
             currency = self._get_currency(kwargs['currency'], acquirer)
             partner = self._get_partner(kwargs['partner'], parent=True)
 
@@ -1471,7 +1468,6 @@ class PayloxController(http.Controller):
             amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
             amount_integer = amount_total #round(amount_total * 100)
 
-            acquirer = self._get_acquirer()
             currency = self._get_currency(kwargs['currency'], acquirer)
             partner = self._get_partner(kwargs['partner'], parent=True)
             order_id = str(uuid.uuid4())
@@ -1659,7 +1655,6 @@ class PayloxController(http.Controller):
             amount_integer = round(amount * 100)
             amount_customer = 0
 
-            acquirer = self._get_acquirer()
             currency = self._get_currency(kwargs['currency'], acquirer)
             partner = self._get_partner(kwargs['partner'], parent=True)
 
