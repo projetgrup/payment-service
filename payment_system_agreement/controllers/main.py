@@ -52,8 +52,8 @@ class PayloxAgreementController(Controller):
             ]
         return request.env['payment.agreement'].sudo().search(domain)
 
-    def _get_tx_vals(self, **kwargs):
-        vals = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        vals = super()._get_tx_values(**kwargs)
         agreements = kwargs.get('agreements', [])
         if agreements:
             vals.update({'paylox_agreement_ids': self._prepare_agreements(agreements)})

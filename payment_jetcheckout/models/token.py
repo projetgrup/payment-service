@@ -7,23 +7,20 @@ from odoo import fields, models, api, _
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
-    jetcheckout_card_userkey = fields.Char('Credit Card User Key')
-    jetcheckout_card_token = fields.Char('Credit Card Token')
-    jetcheckout_card_number = fields.Char('Credit Card Number')
-    jetcheckout_card_holder = fields.Char('Credit Card Holder')
-    jetcheckout_card_expiry_month = fields.Char('Credit Card Expiry Month')
-    jetcheckout_card_expiry_year = fields.Char('Credit Card Expiry Year')
-    jetcheckout_card_cvc = fields.Char('Credit Card CVC')
-    jetcheckout_card_installment = fields.Char('Credit Card Installment')
-    jetcheckout_card_3d = fields.Boolean('Credit Card 3D')
-    jetcheckout_card_save = fields.Boolean('Credit Card Save')
+    jetcheckout_ref = fields.Char('Credit Card Token')
+    jetcheckout_type = fields.Char('Credit Card Type')
+    jetcheckout_holder = fields.Char('Credit Card Holder')
+    jetcheckout_number = fields.Char('Credit Card Number')
+    jetcheckout_family = fields.Char('Credit Card Family')
+    jetcheckout_expiry = fields.Char('Credit Card Expiry')
+    jetcheckout_security = fields.Char('Credit Card Security')
     jetcheckout_limit_card = fields.Float(string='Credit Card Limit')
     jetcheckout_limit_tx = fields.Float(string='Transaction Based Limit')
 
     @api.model
     def create(self, values):
         res = super().create(values)
-        res['jetcheckout_card_token'] = str(uuid.uuid4())
+        res['jetcheckout_ref'] = str(uuid.uuid4())
         return res
 
     #def unlink(self):

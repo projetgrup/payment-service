@@ -33,7 +33,7 @@ class PayloxSystemController(Controller):
 
     def _check_user(self):
         path = urlparse(request.httprequest.referrer).path
-        if '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
+        if path and '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
             raise AccessError(_('Access Denied'))
         return super()._check_user()
 
@@ -85,8 +85,8 @@ class PayloxSystemController(Controller):
         else:
             return request.website.sudo().user_id.partner_id 
 
-    def _get_tx_vals(self, **kwargs):
-        vals = super()._get_tx_vals(**kwargs)
+    def _get_tx_values(self, **kwargs):
+        vals = super()._get_tx_values(**kwargs)
         ids = kwargs.get('payments', [])
         if ids:
             vals.update({'jetcheckout_item_ids': [(6, 0, ids)]})

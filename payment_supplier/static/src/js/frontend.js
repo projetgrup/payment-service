@@ -81,6 +81,7 @@ publicWidget.registry.payloxTokenVerify = payloxPage.extend({
                 token: data.id,
             },
             amount: 1,
+            verify: true,
             currency: this.currency.id,
             installment: {
                 id: 1,
@@ -131,7 +132,7 @@ publicWidget.registry.payloxTokenVerifyResult = publicWidget.Widget.extend({
                 if (success) {
                     window.parent.document.querySelector('.o_form_payment_token_verify').closest('.modal-content').querySelector('header button.close').click();
                 }
-            }, 4000);
+            }, 2000);
         });
     },
 });
