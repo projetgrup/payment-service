@@ -65,7 +65,7 @@ class PartnerBank(models.Model):
 
     def action_api_save(self, mode=None):
         if not mode:
-            if not self.api_message:
+            if not self.api_state:
                 mode = 'create'
             else:
                 mode = 'update'
@@ -104,7 +104,7 @@ class PartnerBank(models.Model):
                     "gsm_number": mobile,
                     "tax_office": self.partner_id.paylox_tax_office or '',
                     "email": self.partner_id.email or '',
-                    "address": self.partner_id._get_address_format(),
+                    "address": self.partner_id._display_address(without_company=True),
                     "contact_name": "",
                     "contact_surname": "",
                     "currency": "TRY",
