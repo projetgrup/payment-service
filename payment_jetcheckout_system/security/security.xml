@@ -88,7 +88,7 @@
         </record>
         <record id="token_company_admin_rule" model="ir.rule">
             <field name="name">Access only tokens belonging to commercial partner for system managers</field>
-            <field name="model_id" ref="mail.model_mail_template"/>
+            <field name="model_id" ref="payment.model_payment_token"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_manager'))]"/>
             <field name="perm_read" eval="True"/>
