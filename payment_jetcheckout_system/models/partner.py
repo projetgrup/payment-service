@@ -57,10 +57,12 @@ class PartnerBank(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if 'api_ref' in values:
+        if 'acc_number' in values:
             for bank in self:
                 if bank.api_ref:
                     bank.action_api_save(mode='update')
+                else:
+                    bank.action_api_save(mode='create')
         return res
 
     def action_api_save(self, mode=None):
@@ -94,6 +96,7 @@ class PartnerBank(models.Model):
                     method = 'put'
 
                 url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
+                address = self.partner_id._display_address(without_company=True).strip().replace('\n', ' ')
                 data = {
                     "application_key": acquirer.jetcheckout_api_key,
                     "external_id": self.api_ref,
@@ -104,7 +107,7 @@ class PartnerBank(models.Model):
                     "gsm_number": mobile,
                     "tax_office": self.partner_id.paylox_tax_office or '',
                     "email": self.partner_id.email or '',
-                    "address": self.partner_id._display_address(without_company=True),
+                    "address": re.sub(r'\s+', ' ', address),
                     "contact_name": "",
                     "contact_surname": "",
                     "currency": "TRY",
