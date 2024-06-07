@@ -71,6 +71,7 @@ class SyncopsSyncWizard(models.TransientModel):
                 'partner_user_phone': line.get('user_phone', False),
                 'partner_user_mobile': line.get('user_mobile', False),
                 'partner_balance': line.get('balance', 0),
+                'partner_campaign': line.get('campaign', False),
             }) for line in lines]
             res['view_id'] = self.env.ref('payment_syncops.tree_wizard_sync_line_partner').id
 
@@ -149,6 +150,17 @@ class SyncopsSyncWizard(models.TransientModel):
                 ('vat', 'in', wizard.line_ids.mapped('partner_vat')),
                 ('ref', 'in', wizard.line_ids.mapped('partner_ref')),
             ], ['id', 'vat', 'ref'])
+
+            campaigns = {}
+            acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
+            if acquirer:
+                campaigns_all = self.env['payment.acquirer.jetcheckout.campaign'].search_read([
+                    ('acquirer_id', '=', acquirer.id),
+                    ('name', '!=', False),
+                ], ['id', 'name'])
+                for campaign in campaigns_all:
+                    campaigns.update({campaign['name']: campaign['id']})
+
             vats, refs = {}, {}
             for partner in partners:
                 if partner['vat']:
@@ -205,6 +217,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
                             'mobile': line['partner_mobile'] or line['partner_phone'],
+                            'campaign_id': campaigns.get(line['partner_campaign'], False),
                             'user_id': user and user.id or partner.user_id.id,
                         })
                     else:
@@ -216,6 +229,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'email': line['partner_email'],
                             'phone': line['partner_phone'],
                             'mobile': line['partner_mobile'] or line['partner_phone'],
+                            'campaign_id': campaigns.get(line['partner_campaign'], False),
                             'user_id': user and user.id,
                             'company_id': company.id,
                             'is_company': True,
@@ -261,6 +275,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'email': line['partner_email'],
                                     'phone': line['partner_phone'],
                                     'mobile': line['partner_phone'],
+                                    'campaign_id': campaigns.get(line['partner_campaign'], False),
                                     'company_id': company.id,
                                     'is_company': True,
                                 })
@@ -317,6 +332,7 @@ class SyncopsSyncWizard(models.TransientModel):
                                     'email': line['partner_email'],
                                     'phone': line['partner_phone'],
                                     'mobile': line['partner_mobile'] or line['partner_phone'],
+                                    'campaign_id': campaigns.get(line['partner_campaign'], False),
                                     'company_id': company.id,
                                     'is_company': True,
                                 })
@@ -350,6 +366,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     partner_email = fields.Char(readonly=True)
     partner_phone = fields.Char(readonly=True)
     partner_mobile = fields.Char(readonly=True)
+    partner_campaign = fields.Char(readonly=True)
     partner_balance = fields.Monetary(readonly=True)
     partner_user_name = fields.Char(string='Partner Salesperson Name', readonly=True)
     partner_user_email = fields.Char(string='Partner Salesperson Email', readonly=True)

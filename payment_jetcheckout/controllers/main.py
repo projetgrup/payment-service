@@ -1027,6 +1027,8 @@ class PayloxController(http.Controller):
 
         self._check_user()
         acquirer = self._get_acquirer()
+        currency = self._get_currency(kwargs['currency'], acquirer)
+        partner = self._get_partner(kwargs['partner'], parent=True)
 
         payment_type = kwargs.get('type', '')
         if payment_type == 'virtual_pos':
@@ -1055,8 +1057,6 @@ class PayloxController(http.Controller):
             amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
             amount_integer = round(amount_total * 100)
 
-            currency = self._get_currency(kwargs['currency'], acquirer)
-            partner = self._get_partner(kwargs['partner'], parent=True)
             year = str(fields.Date.today().year)[:2]
             number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
             token = 'token' in kwargs['card'] and self._get_token(kwargs['card']['token']) or False
@@ -1067,7 +1067,6 @@ class PayloxController(http.Controller):
                 "campaign_name": campaign,
                 "amount": amount_integer,
                 "currency": currency.name,
-                "card_number": number,
                 "installment_count": installment['count'],
                 "expire_month": kwargs['card']['date'][:2],
                 "expire_year": year + kwargs['card']['date'][-2:],
@@ -1077,7 +1076,7 @@ class PayloxController(http.Controller):
             }
             if number:
                 data.update({'card_number': number})
-            elif token:
+            elif token and token.verified:
                 data.update({'card_token': token.jetcheckout_ref})
 
             if getattr(partner, 'tax_office_id', False):
@@ -1101,7 +1100,7 @@ class PayloxController(http.Controller):
                 'amount': amount_total,
                 'fees': amount_cost,
                 'operation': 'online_direct',
-                'token_id': token.id,
+                'token_id': token and token.id or False,
                 'jetcheckout_payment_type': payment_type,
                 'jetcheckout_website_id': request.website.id,
                 'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
@@ -1278,9 +1277,6 @@ class PayloxController(http.Controller):
             amount = float(kwargs['amount'])
             amount_integer = round(amount * 100)
             amount_customer = 0
-
-            currency = self._get_currency(kwargs['currency'], acquirer)
-            partner = self._get_partner(kwargs['partner'], parent=True)
 
             order_id = str(uuid.uuid4())
             hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
@@ -1474,8 +1470,6 @@ class PayloxController(http.Controller):
             amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
             amount_integer = amount_total #round(amount_total * 100)
 
-            currency = self._get_currency(kwargs['currency'], acquirer)
-            partner = self._get_partner(kwargs['partner'], parent=True)
             order_id = str(uuid.uuid4())
             hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
             data = {
@@ -1660,9 +1654,6 @@ class PayloxController(http.Controller):
             amount = float(kwargs['amount'])
             amount_integer = round(amount * 100)
             amount_customer = 0
-
-            currency = self._get_currency(kwargs['currency'], acquirer)
-            partner = self._get_partner(kwargs['partner'], parent=True)
 
             order_id = str(uuid.uuid4())
             hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')

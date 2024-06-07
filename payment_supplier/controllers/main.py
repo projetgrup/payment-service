@@ -4,7 +4,7 @@ import werkzeug
 
 from odoo import _
 from odoo.http import route, request
-#from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
@@ -23,11 +23,14 @@ class PayloxSystemSupplierController(Controller):
 
     def _get_data_values(self, data, **kwargs):
         values = super()._get_data_values(data, **kwargs)
-        if request.env.company.system == 'supplier' and not kwargs.get('verify'):
+        if request.env.company.system == 'supplier':
             partner = self._get_partner(kwargs['partner'], parent=True)
+            reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
+            if not reference:
+                raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
             values.update({
                 'is_submerchant_payment': True,
-                'submerchant_external_id': partner.bank_ids[0]['api_ref'],
+                'submerchant_external_id': reference,
                 'submerchant_price': data['amount']/100,
             })
         return values
