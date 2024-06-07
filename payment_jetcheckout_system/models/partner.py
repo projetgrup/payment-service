@@ -85,13 +85,23 @@ class PartnerBank(models.Model):
                     if len(vat) > 10:
                         if self.partner_id.is_company:
                             partner_type = "PersonalCompany"
+                            contact_name = ""
+                            contact_surname = ""
                         else:
                             partner_type = "Individual"
+                            contact_names = self.partner_id.name.split(' ')
+                            contact_surname = contact_names.pop()
+                            contact_name = ' '.join(contact_names)
                     else:
                         if self.partner_id.is_company:
                             partner_type = "Company"
+                            contact_name = ""
+                            contact_surname = ""
                         else:
                             partner_type = "Individual"
+                            contact_names = self.partner_id.name.split(' ')
+                            contact_surname = contact_names.pop()
+                            contact_name = ' '.join(contact_names)
                 else:
                     method = 'put'
 
@@ -108,8 +118,8 @@ class PartnerBank(models.Model):
                     "tax_office": self.partner_id.paylox_tax_office or '',
                     "email": self.partner_id.email or '',
                     "address": re.sub(r'\s+', ' ', address),
-                    "contact_name": "",
-                    "contact_surname": "",
+                    "contact_name": contact_name,
+                    "contact_surname": contact_surname,
                     "currency": "TRY",
                     "language": "tr",
                 }
