@@ -102,16 +102,20 @@
         content: "\f00c" !important;
     }
 
+    nav.o_main_navbar {
+        display: none;
+    }
+
+    nav.oe_main_menu_navbar {
+        display: none;
+    }
+
     .slider.round {
         border-radius: 20px;
     }
 
     .slider.round:before {
         border-radius: 50%;
-    }
-
-    .o_main_navbar {
-        display: none;
     }
 
     .o_loading {
@@ -1541,6 +1545,10 @@
     }
 
     nav.o_main_navbar {
+        display: none !important;
+    }
+
+    nav.oe_main_menu_navbar {
         display: none !important;
     }
 
