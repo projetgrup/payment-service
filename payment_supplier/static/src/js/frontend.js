@@ -129,7 +129,7 @@ publicWidget.registry.payloxTokenVerifyResult = publicWidget.Widget.extend({
     start: function () {
         return this._super.apply(this, arguments).then(() => {
             setInterval(() => {
-                if (success) {
+                if (document.getElementById('success')) {
                     window.parent.document.querySelector('.o_form_payment_token_verify').closest('.modal-content').querySelector('header button.close').click();
                 }
             }, 2000);
