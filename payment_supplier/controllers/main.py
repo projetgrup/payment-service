@@ -33,6 +33,10 @@ class PayloxSystemSupplierController(Controller):
                 'submerchant_external_id': reference,
                 'submerchant_price': data['amount']/100,
             })
+            if not kwargs.get('verify'):
+                values.update({
+                    'is_3d': False,
+                })
         return values
 
     @route(['/payment/token/verify'], type='http', auth='user', website=True, sitemap=False)

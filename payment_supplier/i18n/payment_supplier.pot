@@ -6,14 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-06 12:35+0000\n"
-"PO-Revision-Date: 2024-06-06 12:35+0000\n"
+"POT-Creation-Date: 2024-06-10 14:08+0000\n"
+"PO-Revision-Date: 2024-06-10 14:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_supplier
+#: code:addons/payment_supplier/controllers/main.py:0
+#, python-format
+msgid "%s must have at least one bank account which is verified."
+msgstr ""
 
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.page_token_result
@@ -453,6 +459,11 @@ msgid "System"
 msgstr ""
 
 #. module: payment_supplier
+#: model:ir.model.fields,field_description:payment_supplier.field_payment_item__system_supplier_bank_verified
+msgid "System Supplier Bank Verified"
+msgstr ""
+
+#. module: payment_supplier
 #: model:ir.ui.menu,name:payment_supplier.menu_tags
 msgid "Tags"
 msgstr ""
@@ -460,6 +471,11 @@ msgstr ""
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
 msgid "Tags..."
+msgstr ""
+
+#. module: payment_supplier
+#: model:ir.ui.menu,name:payment_supplier.menu_transaction
+msgid "Transactions"
 msgstr ""
 
 #. module: payment_supplier

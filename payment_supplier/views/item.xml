@@ -6,9 +6,15 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
     <field name="arch" type="xml">
+        <xpath expr='//tree' position="inside">
+            <field name="system_supplier_bank_verified" invisible="1"/>
+        </xpath>
+        <xpath expr='//tree' position="attributes">
+            <attribute name="decoration-muted">system_supplier_bank_verified == False</attribute>
+        </xpath>
         <xpath expr='//field' position="before">
             <header>
-                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o"/>
+                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o mr-1" class="ml-1 btn-outline-danger border-danger"/>
             </header>
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="replace"/>
