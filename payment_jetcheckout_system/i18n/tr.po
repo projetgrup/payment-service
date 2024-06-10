@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 22:01+0000\n"
-"PO-Revision-Date: 2024-06-06 01:03+0300\n"
+"POT-Creation-Date: 2024-06-10 14:08+0000\n"
+"PO-Revision-Date: 2024-06-10 17:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "%s (Error Code: %s)"
+msgstr "%s (Hata Kodu: %s)"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "%s Installment"
+msgstr "%s Taksit"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
@@ -992,6 +1004,7 @@ msgid "Agreements"
 msgstr "Sözleşmeler"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "All Times"
 msgstr "Tüm Zamanlar"
@@ -1043,6 +1056,12 @@ msgid "Amount<br/>(All / Success)"
 msgstr "Tutar<br/>(Tümü / Başarılı)"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "An error occured"
+msgstr "Bir hata meydana geldi"
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
@@ -1064,6 +1083,30 @@ msgstr ""
 #, python-format
 msgid "An error occured. Please try again."
 msgstr "Bir hata meydana geldi. Lütfen tekrar deneyiniz."
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approval_result
+msgid "Approval Result"
+msgstr "Onay Sonucu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approval_state
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+msgid "Approval State"
+msgstr "Onay Durumu"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+msgid "Approve"
+msgstr "Onay"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__+
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
+#, python-format
+msgid "Approved"
+msgstr "Onaylandı"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -1115,6 +1158,11 @@ msgstr "Ortalama Vadeler"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
 msgid "Back"
 msgstr "Geri"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Banka Hesapları"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_dashboard__graph_type__bar
@@ -1312,6 +1360,7 @@ msgstr "Şirket adedi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_category_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 msgid "Company"
 msgstr "Şirket"
 
@@ -1454,6 +1503,7 @@ msgid "Created payments are listed here"
 msgstr "Oluşturulan ödemeler burada listelenir"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__token_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard_line__token_id
 msgid "Credit Card"
 msgstr "Kredi Kartı"
@@ -1604,6 +1654,19 @@ msgstr "Açıklama"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
 msgid "Details"
 msgstr "Detaylar"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+msgid "Disapprove"
+msgstr "Red"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__-
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
+#, python-format
+msgid "Disapproved"
+msgstr "Reddedildi"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -1874,6 +1937,7 @@ msgstr "Grafik Türü"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_category_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 msgid "Groupby"
 msgstr "Grupla"
 
@@ -2144,6 +2208,7 @@ msgstr "Son Düzenleme Tarihi"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_month
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Month"
 msgstr "Geçen Ay"
@@ -2195,6 +2260,7 @@ msgstr "Son Güncelleme Tarihi"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_week
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Week"
 msgstr "Geçen Hafta"
@@ -2202,6 +2268,7 @@ msgstr "Geçen Hafta"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_last_year
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Year"
 msgstr "Geçen Yıl"
@@ -2328,7 +2395,10 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_message
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__message
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__message
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_message
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Message"
 msgstr "Mesaj"
@@ -2406,9 +2476,22 @@ msgid "No Sent SMS"
 msgstr "SMS Gönderilmedi"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "No acquirer found"
+msgstr "Ödeme sağlayıcı bulunamadı"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy
 msgid "No company found"
 msgstr "Bir şirket bulunamadı"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "No message yet"
+msgstr "Henüz bir mesaj yok"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_plan
@@ -2434,6 +2517,12 @@ msgstr "Bir ayar bulunamadı"
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
 msgid "No transactions yet"
 msgstr "Henüz bir işlem yok"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "No website found"
+msgstr "Website bulunamadı"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -2534,6 +2623,7 @@ msgstr "Sayfa Alt Bilgi"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__paid
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #, python-format
 msgid "Paid"
 msgstr "Ödendi"
@@ -2572,6 +2662,7 @@ msgstr "Veli"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__partner_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 msgid "Partner"
 msgstr "İş Ortağı"
 
@@ -2636,6 +2727,11 @@ msgstr "Pasif"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__path
 msgid "Path"
 msgstr "Yol"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+msgid "Pay"
+msgstr "Öde"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_search
@@ -3343,8 +3439,10 @@ msgid "Record Rule"
 msgstr "Kayıt Kuralı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__ref
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_ref
 msgid "Reference"
 msgstr "Referans"
 
@@ -3379,6 +3477,13 @@ msgstr "Açık Tutar"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__residual_amount
 msgid "Residual Amount"
 msgstr "Açık Tutar"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_result
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__result
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_result
+msgid "Result"
+msgstr "Sonuç"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
@@ -3694,6 +3799,12 @@ msgid "Sign Up"
 msgstr "Kaydol"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Single Payment"
+msgstr "Tek Çekim"
+
+#. module: payment_jetcheckout_system
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_sms
 msgid "Sms"
 msgstr "Sms"
@@ -3741,6 +3852,8 @@ msgid "Specify different campaings per tag on payment page"
 msgstr "Ödeme sayfasında her etiket için farklı kampanyalar tanımlayın"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_state
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
 msgid "State"
 msgstr "Durumu"
@@ -3762,6 +3875,8 @@ msgstr "Altsistem"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Success"
@@ -3908,6 +4023,7 @@ msgstr "Kampanya seçilmemiş sadece bir adet kampanya etiketi olabilir"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_month
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Month"
 msgstr "Bu Ay"
@@ -3922,6 +4038,7 @@ msgstr "TC kimlik numarası yanlış görünüyor. Lütfen tekrar deneyiniz."
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_week
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Week"
 msgstr "Bu Hafta"
@@ -3929,6 +4046,7 @@ msgstr "Bu Hafta"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_this_year
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Year"
 msgstr "Bu Yıl"
@@ -4012,14 +4130,10 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_today
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Today"
 msgstr "Bugün"
-
-#. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__token_id
-msgid "Token"
-msgstr "Jeton"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__tolerance
@@ -4361,6 +4475,7 @@ msgstr "Yıl"
 #. module: payment_jetcheckout_system
 #: model:payment.dashboard,name:payment_jetcheckout_system.dashboard_type_yesterday
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_search
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Yesterday"
 msgstr "Dün"
@@ -4489,6 +4604,9 @@ msgstr "dahil"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "kayıt seçildi"
+
+#~ msgid "Token"
+#~ msgstr "Jeton"
 
 #~ msgid "Create new belge"
 #~ msgstr "Yeni bir belge oluştur"
