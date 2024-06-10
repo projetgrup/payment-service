@@ -6,24 +6,67 @@
     <field name="arch" type="xml">
         <tree editable="top" sample="1">
             <header>
-                <button name="action_payment" string="Pay" type="object"/>
+                <button name="action_payment" string="Pay" type="object" icon="fa-money mr-1" class="ml-1 btn-primary"/>
+                <button name="action_approve" string="Approve" type="object" icon="fa-check mr-1" class="ml-1 btn-outline-primary border-primary"/>
+                <button name="action_disapprove" string="Disapprove" type="object" icon="fa-times mr-1" class="ml-1 btn-outline-danger border-danger"/>
             </header>
-            <field name="date" decoration-bf="1"/>
-            <field name="partner_id" string="Partner" options="{'no_create': True}"/>
-            <field name="token_id" options="{'no_create': True, 'no_open': True}"/>
-            <field name="amount"/>
+            <field name="date" decoration-bf="1" attrs="{'readonly': [('paid', '=', True)]}"/>
+            <field name="partner_id" string="Partner" options="{'no_create': True}" attrs="{'readonly': [('paid', '=', True)]}"/>
+            <field name="token_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('paid', '=', True)]}"/>
+            <field name="amount" attrs="{'readonly': [('paid', '=', True)]}"/>
+            <field name="installment_count" string="Installment" attrs="{'readonly': [('paid', '=', True)]}" optional="show" class="text-center"/>
             <field name="paid"/>
             <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
-            <field name="installment_count" string="Installment" attrs="{'invisible': [('paid', '=', False)]}" optional="show" class="text-center"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
+            <field name="approval_result" string="Approval State" widget="badge"/>
             <button name="action_transaction" string="Details" type="object" icon="fa-credit-card" attrs="{'invisible': [('paid', '=', False)]}"/>
             <button name="action_receipt" string="Receipt" type="object" icon="fa-file-text-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <button name="action_conveyance" string="Conveyance" type="object" icon="fa-file-photo-o" attrs="{'invisible': [('paid', '=', False)]}"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="system" invisible="1"/>
+            <field name="approval_state" invisible="1"/>
             <field name="result" string=" "/>
             <field name="message" optional="hide"/>
         </tree>
+    </field>
+    </record>
+
+    <record id="plan_pivot" model="ir.ui.view">
+    <field name="name">payment.plan.pivot</field>
+    <field name="model">payment.plan</field>
+    <field name="arch" type="xml">
+        <pivot sample="1">
+            <field name="date" type="row"/>
+            <field name="amount" type="measure"/>
+        </pivot>
+    </field>
+    </record>
+
+    <record id="search_plan" model="ir.ui.view">
+    <field name="name">payment.plan.search</field>
+    <field name="model">payment.plan</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="partner_id"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <filter string="Today" name="filterby_today" domain="[('date', '&gt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="Yesterday" name="filterby_yesterday" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() - relativedelta(days=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="This Week" name="filterby_this_week" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=0, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="Last Week" name="filterby_last_week" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=0, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="This Month" name="filterby_this_month" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="Last Month" name="filterby_last_month" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(months=-1, day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today() + relativedelta(day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="This Year" name="filterby_this_year" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(month=1, day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="Last Year" name="filterby_last_year" domain="[('date','&gt;=', (datetime.datetime.combine(context_today() + relativedelta(years=-1, months=1, day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')), ('date','&lt;', (datetime.datetime.combine(context_today() + relativedelta(month=1, day=1), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            <filter string="All Times" name="filterby_all_times" domain="[('date','!=', False)]"/>
+            <separator/>
+            <filter name="filterby_approved" string="Approved" domain="[('approval_state', '=', '+')]"/>
+            <filter name="filterby_disapproved" string="Disapproved" domain="[('approval_state', '=', '-')]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Partner" name="groupby_parent" domain="[]" context="{'group_by':'partner_id'}"/>
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
+                <filter string="Paid" name="groupby_paid" domain="[]" context="{'group_by':'paid'}"/>
+            </group>
+        </search>
     </field>
     </record>
 
