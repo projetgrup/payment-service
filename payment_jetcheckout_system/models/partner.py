@@ -66,44 +66,47 @@ class PartnerBank(models.Model):
         return res
 
     def action_api_save(self, mode=None):
-        if not mode:
-            if not self.api_state:
-                mode = 'create'
-            else:
-                mode = 'update'
-
         if self.partner_id.system:
             company = self.partner_id.company_id or self.env.company
             acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
+
             if not acquirer:
                 self.api_message = _('No acquirer found')
             else:
-                vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
-                mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
+                if not mode:
+                    if self.api_state:
+                        mode = 'update'
+                    else:
+                        mode = 'create'
+
                 if mode == 'create':
                     method = 'post'
-                    if len(vat) > 10:
-                        if self.partner_id.is_company:
-                            partner_type = "PersonalCompany"
-                            contact_name = ""
-                            contact_surname = ""
-                        else:
-                            partner_type = "Individual"
-                            contact_names = self.partner_id.name.split(' ')
-                            contact_surname = contact_names.pop()
-                            contact_name = ' '.join(contact_names)
-                    else:
-                        if self.partner_id.is_company:
-                            partner_type = "Company"
-                            contact_name = ""
-                            contact_surname = ""
-                        else:
-                            partner_type = "Individual"
-                            contact_names = self.partner_id.name.split(' ')
-                            contact_surname = contact_names.pop()
-                            contact_name = ' '.join(contact_names)
                 else:
                     method = 'put'
+
+                vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
+                mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
+             
+                if len(vat) > 10:
+                    if self.partner_id.is_company:
+                        partner_type = "PersonalCompany"
+                        contact_name = ""
+                        contact_surname = ""
+                    else:
+                        partner_type = "Individual"
+                        contact_names = self.partner_id.name.split(' ')
+                        contact_surname = contact_names.pop()
+                        contact_name = ' '.join(contact_names)
+                else:
+                    if self.partner_id.is_company:
+                        partner_type = "Company"
+                        contact_name = ""
+                        contact_surname = ""
+                    else:
+                        partner_type = "Individual"
+                        contact_names = self.partner_id.name.split(' ')
+                        contact_surname = contact_names.pop()
+                        contact_name = ' '.join(contact_names)
 
                 url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
                 address = self.partner_id._display_address(without_company=True).strip().replace('\n', ' ')
@@ -129,7 +132,7 @@ class PartnerBank(models.Model):
                 response = getattr(requests, method)(url, data=json.dumps(data))
                 if response.status_code == 200:
                     result = response.json()
-                    if result['response_code'] in ("00"):
+                    if result['response_code'] == "00":
                         self.api_message = _('Success')
                         self.api_state = True
                     else:
@@ -138,6 +141,39 @@ class PartnerBank(models.Model):
                 else:
                     self.api_message = response.reason
                     self.api_state = False
+
+    def action_api_query(self):
+        if self.partner_id.system:
+            company = self.partner_id.company_id or self.env.company
+            acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
+
+            url = '%s/api/v1/submerchant/query' % acquirer._get_paylox_api_url()
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "external_id": self.api_ref,
+                "language": "tr",
+            }
+
+            values = {}
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    values = {'ok': True, **result['detail']}
+                else:
+                    raise UserError(result['message'])
+            else:
+                raise UserError(response.reason)
+
+        wizard = self.env['res.partner.bank.submerchant.query'].sudo().create(values)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner.bank.submerchant.query',
+            'res_id': wizard.id,
+            'name': _('Submerchant Status'),
+            'view_mode': 'form',
+            'target': 'new',
+        }
 
 
 class PartnerCategory(models.Model):
@@ -762,3 +798,24 @@ class Partner(models.Model):
                 return {'error': _('SMS could not be sent.')}
 
         return {'error': _('Unknown sending method')}
+
+
+class PartnerBankSubmerchantQuery(models.Model):
+    _name = 'res.partner.bank.submerchant.query'
+    _description = 'Partner Bank Submerchant Query'
+
+    ok = fields.Boolean(readonly=True)
+    submerchant_id = fields.Char(readonly=True)
+    external_id = fields.Char(readonly=True)
+    name = fields.Char(readonly=True)
+    type = fields.Char(readonly=True)
+    currency = fields.Char(readonly=True)
+    tax_number = fields.Char(readonly=True)
+    tax_office = fields.Char(readonly=True)
+    title = fields.Char(readonly=True)
+    email = fields.Char(readonly=True)
+    gsm_number = fields.Char(readonly=True, string='Number')
+    contact_name = fields.Char(readonly=True)
+    contact_surname = fields.Char(readonly=True)
+    iban = fields.Char(readonly=True, string='IBAN')
+    address = fields.Char(readonly=True)

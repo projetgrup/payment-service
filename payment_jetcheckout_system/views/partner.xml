@@ -280,6 +280,49 @@
         </search>
     </field>
     </record>
+ 
+    <record id="form_partner_bank_submerchant_query" model="ir.ui.view">
+    <field name="name">res.partner.bank.submerchant.query.form</field>
+    <field name="model">res.partner.bank.submerchant.query</field>
+    <field name="arch" type="xml">
+        <form string="Status">
+            <div colspan="2">
+                <div class="font-weight-bold m-auto text-center d-flex align-items-center justify-content-center">
+                    <div class="float-left text-primary">
+                        <h1 attrs="{'invisible': [('ok', '=', False)]}"><i class="fa fa-check-square-o text-primary"/></h1>
+                        <h1 attrs="{'invisible': [('ok', '=', True)]}"><i class="fa fa-share-square-o text-primary"/></h1>
+                    </div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': [('ok', '=', False)]}"><h2>Submerchant has been registered</h2></div>
+                    <div class="ml-4 text-primary" attrs="{'invisible': [('ok', '=', True)]}"><h2>An error occured</h2></div>
+                    <field name="ok" invisible="1"/>
+                </div>
+            </div>
+            <group>
+                <group>
+                    <field name="submerchant_id"/>
+                    <field name="external_id"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="currency"/>
+                    <field name="tax_number"/>
+                    <field name="tax_office"/>
+                </group>
+                <group>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="gsm_number"/>
+                    <field name="contact_name"/>
+                    <field name="contact_surname"/>
+                    <field name="iban"/>
+                    <field name="address"/>
+                </group>
+            </group>
+            <footer>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
+            </footer>
+        </form>
+    </field>
+    </record>
 
     <record id="payment_share_link" model="ir.actions.server">
     <field name="name">Payment Link</field>

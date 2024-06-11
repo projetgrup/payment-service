@@ -18,10 +18,13 @@ publicWidget.registry.payloxTokenVerify = payloxPage.extend({
 
     start: function () {
         return this._super.apply(this, arguments).then(() => {
-            setInterval(() => {
-                $('.o_loading em').removeClass('d-none');
-                window.parent.document.querySelector('.o_form_payment_token_verify iframe').classList.add('bg-white');
-            }, 2000);
+            const iframe = window.parent.document.querySelector('.o_form_payment_token_verify iframe');
+            if (iframe) {
+                iframe.classList.add('bg-white');
+            } else {
+                document.body.classList.add('d-none');
+            }
+            setInterval(() => $('.o_loading em').removeClass('d-none'), 2000);
         });
     },
 

@@ -14,7 +14,7 @@
         </xpath>
         <xpath expr='//field' position="before">
             <header>
-                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o mr-1" class="ml-1 btn-outline-danger border-danger"/>
+                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o mr-1" class="ml-1 btn-outline-primary border-primary"/>
             </header>
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="replace"/>

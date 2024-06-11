@@ -202,7 +202,7 @@
                 </group>
             </group>
             <footer>
-                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
             </footer>
         </form>
     </field>
