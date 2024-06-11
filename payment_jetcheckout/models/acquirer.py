@@ -613,7 +613,7 @@ class PaymentAcquirer(models.Model):
                         'code': result.get('response_code', ''),
                         'message': result.get('message', ''),
                         'amount': result.get('amount', 0),
-                        'commission_amount': result.get('commission_amount', 0),
+                        'customer_amount': result.get('commission_amount', 0),
                         'commission_rate': result.get('expected_cost_rate', 0),
                         'vpos_name': result.get('virtual_pos_name', ''),
                         'vpos_id': result.get('virtual_pos_id', 0),
