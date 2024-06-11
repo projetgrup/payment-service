@@ -425,6 +425,7 @@ class PaymentTransaction(models.Model):
         vpos_name = values.get('vpos_name', '')
         amount = values.get('amount', self.amount)
         commission = values.get('commission_amount', 0)
+
         self.write({
             'amount': amount,
             'fees': commission,

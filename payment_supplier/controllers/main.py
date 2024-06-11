@@ -46,9 +46,9 @@ class PayloxSystemSupplierController(Controller):
         currency = company.currency_id
 
         user = not request.env.user.share
-        partner = self._get_partner()
-        partner_commercial = partner.commercial_partner_id
-        partner_contact = partner if partner.parent_id else False
+        partner = company.partner_id
+        partner_commercial = partner
+        partner_contact = False
 
         language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner)
