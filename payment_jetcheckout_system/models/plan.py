@@ -27,16 +27,29 @@ class PaymentPlan(models.Model):
                 #plan.result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
                 plan.result = ''
 
+    @api.depends('transaction_ids.state')    
+    def _compute_paid(self):
+        for plan in self:
+            transaction = plan.transaction_ids.filtered(lambda tx: tx.state == 'done')
+            if transaction:
+                plan.paid = True
+                plan.paid_date = transaction[0].last_state_change
+                plan.message = transaction[0].state_message
+            else:
+                plan.paid = False
+                plan.paid_date = False
+                plan.message = False
+
     name = fields.Char(compute='_compute_name')
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
     partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True)
     token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True, string='Credit Card')
     amount = fields.Monetary(readonly=True)
     date = fields.Date(readonly=True)
-    message = fields.Char(readonly=True)
     result = fields.Html(sanitize=False, readonly=True, compute='_compute_result')
-    paid = fields.Boolean(readonly=True)
-    paid_date = fields.Datetime(readonly=True)
+    message = fields.Char(readonly=True, compute='_compute_paid', store=True)
+    paid = fields.Boolean(readonly=True, compute='_compute_paid', store=True)
+    paid_date = fields.Datetime(readonly=True, compute='_compute_paid', store=True)
     installment_count = fields.Integer(readonly=True, default=1)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True)
     system = fields.Selection(related='item_id.system', readonly=True)
@@ -49,6 +62,9 @@ class PaymentPlan(models.Model):
     approval_result = fields.Char(readonly=True)
 
     def payment(self):
+        if self.paid:
+            return
+
         company = self.partner_id.company_id or self.env.company
         acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
         if not acquirer:
@@ -60,13 +76,19 @@ class PaymentPlan(models.Model):
             self.message = _('No website found')
             return
 
+        reference = self.partner_id.bank_ids and self.partner_id.bank_ids[0]['api_ref']
+        if not reference:
+            self.message = _('Partner must have at least one bank account which is verified.' % self.partner_id.name)
+            return
+
         if self.installment_count < 1:
             self.installment_count = 1
         installment = self.installment_count
 
-        url = '%s/payment/init' % website.domain
         data = {
             'type': 'virtual_pos',
+            'payment': False,
+            'threed': False,
             'card': {
                 'type': self.token_id.jetcheckout_type or '',
                 'family': self.token_id.jetcheckout_family or '',
@@ -76,8 +98,11 @@ class PaymentPlan(models.Model):
                 'token': self.token_id.id or 0,
             },
             'amount': self.amount,
-            'partner': self.partner_id.id,
-            'currency': self.currency_id.id,
+            'item': self.item_id,
+            'token': self.token_id,
+            'partner': self.partner_id,
+            'currency': self.currency_id,
+            'website': website,
             'installment': {
                 'id': installment,
                 'index': 0,
@@ -88,21 +113,25 @@ class PaymentPlan(models.Model):
                     'irate': 0.0,
                     'crate': 0.0,
                     'corate': 0.0,
-                    'idesc': _('%s Installment') if installment > 1 else _('Single Payment') % installment,
+                    'idesc': _('%s Installment') % installment if installment > 1 else _('Single Payment'),
                 }],
+            },
+            'request': {
+                'address': '',
+                'referrer': '',
+            },
+            'submerchant': {
+                'ref': reference,
+                'price': self.amount,
             },
             'campaign': '',
         }
 
-        response = requests.post(url, json=data)
-        if response.status_code == 200:
-            result = response.json().get('result', {})
-            if result.get('response_code') == '00':
-                self.message = _('Success')
-            else:
-                self.message = result.get('message') or result.get('error') or _('An error occured')
+        result = acquirer.action_payment(**data)
+        if result.get('ok'):
+            self.write({'transaction_ids': [(4, result['id'])]})
         else:
-            self.message = response.reason
+            self.message = result.get('message') or result.get('error') or _('An error occured')
 
     def approve(self):
         if self.approval_state == '+':
@@ -110,6 +139,7 @@ class PaymentPlan(models.Model):
 
         transactions = self.transaction_ids.filtered(lambda tx: tx.state == 'done')
         if not transactions:
+            self.approval_result = _('Only paid transactions can be approved')
             return
 
         transaction = transactions[0]
@@ -215,24 +245,27 @@ class PaymentPlanWizard(models.TransientModel):
     line_ids = fields.One2many('payment.plan.wizard.line', 'wizard_id', string='Lines')
 
     def action_confirm(self):
+        values = []
+        lines = [[line.token_id.id, line.token_limit_card, line.token_limit_tx] for line in self.line_ids]
         for item in self.item_ids:
             amount = item.amount
-            values = []
-            for line in self.line_ids:
-                limit_card = line.token_limit_card
-                while limit_card > 0:
-                    limit_tx = amount if line.token_limit_tx > amount else line.token_limit_tx
+            for line in lines:
+                while line[1] > 0 and amount > 0:
+                    if line[2] > amount:
+                        line_amount = amount
+                    elif line[1] > line[2]:
+                        line_amount = line[2]
+                    else:
+                        line_amount = line[1]
                     values.append({
+                        'date': item.date,
                         'item_id': item.id,
                         'partner_id': item.parent_id.id,
-                        'token_id': line.token_id.id,
-                        'amount': limit_tx,
-                        'date': item.date,
+                        'amount': line_amount,
+                        'token_id': line[0],
                     })
-                    limit_card -= limit_tx
-                    amount -= limit_tx
-                    if not amount > 0:
-                        break
+                    line[1] -= line_amount
+                    amount -= line_amount
                 if not amount > 0:
                     break
 

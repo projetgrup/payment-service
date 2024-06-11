@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
+import re
+import uuid
+import json
+import base64
+import hashlib
+import requests
+
 from odoo import api, fields, models, _
+from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_round
 from .rpc import rpc
 
 
@@ -352,6 +361,295 @@ class PaymentAcquirer(models.Model):
         action['domain'] = [('acquirer_id', '=', self.id)]
         action['context'] = {'default_acquirer_id': self.id, 'application': True}
         return action
+
+    def action_payment(self, **kwargs):
+        partner = kwargs['partner']
+        currency = kwargs['currency']
+
+        payment_type = kwargs.get('type', '')
+        if payment_type == 'virtual_pos':
+            rows = kwargs['installment']['rows']
+            installment = kwargs['installment']['id']
+            campaign = kwargs.get('campaign') or self.jetcheckout_campaign_id.name or ''
+
+            amount = float(kwargs['amount'])
+            rate = float(kwargs.get('discount', {}).get('single', 0))
+            if rate > 0 and installment == 1:
+                amount = amount * (100 - rate) / 100
+
+            installment_type = kwargs.get('installment_type', 'i')
+            if installment_type == 'c':
+                index = kwargs['installment']['index']
+                installment = next(filter(lambda x: x['id'] == installment, rows), None)
+                installment = next(filter(lambda x: x['index'] == index, installment['ids']), None)
+            elif installment_type == 'ct':
+                index = kwargs['installment']['id']
+                installment = next(filter(lambda x: x['id'] == index and x['campaign'] == campaign, rows), None)
+            else:
+                installment = next(filter(lambda x: x['id'] == installment, rows), None)
+
+            amount_customer = amount * installment['crate'] / 100
+            amount_total = float_round(amount + amount_customer, 2)
+            amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
+            amount_integer = round(amount_total * 100)
+
+            year = str(fields.Date.today().year)[:2]
+            number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
+            token = 'token' in kwargs['card'] and kwargs['token'] or False
+            hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            data = {
+                "application_key": self.jetcheckout_api_key,
+                "mode": self._get_paylox_env(),
+                "campaign_name": campaign,
+                "amount": amount_integer,
+                "currency": currency.name,
+                "installment_count": installment['count'],
+                "expire_month": kwargs['card']['date'][:2],
+                "expire_year": year + kwargs['card']['date'][-2:],
+                "is_3d": kwargs.get('threed', True),
+                "hash_data": hash,
+                "language": "tr",
+            }
+            if number:
+                data.update({'card_number': number})
+            elif token and token.verified:
+                data.update({'card_token': token.jetcheckout_ref})
+
+            if getattr(partner, 'tax_office_id', False):
+                data.update({'billing_tax_office': partner.tax_office_id.name})
+            elif getattr(partner, 'tax_office', False):
+                data.update({'billing_tax_office': partner.tax_office})
+
+            if partner.vat:
+                partner_vat = re.sub(r'[^\d]', '', partner.vat)
+                if partner_vat and len(partner_vat) in (10, 11):
+                    data.update({'billing_tax_number': partner_vat})
+
+            order_id = str(uuid.uuid4())
+            sale_id = int(kwargs.get('order', 0))
+            invoice_id = int(kwargs.get('invoice', 0))
+
+            #tx = self._get_transaction()
+            tx = False
+            vals = {
+                'acquirer_id': self.id,
+                'callback_hash': hash,
+                'amount': amount_total,
+                'fees': amount_cost,
+                'operation': 'online_direct',
+                'token_id': token and token.id or False,
+                'jetcheckout_payment_type': payment_type,
+                'jetcheckout_website_id': kwargs['website'].id,
+                'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or kwargs['request']['address'] or request.httprequest.remote_addr,
+                'jetcheckout_url_address': tx and tx.jetcheckout_url_address or kwargs['request']['referrer'] or request.httprequest.referrer,
+                'jetcheckout_campaign_name': campaign,
+                'jetcheckout_card_name': kwargs['card']['holder'],
+                'jetcheckout_card_number': number and  ''.join([number[:6], '*'*6, number[-4:]]) or False,
+                'jetcheckout_card_type': kwargs['card']['type'].capitalize(),
+                'jetcheckout_card_family': kwargs['card']['family'].capitalize(),
+                'jetcheckout_order_id': order_id,
+                'jetcheckout_payment_amount': amount,
+                'jetcheckout_installment_count': installment['count'],
+                'jetcheckout_installment_plus': installment['plus'],
+                'jetcheckout_installment_description': installment['idesc'],
+                'jetcheckout_installment_amount': amount / installment['count'] if installment['count'] > 0 else amount,
+                'jetcheckout_commission_rate': installment['corate'],
+                'jetcheckout_commission_amount': amount_cost,
+                'jetcheckout_customer_rate': installment['crate'],
+                'jetcheckout_customer_amount': amount_customer,
+                'jetcheckout_payment_ok': kwargs.get('payment', True),
+            }
+
+            #vals.update(self._get_tx_values(**kwargs))
+            if tx:
+                tx.write(vals)
+            else:
+                vals.update({
+                    'acquirer_id': self.id,
+                    'partner_id': partner.id,
+                    'currency_id': currency.id,
+                })
+                tx = self.env['payment.transaction'].sudo().create(vals)
+
+            if sale_id:
+                tx.sale_order_ids = [(4, sale_id)]
+                sale_order_id = self.env['sale.order'].sudo().browse(sale_id)
+                billing_partner_id = sale_order_id.partner_invoice_id
+                shipping_partner_id = sale_order_id.partner_shipping_id
+                data.update({
+                    "billing_address": {
+                        "contactName": billing_partner_id.name,
+                        "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),
+                        "city": billing_partner_id.state_id and billing_partner_id.state_id.name or "",
+                        "country": billing_partner_id.country_id and billing_partner_id.country_id.name or "",
+                    },
+                    "shipping_address": {
+                        "contactName": shipping_partner_id.name,
+                        "address": "%s %s/%s/%s" % (shipping_partner_id.street, shipping_partner_id.city, shipping_partner_id.state_id and shipping_partner_id.state_id.name or '', shipping_partner_id.country_id and shipping_partner_id.country_id.name or ''),
+                        "city": shipping_partner_id.state_id and shipping_partner_id.state_id.name or "",
+                        "country": shipping_partner_id.country_id and shipping_partner_id.country_id.name or "",
+                    },
+                })
+
+                if not float_compare(amount, sale_order_id.amount_total, 2):
+                    customer_basket = [{
+                        "id": line.product_id.default_code or str(line.product_id.id),
+                        "name": line.product_id.name,
+                        "description": line.name,
+                        "qty": line.product_uom_qty,
+                        "amount": line.price_total,
+                        "category": line.product_id.categ_id.name,
+                        "is_physical": line.product_id.type == 'product',
+                    } for line in sale_order_id.order_line if line.price_total > 0]
+
+                    if amount_customer > 0:
+                        product = self.env.ref('payment_jetcheckout.product_commission').sudo()
+                        customer_basket.append({
+                            "id": product.default_code or str(product.id),
+                            "name": product.display_name,
+                            "description": product.name,
+                            "qty": 1.0,
+                            "amount": round(float_round(amount_customer, 2), 2), # used double round, because format_round seems not working
+                            "category": product.categ_id.name,
+                            "is_physical": False,
+                        })
+                    data.update({"customer_basket": customer_basket})
+
+            elif invoice_id:
+                tx.invoice_ids = [(4, invoice_id)]
+
+            #self._set('tx', tx.id)
+
+            url = '%s/api/v1/payment' % self._get_paylox_api_url()
+            fullname = tx.partner_name.split(' ', 1)
+            address = []
+            if tx.partner_city:
+                address.append(tx.partner_city)
+            if tx.partner_state_id:
+                address.append(tx.partner_state_id.name)
+            if tx.partner_country_id:
+                address.append(tx.partner_country_id.name)
+
+            success_url = '/payment/card/success' if 'successurl' not in kwargs or not kwargs['successurl'] else kwargs['successurl']
+            fail_url = '/payment/card/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
+            data.update({
+                "order_id": order_id,
+                "card_holder_name": kwargs['card']['holder'],
+                "cvc": kwargs['card']['code'],
+                "success_url": "%s%s" % (kwargs['website']['domain'], success_url),
+                "fail_url": "%s%s" % (kwargs['website']['domain'], fail_url),
+                "customer":  {
+                    "name": fullname[0],
+                    "surname": fullname[-1],
+                    "email": tx.partner_email,
+                    "id": str(tx.partner_id.id),
+                    "identity_number": tx.partner_id.vat,
+                    "phone": tx.partner_phone,
+                    "ip_address": tx.jetcheckout_ip_address or kwargs['request']['address'],
+                    "postal_code": tx.partner_zip,
+                    "company": tx.partner_id.parent_id and tx.partner_id.parent_id.name or "",
+                    "address": "%s %s" % (tx.partner_address, "/".join(address)),
+                    "city": tx.partner_state_id and tx.partner_state_id.name or "",
+                    "country": tx.partner_country_id and tx.partner_country_id.name or "",
+                },
+            })
+
+            if tx.token_id and not tx.token_id.verified:
+                data.update({
+                    "save_card": True,
+                    "card_alias": tx.token_id.name,
+                    "card_owner_key": tx.token_id.jetcheckout_ref,
+                    "card_owner_email": tx.token_id.partner_id.email,
+                })
+                tx.token_id.write({
+                    'jetcheckout_number': tx.jetcheckout_card_number,
+                    'jetcheckout_type': kwargs['card']['type'],
+                    'jetcheckout_holder': kwargs['card']['holder'],
+                    'jetcheckout_family': kwargs['card']['family'],
+                    'jetcheckout_expiry': kwargs['card']['date'],
+                    'jetcheckout_security': kwargs['card']['code'],
+                })
+
+            if 'submerchant' in kwargs:
+                data.update({
+                    "is_submerchant_payment": True,
+                    "submerchant_external_id": kwargs['submerchant']['ref'],
+                    "submerchant_price": kwargs['submerchant']['price'],
+                })
+            
+            if 'item' in kwargs:
+                tx.write({
+                    'jetcheckout_item_ids': [(4, kwargs['item'].id)],
+                    'paylox_transaction_item_ids': [(0, 0, {
+                        'item_id': kwargs['item'].id,
+                        'ref': kwargs['item'].ref,
+                        'amount': kwargs['amount'],
+                    })]
+                })
+
+            #data.update(self._get_data_values(data, **kwargs))
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                txid = result['transaction_id']
+                if result['response_code'] == "00307":
+                    rurl = result['redirect_url']
+                    tx.write({
+                        'state': 'pending',
+                        'state_message': _('Transaction is pending...'),
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                elif result['response_code'] == "00":
+                    tx.write({
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    tx._paylox_query({
+                        'successful': True,
+                        'code': result.get('response_code', ''),
+                        'message': result.get('message', ''),
+                        'amount': result.get('amount', 0),
+                        'commission_amount': result.get('commission_amount', 0),
+                        'commission_rate': result.get('expected_cost_rate', 0),
+                        'vpos_name': result.get('virtual_pos_name', ''),
+                        'vpos_id': result.get('virtual_pos_id', 0),
+                        'vpos_code': result.get('auth_code', ''),
+                        'card_program': result.get('card_program', ''),
+                        'card_family': result.get('card_family', ''),
+                        'card_type': result.get('card_type', ''),
+                        'bin_code': result.get('bin_code', ''),
+                    })
+                    return {'ok': True, 'id': tx.id}
+                else:
+                    tx.state = 'error'
+                    message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                    if result['response_code'] == "00124" and tx.token_id:
+                        tx.token_id.verified = True
+                        message += '\n' + _('Please check whether the card is verified.')
+
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'error': message}
+            else:
+                tx.state = 'error'
+                message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                return {'error': message}
+            return {}
+        
 
     def _rpc(self, *args):
         if not len(self) == 1:

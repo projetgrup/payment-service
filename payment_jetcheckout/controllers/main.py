@@ -1238,7 +1238,7 @@ class PayloxController(http.Controller):
             if response.status_code == 200:
                 result = response.json()
                 txid = result['transaction_id']
-                if result['response_code'] in ("00", "00307"):
+                if result['response_code'] == "00307":
                     rurl = result['redirect_url']
                     tx.write({
                         'state': 'pending',
@@ -1248,9 +1248,30 @@ class PayloxController(http.Controller):
                         'last_state_change': fields.Datetime.now(),
                     })
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                elif result['response_code'] == "00":
+                    tx._paylox_query({
+                        'successful': True,
+                        'code': result.get('response_code', ''),
+                        'message': result.get('message', ''),
+                        'amount': result.get('amount', 0),
+                        'commission_amount': result.get('commission_amount', 0),
+                        'commission_rate': result.get('expected_cost_rate', 0),
+                        'vpos_name': result.get('virtual_pos_name', ''),
+                        'vpos_id': result.get('virtual_pos_id', 0),
+                        'vpos_code': result.get('auth_code', ''),
+                        'card_program': result.get('card_program', ''),
+                        'card_family': result.get('card_family', ''),
+                        'card_type': result.get('card_type', ''),
+                        'bin_code': result.get('bin_code', ''),
+                    })
+                    return {'ok': True, 'id': tx.id}
                 else:
                     tx.state = 'error'
                     message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                    if result['response_code'] == "00124" and tx.token_id:
+                        tx.token_id.verified = True
+                        message += '\n' + _('Please check whether the card is verified.')
+
                     tx.write({
                         'state': 'error',
                         'state_message': message,
@@ -1258,7 +1279,7 @@ class PayloxController(http.Controller):
                         'jetcheckout_transaction_id': txid,
                         'last_state_change': fields.Datetime.now(),
                     })
-                    values = {'error': message}
+                    return {'error': message}
             else:
                 tx.state = 'error'
                 message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
@@ -1267,8 +1288,8 @@ class PayloxController(http.Controller):
                     'state_message': message,
                     'last_state_change': fields.Datetime.now(),
                 })
-                values = {'error': message}
-            return values
+                return {'error': message}
+            return {}
 
         elif payment_type == 'soft_pos':
             installment_count = 1
@@ -1792,7 +1813,6 @@ class PayloxController(http.Controller):
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
-                _logger.error(result)
                 txid = result['transaction_id']
                 if result['response_code'] in ("00", "00307"):
                     rurl = result['redirect_url']
