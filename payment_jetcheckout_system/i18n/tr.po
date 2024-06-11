@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-10 14:08+0000\n"
-"PO-Revision-Date: 2024-06-10 17:30+0300\n"
+"POT-Creation-Date: 2024-06-11 11:56+0000\n"
+"PO-Revision-Date: 2024-06-11 14:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -977,6 +977,11 @@ msgid "Add Followers"
 msgstr "Takipçi Ekle"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__address
+msgid "Address"
+msgstr "Adres"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__admin
 msgid "Administrator"
 msgstr "Yönetici"
@@ -1057,6 +1062,7 @@ msgstr "Tutar<br/>(Tümü / Başarılı)"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 #, python-format
 msgid "An error occured"
 msgstr "Bir hata meydana geldi"
@@ -1309,6 +1315,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.campaign_tag_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
@@ -1398,11 +1405,21 @@ msgid "Contact Information"
 msgstr "İletişim Bilgileri"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__contact_name
+msgid "Contact Name"
+msgstr "Kişi Adı"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_contact_page
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Contact Page"
 msgstr "İletişim Bilgileri"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__contact_surname
+msgid "Contact Surname"
+msgstr "Kişi Soyadı"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
@@ -1467,6 +1484,7 @@ msgstr "İş Ortağı Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
@@ -1489,6 +1507,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__create_date
 msgid "Created on"
 msgstr "Oluşturma Tarihi"
 
@@ -1512,6 +1531,7 @@ msgstr "Kredi Kartı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__currency_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__currency
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Currency"
 msgstr "Para Birimi"
@@ -1692,6 +1712,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
 
@@ -1764,6 +1785,7 @@ msgstr "Sayfaları Düzenle"
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__email
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
@@ -1834,6 +1856,11 @@ msgstr "Kredi kartı bilgilerini girin"
 #, python-format
 msgid "Error"
 msgstr "Hata"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__external_id
+msgid "External"
+msgstr "Harici"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__failed_message_ids
@@ -2001,6 +2028,11 @@ msgid "Hour"
 msgstr "Saat"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__iban
+msgid "IBAN"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
@@ -2019,6 +2051,7 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__id
 msgid "ID"
 msgstr "ID"
 
@@ -2202,6 +2235,7 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme Tarihi"
 
@@ -2232,6 +2266,7 @@ msgstr "Geçen Ay"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
@@ -2254,6 +2289,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme Tarihi"
 
@@ -2452,6 +2488,7 @@ msgstr "Takip Etmediklerim"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__name
 msgid "Name"
 msgstr "Ad"
 
@@ -2536,6 +2573,7 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__gsm_number
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Number"
 msgstr "Numara"
@@ -2577,6 +2615,11 @@ msgid "Offset"
 msgstr "Ofset"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__ok
+msgid "Ok"
+msgstr "Başarılı"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Only"
 msgstr "Sadece"
@@ -2585,6 +2628,12 @@ msgstr "Sadece"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_own_partner
 msgid "Only Own Partners"
 msgstr "Sadece Kendi İş Ortakları"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Only paid transactions can be approved"
+msgstr "Sadece ödenen işlemler onaylanabilir"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
@@ -2667,6 +2716,11 @@ msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_partner_bank_submerchant_query
+msgid "Partner Bank Submerchant Query"
+msgstr "İş Ortağı Banka Üye İşyeri Sorgu"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_count
 msgid "Partner Count"
 msgstr "İş Ortağı Adedi"
@@ -2685,6 +2739,12 @@ msgstr "İş Ortağı Referansı"
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
 msgid "Partner Tags"
 msgstr "İş Ortakları Etiketleri"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Partner must have at least one bank account which is verified."
+msgstr "İş ortağına ait en az bir adet onaylı banka hesabı bulunmalıdır."
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -3089,6 +3149,7 @@ msgstr "Ödeme Planı Sihirbazı Satırı"
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_plan
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__plan_ids
 msgid "Payment Plans"
 msgstr "Ödeme Planları"
 
@@ -3252,6 +3313,11 @@ msgstr "Telefon"
 #, python-format
 msgid "Phone number is not valid."
 msgstr "Telefon numarası geçerli değil."
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__planned_amount
+msgid "Planned Amount"
+msgstr "Planlanan Tutar"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
@@ -3865,8 +3931,25 @@ msgstr "Statik"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 msgid "Status"
 msgstr "Durumu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__submerchant_id
+msgid "Submerchant"
+msgstr "Üye İşyeri"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "Submerchant Status"
+msgstr "Üye İşyeri Durumu"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+msgid "Submerchant has been registered"
+msgstr "Üye işyeri kaydedildi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__subsystem
@@ -3876,7 +3959,6 @@ msgstr "Altsistem"
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
-#: code:addons/payment_jetcheckout_system/models/plan.py:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Success"
@@ -3921,7 +4003,13 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__tax_number
+msgid "Tax Number"
+msgstr "Vergi Numarası"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paylox_tax_office
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__tax_office
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paylox_tax_office
 msgid "Tax Office"
 msgstr "Vergi Dairesi"
@@ -4119,6 +4207,11 @@ msgid "Thursday"
 msgstr "Perşembe"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__title
+msgid "Title"
+msgstr "Başlık"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid ""
 "To view structure of the data to be sent, please use the following link to "
@@ -4228,6 +4321,7 @@ msgid "Two Factor Required"
 msgstr "İki Faktör Zorunlu"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__type
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Type"

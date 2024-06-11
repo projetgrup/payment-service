@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-10 14:08+0000\n"
-"PO-Revision-Date: 2024-06-10 14:08+0000\n"
+"POT-Creation-Date: 2024-06-11 11:56+0000\n"
+"PO-Revision-Date: 2024-06-11 11:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -464,6 +464,11 @@ msgid "Add Followers"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__address
+msgid "Address"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_users__privilege__admin
 msgid "Administrator"
 msgstr ""
@@ -545,6 +550,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 #, python-format
 msgid "An error occured"
 msgstr ""
@@ -800,6 +806,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.campaign_tag_form
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Close"
@@ -889,10 +896,20 @@ msgid "Contact Information"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__contact_name
+msgid "Contact Name"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_website__payment_contact_page
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_agreement
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
 msgid "Contact Page"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__contact_surname
+msgid "Contact Surname"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -958,6 +975,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -980,6 +998,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__create_date
 msgid "Created on"
 msgstr ""
 
@@ -1003,6 +1022,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__currency_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__currency
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.dashboard_kanban
 msgid "Currency"
 msgstr ""
@@ -1183,6 +1203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1256,6 +1277,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__email
 #: model:payment.acquirer.jetcheckout.send.type,name:payment_jetcheckout_system.send_type_email
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_contact
@@ -1330,6 +1352,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Error"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__external_id
+msgid "External"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1493,6 +1520,11 @@ msgid "Hour"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__iban
+msgid "IBAN"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_paylox_partner_follower__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__id
@@ -1511,6 +1543,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__id
 msgid "ID"
 msgstr ""
 
@@ -1687,6 +1720,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1717,6 +1751,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1739,6 +1774,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_notification_webhook__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1934,6 +1970,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag_line__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__name
 msgid "Name"
 msgstr ""
 
@@ -2018,6 +2055,7 @@ msgid "November"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__gsm_number
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_form
 msgid "Number"
 msgstr ""
@@ -2059,6 +2097,11 @@ msgid "Offset"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__ok
+msgid "Ok"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Only"
 msgstr ""
@@ -2066,6 +2109,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_own_partner
 msgid "Only Own Partners"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Only paid transactions can be approved"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2147,6 +2196,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_res_partner_bank_submerchant_query
+msgid "Partner Bank Submerchant Query"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_count
 msgid "Partner Count"
 msgstr ""
@@ -2164,6 +2218,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
 msgid "Partner Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Partner must have at least one bank account which is verified."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2566,6 +2626,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_plan
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__plan_ids
 msgid "Payment Plans"
 msgstr ""
 
@@ -2728,6 +2789,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid "Phone number is not valid."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__planned_amount
+msgid "Planned Amount"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3335,7 +3401,24 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 msgid "Status"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__submerchant_id
+msgid "Submerchant"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "Submerchant Status"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+msgid "Submerchant has been registered"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3346,7 +3429,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
-#: code:addons/payment_jetcheckout_system/models/plan.py:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
@@ -3392,7 +3474,13 @@ msgid "Tags"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__tax_number
+msgid "Tax Number"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__paylox_tax_office
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__tax_office
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__paylox_tax_office
 msgid "Tax Office"
 msgstr ""
@@ -3585,6 +3673,11 @@ msgid "Thursday"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__title
+msgid "Title"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid ""
 "To view structure of the data to be sent, please use the following link to "
@@ -3692,6 +3785,7 @@ msgid "Two Factor Required"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__type
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_type_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Type"
