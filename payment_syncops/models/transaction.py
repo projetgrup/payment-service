@@ -12,6 +12,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     jetcheckout_connector_ok = fields.Boolean('Connector Transaction', readonly=True)
+    jetcheckout_connector_sent = fields.Boolean('Connector Sent', readonly=True)
     jetcheckout_connector_state = fields.Boolean('Connector State', readonly=True)
     jetcheckout_connector_state_message = fields.Text('Connector State Message', readonly=True)
     jetcheckout_connector_payment_ref = fields.Char('Connector Payment Reference', readonly=True)
@@ -90,6 +91,12 @@ class PaymentTransaction(models.Model):
         if not self.jetcheckout_connector_ok or not self.jetcheckout_connector_state:
             return
 
+        if self.source_transaction_id and not self.source_transaction_id.jetcheckout_connector_sent:
+            return
+
+        if not self.source_transaction_id and not self.state == 'done' and not self.source_transaction_id.jetcheckout_connector_sent:
+            return
+
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
@@ -148,11 +155,16 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_connector_state_message': _('This transaction has not been successfully posted to connector.\n%s') % message
             })
         else:
-            self.write({
+            values = {
                 'jetcheckout_connector_state': False,
                 'jetcheckout_connector_payment_ref': result and result[0].get('ref', False) or False,
                 'jetcheckout_connector_state_message': _('This transaction has been successfully posted to connector.')
-            })
+            }
+            if not self.source_transaction_id and self.state == 'done':
+                values.update({
+                    'jetcheckout_connector_sent': True,
+                })
+            self.write(values)
         self.env.cr.commit()
 
     def _paylox_done_postprocess(self):

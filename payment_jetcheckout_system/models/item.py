@@ -43,6 +43,7 @@ class PaymentItem(models.Model):
                 transaction = transactions[0]
                 item.paid_date = transaction.last_state_change
                 item.installment_count = transaction.jetcheckout_installment_count
+                item.send_done_mail()
 
     @api.depends('transaction_ids.state')
     def _compute_paid_amount(self):
@@ -106,8 +107,16 @@ class PaymentItem(models.Model):
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, readonly=True)
     currency_id = fields.Many2one('res.currency', required=True, ondelete='restrict', default=lambda self: self.env.company.currency_id)
 
+    mail_ok = fields.Boolean(readonly=True)
+    mail_sent = fields.Boolean(readonly=True)
+
     def onchange(self, values, field_name, field_onchange):
         return super(PaymentItem, self.with_context(recursive_onchanges=False)).onchange(values, field_name, field_onchange)
+
+    def action_plan(self):
+        action = self.env.ref('payment_jetcheckout_system.action_plan').sudo().read()[0]
+        action['domain'] = [('id', 'in', self.transaction_ids.ids)]
+        return action
 
     def action_transaction(self):
         self.ensure_one()
@@ -154,7 +163,6 @@ class PaymentItem(models.Model):
         return res
 
     def get_due(self):
-
         values = {
             'amount': 0.0,
             'days': 0,
@@ -228,6 +236,32 @@ class PaymentItem(models.Model):
 
         return values
 
+    def send_done_mail(self):
+        try:
+            if self.mail_ok and not self.mail_sent:
+                with self.env.cr.savepoint():
+                    mail_server = self.company_id.mail_server_id
+                    email_from = mail_server.email_formatted or self.company_id.email_formatted
+                    iban = self.parent_id.bank_ids.filtered(lambda bank: bank.api_state and bank.acc_number)
+                    context = self.env.context.copy()
+                    context.update({
+                        'server': mail_server,
+                        'from': email_from,
+                        'company': self.company_id,
+                        'partner': self.parent_id,
+                        'lang': self.parent_id.lang,
+                        'iban': iban and iban[0].acc_number.replace(' ', '') or ''
+                    })
+                    template = self.env.ref('payment_jetcheckout_system.mail_template_payment_item_done')
+                    template.with_context(context).send_mail(self.parent_id.id, force_send=True, email_values={
+                        'is_notification': True,
+                        'mail_server_id': mail_server.id,
+                    })
+                    self.mail_sent = True
+        except Exception as e:
+            ids = ', '.join(map(str, self.mapped('parent_id.id')))
+            _logger.error('An error occured when sending payment item done email to partner(s) %s (%s)' % (ids, e))
+
     @api.model
     def paylox_send_due_reminder(self):
         companies = self.env['res.company'].search([
@@ -277,4 +311,4 @@ class PaymentItem(models.Model):
                                     'mail_server_id': mail_server.id,
                                 })
                         except Exception as e:
-                            _logger.error('An error occured when sending payment due date emil to partner %s (%s)' % (partner.id, e))
+                            _logger.error('An error occured when sending payment due date email to partner %s (%s)' % (partner.id, e))
