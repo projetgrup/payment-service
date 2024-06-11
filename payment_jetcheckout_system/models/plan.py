@@ -237,7 +237,7 @@ class PaymentPlanWizard(models.TransientModel):
         for wizard in self:
             count = len(wizard.item_ids)
             currency = self.env.company.currency_id
-            amount = formatLang(self.env, sum(wizard.item_ids.mapped('amount')), currency_obj=currency)
+            amount = formatLang(self.env, sum(wizard.item_ids.mapped('amount')) - sum(wizard.item_ids.mapped('planned_amount')), currency_obj=currency)
             wizard.desc = _('<strong class="text-primary">%s</strong> partner(s) selected. Total amount is <strong class="text-primary">%s</strong>.' % (count, amount))
 
     item_ids = fields.Many2many('payment.item', 'item_plan_wizard_rel', 'wizard_id', 'item_id', string='Items', readonly=True)
@@ -248,7 +248,7 @@ class PaymentPlanWizard(models.TransientModel):
         values = []
         lines = [[line.token_id.id, line.token_limit_card, line.token_limit_tx] for line in self.line_ids]
         for item in self.item_ids:
-            amount = item.amount
+            amount = item.amount - item.planned_amount
             for line in lines:
                 while line[1] > 0 and amount > 0:
                     if line[2] > amount:

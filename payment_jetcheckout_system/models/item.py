@@ -70,6 +70,11 @@ class PaymentItem(models.Model):
             diff = date - today
             item.due_amount = item.amount * diff.days
 
+    @api.depends('plan_ids.amount')
+    def _compute_planned_amount(self):
+        for item in self:
+            item.planned_amount = sum(item.plan_ids.mapped('amount'))
+
     name = fields.Char(compute='_compute_name')
     child_id = fields.Many2one('res.partner', ondelete='restrict')
     parent_id = fields.Many2one('res.partner', ondelete='restrict')
@@ -89,11 +94,13 @@ class PaymentItem(models.Model):
 
     paid = fields.Boolean(compute='_compute_paid', store=True, readonly=True)
     paid_amount = fields.Monetary(compute='_compute_paid_amount', store=True, readonly=True)
+    planned_amount = fields.Monetary(compute='_compute_planned_amount', store=True, readonly=True)
     residual_amount = fields.Monetary(compute='_compute_residual_amount', store=True, readonly=True)
     installment_count = fields.Integer(compute='_compute_paid', store=True, readonly=True)
     paid_date = fields.Datetime(compute='_compute_paid', store=True, readonly=True)
     is_admin = fields.Boolean(compute='_compute_is_admin')
 
+    plan_ids = fields.One2many('payment.plan', 'item_id', string='Payment Plans')
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_item_rel', 'item_id', 'transaction_id', string='Transactions')
     system = fields.Selection(selection=[], readonly=True)
     company_id = fields.Many2one('res.company', required=True, ondelete='restrict', default=lambda self: self.env.company, readonly=True)

@@ -23,6 +23,9 @@
             <field name="parent_id" string="Supplier" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'supplier'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" required="1"/>
             <field name="child_id" string="Authorized" invisible="1" readonly="1" force_save="1" context="{'active_system': 'supplier'}" options="{'no_open': True, 'no_create': True}"/>
         </xpath>
+        <xpath expr='//field[@name="residual_amount"]' position="after">
+            <field name="planned_amount"/>
+        </xpath>
         <xpath expr='//field[@name="date"]' position="attributes">
             <attribute name="optional">show</attribute>
         </xpath>
