@@ -52,9 +52,9 @@ class PaymentPlan(models.Model):
     paid_date = fields.Datetime(readonly=True, compute='_compute_paid', store=True)
     installment_count = fields.Integer(readonly=True, default=1)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True)
-    system = fields.Selection(related='item_id.system', readonly=True)
-    company_id = fields.Many2one(related='item_id.company_id', readonly=True)
-    currency_id = fields.Many2one(related='item_id.currency_id', readonly=True)
+    system = fields.Selection(related='item_id.system', readonly=True, store=True)
+    company_id = fields.Many2one(related='item_id.company_id', readonly=True, store=True)
+    currency_id = fields.Many2one(related='item_id.currency_id', readonly=True, store=True)
     approval_state = fields.Selection([
         ('+', 'Approved'),
         ('-', 'Disapproved'),
