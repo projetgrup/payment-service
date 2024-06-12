@@ -227,6 +227,12 @@ class PaymentPlan(models.Model):
         action = self.env.ref('payment_jetcheckout.report_conveyance').report_action(transaction_ids.ids)
         return action
 
+    def unlink(self):
+        for plan in self:
+            if plan.paid:
+                raise UserError(_('Paid payment plans cannot be deleted'))
+        return super().unlink()
+
 
 class PaymentPlanWizard(models.TransientModel):
     _name = 'payment.plan.wizard'

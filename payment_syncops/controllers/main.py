@@ -211,6 +211,7 @@ class PayloxSyncopsController(Controller):
         if path == '/my/payment':
             if partner:
                 vals.update({
+                    'partner_name': partner['name'],
                     'jetcheckout_connector_partner_name': partner['name'],
                     'jetcheckout_connector_partner_vat': partner['vat'],
                     'jetcheckout_connector_partner_ref': partner['ref'],
