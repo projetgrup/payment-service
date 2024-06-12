@@ -7,6 +7,13 @@
         }
     }
 
+    .form-control.o_preloading {
+        background: #eeeeee;
+        background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+        background-size: 200% 100%;
+        animation: 1.5s shine linear infinite;
+    }
+
     .payment-dynamic {
         position: absolute;
         display: flex;
@@ -500,6 +507,45 @@
         }
     }
 
+}
+
+.payment-page-transaction {
+    .select2-container {
+        min-height: unset;
+        height: calc(1.5em + 0.75rem + 2px);
+        border: 1px solid #CED4DA;
+        border-radius: 0.25rem !important;
+
+        .select2-choices {
+            flex: 1 1 auto !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: none !important;
+        }
+
+        .select2-search-choice {
+            background: #eeeeee  !important;
+            line-height: 22px !important;
+            font-size: 14px !important;
+
+            .select2-search-choice-close {
+                top: 7px !important;
+                left: 5px !important;
+            }
+        }
+    }
+
+    .o_payment_select2_dropdown {
+        border-width: 1px !important;
+    }
+
+    .pagination {
+        .page-item.active {
+            a:hover {
+                color: #ffffff;
+            }
+        }
+    }
 }
 
 @keyframes welcomeTopText {

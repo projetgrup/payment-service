@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-11 15:47+0000\n"
-"PO-Revision-Date: 2024-06-11 18:52+0300\n"
+"POT-Creation-Date: 2024-06-12 19:05+0000\n"
+"PO-Revision-Date: 2024-06-12 22:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -66,6 +66,27 @@ msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
 msgstr "<i title=\"Kapat\" class=\"small fa fa-times\"/>"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+msgid ""
+"<select id=\"state\" class=\"d-none w-100\" multiple=\"multiple\">\n"
+"                                <option value=\"draft\">Draft</option>\n"
+"                                <option value=\"pending\">Pending</option>\n"
+"                                <option value=\"done\">Done</option>\n"
+"                                <option value=\"cancel\">Cancelled</option>\n"
+"                                <option value=\"error\">Error</option>\n"
+"                            </select>"
+msgstr ""
+"<select id=\"state\" class=\"d-none w-100\" multiple=\"multiple\">\n"
+"                                <option value=\"draft\">Taslak</option>\n"
+"                                <option value=\"pending\">Beklemede</"
+"option>\n"
+"                                <option value=\"done\">Tamamlandı</option>\n"
+"                                <option value=\"cancel\">İptal Edildi</"
+"option>\n"
+"                                <option value=\"error\">Hata</option>\n"
+"                            </select>"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 msgid ""
 "<span class=\"font-italic font-weight-light btn-sm\">A technical error "
@@ -88,7 +109,7 @@ msgstr ""
 "için lütfen bizim ile iletişime geçiniz.</span>"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 msgid "<span class=\"font-weight-bold\">Message:</span>"
 msgstr "<span class=\"font-weight-bold\">Mesaj:</span>"
 
@@ -1291,6 +1312,11 @@ msgid "An error occured. Please try again."
 msgstr "Bir hata meydana geldi. Lütfen tekrar deneyiniz."
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+msgid "Apply"
+msgstr "Uygula"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approval_result
 msgid "Approval Result"
 msgstr "Onay Sonucu"
@@ -1477,7 +1503,9 @@ msgid "Cannot duplicate configuration!"
 msgstr "Yapılandırma çoklanamaz!"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "Card Holder Name"
 msgstr "Kart Sahibi Adı"
 
@@ -1487,7 +1515,9 @@ msgid "Card Limit"
 msgstr "Kart Limiti"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "Card Number"
 msgstr "Kart Numarası"
 
@@ -1528,7 +1558,9 @@ msgid "Code"
 msgstr "Kod"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "Commission Amount"
 msgstr "Komisyon Oranı"
 
@@ -1636,7 +1668,7 @@ msgstr "Temassız Ödeme Sayfası Aktif"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
 msgid "Conveyance"
@@ -1797,13 +1829,20 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: code:addons/payment_jetcheckout_system/static/src/xml/system.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__date
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 #, python-format
 msgid "Date"
 msgstr "Tarih"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#, python-format
+msgid "Date format cannot be empty"
+msgstr "Tarih biçimi boş olamaz"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/settings.py:0
@@ -1948,6 +1987,11 @@ msgid "Done Transactions"
 msgstr "Başarılı İşlemler"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+msgid "Download"
+msgstr "İndir"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__due
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due_tag__due_id
 msgid "Due"
@@ -2044,6 +2088,11 @@ msgstr "Eposta başarıyla gönderildi."
 #, python-format
 msgid "Emails are going to be sent on %s"
 msgstr "Epostalar %s üzerinden gönderilecektir"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+msgid "End Date"
+msgstr "Bitiş Tarihi"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
@@ -2324,9 +2373,11 @@ msgid "Installment"
 msgstr "Taksit"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__installment_count
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__installment_count
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "Installment Count"
 msgstr "Taksit Adedi"
 
@@ -2641,11 +2692,13 @@ msgid "Menu"
 msgstr "Menü"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_message
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__message
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__message
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_message
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+#, python-format
 msgid "Message"
 msgstr "Mesaj"
 
@@ -2708,6 +2761,7 @@ msgid "Net Amount"
 msgstr "Ele Geçecek Tutar"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 msgid "New Payment"
 msgstr "Yeni Ödeme"
@@ -2759,6 +2813,11 @@ msgstr "Kayıt bulunamadı"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "No setting found"
 msgstr "Bir ayar bulunamadı"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+msgid "No transaction found"
+msgstr "İşlem bulunamadı"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_transaction
@@ -3093,7 +3152,9 @@ msgid "Payment Advance Assign Salesperson"
 msgstr "Avans Ödemesi Satış Temsilcisi Ata"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "Payment Amount"
 msgstr "Ödeme Tutarı"
 
@@ -3715,9 +3776,16 @@ msgid "Re-Invite"
 msgstr "Tekrar Davet Et"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Ready"
+msgstr "Hazır"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_result
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.payment_state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
 msgid "Receipt"
@@ -3736,10 +3804,12 @@ msgid "Record Rule"
 msgstr "Kayıt Kuralı"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_ref
+#, python-format
 msgid "Reference"
 msgstr "Referans"
 
@@ -4149,9 +4219,17 @@ msgid "Specify different campaings per tag on payment page"
 msgstr "Ödeme sayfasında her etiket için farklı kampanyalar tanımlayın"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__api_state
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
+#, python-format
 msgid "State"
 msgstr "Durumu"
 
@@ -4466,7 +4544,7 @@ msgstr "Tolerans"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__transaction_id
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 msgid "Transaction"
 msgstr "İşlem"
 
@@ -4514,6 +4592,7 @@ msgid "Transaction limit must be higher than zero!"
 msgstr "İşlem bazında limit sıfırdan büyük olmalıdır!"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_transaction
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__transaction_ids
@@ -4523,6 +4602,13 @@ msgstr "İşlem bazında limit sıfırdan büyük olmalıdır!"
 #, python-format
 msgid "Transactions"
 msgstr "İşlemler"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Transactions are ready to download"
+msgstr "İşlemler indirmek için hazır"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_table_transpose
