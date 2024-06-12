@@ -14,7 +14,7 @@
         </xpath>
         <xpath expr='//field' position="before">
             <header>
-                <button name="action_plan" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o mr-1" class="ml-1 btn-outline-primary border-primary"/>
+                <button name="action_plan_wizard" type="object" string="Create Payment Plan" icon="fa-calendar-plus-o mr-1" class="ml-1 btn-outline-primary border-primary"/>
             </header>
         </xpath>
         <xpath expr='//field[@name="child_id"]' position="replace"/>
@@ -46,6 +46,10 @@
         <xpath expr='//filter[@name="groupby_child"]' position="replace"/>
         <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
             <attribute name="string">Supplier</attribute>
+        </xpath>
+        <xpath expr='//filter[@name="filterby_paid"]' position="after">
+            <separator/>
+            <filter name="filterby_unverified" string="Unverified Partners" domain="[('system_supplier_bank_verified', '=', False)]"/>
         </xpath>
     </field>
     </record>

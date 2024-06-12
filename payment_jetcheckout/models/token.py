@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 from odoo import fields, models, api, _
-#from odoo.exceptions import UserError
+from odoo.exceptions import UserError
 
 
 class PaymentToken(models.Model):
@@ -23,8 +23,8 @@ class PaymentToken(models.Model):
         res['jetcheckout_ref'] = str(uuid.uuid4())
         return res
 
-    #def unlink(self):
-    #    for token in self:
-    #        if token.transaction_ids:
-    #            raise UserError(_('Token "%s" cannot be deleted because of it has been used in a transaction.'))
-    #    return super().unlink()
+    def unlink(self):
+        for token in self:
+            if token.transaction_ids:
+                raise UserError(_('Token "%s" cannot be deleted because of it has been used in a transaction.') % token.name)
+        return super().unlink()
