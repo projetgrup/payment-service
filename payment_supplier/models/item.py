@@ -25,7 +25,7 @@ class PaymentItem(models.Model):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if self.env.company_id.system == 'supplier':
+        if self.env.company.system == 'supplier':
             res['mail_ok'] = True
         return res
  

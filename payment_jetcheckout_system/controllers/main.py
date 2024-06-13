@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 import re
+import io
 import json
 import base64
 import werkzeug
+from datetime import datetime
 from urllib.parse import urlparse, urlencode
 
 from odoo import fields, http, _
-from odoo.http import request
+from odoo.http import content_disposition, request
 from odoo.tools import html_escape
+from odoo.tools.misc import xlsxwriter
 from odoo.exceptions import AccessError, UserError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
 
@@ -835,21 +838,130 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_result', values)
 
     @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
-    def page_system_payment_transaction(self, page=0, tpp=20, **kwargs):
-        values = self._prepare()
-        tx_ids = request.env['payment.transaction'].sudo().search([
-            ('acquirer_id', '=', values['acquirer'].id),
-            ('partner_id', '=', values['partner'].id)
+    def page_system_payment_transaction(self, page=0, **kwargs):
+        acquirer = self._get_acquirer()
+        user = not request.env.user.share
+        partner = self._get_partner()
+        partner_commercial = partner.commercial_partner_id
+        partner_contact = partner if partner.parent_id else False
+        values = {
+            'company': request.env.company,
+            'partner': partner_commercial,
+            'partner_name': partner_commercial.name,
+            'contact': partner_contact,
+            'acquirer': acquirer,
+            'user': user,
+        }
+
+        txs = request.env['payment.transaction'].sudo().search([
+            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
         ])
-        pager = request.website.pager(url='/my/payment/transactions', total=len(tx_ids), page=page, step=tpp, scope=7, url_args=kwargs)
+
+        step = 5
+        pager = request.website.pager(url='', total=len(txs), page=page, step=step, scope=7, url_args=kwargs)
         offset = pager['offset']
-        txs = tx_ids[offset: offset + tpp]
+        txs = txs[offset: offset + step]
         values.update({
             'pager': pager,
             'txs': txs,
-            'tpp': tpp,
+            'date_format': 'DD-MM-YYYY'
         })
+        if request.env.lang:
+            lang = request.env.lang
+            values.update({
+                'date_locale': lang[:2],
+            })
         return request.render('payment_jetcheckout_system.page_transaction', values)
+
+    @http.route(['/my/payment/transactions/list'], type='json', auth='public', website=True)
+    def page_system_payment_transaction_list(self, **kwargs):
+        date_format = kwargs.get('format')
+        if not date_format:
+            return {'error': _('Date format cannot be empty')}
+
+        partner = self._get_partner()
+        domain = [
+            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
+            #('company_id', '=', request.env.company.id),
+        ]
+        date_format = date_format.replace('DD', '%d').replace('MM', '%m').replace('YYYY', '%Y')
+        if kwargs.get('start'):
+            date_start = datetime.strptime(kwargs['start'], date_format)
+            domain.append(('create_date', '>=', date_start))
+        if kwargs.get('end'):
+            date_end = datetime.strptime(kwargs['end'], date_format)
+            domain.append(('create_date', '<=', date_end))
+        if kwargs.get('state'):
+            domain.append(('state', 'in', kwargs['state']))
+        txs = request.env['payment.transaction'].sudo().search(domain)
+
+        step = 5    
+        pager = request.website.pager(url='', total=len(txs), page=kwargs.get('page', 1), step=step, scope=7)
+        offset = pager['offset']
+        txs = txs[offset: offset + step]
+        pager = request.env['ir.ui.view'].sudo()._render_template('website.pager', {'pager': pager})
+        page = request.env['ir.ui.view'].sudo()._render_template('payment_jetcheckout_system.page_transaction_list', {'txs': txs})
+
+        return {
+            'pager': pager,
+            'page': page,
+        }
+
+    @http.route(['/my/payment/transactions/download'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def page_system_payment_transaction_download(self, **kwargs):
+        date_format = kwargs.get('format')
+        if not date_format:
+            return {'error': _('Date format cannot be empty')}
+
+        partner = self._get_partner()
+        domain = [
+            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
+            #('company_id', '=', request.env.company.id),
+        ]
+        date_format = date_format.replace('DD', '%d').replace('MM', '%m').replace('YYYY', '%Y')
+        if kwargs.get('start'):
+            date_start = datetime.strptime(kwargs['start'], date_format)
+            domain.append(('create_date', '>=', date_start))
+        if kwargs.get('end'):
+            date_end = datetime.strptime(kwargs['end'], date_format)
+            domain.append(('create_date', '<=', date_end))
+        if kwargs.get('state'):
+            domain.append(('state', 'in', kwargs['state'].split(',')))
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+        headers = {
+            'create_date': _('Date'),
+            'reference': _('Reference'),
+            'jetcheckout_card_name': _('Card Holder Name'),
+            'jetcheckout_card_number': _('Card Number'),
+            'jetcheckout_payment_amount': _('Payment Amount'),
+            'jetcheckout_installment_count': _('Installment Count'),
+            'jetcheckout_customer_amount': _('Commission Amount'),
+            'state': _('State'),
+            'state_message': _('Message'),
+        }
+        date_format = workbook.add_format({'num_format': kwargs['format']})
+        for i, col in enumerate(headers.values()):
+            worksheet.write(0, i, col)
+
+        txs = request.env['payment.transaction'].sudo().search_read(domain, list(headers.keys()))
+
+        row = 0
+        for tx in txs:
+            row += 1
+            for i, key in enumerate(headers.keys()):
+                if key == 'create_date':
+                    worksheet.write_datetime(row, i, tx[key], date_format)
+                else:
+                    worksheet.write(row, i, tx[key])
+        workbook.close()
+        headers = [
+            ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            ('Content-Disposition', content_disposition('%s.xlsx' % _('Transactions')))
+        ]
+        return request.make_response(output.getvalue(), headers=headers)
 
     @http.route(['/my/payment/query/partner'], type='json', auth='public', website=True)
     def page_system_payment_query_partner(self, **kwargs):

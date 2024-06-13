@@ -598,8 +598,9 @@
                         <h4 t-if="tx and tx.state == 'done'" class="font-weight-bold m-3 p-3 text-center w-100">
                             <div class="text-center w-100">Payment is successful. Thank you.</div>
                             <div class="row w-100 mt-2">
-                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
-                                <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                                <div class="p-3 col-md-4"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
+                                <div class="p-3 col-md-4"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-primary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>
+                                <div class="p-3 col-md-4"><a href="/my/payment" class="btn btn-primary btn-block font-weight-bold text-uppercase"><i class="fa fa-money mr-2" t-translation="off"/>New Payment</a></div>
                             </div>
                         </h4>
                         <h4 t-elif="tx and tx.state == 'pending'" class="font-weight-bold m-3 p-3 text-center w-100">
@@ -623,14 +624,81 @@
         </t>
     </template>
 
+    <template id="page_transaction_list" name="Payment System Page Transactions List">
+        <t t-if="txs">
+            <table class="table table-borderless table-responsive-md w-100 table-fold small">
+                <thead>
+                    <tr class="font-weight-bold border shadow">
+                        <th>Date</th>
+                        <th>Transaction</th>
+                        <th>Card Holder Name</th>
+                        <th>Card Number</th>
+                        <th class="text-right">Payment Amount</th>
+                        <th class="text-center">State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="txs" t-as="tx">
+                        <tr class="border row-view">
+                            <td><span t-field="tx.create_date"/></td>
+                            <td><span t-field="tx.reference"/></td>
+                            <td><span t-field="tx.jetcheckout_card_name"/></td>
+                            <td><span t-field="tx.jetcheckout_card_number"/></td>
+                            <td class="text-right"><span t-field="tx.jetcheckout_payment_amount"/></td>
+                            <td class="border-right font-weight-bold text-center px-2"><span t-field="tx.state" t-attf-class="py-1 w-100 badge #{'badge-success' if tx.state == 'done' else 'badge-danger'}"/></td>
+                        </tr>
+                        <tr class="border shadow-lg row-fold">
+                            <td colspan="99">
+                                <table class="w-100">
+                                    <tr class="font-weight-bold border">
+                                        <td class="pl-2">Commission Amount</td>
+                                        <td>Installment Count</td>
+                                        <td rowspan="2" class="border-left p-2">
+                                            <a t-attf-href="/report/html/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
+                                            <a t-attf-href="/report/html/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border">
+                                        <td class="pl-2"><span t-field="tx.jetcheckout_customer_amount"/></td>
+                                        <td><span t-field="tx.jetcheckout_installment_count"/></td>
+                                    </tr>
+                                    <tr class="border">
+                                        <td colspan="5" class="text-left pl-2"><span class="font-weight-bold">Message:</span> <span t-field="tx.state_message"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+        <t t-else="">
+            <table class="table table-borderless table-responsive-md w-100 table-fold small">
+                <thead>
+                    <tr class="font-weight-bold border shadow">
+                        <th>Date</th>
+                        <th>Transaction</th>
+                        <th>Card Holder Name</th>
+                        <th>Card Number</th>
+                        <th class="text-right">Payment Amount</th>
+                        <th class="text-center">State</th>
+                    </tr>
+                </thead>
+                <tbody/>
+            </table>
+            <div class="h1 mt-5 text-400 text-center">No transaction found</div>
+        </t>
+    </template>
+
     <template id="page_transaction" name="Payment System Page Transactions">
         <t t-call="web.frontend_layout">
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-page-transaction navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
             <div class="header row mx-0 card border p-2 px-lg-2">
                 <div>
                     <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
@@ -641,62 +709,35 @@
                     <t t-set="page" t-value="'transaction'"/>
                     <t t-set="no_payment_icons" t-value="True"/>
                     <t t-set="no_card_preview" t-value="True"/>
+                    <t t-set="labels">
+                        <div class="o_partner_transaction_dates">
+                            <label for="date_start" class="text-primary font-weight-bold mb-0 d-block mt-3">Start Date</label>
+                            <input type="text" class="form-control datepicker-input" id="date_start" name="date_start" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_start" t-att-value="date_start" t-att-data-date-locale="date_locale"/>
+                            <label for="date_end" class="text-primary font-weight-bold mb-0 d-block mt-3">End Date</label>
+                            <input type="text" class="form-control datepicker-input" id="date_end" name="date_end" data-toggle="datetimepicker" t-att-data-date-format="date_format" data-target="#date_end" t-att-value="date_end" t-att-data-date-locale="date_locale"/>
+                            <label for="state" class="text-primary font-weight-bold mb-0 d-block mt-3">State</label>
+                            <select id="state" class="d-none w-100" multiple="multiple">
+                                <option value="draft">Draft</option>
+                                <option value="pending">Pending</option>
+                                <option value="done">Done</option>
+                                <option value="cancel">Cancelled</option>
+                                <option value="error">Error</option>
+                            </select>
+                            <input type="text" class="form-control o_preloading"/>
+                        </div>
+                    </t>
                     <t t-set="buttons">
+                        <a role="button" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_payment_transaction_apply" href="#"><i class="fa fa-calendar-check-o mr-2" t-translation="off"/>Apply</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_payment_transaction_download" href="#"><i class="fa fa-download mr-2" t-translation="off"/>Download</a>
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>
                 <div class="col-md-9 row justify-content-center mx-0 navbar-light">
-                    <div class="px-3 py-4 bg-white card my-4 w-100">
-                        <table class="table table-borderless table-responsive-md w-100 table-fold small">
-                            <thead>
-                                <tr class="font-weight-bold border shadow">
-                                    <th>Date</th>
-                                    <th>Transaction</th>
-                                    <th>Card Holder Name</th>
-                                    <th>Card Number</th>
-                                    <th class="text-right">Payment Amount</th>
-                                    <th class="text-center">State</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="txs" t-as="tx">
-                                    <tr class="border row-view">
-                                        <td><span t-field="tx.create_date"/></td>
-                                        <td><span t-field="tx.reference"/></td>
-                                        <td><span t-field="tx.jetcheckout_card_name"/></td>
-                                        <td><span t-field="tx.jetcheckout_card_number"/></td>
-                                        <td class="text-right"><span t-field="tx.jetcheckout_payment_amount"/></td>
-                                        <td class="border-right font-weight-bold text-center px-2"><span t-field="tx.state" t-attf-class="py-1 w-100 badge #{'badge-success' if tx.state == 'done' else 'badge-danger'}"/></td>
-                                    </tr>
-                                    <tr class="border shadow-lg row-fold">
-                                        <td colspan="99">
-                                            <table class="w-100">
-                                                <tr class="font-weight-bold border">
-                                                    <td class="pl-2">Commission Amount</td>
-                                                    <td>Installment Count</td>
-                                                    <td rowspan="2" class="border-left p-2">
-                                                        <!--<a t-attf-href="/report/pdf/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
-                                                        <a t-attf-href="/report/pdf/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>-->
-                                                        <a t-attf-href="/report/html/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
-                                                        <a t-attf-href="/report/html/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
-                                                    </td>
-                                                </tr>
-                                                <tr class="border">
-                                                    <td class="pl-2"><span t-field="tx.jetcheckout_customer_amount"/></td>
-                                                    <td><span t-field="tx.jetcheckout_installment_count"/></td>
-                                                </tr>
-                                                <tr class="border">
-                                                    <td colspan="5" class="text-left pl-2"><span class="font-weight-bold">Message:</span> <span t-field="tx.state_message"/></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                    <div class="px-3 py-4 bg-white card my-4 w-100 o_payment_transaction_list">
+                        <t t-call="payment_jetcheckout_system.page_transaction_list"/>
                     </div>
-                    <div class="form-inline justify-content-center mt-3">
+                    <div class="form-inline justify-content-center mt-3 o_payment_transaction_pager">
                         <t t-call="website.pager"/>
                     </div>
                 </div>
