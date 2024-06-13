@@ -161,7 +161,7 @@
             </header>
         </xpath>
         <xpath expr='//field[@name="partner_name"]' position="replace">
-            <field name="partner_name" invisible="1"/>
+            <field name="partner_name" optional="hide"/>
         </xpath>
         <xpath expr='//field[@name="partner_id"]' position="after">
             <field name="partner_vat" optional="hide"/>
