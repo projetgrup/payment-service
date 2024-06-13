@@ -894,4 +894,144 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.payloxSystemPageTransaction = publicWidget.Widget.extend({
+    selector: '.payment-page-transaction #wrapwrap',
+    events: {
+        'click .o_payment_transaction_apply': '_onClickApply',
+        'click .o_payment_transaction_download': '_onClickDownload',
+        'click .pagination .page-item .page-link': '_onClickPage',
+    },
+
+    start: function () {
+        return this._super.apply(this, arguments).then(() => {
+            $('input.o_preloading').addClass('d-none');
+            $('select#state').removeClass('d-none').select2({
+                dropdownCssClass: 'o_payment_select2_dropdown',
+            });
+            framework.hideLoading();
+        });
+    },
+
+    _onClickApply: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this._renderPage(document.querySelector('.pagination .page-item.active a'));
+    },
+
+    _onClickPage: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this._renderPage(ev.currentTarget);
+    },
+
+    _onClickDownload: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        this._downloadPage();
+    },
+
+    _prepareParams: function (page) {
+        if (page) {
+            page = page.getAttribute('href');
+            page = page ? Number(page.split('/').at(-1)) : 1;
+        } else {
+            page = 1;
+        }
+
+        const $start = $('#date_start');
+        const $end = $('#date_end');
+        const $state = $('#state');
+        const format = $start.data('date-format');
+
+        return {
+            start: $start.val(),
+            end: $end.val(),
+            state: $state.val(),
+            format: format,
+            page: page,
+        } 
+    },
+
+    _renderPage: function (page) {
+        const params = this._prepareParams(page);
+
+        framework.showLoading();
+        rpc.query({
+            route: '/my/payment/transactions/list',
+            params: params,
+        }).then((result) => {
+            if (result.error) {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: result.error,
+                });
+            } else {
+                $('.o_payment_transaction_list').html(result.page);
+                $('.o_payment_transaction_pager').html(result.pager);
+            }
+            framework.hideLoading();
+        }).guardedCatch(() => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured.'),
+            });
+            framework.hideLoading();
+        });
+    },
+
+    _downloadPage: function () {
+        const params = this._prepareParams();
+        const query = new URLSearchParams(params);
+
+        let state = false;
+        framework.showLoading();
+
+        const iframe = document.createElement('iframe');
+        iframe.classList.add('d-none');
+        iframe.setAttribute('src', window.location.origin + window.location.pathname  + '/download?' + query.toString());
+
+        iframe.onload = (ev) => {
+            if ($(ev.currentTarget).contents().find('title').first().text().includes('Error')) {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured.'),
+                });
+                framework.hideLoading();
+                iframe.remove(); 
+            } else {
+                this.displayNotification({
+                    type: 'info',
+                    title: _t('Ready'),
+                    message: _t('Transactions are ready to download'),
+                });
+                framework.hideLoading();
+                iframe.remove();
+            }
+        }
+        iframe.onerror = (ev) => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured.'),
+            });
+            framework.hideLoading();
+            iframe.remove();
+        }
+
+        document.body.appendChild(iframe);
+        this.displayNotification({
+            type: 'info',
+            title: _t('Ready'),
+            message: _t('Transactions are ready to download'),
+        });
+        framework.hideLoading();
+        setTimeout(() => {
+            if (iframe) iframe.remove();
+        }, 5000)
+    }
+});
+ 
 export default publicWidget.registry.payloxSystemPage;

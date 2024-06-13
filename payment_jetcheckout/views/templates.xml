@@ -163,7 +163,7 @@
                         </ul>
                     </div>
                 </div>
-                <div t-if="page in ['payment', 'ledger'] and not no_partner_info" class="px-3 py-4 bg-white card my-4">
+                <div t-if="page in ['payment', 'transaction', 'ledger'] and not no_partner_info" class="px-3 py-4 bg-white card my-4">
                     <label name="partner" class="text-primary font-weight-bold mb-0 d-block">
                         <t t-if="partner_label" t-raw="partner_label"/>
                         <t t-else="">Partner</t>
