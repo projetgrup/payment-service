@@ -141,6 +141,16 @@ class Users(models.Model):
             group = self.env.ref('payment_jetcheckout_system.group_system_own_partner')
             group.sudo().write({'users': [(code, user.id)]})
 
+    def _compute_group_own_transaction(self):
+        for user in self:
+            user.group_own_transaction = user.has_group('payment_jetcheckout_system.group_system_own_transaction')
+
+    def _set_group_own_transaction(self):
+        for user in self:
+            code = user.group_own_transaction and 4 or 3
+            group = self.env.ref('payment_jetcheckout_system.group_system_own_transaction')
+            group.sudo().write({'users': [(code, user.id)]})
+
     def _compute_group_create_partner(self):
         for user in self:
             user.group_create_partner = user.has_group('payment_jetcheckout_system.group_system_create_partner')
@@ -194,6 +204,7 @@ class Users(models.Model):
     group_transaction_cancel = fields.Boolean(string='Transaction Cancel', compute='_compute_group_transaction_cancel', inverse='_set_group_transaction_cancel')
     group_transaction_refund = fields.Boolean(string='Transaction Refund', compute='_compute_group_transaction_refund', inverse='_set_group_transaction_refund')
     group_own_partner = fields.Boolean(string='Only Own Partners', compute='_compute_group_own_partner', inverse='_set_group_own_partner')
+    group_own_transaction = fields.Boolean(string='Only Own Transactions', compute='_compute_group_own_transaction', inverse='_set_group_own_transaction')
     group_create_partner = fields.Boolean(string='Create Partners', compute='_compute_group_create_partner', inverse='_set_group_create_partner')
     group_grant_partner = fields.Boolean(string='Grant Partners', compute='_compute_group_grant_partner', inverse='_set_group_grant_partner')
     group_show_payment_link = fields.Boolean(string='Show Payment Link', compute='_compute_group_show_payment_link', inverse='_set_group_show_payment_link')
