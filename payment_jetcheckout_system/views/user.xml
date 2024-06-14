@@ -101,6 +101,7 @@
                     </group>
                     <group string="Permissions" name="permissions">
                         <field name="group_own_partner"/>
+                        <field name="group_own_transaction"/>
                         <field name="group_create_partner"/>
                         <field name="group_grant_partner"/>
                         <field name="group_show_payment_link"/>

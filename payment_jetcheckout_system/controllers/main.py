@@ -853,11 +853,20 @@ class PayloxSystemController(Controller):
             'user': user,
         }
 
-        txs = request.env['payment.transaction'].sudo().search([
-            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
-        ])
+        if request.env.user.group_own_transaction:
+            domain = [
+                ('partner_id', '=', partner and partner.id or False),
+            ]
+        else:
+            domain = [
+                '|',
+                ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
+                ('partner_id.parent_id', '=', partner and partner.commercial_partner_id.id or False),
+            ]
 
-        step = 5
+        txs = request.env['payment.transaction'].sudo().search(domain)
+
+        step = 10
         pager = request.website.pager(url='', total=len(txs), page=page, step=step, scope=7, url_args=kwargs)
         offset = pager['offset']
         txs = txs[offset: offset + step]
@@ -873,17 +882,24 @@ class PayloxSystemController(Controller):
             })
         return request.render('payment_jetcheckout_system.page_transaction', values)
 
-    @http.route(['/my/payment/transactions/list'], type='json', auth='public', website=True)
+    @http.route(['/my/payment/transactions/list'], type='json', auth='user', website=True)
     def page_system_payment_transaction_list(self, **kwargs):
         date_format = kwargs.get('format')
         if not date_format:
             return {'error': _('Date format cannot be empty')}
 
         partner = self._get_partner()
-        domain = [
-            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
-            #('company_id', '=', request.env.company.id),
-        ]
+        if request.env.user.group_own_transaction:
+            domain = [
+                ('partner_id', '=', partner and partner.id or False),
+            ]
+        else:
+            domain = [
+                '|',
+                ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
+                ('partner_id.parent_id', '=', partner and partner.commercial_partner_id.id or False),
+            ]
+
         date_format = date_format.replace('DD', '%d').replace('MM', '%m').replace('YYYY', '%Y')
         if kwargs.get('start'):
             date_start = datetime.strptime(kwargs['start'], date_format)
@@ -895,7 +911,7 @@ class PayloxSystemController(Controller):
             domain.append(('state', 'in', kwargs['state']))
         txs = request.env['payment.transaction'].sudo().search(domain)
 
-        step = 5    
+        step = 10    
         pager = request.website.pager(url='', total=len(txs), page=kwargs.get('page', 1), step=step, scope=7)
         offset = pager['offset']
         txs = txs[offset: offset + step]
@@ -914,10 +930,17 @@ class PayloxSystemController(Controller):
             return {'error': _('Date format cannot be empty')}
 
         partner = self._get_partner()
-        domain = [
-            ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
-            #('company_id', '=', request.env.company.id),
-        ]
+        if request.env.user.group_own_transaction:
+            domain = [
+                ('partner_id', '=', partner and partner.id or False),
+            ]
+        else:
+            domain = [
+                '|',
+                ('partner_id', '=', partner and partner.commercial_partner_id.id or False),
+                ('partner_id.parent_id', '=', partner and partner.commercial_partner_id.id or False),
+            ]
+
         date_format = date_format.replace('DD', '%d').replace('MM', '%m').replace('YYYY', '%Y')
         if kwargs.get('start'):
             date_start = datetime.strptime(kwargs['start'], date_format)

@@ -193,4 +193,7 @@ class PaymentTransaction(models.Model):
     def create(self, values):
         if values.get('jetcheckout_connector_ok'):
             values['jetcheckout_connector_state'] = True
-        return super().create(values)
+        res = super().create(values)
+        if 'jetcheckout_connector_partner_name' in values:
+            res.write({'partner_name': values['jetcheckout_connector_partner_name']})
+        return res

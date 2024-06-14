@@ -969,6 +969,9 @@ publicWidget.registry.payloxSystemPageTransaction = publicWidget.Widget.extend({
             } else {
                 $('.o_payment_transaction_list').html(result.page);
                 $('.o_payment_transaction_pager').html(result.pager);
+                $('.table-fold tr.row-view').on('click', function() {
+                    $(this).toggleClass('open').next('.row-fold').toggleClass('open');
+                });
             }
             framework.hideLoading();
         }).guardedCatch(() => {
