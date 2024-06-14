@@ -11,6 +11,10 @@
             <field name="name">Own Partners Only</field>
             <field name="category_id" ref="module_category_system_technical"/>
         </record>
+        <record model="res.groups" id="group_system_own_transaction">
+            <field name="name">Own Transactions Only</field>
+            <field name="category_id" ref="module_category_system_technical"/>
+        </record>
         <record model="res.groups" id="group_system_create_partner">
             <field name="name">Create Partners</field>
             <field name="category_id" ref="module_category_system_technical"/>
@@ -181,6 +185,16 @@
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="domain_force">['|', '|', '|', '|', ('active', '=', False), ('user_ids.share', '=', False), ('id', '=', user.partner_id.id), ('user_id', '=', user.id), ('parent_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_own_partner'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="own_transaction_rule" model="ir.rule">
+            <field name="name">Access only own transactions for users</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[Command.link(ref('payment_jetcheckout_system.group_system_own_transaction'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>

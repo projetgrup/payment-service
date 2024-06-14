@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-12 19:05+0000\n"
-"PO-Revision-Date: 2024-06-12 22:07+0300\n"
+"POT-Creation-Date: 2024-06-13 09:57+0000\n"
+"PO-Revision-Date: 2024-06-13 12:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -2899,6 +2899,11 @@ msgid "Only Own Partners"
 msgstr "Sadece Kendi İş Ortakları"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__group_own_transaction
+msgid "Only Own Transactions"
+msgstr "Sadece Kendi İşlemleri"
+
+#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
 #, python-format
 msgid "Only paid transactions can be approved"
@@ -2928,6 +2933,11 @@ msgstr "Diğer Ödeme Yöntemleri"
 #: model:res.groups,name:payment_jetcheckout_system.group_system_own_partner
 msgid "Own Partners Only"
 msgstr "Sadece Kendi İş Ortakları"
+
+#. module: payment_jetcheckout_system
+#: model:res.groups,name:payment_jetcheckout_system.group_system_own_transaction
+msgid "Own Transactions Only"
+msgstr "Sadece Kendi İşlemleri"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.website_form
