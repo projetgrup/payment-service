@@ -42,6 +42,7 @@
                         <field name="username"/>
                         <field name="token"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1" force_save="1"/>
+                        <field name="company_ids" groups="base.group_multi_company" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                     </group>
                     <group>
                         <div colspan="2" attrs="{'invisible': [('connected', '=', False)]}">
