@@ -69,7 +69,7 @@ class PayloxSyncopsController(Controller):
                 'refund_time': (tx.source_transaction_id.create_date + offset).strftime('%H:%M:%S'),
             })
         return values
- 
+
     def _connector_get_partner(self, partner=None):
         data = self._get('syncops')
         if data:
@@ -400,7 +400,7 @@ class PayloxSyncopsController(Controller):
             tz = pytz.timezone('Europe/Istanbul')
             offset = tz.utcoffset(now)
             domain = [
-                ('company_id', '=', connector.company_id.id),
+                ('company_id', 'in', connector.get_company_ids()),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
                 ('jetcheckout_payment_type', '=', 'virtual_pos'),
