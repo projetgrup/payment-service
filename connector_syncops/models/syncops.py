@@ -20,6 +20,7 @@ class SyncopsConnector(models.Model):
     username = fields.Char(string='Username', required=True)
     token = fields.Char(string='Token', required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, ondelete='cascade', required=True, readonly=True)
+    company_ids = fields.Many2many('res.company', 'syncops_company_rel', 'connector_id', 'company_id', string='Related Companies')
     line_ids = fields.One2many('syncops.connector.line', 'connector_id', string='Lines', readonly=True)
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
@@ -212,6 +213,9 @@ class SyncopsConnector(models.Model):
             ('connected', '=', True),
             ('line_ids.code', '=', method)
         ])
+
+    def get_company_ids(self):
+        return self.company_id.ids + self.company_ids.ids
 
     def action_toggle_environment(self):
         self.ensure_one()
