@@ -37,9 +37,10 @@ class Http(models.AbstractModel):
             'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
         }
 
-    def session_info(self):
-        self._get_current_system()
-        res = super(Http, self).session_info()
-        if res['user_context'].get('system'):
-            res['home_action_id'] = self.env.ref('payment_jetcheckout_system.action_dashboard').id
-        return res
+    # DEPRECATED -> Now it is handled with JS.
+    #def session_info(self):
+    #    self._get_current_system()
+    #    res = super(Http, self).session_info()
+    #    if res['user_context'].get('system'):
+    #        res['home_action_id'] = self.env.ref('payment_jetcheckout_system.action_dashboard').id
+    #    return res

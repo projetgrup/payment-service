@@ -47,6 +47,7 @@
         'web.assets_backend': [
             'payment_jetcheckout_system/static/src/js/partner.js',
             'payment_jetcheckout_system/static/src/js/item.js',
+            'payment_jetcheckout_system/static/src/js/menu.js',
             'payment_jetcheckout_system/static/src/js/dashboard.js',
             'payment_jetcheckout_system/static/src/js/company.js',
             'payment_jetcheckout_system/static/src/scss/backend.scss',
