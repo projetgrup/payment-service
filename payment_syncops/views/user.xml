@@ -7,6 +7,9 @@
         <xpath expr="//group[@name='other']" position="inside">
             <field name="group_syncops_sync" string="Show Sync Button" widget="boolean_toggle"/>
         </xpath>
+        <xpath expr="//group[@name='permissions']" position="inside">
+            <field name="group_syncops_check_iban" string="Check Partner IBAN"/>
+        </xpath>
     </field>
     </record>
 </odoo>
