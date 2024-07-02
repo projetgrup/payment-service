@@ -12,3 +12,4 @@ class ResCompany(models.Model):
     syncops_cron_sync_item_hour = fields.Integer()
     syncops_cron_sync_partner = fields.Boolean()
     syncops_payment_page_partner_required = fields.Boolean()
+    syncops_check_iban = fields.Boolean()

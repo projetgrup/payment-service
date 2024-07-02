@@ -43,9 +43,9 @@ class PaymentTransaction(models.Model):
                 context = self.env.context.copy()
                 context.update({
                     'tx': self,
-                    'partner': commercial_partner,
                     'company': company,
                     'server': mail_server,
+                    'partner': self.partner_name,
                     'url': self.jetcheckout_website_id.domain,
                     'domain': urlparse(self.jetcheckout_website_id.domain).netloc,
                     'from': mail_server.email_formatted or company.email_formatted,

@@ -48,6 +48,23 @@ class PartnerBank(models.Model):
     api_message = fields.Char('Message')
     api_result = fields.Html('Result', sanitize=False, compute='_compute_api_result')
 
+    def _paylox_api_save(self, acquirer, method, data):
+        url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
+        response = getattr(requests, method)(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                state = True
+                message = _('Success')
+            else:
+                state = False
+                message = result['message']
+        else:
+            state = False
+            message = response.reason
+        return {'state': state, 'message': message}
+
+
     @api.model
     def create(self, values):
         values['api_ref'] = str(uuid.uuid4())
@@ -108,7 +125,6 @@ class PartnerBank(models.Model):
                         contact_surname = contact_names.pop()
                         contact_name = ' '.join(contact_names)
 
-                url = '%s/api/v1/submerchant' % acquirer._get_paylox_api_url()
                 address = self.partner_id._display_address(without_company=True).strip().replace('\n', ' ')
                 data = {
                     "application_key": acquirer.jetcheckout_api_key,
@@ -129,18 +145,11 @@ class PartnerBank(models.Model):
                 if mode == 'create':
                     data.update({"type": partner_type})
 
-                response = getattr(requests, method)(url, data=json.dumps(data))
-                if response.status_code == 200:
-                    result = response.json()
-                    if result['response_code'] == "00":
-                        self.api_message = _('Success')
-                        self.api_state = True
-                    else:
-                        self.api_message = result['message']
-                        self.api_state = False
-                else:
-                    self.api_message = response.reason
-                    self.api_state = False
+                result = self._paylox_api_save(acquirer, method, data)
+                self.write({
+                    'api_state': result['state'],
+                    'api_message': result['message'],
+                })
 
     def action_api_query(self):
         if self.partner_id.system:
@@ -285,6 +294,10 @@ class Partner(models.Model):
         op = 'in' if operator * operand == 1 else 'not in'
         return [('id', op, ids)]
 
+    def _compute_field_bank_ids_api(self):
+        for partner in self:
+            partner.field_bank_ids_api = True
+
     system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -305,6 +318,7 @@ class Partner(models.Model):
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
     paylox_tax_office = fields.Char('Tax Office')
+    field_bank_ids_api = fields.Boolean(compute='_compute_field_bank_ids_api')
 
     @api.model
     def default_get(self, fields):
