@@ -94,7 +94,7 @@ class PaymentTransaction(models.Model):
         if self.source_transaction_id and not self.source_transaction_id.jetcheckout_connector_sent:
             return
 
-        if not self.source_transaction_id and not self.state == 'done' and not self.source_transaction_id.jetcheckout_connector_sent:
+        if not self.source_transaction_id and self.state not in ('done', 'cancel'):
             return
 
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
