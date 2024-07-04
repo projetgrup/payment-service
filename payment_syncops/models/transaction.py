@@ -98,6 +98,8 @@ class PaymentTransaction(models.Model):
             return
 
         if self.state in self.acquirer_id.syncops_excluded_state_ids.mapped('value'):
+            if self.jetcheckout_connector_sent:
+                self.write({'jetcheckout_connector_state': False})
             return
 
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
