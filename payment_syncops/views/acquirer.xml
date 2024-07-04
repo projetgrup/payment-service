@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acquirer_form" model="ir.ui.view">
+    <field name="model">payment.acquirer</field>
+    <field name="inherit_id" ref="payment_jetcheckout.acquirer_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='country_ids']" position="after">
+            <separator string="syncOPS" colspan="2"/>
+            <field name="syncops_excluded_state_ids" string="Excluded States" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>
