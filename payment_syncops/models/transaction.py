@@ -97,6 +97,9 @@ class PaymentTransaction(models.Model):
         if not self.source_transaction_id and self.state not in ('done', 'cancel'):
             return
 
+        if self.state in self.acquirer_id.syncops_excluded_state_ids.mapped('value'):
+            return
+
         vat = self.jetcheckout_connector_partner_vat or self.partner_id.vat
         ref = self.jetcheckout_connector_partner_ref or self.partner_id.ref
         name = self.jetcheckout_connector_partner_name or self.partner_id.name
