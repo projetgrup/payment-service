@@ -254,10 +254,10 @@ class PaymentDasboard(models.Model):
         query = f"""
             SELECT
                 COUNT(*) AS total_count,
-                SUM(t.{field}) AS total_amount,
-                AVG(t.{field}) AS average_amount,
+                COALESCE(SUM(t.{field}), 0) AS total_amount,
+                COALESCE(AVG(t.{field}), 0) AS average_amount,
                 SUM(CASE WHEN t.state = 'done' THEN 1 ELSE 0 END) AS success_count,
-                SUM(CASE WHEN t.state = 'done' THEN t.{field} ELSE 0 END) AS success_amount,
+                COALESCE(SUM(CASE WHEN t.state = 'done' THEN t.{field} ELSE 0 END), 0) AS success_amount,
                 SUM(CASE WHEN t.jetcheckout_installment_count = 1 AND t.state = 'done' THEN 1 ELSE 0 END) AS advance_count,
                 c.name AS currency_name,
                 c.id AS currency_id
