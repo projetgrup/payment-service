@@ -17,6 +17,7 @@
     'data': [
         'data/data.xml',
         'views/transaction.xml',
+        'views/acquirer.xml',
         'views/templates.xml',
         'views/settings.xml',
         'views/user.xml',
