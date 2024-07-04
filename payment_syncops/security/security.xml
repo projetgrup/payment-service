@@ -9,6 +9,10 @@
             <field name="name">Check Partner IBAN</field>
             <field name="category_id" ref="payment_jetcheckout_system.module_category_system_technical"/>
         </record>
+        <record model="res.groups" id="group_check_card">
+            <field name="name">Check Credit Card Number</field>
+            <field name="category_id" ref="payment_jetcheckout_system.module_category_system_technical"/>
+        </record>
         <record model="res.groups" id="payment_jetcheckout_system.group_system_manager">
             <field name="implied_ids" eval="[(4, ref('group_sync'))]"/>
         </record>

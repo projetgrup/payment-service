@@ -206,26 +206,36 @@ class PayloxSyncopsController(Controller):
 
     def _get_tx_values(self, **kwargs):
         vals = super()._get_tx_values(**kwargs)
-        partner = self._get('syncops')
+        user = request.env.user
+        company = request.env.company
+        connector_partner = self._get('syncops')
+        partner = self._get_partner(kwargs['partner'], parent=True)
+        if 'number' in kwargs['card'] and company.syncops_check_card:# and user.has_group('payment_syncops.group_check_card'):
+            vat = connector_partner and connector_partner['vat'] or partner.vat
+            result, message = self.env['syncops.connector'].sudo()._execute('other_get_ozan_card', params={
+                'vat': vat,
+                'number': str(kwargs['card']['number']),
+            }, company=self.env.company, message=True)
+            if result is None:
+                raise Exception(message)
+
         path = urlparse(request.httprequest.referrer).path
         if path == '/my/payment':
-            if partner:
+            if connector_partner:
                 vals.update({
-                    'partner_name': partner['name'],
-                    'jetcheckout_connector_partner_name': partner['name'],
-                    'jetcheckout_connector_partner_vat': partner['vat'],
-                    'jetcheckout_connector_partner_ref': partner['ref'],
+                    'partner_name': connector_partner['name'],
+                    'jetcheckout_connector_partner_name': connector_partner['name'],
+                    'jetcheckout_connector_partner_vat': connector_partner['vat'],
+                    'jetcheckout_connector_partner_ref': connector_partner['ref'],
                 })
             else:
-                user = request.env.user
-                company = request.env.company
                 if  not user.share and user.partner_id.id == kwargs.get('partner', 0) \
                     and company.syncops_payment_page_partner_required \
                     and request.env['syncops.connector'].sudo().count('payment_get_partner_list', company=company):
                         raise ValidationError(_('Please select a partner'))
 
         connector = request.env['syncops.connector'].sudo().search_count([
-            ('company_id', '=', request.env.company.id),
+            ('company_id', '=', company.id),
             ('active', '=', True),
             ('connected', '=', True),
         ])
