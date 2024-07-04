@@ -9,6 +9,7 @@
         </xpath>
         <xpath expr="//group[@name='permissions']" position="inside">
             <field name="group_syncops_check_iban" string="Check Partner IBAN"/>
+            <!--<field name="group_syncops_check_card" string="Check Credit Card Number"/>-->
         </xpath>
     </field>
     </record>
