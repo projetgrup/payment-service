@@ -41,9 +41,6 @@ class PartnerBank(models.Model):
                 elif not result[0]['ok']:
                     return {'state': False, 'message': result[0]['message']}
                 iban.create({'name': data['iban']})
-        else:
-            return {'state': False, 'message': False}
-
         return super()._paylox_api_save(acquirer, method, data)
 
 
