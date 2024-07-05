@@ -294,10 +294,6 @@ class Partner(models.Model):
         op = 'in' if operator * operand == 1 else 'not in'
         return [('id', op, ids)]
 
-    def _compute_field_bank_ids_api(self):
-        for partner in self:
-            partner.field_bank_ids_api = True
-
     system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -318,7 +314,6 @@ class Partner(models.Model):
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
     paylox_tax_office = fields.Char('Tax Office')
-    field_bank_ids_api = fields.Boolean(compute='_compute_field_bank_ids_api')
 
     @api.model
     def default_get(self, fields):

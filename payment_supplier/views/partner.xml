@@ -130,14 +130,13 @@
                     <tree editable="bottom">
                         <field name="sequence" widget="handle"/>
                         <field name="acc_number"/>
-                        <field name="api_result" string=" " attrs="{'column_invisible': [('parent.field_bank_ids_api', '=', False)]}"/>
-                        <field name="api_message" optional="hide" attrs="{'column_invisible': [('parent.field_bank_ids_api', '=', False)]}"/>
-                        <field name="api_state" invisible="1" attrs="{'column_invisible': [('parent.field_bank_ids_api', '=', False)]}"/>
-                        <button name="action_api_save" string="" type="object" class="btn btn-link text-primary" icon="fa-save mr-1" attrs="{'column_invisible': [('parent.field_bank_ids_api', '=', False)], 'invisible': [('api_state', '=', True)]}"/>
-                        <button name="action_api_query" string="" type="object" class="btn btn-link text-primary" icon="fa-search mr-1" attrs="{'column_invisible': [('parent.field_bank_ids_api', '=', False)], 'invisible': [('acc_number', '=', False)]}"/>
+                        <field name="api_result" string=" "/>
+                        <field name="api_message" optional="hide"/>
+                        <field name="api_state" invisible="1"/>
+                        <button name="action_api_save" string="" type="object" class="btn btn-link text-primary" icon="fa-save mr-1" attrs="{'invisible': [('api_state', '=', True)]}"/>
+                        <button name="action_api_query" string="" type="object" class="btn btn-link text-primary" icon="fa-search mr-1" attrs="{'invisible': [('acc_number', '=', False)]}"/>
                     </tree>
                 </field>
-                <field name="field_bank_ids_api" invisible="1"/>
                 <button type="action" class="btn-link" name="64" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}" string="View accounts detail" colspan="2"/>
             </group>
         </xpath>
