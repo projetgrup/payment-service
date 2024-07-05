@@ -19,7 +19,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
-
     init: function (parent, options) {
         this._super(parent, options);
         this.card = {
