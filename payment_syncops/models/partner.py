@@ -29,7 +29,7 @@ class PartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
     def _paylox_api_save(self, acquirer, method, data):
-        if self.field_bank_ids_api:
+        if self.partner_id.field_bank_ids_api:
             iban = self.env['syncops.partner.iban'].sudo().search([('name', '=', data['iban'])])
             if not iban:
                 result, message = self.env['syncops.connector'].sudo()._execute('other_get_ozan_iban', reference=str(self.id), params={
