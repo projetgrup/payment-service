@@ -210,7 +210,7 @@ class PayloxSyncopsController(Controller):
         company = request.env.company
         connector_partner = self._get('syncops')
         partner = self._get_partner(kwargs['partner'], parent=True)
-        if 'number' in kwargs['card'] and company.syncops_check_card:# and user.has_group('payment_syncops.group_check_card'):
+        if 'number' in kwargs.get('card', {}) and company.syncops_check_card:# and user.has_group('payment_syncops.group_check_card'):
             vat = connector_partner and connector_partner['vat'] or partner.vat
             result, message = self.env['syncops.connector'].sudo()._execute('other_get_ozan_card', params={
                 'vat': vat,
