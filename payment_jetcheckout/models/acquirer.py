@@ -590,6 +590,7 @@ class PaymentAcquirer(models.Model):
 
             if options.get('simulate'):
                 url = '%s/api/v1/payment/simulation' % self._get_paylox_api_url()
+            
                 response = requests.post(url, data=json.dumps(data))
                 if response.status_code == 200:
                     result = response.json()
@@ -600,10 +601,12 @@ class PaymentAcquirer(models.Model):
                     amount_total = float_round(amount + amount_customer, 2)
                     amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
                     amount_integer = round(amount_total * 100)
+                    hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
                     if result['response_code'] == "00":
                         tx.write({
                             'amount': amount_total,
                             'fees': amount_cost,
+                            'callback_hash': hash,
                             'jetcheckout_payment_amount': amount,
                             'jetcheckout_commission_rate': installment['corate'],
                             'jetcheckout_commission_amount': amount_cost,
@@ -611,6 +614,7 @@ class PaymentAcquirer(models.Model):
                             'jetcheckout_customer_amount': amount_customer,
                         })
                         data.update({
+                            "hash_data": hash,
                             "amount": amount_integer,
                         })
                 else:

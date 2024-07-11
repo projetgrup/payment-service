@@ -14,6 +14,8 @@
             <field name="partner_id" string="Partner" options="{'no_create': True}" attrs="{'readonly': [('paid', '=', True)]}"/>
             <field name="token_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('paid', '=', True)]}"/>
             <field name="amount" attrs="{'readonly': [('paid', '=', True)]}"/>
+            <field name="amount_paid" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
+            <field name="amount_cost" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <field name="installment_count" string="Installment" attrs="{'readonly': [('paid', '=', True)]}" optional="show" class="text-center"/>
             <field name="paid"/>
             <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
