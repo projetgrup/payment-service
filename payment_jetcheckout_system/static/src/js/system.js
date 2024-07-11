@@ -804,7 +804,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         setTimeout(() => {
             $('.o_notification_manager').css('z-index', 999);
             $('.o_notification_body .o_button_link_send').off('click').on('click', (ev) => {
-                this._onClickLinkShare(ev, link);
+                this._onClickLinkShare(ev);
             });
         }, 500);
     },

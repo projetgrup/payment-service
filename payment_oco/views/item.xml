@@ -9,7 +9,7 @@
         <xpath expr='//field[@name="child_id"]' position="replace"/>
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
         <xpath expr='//field[@name="campaign_id"]' position="before">
-            <field name="parent_id" string="Vendor" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'oco'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" required="1"/>
+            <field name="parent_id" string="Vendor" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'oco'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), ('company_id', '=', company_id)]" required="1"/>
             <field name="child_id" string="Authorized" readonly="1" force_save="1" context="{'active_system': 'oco'}" options="{'no_open': True, 'no_create': True}"/>
         </xpath>
     </field>
