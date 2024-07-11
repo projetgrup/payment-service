@@ -127,7 +127,7 @@ class PaymentPlan(models.Model):
             'campaign': '',
         }
 
-        result = acquirer.action_payment(**data)
+        result = acquirer.action_payment(options={'simulate': True}, **data)
         if result.get('ok'):
             self.write({'transaction_ids': [(4, result['id'])]})
         else:

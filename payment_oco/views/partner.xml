@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="parent_tree" model="ir.ui.view">
+    <field name="name">res.oco.parent.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="after">
+            <field name="campaign_id" string="Campaign" optional="show"/>
+            <field name="is_portal" string="Authorized"/>
+            <field name="is_contactless" invisible="1"/>
+        </xpath>
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="user_id" optional="hide"/>
+            <field name="team_id" optional="hide"/>
+            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" optional="hide"/>
+        </xpath>
+        <xpath expr='//tree' position="inside">
+            <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link" groups="payment_jetcheckout_system.group_show_payment_link"/>
+            <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card" attrs="{'invisible': [('is_portal', '=', False)]}"/>
+            <button name="action_redirect_contactless_payment_page" type="object" string="Contactless Payment" icon="fa-clone" attrs="{'invisible': [('is_contactless', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="parent_kanban" model="ir.ui.view">
+    <field name="name">res.oco.parent.kanban</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr='//div[@class="oe_kanban_details"]/ul' position="after">
+            <div t-if="!record.parent_id.raw_value" class="o_row">
+                <button name="action_redirect_payment_link" type="object" class="btn btn-secondary" groups="payment_jetcheckout_system.group_show_payment_link"><i class="fa fa-link mr-2"/>Payment Link</button>
+                <t t-if="record.is_portal.raw_value">
+                    <button name="action_redirect_payment_page" type="object" class="btn btn-secondary"><i class="fa fa-credit-card mr-2"/>Payment Page</button>
+                </t>
+                <t t-if="record.is_contactless.raw_value">
+                    <button name="action_redirect_contactless_payment_page" type="object" class="btn btn-secondary"><i class="fa fa-clone mr-2"/>Contactless Payment</button>
+                </t>
+            </div>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="parent_form" model="ir.ui.view">
+    <field name="name">res.oco.parent.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="before">
+            <span class="o_form_label o_td_label" name="address_name">
+                <b>Address</b>
+            </span>
+            <div class="o_address_format">
+                <field name="street" placeholder="Street..." class="o_address_street"/>
+                <!--<field name="street2" placeholder="Street 2..." class="o_address_street"/>-->
+                <field name="city" placeholder="City" class="o_address_city"/>
+                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+            </div>
+        </xpath>
+        <xpath expr='//field[@name="mobile"]' position="before">
+            <field name="phone" widget="phone"/>
+        </xpath>
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="email"]' position="attributes">
+            <attribute name="required">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="campaign_ids"]' position="after">
+            <field name="payment_product_categ_ids" domain="[('system', '!=', False), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" groups="payment_system_product.group_product"/>
+        </xpath>
+        <xpath expr='//page[@name="siblings"]' position="replace"/>
+        <xpath expr='//page[@name="children"]' position="attributes">
+            <attribute name="string">Contacts</attribute>
+        </xpath>
+        <xpath expr='//field[@name="child_ids"]' position="replace">
+            <field name="child_ids" mode="kanban" context="{'kanban_view_ref' : 'payment_oco.child_kanban', 'form_view_ref': 'payment_oco.child_form', 'default_is_company': False, 'active_child': 1, 'default_parent_id': active_id, 'default_lang': lang}"/>
+        </xpath>
+        <xpath expr='//group[@name="general"]' position="inside">
+            <field name="paylox_tax_office"/>
+            <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
+        </xpath>
+        <xpath expr='//notebook' position="inside">
+            <page name="other" string="Other">
+                <group>
+                    <group string="Representatives">
+                        <field name="user_id" options="{'no_create': True}" domain="[('share', '=', False)]"/>
+                        <field name="team_id" options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </page>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="parent_search" model="ir.ui.view">
+    <field name="name">res.oco.parent.search</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="before">
+            <field name="ref"/>
+        </xpath>
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="mobile"/>
+            <field name="user_id"/>
+            <field name="team_id"/>
+        </xpath>
+        <xpath expr='//group' position="inside">
+            <filter string="Sales Person" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+            <filter string="Sales Team" name="groupby_salesteam" domain="[]" context="{'group_by':'team_id'}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_tree" model="ir.ui.view">
+    <field name="name">res.oco.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="ref"/>
+        </xpath>
+        <xpath expr='//field[@name="date_email_sent"]' position="replace"/>
+        <xpath expr='//field[@name="date_sms_sent"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_form" model="ir.ui.view">
+    <field name="name">res.oco.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="company_id"]' position="before">
+            <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
+            <field name="is_company" invisible="1"/>
+        </xpath>
+        <xpath expr='//field[@name="mobile"]' position="before">
+            <field name="phone" widget="phone"/>
+        </xpath>
+        <xpath expr='//group[@name="communication"]' position="replace"/>
+        <xpath expr='//group[@name="payment"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
+        <xpath expr='//notebook' position="replace"/>
+    </field>
+    </record>
+
+    <record id="child_kanban" model="ir.ui.view">
+    <field name="name">res.oco.child.kanban</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('oe_kanban_details')]//div[hasclass('o_row')]" position="attributes">
+            <attribute name="t-if">true</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="child_search" model="ir.ui.view">
+    <field name="name">res.oco.search</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="after">
+            <field name="ref"/>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_company"]' position="before">
+            <filter string="Vendor" name="groupby_parent" domain="[]" context="{'group_by':'parent_id'}"/>
+        </xpath>
+        <xpath expr='//separator' position="replace"/>
+        <xpath expr='//filter[@name="filterby_payment"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_no_payment"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_today"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_before"]' position="replace"/>
+        <xpath expr='//filter[@name="filterby_email_sent_no"]' position="replace"/>
+    </field>
+    </record>
+</odoo>

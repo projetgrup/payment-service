@@ -29,7 +29,7 @@ class BaseRestServiceAPISpec(APISpec):
             url = "/web/image/res.company/%s/logo" % company.id
 
         super(BaseRestServiceAPISpec, self).__init__(
-            title=_("%s REST Services") % self._service._usage.capitalize(),
+            title=_("%s REST Services") % self._service._name.title(),
             openapi_version="3.0.0",
             version="",
             info={

@@ -71,7 +71,6 @@ class PaymentTransaction(models.Model):
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
 
-    jetcheckout_contactless_ok = fields.Boolean('Paylox Contactless Payment', readonly=True, copy=False) #TODO remove
     jetcheckout_payment_type = fields.Selection(selection=[
         ('virtual_pos', 'Virtual PoS'),
         ('physical_pos', 'Physical PoS'),
@@ -277,6 +276,20 @@ class PaymentTransaction(models.Model):
         else:
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
         return values
+
+    def _paylox_auth_postprocess_values(self):
+        return {
+            'state': 'authorized',
+            'is_post_processed': True,
+            'last_state_change': fields.Datetime.now(),
+            'state_message': _('Provision is successful.'),
+        }
+
+    def _paylox_auth_postprocess(self):
+        if not self.state == 'auth':
+            self.write(self._paylox_auth_postprocess_values())
+        self.paylox_verify_token()
+        self.paylox_order_confirm()
 
     def _paylox_done_postprocess_values(self):
         return {

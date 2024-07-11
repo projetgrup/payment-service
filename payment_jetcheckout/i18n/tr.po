@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-11 09:39+0000\n"
-"PO-Revision-Date: 2024-05-11 12:44+0300\n"
+"POT-Creation-Date: 2024-07-11 09:43+0000\n"
+"PO-Revision-Date: 2024-07-11 12:48+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -19,6 +19,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "%s (Error Code: %s)"
@@ -693,6 +694,7 @@ msgstr "Yetki Kodu"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__authorized
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Authorized"
 msgstr "Yetkili"
 
@@ -1166,54 +1168,44 @@ msgid "Credit Card"
 msgstr "Kredi Kartı"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_3d
-msgid "Credit Card 3D"
-msgstr "Kredi Kartı 3D"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_expiry
+msgid "Credit Card Expiry"
+msgstr "Kredi Kartı Son Tarihi"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_cvc
-msgid "Credit Card CVC"
-msgstr "Kredi Kartı CVC"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_family
+msgid "Credit Card Family"
+msgstr "Kredi Kartı Ailesi"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_expiry_month
-msgid "Credit Card Expiry Month"
-msgstr "Kredi Kartı Son Ay"
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_expiry_year
-msgid "Credit Card Expiry Year"
-msgstr "Kredi Kartı Son Yıl"
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_holder
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_holder
 msgid "Credit Card Holder"
 msgstr "Kart Sahibi Adı"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_installment
-msgid "Credit Card Installment"
-msgstr "Kredi Kartı Taksit"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_limit_card
+msgid "Credit Card Limit"
+msgstr "Kredi Kartı Limiti"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_number
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_number
 msgid "Credit Card Number"
 msgstr "Kredi Kartı Numarası"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_save
-msgid "Credit Card Save"
-msgstr "Kredi Kartını Kaydet"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_security
+msgid "Credit Card Security"
+msgstr "Kredi Kartını Güvenlik Kodu"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_token
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_ref
 msgid "Credit Card Token"
 msgstr "Kredi Kart Tokeni"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_userkey
-msgid "Credit Card User Key"
-msgstr "Kredi Kartı Kullanıcı Anahtarı"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_type
+msgid "Credit Card Type"
+msgstr "Kredi Kart Türü"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer_jetcheckout_api_excluded__card_type__credit-business
@@ -2199,11 +2191,6 @@ msgid "Paylox Campaigns"
 msgstr "Paylox Kampanyalar"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_contactless_ok
-msgid "Paylox Contactless Payment"
-msgstr "Paylox Temassız Ödeme"
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_journal_ids
 msgid "Paylox Journal"
 msgstr "Paylox Yevmiye"
@@ -2436,6 +2423,13 @@ msgid "Please activate this record before selecting it"
 msgstr "Lütfen bu kaydı seçmeden önce onu etkinleştirin"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
+#, python-format
+msgid "Please check whether the card is verified."
+msgstr "Lütfen kredi kartının onaylandığından emin olunuz."
+
+#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/wizards/transaction_import.py:0
 #, python-format
 msgid "Please create a \"Amount\" column"
@@ -2606,6 +2600,22 @@ msgstr "Program"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__payment_org_id
 msgid "Provider"
 msgstr "Sağlayıcı"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
+msgid "Provision"
+msgstr "Provizyon"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Provision is successful."
+msgstr "Provizyon başarılı."
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_result
+msgid "Provision is successful. Thank you."
+msgstr "Provizyon başarılı. Teşekkür ederiz."
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.prestatus_form
@@ -2937,6 +2947,13 @@ msgid "Threed"
 msgstr "3D İşlemi"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/token.py:0
+#, python-format
+msgid ""
+"Token \"%s\" cannot be deleted because of it has been used in a transaction."
+msgstr "\"%s\" kredi kartı jetonu, bir işlemde kullanıldığı için silinemiyor."
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__total
@@ -2958,6 +2975,11 @@ msgstr "Toplam Ödeme"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_transaction
 msgid "Transaction"
 msgstr "İşlem"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_limit_tx
+msgid "Transaction Based Limit"
+msgstr "İşlem Bazlı Limit"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_prestatus__transaction_id
@@ -3004,6 +3026,7 @@ msgstr "İşlem başarısız"
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
 #, python-format
 msgid "Transaction is pending..."
 msgstr "İşlem bekliyor..."
@@ -3283,6 +3306,21 @@ msgstr "https://app.jetcheckout.com"
 msgid "jetcheckout"
 msgstr "jetcheckout"
 
+#~ msgid "Credit Card 3D"
+#~ msgstr "Kredi Kartı 3D"
+
+#~ msgid "Credit Card CVC"
+#~ msgstr "Kredi Kartı CVC"
+
+#~ msgid "Credit Card Expiry Month"
+#~ msgstr "Kredi Kartı Son Ay"
+
+#~ msgid "Credit Card Installment"
+#~ msgstr "Kredi Kartı Taksit"
+
+#~ msgid "Credit Card User Key"
+#~ msgstr "Kredi Kartı Kullanıcı Anahtarı"
+
 #~ msgid "Contactless"
 #~ msgstr "Temassız"
 
@@ -3361,9 +3399,6 @@ msgstr "jetcheckout"
 
 #~ msgid "Name must be unique"
 #~ msgstr "Seçilen ad, benzersiz olmalı"
-
-#~ msgid "Providers"
-#~ msgstr "PoS Sağlayıcılar"
 
 #, python-format
 #~ msgid "Journal credit account missing"

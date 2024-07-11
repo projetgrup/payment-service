@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="item_tree" model="ir.ui.view">
+    <field name="name">payment.item.oco.tree</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//field[@name="campaign_id"]' position="before">
+            <field name="parent_id" string="Vendor" force_save="1" options="{'no_open': True, 'no_create': True}" domain="context.get('domain') and [('id','in',context['domain']), ('system', '=', context.get('active_system'))] or [('system', '=', 'oco'), ('system', '=', context.get('active_system')), ('parent_id', '=', False), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" required="1"/>
+            <field name="child_id" string="Authorized" readonly="1" force_save="1" context="{'active_system': 'oco'}" options="{'no_open': True, 'no_create': True}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="item_search" model="ir.ui.view">
+    <field name="name">payment.item.oco.search</field>
+    <field name="model">payment.item</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.item_search"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="child_id"]' position="replace"/>
+        <xpath expr='//field[@name="parent_id"]' position="replace">
+            <field name="parent_id" string="Vendor"/>
+            <field name="child_id" string="Authorized"/>
+        </xpath>
+        <xpath expr='//filter[@name="groupby_child"]' position="replace"/>
+        <xpath expr='//filter[@name="groupby_parent"]' position="attributes">
+            <attribute name="string">Vendor</attribute>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -2,7 +2,7 @@
 <odoo>
     <template id="payment_receipt">
 		<t t-call="web.html_container">
-            <t t-foreach="docs.filtered(lambda x: x.state == 'done')" t-as="doc">
+            <t t-foreach="docs.filtered(lambda x: x.state in ('authorized', 'done'))" t-as="doc">
                 <t t-set="company" t-value="doc.company_id or doc.env.company"/>
                 <t t-set="website" t-value="doc.jetcheckout_website_id or doc.acquirer_id.website_id"/>
                 <div class="header">
@@ -10,6 +10,9 @@
                         <table width="709" border="0" class="d-block mx-auto" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="text-uppercase text-center font-weight-bold text-700"><h4 t-if="is_conveyance">Conveyance</h4><h4 t-else="">Receipt</h4></td>
+                            </tr>
+                            <tr t-if="doc.state == 'authorized'">
+                                <td class="text-uppercase text-center font-weight-bold font-italic text-600 pb-3"><h5>Provision</h5></td>
                             </tr>
                             <tr>
                                 <td width="644">

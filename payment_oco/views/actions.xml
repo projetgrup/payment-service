@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_child" model="ir.actions.act_window">
+    <field name="name">Contacts</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','oco'),('parent_id','!=',False),('partner_share','!=',False)]</field>
+    <field name="context">{'active_system': 'oco', 'active_child': True, 'default_system': 'oco', 'default_is_company': False}</field>
+    <field name="search_view_id" ref="child_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a contact
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('child_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('child_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_parent" model="ir.actions.act_window">
+    <field name="name">Vendors</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system','=','oco'),('parent_id','=',False),('partner_share','!=',False)]</field>
+    <field name="context">{'active_system': 'oco', 'active_parent': True, 'default_system': 'oco', 'default_is_company': True}</field>
+    <field name="search_view_id" ref="parent_search"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a vendor
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('parent_tree')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('parent_kanban')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('parent_form')}),
+    ]"/>
+    </record>
+
+    <record id="action_item" model="ir.actions.act_window">
+    <field name="name">Collections</field>
+    <field name="res_model">payment.item</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="search_view_id" ref="item_search"/>
+    <field name="domain">[('system', '=', 'oco')]</field>
+    <field name="context">{'active_system': 'oco'}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No collections yet
+        </p>
+        <p>
+            Created collections are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout_system.item_pivot')}),
+    ]"/>
+    </record>
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+    <field name="name">Orders</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">sale.order</field>
+    <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+    <field name="domain">[('system', '=', 'oco')]</field>
+    <field name="context">{'create': False}</field>
+    <!--<field name="search_view_id" ref="search_sale_order"/>-->
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_sale_order')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_sale_order')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_sale_order')}),
+    ]"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Sale Orders
+        </p>
+        <p>
+            All sale orders are listed here
+        </p>
+    </field>
+    </record>
+
+    <record id="action_order_amount" model="ir.actions.act_window">
+    <field name="name">Order Confirmed Amount</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.oco.sale.order.amount</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+
+    <record id="action_settings" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">payment.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field name="context">{'active_system' : 'oco'}</field>
+    </record>
+</odoo>

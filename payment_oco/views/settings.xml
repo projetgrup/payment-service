@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.oco.form</field>
+    <field name="model">payment.settings</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@data-key='general_settings']" position="after">
+            <div class="app_settings_block" data-string="Vendors" string="Vendors" data-key="payment_oco" invisible="context.get('active_system') != 'oco'">
+                <h2>Vendors</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="system_agreement"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="system_agreement"/>
+                            <div class="text-muted">
+                                Define agreements to facilitate receiving payments
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="system_product"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="system_product"/>
+                            <div class="text-muted">
+                                Define products to facilitate receiving payments
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="payment_page_amount_editable"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_page_amount_editable" string="Editable Payment Amount"/>
+                            <div class="text-muted">
+                                Allow dealers to edit payable amount on payment link
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

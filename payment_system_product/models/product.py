@@ -282,6 +282,10 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.company.system:
+            for vals in vals_list:
+                vals['system'] = self.env.company.system
+                vals['company_id'] = self.env.company.id
         res = super().create(vals_list)
         res._broadcast_price()
         return res
