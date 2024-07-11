@@ -12,7 +12,7 @@
                                 <td class="text-uppercase text-center font-weight-bold text-700"><h4 t-if="is_conveyance">Conveyance</h4><h4 t-else="">Receipt</h4></td>
                             </tr>
                             <tr t-if="doc.state == 'authorized'">
-                                <td class="text-uppercase text-center font-weight-bold font-italic text-600 pb-3"><h5>Provision</h5></td>
+                                <td class="text-uppercase text-center font-weight-bold font-italic text-600 pb-3"><h5>Pre-Authorization</h5></td>
                             </tr>
                             <tr>
                                 <td width="644">

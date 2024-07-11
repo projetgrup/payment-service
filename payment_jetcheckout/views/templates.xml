@@ -606,7 +606,7 @@
                             </div>
                         </h4>
                         <h4 t-elif="tx != False and tx.state == 'authorized'" class="font-weight-bold m-3 p-3 text-center w-100 text-800">
-                            <div class="text-center w-100">Provision is successful. Thank you.</div>
+                            <div class="text-center w-100">Payment has been held on pre-authorization.</div>
                             <div class="row w-100 mt-2">
                                 <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-file-text-o mr-2" t-translation="off"/>Receipt</a></div>
                                 <div class="p-3 col-md-6"><a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-secondary btn-block font-weight-bold text-uppercase" target="_blank"><i class="fa fa-edit mr-2" t-translation="off"/>Conveyance</a></div>

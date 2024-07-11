@@ -18,5 +18,8 @@ class PayloxSystemOcoController(Controller):
     def _get_data_values(self, data, **kwargs):
         values = super()._get_data_values(data, **kwargs)
         if request.env.company.system == 'oco':
-            values.update({'is_preauth': True})
+            values.update({
+                #'is_3d': False,
+                'is_preauth': True
+            })
         return values

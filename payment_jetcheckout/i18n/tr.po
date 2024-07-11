@@ -2603,19 +2603,19 @@ msgstr "Sağlayıcı"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
-msgid "Provision"
-msgstr "Provizyon"
+msgid "Pre-Authorization"
+msgstr "Ön Provizyon"
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
-msgid "Provision is successful."
-msgstr "Provizyon başarılı."
+msgid "Payment has been held on pre-authorization."
+msgstr "Ödeme ön provizyona alındı."
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_result
-msgid "Provision is successful. Thank you."
-msgstr "Provizyon başarılı. Teşekkür ederiz."
+msgid "Payment has been held on pre-authorization."
+msgstr "Ödeme ön provizyona alındı."
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.prestatus_form
