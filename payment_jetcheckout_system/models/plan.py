@@ -35,10 +35,14 @@ class PaymentPlan(models.Model):
                 plan.paid = True
                 plan.paid_date = transaction[0].last_state_change
                 plan.message = transaction[0].state_message
+                plan.amount_paid = transaction[0].jetcheckout_payment_paid
+                plan.amount_cost = transaction[0].jetcheckout_commission_amount
             else:
                 plan.paid = False
                 plan.paid_date = False
                 plan.message = False
+                plan.amount_paid = False
+                plan.amount_cost = False
 
     name = fields.Char(compute='_compute_name')
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
@@ -50,6 +54,8 @@ class PaymentPlan(models.Model):
     message = fields.Char(readonly=True, compute='_compute_paid', store=True)
     paid = fields.Boolean(readonly=True, compute='_compute_paid', store=True)
     paid_date = fields.Datetime(readonly=True, compute='_compute_paid', store=True)
+    amount_paid = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Paid Amount')
+    amount_cost = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Cost Amount')
     installment_count = fields.Integer(readonly=True, default=1)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True)
     system = fields.Selection(related='item_id.system', readonly=True, store=True)

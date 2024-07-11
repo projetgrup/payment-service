@@ -258,7 +258,7 @@
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="system" type="hidden" value="api" field="system"/>
-                    <t t-if="tx.state == 'draft'" t-call="payment_jetcheckout.s2s">
+                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
                         <t t-set="amount" t-value="tx.amount"/>
                         <t t-set="no_border" t-value="True"/>
                         <t t-set="no_loading" t-value="True"/>

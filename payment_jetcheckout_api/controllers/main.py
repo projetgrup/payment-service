@@ -52,7 +52,7 @@ class PayloxApiController(Controller):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
-            ('state', '=', 'draft')
+            ('state', 'in', ('draft', 'pending', 'error'))
         ], limit=1)
         if not tx:
             raise ValidationError(_('An error occured. Please restart your payment transaction.'))
@@ -80,7 +80,7 @@ class PayloxApiController(Controller):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
-            ('state', 'in', ('draft', 'cancel', 'expired'))
+            #('state', 'in', ('draft', 'cancel', 'expired'))
         ], limit=1)
         if not tx:
             raise NotFound()
@@ -112,7 +112,7 @@ class PayloxApiController(Controller):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '=', hash),
-            ('state', 'in', ('draft', 'cancel', 'expired'))
+            #('state', 'in', ('draft', 'cancel', 'expired'))
         ], limit=1)
         if not tx:
             raise NotFound()
