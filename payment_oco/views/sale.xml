@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="name">payment.oco.sale.order.form</field>
+    <field name="model">sale.order</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='note_group']" position="before">
+            <div class="oe_right" attrs="{'invisible': [('state', 'in', ('cancel', 'done'))]}">
+                <button name="system_oco_update_amount_confirmed" type="object" string="Update Confirmed Amount"/>
+            </div>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="kanban_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+    <field name="name">payment.oco.sale.order.kanban</field>
+    <field name="model">sale.order</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <xpath expr="//strong/field[@name='amount_total']" position="after">
+            <button t-if="!['cancel', 'done'].includes(record.state.raw_value)" name="system_oco_update_amount_confirmed" type="object" icon="fa-money mr4" string="Update Confirmed Amount"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="tree_sale_order" model="ir.ui.view">
+    <field name="inherit_id" ref="sale.view_order_tree"/>
+    <field name="name">payment.oco.sale.order.tree</field>
+    <field name="model">sale.order</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='amount_total']" position="after">
+            <field name="amount_confirmed" widget="monetary"/>
+            <button name="system_oco_update_amount_confirmed" type="object" icon="fa-money mr4" string="Update Confirmed Amount" attrs="{'invisible': [('state', 'in', ('cancel', 'done'))]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="form_sale_order_amount" model="ir.ui.view">
+    <field name="name">payment.oco.sale.order.amount.form</field>
+    <field name="model">payment.oco.sale.order.amount</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <h3 class="text-center">Please enter amount to confirm</h3>
+                <field name="amount" class="h2 mt-4 text-center w-100 text-700"/>
+                <field name="currency_id" invisible="1"/>
+            </sheet>
+            <footer>
+                <button name="confirm" type="object" string="Confirm" class="btn-primary"/>
+                <button name="cancel" special="cancel" string="Close" class="btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+    </record>
+
+    <!--<record id="search_sale_order" model="ir.ui.view">
+    <field name="name">payment.oco.sale.order.search</field>
+    <field name="model">sale.order</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="company_id" groups="base.group_multi_company,base.group_system"/>
+            <filter name="favorite" string="Favorites" domain="[('priority', '=', '1')]"/>
+            <group expand="0" string="Groupby">
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company,base.group_system"/>
+            </group>
+        </search>
+    </field>
+    </record>-->
+</odoo>

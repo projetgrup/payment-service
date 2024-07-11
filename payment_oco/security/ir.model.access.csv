@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_oco_sale_order_amount,access_payment_oco_sale_order_amount,model_payment_oco_sale_order_amount,group_oco_user,1,1,1,1

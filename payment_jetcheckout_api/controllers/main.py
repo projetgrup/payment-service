@@ -36,11 +36,12 @@ class PayloxApiController(Controller):
         elif 'hash' in kwargs:
             hash = unquote(kwargs['hash'])
             self._set('hash', hash)
-
-        if not hash:
-            if raise_exception:
-                raise NotFound()
-            return False
+        else:
+            hash = self._get('hash')
+            if not hash:
+                if raise_exception:
+                    raise NotFound()
+                return False
         return hash
 
     def _get_transaction(self):
@@ -62,7 +63,7 @@ class PayloxApiController(Controller):
         if transaction and transaction.jetcheckout_api_ok:
             values.update({
                 'partner_name': transaction.partner_name,
-            })
+        })
         return values
 
     def _process(self, **kwargs):
