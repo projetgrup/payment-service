@@ -362,7 +362,7 @@ class PaymentAcquirer(models.Model):
         action['context'] = {'default_acquirer_id': self.id, 'application': True}
         return action
 
-    def action_payment(self, **kwargs):
+    def action_payment(self, options={}, **kwargs):
         partner = kwargs['partner']
         currency = kwargs['currency']
 
@@ -520,7 +520,6 @@ class PaymentAcquirer(models.Model):
 
             #self._set('tx', tx.id)
 
-            url = '%s/api/v1/payment' % self._get_paylox_api_url()
             fullname = tx.partner_name.split(' ', 1)
             address = []
             if tx.partner_city:
@@ -588,6 +587,43 @@ class PaymentAcquirer(models.Model):
                 })
 
             #data.update(self._get_data_values(data, **kwargs))
+
+            if options.get('simulate'):
+                url = '%s/api/v1/payment/simulation' % self._get_paylox_api_url()
+                response = requests.post(url, data=json.dumps(data))
+                if response.status_code == 200:
+                    result = response.json()
+                    installment['crate'] = result['expected_customer_rate']
+                    installment['corate'] = result['expected_cost_rate']
+                    amount = float(kwargs['amount'])
+                    amount_customer = amount * installment['crate'] / 100
+                    amount_total = float_round(amount + amount_customer, 2)
+                    amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
+                    amount_integer = round(amount_total * 100)
+                    if result['response_code'] == "00":
+                        tx.write({
+                            'amount': amount_total,
+                            'fees': amount_cost,
+                            'jetcheckout_payment_amount': amount,
+                            'jetcheckout_commission_rate': installment['corate'],
+                            'jetcheckout_commission_amount': amount_cost,
+                            'jetcheckout_customer_rate': installment['crate'],
+                            'jetcheckout_customer_amount': amount_customer,
+                        })
+                        data.update({
+                            "amount": amount_integer,
+                        })
+                else:
+                    tx.state = 'error'
+                    message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'error': message}
+
+            url = '%s/api/v1/payment' % self._get_paylox_api_url()
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()

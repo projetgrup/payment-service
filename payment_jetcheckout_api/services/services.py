@@ -354,7 +354,6 @@ class PaymentAPIService(Component):
             method = codes[0]
 
         acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=providers, limit=1)
-        products = getattr(params.order, 'products', [])
         values = {
             'acquirer_id': acquirer.id,
             'partner_id': api.partner_id.id,
@@ -375,8 +374,31 @@ class PaymentAPIService(Component):
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
 
+        products = getattr(params.order, 'products', [])
         if products:
-            values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})
+            product_ids = []
+            prods = self.env['product.product'].sudo()
+            for product in products:
+                prod = prods.search([
+                    ('type', '=', 'product'),
+                    ('default_code', '=', product),
+                    '|', ('company_id', '=', self.env.company.id),
+                         ('company_id', '=', False)
+                ])
+                if not prod:
+                    prod = prods.create({
+                        'type': 'product',
+                        'name': product.name,
+                        'default_code': product.code,
+                    })
+                product_ids.append((0, 0, {
+                    'product_id': prod.id,
+                    'name': product.name,
+                    'code': product.code,
+                    'qty': product.qty
+                }))
+            values.update({'jetcheckout_api_product_ids': product_ids})
+            #values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})
 
         if getattr(params.url, 'bank', None):
             values.update({'jetcheckout_api_bank_return_url': params.url.bank.result})

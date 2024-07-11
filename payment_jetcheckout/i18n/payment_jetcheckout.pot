@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-11 09:39+0000\n"
-"PO-Revision-Date: 2024-05-11 09:39+0000\n"
+"POT-Creation-Date: 2024-07-11 09:43+0000\n"
+"PO-Revision-Date: 2024-07-11 09:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,9 @@ msgstr ""
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #: code:addons/payment_jetcheckout/models/transaction.py:0
@@ -639,6 +642,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__authorized
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "Authorized"
 msgstr ""
 
@@ -1111,53 +1115,43 @@ msgid "Credit Card"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_3d
-msgid "Credit Card 3D"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_expiry
+msgid "Credit Card Expiry"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_cvc
-msgid "Credit Card CVC"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_family
+msgid "Credit Card Family"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_expiry_month
-msgid "Credit Card Expiry Month"
-msgstr ""
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_expiry_year
-msgid "Credit Card Expiry Year"
-msgstr ""
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_holder
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_holder
 msgid "Credit Card Holder"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_installment
-msgid "Credit Card Installment"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_limit_card
+msgid "Credit Card Limit"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_number
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_number
 msgid "Credit Card Number"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_save
-msgid "Credit Card Save"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_security
+msgid "Credit Card Security"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_token
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_ref
 msgid "Credit Card Token"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_card_userkey
-msgid "Credit Card User Key"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_type
+msgid "Credit Card Type"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2150,11 +2144,6 @@ msgid "Paylox Campaigns"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_contactless_ok
-msgid "Paylox Contactless Payment"
-msgstr ""
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_journal_ids
 msgid "Paylox Journal"
 msgstr ""
@@ -2384,6 +2373,13 @@ msgid "Please activate this record before selecting it"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
+#, python-format
+msgid "Please check whether the card is verified."
+msgstr ""
+
+#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/wizards/transaction_import.py:0
 #, python-format
 msgid "Please create a \"Amount\" column"
@@ -2555,6 +2551,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__provider
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__payment_org_id
 msgid "Provider"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
+msgid "Provision"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/transaction.py:0
+#, python-format
+msgid "Provision is successful."
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_result
+msgid "Provision is successful. Thank you."
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2888,6 +2900,13 @@ msgid "Threed"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/models/token.py:0
+#, python-format
+msgid ""
+"Token \"%s\" cannot be deleted because of it has been used in a transaction."
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__total
@@ -2908,6 +2927,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_transaction_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_transaction
 msgid "Transaction"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_limit_tx
+msgid "Transaction Based Limit"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2958,6 +2982,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
+#: code:addons/payment_jetcheckout/models/acquirer.py:0
 #, python-format
 msgid "Transaction is pending..."
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-16 12:33+0000\n"
-"PO-Revision-Date: 2024-05-16 16:09+0300\n"
+"POT-Creation-Date: 2024-07-11 09:44+0000\n"
+"PO-Revision-Date: 2024-07-11 12:49+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -160,6 +160,11 @@ msgstr "API Sipariş"
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_product
 msgid "API Product"
 msgstr "API Ürün"
+
+#. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_product_ids
+msgid "API Products"
+msgstr "API Ürünleri"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_transaction__jetcheckout_api_id
@@ -408,6 +413,12 @@ msgstr ""
 "ile Havale veya EFT işlemlerinizi gerçekleştirebilirsiniz."
 
 #. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__code
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Code given by service provider"
@@ -521,11 +532,13 @@ msgstr "Ülke kodu"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__create_date
 msgid "Created on"
 msgstr "Oluşturma Tarihi"
 
@@ -657,6 +670,7 @@ msgstr "Yanıtı temsil edecek şekilde dönen açıklama"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
 
@@ -763,6 +777,7 @@ msgstr "IBAN"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.api_form
 msgid "ID"
 msgstr "ID"
@@ -872,16 +887,19 @@ msgstr "Anahtar"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme Tarihi"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncellemeyen"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme Tarihi"
 
@@ -976,6 +994,8 @@ msgstr "Aylık ödeme tutarı"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_acquirer_jetcheckout_api__name
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__name
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid "Name"
 msgstr "Ad"
 
@@ -1108,6 +1128,11 @@ msgstr "Ödeme işlemi ile ilgili iş ortağı"
 #: model:ir.model,name:payment_jetcheckout_api.model_payment_acquirer_jetcheckout_api
 msgid "Paylox API"
 msgstr "Paylox API"
+
+#. module: payment_jetcheckout_api
+#: model:ir.model,name:payment_jetcheckout_api.model_payment_jetcheckout_api_product
+msgid "Paylox API Products"
+msgstr "Paylox API Ürünleri"
 
 #. module: payment_jetcheckout_api
 #: model:ir.actions.act_window,name:payment_jetcheckout_api.action_api
@@ -1315,9 +1340,16 @@ msgid "Prepare Payment"
 msgstr "Ödeme Hazırla"
 
 #. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__product_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form
 msgid "Product"
 msgstr "Ürün"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Product Code"
+msgstr "Ürün Kodu"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1328,8 +1360,26 @@ msgstr "Ürün Adı"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Product Quantity"
+msgstr "Ürün Miktarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Product code"
+msgstr "Ürün kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Product name"
 msgstr "Ürün adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Product quantity"
+msgstr "Ürün miktarı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1342,6 +1392,16 @@ msgstr "Ürünler Listesi"
 #, python-format
 msgid "Provider Code"
 msgstr "Sağlayıcı Kodu"
+
+#. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__qty
+msgid "Qty"
+msgstr "Miktar"
+
+#. module: payment_jetcheckout_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
+msgid "Quantity"
+msgstr "Miktar"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1522,6 +1582,11 @@ msgid "Total applied installment count if exist"
 msgstr "Var ise, toplam uygulanan taksit miktarı"
 
 #. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__transaction_id
+msgid "Transaction"
+msgstr "İşlem"
+
+#. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Transaction date and time"
@@ -1605,6 +1670,11 @@ msgstr "Kart ile öde seçili ise kullanılacak URL adresleri"
 #, python-format
 msgid "UUID which is generated especially for credit card payments"
 msgstr "Özellikle kredi kart ödemeleri için üretilen UUID dizgisi"
+
+#. module: payment_jetcheckout_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_api.field_payment_jetcheckout_api_product__uom
+msgid "Unit of Measure"
+msgstr "Ölçü Birimi"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.transaction_form

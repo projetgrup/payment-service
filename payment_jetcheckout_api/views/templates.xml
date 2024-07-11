@@ -79,10 +79,10 @@
                                 <div class="position-absolute info-icon">
                                     <i class="fa fa-shopping-basket"/>
                                 </div>
-                                <div t-if="tx.jetcheckout_api_product">
+                                <div t-if="len(tx.jetcheckout_api_product_ids) == 1 and tx.jetcheckout_api_product_ids[0]['qty'] &lt;= 1.0">
                                     <strong class="text-primary font-weight-bold z-index-1">Product</strong>
                                     <p class="z-index-1">
-                                        <t t-esc="tx.jetcheckout_api_product"/>
+                                        <t t-esc="tx.jetcheckout_api_product_ids[0]['name']"/>
                                     </p>
                                 </div>
                                 <div t-elif="tx.jetcheckout_api_order">
@@ -100,6 +100,30 @@
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div t-if="tx.jetcheckout_api_product_ids" class="row mx-0 my-2 px-3">
+                        <div class="card table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th class="text-right">Quantity</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="tx.jetcheckout_api_product_ids" t-as="product">
+                                        <tr>
+                                            <td><span t-esc="product.name"/></td>
+                                            <td><span t-esc="product.code"/></td>
+                                            <td class="text-right"><span t-esc="product.qty" t-options="{'widget': 'float', 'precision': 2}"/></td>
+                                            <td><span t-esc="product.uom or ''"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div t-attf-class="row mx-0 #{classname}">
