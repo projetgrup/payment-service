@@ -10,7 +10,6 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['payment_system_sale'],
     'data': [
-        'data/data.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/item.xml',
