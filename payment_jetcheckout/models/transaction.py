@@ -461,7 +461,7 @@ class PaymentTransaction(models.Model):
         if values['successful']:
             if 'cancelled' in values and values['cancelled']:
                 self._paylox_cancel_postprocess()
-            elif values['preauth']:
+            elif 'preauth' in values and values['preauth']:
                 self._paylox_auth_postprocess()
             else:
                 self._paylox_done_postprocess()
@@ -508,6 +508,8 @@ class PaymentTransaction(models.Model):
                 'cancelled': result['cancelled'],
                 'threed': result['is_3d'],
                 'auth_code': result['auth_code'],
+                'preauth': result['preauth'],
+                'postauth': result['postauth'],
                 'card_family': result['card_family'] and result['card_family'].lower().capitalize() or '',
                 'card_program': result['card_program'] and result['card_program'].lower().capitalize() or '',
                 'bin_code': result['bin_code'],

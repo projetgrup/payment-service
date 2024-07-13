@@ -380,14 +380,16 @@ class PaymentAPIService(Component):
             prods = self.env['product.product'].sudo()
             for product in products:
                 prod = prods.search([
-                    ('type', '=', 'product'),
+                    #('type', '=', 'product'),
+                    ('type', '=', 'consu'),
                     ('default_code', '=', product),
                     '|', ('company_id', '=', self.env.company.id),
                          ('company_id', '=', False)
                 ])
                 if not prod:
                     prod = prods.create({
-                        'type': 'product',
+                        #'type': 'product',
+                        'type': 'consu',
                         'name': product.name,
                         'default_code': product.code,
                     })
