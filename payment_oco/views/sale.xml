@@ -11,6 +11,9 @@
                 <button name="system_oco_update_amount_confirmed" type="object" string="Update Confirmed Amount"/>
             </div>
         </xpath>
+        <xpath expr="//field[@name='tax_totals_json']" position="after">
+            <field name="amount_confirmed" widget="monetary"/>
+        </xpath>
     </field>
     </record>
 

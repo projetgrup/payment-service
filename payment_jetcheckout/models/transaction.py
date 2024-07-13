@@ -282,7 +282,7 @@ class PaymentTransaction(models.Model):
             'state': 'authorized',
             'is_post_processed': True,
             'last_state_change': fields.Datetime.now(),
-            'state_message': _('Provision is successful.'),
+            'state_message': _('Payment has been held on pre-authorization.'),
         }
 
     def _paylox_auth_postprocess(self):
@@ -461,6 +461,8 @@ class PaymentTransaction(models.Model):
         if values['successful']:
             if 'cancelled' in values and values['cancelled']:
                 self._paylox_cancel_postprocess()
+            elif values['preauth']:
+                self._paylox_auth_postprocess()
             else:
                 self._paylox_done_postprocess()
         else:
