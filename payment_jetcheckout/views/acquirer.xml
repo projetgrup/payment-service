@@ -181,6 +181,8 @@
                     <field name="vpos_name"/>
                     <field name="successful" widget="boolean_toggle" style="pointer-events: none;"/>
                     <field name="completed" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="preauth" widget="boolean_toggle" style="pointer-events: none;"/>
+                    <field name="postauth" widget="boolean_toggle" style="pointer-events: none;"/>
                     <field name="threed" widget="boolean_toggle" style="pointer-events: none;"/>
                     <field name="cancelled" widget="boolean_toggle" style="pointer-events: none;"/>
                 </group>
