@@ -50,6 +50,8 @@ class PaymentPayloxStatus(models.TransientModel):
     successful = fields.Boolean(readonly=True)
     completed = fields.Boolean(readonly=True)
     cancelled = fields.Boolean(readonly=True)
+    preauth = fields.Boolean(readonly=True, string='Pre-Authorization')
+    postauth = fields.Boolean(readonly=True, string='Post-Authorization')
     threed = fields.Boolean(readonly=True)
     currency_id =fields.Many2one('res.currency', readonly=True)
     amount = fields.Monetary(readonly=True)
