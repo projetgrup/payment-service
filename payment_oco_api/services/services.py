@@ -102,9 +102,9 @@ class OrderCheckoutAPIService(Component):
 
         partner = api.partner_id
         if hasattr(params, 'partner'):
-            partner = self.env['res.partner'].sudo().search([('vat', '=', params.partner.vat), ('company_id', '=', company.id)])
+            partner = self.env['res.partner'].sudo().search([('vat', '=', params.partner.vat), ('company_id', '=', company.id)]).with_company(company)
             if not partner:
-                partner = self.env['res.partner'].sudo().with_context({'no_vat_validation': True, 'active_system': 'oco'}).create({
+                partner = partner.with_context({'no_vat_validation': True, 'active_system': 'oco'}).create({
                     'is_company': True,
                     'company_id': company.id,
                     'name': params.partner.name,
@@ -118,7 +118,7 @@ class OrderCheckoutAPIService(Component):
                     'city': getattr(params.partner, 'city', '') or '',
                 })
 
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=providers, limit=1)
+        acquirer = self.env['payment.acquirer'].with_company(company)._get_acquirer(company=company, providers=providers, limit=1)
         values = {
             'acquirer_id': acquirer.id,
             'partner_id': partner.id,
@@ -142,14 +142,13 @@ class OrderCheckoutAPIService(Component):
         products = getattr(params.order, 'products', [])
         if products:
             product_ids = []
-            prods = self.env['product.product'].sudo()
+            prods = self.env['product.product'].sudo().with_context(system='oco')
             for product in products:
                 prod = prods.search([
                     #('type', '=', 'product'),
                     ('type', '=', 'consu'),
                     ('default_code', '=', product),
-                    '|', ('company_id', '=', company.id),
-                         ('company_id', '=', False)
+                    ('company_id', '=', api.company_id.id)
                 ])
                 if not prod:
                     prod = prods.create({
@@ -157,6 +156,7 @@ class OrderCheckoutAPIService(Component):
                         'type': 'consu',
                         'name': product.name,
                         'default_code': product.code,
+                        'company_id': api.company_id.id,
                     })
                 product_ids.append((0, 0, {
                     'product_id': prod.id,
@@ -172,7 +172,7 @@ class OrderCheckoutAPIService(Component):
             if getattr(params.url.bank, 'webhook', None):
                 values.update({'jetcheckout_api_bank_webhook_url': params.url.bank.webhook})
 
-        tx = self.env['payment.transaction'].sudo().create(values)
+        tx = self.env['payment.transaction'].sudo().with_company(company).create(values)
         tx.write({
             'partner_name': params.partner.name,
             'partner_vat': params.partner.vat,
