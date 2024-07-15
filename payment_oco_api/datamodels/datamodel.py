@@ -41,6 +41,7 @@ class OcoPaymentOrder(Datamodel):
 
     name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Order Name"), "description": _lt("Order name"), "example": "S123564"})
     products = fields.List(NestedModel("payment.product"), required=False, metadata={"title": _lt("Products List"), "description": _lt("List of related products")})
+    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
 
 
 class OcoPaymentUrl(Datamodel):
@@ -49,8 +50,7 @@ class OcoPaymentUrl(Datamodel):
 
     _name = "oco.payment.url"
 
-    card = NestedModel("payment.url.method", required=True, metadata={"title": _lt("Return URLs by card payment method"), "description": _lt("URL addresses when card payment is selected")})
-    bank = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by bank payment method"), "description": _lt("URL addresses when bank payment is selected")})
+    redirect = fields.String(required=True, allow_none=False, metadata={"title": _lt("Redirect URL"), "description": _lt("URL to redirect after payment operation"), "example": "https://example.com/redirect"})
 
 
 class OrderCheckoutPaymentCreate(Datamodel):
@@ -68,8 +68,6 @@ class OrderCheckoutPaymentCreate(Datamodel):
     order = NestedModel("oco.payment.order", required=True, metadata={"title": _lt("Order information related to request"), "description": _lt("Order details")})
     url = NestedModel("oco.payment.url", required=True, metadata={"title": _lt("Return URLs by payment method"), "description": _lt("URL addresses")})
     html = fields.String(metadata={"title": _lt("Custom HTML"), "description": _lt("Custom code to be viewed bottom of the page"), "example": "<p>Copyright</p>"})
-    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
-    methods = fields.List(fields.String(), required=False, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible values are 'card' and 'bank'."), "example": ["bank", "card"]})
 
 
 class OrderCheckoutPaymentOutput(Datamodel):

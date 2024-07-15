@@ -71,7 +71,7 @@ class PayloxApiController(Controller):
         if not status and tx.jetcheckout_api_hash:
             status = True
             self._del('hash')
-            url = tx.jetcheckout_api_card_return_url
+            url = tx.jetcheckout_api_card_result_url
         return url, tx, status
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
