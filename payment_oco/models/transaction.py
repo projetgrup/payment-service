@@ -6,7 +6,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     def _paylox_query(self, values={}):
-        if self.company_id.system == 'oco':
+        if values and self.company_id.system == 'oco':
             values.update({'preauth': True})
         return super()._paylox_query(values=values)
 
