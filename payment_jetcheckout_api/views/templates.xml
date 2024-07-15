@@ -7,6 +7,13 @@
         <xpath expr="//t[@t-call='payment_jetcheckout.payment_smart_button']" position="attributes">
             <attribute name="t-if">not tx.jetcheckout_api_ok</attribute>
         </xpath>
+        <xpath expr="//h4[last()]" position="after">
+            <h4 t-if="tx.jetcheckout_api_ok and tx.jetcheckout_api_card_redirect_url" class="font-weight-bold m-3 mt-n5 p-3 text-center w-100 text-800">
+                <div class="row w-100 mt-2">
+                    <div class="p-3 col-md-12"><a t-att-href="tx.jetcheckout_api_card_redirect_url" class="btn text-600 btn-block font-weight-bold text-uppercase"><i class="fa fa-undo mr-2" t-translation="off"/>Return to Order</a></div>
+                </div>
+            </h4>
+        </xpath>
     </template>
 
     <template id="layout" name="Payment Layout">
