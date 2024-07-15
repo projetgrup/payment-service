@@ -119,7 +119,7 @@ class PayloxController(http.Controller):
             else:
                 return acquirer
         else:
-            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
+            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(company=PayloxController._get('company'), website=request.website, providers=providers, limit=limit)
             PayloxController._set('acquirer', acquirer.id)
             return acquirer
 
@@ -954,6 +954,8 @@ class PayloxController(http.Controller):
             'vpos_id': kwargs.get('virtual_pos_id', 0),
             'vpos_name': kwargs.get('virtual_pos_name', ''),
             'vpos_code': kwargs.get('auth_code', ''),
+            'preauth': kwargs.get('preauth', False),
+            'postauth': kwargs.get('postauth', False),
             'commission_rate': corate,
         })
 

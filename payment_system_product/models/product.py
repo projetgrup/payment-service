@@ -10,7 +10,7 @@ from odoo.tools.safe_eval import safe_eval
 
 def _get_system(env):
     system = env.context.get('active_system') or env.context.get('system')
-    company = env.company
+    company = env.company.parent_id or env.company
     return system, company
 
 
@@ -282,10 +282,13 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if self.env.company.system:
+        company = self.env.company
+        if company.parent_id:
+            company = company.parent_id
+        if company.system:
             for vals in vals_list:
-                vals['system'] = self.env.company.system
-                vals['company_id'] = self.env.company.id
+                vals['system'] = company.system
+                vals['company_id'] = company.id
         res = super().create(vals_list)
         res._broadcast_price()
         return res
