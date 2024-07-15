@@ -12,8 +12,10 @@ class PaymentTransaction(models.Model):
 
     def _paylox_system_oco_postprocess(self):
         if not self.sale_order_ids and getattr(self, 'jetcheckout_api_product_ids', False):
+            self = self.with_company(self.company_id)
             self.sale_order_ids = [(0, 0, {
                 'partner_id': self.partner_id.id,
+                'company_id': self.company_id.id,
                 'order_line': [(0, 0, {
                     'product_id': line.product_id.id,
                     'product_uom_qty': line.qty,
