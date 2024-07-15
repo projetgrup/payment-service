@@ -76,6 +76,8 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api(self, **kwargs):
+        self._del()
+
         hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_api_hash', '!=', False),
@@ -84,6 +86,8 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
+ 
+        self._set('company', tx.company_id.id)
 
         if tx.jetcheckout_api_method:
             return werkzeug.utils.redirect('/payment/%s' % tx.jetcheckout_api_method)
