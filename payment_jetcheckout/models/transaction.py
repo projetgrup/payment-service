@@ -289,7 +289,6 @@ class PaymentTransaction(models.Model):
         if not self.state == 'auth':
             self.write(self._paylox_auth_postprocess_values())
         self.paylox_verify_token()
-        self.paylox_order_confirm()
 
     def _paylox_done_postprocess_values(self):
         return {
