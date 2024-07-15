@@ -41,7 +41,7 @@ class OcoPaymentOrder(Datamodel):
 
     name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Order Name"), "description": _lt("Order name"), "example": "S123564"})
     products = fields.List(NestedModel("payment.product"), required=False, metadata={"title": _lt("Products List"), "description": _lt("List of related products")})
-    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
+    amount = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay. If it is not sent, sum of total prices of products will be used."), "example": 145.3})
 
 
 class OcoPaymentUrl(Datamodel):
@@ -77,4 +77,4 @@ class OrderCheckoutPaymentOutput(Datamodel):
     _name = "oco.payment.output"
     _inherit = "payment.output"
 
-    hash = fields.String(required=False, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Encrypted data to check if hash is created successfully"), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
+    url = fields.String(required=False, allow_none=False, metadata={"title": _lt("URL"), "description": _lt("Payment URL which redirects to payment page"), "example": "https://example.com/payment?=LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})

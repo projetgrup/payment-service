@@ -48,8 +48,9 @@ class OrderCheckoutAPIService(Component):
 
             self._create_transaction(api, hash, params)
 
-            ResponseOk = self.env.datamodels["payment.prepare.output"]
-            return ResponseOk(hash=quote(hash), **RESPONSE[200])
+            ResponseOk = self.env.datamodels["oco.payment.output"]
+            url = 'https://%s/payment?=%s' % (request.httprequest.host, quote(hash))
+            return ResponseOk(url=url, **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response(str(e), status=500, mimetype="application/json")
@@ -111,7 +112,7 @@ class OrderCheckoutAPIService(Component):
         values = {
             'acquirer_id': acquirer.id,
             'partner_id': partner.id,
-            'amount': params.order.amount,
+            'amount': getattr(params.order, 'amount', 0),
             'currency_id': company.currency_id.id,
             'company_id': company.id,
             'state': 'draft',
@@ -131,15 +132,16 @@ class OrderCheckoutAPIService(Component):
 
         products = getattr(params.order, 'products', [])
         if products:
+            amount = 0
             product_ids = []
             prods = self.env['product.product'].sudo().with_context(system='oco')
             for product in products:
                 prod = prods.search([
                     #('type', '=', 'product'),
                     ('type', '=', 'consu'),
-                    ('default_code', '=', product),
+                    ('default_code', '=', product.code),
                     ('company_id', '=', api.company_id.id)
-                ])
+                ], limit=1)
                 if not prod:
                     prod = prods.create({
                         #'type': 'product',
@@ -152,9 +154,14 @@ class OrderCheckoutAPIService(Component):
                     'product_id': prod.id,
                     'name': product.name,
                     'code': product.code,
-                    'qty': product.qty
+                    'qty': product.qty,
+                    'price': product.price,
                 }))
-            values.update({'jetcheckout_api_product_ids': product_ids})
+                amount += product.qty * product.price
+            values.update({
+                'amount': amount,
+                'jetcheckout_api_product_ids': product_ids,
+            })
             #values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})
 
         tx = self.env['payment.transaction'].sudo().with_company(company).create(values)
