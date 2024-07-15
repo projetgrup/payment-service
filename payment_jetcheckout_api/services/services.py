@@ -353,13 +353,19 @@ class PaymentAPIService(Component):
         if len(codes) == 1:
             method = codes[0]
 
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=providers, limit=1)
+        company = api.company_id
+        if hasattr(params, 'company'):
+            company = self.env['res.company'].sudo().search([('vat', '=', params.company.vat), ('parent_id', '=', company.id)])
+            if not company:
+                raise Exception('Company cannot be found')
+
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=providers, limit=1)
         values = {
             'acquirer_id': acquirer.id,
             'partner_id': api.partner_id.id,
             'amount': params.amount,
-            'currency_id': api.company_id.currency_id.id,
-            'company_id': api.company_id.id,
+            'currency_id': company.currency_id.id,
+            'company_id': company.id,
             'state': 'draft',
             'jetcheckout_ip_address': params.partner.ip_address,
             'jetcheckout_api_ok': True,
@@ -383,7 +389,7 @@ class PaymentAPIService(Component):
                     #('type', '=', 'product'),
                     ('type', '=', 'consu'),
                     ('default_code', '=', product),
-                    '|', ('company_id', '=', self.env.company.id),
+                    '|', ('company_id', '=', company.id),
                          ('company_id', '=', False)
                 ])
                 if not prod:
