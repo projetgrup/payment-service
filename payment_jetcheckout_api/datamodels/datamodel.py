@@ -104,6 +104,7 @@ class PaymentProduct(Datamodel):
     name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Product Name"), "description": _lt("Product name"), "example": "Maintenance Services"})
     code = fields.String(required=True, allow_none=False, metadata={"title": _lt("Product Code"), "description": _lt("Product code"), "example": "MS-123"})
     qty = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Product Quantity"), "description": _lt("Product quantity"), "example": 2.0})
+    price = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Unit Price"), "description": _lt("Unit price"), "example": 30.45})
 
 
 class PaymentCard(Datamodel):

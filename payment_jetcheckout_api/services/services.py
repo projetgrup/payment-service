@@ -403,7 +403,8 @@ class PaymentAPIService(Component):
                     'product_id': prod.id,
                     'name': product.name,
                     'code': product.code,
-                    'qty': product.qty
+                    'qty': product.qty,
+                    'price': product.price,
                 }))
             values.update({'jetcheckout_api_product_ids': product_ids})
             #values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})

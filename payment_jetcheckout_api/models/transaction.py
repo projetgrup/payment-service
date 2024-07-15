@@ -38,3 +38,4 @@ class PaymentJetcheckoutApiProduct(models.Model):
     code = fields.Char(required=True)
     uom = fields.Char(related='product_id.uom_id.name')
     qty = fields.Float()
+    price = fields.Float()
