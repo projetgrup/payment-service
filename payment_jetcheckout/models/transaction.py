@@ -9,6 +9,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
+from odoo.http import request
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
@@ -70,6 +71,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+    jetcheckout_preauth = fields.Boolean('Pre-Authorization', readonly=True, copy=False)
+    jetcheckout_postauth = fields.Boolean('Post-Authorization', readonly=True, copy=False)
 
     jetcheckout_payment_type = fields.Selection(selection=[
         ('virtual_pos', 'Virtual PoS'),
@@ -305,6 +308,31 @@ class PaymentTransaction(models.Model):
         self.paylox_order_confirm()
         self.paylox_payment()
 
+    def _send_capture_request(self):
+        super()._send_capture_request()
+        if self.provider != 'jetcheckout':
+            return
+
+        url = '%s/api/v1/payment/postauth' % self.acquirer_id._get_paylox_api_url()
+        data = {
+            "application_key": self.acquirer_id.jetcheckout_api_key,
+            "transaction_id": self.jetcheckout_transaction_id,
+            "amount": self.env.context.get('amount', tx.amount),
+            "ip_address": request.httprequest.remote_addr,
+            "language": "tr",
+        }
+
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                self.jetcheckout_postauth = True
+                self._paylox_done_postprocess()
+            else:
+                raise UserError(_('%s (Error Code: %s)') % (result['message'], result['response_code']))
+        else:
+            raise UserError(_('%s (Error Code: %s)') % (response.reason, response.status_code))
+
     def paylox_verify_token(self):
         try:
             if self.token_id and not self.token_id.verified:
@@ -461,7 +489,11 @@ class PaymentTransaction(models.Model):
             if 'cancelled' in values and values['cancelled']:
                 self._paylox_cancel_postprocess()
             elif 'preauth' in values and values['preauth']:
-                self._paylox_auth_postprocess()
+                if 'postauth' in values and values['postauth']:
+                    self.jetcheckout_postauth = True
+                    self._paylox_done_postprocess()
+                else:
+                    self._paylox_auth_postprocess()
             else:
                 self._paylox_done_postprocess()
         else:
