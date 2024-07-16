@@ -127,7 +127,7 @@
                                         <tr>
                                             <td><span t-esc="product.name"/></td>
                                             <td><span t-esc="product.code"/></td>
-                                            <td><span t-esc="product.price" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>
+                                            <td class="text-right"><span t-esc="product.price" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>
                                             <td class="text-right"><span t-esc="product.qty" t-options="{'widget': 'float', 'precision': 2}"/></td>
                                             <td><span t-esc="product.uom or ''"/></td>
                                             <td class="text-right"><span t-esc="product.price * product.qty" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>
