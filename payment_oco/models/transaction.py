@@ -5,11 +5,6 @@ from odoo import models
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def _paylox_query(self, values={}):
-        if values and self.company_id.system == 'oco':
-            values.update({'preauth': True})
-        return super()._paylox_query(values=values)
-
     def _paylox_system_oco_postprocess(self):
         if not self.sale_order_ids and getattr(self, 'jetcheckout_api_product_ids', False):
             self = self.with_company(self.company_id)
