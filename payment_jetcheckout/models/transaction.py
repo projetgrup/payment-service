@@ -317,7 +317,7 @@ class PaymentTransaction(models.Model):
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
             "transaction_id": self.jetcheckout_transaction_id,
-            "amount": self.env.context.get('amount', tx.amount),
+            "amount": self.env.context.get('amount', self.amount),
             "ip_address": request.httprequest.remote_addr,
             "language": "tr",
         }
