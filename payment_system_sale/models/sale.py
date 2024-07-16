@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def _compute_field_amount_approved(self):
         for sale in self:
             txs = sale.transaction_ids.filtered(lambda tx: tx.state == 'authorized')
-            sale.field_amount_approved = txs.exist()
+            sale.field_amount_approved = txs.exists()
 
 
     system = fields.Selection(selection=[], readonly=True)
