@@ -6,13 +6,19 @@
     <field name="model">sale.order</field>
     <field name="mode">primary</field>
     <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <button name="action_view_transaction" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('transaction_count', '=', 0)]}">
+                <field name="transaction_count" widget="statinfo" string="Transactions"/>
+            </button>
+        </xpath>
         <xpath expr="//group[@name='note_group']" position="before">
-            <div class="oe_right" attrs="{'invisible': [('state', 'in', ('cancel', 'done'))]}">
-                <button name="system_oco_update_amount_confirmed" type="object" string="Update Confirmed Amount"/>
+            <div class="oe_right" attrs="{'invisible': ['|', ('state', 'in', ('cancel', 'done')), ('field_amount_approved', '=', False)]}">
+                <button name="system_oco_update_amount_approved" type="object" string="Update Approved Amount"/>
             </div>
         </xpath>
         <xpath expr="//field[@name='tax_totals_json']" position="after">
-            <field name="amount_confirmed" widget="monetary"/>
+            <field name="amount_approved" widget="monetary" attrs="{'invisible': [('field_amount_approved', '=', False)]}"/>
+            <field name="field_amount_approved" invisible="1"/>
         </xpath>
     </field>
     </record>
@@ -23,8 +29,11 @@
     <field name="model">sale.order</field>
     <field name="mode">primary</field>
     <field name="arch" type="xml">
+        <xpath expr="//field" position="after">
+            <field name="field_amount_approved"/>
+        </xpath>
         <xpath expr="//strong/field[@name='amount_total']" position="after">
-            <button t-if="!['cancel', 'done'].includes(record.state.raw_value)" name="system_oco_update_amount_confirmed" type="object" icon="fa-money mr4" string="Update Confirmed Amount"/>
+            <button t-if="!['cancel', 'done'].includes(record.state.raw_value) &amp;&amp; record.field_amount_approved.raw_value" name="system_oco_update_amount_approved" type="object" icon="fa-money mr4" string="Update Approved Amount"/>
         </xpath>
     </field>
     </record>
@@ -36,8 +45,9 @@
     <field name="mode">primary</field>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='amount_total']" position="after">
-            <field name="amount_confirmed" widget="monetary"/>
-            <button name="system_oco_update_amount_confirmed" type="object" icon="fa-money mr4" string="Update Confirmed Amount" attrs="{'invisible': [('state', 'in', ('cancel', 'done'))]}"/>
+            <field name="amount_approved" widget="monetary" attrs="{'invisible': [('field_amount_approved', '=', False)]}"/>
+            <button name="system_oco_update_amount_approved" type="object" icon="fa-money mr4" string="Update Approved Amount" attrs="{'invisible': ['|', ('state', 'in', ('cancel', 'done')), ('field_amount_approved', '=', False)]}"/>
+            <field name="field_amount_approved" invisible="1"/>
         </xpath>
     </field>
     </record>
@@ -48,12 +58,12 @@
     <field name="arch" type="xml">
         <form>
             <sheet>
-                <h3 class="text-center">Please enter amount to confirm</h3>
+                <h3 class="text-center">Please enter amount to approve</h3>
                 <field name="amount" class="h2 mt-4 text-center w-100 text-700"/>
                 <field name="currency_id" invisible="1"/>
             </sheet>
             <footer>
-                <button name="confirm" type="object" string="Confirm" class="btn-primary"/>
+                <button name="approve" type="object" string="Approve" class="btn-primary"/>
                 <button name="cancel" special="cancel" string="Close" class="btn-secondary"/>
             </footer>
         </form>

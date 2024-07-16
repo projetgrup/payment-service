@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-11 09:44+0000\n"
-"PO-Revision-Date: 2024-07-11 12:53+0300\n"
+"POT-Creation-Date: 2024-07-16 22:36+0000\n"
+"PO-Revision-Date: 2024-07-17 01:39+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #. module: payment_oco
 #: model_terms:ir.ui.view,arch_db:payment_oco.page_payment
@@ -638,6 +638,11 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: payment_oco
+#: model_terms:ir.ui.view,arch_db:payment_oco.form_sale_order_amount
+msgid "Approve"
+msgstr "Onayla"
+
+#. module: payment_oco
 #: model:ir.ui.menu,name:payment_oco.menu_product_attribute
 msgid "Attributes"
 msgstr "Nitelikler"
@@ -701,16 +706,6 @@ msgstr "Şirket Ayarları"
 #: model:ir.ui.menu,name:payment_oco.menu_conf
 msgid "Configuration"
 msgstr "Yapılandırma"
-
-#. module: payment_oco
-#: model_terms:ir.ui.view,arch_db:payment_oco.form_sale_order_amount
-msgid "Confirm"
-msgstr "Onayla"
-
-#. module: payment_oco
-#: model:ir.model.fields,field_description:payment_oco.field_sale_order__amount_confirmed
-msgid "Confirmed Amount"
-msgstr "Onaylanan Tutar"
 
 #. module: payment_oco
 #: model:ir.model,name:payment_oco.model_res_partner
@@ -981,7 +976,9 @@ msgstr "Ödeme İşlemleri"
 
 #. module: payment_oco
 #: model_terms:ir.ui.view,arch_db:payment_oco.form_sale_order_amount
-msgid "Please enter amount to confirm"
+#, fuzzy
+#| msgid "Please enter amount to confirm"
+msgid "Please enter amount to approve"
 msgstr "Lütfen onaylanacak tutarı giriniz"
 
 #. module: payment_oco
@@ -1138,6 +1135,7 @@ msgstr "Ödeme İşlemi: Başarılı Ödeme SMS Mesajı"
 
 #. module: payment_oco
 #: model:ir.ui.menu,name:payment_oco.menu_transaction
+#: model_terms:ir.ui.view,arch_db:payment_oco.form_sale_order
 msgid "Transactions"
 msgstr "İşlemler"
 
@@ -1145,7 +1143,9 @@ msgstr "İşlemler"
 #: model_terms:ir.ui.view,arch_db:payment_oco.form_sale_order
 #: model_terms:ir.ui.view,arch_db:payment_oco.kanban_sale_order
 #: model_terms:ir.ui.view,arch_db:payment_oco.tree_sale_order
-msgid "Update Confirmed Amount"
+#, fuzzy
+#| msgid "Update Confirmed Amount"
+msgid "Update Approved Amount"
 msgstr "Onaylanacak Tutarı Güncelle"
 
 #. module: payment_oco
@@ -1215,6 +1215,12 @@ msgstr ""
 #: model:mail.template,subject:payment_oco.mail_transaction_successful
 msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
 msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid "Confirm"
+#~ msgstr "Onayla"
+
+#~ msgid "Confirmed Amount"
+#~ msgstr "Onaylanan Tutar"
 
 #, fuzzy
 #~| msgid ""

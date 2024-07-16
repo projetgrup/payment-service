@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-13 14:27+0000\n"
-"PO-Revision-Date: 2024-03-13 17:50+0300\n"
+"POT-Creation-Date: 2024-07-16 22:44+0000\n"
+"PO-Revision-Date: 2024-07-17 01:45+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,12 +15,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #. module: payment_system_sale
 #: model_terms:ir.actions.act_window,help:payment_system_sale.action_sale_order
 msgid "All sale orders are listed here"
 msgstr "Tüm satış siparişleri burada listelenir"
+
+#. module: payment_system_sale
+#: model:ir.model.fields,field_description:payment_system_sale.field_sale_order__amount_approved
+msgid "Approved Amount"
+msgstr "Onaylanan Tutar"
+
+#. module: payment_system_sale
+#: model:ir.model.fields,field_description:payment_system_sale.field_sale_order__field_amount_approved
+msgid "Field Amount Approved"
+msgstr "Onaylanan Tutar Alanı"
 
 #. module: payment_system_sale
 #: model:ir.actions.act_window,name:payment_system_sale.action_sale_order
@@ -36,6 +46,11 @@ msgstr "Paylox Sistem Birim Fiyat"
 #: model:ir.model,name:payment_system_sale.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
+
+#. module: payment_system_sale
+#: model:ir.model.fields,field_description:payment_system_sale.field_sale_order_line__product_id
+msgid "Product"
+msgstr "Ürün"
 
 #. module: payment_system_sale
 #: model_terms:ir.actions.act_window,help:payment_system_sale.action_sale_order
@@ -56,3 +71,8 @@ msgstr "Satış Sipariş Satırları"
 #: model:ir.model.fields,field_description:payment_system_sale.field_sale_order__system
 msgid "System"
 msgstr "Sistem"
+
+#. module: payment_system_sale
+#: model:ir.model.fields,field_description:payment_system_sale.field_sale_order__transaction_count
+msgid "Transaction Count"
+msgstr "İşlem Adedi"

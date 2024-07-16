@@ -954,8 +954,8 @@ class PayloxController(http.Controller):
             'vpos_id': kwargs.get('virtual_pos_id', 0),
             'vpos_name': kwargs.get('virtual_pos_name', ''),
             'vpos_code': kwargs.get('auth_code', ''),
-            'preauth': kwargs.get('preauth', False),
-            'postauth': kwargs.get('postauth', False),
+            'preauth': kwargs.get('preauth', tx.jetcheckout_preauth),
+            'postauth': kwargs.get('postauth', tx.jetcheckout_postauth),
             'commission_rate': corate,
         })
 
@@ -1234,6 +1234,9 @@ class PayloxController(http.Controller):
                     'jetcheckout_expiry': kwargs['card']['date'],
                     'jetcheckout_security': kwargs['card']['code'],
                 })
+
+            if tx.jetcheckout_preauth:
+                data.update({'is_preauth': True})
 
             data.update(self._get_data_values(data, **kwargs))
             response = requests.post(url, data=json.dumps(data))
