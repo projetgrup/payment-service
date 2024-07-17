@@ -12,6 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        'data/data.xml',
         'views/item.xml',
         'views/token.xml',
         'views/partner.xml',

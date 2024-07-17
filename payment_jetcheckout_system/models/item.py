@@ -115,7 +115,7 @@ class PaymentItem(models.Model):
 
     def action_plan(self):
         action = self.env.ref('payment_jetcheckout_system.action_plan').sudo().read()[0]
-        action['domain'] = [('id', 'in', self.transaction_ids.ids)]
+        action['domain'] = [('id', 'in', self.plan_ids.ids)]
         return action
 
     def action_transaction(self):
