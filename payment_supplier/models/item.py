@@ -15,6 +15,7 @@ class PaymentItem(models.Model):
 
     system = fields.Selection(selection_add=[('supplier', 'Supplier Payment System')])
     system_supplier_bank_verified = fields.Boolean(compute='_compute_bank_verified', store=True, readonly=True)
+    system_supplier_plan_mail_sent = fields.Boolean(readonly=True)
 
     def action_plan_wizard(self):
         action = self.env.ref('payment_jetcheckout_system.action_plan_wizard').sudo().read()[0]

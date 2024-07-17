@@ -318,8 +318,8 @@ class PaymentTransaction(models.Model):
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
             "transaction_id": self.jetcheckout_transaction_id,
-            "amount": int(amount * 100),
             "ip_address": request.httprequest.remote_addr,
+            "amount": int(amount * 100),
             "language": "tr",
         }
 
