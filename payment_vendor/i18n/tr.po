@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 09:53+0000\n"
-"PO-Revision-Date: 2024-05-02 12:55+0300\n"
+"POT-Creation-Date: 2024-07-18 00:20+0000\n"
+"PO-Revision-Date: 2024-07-18 03:23+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -299,7 +299,7 @@ msgid ""
 "                        Successful transaction information as follows.<br/"
 "><br/>\n"
 "                        Transaction Owner Company : <t t-"
-"out=\"ctx['partner'] or ''\"/><br/>\n"
+"out=\"ctx['partner'].name or ''\"/><br/>\n"
 "                        Transaction Date : <t t-"
 "out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:"
 "ss')\">01.01.2023 00:00:00</t><br/>\n"
@@ -382,8 +382,8 @@ msgstr ""
 "                        Merhaba <strong t-out=\"object.name or ''\">Marc "
 "Demo</strong>,<br/><br/>\n"
 "                        Başarılı işlem bilgileri aşağıdaki gibidir.<br/>\n"
-"                        İşlem Geçen Firma : <t t-esc=\"ctx['partner'] "
-"or ''\"/><br/>\n"
+"                        İşlem Geçen Firma : <t t-esc=\"ctx['partner'] or "
+"''\"/><br/>\n"
 "                        İşlem Tarihi : <t t-out=\"format_datetime(ctx['tx']."
 "last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')\">01.01.2023 00:00:00</t><br/"
 ">\n"
@@ -697,6 +697,11 @@ msgstr ""
 "</table>"
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Access All Transactions"
+msgstr "Tüm İşlemleri Gör"
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_agreements
 msgid "Agreement Settings"
 msgstr "Sözleşme Ayarları"
@@ -711,6 +716,11 @@ msgstr "Sözleşmeler"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Allow dealers to edit payable amount on payment link"
 msgstr "Bayilerin ödeme linkindeki ödenebilir tutarı düzenlemesine izin verin"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Allow dealers to see their all transactions on payment link"
+msgstr "Bayilerin ödeme linkinde tüm ödeme işlemlerine erişim izni verin"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -761,6 +771,12 @@ msgstr "Kategoriler"
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
 msgstr "İlçe"
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_item
+#: model:ir.ui.menu,name:payment_vendor.menu_payment
+msgid "Collections"
+msgstr "Tahsilatlar"
 
 #. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_res_company
@@ -825,8 +841,8 @@ msgstr "Seçilen ürünler ile abonelik oluştur"
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
-msgid "Created payments are listed here"
-msgstr "Oluşturulan ödemeler burada listelenir"
+msgid "Created collections are listed here"
+msgstr "Oluşturulan tahsilatlar burada listelenir"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_dashboard
@@ -896,9 +912,18 @@ msgstr "HTTP Yönlendirme"
 
 #. module: payment_vendor
 #: model:sms.template,body:payment_vendor.sms_transaction_successful
+#, fuzzy
+#| msgid ""
+#| "Hello {{ object.name }}, successful transaction information as follows."
+#| "\\nTransaction Owner Company: {{ ctx['partner'] or '' }}\\nTransaction "
+#| "Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y "
+#| "H:mm:ss') }}\\nTransaction Amount: {{ ctx['amount'] }} {{ ctx['tx']."
+#| "currency_id.name }}\\nInstallment Count: {{ ctx['tx']."
+#| "with_context(lang=ctx['lang']).jetcheckout_installment_description_long "
+#| "or '' }}"
 msgid ""
 "Hello {{ object.name }}, successful transaction information as follows."
-"\\nTransaction Owner Company: {{ ctx['partner'] or '' }}\\nTransaction "
+"\\nTransaction Owner Company: {{ ctx['partner'].name or '' }}\\nTransaction "
 "Date: {{ format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:"
 "mm:ss') }}\\nTransaction Amount: {{ ctx['amount'] }} {{ ctx['tx']."
 "currency_id.name }}\\nInstallment Count: {{ ctx['tx']."
@@ -941,8 +966,8 @@ msgstr "Adı"
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
-msgid "No payments yet"
-msgstr "Henüz bir ödeme yok"
+msgid "No collections yet"
+msgstr "Henüz bir tahsilat yok"
 
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_sale_order
@@ -1009,12 +1034,6 @@ msgstr "Ödeme İşlemleri"
 #, python-format
 msgid "Payment items must share one common currency"
 msgstr "Ödeme kalemlerinin para birimleri aynı olmalıdır"
-
-#. module: payment_vendor
-#: model:ir.actions.act_window,name:payment_vendor.action_item
-#: model:ir.ui.menu,name:payment_vendor.menu_payment
-msgid "Payments"
-msgstr "Ödemeler"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
@@ -1118,6 +1137,11 @@ msgstr "Satış Ekibi"
 #: model:ir.ui.menu,name:payment_vendor.menu_team
 msgid "Sales Teams"
 msgstr "Satış Ekipleri"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "See All Transactions"
+msgstr "Tüm İşlemleri Gör"
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system
@@ -1327,6 +1351,9 @@ msgstr ""
 #: model:mail.template,subject:payment_vendor.mail_transaction_successful
 msgid "{{ ctx['domain'] }} | Successful Transaction Notification"
 msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
+
+#~ msgid "Payments"
+#~ msgstr "Ödemeler"
 
 #~ msgid "Standard"
 #~ msgstr "Standart"

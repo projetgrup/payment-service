@@ -66,14 +66,19 @@
                             </div>
                         </div>
                     </div>
-                    <t t-if="payments">
-                        <div t-if="payment_tags" class="row bg-white mx-0 px-3 mb-1 gap-1 w-100">
+                    <div class="d-flex">
+                        <div t-if="payments and payment_tags" class="row bg-white mx-0 px-3 mb-1 gap-1 w-100">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="payment_tags" t-as="tag">
-                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} px-3 font-weight-bold text-uppercase"  t-att-data-id="tag.id" t-att-data-name="tag.name" t-esc="tag.name" field="payment.due.tag"/>
+                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} px-3 font-weight-bold text-uppercase" t-att-data-id="tag.id" t-att-data-name="tag.name" t-esc="tag.name" field="payment.due.tag"/>
                                 <t t-set="i" t-value="i+1"/>
                             </t>
                         </div>
+                        <div t-if="company.payment_page_button_access_transaction" class="mb-1 ml-auto mx-0 px-3 text-nowrap">
+                            <a role="button" class="btn btn-secondary px-3 font-weight-bold text-uppercase" t-attf-href="/p/#{token}/transaction">See All Transactions</a>
+                        </div>
+                    </div>
+                    <t t-if="payments">
                         <div class="row bg-white mx-0 px-3 w-100 payment-item">
                             <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
                                 <t t-foreach="payments" t-as="payment">

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-02 09:53+0000\n"
-"PO-Revision-Date: 2024-05-02 09:53+0000\n"
+"POT-Creation-Date: 2024-07-18 00:20+0000\n"
+"PO-Revision-Date: 2024-07-18 00:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -152,7 +152,7 @@ msgid ""
 "                    <div>\n"
 "                        Hello <strong t-out=\"object.name or ''\">Marc Demo</strong>,<br/><br/>\n"
 "                        Successful transaction information as follows.<br/><br/>\n"
-"                        Transaction Owner Company : <t t-out=\"ctx['partner'] or ''\"/><br/>\n"
+"                        Transaction Owner Company : <t t-out=\"ctx['partner'].name or ''\"/><br/>\n"
 "                        Transaction Date : <t t-out=\"format_datetime(ctx['tx'].last_state_change, ctx['tz'], 'd.MM.y H:mm:ss')\">01.01.2023 00:00:00</t><br/>\n"
 "                        Transaction Amount : <t t-out=\"format_amount(ctx['tx'].jetcheckout_payment_amount, ctx['tx'].currency_id) or ''\"/><br/>\n"
 "                        Installment Count : <t t-out=\"ctx['tx'].jetcheckout_installment_description_long or ''\"/><br/><br/>\n"
@@ -288,6 +288,11 @@ msgid ""
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Access All Transactions"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_agreements
 msgid "Agreement Settings"
 msgstr ""
@@ -301,6 +306,11 @@ msgstr ""
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Allow dealers to edit payable amount on payment link"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Allow dealers to see their all transactions on payment link"
 msgstr ""
 
 #. module: payment_vendor
@@ -351,6 +361,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment_system_product
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "City"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.actions.act_window,name:payment_vendor.action_item
+#: model:ir.ui.menu,name:payment_vendor.menu_payment
+msgid "Collections"
 msgstr ""
 
 #. module: payment_vendor
@@ -416,7 +432,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
-msgid "Created payments are listed here"
+msgid "Created collections are listed here"
 msgstr ""
 
 #. module: payment_vendor
@@ -526,7 +542,7 @@ msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.actions.act_window,help:payment_vendor.action_item
-msgid "No payments yet"
+msgid "No collections yet"
 msgstr ""
 
 #. module: payment_vendor
@@ -593,12 +609,6 @@ msgstr ""
 #: code:addons/payment_vendor/controllers/main.py:0
 #, python-format
 msgid "Payment items must share one common currency"
-msgstr ""
-
-#. module: payment_vendor
-#: model:ir.actions.act_window,name:payment_vendor.action_item
-#: model:ir.ui.menu,name:payment_vendor.menu_payment
-msgid "Payments"
 msgstr ""
 
 #. module: payment_vendor
@@ -702,6 +712,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_team
 msgid "Sales Teams"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
+msgid "See All Transactions"
 msgstr ""
 
 #. module: payment_vendor
