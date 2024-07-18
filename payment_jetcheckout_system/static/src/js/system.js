@@ -955,7 +955,13 @@ publicWidget.registry.payloxSystemPageTransaction = publicWidget.Widget.extend({
     _renderPage: function (page) {
         const params = this._prepareParams(page);
         const paths = window.location.pathname.split('/');
-        const route = `/${paths[1]}/${paths[2]}/${paths[3]}/list`
+        while (!['my', 'p'].includes(paths[0])) {
+            paths.shift();
+            if (!paths.length) {
+                return;
+            }
+        }
+        const route = `/${paths[0]}/${paths[1]}/transaction/list`
 
         framework.showLoading();
         rpc.query({ route, params }).then((result) => {
