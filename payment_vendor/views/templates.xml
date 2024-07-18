@@ -201,7 +201,7 @@
                         <input t-if="prioritize" type="hidden" field="payment.priority"/>
                     </t>
                     <t t-else="">
-                        <div class="row justify-content-center flex-column">
+                        <div class="row justify-content-center flex-column mx-3">
                             <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
                                 <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
                             </div>

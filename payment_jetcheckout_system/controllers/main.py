@@ -7,12 +7,14 @@ import werkzeug
 from datetime import datetime
 from urllib.parse import urlparse, urlencode
 
-from odoo import fields, http, _
+from odoo import fields, http, _, SUPERUSER_ID
 from odoo.http import content_disposition, request
 from odoo.tools import html_escape
 from odoo.tools.misc import xlsxwriter
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, MissingError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
+
+REPORT_NAMES = ['payment_jetcheckout.payment_receipt', 'payment_jetcheckout.payment_conveyance']
 
 
 class PayloxSystemController(Controller):
@@ -838,8 +840,8 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_result', values)
 
     @http.route([
-        '/my/payment/transactions',
-        '/my/payment/transactions/page/<int:page>',
+        '/my/payment/transaction',
+        '/my/payment/transaction/page/<int:page>',
         '/p/<token>/transaction',
         '/p/<token>/transaction/page/<int:page>',
         ], type='http', auth='public', methods=['GET'], website=True)
@@ -864,6 +866,7 @@ class PayloxSystemController(Controller):
             'partner_name': partner_commercial.name,
             'contact': partner_contact,
             'acquirer': acquirer,
+            'token': token,
             'user': not user.share,
             'url_payment': url_payment,
         }
@@ -898,7 +901,7 @@ class PayloxSystemController(Controller):
         return request.render('payment_jetcheckout_system.page_transaction', values)
 
     @http.route([
-        '/my/payment/transactions/list',
+        '/my/payment/transaction/list',
         '/p/<token>/transaction/list',
     ], type='json', auth='public', website=True)
     def page_system_payment_transaction_list(self, token=None, **kwargs):
@@ -941,7 +944,7 @@ class PayloxSystemController(Controller):
         offset = pager['offset']
         txs = txs[offset: offset + step]
         pager = request.env['ir.ui.view'].sudo()._render_template('website.pager', {'pager': pager})
-        page = request.env['ir.ui.view'].sudo()._render_template('payment_jetcheckout_system.page_transaction_list', {'txs': txs})
+        page = request.env['ir.ui.view'].sudo()._render_template('payment_jetcheckout_system.page_transaction_list', {'txs': txs, 'token': token})
 
         return {
             'pager': pager,
@@ -949,7 +952,7 @@ class PayloxSystemController(Controller):
         }
 
     @http.route([
-        '/my/payment/transactions/download',
+        '/my/payment/transaction/download',
         '/p/<token>/transaction/download',
     ], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_transaction_download(self, token=None, **kwargs):
@@ -1091,3 +1094,40 @@ class PayloxSystemController(Controller):
     @http.route(['/my/payment/share/link'], type='json', auth='public', website=True)
     def page_system_share_link(self, type, link, lang, value):
         return request.env['res.partner'].sudo().send_payment_link(type, link, lang, value)
+
+    @http.route([
+        '/p/<token>/report/<converter>/<reportname>',
+        '/p/<token>/report/<converter>/<reportname>/<docids>',
+    ], type='http', auth='public', website=True)
+    def page_system_report_link(self, token, reportname, docids=None, converter=None, **data):
+        if reportname not in REPORT_NAMES:
+            raise MissingError(_('Report cannot be found'))
+
+        partner = self._get_parent(token)
+        if not partner:
+            raise MissingError(_('Partner cannot be found'))
+
+        user = request.env['res.users'].browse(SUPERUSER_ID)
+        report = request.env['ir.actions.report'].sudo()._get_report_from_name(reportname)
+        context = dict(request.env.context)
+
+        if docids:
+            docids = [int(i) for i in docids.split(',')]
+        if data.get('options'):
+            data.update(json.loads(data.pop('options')))
+        if data.get('context'):
+            data['context'] = json.loads(data['context'])
+            context.update(data['context'])
+        if converter == 'html':
+            html = report.with_user(user).with_context(context).sudo()._render_qweb_html(docids, data=data)[0]
+            return request.make_response(html)
+        elif converter == 'pdf':
+            pdf = report.with_context(context)._render_qweb_pdf(docids, data=data)[0]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        elif converter == 'text':
+            text = report.with_context(context)._render_qweb_text(docids, data=data)[0]
+            texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
+            return request.make_response(text, headers=texthttpheaders)
+        else:
+            raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
