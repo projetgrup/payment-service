@@ -13,3 +13,4 @@ class ResCompany(models.Model):
     api_item_notif_sms_create_filter_number = fields.Text(string='API Payment Item SMS Notification Number Filter on Create Request')
     api_item_notif_sms_create_filter_number_ok = fields.Boolean(string='API Payment Item SMS Notification Number Filter Option on Create Request')
     api_item_notif_sms_create_template = fields.Many2one('sms.template', string='API Payment Item SMS Notification Template on Create Request')
+    api_item_new_data_only = fields.Boolean('API Payment Item Only Newly Sent Data')
