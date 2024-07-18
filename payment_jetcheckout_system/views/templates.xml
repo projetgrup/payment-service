@@ -729,7 +729,7 @@
                     <t t-set="buttons">
                         <a role="button" class="btn btn-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_payment_transaction_apply" href="#"><i class="fa fa-calendar-check-o mr-2" t-translation="off"/>Apply</a>
                         <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden o_payment_transaction_download" href="#"><i class="fa fa-download mr-2" t-translation="off"/>Download</a>
-                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" href="/my/payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
+                        <a role="button" class="btn btn-outline-primary btn-block mt-3 font-weight-bold text-uppercase shadow text-nowrap overflow-hidden" t-att-href="url_payment"><i class="fa fa-undo mr-2" t-translation="off"/>Payment</a>
                     </t>
                     <t t-call="payment_jetcheckout_system.payment_contact"/>
                 </t>

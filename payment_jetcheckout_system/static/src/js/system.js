@@ -639,7 +639,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
         const $button = $(ev.currentTarget);
         const cid = $button.data('id');
-        rpc.query({route: '/p/company', params: { cid }}).then(function (token) {
+        rpc.query({route: '/p/company', params: { cid }}).then((token) => {
             if (token) {
                 framework.showLoading();
                 window.location.assign('/p/' + token);
@@ -652,7 +652,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         ev.preventDefault();
         const $button = $(ev.currentTarget);
         const tid = $button.data('id');
-        rpc.query({route: '/p/tag', params: { tid }}).then(function (token) {
+        rpc.query({route: '/p/tag', params: { tid }}).then((token) => {
             if (token) {
                 framework.showLoading();
                 window.location.assign('/p/' + token);
@@ -954,12 +954,11 @@ publicWidget.registry.payloxSystemPageTransaction = publicWidget.Widget.extend({
 
     _renderPage: function (page) {
         const params = this._prepareParams(page);
+        const paths = window.location.pathname.split('/');
+        const route = `/${paths[1]}/${paths[2]}/${paths[3]}/list`
 
         framework.showLoading();
-        rpc.query({
-            route: '/my/payment/transactions/list',
-            params: params,
-        }).then((result) => {
+        rpc.query({ route, params }).then((result) => {
             if (result.error) {
                 this.displayNotification({
                     type: 'danger',

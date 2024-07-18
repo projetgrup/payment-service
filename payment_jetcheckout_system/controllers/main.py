@@ -837,23 +837,38 @@ class PayloxSystemController(Controller):
         self._del()
         return request.render('payment_jetcheckout_system.page_result', values)
 
-    @http.route(['/my/payment/transactions', '/my/payment/transactions/page/<int:page>'], type='http', auth='user', methods=['GET'], website=True)
-    def page_system_payment_transaction(self, page=0, **kwargs):
-        acquirer = self._get_acquirer()
-        user = not request.env.user.share
-        partner = self._get_partner()
+    @http.route([
+        '/my/payment/transactions',
+        '/my/payment/transactions/page/<int:page>',
+        '/p/<token>/transaction',
+        '/p/<token>/transaction/page/<int:page>',
+        ], type='http', auth='public', methods=['GET'], website=True)
+    def page_system_payment_transaction(self, token=None, page=0, **kwargs):
+        user = request.env.user
+        if token:
+            partner = self._get_parent(token)
+            url_payment = '/p/%s' % token
+        else:
+            if user.has_group('base.group_public'):
+                raise AccessError(_('Please login before continue.'))
+            partner = self._get_partner()
+            url_payment = '/my/payment'
+
         partner_commercial = partner.commercial_partner_id
         partner_contact = partner if partner.parent_id else False
+
+        acquirer = self._get_acquirer()
         values = {
             'company': request.env.company,
             'partner': partner_commercial,
             'partner_name': partner_commercial.name,
             'contact': partner_contact,
             'acquirer': acquirer,
-            'user': user,
+            'user': not user.share,
+            'url_payment': url_payment,
         }
 
-        if request.env.user.group_own_transaction:
+        if user.group_own_transaction:
             domain = [
                 ('partner_id', '=', partner and partner.id or False),
             ]
@@ -882,14 +897,24 @@ class PayloxSystemController(Controller):
             })
         return request.render('payment_jetcheckout_system.page_transaction', values)
 
-    @http.route(['/my/payment/transactions/list'], type='json', auth='user', website=True)
-    def page_system_payment_transaction_list(self, **kwargs):
+    @http.route([
+        '/my/payment/transactions/list',
+        '/p/<token>/transaction/list',
+    ], type='json', auth='public', website=True)
+    def page_system_payment_transaction_list(self, token=None, **kwargs):
         date_format = kwargs.get('format')
         if not date_format:
             return {'error': _('Date format cannot be empty')}
 
-        partner = self._get_partner()
-        if request.env.user.group_own_transaction:
+        user = request.env.user
+        if token:
+            partner = self._get_parent(token)
+        else:
+            if user.has_group('base.group_public'):
+                raise AccessError(_('Please login before continue.'))
+            partner = self._get_partner()
+
+        if user.group_own_transaction:
             domain = [
                 ('partner_id', '=', partner and partner.id or False),
             ]
@@ -923,14 +948,24 @@ class PayloxSystemController(Controller):
             'page': page,
         }
 
-    @http.route(['/my/payment/transactions/download'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
-    def page_system_payment_transaction_download(self, **kwargs):
+    @http.route([
+        '/my/payment/transactions/download',
+        '/p/<token>/transaction/download',
+    ], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def page_system_payment_transaction_download(self, token=None, **kwargs):
         date_format = kwargs.get('format')
         if not date_format:
             return {'error': _('Date format cannot be empty')}
 
-        partner = self._get_partner()
-        if request.env.user.group_own_transaction:
+        user = request.env.user
+        if token:
+            partner = self._get_parent(token)
+        else:
+            if user.has_group('base.group_public'):
+                raise AccessError(_('Please login before continue.'))
+            partner = self._get_partner()
+
+        if user.group_own_transaction:
             domain = [
                 ('partner_id', '=', partner and partner.id or False),
             ]
