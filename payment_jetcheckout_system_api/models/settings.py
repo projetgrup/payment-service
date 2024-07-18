@@ -33,3 +33,4 @@ class PaymentSettings(models.TransientModel):
     api_item_notif_sms_create_filter_number_ok = fields.Boolean(related='company_id.api_item_notif_sms_create_filter_number_ok', readonly=False)
     api_item_notif_sms_create_filter_number_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_api_item_notif_sms_create_filter_number_opt', inverse='_set_api_item_notif_sms_create_filter_number_opt', string='API Payment Item SMS Notification Number Filter Option on Create Request')
     api_item_notif_sms_create_template = fields.Many2one(related='company_id.api_item_notif_sms_create_template', readonly=False)
+    api_item_new_data_only = fields.Boolean(related='company_id.api_item_new_data_only', readonly=False)

@@ -6,14 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 15:52+0000\n"
-"PO-Revision-Date: 2023-07-04 15:52+0000\n"
+"POT-Creation-Date: 2024-07-18 19:26+0000\n"
+"PO-Revision-Date: 2024-07-18 19:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_filter_email_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_filter_email_opt
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_filter_email_ok
+msgid ""
+"API Payment Item Email Notification Email Filter Option on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_filter_email
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_filter_email
+msgid "API Payment Item Email Notification Email Filter on Create Request"
+msgstr ""
 
 #. module: payment_jetcheckout_system_api
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_template
@@ -25,6 +39,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_mail_create_ok
 #: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_mail_create_ok
 msgid "API Payment Item Email Notification on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_new_data_only
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_new_data_only
+msgid "API Payment Item Only Newly Sent Data"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_sms_create_filter_number_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_sms_create_filter_number_opt
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_sms_create_filter_number_ok
+msgid ""
+"API Payment Item SMS Notification Number Filter Option on Create Request"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_payment_settings__api_item_notif_sms_create_filter_number
+#: model:ir.model.fields,field_description:payment_jetcheckout_system_api.field_res_company__api_item_notif_sms_create_filter_number
+msgid "API Payment Item SMS Notification Number Filter on Create Request"
 msgstr ""
 
 #. module: payment_jetcheckout_system_api
@@ -51,7 +85,22 @@ msgstr ""
 
 #. module: payment_jetcheckout_system_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Email Addresses..."
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
 msgid "Email Template"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Only"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Only Newly Sent Data"
 msgstr ""
 
 #. module: payment_jetcheckout_system_api
@@ -62,6 +111,11 @@ msgstr ""
 #. module: payment_jetcheckout_system_api
 #: model:ir.model,name:payment_jetcheckout_system_api.model_payment_settings
 msgid "Payment Settings"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid "Phone Numbers..."
 msgstr ""
 
 #. module: payment_jetcheckout_system_api
@@ -87,4 +141,37 @@ msgstr ""
 #. module: payment_jetcheckout_system_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
 msgid "Send email notifications to partners related to created payment items"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid ""
+"When a new request is sent, process data and remove old related records on "
+"database."
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system_api.selection__payment_settings__api_item_notif_mail_create_filter_email_opt__exclude
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system_api.selection__payment_settings__api_item_notif_sms_create_filter_number_opt__exclude
+msgid "exclude"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid ""
+"following email addresses<br/><em class=\"text-muted\">(every address on a "
+"new line)</em><br/><br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system_api.settings_form
+msgid ""
+"following phone numbers<br/><em class=\"text-muted\">(every number on a new "
+"line)</em><br/><br/>"
+msgstr ""
+
+#. module: payment_jetcheckout_system_api
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system_api.selection__payment_settings__api_item_notif_mail_create_filter_email_opt__include
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system_api.selection__payment_settings__api_item_notif_sms_create_filter_number_opt__include
+msgid "include"
 msgstr ""

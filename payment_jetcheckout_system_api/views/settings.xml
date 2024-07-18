@@ -53,6 +53,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="api_item_new_data_only"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="api_item_new_data_only" string="Only Newly Sent Data"/>
+                            <div class="text-muted">
+                                When a new request is sent, process data and remove old related records on database.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </xpath>
     </field>
