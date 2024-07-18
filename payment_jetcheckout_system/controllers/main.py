@@ -954,7 +954,7 @@ class PayloxSystemController(Controller):
     @http.route([
         '/my/payment/transaction/download',
         '/p/<token>/transaction/download',
-    ], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    ], type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_transaction_download(self, token=None, **kwargs):
         date_format = kwargs.get('format')
         if not date_format:
