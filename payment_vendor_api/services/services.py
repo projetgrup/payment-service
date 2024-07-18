@@ -111,8 +111,17 @@ class VendorAPIService(Component):
             vendors = self.env['res.partner'].sudo()
             for item in params.items:
                 vendor = self._get_vendor(company, item.vendor)
-                if not vendor:
+                if vendor:
+                    if company.api_item_new_data_only:
+                        domain = [('paid', '=', False)]
+                        if vendor.parent_id:
+                            domain.append(('child_id', '=', vendor.id))
+                        else:
+                            domain.append(('parent_id', '=', vendor.id))
+                        self.env['payment.item'].sudo().search(domain).unlink()
+                else:
                     vendor = self._create_vendor(company, item.vendor)
+
                 result.append({
                     'vat': vendor.vat,
                     'link': vendor._get_payment_url(shorten=True),
