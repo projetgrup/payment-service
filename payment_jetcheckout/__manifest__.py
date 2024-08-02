@@ -16,6 +16,7 @@
         'views/acquirer.xml',
         'views/transaction.xml',
         'views/partner.xml',
+        'views/product.xml',
         'views/templates.xml',
         'wizards/signin.xml',
         'wizards/application.xml',
