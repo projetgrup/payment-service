@@ -32,7 +32,7 @@ class PaymentTransaction(models.Model):
                 installment = int(desc)
                 if installment == 0:
                     desc_long = ''
-                elif installment == 1:
+                elif installment == 1 and tx.jetcheckout_payment_type in ('virtual_pos', 'physical_pos', 'soft_pos'):
                     desc_long = _('Single payment')
                 else:
                     desc_long = _('%s installment') % desc

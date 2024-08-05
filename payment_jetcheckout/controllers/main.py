@@ -119,7 +119,7 @@ class PayloxController(http.Controller):
             else:
                 return acquirer
         else:
-            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(company=PayloxController._get('company'), website=request.website, providers=providers, limit=limit)
+            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
             PayloxController._set('acquirer', acquirer.id)
             return acquirer
 
@@ -380,6 +380,7 @@ class PayloxController(http.Controller):
             "language": "tr",
         }
 
+        index = 1    
         shopping_credits = []
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
@@ -387,6 +388,7 @@ class PayloxController(http.Controller):
             if result['response_code'] == "00":
                 for installment in result['installment_options']:
                     shopping_credits.append({
+                        'id': index,
                         'name': installment['bank_name'],
                         'code': installment['bank_code'],
                         'image': installment['bank_logo'],
@@ -396,6 +398,7 @@ class PayloxController(http.Controller):
                         'new': installment['bank_supports_new_customer'],
                         'rows': [{
                             'id': i['installment_count'],
+                            'count': i['installment_count'],
                             'amount': i['installment_amount'],
                             'corate': i['cost_rate'],
                             'crate': i['customer_rate'],
@@ -405,8 +408,30 @@ class PayloxController(http.Controller):
                             'maxamount': i['max_amount'],
                         } for i in installment.get('installments', [])]
                     })
+                    index += 1
         return shopping_credits
- 
+
+    def _prepare_credit_categs(self, acquirer=None):
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        url = '%s/api/v1/prepayment/sc_itemcategories' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "language": "tr",
+        }
+  
+        categs = []
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            if result['response_code'] == "00":
+                for categ in result['categories']:
+                    categs.append({
+                        'id': categ['id'],
+                        'name': categ['name'],
+                        'desc': categ['description'],
+                    })
+        return categs
+
     def _prepare_wallet(self, acquirer=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         url = '%s/api/v1/prepayment/wallet_options' % acquirer._get_paylox_api_url()
@@ -963,6 +988,7 @@ class PayloxController(http.Controller):
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
     def payment_acquirer(self):
+        self._del()
         acquirer = self._get_acquirer()
         commission = request.env['ir.model.data'].sudo()._xmlid_to_res_id('payment_jetcheckout.product_commission')
         return {
@@ -975,6 +1001,7 @@ class PayloxController(http.Controller):
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
     def payment_card_type(self, acquirer=False):
+        self._del()
         acquirer = self._get_acquirer(acquirer=acquirer)
         if acquirer:
             return [{'id': icon.id, 'name': icon.name, 'src': icon.image} for icon in acquirer.payment_icon_ids]
@@ -982,6 +1009,7 @@ class PayloxController(http.Controller):
 
     @http.route('/payment/card/family', type='json', auth='user', website=True)
     def payment_card_family(self, **kwargs):
+        self._del()
         acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
         if acquirer:
             return self._get_card_family(**kwargs)
@@ -989,9 +1017,26 @@ class PayloxController(http.Controller):
  
     @http.route('/payment/card/banks', type='json', auth='user', website=True)
     def payment_card_banks(self, **kwargs):
+        self._del()
         acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
         if acquirer:
             return self._get_bank_codes(**kwargs)
+        return []
+
+    @http.route('/payment/credit/banks', type='json', auth='user', website=True)
+    def payment_credit_banks(self, **kwargs):
+        self._del()
+        acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
+        if acquirer:
+            return self._prepare_credit(**kwargs)
+        return []
+
+    @http.route('/payment/credit/categs', type='json', auth='user', website=True)
+    def payment_credit_categs(self, **kwargs):
+        self._del()
+        acquirer = self._get_acquirer(acquirer=kwargs['acquirer'])
+        if acquirer:
+            return self._prepare_credit_categs(**kwargs)
         return []
 
     @http.route(['/pay'], type='http', auth='user', website=True)
@@ -1346,7 +1391,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment_count,
                 'jetcheckout_installment_plus': 0,
-                'jetcheckout_installment_description': False,
+                'jetcheckout_installment_description': str(installment_count),
                 'jetcheckout_installment_amount': amount,
                 'jetcheckout_commission_rate': 0,
                 'jetcheckout_commission_amount': 0,
@@ -1508,6 +1553,14 @@ class PayloxController(http.Controller):
                 "bank_code": kwargs['code'],
                 "hash_data": hash,
                 "language": "tr",
+                "basket_items": [{
+                    "id": "1",
+                    "name": "Diğer",
+                    "brandName": "Diğer",
+                    "qty": 1,
+                    "category": 3,
+                    "unitPrice": amount_total,
+                }],
                 #"campaign_name": campaign,
             }
 
@@ -1531,7 +1584,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment['count'],
                 'jetcheckout_installment_plus': 0,
-                'jetcheckout_installment_description': False,
+                'jetcheckout_installment_description': str(installment['count']),
                 'jetcheckout_installment_amount': amount / installment['count'] if installment['count'] > 0 else amount,
                 'jetcheckout_commission_rate': installment['corate'],
                 'jetcheckout_commission_amount': amount_cost,
@@ -1571,7 +1624,7 @@ class PayloxController(http.Controller):
                 })
 
                 if not float_compare(amount, sale_order_id.amount_total, 2):
-                    customer_basket = [{
+                    basket_items = [{
                         "id": line.product_id.default_code or str(line.product_id.id),
                         "name": line.product_id.name,
                         "description": line.name,
@@ -1583,7 +1636,7 @@ class PayloxController(http.Controller):
 
                     if amount_customer > 0:
                         product = request.env.ref('payment_jetcheckout.product_commission').sudo()
-                        customer_basket.append({
+                        basket_items.append({
                             "id": product.default_code or str(product.id),
                             "name": product.display_name,
                             "description": product.name,
@@ -1592,7 +1645,7 @@ class PayloxController(http.Controller):
                             "category": product.categ_id.name,
                             "is_physical": False,
                         })
-                    data.update({"customer_basket": customer_basket})
+                    data.update({"basket_items": basket_items})
 
             elif invoice_id:
                 tx.invoice_ids = [(4, invoice_id)]
@@ -1615,14 +1668,6 @@ class PayloxController(http.Controller):
             data.update({
                 "success_url": "https://%s%s" % (base_url, success_url),
                 "fail_url": "https://%s%s" % (base_url, fail_url),
-                "basket_items": [{
-                    "id": "1",
-                    "name": "Test",
-                    "brandName": "Test",
-                    "qty": 1,
-                    "unitPrice": 1,
-                    "category": 3,
-                }],
                 "customer":  {
                     "name": fullname[0],
                     "surname": fullname[-1],
@@ -1640,6 +1685,7 @@ class PayloxController(http.Controller):
                 },
             })
 
+            data.update(self._get_data_values(data, **kwargs))
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
@@ -1714,7 +1760,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': 1,
                 'jetcheckout_installment_plus': 0,
-                'jetcheckout_installment_description': False,
+                'jetcheckout_installment_description': '0',
                 'jetcheckout_installment_amount': amount,
                 'jetcheckout_commission_rate': 0,
                 'jetcheckout_commission_amount': 0,
