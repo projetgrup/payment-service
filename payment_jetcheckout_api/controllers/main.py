@@ -87,7 +87,7 @@ class PayloxApiController(Controller):
         if not tx:
             raise NotFound()
  
-        self._set('company', tx.company_id.id)
+        self._set('company', tx.company_id.id) #TODO Its acquirer bound has been released
 
         if tx.jetcheckout_api_method:
             return werkzeug.utils.redirect('/payment/%s' % tx.jetcheckout_api_method)

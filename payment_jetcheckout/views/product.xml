@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_product_category" model="ir.ui.view">
+    <field name="model">product.category</field>
+    <field name="inherit_id" ref="product.product_category_form_view"/>
+    <field name="arch" type="xml">
+        <group name="first" position="after">
+            <group name="payment_jetcheckout">
+                <group string="Paylox Options">
+                    <label for="jetcheckout_credit_categ_id" string="Shopping Credit Category"/>
+                    <div class="o_row">
+                        <field name="jetcheckout_credit_categ_id" options="{'no_create': True, 'no_open': True}"/>
+                        <button name="update_jetcheckout_credit_categ" class="oe_edit_only" type="object" string="Update" icon="fa-refresh"/>
+                    </div>
+                </group>
+            </group>
+        </group>
+    </field>
+    </record>
+</odoo>
