@@ -485,28 +485,57 @@ class Partner(models.Model):
         return self.company_id and self.company_id.name or self.env.company.name
 
     def action_grant_access(self):
-        self.ensure_one()
-        self._check_portal_user()
+        count = len(self)
+        errors = {}
 
-        if self.is_portal or self.is_internal:
-            raise UserError(_('The partner "%s" already has the portal access.', self.partner_id.name))
+        def _prepare_error(partner, error):
+            if count > 1:
+                errors[partner.id] = {
+                    'id': partner.id,
+                    'name': partner.name,
+                    'error': str(error)
+                }
+            else:
+                raise error
 
         self_sudo = self.sudo()
-        group_portal = self_sudo.env.ref('base.group_portal')
-        group_public = self_sudo.env.ref('base.group_public')
+        for partner in self:
+            try:
+                partner._check_portal_user()
+            except Exception as e:
+                _prepare_error(partner, e)
+                continue
 
-        user = self.users_id
+            if partner.is_portal or partner.is_internal:
+                e = UserError(_('The partner "%s" already has the portal access.', partner.name))
+                _prepare_error(partner, e)
+                continue
 
-        if not user:
-            company = self.company_id or self.env.company
-            user = self_sudo.with_company(company.id)._create_portal_user()
+            group_portal = self_sudo.env.ref('base.group_portal')
+            group_public = self_sudo.env.ref('base.group_public')
 
-        user = user.sudo()
-        if not user.active or user.has_group('base.group_public'):
-            user.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
-            self_sudo.signup_prepare()
+            user = partner.users_id
+            if not user:
+                company = self.company_id or self.env.company
+                user = self_sudo.with_company(company.id)._create_portal_user()
 
-        self_sudo.with_context(active_test=True)._send_portal_email()
+            user = user.sudo()
+            if not user.active or user.has_group('base.group_public'):
+                user.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+                self_sudo.signup_prepare()
+
+            self_sudo.with_context(active_test=True)._send_portal_email()
+            self.env.cr.commit()
+        
+        if errors:
+            error = ['%s (%s): %s' % (partner['name'], partner['id'], partner['error']) for partner in errors.values()]
+            count = count - len(error)
+            if count == 0:
+                message = _('%s partners have been granted. Errors are as following:\n%s')
+            else:
+                message = _('%s partners have been successfully granted. But some error occured for following records:\n%s')
+            raise UserError(message % (count, '\n'.join(error)))
+
         return True
 
     def action_revoke_access(self):
