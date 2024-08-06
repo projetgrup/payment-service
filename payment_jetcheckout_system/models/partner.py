@@ -498,7 +498,6 @@ class Partner(models.Model):
             else:
                 raise error
 
-        self_sudo = self.sudo()
         for partner in self:
             try:
                 partner._check_portal_user()
@@ -511,20 +510,21 @@ class Partner(models.Model):
                 _prepare_error(partner, e)
                 continue
 
-            group_portal = self_sudo.env.ref('base.group_portal')
-            group_public = self_sudo.env.ref('base.group_public')
+            partner_sudo = partner.sudo()
+            group_portal = partner_sudo.env.ref('base.group_portal')
+            group_public = partner_sudo.env.ref('base.group_public')
 
             user = partner.users_id
             if not user:
                 company = self.company_id or self.env.company
-                user = self_sudo.with_company(company.id)._create_portal_user()
+                user = partner_sudo.with_company(company.id)._create_portal_user()
 
             user = user.sudo()
             if not user.active or user.has_group('base.group_public'):
                 user.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
-                self_sudo.signup_prepare()
+                partner_sudo.signup_prepare()
 
-            self_sudo.with_context(active_test=True)._send_portal_email()
+            partner_sudo.with_context(active_test=True)._send_portal_email()
             self.env.cr.commit()
         
         if errors:
