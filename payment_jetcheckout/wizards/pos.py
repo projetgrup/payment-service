@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 from odoo import fields, models, api, _
 
 
@@ -121,6 +122,12 @@ class PaymentPayloxApiPos(models.TransientModel):
         return res
 
     def unlink(self):
+        try:
+            if inspect.currentframe().f_back.f_code.co_name.startswith('_transient'):
+                return super().unlink()
+        except:
+            pass
+
         if not self.env.context.get('no_sync'):
             for pos in self:
                 pos.acquirer_id._rpc(pos._remote_name, 'unlink', pos.res_id)

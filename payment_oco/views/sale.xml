@@ -16,7 +16,7 @@
                 <button name="system_oco_update_amount_approved" type="object" string="Update Approved Amount"/>
             </div>
         </xpath>
-        <xpath expr="//field[@name='tax_totals_json']" position="after">
+        <xpath expr="//group[@name='sale_total']" position="inside">
             <field name="amount_approved" widget="monetary" attrs="{'invisible': [('field_amount_approved', '=', False)]}"/>
             <field name="field_amount_approved" invisible="1"/>
         </xpath>

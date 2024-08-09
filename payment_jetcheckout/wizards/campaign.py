@@ -34,7 +34,7 @@ class PaymentPayloxApiCampaign(models.TransientModel):
     virtual_pos_id = fields.Many2one('payment.acquirer.jetcheckout.api.pos')
     res_id = fields.Integer(readonly=True)
     offer_name = fields.Char('Campaign Name', required=True)
-    currency_id = fields.Many2one('payment.acquirer.jetcheckout.api.currency', required=True)
+    currency_id = fields.Many2one('payment.acquirer.jetcheckout.api.currency', required=True, ondelete='cascade')
     is_active = fields.Boolean('Active', default=True)
     from_date = fields.Date('Start Date')
     to_date = fields.Date('End Date')
