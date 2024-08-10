@@ -89,7 +89,7 @@
                         <label for="lang"/>
                         <div class="o_row">
                             <field name="lang" required="1"/>
-                            <button type="action" name="56" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" title="More languages"/>
+                            <button type="action" name="%(base.res_lang_act_window)d" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" title="More languages"/>
                         </div>
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}"/>
                         <field name="tz_offset" invisible="1"/>

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
@@ -99,6 +100,12 @@ class PaymentPayloxApiApplication(models.TransientModel):
         return res
 
     def unlink(self):
+        try:
+            if inspect.currentframe().f_back.f_code.co_name.startswith('_transient'):
+                return super().unlink()
+        except:
+            pass
+
         if 'application' in self.env.context:
             for app in self:
                 if app.in_use:
