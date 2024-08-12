@@ -303,6 +303,7 @@
                     <field name="submerchant_id"/>
                     <field name="external_id"/>
                     <field name="name"/>
+                    <field name="merchant_name"/>
                     <field name="type"/>
                     <field name="currency"/>
                     <field name="tax_number"/>
