@@ -44,6 +44,7 @@ class PartnerBank(models.Model):
                 bank.api_result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
 
     api_ref = fields.Char('Reference')
+    api_merchant = fields.Char('Merchant')
     api_state = fields.Boolean('State')
     api_message = fields.Char('Message')
     api_result = fields.Html('Result', sanitize=False, compute='_compute_api_result')
@@ -74,7 +75,7 @@ class PartnerBank(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if 'acc_number' in values:
+        if 'acc_number' in values or 'api_merchant' in values:
             for bank in self:
                 if bank.api_ref:
                     bank.action_api_save(mode='update')
@@ -139,6 +140,7 @@ class PartnerBank(models.Model):
                     "address": re.sub(r'\s+', ' ', address),
                     "contact_name": contact_name,
                     "contact_surname": contact_surname,
+                    "merchant_name": self.api_merchant,
                     "currency": "TRY",
                     "language": "tr",
                 }
@@ -863,6 +865,7 @@ class PartnerBankSubmerchantQuery(models.Model):
     submerchant_id = fields.Char(readonly=True)
     external_id = fields.Char(readonly=True)
     name = fields.Char(readonly=True)
+    merchant_name = fields.Char(readonly=True)
     type = fields.Char(readonly=True)
     currency = fields.Char(readonly=True)
     tax_number = fields.Char(readonly=True)
