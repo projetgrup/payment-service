@@ -42,6 +42,7 @@
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="string">Student</attribute>
+            <attribute name="domain">[('parent_id','=',False), ('system', '=', context.get('active_system')), ('company_id','=',company_id)]</attribute>
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="after">
             <field name="system_student_faculty_id" required="1" force_save="1" options="{'no_open': True}" domain="[('company_id','=',company_id)]"/>

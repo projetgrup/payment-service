@@ -40,6 +40,9 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             partner: new fields.element(),
             amount: new fields.float({
                 default: 0,
+                events: [
+                    ['update', this._onUpdateAmount],
+                ],
                 mask: payloxPage.prototype._maskAmount.bind(this),
             }),
             page: {
@@ -123,6 +126,11 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         });
     },
 
+    _onUpdateAmount: function () {
+        this.wizard.amount._.updateValue();
+        this.wizard.amount.$.data('value', this.wizard.amount.value);
+    },
+ 
     _onPause: async function(time=0) {
         await new Promise(resolve => setTimeout(resolve, time));
     },
@@ -179,6 +187,9 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.button.login.done.$.addClass('border-danger text-danger');
         } else {
             this.partner.value = partner.id;
+            if (partner.amount) {
+                this.wizard.amount.$.val(format.float(partner.amount)).change().trigger('update');
+            }
             this.vat.value = this.wizard.vat.value;
             this.wizard.partner.html = partner.name || '-';
             this._queryPartnerPostprocess(partner);
@@ -368,7 +379,7 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
         $element.css('transform', 'translate(' + position.left + 'px, ' + position.top + 'px)');
         await this._onPause(500);
 
-        $('.payment-system .payment-card input[name=amount]').val(format.float(amount)).change().trigger('update');
+        $('#payment_card input[name=amount]').val(format.float(amount)).change().trigger('update');
         const page = $('.payment-dynamic');
         overlay.css('opacity', '0');
         page.css('opacity', '0');
