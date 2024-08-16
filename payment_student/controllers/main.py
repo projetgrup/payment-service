@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from urllib.parse import urlparse
+
 from odoo import _
 from odoo.http import request, route
 from odoo.exceptions import UserError
@@ -159,7 +161,7 @@ class PayloxSystemStudentController(Controller):
                 student = request.env['res.partner'].sudo().search([('vat', '=', kwargs['vat']), ('company_id', '=', company.id)], limit=1)
 
             if student:
-                return {
+                values = {
                     'id': student.id,
                     'name': student.name,
                     'system_student_faculty_id': student.system_student_faculty_id.name,
@@ -168,6 +170,12 @@ class PayloxSystemStudentController(Controller):
                     'phone': student.mobile,
                     'email': student.email,
                 }
+                path = urlparse(request.httprequest.referrer).path
+                if path and '/my/payment/link' in path:
+                    values.update({
+                        'amount': sum(student.payable_ids.mapped('amount'))
+                    })
+                return values
 
             return {}
         return super().page_system_payment_query_partner(**kwargs)

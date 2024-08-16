@@ -86,9 +86,8 @@ publicWidget.registry.payloxPaymentCompany = publicWidget.Widget.extend({
     },
  
     start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
-            payloxPage.prototype._start.apply(self);
+        return this._super.apply(this, arguments).then(() => {
+            payloxPage.prototype._start.apply(this);
         });
     },
 
