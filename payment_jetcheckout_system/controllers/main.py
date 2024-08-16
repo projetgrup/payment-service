@@ -48,6 +48,9 @@ class PayloxSystemController(Controller):
         if request.env.user.share or not request.env.user.payment_contactless_ok:
             raise werkzeug.exceptions.NotFound()
 
+    def _check_payment_link_page(self):
+        pass
+
     def _check_payment_page(self):
         if not request.env.company.payment_page_ok:
             raise werkzeug.exceptions.NotFound()
@@ -107,10 +110,11 @@ class PayloxSystemController(Controller):
         url, tx, status = super()._process(**kwargs)
         if not status and (tx.company_id.system or tx.partner_id.system):
             status = True
-            if (urlparse(tx.jetcheckout_url_address).path == '/my/payment'):
-                path = '/my/payment/result'
-            else:
+            path = urlparse(tx.jetcheckout_url_address).path
+            if (path.startswith('/p/')):
                 path = tx.partner_id._get_share_url()
+            else:
+                path = '/my/payment/result'
             url = '%s?=%s' % (path, kwargs.get('order_id'))
         return url, tx, status
 
@@ -186,6 +190,7 @@ class PayloxSystemController(Controller):
 
     @http.route('/p/<token>', type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, website=True)
     def page_system_link(self, token, **kwargs):
+        self._check_payment_link_page()
         partner = self._get_parent(token)
         transaction = None
         if '' in kwargs:
@@ -781,9 +786,6 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment/link', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
     def page_system_payment_link(self, **kwargs):
-        if request.env.user.has_group('base.group_public'):
-            raise werkzeug.exceptions.NotFound()
-
         if not kwargs.get('values', {}).get('no_redirect'):
             redirect = self._check_redirect(request.env.user.partner_id)
             if redirect:
@@ -887,7 +889,7 @@ class PayloxSystemController(Controller):
             url += '?=%s' % tx.jetcheckout_order_id
         return werkzeug.utils.redirect(url)
 
-    @http.route('/my/payment/result', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    @http.route('/my/payment/result', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_result(self, **kwargs):
         values = self._prepare()
         if '' in kwargs:
