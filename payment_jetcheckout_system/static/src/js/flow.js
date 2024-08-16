@@ -187,9 +187,18 @@ publicWidget.registry.payloxSystemPageDynamic = publicWidget.Widget.extend({
             this.wizard.button.login.done.$.addClass('border-danger text-danger');
         } else {
             this.partner.value = partner.id;
-            if (partner.amount) {
-                this.wizard.amount.$.val(format.float(partner.amount)).change().trigger('update');
+            if (partner.items) {
+                // Sum of amounts from related payment links are retrieved.
+                // Update amount input and create payment link input.
+                let amountTotal = 0;
+                let amountInput = $('#payment_card input[name=amount]');
+                for (const [id, amount] of partner.items) {
+                    amountTotal += amount;
+                    amountInput.after(`<input type="checkbox" class="input-switch d-none" data-id="${id}" data-paid="${amount}" disabled="disabled" checked="checked"/>`);
+                }                    
+                this.wizard.amount.$.val(format.float(amountTotal)).change().trigger('update');
             }
+
             this.vat.value = this.wizard.vat.value;
             this.wizard.partner.html = partner.name || '-';
             this._queryPartnerPostprocess(partner);
