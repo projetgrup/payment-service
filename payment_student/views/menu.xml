@@ -2,11 +2,11 @@
 <odoo>
     <menuitem id="menu_main" name="SPS" web_icon="payment_student,static/description/icon.png" sequence="24"/>
     <menuitem id="menu_dashboard" action="payment_jetcheckout_system.action_dashboard" parent="menu_main" sequence="0"/>
-    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1" groups="group_subsystem_school"/>
-    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="2" groups="group_subsystem_school"/>
-    <menuitem id="menu_university_parent" action="action_university_parent" parent="menu_main" sequence="2" groups="group_subsystem_university"/>
-    <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="3" groups="group_subsystem_school"/>
-    <menuitem id="menu_university_payment" action="action_university_item" parent="menu_main" sequence="3" groups="group_subsystem_university"/>
+    <menuitem id="menu_child" action="action_child" parent="menu_main" sequence="1" groups="group_subsystem_school,group_student_manager"/>
+    <menuitem id="menu_parent" action="action_parent" parent="menu_main" sequence="2" groups="group_subsystem_school,group_student_manager"/>
+    <menuitem id="menu_university_parent" action="action_university_parent" parent="menu_main" sequence="2" groups="group_subsystem_university,group_student_manager"/>
+    <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="3" groups="group_subsystem_school,group_student_manager"/>
+    <menuitem id="menu_university_payment" action="action_university_item" parent="menu_main" sequence="3" groups="group_subsystem_university,group_student_manager"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="4"/>
 
     <!--<menuitem id="menu_messages" name="Messages" parent="menu_main" sequence="4"/>
@@ -21,11 +21,11 @@
     <menuitem id="menu_user" action="payment_jetcheckout_system.action_user" parent="menu_companies" sequence="2"/>
 
     <menuitem id="menu_schools" name="School Settings" parent="menu_conf" sequence="2"/>
-    <menuitem id="menu_school" action="action_school" parent="menu_schools" sequence="1" groups="group_subsystem_school"/>
-    <menuitem id="menu_faculty" action="action_faculty" parent="menu_schools" sequence="1" groups="group_subsystem_university"/>
-    <menuitem id="menu_department" action="action_department" parent="menu_schools" sequence="1" groups="group_subsystem_university"/>
-    <menuitem id="menu_program" action="action_program" parent="menu_schools" sequence="1" groups="group_subsystem_university"/>
-    <menuitem id="menu_class" action="action_class" parent="menu_schools" sequence="2" groups="group_subsystem_school"/>
+    <menuitem id="menu_school" action="action_school" parent="menu_schools" sequence="1" groups="group_subsystem_school,group_student_manager"/>
+    <menuitem id="menu_faculty" action="action_faculty" parent="menu_schools" sequence="1" groups="group_subsystem_university,group_student_manager"/>
+    <menuitem id="menu_department" action="action_department" parent="menu_schools" sequence="1" groups="group_subsystem_university,group_student_manager"/>
+    <menuitem id="menu_program" action="action_program" parent="menu_schools" sequence="1" groups="group_subsystem_university,group_student_manager"/>
+    <menuitem id="menu_class" action="action_class" parent="menu_schools" sequence="2" groups="group_subsystem_school,group_student_manager"/>
     <menuitem id="menu_term" action="action_term" parent="menu_schools" sequence="3"/>
     <menuitem id="menu_bursary" action="action_bursary" parent="menu_schools" sequence="4"/>
     <menuitem id="menu_payment_type" action="action_payment_type" parent="menu_schools" sequence="5"/>

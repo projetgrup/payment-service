@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import werkzeug
 from urllib.parse import urlparse
 
 from odoo import _
@@ -9,57 +10,71 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystem
 
 class PayloxSystemStudentController(Controller):
 
+    def _check_payment_link_page(self):
+        super()._check_payment_link_page()
+        if request.env.company.system == 'student' and request.env.company.subsystem == 'student_university':
+            raise werkzeug.exceptions.NotFound()
+
     def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'student':
-            items = []
-            ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
-            if ids:
-                payment_ids = request.env['payment.item'].sudo().browse(ids)
-                payment_table = payment_ids.get_student_payment_table(installment=int(kwargs['installment']['id']))
-                students = {i: 0 for i in payment_ids.mapped('child_id').ids}
-                for payment in payment_ids:
-                    sid = payment.child_id.id
-                    total_amount = 0
-                    bursary_amount = 0
-                    sibling_amount = 0
-                    prepayment_amount = 0
 
-                    if payment_table['payments']:
-                        for pay in payment_table['payments']:
-                            amount = next(filter(lambda s: s['id'] == sid, pay['amount']), None)
-                            total_amount += amount['amount'] if amount else 0
+            items = kwargs.get('items', [])
+            if items:
+                items = request.env['payment.item'].sudo().browse([i for i, null in items])
+                res['paylox_transaction_item_ids'] = [(0, 0, {
+                    'item_id': item.id,
+                    'amount': item.amount,
+                }) for item in items]
 
-                    if payment_table['bursaries']:
-                        for bursary in payment_table['bursaries']:
-                            amount = next(filter(lambda s: s['id'] == sid, bursary['amount']), None)
-                            bursary_amount += amount['amount'] if amount else 0
+            else:
+                ids = 'jetcheckout_item_ids' in res and res['jetcheckout_item_ids'][0][2] or False
+                if ids:
+                    payment_ids = request.env['payment.item'].sudo().browse(ids)
+                    payment_table = payment_ids.get_student_payment_table(installment=int(kwargs['installment']['id']))
+                    students = {i: 0 for i in payment_ids.mapped('child_id').ids}
+                    for payment in payment_ids:
+                        sid = payment.child_id.id
+                        total_amount = 0
+                        bursary_amount = 0
+                        sibling_amount = 0
+                        prepayment_amount = 0
 
-                    if payment_table['siblings']:
-                        amount = next(filter(lambda s: s['id'] == sid, payment_table['siblings']), None)
-                        sibling_amount = amount['amount'] if amount else 0
+                        if payment_table['payments']:
+                            for pay in payment_table['payments']:
+                                amount = next(filter(lambda s: s['id'] == sid, pay['amount']), None)
+                                total_amount += amount['amount'] if amount else 0
 
-                    if payment_table['discounts']:
-                        amount = next(filter(lambda s: s['id'] == sid, payment_table['discounts']), None)
-                        prepayment_amount = amount['amount'] if amount else 0
+                        if payment_table['bursaries']:
+                            for bursary in payment_table['bursaries']:
+                                amount = next(filter(lambda s: s['id'] == sid, bursary['amount']), None)
+                                bursary_amount += amount['amount'] if amount else 0
 
-                    items.append((0, 0, {
-                        'item_id': payment.id,
-                        'ref': payment.ref,
-                        'advance': payment.advance,
-                        'amount': total_amount,
-                        'bursary_amount': bursary_amount,
-                        'sibling_amount': sibling_amount,
-                        'prepayment_amount': prepayment_amount,
-                    }))
+                        if payment_table['siblings']:
+                            amount = next(filter(lambda s: s['id'] == sid, payment_table['siblings']), None)
+                            sibling_amount = amount['amount'] if amount else 0
 
-                res['paylox_transaction_item_ids'] = items
+                        if payment_table['discounts']:
+                            amount = next(filter(lambda s: s['id'] == sid, payment_table['discounts']), None)
+                            prepayment_amount = amount['amount'] if amount else 0
+
+                        items.append((0, 0, {
+                            'item_id': payment.id,
+                            'ref': payment.ref,
+                            'advance': payment.advance,
+                            'amount': total_amount,
+                            'bursary_amount': bursary_amount,
+                            'sibling_amount': sibling_amount,
+                            'prepayment_amount': prepayment_amount,
+                        }))
+
+                    res['paylox_transaction_item_ids'] = items
         return res
 
     def _prepare_system(self, company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
-        if system == 'student':
+        if system == 'student' and company.subsystem in (False, 'student_school'):
             installment = transaction and transaction.jetcheckout_installment_count or 0
             res.update({
                 'discount_single': company._get_student_discount(installment=installment) if company.student_discount_advance_active else 0,
@@ -173,7 +188,7 @@ class PayloxSystemStudentController(Controller):
                 path = urlparse(request.httprequest.referrer).path
                 if path and '/my/payment/link' in path:
                     values.update({
-                        'amount': sum(student.payable_ids.mapped('amount'))
+                        'items': [[item.id, item.amount] for item in student.payable_ids]
                     })
                 return values
 
