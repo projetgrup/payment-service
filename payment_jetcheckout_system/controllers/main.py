@@ -779,6 +779,66 @@ class PayloxSystemController(Controller):
             'Expires': '-1'
         })
 
+    @http.route('/my/payment/link', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
+    def page_system_payment_link(self, **kwargs):
+        if request.env.user.has_group('base.group_public'):
+            raise werkzeug.exceptions.NotFound()
+
+        if not kwargs.get('values', {}).get('no_redirect'):
+            redirect = self._check_redirect(request.env.user.partner_id)
+            if redirect:
+                return redirect
+
+        self._check_payment_page()
+
+        params = kwargs.get('', {})
+        if params:
+            params = json.loads(base64.b64decode(params))
+
+        partner = None
+        company = request.env.company
+        if 'pid' in params:
+            partner = self._get_parent(params['pid'])
+        elif 'vat' in params and isinstance(params['vat'], str) and 9 < len(params['vat']) < 14:
+            partner = request.env['res.partner'].sudo().search([
+                ('vat', '!=', False),
+                ('vat', '=', params['vat']),
+                ('company_id', '=', company.id),
+                ('system', '=', company.system)
+            ])
+            if len(partner) != 1:
+                partner = None
+        else:
+            partner = request.website.user_id.partner_id.sudo()
+
+        if not partner:
+            partner = self._get_partner()
+
+        if 'currency' in params and isinstance(params['currency'], str) and len(params['currency']) == 3:
+            currency = request.env['res.currency'].sudo().search([('name', '=', params['currency'])], limit=1)
+        else:
+            currency = None
+
+        self._del()
+        self._set('partner', partner.id)
+
+        values = self._prepare(partner=partner, company=company, currency=currency)
+        values.update({
+            'success_url': '/my/payment/success',
+            'fail_url': '/my/payment/fail',
+            'system': company.system,
+            'subsystem': company.subsystem,
+            'vat': params.get('vat'),
+            'flow': 'dynamic',
+            'readonly': True,
+        })
+
+        return request.render('payment_jetcheckout_system.page_payment', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
     @http.route('/my/payment/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_payment_login(self, token, **kwargs):
         partner = self._get_parent(token)
@@ -1031,12 +1091,13 @@ class PayloxSystemController(Controller):
             ('vat', '=', kwargs.get('vat')),
             ('company_id', '=', request.env.company.id),
         ], limit=1)
+
         if not partner:
             return {
                 'vat': '11111111111',
             }
         else:
-            return partner.read([
+            values = partner.read([
                 'id',
                 'vat',
                 'name',
@@ -1047,6 +1108,13 @@ class PayloxSystemController(Controller):
                 'country_id',
                 'state_id',
             ])[0]
+
+            path = urlparse(request.httprequest.referrer).path
+            if path and '/my/payment/link' in path:
+                values.update({
+                    'amount': sum(partner.payable_ids.mapped('amount'))
+                })
+            return values
         return {}
 
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)

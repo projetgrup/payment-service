@@ -157,8 +157,30 @@
     ]"/>
     </record>
 
+    <record id="action_school_item" model="ir.actions.act_window">
+    <field name="name">Collections</field>
+    <field name="res_model">payment.item</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="search_view_id" ref="item_search"/>
+    <field name="domain">[('system', '=', 'student')]</field>
+    <field name="context">{'active_system': 'student'}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No collections yet
+        </p>
+        <p>
+            Created collections are listed here
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('item_tree')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('payment_jetcheckout_system.item_pivot')}),
+    ]"/>
+    </record>
+
     <record id="action_university_item" model="ir.actions.act_window">
-    <field name="name">Payments</field>
+    <field name="name">Collections</field>
     <field name="res_model">payment.item</field>
     <field name="view_mode">tree,pivot</field>
     <field name="search_view_id" ref="university_item_search"/>
@@ -166,10 +188,10 @@
     <field name="context">{'active_system': 'student'}</field>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
-            No payments yet
+            No collections yet
         </p>
         <p>
-            Created payments are listed here
+            Created collections are listed here
         </p>
     </field>
     <field name="view_ids" eval="[
