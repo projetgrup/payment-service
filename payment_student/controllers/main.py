@@ -111,46 +111,58 @@ class PayloxSystemStudentController(Controller):
                 ], limit=1)
 
                 faculty = False
-                if res.get('faculty_code') or res.get('faculty_name'):
+                if res.get('faculty_code'):
                     faculty = request.env['res.student.faculty'].sudo().search([
                         ('company_id', '=', company.id),
-                        '|', ('code', '=', res.get('faculty_code', False)),
-                             ('name', '=', res.get('faculty_name', False)),
-                    ])
-                    if not faculty and res.get('faculty_name'):
-                        faculty = request.env['res.student.faculty'].sudo().create({
-                            'name': res.get('faculty_name', False),
-                            'code': res.get('faculty_code', False),
-                            'company_id': company.id,
-                        })
+                        ('code', '=', res.get('faculty_code', False)),
+                    ], limit=1)
+                elif res.get('faculty_name'):
+                    faculty = request.env['res.student.faculty'].sudo().search([
+                        ('company_id', '=', company.id),
+                        ('name', '=', res.get('faculty_name', False)),
+                    ], limit=1)
+                if not faculty and res.get('faculty_name'):
+                    faculty = request.env['res.student.faculty'].sudo().create({
+                        'name': res.get('faculty_name', False),
+                        'code': res.get('faculty_code', False),
+                        'company_id': company.id,
+                    })
 
                 department = False
-                if res.get('department_code') or res.get('department_name'):
+                if res.get('department_code'):
                     department = request.env['res.student.department'].sudo().search([
                         ('company_id', '=', company.id),
-                        '|', ('code', '=', res.get('department_code', False)),
-                             ('name', '=', res.get('department_name', False)),
-                    ])
-                    if not department and res.get('department_name'):
-                        department = request.env['res.student.department'].sudo().create({
-                            'name': res.get('department_name', False),
-                            'code': res.get('department_code', False),
-                            'company_id': company.id,
-                        })
+                        ('code', '=', res.get('department_code', False)),
+                    ], limit=1)
+                elif res.get('department_name'):
+                    department = request.env['res.student.department'].sudo().search([
+                        ('company_id', '=', company.id),
+                        ('name', '=', res.get('department_name', False)),
+                    ], limit=1)
+                if not department and res.get('department_name'):
+                    department = request.env['res.student.department'].sudo().create({
+                        'name': res.get('department_name', False),
+                        'code': res.get('department_code', False),
+                        'company_id': company.id,
+                    })
 
                 program = False
-                if res.get('program_code') or res.get('program_name'):
+                if res.get('program_code'):
                     program = request.env['res.student.program'].sudo().search([
                         ('company_id', '=', company.id),
-                        '|', ('code', '=', res.get('program_code', False)),
-                             ('name', '=', res.get('program_name', False)),
-                    ])
-                    if not program and res.get('program_name'):
-                        program = request.env['res.student.program'].sudo().create({
-                            'name': res.get('program_name', False),
-                            'code': res.get('program_code', False),
-                            'company_id': company.id,
-                        })
+                        ('code', '=', res.get('program_code', False)),
+                    ], limit=1)
+                elif res.get('program_name'):
+                    program = request.env['res.student.program'].sudo().search([
+                        ('company_id', '=', company.id),
+                        ('name', '=', res.get('program_name', False)),
+                    ], limit=1)
+                if not program and res.get('program_name'):
+                    program = request.env['res.student.program'].sudo().create({
+                        'name': res.get('program_name', False),
+                        'code': res.get('program_code', False),
+                        'company_id': company.id,
+                    })
 
                 if not res.get('email'):
                     email = company.email
