@@ -107,45 +107,48 @@ class PayloxSystemStudentController(Controller):
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', res.get('vat')),
                     '|', ('company_id', '=', False),
-                    ('company_id', '=', company.id),
+                         ('company_id', '=', company.id),
                 ], limit=1)
 
                 faculty = False
-                if res.get('faculty_code'):
+                if res.get('faculty_code') or res.get('faculty_name'):
                     faculty = request.env['res.student.faculty'].sudo().search([
-                        ('code', '=', res.get('faculty_code')),
                         ('company_id', '=', company.id),
+                        '|', ('code', '=', res.get('faculty_code', False)),
+                             ('name', '=', res.get('faculty_name', False)),
                     ])
                     if not faculty and res.get('faculty_name'):
                         faculty = request.env['res.student.faculty'].sudo().create({
-                            'name': res.get('faculty_name'),
-                            'code': res.get('faculty_code'),
+                            'name': res.get('faculty_name', False),
+                            'code': res.get('faculty_code', False),
                             'company_id': company.id,
                         })
 
                 department = False
-                if res.get('department_code'):
+                if res.get('department_code') or res.get('department_name'):
                     department = request.env['res.student.department'].sudo().search([
-                        ('code', '=', res.get('department_code')),
                         ('company_id', '=', company.id),
+                        '|', ('code', '=', res.get('department_code', False)),
+                             ('name', '=', res.get('department_name', False)),
                     ])
                     if not department and res.get('department_name'):
                         department = request.env['res.student.department'].sudo().create({
-                            'name': res.get('department_name'),
-                            'code': res.get('department_code'),
+                            'name': res.get('department_name', False),
+                            'code': res.get('department_code', False),
                             'company_id': company.id,
                         })
 
                 program = False
-                if res.get('program_code'):
+                if res.get('program_code') or res.get('program_name'):
                     program = request.env['res.student.program'].sudo().search([
-                        ('code', '=', res.get('program_code')),
                         ('company_id', '=', company.id),
+                        '|', ('code', '=', res.get('program_code', False)),
+                             ('name', '=', res.get('program_name', False)),
                     ])
                     if not program and res.get('program_name'):
                         program = request.env['res.student.program'].sudo().create({
-                            'name': res.get('program_name'),
-                            'code': res.get('program_code'),
+                            'name': res.get('program_name', False),
+                            'code': res.get('program_code', False),
                             'company_id': company.id,
                         })
 
@@ -200,7 +203,6 @@ class PayloxSystemStudentController(Controller):
 
             return {}
         return super().page_system_payment_query_partner(**kwargs)
-
 
     #@route(['/my/payment/create/partner'], type='json', auth='public', website=True)
     #def page_system_payment_create_partner(self, **kwargs):
