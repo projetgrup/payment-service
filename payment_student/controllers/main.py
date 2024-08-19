@@ -114,6 +114,7 @@ class PayloxSystemStudentController(Controller):
                 if res.get('faculty_code'):
                     faculty = request.env['res.student.faculty'].sudo().search([
                         ('code', '=', res.get('faculty_code')),
+                        ('company_id', '=', company.id),
                     ])
                     if not faculty and res.get('faculty_name'):
                         faculty = request.env['res.student.faculty'].sudo().create({
@@ -126,6 +127,7 @@ class PayloxSystemStudentController(Controller):
                 if res.get('department_code'):
                     department = request.env['res.student.department'].sudo().search([
                         ('code', '=', res.get('department_code')),
+                        ('company_id', '=', company.id),
                     ])
                     if not department and res.get('department_name'):
                         department = request.env['res.student.department'].sudo().create({
@@ -138,6 +140,7 @@ class PayloxSystemStudentController(Controller):
                 if res.get('program_code'):
                     program = request.env['res.student.program'].sudo().search([
                         ('code', '=', res.get('program_code')),
+                        ('company_id', '=', company.id),
                     ])
                     if not program and res.get('program_name'):
                         program = request.env['res.student.program'].sudo().create({
@@ -173,7 +176,10 @@ class PayloxSystemStudentController(Controller):
                     student = request.env['res.partner'].sudo().with_context(skip_student_vat_check=True).create(values)
 
             else:
-                student = request.env['res.partner'].sudo().search([('vat', '=', kwargs['vat']), ('company_id', '=', company.id)], limit=1)
+                student = request.env['res.partner'].sudo().search([
+                    ('vat', '=', kwargs['vat']),
+                    ('company_id', '=', company.id),
+                ], limit=1)
 
             if student:
                 values = {
