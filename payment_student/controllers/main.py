@@ -25,6 +25,7 @@ class PayloxSystemStudentController(Controller):
                 items = request.env['payment.item'].sudo().browse([i for i, null in items])
                 res['paylox_transaction_item_ids'] = [(0, 0, {
                     'item_id': item.id,
+                    'ref': item.ref,
                     'amount': item.amount,
                 }) for item in items]
 
@@ -102,7 +103,7 @@ class PayloxSystemStudentController(Controller):
         company = request.env.company
         if company.system == 'student' and company.subsystem == 'student_university':
             result = request.env['syncops.connector'].sudo()._execute('payment_get_partner_list', params={'vat': kwargs['vat']})
-            if not result == None and isinstance(result, list) and len(result) > 0:
+            if result is not None and isinstance(result, list) and len(result) > 0:
                 res = result[0]
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', res.get('vat')),
@@ -175,6 +176,7 @@ class PayloxSystemStudentController(Controller):
                     'system_student_faculty_id': faculty and faculty.id,
                     'system_student_department_id': department and department.id,
                     'system_student_program_id': program and program.id,
+                    'ref': res.get('ref'),
                     'email': res.get('email'),
                     'mobile': res.get('mobile'),
                 }
@@ -190,6 +192,25 @@ class PayloxSystemStudentController(Controller):
                     })
                     student = request.env['res.partner'].sudo().with_context(skip_student_vat_check=True).create(values)
 
+                if res.get('payments'):
+                    items = request.env['payment.item'].sudo()
+                    items.search([
+                        ('parent_id', '=', student.id),
+                        ('paid', '=', False),
+                    ]).unlink()
+                    items.create([{
+                        'amount': payment.get('amount', 0.0),
+                        'ref': payment.get('ref', False),
+                        'tag': payment.get('tag', False),
+                        'date': payment.get('date', False),
+                        'due_date': payment.get('dateDue', False),
+                        'description': payment.get('description', False),
+                        'system': company.system,
+                        'parent_id': student.id,
+                        'company_id': company.id,
+                        'currency_id': company.currency_id.id,
+                    } for payment in res['payments']])
+
             else:
                 student = request.env['res.partner'].sudo().search([
                     ('vat', '=', kwargs['vat']),
@@ -200,11 +221,11 @@ class PayloxSystemStudentController(Controller):
                 values = {
                     'id': student.id,
                     'name': student.name,
-                    'system_student_faculty_id': student.system_student_faculty_id.name,
-                    'system_student_department_id': student.system_student_department_id.name,
-                    'system_student_program_id': student.system_student_program_id.name,
-                    'phone': student.mobile,
                     'email': student.email,
+                    'phone': student.mobile,
+                    'system_student_faculty_id': student.system_student_faculty_id.name,
+                    'system_student_program_id': student.system_student_program_id.name,
+                    'system_student_department_id': student.system_student_department_id.name,
                 }
                 path = urlparse(request.httprequest.referrer).path
                 if path and '/my/payment/link' in path:
