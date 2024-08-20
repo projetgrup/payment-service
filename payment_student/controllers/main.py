@@ -25,6 +25,7 @@ class PayloxSystemStudentController(Controller):
                 items = request.env['payment.item'].sudo().browse([i for i, null in items])
                 res['paylox_transaction_item_ids'] = [(0, 0, {
                     'item_id': item.id,
+                    'ref': item.ref,
                     'amount': item.amount,
                 }) for item in items]
 
@@ -175,6 +176,7 @@ class PayloxSystemStudentController(Controller):
                     'system_student_faculty_id': faculty and faculty.id,
                     'system_student_department_id': department and department.id,
                     'system_student_program_id': program and program.id,
+                    'ref': res.get('ref'),
                     'email': res.get('email'),
                     'mobile': res.get('mobile'),
                 }
@@ -192,7 +194,10 @@ class PayloxSystemStudentController(Controller):
 
                 if res.get('payments'):
                     items = request.env['payment.item'].sudo()
-                    items.search([('parent_id', '=', student.id)]).unlink()
+                    items.search([
+                        ('parent_id', '=', student.id),
+                        ('paid', '=', False),
+                    ]).unlink()
                     items.create([{
                         'amount': payment.get('amount', 0.0),
                         'ref': payment.get('ref', False),
