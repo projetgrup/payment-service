@@ -2,10 +2,10 @@
 <templates>
     <t t-name="web_dropdown_filter.switch_website_menu">
         <div class="" role="menu">
-            <div class="input-group border-bottom shadow-sm mb-2">
+            <div class="input-group position-sticky bg-white border-bottom shadow-sm mb-2" style="top:-8px">
                 <input
                     type="text"
-                    class="form-control border-0 filter-input"
+                    class="form-control border-0 filter-input rounded-0"
                     placeholder="Search website..."/>
             </div>
             <div class="oe_website_filter">

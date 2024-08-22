@@ -8,7 +8,7 @@
                 <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
             </span>
         </t>
-        <div class="input-group mb-2 oe_search_company border-bottom shadow-sm pb-1">
+        <div class="input-group oe_search_company position-sticky bg-white border-bottom shadow-sm my-2 py-2" style="top:-6px">
             <input
                 type="text"
                 class="form-control border-0" 
