@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web_dropdown_filter.switch_website_menu">
+        <div class="" role="menu">
+            <div class="input-group border-bottom shadow-sm mb-2">
+                <input
+                    type="text"
+                    class="form-control border-0 filter-input"
+                    placeholder="Search website..."/>
+            </div>
+            <div class="oe_website_filter">
+                <t t-foreach="websites" t-as="multi_website_website">
+                    <a role="menuitem" href="#"
+                            t-att-domain="multi_website_website['domain']"
+                            class="dropdown-item oe_menu_text js_multi_website_switch"
+                            t-att-website-id="multi_website_website['website_id']"
+                        >
+                        <span class="oe_website_name" t-esc="multi_website_website['name']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
