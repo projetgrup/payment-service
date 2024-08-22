@@ -57,7 +57,7 @@ class PaymentPlan(models.Model):
     amount_paid = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Paid Amount')
     amount_cost = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Cost Amount')
     installment_count = fields.Integer(readonly=True, default=1)
-    transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True)
+    transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True, ondelete='restrict')
     system = fields.Selection(related='item_id.system', readonly=True, store=True)
     company_id = fields.Many2one(related='item_id.company_id', readonly=True, store=True)
     currency_id = fields.Many2one(related='item_id.currency_id', readonly=True, store=True)

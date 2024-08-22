@@ -3,12 +3,9 @@
 import core from 'web.core';
 import session from 'web.session';
 import AbstractAction from 'web.AbstractAction';
-import { SwitchCompanyMenu } from '@web/webclient/switch_company_menu/switch_company_menu';
 
 const QWeb = core.qweb;
 const _t = core._t;
-
-SwitchCompanyMenu.template = 'system.SwitchCompanyMenu';
 
 const CompanyHierarchy = AbstractAction.extend({
     hasControlPanel: true,

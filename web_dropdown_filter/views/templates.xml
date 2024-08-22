@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_filter" inherit_id="website.user_navbar" name="Website Filter">
+        <xpath expr="//div[@id='website_switcher']/div[@class='dropdown-menu']/t" position="replace">
+            <div class="input-group oe_filter_website mt-n2" t-att-data="multi_website_websites"/>
+        </xpath>
+    </template> 
+</odoo>
