@@ -3,19 +3,16 @@
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Paylox - Theme',
+    'name': 'Paylox Theme',
     'version': '1.0',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
     'sequence': 1456,
-    'category': 'Accounting/Payment Acquirers',
-    'depends': [
-        'payment_jetcheckout_system',
-    ],
-    'data': [
-        'views/templates.xml',
-    ],
+    'category': 'Theme',
+    'depends': ['payment_jetcheckout_system'],
+    'data': ['views/res_config_settings.xml'],
+    'images': ['static/description/theme_default_screenshot.jpg'],
     'application': False,
-    'images': ['static/description/icon.png'],
+    'auto_install': True,
 }
