@@ -1265,6 +1265,8 @@ class PayloxController(http.Controller):
             })
 
             if tx.token_id and not tx.token_id.verified:
+                if not tx.token_id.jetcheckout_ref:
+                    raise Exception(_('Token has not been set'))
                 data.update({
                     "save_card": True,
                     "card_alias": tx.token_id.name,
