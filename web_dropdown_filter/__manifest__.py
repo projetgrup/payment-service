@@ -12,6 +12,7 @@
     'assets': {
         'web.assets_backend': [
             'web_dropdown_filter/static/src/webclient/**/*',
+            'web_dropdown_filter/static/src/scss/menu.scss',
         ],
         'web.assets_qweb': [
             'web_dropdown_filter/static/src/webclient/**/*',

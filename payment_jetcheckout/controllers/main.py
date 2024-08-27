@@ -107,7 +107,7 @@ class PayloxController(http.Controller):
         return werkzeug.utils.redirect(path)
 
     @staticmethod
-    def _get_acquirer(acquirer=None, providers=['jetcheckout'], limit=1):
+    def _get_acquirer(acquirer=None, company=None, providers=['jetcheckout'], limit=1):
         if acquirer == None:
             acquirer = PayloxController._get('acquirer')
             if acquirer:
@@ -119,7 +119,7 @@ class PayloxController(http.Controller):
             else:
                 return acquirer
         else:
-            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
+            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(company=company, website=request.website, providers=providers, limit=limit)
             PayloxController._set('acquirer', acquirer.id)
             return acquirer
 
@@ -987,9 +987,9 @@ class PayloxController(http.Controller):
         return url, tx, False
 
     @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
-    def payment_acquirer(self):
+    def payment_acquirer(self, company):
         self._del()
-        acquirer = self._get_acquirer()
+        acquirer = self._get_acquirer(company=company)
         commission = request.env['ir.model.data'].sudo()._xmlid_to_res_id('payment_jetcheckout.product_commission')
         return {
             'id': acquirer.id,
