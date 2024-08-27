@@ -18,8 +18,8 @@ class PaymentToken(models.Model):
     jetcheckout_limit_tx = fields.Float(string='Transaction Based Limit')
 
     @api.model
-    def create(self, values):
-        res = super().create(values)
+    def default_get(self, fields):
+        res = super().default_get(fields)
         res['jetcheckout_ref'] = str(uuid.uuid4())
         return res
 
