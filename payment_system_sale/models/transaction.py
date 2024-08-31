@@ -15,7 +15,7 @@ class PaymentTransaction(models.Model):
                 'partner_id': self.partner_id.id,
                 'order_line': [(0, 0, {
                     'product_id': product.product_id.id,
-                    'product_uom_qty': product.quantity,
+                    'product_uom_qty': product.qty,
                 }) for product in products]
             })
             self.sale_order_ids = [(6, 0, order.ids)]
