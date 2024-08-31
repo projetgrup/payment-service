@@ -86,10 +86,10 @@
                                 <div class="position-absolute info-icon">
                                     <i class="fa fa-shopping-basket"/>
                                 </div>
-                                <div t-if="len(tx.jetcheckout_api_product_ids) == 1 and tx.jetcheckout_api_product_ids[0]['qty'] &lt;= 1.0">
+                                <div t-if="len(tx.paylox_product_ids) == 1 and tx.paylox_product_ids[0]['qty'] &lt;= 1.0">
                                     <strong class="text-primary font-weight-bold z-index-1">Product</strong>
                                     <p class="z-index-1">
-                                        <t t-esc="tx.jetcheckout_api_product_ids[0]['name']"/>
+                                        <t t-esc="tx.paylox_product_ids[0]['name']"/>
                                     </p>
                                 </div>
                                 <div t-elif="tx.jetcheckout_api_order">
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="tx.jetcheckout_api_product_ids" class="row mx-0 my-2 px-3">
+                    <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
                         <div class="card table-responsive">
                             <table class="table">
                                 <thead>
@@ -123,7 +123,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="tx.jetcheckout_api_product_ids" t-as="product">
+                                    <t t-foreach="tx.paylox_product_ids" t-as="product">
                                         <tr>
                                             <td><span t-esc="product.name"/></td>
                                             <td><span t-esc="product.code"/></td>
@@ -302,6 +302,29 @@
                             </li>
                         </t>
                     </ul>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_credit" name="Shopping Credit Payment Page">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-shopping-credit px-3'"/>
+            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <div class="row w-100 mx-0 my-4 card border shadow p-4">
+                <div class="justify-content-center mx-0 w-100">
+                    <input id="system" type="hidden" value="api" field="system"/>
+                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
+                        <t t-set="amount" t-value="tx.amount"/>
+                        <t t-set="no_border" t-value="True"/>
+                        <t t-set="no_loading" t-value="True"/>
+                    </t>
+                    <t t-elif="tx.state == 'cancel'">
+                        <div class="alert alert-danger">This payment transaction is cancelled</div>
+                    </t>
+                    <t t-elif="tx.state == 'expired'">
+                        <div class="alert alert-danger">This payment transaction is expired</div>
+                    </t>
                 </div>
             </div>
         </t>

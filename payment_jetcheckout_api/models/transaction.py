@@ -14,6 +14,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_api_method = fields.Selection([
         ('card', 'Credit Card'),
         ('bank', 'Bank Transfer'),
+        ('credit', 'Shopping Credit'),
     ], string='API Method', readonly=True)
     jetcheckout_api_html = fields.Html('API HTML', sanitize=False, readonly=True)
     jetcheckout_api_card_return_url = fields.Char('API Card Return URL', readonly=True)
@@ -21,21 +22,10 @@ class PaymentTransaction(models.Model):
     jetcheckout_api_card_redirect_url = fields.Char('API Card Redirect URL', readonly=True)
     jetcheckout_api_bank_return_url = fields.Char('API Bank Return URL', readonly=True)
     jetcheckout_api_bank_webhook_url = fields.Char('API Bank Webhook URL', readonly=True)
-    jetcheckout_api_product_ids = fields.One2many('payment.jetcheckout.api.product', 'transaction_id', 'API Products', readonly=True)
+    jetcheckout_api_credit_return_url = fields.Char('API Credit Return URL', readonly=True)
+    jetcheckout_api_credit_result_url = fields.Char('API Credit Result URL', readonly=True)
 
     def write(self, values):
         if 'jetcheckout_payment_ok' in values and any(tx.jetcheckout_api_ok for tx in self):
             values['jetcheckout_payment_ok'] = False
         return super().write(values)
-
-class PaymentJetcheckoutApiProduct(models.Model):
-    _name = 'payment.jetcheckout.api.product'
-    _description = 'Paylox API Products'
-
-    transaction_id = fields.Many2one('payment.transaction')
-    product_id = fields.Many2one('product.product')
-    name = fields.Char(required=True)
-    code = fields.Char(required=True)
-    uom = fields.Char(related='product_id.uom_id.name')
-    qty = fields.Float()
-    price = fields.Float()

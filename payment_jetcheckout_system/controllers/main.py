@@ -144,7 +144,7 @@ class PayloxSystemController(Controller):
                 shopping_credits = self._prepare_credit(acquirer=acquirer, currency=currency)
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
-            elif ptype['code'] == 'wire_transfer':
+            elif ptype['code'] == 'bank':
                 transfers = self._prepare_wiretransfer(acquirer=acquirer)
 
         if options.get('no_compute_payment_tags'):

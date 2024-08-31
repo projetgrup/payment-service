@@ -105,6 +105,8 @@ class PaymentProduct(Datamodel):
     code = fields.String(required=True, allow_none=False, metadata={"title": _lt("Product Code"), "description": _lt("Product code"), "example": "MS-123"})
     qty = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Product Quantity"), "description": _lt("Product quantity"), "example": 2.0})
     price = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Unit Price"), "description": _lt("Unit price"), "example": 30.45})
+    brand = fields.String(required=False, allow_none=False, metadata={"title": _lt("Product Brand"), "description": _lt("Product brand"), "example": "Brand"})
+    categ = fields.String(required=False, allow_none=False, metadata={"title": _lt("Product Category"), "description": _lt("Product category"), "example": "General"})
 
 
 class PaymentCard(Datamodel):
@@ -117,6 +119,15 @@ class PaymentCard(Datamodel):
     number = fields.String(metadata={"title": _lt("Credit Card Number"), "description": _lt("Masked number of related credit card"), "example": "123478******1234"})
     type = fields.String(metadata={"title": _lt("Credit Card Type"), "description": "Visa, MasterCard, Amex, Troy...", "example": "Troy"})
     family = fields.String(metadata={"title": _lt("Credit Card Family"), "description": "Bonus, Maximum, Axess, Bankkart...", "example": "Paraf"})
+
+
+class PaymentCredit(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.credit"
+
+    bank = fields.String(metadata={"title": _lt("Bank Code"), "description": _lt("Bank code"), "example": "34"})
 
 
 class PaymentOrder(Datamodel):
@@ -135,7 +146,7 @@ class PaymentUrlMethod(Datamodel):
 
     _name = "payment.url.method"
 
-    result = fields.String(required=True, allow_none=False, metadata={"title": _lt("Return URL"), "description": _lt("Return URL when user picks card payment method"), "example": "https://example.com/method/result"})
+    result = fields.String(required=True, allow_none=False, metadata={"title": _lt("Return URL"), "description": _lt("Return URL when user picks suitable payment method"), "example": "https://example.com/method/result"})
     webhook = fields.String(required=False, allow_none=False, metadata={"title": _lt("Webhook URL"), "description": _lt("Webhook URL to send a notification"), "example": "https://example.com/method/webhook"})
 
 
@@ -145,8 +156,9 @@ class PaymentUrl(Datamodel):
 
     _name = "payment.url"
 
-    card = NestedModel("payment.url.method", required=True, metadata={"title": _lt("Return URLs by card payment method"), "description": _lt("URL addresses when card payment is selected")})
+    card = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by card payment method"), "description": _lt("URL addresses when card payment is selected")})
     bank = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by bank payment method"), "description": _lt("URL addresses when bank payment is selected")})
+    credit = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by shopping credit method"), "description": _lt("URL addresses when shopping credit is selected")})
 
 
 class PaymentInstallmentOption(Datamodel):
@@ -222,6 +234,7 @@ class PaymentPrepareInput(Datamodel):
     html = fields.String(metadata={"title": _lt("Custom HTML"), "description": _lt("Custom code to be viewed bottom of the page"), "example": "<p>Copyright</p>"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
     methods = fields.List(fields.String(), required=False, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible values are 'card' and 'bank'."), "example": ["bank", "card"]})
+    products = fields.List(NestedModel("payment.product"), required=False, metadata={"title": _lt("Products List"), "description": _lt("List of related products")})
 
 
 class PaymentPrepareOutput(Datamodel):
@@ -310,10 +323,11 @@ class PaymentTransaction(Datamodel):
     provider = fields.String(metadata={"title": _lt("Provider Code"), "description": _lt("Codename of payment acquirer"), "example": "card"})
     virtual_pos_name = fields.String(metadata={"title": _lt("Virtual PoS Name"), "description": _lt("PoS name you assigned to track payment flow"), "example": "My PoS | Long Term"})
     order_id = fields.String(metadata={"title": _lt("Payment Token"), "description": _lt("UUID which is generated especially for credit card payments"), "example": "15a8ecc1-731c-411b-89fd-283e1c55cfaf"})
-    transaction_id = fields.String(metadata={"title": _lt("Payment TransactionID"), "description": _lt("Special value which is generated especially for credit card payments"), "example": "v3a2a10684j94ue0151z7f2e9bbdvd0p"})
+    transaction_id = fields.String(metadata={"title": _lt("Payment TransactionID"), "description": _lt("Special value which is generated especially for payments"), "example": "v3a2a10684j94ue0151z7f2e9bbdvd0p"})
     message = fields.String(metadata={"title": _lt("State Message"), "description": _lt("Description of payment transaction"), "example": "Transaction is successful"})
     partner = NestedModel("payment.transaction.partner", metadata={"title": _lt("Partner related to transaction"), "description": _lt("Partner details")})
     card = NestedModel("payment.card", metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
+    credit = NestedModel("payment.credit", metadata={"title": _lt("Shopping credit information related to transaction"), "description": _lt("Shopping credit details")})
     amounts = NestedModel("payment.amount", metadata={"title": _lt("Amounts related to transaction"), "description": _lt("Amount details")})
 
 
