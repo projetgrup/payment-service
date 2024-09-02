@@ -71,7 +71,9 @@ class PayloxApiController(Controller):
         if not status and tx.jetcheckout_api_hash:
             status = True
             self._del('hash')
-            url = tx.jetcheckout_api_card_result_url
+            result_url = getattr(tx, 'jetcheckout_api_%s_result_url' % tx.jetcheckout_api_method, None)
+            if result_url:
+                url = result_url
         return url, tx, status
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
@@ -94,9 +96,9 @@ class PayloxApiController(Controller):
 
         acquirers = Controller._get_acquirer()
         order = request.env['payment.transaction'].sudo().search([
+            ('state', '=', 'pending'),
             ('jetcheckout_api_hash', '!=', False),
             ('jetcheckout_api_hash', '!=', hash),
-            ('state', '=', 'pending'),
             ('jetcheckout_api_order', '=', tx.jetcheckout_api_order)
         ], limit=1)
         values = {
@@ -134,7 +136,7 @@ class PayloxApiController(Controller):
             company=tx.company_id,
             balance=False
         )
-        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False)
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False, filters={'type': ['virtual_pos']})
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.page_card', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
@@ -174,10 +176,43 @@ class PayloxApiController(Controller):
         values = self._prepare(
             acquirer=acquirer,
             company=tx.company_id,
-            balance=False
+            balance=False,
+            filters={'type': ['bank']}
         )
         values.update({'tx': tx})
         return request.render('payment_jetcheckout_api.payment_bank_page', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
+    @http.route(['/payment/credit'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_credit(self, **kwargs):
+        hash = self._set_hash(raise_exception=False, **kwargs)
+        tx = request.env['payment.transaction'].sudo().search([
+            ('jetcheckout_api_hash', '!=', False),
+            ('jetcheckout_api_hash', '=', hash),
+            #('state', 'in', ('draft', 'cancel', 'expired'))
+        ], limit=1)
+        if not tx:
+            raise NotFound()
+        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'credit':
+            raise NotFound()
+
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['jetcheckout'],
+            limit=1,
+        )
+        values = self._prepare(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False,
+        )
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False, filters={'type': ['credit']})
+        values.update({'tx': tx})
+        return request.render('payment_jetcheckout_api.page_credit', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '-1'

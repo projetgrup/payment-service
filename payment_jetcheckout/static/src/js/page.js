@@ -952,11 +952,19 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 checked = false;
             }
         } else if (type === 'credit') {
+            const $input = this.type.credit.$.find('input[name="payment_type_credit"]:checked');
             if (!this.amount.value) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
                     message: _t('Please enter an amount'),
+                });
+                checked = false;
+            } else if (!$input.length) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please select a bank'),
                 });
                 checked = false;
             }
@@ -1037,22 +1045,29 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }
 
         } else if (type === 'credit') {
+            const $input = this.type.credit.$.find('input[name="payment_type_credit"]:checked');
             return {
-                type,
-                code: this.type.credit.selected.value,
+                type: 'credit',
+                code: $input.val(),
+                installment: {
+                    index: 0,
+                    id: 1,
+                    rows: [{
+                        id: 1,
+                        count: 1,
+                        crate: 0,
+                        corate: 0,
+                    }],
+                },
+                partner: parseInt(this.partner.value || 0),
+                campaign: $input.data('campaign'),
                 amount: this.amount.value,
                 currency: this.currency.id,
-                installment: {
-                    id: parseInt(this.installment.credit.selected.value),
-                    rows: this.installment.credit.rows,
-                },
-                campaign: this.type.credit.selected.dataset.campaign,
-                partner: parseInt(this.partner.value || 0),
-                successurl: this.payment.successurl.value,
-                failurl: this.payment.failurl.value,
                 order: this.payment.order.value,
                 invoice: this.payment.invoice.value,
                 subscription: this.payment.subscription.value,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
             }
         } else if (type === 'wallet') {
             return {
@@ -1090,10 +1105,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         const id = ev.currentTarget.dataset.id;
         this.type.credit.$.each((_, e) => {
             if (e.dataset.id === id) {
-                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.classList.add('selected');
                 e.querySelector('input').checked = true;
             } else {
-                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.classList.remove('selected');
                 e.querySelector('input').checked = false;
             }
         })

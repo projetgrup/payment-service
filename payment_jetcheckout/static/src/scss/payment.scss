@@ -763,7 +763,178 @@
         }
     }
 
-    .payment-type-credit, .payment-type-wallet, .payment-type-transfer {
+
+    .payment-type-credit {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin: 10px;
+        height: unset !important;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
+
+            & + span {
+                display: inline-block;
+                position: relative;
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+                background-color: #eeeeee;
+            }
+
+            & + span::after {
+                content: "";
+                position: absolute;
+                display: none;
+                top: 6px;
+                left: 6px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #ffffff;
+            }
+    
+            &:checked + span {
+                background-color: var(--primary) !important;
+            }
+    
+            &:checked + span::after {
+                display: block;
+            }
+        }
+
+        button.payment-type-credit-payment {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        > div {
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+
+            &.selected {
+                border-color: var(--primary) !important;
+
+                button.payment-type-credit-payment {
+                    opacity: 1 !important;
+                    pointer-events: unset !important;
+                }
+            }
+
+            &:hover {
+                box-shadow: 0px 0px 10px 0px #ddd;
+
+                button.payment-type-credit-payment {
+                    opacity: 0.32;
+                }
+            }
+        }
+
+        .payment-type-credit-bank {
+            display: flex;
+            padding: 4px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            box-shadow: -5px 0px 10px 0px #ddd;
+
+            &:hover input + span {
+                background-color: #ccc;
+            }
+
+            > div:first-of-type {
+                flex: 1 1 auto;
+                display: flex;
+                align-items: center;
+                padding-left: 6px;
+
+                strong {
+                    font-size: 1.2em;
+                    margin-left: 12px;
+                }
+            }
+
+            > div:last-of-type {
+                img {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 6px;
+                    border: 2px solid #eee;
+                }
+            }
+        }
+
+        .payment-type-credit-desc {
+            margin: 6px;
+        }
+
+        .payment-type-credit-installment {
+            display: flex;
+
+            .installment-rows {
+                padding-bottom: 6px;
+
+                > div:last-of-type {
+                    padding-top: 6px;
+
+                    span {
+                        margin-left: 6px;
+                    }
+                }
+
+                .installment-line {
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+
+                    input {
+                        & + span {
+                            height: 14px;
+                            width: 14px;
+                        }
+
+                        & + span::after {
+                            top: 4px;
+                            left: 4px;
+                            width: 6px;
+                            height: 6px;
+                        }
+                    }
+
+                    &:not(.installment-selected):hover input + span::after {
+                        display: block;
+                        background-color: #43996E !important;
+                    }
+
+                    &.installment-selected:hover input + span {
+                        background-color: darken(#43996E, 10%) !important;
+                    }
+
+                    .installment-cell {
+                        > div:last-of-type {
+                            flex: 1 1 auto;
+
+                            > span {
+                                line-height: 1.2em;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .payment-type-wallet, .payment-type-transfer {
         > div {
             cursor: pointer;
             color: #666;

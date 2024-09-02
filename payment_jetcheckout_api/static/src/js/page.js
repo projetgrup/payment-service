@@ -37,6 +37,16 @@ publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
+    selector: '.payment-shopping-credit',
+
+    start: function () {
+        return this._super.apply(this, arguments).then(function () {
+            framework.hideLoading();
+        });
+    },
+});
+
 publicWidget.registry.PayloxApiBank = publicWidget.Widget.extend({
     selector: '.payment-bank',
     events: {

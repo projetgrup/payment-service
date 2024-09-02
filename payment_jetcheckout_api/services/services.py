@@ -342,13 +342,14 @@ class PaymentAPIService(Component):
         else:
             state = False
 
+        type = getattr(params, 'type', False) or 'virtual_pos'
         codes = hasattr(params, 'methods') and params.methods or []
         method = ''
         providers = []
         for code in codes:
-            if code == 'bank':
+            if not type and code == 'bank':
                 providers.append('transfer')
-            elif code == 'card':
+            else:
                 providers.append('jetcheckout')
         if len(codes) == 1:
             method = codes[0]
@@ -361,58 +362,79 @@ class PaymentAPIService(Component):
 
         acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=providers, limit=1)
         values = {
+            'state': 'draft',
+            'amount': params.amount,
+            'company_id': company.id,
             'acquirer_id': acquirer.id,
             'partner_id': api.partner_id.id,
-            'amount': params.amount,
             'currency_id': company.currency_id.id,
-            'company_id': company.id,
-            'state': 'draft',
             'jetcheckout_ip_address': params.partner.ip_address,
+            'jetcheckout_payment_type': type,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
             'jetcheckout_api_method': method,
-            'jetcheckout_api_contact': getattr(params.partner, 'contact', False) or False,
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_html': getattr(params, 'html', False) or False,
-            'jetcheckout_api_card_result_url': params.url.card.result,
+            'jetcheckout_api_contact': getattr(params.partner, 'contact', False) or False,
             'jetcheckout_date_expiration': getattr(params, 'expiration', False) or False,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
 
-        products = getattr(params.order, 'products', [])
-        if products:
-            product_ids = []
-            prods = self.env['product.product'].sudo()
-            for product in products:
-                prod = prods.search([
-                    #('type', '=', 'product'),
-                    ('type', '=', 'consu'),
-                    ('default_code', '=', product),
-                    '|', ('company_id', '=', company.id),
-                         ('company_id', '=', False)
-                ])
-                if not prod:
-                    prod = prods.create({
-                        #'type': 'product',
-                        'type': 'consu',
-                        'name': product.name,
-                        'default_code': product.code,
-                    })
-                product_ids.append((0, 0, {
-                    'product_id': prod.id,
-                    'name': product.name,
-                    'code': product.code,
-                    'qty': product.qty,
-                    'price': product.price,
-                }))
-            values.update({'jetcheckout_api_product_ids': product_ids})
-            #values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})
+        if getattr(params.url, 'card', None):
+            values.update({'jetcheckout_api_card_result_url': params.url.card.result})
 
         if getattr(params.url, 'bank', None):
-            values.update({'jetcheckout_api_bank_return_url': params.url.bank.result})
+            values.update({'jetcheckout_api_bank_result_url': params.url.bank.result})
             if getattr(params.url.bank, 'webhook', None):
                 values.update({'jetcheckout_api_bank_webhook_url': params.url.bank.webhook})
+
+        if getattr(params.url, 'credit', None):
+            values.update({'jetcheckout_api_credit_result_url': params.url.credit.result})
+
+        products = getattr(params.order, 'products', [])
+        if products:
+            will_create_product = values['jetcheckout_payment_type'] == 'virtual_pos'
+            product_ids = []
+            if will_create_product:
+                prods = self.env['product.product'].sudo()
+                for product in products:
+                    prod = prods.search([
+                        #('type', '=', 'product'),
+                        ('type', '=', 'consu'),
+                        ('default_code', '=', product),
+                        '|', ('company_id', '=', company.id),
+                            ('company_id', '=', False)
+                    ])
+                    if not prod:
+                        prod = prods.create({
+                            #'type': 'product',
+                            'type': 'consu',
+                            'name': product.name,
+                            'default_code': product.code,
+                        })
+                    product_ids.append((0, 0, {
+                        'product_id': prod.id,
+                        'qty': product.qty,
+                        'name': product.name,
+                        'code': product.code,
+                        'price': product.price,
+                        'categ': getattr(product, 'categ', False) or False,
+                        'brand': getattr(product, 'brand', False) or False,
+                    }))
+            else:
+                for product in products:
+                    product_ids.append((0, 0, {
+                        'qty': product.qty,
+                        'name': product.name,
+                        'code': product.code,
+                        'price': product.price,
+                        'categ': getattr(product, 'categ', False) or False,
+                        'brand': getattr(product, 'brand', False) or False,
+                    }))
+
+            values.update({'paylox_product_ids': product_ids})
+            #values.update({'paylox_product_ids': ','.join(list(map(lambda x: x.name, products)))})
 
         tx = self.env['payment.transaction'].sudo().create(values)
         tx.write({
@@ -451,6 +473,9 @@ class PaymentAPIService(Component):
                     'number': tx.jetcheckout_card_number or '',
                     'type': tx.jetcheckout_card_type or '',
                     'family': tx.jetcheckout_card_family or '',
+                },
+                'credit': {
+                    'bank': tx.jetcheckout_payment_type_credit_bank_code or '',
                 },
                 'amounts': {
                     'amount': tx.amount,
