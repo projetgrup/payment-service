@@ -186,6 +186,69 @@ class PayloxApiController(Controller):
             'Expires': '-1'
         })
 
+    @http.route(['/payment/transfer'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_transfer(self, **kwargs):
+        hash = self._set_hash(raise_exception=False, **kwargs)
+        tx = request.env['payment.transaction'].sudo().search([
+            ('jetcheckout_api_hash', '!=', False),
+            ('jetcheckout_api_hash', '=', hash),
+            #('state', 'in', ('draft', 'cancel', 'expired'))
+        ], limit=1)
+        if not tx:
+            raise NotFound()
+        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'transfer':
+            raise NotFound()
+
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['jetcheckout'],
+            limit=1,
+        )
+        values = self._prepare(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False,
+        )
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False, filters={'type': ['transfer']})
+        values.update({'tx': tx})
+        return request.render('payment_jetcheckout_api.page_transfer', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
+    @http.route(['/payment/wallet'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_wallet(self, **kwargs):
+        hash = self._set_hash(raise_exception=False, **kwargs)
+        tx = request.env['payment.transaction'].sudo().search([
+            ('jetcheckout_api_hash', '!=', False),
+            ('jetcheckout_api_hash', '=', hash),
+            #('state', 'in', ('draft', 'cancel', 'expired'))
+        ], limit=1)
+        if not tx:
+            raise NotFound()
+        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'wallet':
+            raise NotFound()
+
+        acquirer = request.env['payment.acquirer']._get_acquirer(
+            company=tx.company_id,
+            website=request.website,
+            providers=['jetcheckout'],
+            limit=1,
+        )
+        values = self._prepare(
+            acquirer=acquirer,
+            company=tx.company_id,
+            balance=False,
+        )
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False, filters={'type': ['wallet']})
+        values.update({'tx': tx})
+        return request.render('payment_jetcheckout_api.page_wallet', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
     @http.route(['/payment/credit'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_credit(self, **kwargs):
         hash = self._set_hash(raise_exception=False, **kwargs)
