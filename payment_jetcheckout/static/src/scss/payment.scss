@@ -763,7 +763,6 @@
         }
     }
 
-
     .payment-type-credit {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -1683,6 +1682,12 @@
         &.sm {
             display: flex !important;
         }
+    }
+}
+
+@media (max-width: 668px), (min-width: 768px) and (max-width: 1125px) {
+    .payment-type-credit {
+        grid-template-columns: 1fr !important;
     }
 }
 
