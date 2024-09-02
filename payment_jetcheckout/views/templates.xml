@@ -318,18 +318,20 @@
     </template>
 
     <template id="payment_form" name="Paylox Payment Form">
+        <t t-if="not types" t-set="types" t-value="[{'code': 'virtual_pos', 'name': ''}]"/>
         <t t-call="payment_jetcheckout.payment_loading"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
                 <t t-set="page" t-value="'payment'"/>
             </t>
             <div id="payment_type" t-attf-class="payment-type #{'' if len(types or []) &gt; 1 else 'd-none'}">
-                <t t-set="ptype_selected" t-as="False"/>
-                <t t-foreach="types" t-as="ptype">
-                    <button class="btn btn-secondary text-primary" t-att-data-name="ptype['code']" field="type.all">
-                        <input type="radio" class="d-none" name="payment_type" t-att-checked="None if ptype_selected else 'checked'" t-att-value="ptype['code']"/>
-                        <span t-esc="ptype['name']"/>
+                <t t-set="type_selected" t-as="True"/>
+                <t t-foreach="types" t-as="t">
+                    <button class="btn btn-secondary text-primary" t-att-data-name="t['code']" field="type.all">
+                        <input type="radio" class="d-none" name="payment_type" t-att-checked="'checked' if type_selected else None" t-att-value="t['code']"/>
+                        <span t-esc="t['name']"/>
                     </button>
+                    <t t-set="type_selected" t-as="False"/>
                 </t>
             </div>
             <t t-foreach="types" t-as="ptype">
@@ -426,60 +428,52 @@
                 </div>
                 <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
                 </div>
-                <div t-elif="ptype['code'] == 'wallet'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-wallet px-3 #{'d-none' if types and types[0]['code'] != 'wallet' else ''}">
-                    <t t-set="wallet_id" t-value="1"/>
-                    <t t-set="wallet_selected" t-value="True"/>
-                    <t t-foreach="wallets" t-as="wallet">
-                        <t t-foreach="wallet['wallets']" t-as="w">
-                            <div t-attf-data-id="wallet_id" t-att-data-name="wallet['name']" field="type.wallet">
-                                <div>
-                                    <div>
-                                        <input type="radio" name="payment_type_wallet" t-att-value="w['id']" t-att-data-value="wallet['name']" t-att-checked="wallet_selected and 'checked' or None"/>
-                                        <span/>
-                                        <strong t-esc="w['name']"/>
-                                    </div>
-                                    <div>
-                                        <img t-att-src="w['image']"/>
-                                    </div>
-                                </div>
-                                <div t-attf-class="#{'' if wallet_selected else 'd-none'}">
-                                    <div class="flex-fill" t-raw="w['desc']"/>
-                                    <div class="align-items-end d-flex" style="min-width: 200px;">
-                                        <button class="align-items-center btn btn-primary d-flex justify-content-center overflow-hidden shadow text-nowrap w-100 text-overflow-ellipsis" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <t t-set="wallet_id" t-value="wallet_id+1"/>
-                            <t t-set="wallet_selected" t-value="False"/>
-                        </t>
-                    </t>
-                </div>
-                <div t-elif="ptype['code'] == 'wire_transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'wire_transfer' else ''}">
-                    <t t-set="transfer_id" t-value="1"/>
-                    <t t-set="transfer_selected" t-value="True"/>
-                    <t t-foreach="transfers" t-as="transfer">
-                        <div t-att-data-id="transfer_id" field="type.transfer">
-                            <div>
-                                <div>
-                                    <input type="radio" name="payment_type_transfer" t-att-checked="transfer_selected and 'checked' or None"/>
-                                    <span/>
-                                    <strong t-esc="transfer['name']"/>
-                                </div>
-                                <div>
-                                    <img t-att-src="transfer['image']"/>
-                                </div>
-                            </div>
-                            <div t-attf-class="#{'' if transfer_selected else 'd-none'}" class="d-none"/>
-                        </div>
-                        <t t-set="transfer_id" t-value="transfer_id+1"/>
-                        <t t-set="transfer_selected" t-value="False"/>
-                    </t>
-                </div>
                 <div t-elif="ptype['code'] == 'soft_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'soft_pos' else ''}">
+                </div>
+                <div t-elif="ptype['code'] == 'transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'transfer' else ''}">
+                    <t t-set="transfer_id" t-value="1"/>
+                    <div t-foreach="transfers" t-as="transfer" t-att-data-id="transfer['id']" t-att-data-name="transfer['name']" field="type.transfer">
+                        <div class="payment-type-transfer-bank">
+                            <div>
+                                <input type="radio" name="payment_type_transfer" t-att-value="transfer['name']" t-att-checked="transfer_id == transfer['id'] and 'checked' or None"/>
+                                <span/>
+                                <strong t-esc="transfer['name']"/>
+                            </div>
+                            <div>
+                                <img t-att-src="transfer['image']"/>
+                            </div>
+                        </div>
+                        <div class="payment-type-transfer-desc d-flex flex-column justify-content-between h-100">
+                            <button class="align-items-center btn btn-primary d-flex justify-content-center overflow-hidden text-nowrap w-100 text-overflow-ellipsis payment-type-transfer-payment" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                        </div>
+                    </div>
+                </div>
+                <div t-elif="ptype['code'] == 'wallet'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-wallet px-3 #{'d-none' if types and types[0]['code'] != 'wallet' else ''}">
+                    <t t-set="wallet_id" t-value="wallets[0]['wallets'][0]['id'] if wallets and wallets[0]['wallets'] else 0"/>
+                    <t t-foreach="wallets" t-as="w">
+                        <div t-foreach="w['wallets']" t-as="wallet" t-att-value="wallet['name']" t-att-data-id="wallet['id']" field="type.wallet">
+                            <div class="payment-type-wallet-bank">
+                                <div>
+                                    <input type="radio" name="payment_type_wallet" t-att-value="w['name']" t-att-data-id="wallet['id']" t-att-checked="wallet_id == wallet['id'] and 'checked' or None"/>
+                                    <span/>
+                                    <strong t-esc="wallet['name']"/>
+                                </div>
+                                <div>
+                                    <img t-att-src="wallet['image']"/>
+                                </div>
+                            </div>
+                            <div class="payment-type-wallet-desc d-flex flex-column justify-content-between h-100">
+                                <div>
+                                    <t t-raw="wallet['desc']"/>
+                                </div>
+                                <button class="align-items-center btn btn-primary d-flex justify-content-center overflow-hidden text-nowrap w-100 text-overflow-ellipsis payment-type-wallet-payment" field="payment.button">Pay<i class="fa fa-arrow-circle-right ml-2" t-translation="off"/></button>
+                            </div>
+                        </div>
+                    </t>
                 </div>
                 <div t-elif="ptype['code'] == 'credit'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-credit px-3 #{'d-none' if types and types[0]['code'] != 'credit' else ''}">
                     <t t-set="credit_id" t-value="1"/>
-                    <div t-foreach="shopping_credits" t-as="credit" t-att-data-id="credit['id']" t-att-data-code="credit['code']" t-att-class="credit_id == credit['id'] and 'selected' or None" field="type.credit">
+                    <div t-foreach="shopping_credits" t-as="credit" t-att-data-id="credit['id']" t-att-data-code="credit['code']" field="type.credit">
                         <div class="payment-type-credit-bank">
                             <div>
                                 <input type="radio" name="payment_type_credit" t-att-value="credit['code']" t-att-data-campaign="credit['campaign']" t-att-checked="credit_id == credit['id'] and 'checked' or None"/>

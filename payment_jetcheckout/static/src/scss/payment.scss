@@ -763,7 +763,7 @@
         }
     }
 
-    .payment-type-credit {
+    .payment-type-transfer, .payment-type-wallet, .payment-type-credit {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -808,7 +808,7 @@
             }
         }
 
-        button.payment-type-credit-payment {
+        button.payment-type-transfer-payment, button.payment-type-wallet-payment, button.payment-type-credit-payment {
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s;
@@ -823,10 +823,10 @@
             border-radius: 10px;
             transition: border-color 0.2s, box-shadow 0.2s;
 
-            &.selected {
+            &:has(input:checked) {
                 border-color: var(--primary) !important;
 
-                button.payment-type-credit-payment {
+                button.payment-type-transfer-payment, button.payment-type-wallet-payment, button.payment-type-credit-payment {
                     opacity: 1 !important;
                     pointer-events: unset !important;
                 }
@@ -835,13 +835,13 @@
             &:hover {
                 box-shadow: 0px 0px 10px 0px #ddd;
 
-                button.payment-type-credit-payment {
+                button.payment-type-transfer-payment, button.payment-type-wallet-payment, button.payment-type-credit-payment {
                     opacity: 0.32;
                 }
             }
         }
 
-        .payment-type-credit-bank {
+        .payment-type-transfer-bank, .payment-type-wallet-bank, .payment-type-credit-bank {
             display: flex;
             padding: 4px;
             cursor: pointer;
@@ -874,7 +874,7 @@
             }
         }
 
-        .payment-type-credit-desc {
+        .payment-type-transfer-desc, .payment-type-wallet-desc, .payment-type-credit-desc {
             margin: 6px;
         }
 
@@ -931,83 +931,6 @@
                 }
             }
         }
-    }
-
-    .payment-type-wallet, .payment-type-transfer {
-        > div {
-            cursor: pointer;
-            color: #666;
-            display: flex;
-            flex-direction: column;
-            padding-left: 0.5em;
-            padding-bottom: 1em;
-            border-bottom: 1px solid #cccccc;
-
-            > div:first-of-type {
-                display: flex;
-
-                > div:first-child {
-                    flex: 1 1 auto;
-                    display: flex;
-                    padding: 1em 0;
-                    position: relative;
-                    align-items: center;
-                    gap: 1em;
-                    
-                    > input {
-                        position: absolute;
-                        opacity: 0;
-                        height: 0;
-                        width: 0;
-
-                        &+span {
-                            position: absolute;
-                            //top: 0;
-                            //left: 0;
-                            width: 20px;
-                            height: 20px;
-                            border-radius: 50%;
-                            background-color: #eee;
-
-                            &:after {
-                                content: "";
-                                position: absolute;
-                                display: none;
-                                top: 5px;
-                                left: 5px;
-                                width: 10px;
-                                height: 10px;
-                                border-radius: 50%;
-                                background-color: var(--primary);
-                            }
-                        }
-
-                        &:checked {
-                            &+span:after {
-                                display: block;
-                            }
-                        }
-                    }
-
-                    > strong {
-                        margin-left: 2em;
-                    }
-                }
-            }
-
-            > div:last-of-type {
-                display: flex;
-                font-size: 0.9em;
-            }
-
-            &:last-of-type {
-                border-bottom: none;
-            }
-
-            img {
-                max-height: 75px;
-            }
-        };
     }
 
     .installment-tabs {
@@ -1686,7 +1609,7 @@
 }
 
 @media (max-width: 668px), (min-width: 768px) and (max-width: 1125px) {
-    .payment-type-credit {
+    .payment-type-transfer, .payment-type-wallet, .payment-type-credit {
         grid-template-columns: 1fr !important;
     }
 }

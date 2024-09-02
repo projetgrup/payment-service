@@ -130,14 +130,14 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             all: new fields.element({
                 events: [['click', this._onClickPaymentType]],
             }),
-            credit: new fields.element({
-                events: [['click', this._onClickPaymentTypeCredit]],
+            transfer: new fields.element({
+                events: [['click', this._onClickPaymentTypeTransfer]],
             }),
             wallet: new fields.element({
                 events: [['click', this._onClickPaymentTypeWallet]],
             }),
-            transfer: new fields.element({
-                events: [['click', this._onClickPaymentTypeTransfer]],
+            credit: new fields.element({
+                events: [['click', this._onClickPaymentTypeCredit]],
             }),
         }
         this.payment = {
@@ -169,17 +169,22 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         };
         Object.defineProperty(this.type, 'selected', {
             get () {
-                return payment_type.querySelector('input:checked').value;
+                return payment_type.querySelector('input[name="payment_type"]:checked').value;
+            },
+        });
+        Object.defineProperty(this.type.transfer, 'selected', {
+            get () {
+                return payment_type_transfer.querySelector('input[name="payment_type_transfer"]:checked');
             },
         });
         Object.defineProperty(this.type.wallet, 'selected', {
             get () {
-                return payment_type_wallet.querySelector('input:checked');
+                return payment_type_wallet.querySelector('input[name="payment_type_wallet"]:checked');
             },
         });
         Object.defineProperty(this.type.credit, 'selected', {
             get () {
-                return payment_type_credit.querySelector('input:checked');
+                return payment_type_credit.querySelector('input[name="payment_type_credit"]:checked');
             },
         });
         Object.defineProperty(this.installment.credit, 'selected', {
@@ -951,8 +956,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 });
                 checked = false;
             }
-        } else if (type === 'credit') {
-            const $input = this.type.credit.$.find('input[name="payment_type_credit"]:checked');
+        } else if (type === 'transfer') {
             if (!this.amount.value) {
                 this.displayNotification({
                     type: 'warning',
@@ -960,7 +964,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     message: _t('Please enter an amount'),
                 });
                 checked = false;
-            } else if (!$input.length) {
+            } else if (!this.type.transfer.selected) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
@@ -974,6 +978,29 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     type: 'warning',
                     title: _t('Warning'),
                     message: _t('Please enter an amount'),
+                });
+                checked = false;
+            } else if (!this.type.wallet.selected) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please select a provider'),
+                });
+                checked = false;
+            }
+        } else if (type === 'credit') {
+            if (!this.amount.value) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please enter an amount'),
+                });
+                checked = false;
+            } else if (!this.type.credit.selected) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('Please select a bank'),
                 });
                 checked = false;
             }
@@ -1044,11 +1071,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 subscription: this.payment.subscription.value,
             }
 
-        } else if (type === 'credit') {
-            const $input = this.type.credit.$.find('input[name="payment_type_credit"]:checked');
+        } else if (type === 'transfer') {
+            const $input = this.type.credit.$.find('input[name="payment_type_transfer"]:checked');
             return {
-                type: 'credit',
-                code: $input.val(),
+                type,
+                name: this.type.transfer.selected.value,
                 installment: {
                     index: 0,
                     id: 1,
@@ -1060,7 +1087,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     }],
                 },
                 partner: parseInt(this.partner.value || 0),
-                campaign: $input.data('campaign'),
                 amount: this.amount.value,
                 currency: this.currency.id,
                 order: this.payment.order.value,
@@ -1072,16 +1098,50 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         } else if (type === 'wallet') {
             return {
                 type,
-                id: parseInt(this.type.wallet.selected.value),
-                name: this.type.wallet.selected.dataset.value,
+                id: this.type.wallet.selected.dataset.id,
+                name: this.type.wallet.selected.value,
+                installment: {
+                    index: 0,
+                    id: 1,
+                    rows: [{
+                        id: 1,
+                        count: 1,
+                        crate: 0,
+                        corate: 0,
+                    }],
+                },
+                partner: parseInt(this.partner.value || 0),
                 amount: this.amount.value,
                 currency: this.currency.id,
-                partner: parseInt(this.partner.value || 0),
-                successurl: this.payment.successurl.value,
-                failurl: this.payment.failurl.value,
                 order: this.payment.order.value,
                 invoice: this.payment.invoice.value,
                 subscription: this.payment.subscription.value,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
+            }
+        } else if (type === 'credit') {
+            return {
+                type,
+                code: this.type.credit.selected.value,
+                installment: {
+                    index: 0,
+                    id: 1,
+                    rows: [{
+                        id: 1,
+                        count: 1,
+                        crate: 0,
+                        corate: 0,
+                    }],
+                },
+                partner: parseInt(this.partner.value || 0),
+                campaign: this.type.credit.selected.dataset.campaign,
+                amount: this.amount.value,
+                currency: this.currency.id,
+                order: this.payment.order.value,
+                invoice: this.payment.invoice.value,
+                subscription: this.payment.subscription.value,
+                successurl: this.payment.successurl.value,
+                failurl: this.payment.failurl.value,
             }
         }
         return {}
@@ -1101,9 +1161,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         })
     },
 
-    _onClickPaymentTypeCredit: function (ev) {
+    _onClickPaymentTypeTransfer: function (ev) {
         const id = ev.currentTarget.dataset.id;
-        this.type.credit.$.each((_, e) => {
+        this.type.transfer.$.each((_, e) => {
             if (e.dataset.id === id) {
                 e.classList.add('selected');
                 e.querySelector('input').checked = true;
@@ -1118,23 +1178,23 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         const id = ev.currentTarget.dataset.id;
         this.type.wallet.$.each((_, e) => {
             if (e.dataset.id === id) {
-                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.classList.add('selected');
                 e.querySelector('input').checked = true;
             } else {
-                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.classList.remove('selected');
                 e.querySelector('input').checked = false;
             }
         })
     },
 
-    _onClickPaymentTypeTransfer: function (ev) {
+    _onClickPaymentTypeCredit: function (ev) {
         const id = ev.currentTarget.dataset.id;
-        this.type.transfer.$.each((_, e) => {
+        this.type.credit.$.each((_, e) => {
             if (e.dataset.id === id) {
-                e.querySelector('div:last-child > div:last-child').classList.remove('d-none');
+                e.classList.add('selected');
                 e.querySelector('input').checked = true;
             } else {
-                e.querySelector('div:last-child > div:last-child').classList.add('d-none');
+                e.classList.remove('selected');
                 e.querySelector('input').checked = false;
             }
         })

@@ -274,7 +274,7 @@ class PayloxController(http.Controller):
                 shopping_credits = self._prepare_credit(acquirer=acquirer, currency=currency)
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
-            elif ptype['code'] == 'bank':
+            elif ptype['code'] == 'transfer':
                 transfers = self._prepare_wiretransfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
@@ -361,7 +361,7 @@ class PayloxController(http.Controller):
                     elif payment_type == 'WireTransfer':
                         types.append({
                             'name': _('Pay with Wire Transfer'),
-                            'code': 'bank',
+                            'code': 'transfer',
                             'id': 4,
                         })
                     elif payment_type == 'Wallet':
@@ -390,7 +390,7 @@ class PayloxController(http.Controller):
             "language": "tr",
         }
 
-        index = 1    
+        index = 1
         shopping_credits = []
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
@@ -451,6 +451,7 @@ class PayloxController(http.Controller):
             "language": "tr",
         }
 
+        index = 1
         wallets = []
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
@@ -458,6 +459,7 @@ class PayloxController(http.Controller):
             if result['response_code'] == "00":
                 for service in result['services']:
                     wallets.append({
+                        'id': index,
                         'name': service['service_name'],
                         'wallets': [{
                             'id': wallet['wallet_id'],
@@ -466,6 +468,7 @@ class PayloxController(http.Controller):
                             'desc': wallet['description'],
                         } for wallet in service.get('wallets', [])]
                     })
+                    index += 1
         return wallets
 
     def _prepare_wiretransfer(self, acquirer=None):
@@ -477,6 +480,7 @@ class PayloxController(http.Controller):
             "language": "tr",
         }
 
+        index = 1
         providers = []
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
@@ -484,9 +488,11 @@ class PayloxController(http.Controller):
             if result['response_code'] == "00":
                 for service in result['services']:
                     providers.append({
+                        'id': index,
                         'name': service['name'],
                         'image': service['logo_url']
                     })
+                    index += 1
         return providers
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
@@ -1546,6 +1552,354 @@ class PayloxController(http.Controller):
                 values = {'error': message}
             return values
 
+        elif payment_type == 'transfer':
+            amount = float(kwargs['amount'])
+            amount_integer = round(amount * 100)
+            amount_customer = 0
+
+            order_id = str(uuid.uuid4())
+            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "mode": acquirer._get_paylox_env(),
+                "amount": amount_integer,
+                "currency": currency.name,
+                "service": kwargs['name'],
+                "hash_data": hash,
+                "language": "tr",
+            }
+
+            sale_id = int(kwargs.get('order', 0))
+            invoice_id = int(kwargs.get('invoice', 0))
+
+            tx = self._get_transaction()
+            vals = {
+                'acquirer_id': acquirer.id,
+                'callback_hash': hash,
+                'amount': amount,
+                'fees': 0,
+                'operation': 'online_direct',
+                'jetcheckout_payment_type': payment_type,
+                'jetcheckout_payment_type_transfer_service_name': kwargs['name'],
+                'jetcheckout_website_id': request.website.id,
+                'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+                'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
+                'jetcheckout_order_id': order_id,
+                'jetcheckout_payment_amount': amount,
+                'jetcheckout_installment_count': 1,
+                'jetcheckout_installment_plus': 0,
+                'jetcheckout_installment_description': '0',
+                'jetcheckout_installment_amount': amount,
+                'jetcheckout_commission_rate': 0,
+                'jetcheckout_commission_amount': 0,
+                'jetcheckout_customer_rate': 0,
+                'jetcheckout_customer_amount': 0,
+            }
+
+            vals.update(self._get_tx_values(**kwargs))
+            if tx:
+                tx.write(vals)
+            else:
+                vals.update({
+                    'currency_id': currency.id,
+                    'acquirer_id': acquirer.id,
+                    'partner_id': partner.id,
+                })
+                tx = request.env['payment.transaction'].sudo().create(vals)
+
+            if sale_id:
+                tx.sale_order_ids = [(4, sale_id)]
+                sale_order_id = request.env['sale.order'].sudo().browse(sale_id)
+                billing_partner_id = sale_order_id.partner_invoice_id
+                shipping_partner_id = sale_order_id.partner_shipping_id
+                data.update({
+                    "billing_address": {
+                        "contactName": billing_partner_id.name,
+                        "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),
+                        "city": billing_partner_id.state_id and billing_partner_id.state_id.name or "",
+                        "country": billing_partner_id.country_id and billing_partner_id.country_id.name or "",
+                    },
+                    "shipping_address": {
+                        "contactName": shipping_partner_id.name,
+                        "address": "%s %s/%s/%s" % (shipping_partner_id.street, shipping_partner_id.city, shipping_partner_id.state_id and shipping_partner_id.state_id.name or '', shipping_partner_id.country_id and shipping_partner_id.country_id.name or ''),
+                        "city": shipping_partner_id.state_id and shipping_partner_id.state_id.name or "",
+                        "country": shipping_partner_id.country_id and shipping_partner_id.country_id.name or "",
+                    },
+                })
+
+                if not float_compare(amount, sale_order_id.amount_total, 2):
+                    customer_basket = [{
+                        "id": line.product_id.default_code or str(line.product_id.id),
+                        "name": line.product_id.name,
+                        "description": line.name,
+                        "qty": line.product_uom_qty,
+                        "amount": line.price_total,
+                        "category": line.product_id.categ_id.name,
+                        "is_physical": line.product_id.type == 'product',
+                    } for line in sale_order_id.order_line if line.price_total > 0]
+
+                    if amount_customer > 0:
+                        product = request.env.ref('payment_jetcheckout.product_commission').sudo()
+                        customer_basket.append({
+                            "id": product.default_code or str(product.id),
+                            "name": product.display_name,
+                            "description": product.name,
+                            "qty": 1.0,
+                            "amount": round(float_round(amount_customer, 2), 2), # used double round, because format_round seems not working
+                            "category": product.categ_id.name,
+                            "is_physical": False,
+                        })
+                    data.update({"customer_basket": customer_basket})
+
+            elif invoice_id:
+                tx.invoice_ids = [(4, invoice_id)]
+
+            self._set('tx', tx.id)
+
+            url = '%s/api/v1/payment/wiretransfer' % acquirer._get_paylox_api_url()
+            fullname = tx.partner_name.split(' ', 1)
+            address = []
+            if tx.partner_city:
+                address.append(tx.partner_city)
+            if tx.partner_state_id:
+                address.append(tx.partner_state_id.name)
+            if tx.partner_country_id:
+                address.append(tx.partner_country_id.name)
+
+            base_url = request.httprequest.host
+            success_url = '/payment/success' if 'successurl' not in kwargs or not kwargs['successurl'] else kwargs['successurl']
+            fail_url = '/payment/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
+            data.update({
+                "order_id": order_id,
+                "success_url": "https://%s%s" % (base_url, success_url),
+                "fail_url": "https://%s%s" % (base_url, fail_url),
+                "customer":  {
+                    "name": fullname[0],
+                    "surname": fullname[-1],
+                    "email": tx.partner_email,
+                    "id": str(tx.partner_id.id),
+                    "identity_number": tx.partner_id.vat,
+                    "phone": tx.partner_phone,
+                    "ip_address": tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+                    "postal_code": tx.partner_zip,
+                    "company": tx.partner_id.parent_id and tx.partner_id.parent_id.name or "",
+                    "address": "%s %s" % (tx.partner_address, "/".join(address)),
+                    "city": tx.partner_state_id and tx.partner_state_id.name or "",
+                    "country": tx.partner_country_id and tx.partner_country_id.name or "",
+                },
+            })
+
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                txid = result['transaction_id']
+                if result['response_code'] in ("00", "00307"):
+                    rurl = result['redirect_url']
+                    tx.write({
+                        'state': 'pending',
+                        'state_message': _('Transaction is pending...'),
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'url': rurl, 'id': tx.id}
+                else:
+                    tx.state = 'error'
+                    message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    values = {'error': message}
+            else:
+                tx.state = 'error'
+                message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values = {'error': message}
+            return values
+
+        elif payment_type == 'wallet':
+            amount = float(kwargs['amount'])
+            amount_integer = round(amount * 100)
+            amount_customer = 0
+
+            order_id = str(uuid.uuid4())
+            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "mode": acquirer._get_paylox_env(),
+                "amount": amount_integer,
+                "currency": currency.name,
+                "wallet_id": kwargs['id'],
+                "service": kwargs['name'],
+                "hash_data": hash,
+                "language": "tr",
+            }
+
+            sale_id = int(kwargs.get('order', 0))
+            invoice_id = int(kwargs.get('invoice', 0))
+
+            tx = self._get_transaction()
+            vals = {
+                'acquirer_id': acquirer.id,
+                'callback_hash': hash,
+                'amount': amount,
+                'fees': 0,
+                'operation': 'online_direct',
+                'jetcheckout_payment_type': payment_type,
+                'jetcheckout_payment_type_wallet_id': kwargs['id'],
+                'jetcheckout_payment_type_wallet_service_name': kwargs['name'],
+                'jetcheckout_website_id': request.website.id,
+                'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+                'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
+                'jetcheckout_order_id': order_id,
+                'jetcheckout_payment_amount': amount,
+                'jetcheckout_installment_count': 1,
+                'jetcheckout_installment_plus': 0,
+                'jetcheckout_installment_description': '0',
+                'jetcheckout_installment_amount': amount,
+                'jetcheckout_commission_rate': 0,
+                'jetcheckout_commission_amount': 0,
+                'jetcheckout_customer_rate': 0,
+                'jetcheckout_customer_amount': 0,
+            }
+
+            vals.update(self._get_tx_values(**kwargs))
+            if tx:
+                tx.write(vals)
+            else:
+                vals.update({
+                    'currency_id': currency.id,
+                    'acquirer_id': acquirer.id,
+                    'partner_id': partner.id,
+                })
+                tx = request.env['payment.transaction'].sudo().create(vals)
+
+            if sale_id:
+                tx.sale_order_ids = [(4, sale_id)]
+                sale_order_id = request.env['sale.order'].sudo().browse(sale_id)
+                billing_partner_id = sale_order_id.partner_invoice_id
+                shipping_partner_id = sale_order_id.partner_shipping_id
+                data.update({
+                    "billing_address": {
+                        "contactName": billing_partner_id.name,
+                        "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),
+                        "city": billing_partner_id.state_id and billing_partner_id.state_id.name or "",
+                        "country": billing_partner_id.country_id and billing_partner_id.country_id.name or "",
+                    },
+                    "shipping_address": {
+                        "contactName": shipping_partner_id.name,
+                        "address": "%s %s/%s/%s" % (shipping_partner_id.street, shipping_partner_id.city, shipping_partner_id.state_id and shipping_partner_id.state_id.name or '', shipping_partner_id.country_id and shipping_partner_id.country_id.name or ''),
+                        "city": shipping_partner_id.state_id and shipping_partner_id.state_id.name or "",
+                        "country": shipping_partner_id.country_id and shipping_partner_id.country_id.name or "",
+                    },
+                })
+
+                if not float_compare(amount, sale_order_id.amount_total, 2):
+                    customer_basket = [{
+                        "id": line.product_id.default_code or str(line.product_id.id),
+                        "name": line.product_id.name,
+                        "description": line.name,
+                        "qty": line.product_uom_qty,
+                        "amount": line.price_total,
+                        "category": line.product_id.categ_id.name,
+                        "is_physical": line.product_id.type == 'product',
+                    } for line in sale_order_id.order_line if line.price_total > 0]
+
+                    if amount_customer > 0:
+                        product = request.env.ref('payment_jetcheckout.product_commission').sudo()
+                        customer_basket.append({
+                            "id": product.default_code or str(product.id),
+                            "name": product.display_name,
+                            "description": product.name,
+                            "qty": 1.0,
+                            "amount": round(float_round(amount_customer, 2), 2), # used double round, because format_round seems not working
+                            "category": product.categ_id.name,
+                            "is_physical": False,
+                        })
+                    data.update({"customer_basket": customer_basket})
+
+            elif invoice_id:
+                tx.invoice_ids = [(4, invoice_id)]
+
+            self._set('tx', tx.id)
+
+            url = '%s/api/v1/payment/wallet' % acquirer._get_paylox_api_url()
+            fullname = tx.partner_name.split(' ', 1)
+            address = []
+            if tx.partner_city:
+                address.append(tx.partner_city)
+            if tx.partner_state_id:
+                address.append(tx.partner_state_id.name)
+            if tx.partner_country_id:
+                address.append(tx.partner_country_id.name)
+
+            base_url = request.httprequest.host
+            success_url = '/payment/success' if 'successurl' not in kwargs or not kwargs['successurl'] else kwargs['successurl']
+            fail_url = '/payment/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
+            data.update({
+                "order_id": order_id,
+                "success_url": "https://%s%s" % (base_url, success_url),
+                "fail_url": "https://%s%s" % (base_url, fail_url),
+                "customer":  {
+                    "name": fullname[0],
+                    "surname": fullname[-1],
+                    "email": tx.partner_email,
+                    "id": str(tx.partner_id.id),
+                    "identity_number": tx.partner_id.vat,
+                    "phone": tx.partner_phone,
+                    "ip_address": tx.jetcheckout_ip_address or request.httprequest.remote_addr,
+                    "postal_code": tx.partner_zip,
+                    "company": tx.partner_id.parent_id and tx.partner_id.parent_id.name or "",
+                    "address": "%s %s" % (tx.partner_address, "/".join(address)),
+                    "city": tx.partner_state_id and tx.partner_state_id.name or "",
+                    "country": tx.partner_country_id and tx.partner_country_id.name or "",
+                },
+            })
+
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                txid = result['transaction_id']
+                if result['response_code'] in ("00", "00307"):
+                    rurl = result['redirect_url']
+                    tx.write({
+                        'state': 'pending',
+                        'state_message': _('Transaction is pending...'),
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    return {'url': rurl, 'id': tx.id}
+                else:
+                    tx.state = 'error'
+                    message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'acquirer_reference': txid,
+                        'jetcheckout_transaction_id': txid,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    values = {'error': message}
+            else:
+                tx.state = 'error'
+                message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values = {'error': message}
+            return values
+
         elif payment_type == 'credit':
             amount = float(kwargs['amount'])
             campaign = kwargs.get('campaign', '')
@@ -1720,181 +2074,6 @@ class PayloxController(http.Controller):
             })
 
             data.update(self._get_data_values(data, **kwargs))
-            response = requests.post(url, data=json.dumps(data))
-            if response.status_code == 200:
-                result = response.json()
-                txid = result['transaction_id']
-                if result['response_code'] in ("00", "00307"):
-                    rurl = result['redirect_url']
-                    tx.write({
-                        'state': 'pending',
-                        'state_message': _('Transaction is pending...'),
-                        'acquirer_reference': txid,
-                        'jetcheckout_transaction_id': txid,
-                        'last_state_change': fields.Datetime.now(),
-                    })
-                    return {'url': rurl, 'id': tx.id}
-                else:
-                    tx.state = 'error'
-                    message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
-                    tx.write({
-                        'state': 'error',
-                        'state_message': message,
-                        'acquirer_reference': txid,
-                        'jetcheckout_transaction_id': txid,
-                        'last_state_change': fields.Datetime.now(),
-                    })
-                    values = {'error': message}
-            else:
-                tx.state = 'error'
-                message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
-                tx.write({
-                    'state': 'error',
-                    'state_message': message,
-                    'last_state_change': fields.Datetime.now(),
-                })
-                values = {'error': message}
-            return values
-
-        elif payment_type == 'wallet':
-            amount = float(kwargs['amount'])
-            amount_integer = round(amount * 100)
-            amount_customer = 0
-
-            order_id = str(uuid.uuid4())
-            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
-            data = {
-                "application_key": acquirer.jetcheckout_api_key,
-                "mode": acquirer._get_paylox_env(),
-                "amount": amount_integer,
-                "currency": currency.name,
-                "wallet_id": kwargs['id'],
-                "service": kwargs['name'],
-                "hash_data": hash,
-                "language": "tr",
-            }
-
-            sale_id = int(kwargs.get('order', 0))
-            invoice_id = int(kwargs.get('invoice', 0))
-
-            tx = self._get_transaction()
-            vals = {
-                'acquirer_id': acquirer.id,
-                'callback_hash': hash,
-                'amount': amount,
-                'fees': 0,
-                'operation': 'online_direct',
-                'jetcheckout_payment_type': payment_type,
-                'jetcheckout_payment_type_wallet_id': kwargs['id'],
-                'jetcheckout_payment_type_wallet_name': kwargs['name'],
-                'jetcheckout_website_id': request.website.id,
-                'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-                'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
-                'jetcheckout_order_id': order_id,
-                'jetcheckout_payment_amount': amount,
-                'jetcheckout_installment_count': 1,
-                'jetcheckout_installment_plus': 0,
-                'jetcheckout_installment_description': '0',
-                'jetcheckout_installment_amount': amount,
-                'jetcheckout_commission_rate': 0,
-                'jetcheckout_commission_amount': 0,
-                'jetcheckout_customer_rate': 0,
-                'jetcheckout_customer_amount': 0,
-            }
-
-            vals.update(self._get_tx_values(**kwargs))
-            if tx:
-                tx.write(vals)
-            else:
-                vals.update({
-                    'currency_id': currency.id,
-                    'acquirer_id': acquirer.id,
-                    'partner_id': partner.id,
-                })
-                tx = request.env['payment.transaction'].sudo().create(vals)
-
-            if sale_id:
-                tx.sale_order_ids = [(4, sale_id)]
-                sale_order_id = request.env['sale.order'].sudo().browse(sale_id)
-                billing_partner_id = sale_order_id.partner_invoice_id
-                shipping_partner_id = sale_order_id.partner_shipping_id
-                data.update({
-                    "billing_address": {
-                        "contactName": billing_partner_id.name,
-                        "address": "%s %s/%s/%s" % (billing_partner_id.street, billing_partner_id.city, billing_partner_id.state_id and billing_partner_id.state_id.name or '', billing_partner_id.country_id and billing_partner_id.country_id.name or ''),
-                        "city": billing_partner_id.state_id and billing_partner_id.state_id.name or "",
-                        "country": billing_partner_id.country_id and billing_partner_id.country_id.name or "",
-                    },
-                    "shipping_address": {
-                        "contactName": shipping_partner_id.name,
-                        "address": "%s %s/%s/%s" % (shipping_partner_id.street, shipping_partner_id.city, shipping_partner_id.state_id and shipping_partner_id.state_id.name or '', shipping_partner_id.country_id and shipping_partner_id.country_id.name or ''),
-                        "city": shipping_partner_id.state_id and shipping_partner_id.state_id.name or "",
-                        "country": shipping_partner_id.country_id and shipping_partner_id.country_id.name or "",
-                    },
-                })
-
-                if not float_compare(amount, sale_order_id.amount_total, 2):
-                    customer_basket = [{
-                        "id": line.product_id.default_code or str(line.product_id.id),
-                        "name": line.product_id.name,
-                        "description": line.name,
-                        "qty": line.product_uom_qty,
-                        "amount": line.price_total,
-                        "category": line.product_id.categ_id.name,
-                        "is_physical": line.product_id.type == 'product',
-                    } for line in sale_order_id.order_line if line.price_total > 0]
-
-                    if amount_customer > 0:
-                        product = request.env.ref('payment_jetcheckout.product_commission').sudo()
-                        customer_basket.append({
-                            "id": product.default_code or str(product.id),
-                            "name": product.display_name,
-                            "description": product.name,
-                            "qty": 1.0,
-                            "amount": round(float_round(amount_customer, 2), 2), # used double round, because format_round seems not working
-                            "category": product.categ_id.name,
-                            "is_physical": False,
-                        })
-                    data.update({"customer_basket": customer_basket})
-
-            elif invoice_id:
-                tx.invoice_ids = [(4, invoice_id)]
-
-            self._set('tx', tx.id)
-
-            url = '%s/api/v1/payment/wallet' % acquirer._get_paylox_api_url()
-            fullname = tx.partner_name.split(' ', 1)
-            address = []
-            if tx.partner_city:
-                address.append(tx.partner_city)
-            if tx.partner_state_id:
-                address.append(tx.partner_state_id.name)
-            if tx.partner_country_id:
-                address.append(tx.partner_country_id.name)
-
-            base_url = request.httprequest.host
-            success_url = '/payment/success' if 'successurl' not in kwargs or not kwargs['successurl'] else kwargs['successurl']
-            fail_url = '/payment/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
-            data.update({
-                "order_id": order_id,
-                "success_url": "https://%s%s" % (base_url, success_url),
-                "fail_url": "https://%s%s" % (base_url, fail_url),
-                "customer":  {
-                    "name": fullname[0],
-                    "surname": fullname[-1],
-                    "email": tx.partner_email,
-                    "id": str(tx.partner_id.id),
-                    "identity_number": tx.partner_id.vat,
-                    "phone": tx.partner_phone,
-                    "ip_address": tx.jetcheckout_ip_address or request.httprequest.remote_addr,
-                    "postal_code": tx.partner_zip,
-                    "company": tx.partner_id.parent_id and tx.partner_id.parent_id.name or "",
-                    "address": "%s %s" % (tx.partner_address, "/".join(address)),
-                    "city": tx.partner_state_id and tx.partner_state_id.name or "",
-                    "country": tx.partner_country_id and tx.partner_country_id.name or "",
-                },
-            })
-
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
