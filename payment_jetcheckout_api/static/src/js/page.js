@@ -27,7 +27,7 @@ publicWidget.registry.payloxApiPage = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
+publicWidget.registry.PayloxApiCard = publicWidget.Widget.extend({
     selector: '.payment-credit-card',
 
     start: function () {
@@ -37,7 +37,28 @@ publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.PayloxtApiCard = publicWidget.Widget.extend({
+
+publicWidget.registry.PayloxApiTransfer = publicWidget.Widget.extend({
+    selector: '.payment-wire-transfer',
+
+    start: function () {
+        return this._super.apply(this, arguments).then(function () {
+            framework.hideLoading();
+        });
+    },
+});
+
+publicWidget.registry.PayloxApiWallet = publicWidget.Widget.extend({
+    selector: '.payment-wallet',
+
+    start: function () {
+        return this._super.apply(this, arguments).then(function () {
+            framework.hideLoading();
+        });
+    },
+});
+
+publicWidget.registry.PayloxApiCredit = publicWidget.Widget.extend({
     selector: '.payment-shopping-credit',
 
     start: function () {

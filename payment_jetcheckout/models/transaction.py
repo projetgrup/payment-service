@@ -78,13 +78,14 @@ class PaymentTransaction(models.Model):
         ('virtual_pos', 'Virtual PoS'),
         ('physical_pos', 'Physical PoS'),
         ('soft_pos', 'Soft PoS'),
-        ('credit', 'Shopping Credit'),
         ('transfer', 'Wire Transfer'),
         ('wallet', 'Wallet'),
+        ('credit', 'Shopping Credit'),
     ], string='Paylox Payment Type', default='virtual_pos', readonly=True, copy=False)
-    jetcheckout_payment_type_credit_bank_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
+    jetcheckout_payment_type_transfer_service_name = fields.Char('Paylox Payment Type Transfer Service Name', readonly=True, copy=False)
+    jetcheckout_payment_type_wallet_service_name = fields.Char('Paylox Payment Type Wallet Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
-    jetcheckout_payment_type_wallet_name = fields.Char('Paylox Payment Type Wallet Name', readonly=True, copy=False)
+    jetcheckout_payment_type_credit_bank_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)
