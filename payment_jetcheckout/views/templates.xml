@@ -325,13 +325,13 @@
                 <t t-set="page" t-value="'payment'"/>
             </t>
             <div id="payment_type" t-attf-class="payment-type #{'' if len(types or []) &gt; 1 else 'd-none'}">
-                <t t-set="type_selected" t-as="True"/>
+                <t t-set="type_selected" t-value="True"/>
                 <t t-foreach="types" t-as="t">
                     <button class="btn btn-secondary text-primary" t-att-data-name="t['code']" field="type.all">
                         <input type="radio" class="d-none" name="payment_type" t-att-checked="'checked' if type_selected else None" t-att-value="t['code']"/>
                         <span t-esc="t['name']"/>
                     </button>
-                    <t t-set="type_selected" t-as="False"/>
+                    <t t-set="type_selected" t-value="False"/>
                 </t>
             </div>
             <t t-foreach="types" t-as="ptype">
