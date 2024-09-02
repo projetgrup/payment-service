@@ -107,7 +107,7 @@ class PayloxController(http.Controller):
         return werkzeug.utils.redirect(path)
 
     @staticmethod
-    def _get_acquirer(acquirer=None, providers=['jetcheckout'], limit=1):
+    def _get_acquirer(acquirer=None, company=None, providers=['jetcheckout'], limit=1):
         if acquirer == None:
             acquirer = PayloxController._get('acquirer')
             if acquirer:
@@ -119,7 +119,7 @@ class PayloxController(http.Controller):
             else:
                 return acquirer
         else:
-            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(website=request.website, providers=providers, limit=limit)
+            acquirer = request.env['payment.acquirer'].sudo()._get_acquirer(company=company, website=request.website, providers=providers, limit=limit)
             PayloxController._set('acquirer', acquirer.id)
             return acquirer
 
@@ -248,7 +248,7 @@ class PayloxController(http.Controller):
     def _get_data_values(self, data, **kwargs):
         return {}
 
-    def _prepare(self, acquirer=None, company=None, partner=None, currency=None, transaction=None, balance=True):
+    def _prepare(self, acquirer=None, company=None, partner=None, currency=None, transaction=None, balance=True, filters={}):
         acquirer = self._get_acquirer(acquirer=acquirer)
         company = company or request.env.company
         currency = currency or (transaction and transaction.currency_id) or company.currency_id
@@ -262,6 +262,10 @@ class PayloxController(http.Controller):
         language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner, transaction=transaction)
         types = self._get_payment_types(acquirer=acquirer)
+
+        if filters.get('type'):
+            types = list(filter(lambda t: t['code'] in filters['type'], types))
+
         shopping_credits = []
         wallets = []
         transfers = []
@@ -270,7 +274,7 @@ class PayloxController(http.Controller):
                 shopping_credits = self._prepare_credit(acquirer=acquirer, currency=currency)
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
-            elif ptype['code'] == 'wire_transfer':
+            elif ptype['code'] == 'bank':
                 transfers = self._prepare_wiretransfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
@@ -337,34 +341,40 @@ class PayloxController(http.Controller):
             if result['response_code'] == "00":
                 for payment_type in result['payment_types']:
                     if payment_type == 'Virtual':
-                        types.append({
+                        types.insert(0, {
                             'name': _('Pay with Credit Card'),
-                            'code': 'virtual_pos'
+                            'code': 'virtual_pos',
+                            'id': 1,
                         })
                     #elif payment_type == 'Physical':
                     #    types.append({
                     #        'name': _('Pay with Physical PoS'),
-                    #        'code': 'physical_pos'
-                    #    })
-                    elif payment_type == 'Wallet':
-                        types.append({
-                            'name': _('Pay with Wallet'),
-                            'code': 'wallet'
-                        })
-                    #elif payment_type == 'WireTransfer':
-                    #    types.append({
-                    #        'name': _('Pay with Wire Transfer'),
-                    #        'code': 'wire_transfer'
+                    #        'code': 'physical_pos',
+                    #        'id': 2,
                     #    })
                     #elif payment_type == 'SoftPOS':
                     #    types.append({
                     #        'name': _('Pay with Soft PoS'),
-                    #        'code': 'soft_pos'
+                    #        'code': 'soft_pos',
+                    #        'id': 3,
                     #    })
+                    elif payment_type == 'WireTransfer':
+                        types.append({
+                            'name': _('Pay with Wire Transfer'),
+                            'code': 'bank',
+                            'id': 4,
+                        })
+                    elif payment_type == 'Wallet':
+                        types.append({
+                            'name': _('Pay with Wallet'),
+                            'code': 'wallet',
+                            'id': 5,
+                        })
                     elif payment_type == 'ShoppingCredit':
                         types.append({
                             'name': _('Pay with Shopping Credit'),
-                            'code': 'credit'
+                            'code': 'credit',
+                            'id': 6,
                         })
         return types
     
@@ -986,10 +996,10 @@ class PayloxController(http.Controller):
 
         return url, tx, False
 
-    @http.route('/payment/card/acquirer', type='json', auth='user', website=True)
-    def payment_acquirer(self):
+    @http.route('/payment/acquirer', type='json', auth='user', website=True)
+    def payment_acquirer(self, company):
         self._del()
-        acquirer = self._get_acquirer()
+        acquirer = self._get_acquirer(company=company)
         commission = request.env['ir.model.data'].sudo()._xmlid_to_res_id('payment_jetcheckout.product_commission')
         return {
             'id': acquirer.id,
@@ -998,6 +1008,12 @@ class PayloxController(http.Controller):
                 'commission': commission,
             }
         }
+
+    @http.route('/payment/types', type='json', auth='user', website=True)
+    def payment_types(self, **kwargs):
+        self._del()
+        return self._get_payment_types(acquirer=kwargs['acquirer'])
+
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
     def payment_card_type(self, acquirer=False):
@@ -1545,26 +1561,6 @@ class PayloxController(http.Controller):
 
             order_id = str(uuid.uuid4())
             hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, order_id, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
-            data = {
-                "application_key": acquirer.jetcheckout_api_key,
-                "mode": acquirer._get_paylox_env(),
-                "order_id": order_id,
-                "amount": amount_integer,
-                "currency": currency.name,
-                "installment_count": installment['count'],
-                "bank_code": kwargs['code'],
-                "hash_data": hash,
-                "language": "tr",
-                "basket_items": [{
-                    "id": "1",
-                    "name": "Diğer",
-                    "brandName": "Diğer",
-                    "qty": 1,
-                    "category": 3,
-                    "unitPrice": amount_total,
-                }],
-                #"campaign_name": campaign,
-            }
 
             sale_id = int(kwargs.get('order', 0))
             invoice_id = int(kwargs.get('invoice', 0))
@@ -1577,7 +1573,7 @@ class PayloxController(http.Controller):
                 'fees': amount_cost,
                 'operation': 'online_direct',
                 'jetcheckout_payment_type': payment_type,
-                'jetcheckout_payment_type_credit_code': kwargs['code'],
+                'jetcheckout_payment_type_credit_bank_code': kwargs['code'],
                 'jetcheckout_website_id': request.website.id,
                 'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
                 'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
@@ -1604,6 +1600,42 @@ class PayloxController(http.Controller):
                     'partner_id': partner.id,
                 })
                 tx = request.env['payment.transaction'].sudo().create(vals)
+
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "mode": acquirer._get_paylox_env(),
+                "order_id": order_id,
+                "amount": amount_integer,
+                "currency": currency.name,
+                "installment_count": installment['count'],
+                "bank_code": kwargs['code'],
+                "hash_data": hash,
+                "language": "tr",
+                #"campaign_name": campaign,
+            }
+
+            if tx.paylox_product_ids:
+                data.update({
+                    "basket_items": [{
+                        "id": str(i),
+                        "unitPrice": product.price,
+                        "name": product.name or "Diğer",
+                        "brandName": product.brand or "Diğer",
+                        "category": product.categ and int(product.categ) or 3,
+                        "qty": product.qty and float_round(product.qty, product.qty % 1 and 2 or 0) or 1,
+                    } for i, product in enumerate(tx.paylox_product_ids, start=1)],
+                })
+            else:
+                data.update({
+                    "basket_items": [{
+                        "id": "1",
+                        "name": "Diğer",
+                        "brandName": "Diğer",
+                        "unitPrice": amount_total,
+                        "category": 3,
+                        "qty": 1,
+                    }],
+                })
 
             if sale_id:
                 tx.sale_order_ids = [(4, sale_id)]
@@ -2033,3 +2065,15 @@ class PayloxController(http.Controller):
             'balance_sum': balance_sum,
         })
         return request.render('payment_jetcheckout.page_ledger', values)
+
+    @http.route(['/payment/credit/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def result_credit(self, **kwargs):
+        values = self._prepare()
+        if '' in kwargs:
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+        else:
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
+        self._del()
+        return request.render('payment_jetcheckout.page_result', values)

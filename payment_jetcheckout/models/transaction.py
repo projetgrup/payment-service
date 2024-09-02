@@ -82,7 +82,7 @@ class PaymentTransaction(models.Model):
         ('transfer', 'Wire Transfer'),
         ('wallet', 'Wallet'),
     ], string='Paylox Payment Type', default='virtual_pos', readonly=True, copy=False)
-    jetcheckout_payment_type_credit_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
+    jetcheckout_payment_type_credit_bank_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_name = fields.Char('Paylox Payment Type Wallet Name', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
@@ -104,6 +104,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_fund_amount = fields.Monetary('Fund Amount', compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
+
+    paylox_product_ids = fields.One2many('payment.transaction.product', 'transaction_id', 'Products')
 
     @api.model
     def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):
@@ -711,3 +713,18 @@ class PaymentTransaction(models.Model):
     @api.model
     def jetcheckout_resync(self, date_start=None, date_end=None, companies=None, states=None):
         self.paylox_resync(date_start=date_start, date_end=date_end, companies=companies, states=states)
+
+
+class PaymentTransactionProduct(models.Model):
+    _name = 'payment.transaction.product'
+    _description = 'Payment Transaction Product'
+
+    transaction_id = fields.Many2one('payment.transaction', ondelete='cascade')
+    product_id = fields.Many2one('product.product')
+    uom = fields.Char(related='product_id.uom_id.name')
+    name = fields.Char()
+    code = fields.Char()
+    qty = fields.Float()
+    categ = fields.Char()
+    brand = fields.Char()
+    price = fields.Float()
