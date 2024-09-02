@@ -85,14 +85,15 @@
                 </group>
                 <group>
                     <field name="jetcheckout_payment_type" string="Type"/>
-                    <field name="jetcheckout_payment_type_credit_bank_code" string="Bank Code" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'credit')]}"/>
-                    <label for="jetcheckout_payment_type_wallet_name" string="Wallet Name" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'wallet')]}"/>
+                    <field name="jetcheckout_payment_type_transfer_service_name" string="Service Name" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'transfer')]}"/>
+                    <label for="jetcheckout_payment_type_wallet_service_name" string="Service Name" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'wallet')]}"/>
                     <div class="o_row" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'wallet')]}">
-                        <field name="jetcheckout_payment_type_wallet_name"/>
+                        <field name="jetcheckout_payment_type_wallet_service_name"/>
                         <span class="ml-2 font-italic text-muted">
                             #<field name="jetcheckout_payment_type_wallet_id" class="oe_inline"/>
                         </span>
                     </div>
+                    <field name="jetcheckout_payment_type_credit_bank_code" string="Bank Code" attrs="{'invisible': [('jetcheckout_payment_type', '!=', 'credit')]}"/>
                     <field name="jetcheckout_installment_description_long" string="Installment" class="font-weight-bold text-primary" attrs="{'invisible': ['|', ('jetcheckout_installment_description_long', '=', False), ('source_transaction_id', '!=', False)]}"/>
                     <field name="jetcheckout_card_name" attrs="{'invisible': [('jetcheckout_card_name', '=', False)]}"/>
                     <field name="token_id" attrs="{'invisible': [('token_id', '=', False)]}" options="{'no_create': True, 'no_open': True}"/>
