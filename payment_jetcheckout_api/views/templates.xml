@@ -264,7 +264,7 @@
 
     <template id="page_card" name="Credit Card Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
-            <t t-set="classname" t-value="'payment-credit-card px-3'"/>
+            <t t-set="classname" t-value="'payment-page-card px-3'"/>
             <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
@@ -307,9 +307,55 @@
         </t>
     </template>
 
+    <template id="page_transfer" name="Wire Transfer Payment Page">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-page-transfer px-3'"/>
+            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <div class="row w-100 mx-0 my-4 card border shadow p-4">
+                <div class="justify-content-center mx-0 w-100">
+                    <input id="system" type="hidden" value="api" field="system"/>
+                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
+                        <t t-set="amount" t-value="tx.amount"/>
+                        <t t-set="no_border" t-value="True"/>
+                        <t t-set="no_loading" t-value="True"/>
+                    </t>
+                    <t t-elif="tx.state == 'cancel'">
+                        <div class="alert alert-danger">This payment transaction is cancelled</div>
+                    </t>
+                    <t t-elif="tx.state == 'expired'">
+                        <div class="alert alert-danger">This payment transaction is expired</div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_wallet" name="Wallet Payment Page">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-page-wallet px-3'"/>
+            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <div class="row w-100 mx-0 my-4 card border shadow p-4">
+                <div class="justify-content-center mx-0 w-100">
+                    <input id="system" type="hidden" value="api" field="system"/>
+                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
+                        <t t-set="amount" t-value="tx.amount"/>
+                        <t t-set="no_border" t-value="True"/>
+                        <t t-set="no_loading" t-value="True"/>
+                    </t>
+                    <t t-elif="tx.state == 'cancel'">
+                        <div class="alert alert-danger">This payment transaction is cancelled</div>
+                    </t>
+                    <t t-elif="tx.state == 'expired'">
+                        <div class="alert alert-danger">This payment transaction is expired</div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="page_credit" name="Shopping Credit Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
-            <t t-set="classname" t-value="'payment-shopping-credit px-3'"/>
+            <t t-set="classname" t-value="'payment-page-credit px-3'"/>
             <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">

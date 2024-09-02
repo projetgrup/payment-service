@@ -28,7 +28,7 @@ publicWidget.registry.payloxApiPage = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.PayloxApiCard = publicWidget.Widget.extend({
-    selector: '.payment-credit-card',
+    selector: '.payment-page-card',
 
     start: function () {
         return this._super.apply(this, arguments).then(function () {
@@ -39,7 +39,7 @@ publicWidget.registry.PayloxApiCard = publicWidget.Widget.extend({
 
 
 publicWidget.registry.PayloxApiTransfer = publicWidget.Widget.extend({
-    selector: '.payment-wire-transfer',
+    selector: '.payment-page-transfer',
 
     start: function () {
         return this._super.apply(this, arguments).then(function () {
@@ -49,7 +49,7 @@ publicWidget.registry.PayloxApiTransfer = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.PayloxApiWallet = publicWidget.Widget.extend({
-    selector: '.payment-wallet',
+    selector: '.payment-page-wallet',
 
     start: function () {
         return this._super.apply(this, arguments).then(function () {
@@ -59,7 +59,7 @@ publicWidget.registry.PayloxApiWallet = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.PayloxApiCredit = publicWidget.Widget.extend({
-    selector: '.payment-shopping-credit',
+    selector: '.payment-page-credit',
 
     start: function () {
         return this._super.apply(this, arguments).then(function () {
