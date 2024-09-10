@@ -11,7 +11,7 @@
     "category": "Tools",
     "author": 'Projet',
     "website": 'https://bulutkobi.io',
-    "excludes": ["web_enterprise"],
+    "excludes": ["web_enterprise", "web_responsive"],
     "depends": [
         'base',
         'web',
