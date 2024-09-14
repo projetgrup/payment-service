@@ -21,6 +21,7 @@ class PayloxSystemController(Controller):
 
     def _check_redirect(self, partner):
         if request.session.get('company_selected'):
+            del request.session['company_selected']
             return False
 
         if not request.env.user.share:
@@ -35,6 +36,16 @@ class PayloxSystemController(Controller):
                 return self._redirect(company_id=company_id)
 
         return False
+
+    def _check_session(self, **kwargs):
+        if kwargs.get('values', {}).get('no_session_check'):
+            return
+  
+        if request.website.company_id.id != request.env.company.id:
+            user = request.env['res.users'].sudo().search([
+                ('login', '=', request.env.user.login),
+                ('company_id', '=', request.website.company_id.id),
+            ])
 
     def _check_user(self):
         path = urlparse(request.httprequest.referrer).path
@@ -70,14 +81,14 @@ class PayloxSystemController(Controller):
             return {'error': _('Only registered users can create partners.<br/>Please contact with your system administrator.')}
 
     def _get_parent(self, token):
-        id, token = request.env['res.partner'].sudo()._resolve_token(token)
-        if not id or not token:
+        pid, token = request.env['res.partner'].sudo()._resolve_token(token)
+        if not pid or not token:
             raise werkzeug.exceptions.NotFound()
 
         websites = request.env['website'].sudo().search([('domain', 'like', '%%%s%%' % request.httprequest.host)])
         companies = websites.mapped('company_id')
         partner = request.env['res.partner'].sudo().search([
-            ('id', '=', id), ('access_token', '=', token),
+            ('id', '=', pid), ('access_token', '=', token),
             '|',('company_id', '=', False), ('company_id', 'in', companies.ids),
         ], limit=1)
         if not partner:
@@ -719,6 +730,7 @@ class PayloxSystemController(Controller):
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
+        #request.uid = 62
         if request.env.user.has_group('base.group_public'):
             raise werkzeug.exceptions.NotFound()
 
@@ -849,7 +861,9 @@ class PayloxSystemController(Controller):
             return redirect
 
         self._check_payment_page()
+
         self._del()
+        self._set('partner', partner.id)
 
         if partner.is_portal:
             if request.env.user.has_group('base.group_public'):
@@ -861,9 +875,13 @@ class PayloxSystemController(Controller):
 
     @http.route(['/my/payment/company'], type='json', auth='public', website=True, csrf=False)
     def page_system_page_company(self, cid):
+        if request.env.user._is_public():
+            return False
+
         if cid == request.env.company.id:
-            if request.session.get('company_selected'):
-                return False
+            return False
+            #if request.session.get('company_selected'):
+            #    return False
 
         else:
             website = request.env['website'].sudo().search([
@@ -873,6 +891,14 @@ class PayloxSystemController(Controller):
             if not website:
                 return False
             website._force()
+
+            if not request.env.user._is_internal():
+                user = request.env['res.users'].sudo().search([
+                    ('login', '=', request.env.user.login),
+                    ('company_id', '=', website.company_id.id),
+                ])
+                request.session.authenticate(request.db, user.login, {'token': user.partner_id._get_token(), 'company': website.company_id.id})
+                self._set('partner', user.partner_id.id)
 
         request.session['company_selected'] = True
         return True

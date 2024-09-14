@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website_form" model="ir.ui.view">
+    <field name="model">website</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="website.view_website_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='domain']" position="before">
+            <br colspan="2"/>
+            <field name="id" invisible="1"/>
+            <field name="template_ok" widget="boolean_toggle"/>
+            <field name="template_id" domain="[('id', '!=', id), ('template_id', '=', False)]" options="{'no_create': True}" attrs="{'invisible': [('template_ok', '=', False)]}"/>
+        </xpath>
+        <xpath expr="//field[@name='domain']" position="attributes">
+            <attribute name="attrs">{'invisible': [('template_ok', '!=', False)]}</attribute>
+        </xpath>
+        <xpath expr="//field[@name='logo']" position="attributes">
+            <attribute name="attrs">{'invisible': [('template_ok', '!=', False)]}</attribute>
+        </xpath>
+    </field>
+    </record>
+</odoo>
