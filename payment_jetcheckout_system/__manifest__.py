@@ -13,8 +13,9 @@
     'depends': [
         'sale',
         'sales_team',
+        'sms_api',
         'payment_jetcheckout',
-        'sms_api'
+        'web_multitenant',
     ],
     'data': [
         'data/data.xml',

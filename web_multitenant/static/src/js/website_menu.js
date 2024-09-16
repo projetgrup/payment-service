@@ -1,12 +1,12 @@
-odoo.define('web_dropdown_filter.webDropdownFilter', function (require) {
+odoo.define('web_multitenant.switchWebsiteMenu', function (require) {
     'use strict';
     
     const Widget = require('web.Widget'); 
     const { qweb } = require('web.core');
     const { registry } = require("@web/core/registry");
 
-    const webDropdownFilter = Widget.extend({
-        xmlDependencies: ['/web_dropdown_filter/static/src/xml/switch_website_menu.xml'],
+    const switchWebsiteMenu = Widget.extend({
+        xmlDependencies: ['/web_multitenant/static/src/xml/website_menu.xml'],
         events: {
             'input .filter-input': '_onSearch',
             'click #website_switcher': '_onWebsiteClick',
@@ -15,7 +15,7 @@ odoo.define('web_dropdown_filter.webDropdownFilter', function (require) {
         start: function () {
             const data = $('.oe_filter_website').attr('data');
             const websites = JSON.parse(data.replace(/'/g, '"'));
-            const $filter = $(qweb.render('web_dropdown_filter.switch_website_menu', { websites: websites }));
+            const $filter = $(qweb.render('web_multitenant.switch_website_menu', { websites }));
             this.$el.append($filter);
             return this._super.apply(this, arguments);
         },
@@ -39,10 +39,10 @@ odoo.define('web_dropdown_filter.webDropdownFilter', function (require) {
         },
     });
     
-    registry.category("website_navbar_widgets").add("webDropdownFilter", {
-        Widget: webDropdownFilter,
+    registry.category("website_navbar_widgets").add("switchWebsiteMenu", {
+        Widget: switchWebsiteMenu,
         selector: '.oe_filter_website',
     });
     
-    return webDropdownFilter;
+    return switchWebsiteMenu;
 });

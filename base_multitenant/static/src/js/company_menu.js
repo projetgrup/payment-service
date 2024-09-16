@@ -11,7 +11,7 @@ import { patch } from "web.utils";
 const { hooks } = owl;
 const { useState } = hooks;
 
-patch(SwitchCompanyMenu.prototype, "web_dropdown_filter.SwitchCompanyMenu", {
+patch(SwitchCompanyMenu.prototype, "base_multitenant.SwitchCompanyMenu", {
     setup() {
         this._super.apply(this, arguments);
         this.companyService = useService("company");
@@ -50,4 +50,4 @@ patch(SwitchCompanyMenu.prototype, "web_dropdown_filter.SwitchCompanyMenu", {
 });
 
 
-SwitchCompanyMenu.template = "web_dropdown_filter.SwitchCompanyMenu";
+SwitchCompanyMenu.template = "base_multitenant.SwitchCompanyMenu";

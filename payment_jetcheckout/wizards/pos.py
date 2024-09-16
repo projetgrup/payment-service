@@ -142,6 +142,7 @@ class PaymentPayloxApiCurrency(models.TransientModel):
     res_id = fields.Integer(readonly=True)
     name = fields.Char(readonly=True)
 
+
 class PaymentPayloxApiProvider(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.provider'
     _description = 'Paylox API Providers'
@@ -186,6 +187,7 @@ class PaymentPayloxApiProvider(models.TransientModel):
     shipping_address = fields.Char()
     shipping_address_city = fields.Char()
     shipping_address_country = fields.Char()
+
 
 class PaymentPayloxApiPoses(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.api.poses'

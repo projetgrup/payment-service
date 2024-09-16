@@ -10,8 +10,10 @@ from urllib.parse import urlparse
 from collections import OrderedDict
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 from odoo.tools import email_normalize
+from odoo.exceptions import UserError, ValidationError
+from odoo.addons.auth_signup.models.res_users import SignupError
+
 from .constants import PRIMEFACTOR
 
 _logger = logging.getLogger(__name__)
@@ -448,8 +450,8 @@ class Partner(models.Model):
         try:
             data = token.rsplit('-', 1)
             token = data[0]
-            id = int(int(data[1], 16) / PRIMEFACTOR)
-            return id, token
+            pid = int(int(data[1], 16) / PRIMEFACTOR)
+            return pid, token
         except:
             return False
 
@@ -519,7 +521,10 @@ class Partner(models.Model):
             user = partner.users_id
             if not user:
                 company = self.company_id or self.env.company
-                user = partner_sudo.with_company(company.id)._create_portal_user()
+                try:
+                    user = partner_sudo.with_company(company.id)._create_portal_user()
+                except SignupError:
+                    raise ValidationError(_('You can not have two users with the same login!'))
 
             user = user.sudo()
             if not user.active or user.has_group('base.group_public'):
@@ -574,6 +579,7 @@ class Partner(models.Model):
         user = self.env['res.users'].sudo().with_context(active_test=False).search([
             ('id', '!=', self.users_id.id),
             ('login', '=', email),
+            ('company_id', '=', self.users_id.company_id.id),
         ])
 
         if user:
