@@ -220,8 +220,8 @@ class Users(models.Model):
     ], string='Payment Page Items Priority Selection', compute='_compute_payment_page_item_priority', inverse='_set_payment_page_item_priority')
 
     def _check_token(self, token):
-        id, token = self.partner_id._resolve_token(token)
-        if not self.partner_id.id == id or not self.partner_id.access_token == token:
+        pid, token = self.partner_id._resolve_token(token)
+        if not self.partner_id.id == pid or not self.partner_id.access_token == token:
             raise AccessDenied()
 
     def _check_credentials(self, password, env):
@@ -236,8 +236,10 @@ class Users(models.Model):
     @classmethod
     def authenticate(cls, db, login, password, env):
         if isinstance(password, dict):
-            if password['token']:
-                env = env or {}
+            env = env or {}
+            if 'company' in password:
+                env['company'] = password['company']
+            if 'token' in password:
                 env['token'] = password['token']
                 password = password['token']
         return super(Users, cls).authenticate(db, login, password, env)
