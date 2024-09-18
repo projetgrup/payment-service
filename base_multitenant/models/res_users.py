@@ -41,7 +41,8 @@ class ResUsers(models.Model):
     def write(self, values):
         if 'password' in values:
             for user in self:
-                users = self.search([('id', '!=', user.id), ('login', '=', user.login)]).filtered(lambda u: u.has_group('base.group_portal'))
-                super(ResUsers, users).write({'password': values['password']})
+                if user.has_group('base.group_user'):
+                    users = self.search([('id', '!=', user.id), ('login', '=', user.login)]).filtered(lambda u: u.has_group('base.group_user'))
+                    super(ResUsers, users).write({'password': values['password']})
 
         return super(ResUsers, self).write(values)
