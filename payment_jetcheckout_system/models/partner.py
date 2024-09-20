@@ -318,6 +318,9 @@ class Partner(models.Model):
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
     paylox_tax_office = fields.Char('Tax Office')
+    signup_token = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')
+    signup_type = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')
+    signup_expiration = fields.Datetime(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')
 
     @api.model
     def default_get(self, fields):
