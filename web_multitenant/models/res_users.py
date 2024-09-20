@@ -34,16 +34,12 @@ class ResUsers(models.Model):
         website = self.env['website'].get_current_website()
         if website:
             websites = self.env['website'].sudo().search([('domain', '=', website.domain)])
-            domain.append(('website_id', 'in', tuple([False] + websites.ids)))
 
             frame = inspect.currentframe().f_back
             args = frame.f_locals
             env = args.get('user_agent_env')
-            if 'company' in env:
-                domain.append(('company_id', '=', env['company']))
-            else:
-                domain.append(('company_id', 'in', websites.mapped('company_id').ids))
-   
+            companies = [env['company']] if 'company' in env else websites.mapped('company_id').ids
+            domain += ['|', ('share', '=', False), '&', '&', ('share', '=', True), ('website_id', 'in', tuple([False] + websites.ids)), ('company_id', 'in', companies)]
         return domain
 
     @api.model
