@@ -41,6 +41,7 @@
             'payment_jetcheckout/static/src/js/page.js',
         ],
         'web.assets_backend': [
+            'payment_jetcheckout/static/src/scss/backend.scss',
             'payment_jetcheckout/static/src/js/backend.js',
             'payment_jetcheckout/static/src/js/transaction.js',
         ],

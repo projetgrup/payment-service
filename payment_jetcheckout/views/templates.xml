@@ -375,6 +375,10 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="field-container">
+                                <button class="btn btn-paylox-token-list border-0 text-primary font-weight-bold" field="card.token.list">Saved Cards</button>
+                                <button class="btn btn-paylox-point border-0 text-primary font-weight-bold" field="card.point">Query Points</button>
+                            </div>
                         </div>
                     </div>
                     <div class="payment-table mt-2 p-3 col-md-6">
@@ -682,6 +686,91 @@
                     </div>
                 </div>
             </div>
+        </t>
+    </template>
+
+    <template id="page_token_verify" name="Paylox Card Token Verify Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="'%s | Card Token Verify' % website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-set="body_classname" t-value="'payment-page payment-token-verify'"/>
+            <div class="o_loading">
+                <em class="fa fa-4x fa-spin fa-circle-o-notch d-none"/>
+            </div>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+            <input type="hidden" name="success_url" t-att-value="success_url" field="payment.successurl"/>
+            <input type="hidden" name="fail_url" t-att-value="fail_url" field="payment.failurl"/>
+            <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
+            <div class="payment-card row justify-content-center mx-0 h-100">
+                <div class="col-md-6 row justify-content-center mx-0">
+                    <div class="payment-table mt-2 p-3">
+                        <div class="payment-form-container payment-gradient">
+                            <div class="field-container">
+                                <input id="cardholder" type="text" required="required" field="card.holder"/>
+                                <span class="bar-container"/>
+                                <label for="cardholder"><span>Name</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="cardnumber" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
+                                <span class="bar-container"/>
+                                <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
+                                <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
+                                <label for="cardnumber"><span>Card Number</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="carddate" inputmode="numeric" pattern="[0-9\/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
+                                <span class="bar-container"/>
+                                <label for="carddate"><span>Expiration</span></label>
+                            </div>
+                            <div class="field-container">
+                                <input id="cardcode" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.code"/>
+                                <span class="bar-container"/>
+                                <label for="cardcode"><span t-if="s2s">CVC</span><span t-else="">Security Code</span></label>
+                            </div>
+                            <button class="payment-token-verify-button btn" field="payment.button">
+                                Verify
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 row justify-content-center mx-0 navbar-light pt48">
+                    <t t-call="payment_jetcheckout.payment_preview"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_token_result" name="Paylox Card Token Verify Result Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="'%s | Card Token Verify Result' % website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-set="body_classname" t-value="'payment-token-result'"/>
+            <t t-if="tx">
+                <div t-if="tx.state == 'error'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-danger">Your credit card verification has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <small class="d-block mt-1" t-esc="tx.state_message"/>
+                </div>
+                <div t-elif="tx.state == 'done'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-700">Your credit card has been successfully verified.</div>
+                    <input id="success" type="hidden"/>
+                    <em class="d-block mt-1 text-600">Redirecting...</em>
+                </div>
+                <div t-else="" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100h2 text-danger">Your credit card verification status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <small class="d-block mt-1" t-esc="tx.state_message"/>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-danger">Credit card verification status could not be retrieved. Please close the dialog and check the verification again.</div>
+                    <small class="d-block mt-1" t-esc="tx.state_message"/>
+                </div>
+            </t>
         </t>
     </template>
 </odoo>

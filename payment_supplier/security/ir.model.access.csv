@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-jetcheckout_payment_token_verify_user,jetcheckout_payment_token_verify_user,model_payment_token_verify,payment_jetcheckout_system.group_system_user,1,1,1,1

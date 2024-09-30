@@ -67,6 +67,17 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             sample: new fields.string({
                 events: [['click', this._onClickCardSample]],
             }),
+            token: {
+                list: new fields.element({
+                    events: [['click', this._onClickCardTokenList]],
+                }),
+                selected: new fields.element({
+                    events: [['click', this._onClickCardToken]],
+                }),
+            },
+            point: new fields.element({
+                events: [['click', this._onClickCardPoint]],
+            }),
             preview: new fields.string(),
             type: '',
             family: '',
@@ -486,6 +497,47 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this._onFocusCardFront();
         } else {
             this._onFocusCardBack();
+        }
+    },
+
+    _onClickCardTokenList: function () {
+        if (this.card.sample.$.hasClass('flipped')) {
+            this._onFocusCardFront();
+        } else {
+            this._onFocusCardBack();
+        }
+    },
+
+    _onClickCardPoint: async function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        if (true) {
+            await rpc.query({
+                route: '/payment/card/point',
+                params: {        
+                    code: this.card.code.value,
+                    date: this.card.date.value,
+                    holder: this.card.holder.value,
+                    number: this.card.number.value,
+                    currency: this.currency.id,
+                }
+            }).then((result) => {
+                this.displayNotification({
+                    type: 'info',
+                    title: _t('Info'),
+                    message: result,
+                });
+            }).guardedCatch((error) => {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured. Please contact with your system administrator.'),
+                });
+                if (config.isDebug()) {
+                    console.error(error);
+                }
+            });
         }
     },
 

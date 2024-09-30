@@ -969,6 +969,42 @@ class PayloxController(http.Controller):
         except:
             return []
 
+    @staticmethod
+    def _get_card_points(**kwargs):
+        acquirer = PayloxController._get_acquirer()
+        currency = PayloxController._get_currency(kwargs.get('currency'), acquirer)
+        url = '%s/api/v1/prepayment/pointinfo' % acquirer._get_paylox_api_url()
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, kwargs.get('number', ''), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        year = str(fields.Date.today().year)[:2]
+        date = kwargs.get('date', '')
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "currency": currency.name,
+            "card_holder_name": kwargs.get('holder', ''),
+            "card_number": kwargs.get('number', ''),
+            "cvc": kwargs.get('code', ''),
+            "expire_month": date[:2],
+            "expire_year": year + date[-2:],
+            "hash_data": hash,
+            "language": "tr",
+        }
+
+        raise Exception(data)
+
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    return result.get('amount', 0)
+                else:
+                    raise Exception(result.get('message', _('An error occured')))
+            else:
+                raise Exception(_('An error occured'))
+        except:
+            raise Exception(_('An error occured'))
+
     def _get_transaction(self):
         return False
 
@@ -2138,6 +2174,58 @@ class PayloxController(http.Controller):
             url += '?=%s' % tx.jetcheckout_order_id
         return werkzeug.utils.redirect(url)
  
+    @http.route(['/payment/token/verify'], type='http', auth='user', website=True, sitemap=False)
+    def payment_token_verify(self, **kwargs):
+        acquirer = self._get_acquirer()
+        company = request.env.company
+        currency = company.currency_id
+
+        user = not request.env.user.share
+        partner = company.partner_id
+        partner_commercial = partner
+        partner_contact = False
+
+        language = request.env['res.lang']._lang_get(request.env.lang)
+        campaign = self._get_campaign(partner=partner)
+
+        values = {
+            'user': user,
+            'contact': partner_contact,
+            'partner': partner_commercial,
+            'company': company,
+            'acquirer': acquirer,
+            'campaign': campaign,
+            'language': language,
+            'currency': currency,
+            'success_url': '/payment/token/success',
+            'fail_url': '/payment/token/fail',
+        }
+        return request.render('payment_jetcheckout.page_token_verify', values)
+
+    @http.route(['/payment/token/success', '/payment/token/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
+    def payment_token_finalize(self, **kwargs):
+        url, tx, status = self._process(**kwargs)
+        url = '/payment/token/result'
+        if tx.jetcheckout_order_id:
+            url += '?=%s' % tx.jetcheckout_order_id
+        return werkzeug.utils.redirect(url)
+
+    @http.route(['/payment/token/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def payment_token_result(self, **kwargs):
+        values = {}
+        if '' in kwargs:
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+        else:
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
+        self._del()
+        return request.render('payment_jetcheckout.page_token_result', values)
+
+    @http.route(['/payment/card/point'], type='json', auth='public', sitemap=False, website=True)
+    def card_point(self, **kwargs):
+        return self._get_card_points(**kwargs)
+
     @http.route(['/payment/card/success', '/payment/card/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
     def finalize_card(self, **kwargs):
         kwargs['result_url'] = '/payment/card/result'

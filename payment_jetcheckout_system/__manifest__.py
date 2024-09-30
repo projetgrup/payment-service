@@ -29,6 +29,7 @@
         'views/page.xml',
         'views/item.xml',
         'views/plan.xml',
+        'views/token.xml',
         'views/partner.xml',
         'views/website.xml',
         'views/settings.xml',
