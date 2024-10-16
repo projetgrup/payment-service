@@ -249,7 +249,7 @@
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
             <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <div class="field-container d-none">
-                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.paylox_tax_office"/>
+                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.tax_office"/>
                     <span class="bar-container"/>
                     <label class="text-primary"><span>Tax Office</span></label>
                 </div>
@@ -319,7 +319,7 @@
         <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
             <t t-if="flow == 'dynamic' and system == 'vendor'">
                 <div class="field-container d-none">
-                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.paylox_tax_office"/>
+                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.tax_office"/>
                     <span class="bar-container"/>
                     <label class="text-primary"><span>Tax Office</span></label>
                 </div>
