@@ -17,12 +17,6 @@ class PaymentItem(models.Model):
     system_supplier_bank_verified = fields.Boolean(compute='_compute_bank_verified', store=True, readonly=True)
     system_supplier_plan_mail_sent = fields.Boolean(readonly=True)
 
-    def action_plan_wizard(self):
-        action = self.env.ref('payment_jetcheckout_system.action_plan_wizard').sudo().read()[0]
-        item_ids = self.filtered(lambda item: any(bank.api_state for bank in item.parent_id.bank_ids))
-        action['context'] = {'default_item_ids': [(6, 0, item_ids.ids)]}
-        return action
-
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)

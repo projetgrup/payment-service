@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_form" model="ir.ui.view">
+    <field name="name">payment.settings.insurance.form</field>
+    <field name="model">payment.settings</field>
+    <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@data-key='general_settings']" position="after">
+            <div class="app_settings_block" data-string="Insurance" string="Insurance" data-key="payment_insurance" invisible="context.get('active_system') != 'insurance'">
+                <h2>Insurance</h2>
+            </div>
+        </xpath>
+    </field>
+    </record>
+</odoo>

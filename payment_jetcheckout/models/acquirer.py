@@ -421,8 +421,8 @@ class PaymentAcquirer(models.Model):
 
             if getattr(partner, 'tax_office_id', False):
                 data.update({'billing_tax_office': partner.tax_office_id.name})
-            elif getattr(partner, 'tax_office', False):
-                data.update({'billing_tax_office': partner.tax_office})
+            elif getattr(partner, 'paylox_tax_office', False):
+                data.update({'billing_tax_office': partner.paylox_tax_office})
 
             if partner.vat:
                 partner_vat = re.sub(r'[^\d]', '', partner.vat)
