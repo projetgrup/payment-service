@@ -118,6 +118,12 @@ class PaymentItem(models.Model):
         action['domain'] = [('id', 'in', self.plan_ids.ids)]
         return action
 
+    def action_plan_wizard(self):
+        action = self.env.ref('payment_jetcheckout_system.action_plan_wizard').sudo().read()[0]
+        item_ids = self.filtered(lambda item: any(bank.api_state for bank in item.parent_id.bank_ids))
+        action['context'] = {'default_item_ids': [(6, 0, item_ids.ids)]}
+        return action
+
     def action_transaction(self):
         self.ensure_one()
         action = self.env.ref('payment.action_payment_transaction').sudo().read()[0]

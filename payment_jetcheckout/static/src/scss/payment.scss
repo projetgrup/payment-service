@@ -159,6 +159,19 @@
         }
     }
 
+    .btn-paylox-token-list, .btn-paylox-point {
+        font-size: 0.8em;
+        outline: none !important;
+
+        &:hover {
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+        }
+
+        &:focus {
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.175) !important;
+        }
+    }
+
     .installment-rows {
         background-color: #ffffff;
         color: #888888 !important;
@@ -1570,6 +1583,70 @@
     .creditcard.flipped {
         -webkit-transform: rotateY(180deg);
         transform: rotateY(180deg);
+    }
+}
+
+.payment-token-verify {
+    *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background-color: #f7fafc;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 50px;
+    }
+
+    *::-webkit-scrollbar-corner {
+        background-color: initial;
+    }
+
+    .o_loading {
+        color: var(--o-palette-base-1-o-color-1) !important;
+        //background: #ffffff !important;
+    }
+
+    .payment-card {
+        .payment-form-container {
+            grid-template-areas: "name name" "number number" "expiration security" "tokenVerify tokenVerify" !important;
+
+            .payment-token-verify-button {
+                grid-area: tokenVerify;
+                background-color: var(--o-palette-base-1-o-color-1);
+                color: #ffffff;
+                font-weight: bold;
+                font-size: 1.1em;
+
+                &:focus {
+                    filter: brightness(0.9);
+                }
+            }
+
+            &.payment-gradient {
+                min-height: 360px !important;
+            }
+
+            .field-container {
+                > input[type=text]:focus {
+                    border-color: var(--o-palette-base-1-o-color-1) !important;
+
+                    &~ .bar-container:before, &~ .bar-container:after {
+                        background: var(--o-palette-base-1-o-color-1) !important;
+                    }
+                }
+
+                > label {
+                    color: var(--o-palette-base-1-o-color-1) !important;
+                }
+            }
+        }
+    }
+}
+
+.payment-token-result {
+    .o_main_navbar {
+        display: none;
     }
 }
 
