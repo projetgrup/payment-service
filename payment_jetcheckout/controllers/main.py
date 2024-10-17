@@ -1417,10 +1417,15 @@ class PayloxController(http.Controller):
                 "campaign_name": campaign,
                 "amount": amount_integer,
                 "currency": currency.name,
-                "installment_count": installment_count,
                 "hash_data": hash,
+                "installment_count": installment_count,
                 "language": "tr",
             }
+            if acquirer.jetcheckout_soft_pos_version:
+                data.update({
+                    "user_email": acquirer.jetcheckout_soft_pos_email or '',
+                    "v2_active": True,
+                })
 
             if getattr(partner, 'tax_office_id', False):
                 data.update({'billing_tax_office': partner.tax_office_id.name})
