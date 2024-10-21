@@ -1173,12 +1173,19 @@ class PayloxSystemController(Controller):
                 if partner:
                     raise UserError(_('There is already a partner with the same ID Number'))
 
+            if values.get('company_type') == 'company' and not values.get('tax_office'):
+                raise UserError(_('Please enter a tax office'))
+
             if not values.get('email'):
                 email = company.email
                 if not email or '@' not in email:
                     email = 'vat@paylox.io'
                 name, domain = email.rsplit('@', 1)
                 values['email'] = '%s@%s' % (values['vat'], domain)
+
+            if 'tax_office' in values:
+                values['paylox_tax_office'] = values['tax_office']
+                del values['tax_office']
 
             partner = request.env['res.partner'].sudo().with_context(no_vat_validation=True).create(values)
             return partner.read([value for value in kwargs.keys()])[0] or {}

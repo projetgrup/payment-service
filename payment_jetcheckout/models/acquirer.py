@@ -189,6 +189,8 @@ class PaymentAcquirer(models.Model):
     jetcheckout_user_id = fields.Integer(readonly=True)
     jetcheckout_api_name = fields.Char(readonly=True)
     jetcheckout_campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', copy=False)
+    jetcheckout_soft_pos_version = fields.Boolean()
+    jetcheckout_soft_pos_email = fields.Char()
 
     @api.model
     def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
@@ -421,8 +423,8 @@ class PaymentAcquirer(models.Model):
 
             if getattr(partner, 'tax_office_id', False):
                 data.update({'billing_tax_office': partner.tax_office_id.name})
-            elif getattr(partner, 'tax_office', False):
-                data.update({'billing_tax_office': partner.tax_office})
+            elif getattr(partner, 'paylox_tax_office', False):
+                data.update({'billing_tax_office': partner.paylox_tax_office})
 
             if partner.vat:
                 partner_vat = re.sub(r'[^\d]', '', partner.vat)
