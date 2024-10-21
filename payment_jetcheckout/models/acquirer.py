@@ -64,6 +64,8 @@ class PaymentPayloxStatus(models.TransientModel):
     card_program = fields.Char(readonly=True)
     bin_code = fields.Char(readonly=True)
     service_ref_id = fields.Char(readonly=True)
+    service_code = fields.Char(readonly=True)
+    service_message = fields.Char(readonly=True)
 
 
 class PaymentPayloxRefund(models.TransientModel):

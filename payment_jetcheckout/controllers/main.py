@@ -1049,6 +1049,9 @@ class PayloxController(http.Controller):
             'successful': kwargs.get('response_code') == '00',
             'code': kwargs.get('response_code', ''),
             'message': kwargs.get('response_message', ''),
+            'service_code': kwargs.get('service_resp_code', ''),
+            'service_message': kwargs.get('service_resp_message', ''),
+            'service_suggestion': kwargs.get('suggestion', ''),
             'amount': kwargs.get('amount', 0),
             'vpos_id': kwargs.get('virtual_pos_id', 0),
             'vpos_name': kwargs.get('virtual_pos_name', ''),
@@ -1057,7 +1060,6 @@ class PayloxController(http.Controller):
             'postauth': kwargs.get('postauth', tx.jetcheckout_postauth),
             'commission_rate': corate,
         })
-
         return url, tx, False
 
     @http.route('/payment/acquirer', type='json', auth='user', website=True)
