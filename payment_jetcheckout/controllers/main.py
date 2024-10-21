@@ -970,6 +970,30 @@ class PayloxController(http.Controller):
             return []
 
     @staticmethod
+    def _get_card_tokens(**kwargs):
+        acquirer = PayloxController._get_acquirer()
+        url = '%s/api/v1/prepayment/listcards' % acquirer._get_paylox_api_url()
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "card_owner_key": "",
+            "language": "tr",
+        }
+
+        try:
+            response = requests.post(url, data=json.dumps(data), timeout=5)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    return result.get('cards', [])
+                else:
+                    raise Exception(result.get('message', _('An error occured')))
+            else:
+                raise Exception(_('An error occured'))
+        except:
+            raise Exception(_('An error occured'))
+
+    @staticmethod
     def _get_card_points(**kwargs):
         acquirer = PayloxController._get_acquirer()
         currency = PayloxController._get_currency(kwargs.get('currency'), acquirer)
@@ -989,8 +1013,6 @@ class PayloxController(http.Controller):
             "hash_data": hash,
             "language": "tr",
         }
-
-        raise Exception(data)
 
         try:
             response = requests.post(url, data=json.dumps(data), timeout=5)
