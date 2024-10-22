@@ -146,7 +146,7 @@
                                                 <td t-if="company.payment_page_due_base == 'date_due'" class="px-2"><span t-field="payment.due_date"/></td>
                                                 <td class="px-2"><span t-field="payment.description"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.amount"/></td>
-                                                <td class="text-right px-2"><span t-field="payment.residual_amount"/></td>
+                                                <td class="text-right px-2"><span t-field="payment.paid_amount"/></td>
                                                 <td class="text-right px-2"><span t-field="payment.residual_amount" class="payment-amount-paid"/></td>
                                                 <td class="text-center">
                                                     <form t-if="payment.file" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
