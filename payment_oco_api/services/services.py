@@ -197,7 +197,7 @@ class OrderCheckoutAPIService(Component):
         return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
 
     def _get_hash(self, key, hash, id):
-        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(id)]).encode('utf-8')).digest()).decode('utf-8')
+        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, id]).encode('utf-8')).digest()).decode('utf-8')
         if hashed != hash:
             return False
         return hash
