@@ -564,7 +564,7 @@ class PayloxController(http.Controller):
                     index += 1
         return providers
 
-    def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', **kwargs):
+    def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', token='', **kwargs):
         self._check_user()
         client = self._get_partner(partner, parent=True)
         if not request.env.user.has_group('base.group_user'):
@@ -584,6 +584,8 @@ class PayloxController(http.Controller):
         }
         if bin:
             data.update({"bin": bin})
+        if token and isinstance(token, str):
+            data.update({"card_token": token})
 
         if type == 'i':
             data.update({
@@ -1291,16 +1293,23 @@ class PayloxController(http.Controller):
                 "amount": amount_integer,
                 "currency": currency.name,
                 "installment_count": installment['count'],
-                "expire_month": kwargs['card']['date'][:2],
-                "expire_year": year + kwargs['card']['date'][-2:],
-                "is_3d": True,
                 "hash_data": hash,
                 "language": "tr",
             }
             if token and token.verified:
-                data.update({'card_token': token_ref})
+                data.update({
+                    "card_token": token_ref,
+                    "is_3d": False,
+                })
             elif card_number:
-                data.update({'card_number': card_number})
+                data.update({
+                    "card_number": card_number,
+                    "expire_month": kwargs['card']['date'][:2],
+                    "expire_year": year + kwargs['card']['date'][-2:],
+                    "card_holder_name": kwargs['card']['holder'],
+                    "cvc": kwargs['card']['code'],
+                    "is_3d": True,
+                })
 
             sale_id = int(kwargs.get('order', 0))
             invoice_id = int(kwargs.get('invoice', 0))
@@ -1335,11 +1344,11 @@ class PayloxController(http.Controller):
                 'jetcheckout_ip_address': tx and tx.jetcheckout_ip_address or request.httprequest.remote_addr,
                 'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
                 'jetcheckout_campaign_name': campaign,
-                'jetcheckout_card_name': kwargs['card']['holder'],
+                'jetcheckout_card_name': 'holder' in kwargs['card'] and kwargs['card']['holder'] or False,
                 'jetcheckout_card_number': card_number and ''.join([card_number[:6], '*'*6, card_number[-4:]]) or False,
-                'jetcheckout_card_type': kwargs['card']['type'].capitalize(),
-                'jetcheckout_card_program': kwargs['card']['program'].capitalize(),
-                'jetcheckout_card_family': kwargs['card']['family'].capitalize(),
+                'jetcheckout_card_type': 'type' in kwargs['card'] and kwargs['card']['type'].capitalize() or False,
+                'jetcheckout_card_program': 'program' in kwargs['card'] and kwargs['card']['program'].capitalize() or False,
+                'jetcheckout_card_family': 'family' in kwargs['card'] and kwargs['card']['family'].capitalize() or False,
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment['count'],
                 'jetcheckout_installment_plus': installment['plus'],
@@ -1436,8 +1445,6 @@ class PayloxController(http.Controller):
             fail_url = '/payment/card/fail' if 'failurl' not in kwargs or not kwargs['failurl'] else kwargs['failurl']
             data.update({
                 "order_id": tx.jetcheckout_order_id,
-                "card_holder_name": kwargs['card']['holder'],
-                "cvc": kwargs['card']['code'],
                 "success_url": "https://%s%s" % (base_url, success_url),
                 "fail_url": "https://%s%s" % (base_url, fail_url),
                 "customer":  {
@@ -1515,7 +1522,7 @@ class PayloxController(http.Controller):
                         'card_type': result.get('card_type', ''),
                         'bin_code': result.get('bin_code', ''),
                     })
-                    return {'ok': True, 'id': tx.id}
+                    return {'url': '%s/result?=%s' % (request.httprequest.referrer, tx.jetcheckout_order_id), 'id': tx.id}
                 else:
                     tx.state = 'error'
                     message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])

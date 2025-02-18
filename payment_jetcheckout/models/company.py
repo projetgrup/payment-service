@@ -10,6 +10,7 @@ class Company(models.Model):
     payment_page_campaign_table_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'company_campaign_table_rel', 'company_id', 'campaign_id', string='Campaigns on Campaign Table on Payment Page')
     payment_page_campaign_table_included = fields.Boolean(string='Campaigns on Campaign Table Included on Payment Page')
     payment_page_token_wo_commission = fields.Boolean(string='Payment Token Page Amount Without Commission')
+    payment_page_token_view_type = fields.Selection([('select', 'Selection'), ('radio', 'Radio')], string='Payment Page Token View Type')
     payment_page_description_ok = fields.Boolean(string='Payment Page Description')
     payment_token_ok = fields.Boolean(string='Enable Payment Credit Card Tokens')
     payment_point_ok = fields.Boolean(string='Enable Payment Credit Card Points')

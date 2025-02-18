@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('payment_page_ok', '=', False)]}">
                                         <div class="row mt16">
-                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_page_ok', '!=', False)]}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -281,6 +281,11 @@
                                     <label for="payment_token_ok" string="Save Credit Card"/>
                                     <div class="text-muted">
                                         Store credit card tokens of your partners to get payments easily next time
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_token_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <field name="payment_page_token_view_type" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_token_ok', '!=', False)]}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

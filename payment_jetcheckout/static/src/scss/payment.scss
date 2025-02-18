@@ -1127,6 +1127,15 @@
             background: none;
             color: #999;
             border: none;
+
+            &:has(.card-token-option) {
+                width: 100%;
+            }
+
+            &:has(.card-token-selection) {
+                min-height: 48px;
+                width: 100%;
+            }
         }
 
         .select2-chosen {
@@ -1270,28 +1279,40 @@
         background-color: #ffffff !important;
         display: grid;
         gap: 1em;
-        grid-template-areas: "name name""number number""expiration security""terms terms";
+        grid-template-areas: "name name""number number""date code""term term""agreement agreement";
         padding: 20px;
         color: #707070;
 
-        .field-container:first-of-type {
+        .field-container.field-name {
             grid-area: name;
         }
 
-        .field-container:nth-of-type(2) {
+        .field-container.field-number {
             grid-area: number;
         }
-    
-        .field-container:nth-of-type(3) {
-            grid-area: expiration;
+
+        .field-container.field-date {
+            grid-area: date;
         }
     
-        .field-container:nth-of-type(4) {
-            grid-area: security;
+        .field-container.field-code {
+            grid-area: code;
         }
     
-        .field-container:nth-of-type(5) {
-            grid-area: terms;
+        .field-container.field-term {
+            grid-area: term;
+        }
+    
+        .field-container.field-token {
+            grid-area: token;
+        }
+    
+        .field-container.field-agreement {
+            grid-area: agreement;
+        }
+        
+        &.payment-form-with-token {
+            grid-template-areas: "token token""name name""number number""date code""term term""agreement agreement";
         }
     }
 

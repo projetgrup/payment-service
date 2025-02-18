@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.cards **/
+/** @odoo-module alias=paylox.card.programs **/
 
 export default [
     {

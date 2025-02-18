@@ -2,6 +2,8 @@
 
 import core from 'web.core';
 import utils from 'web.utils';
+import cardPrograms from 'paylox.card.programs';
+import cardFamilies from 'paylox.card.families';
 
 const round_di = utils.round_decimals;
 
@@ -34,11 +36,23 @@ function formatDate(value, format='DD-MM-YYYY') {
     return value && moment(value).format(format) || ''
 }
 
+function searchProgram(name) {
+    return cardPrograms.find(p => p.name === name);
+}
+
+function searchFamily(name) {
+    return cardFamilies.find(f => f.name === name);
+}
+
 export default {
     format: {
         float: formatFloat,
         percentage: formatPercentage,
         currency: formatCurrency,
         date: formatDate,
+    },
+    search: {
+        program: searchProgram,
+        family: searchFamily,
     }
 };

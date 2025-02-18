@@ -326,6 +326,12 @@
         <button class="btn btn-primary btn-block px-2 py-4 font-weight-bold" field="payment.contactless">Pay Contactless</button>
     </template>
 
+    <template id="payment_token" name="Paylox Payment Token">
+        <div t-if="company.payment_page_token_view_type == 'select'" field="card.token.select"/>
+        <div t-elif="company.payment_page_token_view_type == 'radio'" field="card.token.radio"/>
+        <input type="hidden" t-att-value="tokens" field="card.token.data"/>
+    </template>
+
     <template id="payment_form" name="Paylox Payment Form">
         <t t-if="not types" t-set="types" t-value="[{'code': 'virtual_pos', 'name': ''}]"/>
         <t t-call="payment_jetcheckout.payment_loading"/>
@@ -352,30 +358,35 @@
                         <div t-if="not s2s" class="payment-info-sub">
                             Please specify a payment amount from sidebar and enter your credit card details here
                         </div>
-                        <div class="payment-form-container payment-gradient border card">
-                            <div class="field-container">
+                        <div id="paymentFormContainer" t-attf-class="payment-form-container payment-gradient border card #{'payment-form-with-token' if company.payment_token_ok else ''}">
+                            <t t-if="company.payment_token_ok">
+                                <div class="field-container field-token">
+                                    <t t-call="payment_jetcheckout.payment_token"/>
+                                </div>
+                            </t>
+                            <div class="field-container field-name fade show">
                                 <input id="cardholder" type="text" required="required" field="card.holder"/>
                                 <span class="bar-container"/>
                                 <label for="cardholder"><span>Name</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-number fade show">
                                 <input id="cardnumber" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
                                 <span class="bar-container"/>
                                 <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
                                 <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
                                 <label for="cardnumber"><span>Card Number</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-date fade show">
                                 <input id="carddate" inputmode="numeric" pattern="[0-9\/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
                                 <span class="bar-container"/>
                                 <label for="carddate"><span>Expiration</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-code fade show">
                                 <input id="cardcode" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.code"/>
                                 <span class="bar-container"/>
                                 <label for="cardcode"><span t-if="s2s">CVC</span><span t-else="">Security Code</span></label>
                             </div>
-                            <div t-if="not no_terms" class="field-container">
+                            <div t-if="not no_terms" class="field-container field-term fade show">
                                 <div class="terms-container justify-content-end">
                                     <label for="term" class="btn mb-0 cursor-pointer" field="terms.all">Terms &amp; Conditions</label>
                                     <label class="switch mb-0">
@@ -383,12 +394,6 @@
                                         <span class="slider round fa"/>
                                     </label>
                                 </div>
-                            </div>
-                            <div class="field-container">
-                                <div t-if="company.payment_token_ok">
-                                    <div field="card.token.list"/>
-                                </div>
-                                <!--<button class="btn btn-paylox-point border-0 text-primary font-weight-bold" field="card.point">Query Points</button>-->
                             </div>
                         </div>
                     </div>
@@ -439,7 +444,6 @@
                             <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
                         </div>
                     </div>
-                    <input type="hidden" t-att-value="tokens" field="card.token.data"/>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
                 <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
@@ -733,7 +737,7 @@
             <div class="payment-card row justify-content-center mx-0 h-100">
                 <div class="col-md-6 row justify-content-center mx-0">
                     <div class="payment-table mt-2 p-3">
-                        <div class="payment-form-container payment-gradient">
+                        <div id="paymentFormContainer" class="payment-form-container payment-gradient">
                             <div class="field-container">
                                 <input id="cardholder" type="text" required="required" field="card.holder"/>
                                 <span class="bar-container"/>
