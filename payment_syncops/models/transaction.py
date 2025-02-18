@@ -122,8 +122,8 @@ class PaymentTransaction(models.Model):
         tz = timezone('Europe/Istanbul')
         date = self.create_date
         date += tz.utcoffset(date)
-        if not line or not line.account_code:
-            raise UserError(_('There is no account line for this provider'))
+        #if not line or not line.account_code:
+        #    raise UserError(_('There is no account line for this provider'))
 
         result, message = None, ''
         if self.company_id.syncops_sync_item_split:
@@ -151,7 +151,7 @@ class PaymentTransaction(models.Model):
                     'partner_name': self.partner_id.name,
                     'currency_name': self.currency_id.name,
                     'company_id': self.company_id.partner_id.ref,
-                    'account_code': line.account_code,
+                    #'account_code': line.account_code,
                     'state': 'refund' if self.source_transaction_id else self.state,
                     'card_number': self.jetcheckout_card_number or '',
                     'card_name': self.jetcheckout_card_name,
@@ -188,7 +188,7 @@ class PaymentTransaction(models.Model):
                 'partner_name': self.partner_id.name,
                 'currency_name': self.currency_id.name,
                 'company_id': self.company_id.partner_id.ref,
-                'account_code': line.account_code,
+                #'account_code': line.account_code,
                 'state': 'refund' if self.source_transaction_id else self.state,
                 'card_number': self.jetcheckout_card_number or '',
                 'card_name': self.jetcheckout_card_name,

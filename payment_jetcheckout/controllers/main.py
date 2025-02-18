@@ -214,12 +214,12 @@ class PayloxController(http.Controller):
         return '%s' % installment['installment_count']
 
     @staticmethod
-    def _get_validity(acquirer=None, number=None):
+    def _get_validity(acquirer=None, card_number=None):
         acquirer = acquirer or PayloxController._get_acquirer()
         url = '%s/api/v1/prepayment/card_check' % acquirer._get_paylox_api_url()
         data = {
             "application_key": acquirer.jetcheckout_api_key,
-            "card_number": number,
+            "card_number": card_number,
             "language": "tr",
         }
 
@@ -234,8 +234,24 @@ class PayloxController(http.Controller):
             return False
 
     @staticmethod
-    def _get_token(token):
-        return request.env['payment.token'].sudo().browse(token)
+    def _get_token(acquirer, partner, token):
+        if isinstance(token, int):
+            return False
+        return request.env['payment.token'].sudo().search([
+            ('acquirer_id', '=', acquirer.id),
+            ('partner_id', '=', partner.id),
+            ('acquirer_ref', '=', token),
+            ('verified', '=', True),
+        ], limit=1)
+
+    @staticmethod
+    def _get_token_hash(card):
+        return base64.b64encode(hashlib.sha256(''.join([
+            card['holder'],
+            card['number'],
+            card['date'],
+            card['code']
+        ]).encode('utf-8')).digest()).decode('utf-8')
 
     def _check_user(self):
         return True
@@ -263,6 +279,7 @@ class PayloxController(http.Controller):
         language = request.env['res.lang']._lang_get(request.env.lang)
         campaign = self._get_campaign(partner=partner, transaction=transaction)
         types = self._get_payment_types(acquirer=acquirer)
+        tokens = self._get_payment_tokens(acquirer=acquirer, partner=partner)
 
         if filters.get('type'):
             types = list(filter(lambda t: t['code'] in filters['type'], types))
@@ -295,6 +312,7 @@ class PayloxController(http.Controller):
             'language': language,
             'currency': currency,
             'types': types,
+            'tokens': tokens,
             'shopping_credits': shopping_credits,
             'wallets': wallets,
             'transfers': transfers,
@@ -379,7 +397,56 @@ class PayloxController(http.Controller):
                             'id': 6,
                         })
         return types
-    
+
+    def _get_payment_tokens(self, acquirer, partner):
+        tokens = ''
+        acquirer = self._get_acquirer(acquirer=acquirer)
+        if acquirer.company_id.payment_token_ok:
+            url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "card_customer_token": partner.get_paylox_token_ref(),
+                "mode": acquirer._get_paylox_env(),
+                "language": "tr",
+            }
+
+            values = [
+                {'id': -1, 'selected': True, 'text': _('Do not save credit card')},
+                {'id': 0, 'text': _('Add new credit card')},
+            ]
+            tokens = request.env['payment.token'].sudo().search([
+                ('acquirer_id', '=', acquirer.id),
+                ('partner_id', '=', partner.id),
+                ('verified', '=', True),
+            ])
+            if tokens:
+                children = []
+                for token in tokens:
+                    children.append({
+                        'id': token.acquirer_ref,
+                        'text': token.name,
+                        'family': token.jetcheckout_family,
+                        'program': token.jetcheckout_program,
+                    })
+                values.append({
+                    'text': _('Saved Credit Cards'),
+                    'children': children,
+                })
+                
+            #response = requests.post(url, data=json.dumps(data))
+            #if response.status_code == 200:
+            #    result = response.json()
+            #    if result['response_code'] == "00":
+            #        cards = result['cards']
+            #        if cards:
+            #            children = []
+            #            values.append({
+            #                'text': _('Saved Credit Cards'),
+            #                'children': children,
+            #            })
+            tokens = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
+        return tokens
+
     def _prepare_credit(self, acquirer=None, currency=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         if not currency:
@@ -1169,7 +1236,7 @@ class PayloxController(http.Controller):
 
     @http.route('/payment/card/valid', type='json', auth='public', csrf=False, sitemap=False, website=True)
     def payment_card_valid(self, number):
-        return self._get_validity(number=number)
+        return self._get_validity(card_number=number)
 
     @http.route(['/payment/init'], type='json', auth='public', csrf=False, sitemap=False, website=True)
     def initialize(self, **kwargs):
@@ -1213,9 +1280,10 @@ class PayloxController(http.Controller):
             amount_integer = round(amount_total * 100)
 
             year = str(fields.Date.today().year)[:2]
-            number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
-            token = 'token' in kwargs['card'] and self._get_token(kwargs['card']['token']) or False
-            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            token = 'token' in kwargs['card'] and self._get_token(acquirer, partner, kwargs['card']['token']) or False
+            token_ref = token and token.acquirer_ref or False
+            card_number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
+            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, token_ref or card_number or '', str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
             data = {
                 "application_key": acquirer.jetcheckout_api_key,
                 "mode": acquirer._get_paylox_env(),
@@ -1229,14 +1297,30 @@ class PayloxController(http.Controller):
                 "hash_data": hash,
                 "language": "tr",
             }
-            if number:
-                data.update({'card_number': number})
-            elif token and token.verified:
-                data.update({'card_token': token.jetcheckout_ref})
+            if token and token.verified:
+                data.update({'card_token': token_ref})
+            elif card_number:
+                data.update({'card_number': card_number})
 
             sale_id = int(kwargs.get('order', 0))
             invoice_id = int(kwargs.get('invoice', 0))
 
+            if kwargs.get('card', {}).get('token') == 0 and card_number:
+                token_hash = self._get_token_hash(kwargs['card'])
+                token_name = '%s%s******%s' % (card_number[:4], card_number[4:6], card_number[-4:])
+                token = request.env['payment.token'].sudo().search([
+                    ('partner_id', '=', partner.id),
+                    ('acquirer_id', '=', acquirer.id),
+                    ('jetcheckout_hash', '=', token_hash),
+                ], limit=1)
+                if not token:
+                    token = request.env['payment.token'].sudo().create({
+                        'name': token_name,
+                        'partner_id': partner.id,
+                        'acquirer_id': acquirer.id,
+                        'acquirer_ref': str(uuid.uuid4()),
+                        'jetcheckout_hash': token_hash,
+                    })
             tx = self._get_transaction()
             vals = {
                 'acquirer_id': acquirer.id,
@@ -1252,7 +1336,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
                 'jetcheckout_campaign_name': campaign,
                 'jetcheckout_card_name': kwargs['card']['holder'],
-                'jetcheckout_card_number': number and  ''.join([number[:6], '*'*6, number[-4:]]) or False,
+                'jetcheckout_card_number': card_number and ''.join([card_number[:6], '*'*6, card_number[-4:]]) or False,
                 'jetcheckout_card_type': kwargs['card']['type'].capitalize(),
                 'jetcheckout_card_program': kwargs['card']['program'].capitalize(),
                 'jetcheckout_card_family': kwargs['card']['family'].capitalize(),
@@ -1373,7 +1457,7 @@ class PayloxController(http.Controller):
             })
 
             if tx.token_id and not tx.token_id.verified:
-                if not tx.token_id.jetcheckout_ref:
+                if not tx.token_id.acquirer_ref:
                     raise Exception(_('Token has not been set'))
                 if tx.company_id.payment_page_token_wo_commission:
                     amount_customer = amount * installment['crate'] / 100
@@ -1385,18 +1469,16 @@ class PayloxController(http.Controller):
                 data.update({
                     "save_card": True,
                     "card_alias": tx.token_id.name,
-                    "card_owner_key": tx.token_id.jetcheckout_ref,
+                    "card_owner_key": tx.token_id.acquirer_ref,
                     "card_owner_email": tx.token_id.partner_id.email,
-                    "card_customer_token": tx.token_id.partner_id.paylox_token_ref,
+                    "card_customer_token": tx.token_id.partner_id.get_paylox_token_ref(),
                 })
                 tx.token_id.write({
+                    'jetcheckout_type': tx.jetcheckout_card_type,
+                    'jetcheckout_holder': tx.jetcheckout_card_name,
                     'jetcheckout_number': tx.jetcheckout_card_number,
-                    'jetcheckout_type': kwargs['card']['type'],
-                    'jetcheckout_program': kwargs['card']['program'],
-                    'jetcheckout_holder': kwargs['card']['holder'],
-                    'jetcheckout_family': kwargs['card']['family'],
-                    'jetcheckout_expiry': kwargs['card']['date'],
-                    'jetcheckout_security': kwargs['card']['code'],
+                    'jetcheckout_family': tx.jetcheckout_card_family,
+                    'jetcheckout_program': tx.jetcheckout_card_program,
                 })
 
             if tx.jetcheckout_preauth:

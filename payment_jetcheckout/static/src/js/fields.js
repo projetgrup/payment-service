@@ -106,6 +106,12 @@ class selection extends fields {
             ...this.options,
         };
         this.$.select2(defaults);
+        if (this.options?.data) {
+            const placeholder = this.options.data.find(d => d.selected)
+            if (placeholder) {
+                this.value = placeholder.id;
+            }
+        }
     }
 
     get value() {

@@ -81,13 +81,6 @@
     ]"/>
     </record>
 
-    <record id="action_token_verify" model="ir.actions.act_window">
-    <field name="name">Credit Card Verify</field>
-    <field name="res_model">payment.token.verify</field>
-    <field name="view_mode">form</field>
-    <field name="target">new</field>
-    </record>
-
     <record id="action_settings" model="ir.actions.act_window">
     <field name="name">Settings</field>
     <field name="type">ir.actions.act_window</field>

@@ -386,8 +386,7 @@
                             </div>
                             <div class="field-container">
                                 <div t-if="company.payment_token_ok">
-                                    <div field="card.token.all"/>
-                                    <button class="btn btn-paylox-token border-0 text-primary font-weight-bold" field="card.token.ok">Save Card</button>
+                                    <div field="card.token.list"/>
                                 </div>
                                 <!--<button class="btn btn-paylox-point border-0 text-primary font-weight-bold" field="card.point">Query Points</button>-->
                             </div>
@@ -440,6 +439,7 @@
                             <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
                         </div>
                     </div>
+                    <input type="hidden" t-att-value="tokens" field="card.token.data"/>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
                 <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">

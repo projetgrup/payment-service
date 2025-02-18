@@ -281,13 +281,12 @@ class PaymentAcquirer(models.Model):
             return token
 
         return self.env['payment.token'].sudo().create({
+            'acquirer_ref': '-',
             'acquirer_id': int(kwargs['acquirer_id']),
-            'acquirer_ref': kwargs.get('cc_holder_name'),
             'jetcheckout_card_holder': kwargs.get('cc_holder_name'),
             'jetcheckout_card_number': kwargs.get('cc_number').replace(' ', ''),
             'jetcheckout_card_expiry_month': kwargs.get('cc_expiry')[:2],
             'jetcheckout_card_expiry_year': kwargs.get('cc_expiry')[-2:],
-            'jetcheckout_card_cvc': kwargs.get('cvc'),
             'jetcheckout_card_3d': kwargs.get('secure', True),
             'jetcheckout_card_save': kwargs.get('save', False),
             'jetcheckout_card_installment': kwargs.get('installment_id', '1'),
@@ -406,7 +405,7 @@ class PaymentAcquirer(models.Model):
             year = str(fields.Date.today().year)[:2]
             number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
             token = 'token' in kwargs['card'] and kwargs['token'] or False
-            hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.acquirer_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
             data = {
                 "application_key": self.jetcheckout_api_key,
                 "mode": self._get_paylox_env(),
@@ -423,7 +422,7 @@ class PaymentAcquirer(models.Model):
             if number:
                 data.update({'card_number': number})
             elif token and token.verified:
-                data.update({'card_token': token.jetcheckout_ref})
+                data.update({'card_token': token.acquirer_ref})
 
             if getattr(partner, 'tax_office_id', False):
                 data.update({'billing_tax_office': partner.tax_office_id.name})
@@ -566,7 +565,7 @@ class PaymentAcquirer(models.Model):
                 data.update({
                     "save_card": True,
                     "card_alias": tx.token_id.name,
-                    "card_owner_key": tx.token_id.jetcheckout_ref,
+                    "card_owner_key": tx.token_id.acquirer_ref,
                     "card_owner_email": tx.token_id.partner_id.email,
                 })
                 tx.token_id.write({
@@ -604,7 +603,7 @@ class PaymentAcquirer(models.Model):
                     amount_total = float_round(amount + amount_customer, 2)
                     amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
                     amount_integer = round(amount_total * 100)
-                    hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.jetcheckout_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+                    hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.acquirer_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
                     if result['response_code'] == "00":
                         tx.write({
                             'amount': amount_total,

@@ -24,7 +24,7 @@ class PaymentToken(models.Model):
             return
 
         action = self.env.ref('payment_jetcheckout_system.action_token_verify').sudo().read()[0]
-        action['context'] = {'default_data': json.dumps({'id': self.id, 'name': self.name})}
+        action['context'] = {'default_data': json.dumps({'id': self.acquirer_ref, 'name': self.name})}
         return action
 
 

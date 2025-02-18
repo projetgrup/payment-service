@@ -68,18 +68,27 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickCardSample]],
             }),
             token: {
-                all: new fields.selection({
+                list: new fields.selection({
                     formatResult: (t) => {
                         return qweb.render('paylox.token', t);
                     },
                     formatSelection: (t) => {
                         return qweb.render('paylox.token', t);
                     },
-                    ajax: {
-                        url: '/payment/card/token',
-                        cache: true,
-                    },
+                    minimumResultsForSearch: Infinity,
+                    data: function() {
+                        const $data = $('[field="card.token.data"]');
+                        if ($data.length) {
+                            const value = $data.val();
+                            $data.remove();
+                            if (value) {
+                                return JSON.parse(atob(value));
+                            }
+                        }
+                        return [];
+                    }()
                 }),
+                data: new fields.element(),
             },
             point: new fields.element({
                 events: [['click', this._onClickCardPoint]],
@@ -87,6 +96,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             preview: new fields.string(),
             type: '',
             family: '',
+            program: '',
             bin: '',
             valid: false,
         };
@@ -407,7 +417,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         this._getInstallment();
         const card = this.card.number._.masked.currentMask;
         const limit = card.code === 'amex' ? 14 : 15;
-        this.card.type = card.name;
+        this.card.program = card.name;
 
         if (card.typedValue.length > limit) {
             const self = this;
@@ -869,6 +879,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
             this.card.logo.$.removeClass('show');
             this.card.family = '';
+            this.card.type = '';
             this.card.bin = '';
         } else {
             if (this.card.sample.exist) {
@@ -1140,6 +1151,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     holder: this.card.holder.value,
                     date: this.card.date.value,
                     number: this.card.number.value,
+                    token: this.card.token.list.value,
                 },
                 amount: this.amount.value,
                 currency: this.currency.id,
