@@ -1305,6 +1305,33 @@
     
         .field-container.field-token {
             grid-area: token;
+
+            .card-token-radio {
+                transition: all 0.2s;
+                border-radius: 6px;
+                box-shadow: 0 0 0 2px #fff inset;
+
+                &:has(input:checked) {
+                    border-color: theme-color('primary') !important;
+                }
+
+                input {
+                    display: none;
+                }
+
+                i {
+                    display: none;
+                }
+
+                input:checked + i {
+                    display: block;
+                }
+
+                .position-absolute {
+                    top: 2px;
+                    right: 6px;
+                }
+            }
         }
     
         .field-container.field-agreement {

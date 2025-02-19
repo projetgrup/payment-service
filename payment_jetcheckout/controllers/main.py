@@ -402,18 +402,31 @@ class PayloxController(http.Controller):
         tokens = ''
         acquirer = self._get_acquirer(acquirer=acquirer)
         if acquirer.company_id.payment_token_ok:
-            url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
-            data = {
-                "application_key": acquirer.jetcheckout_api_key,
-                "card_customer_token": partner.get_paylox_token_ref(),
-                "mode": acquirer._get_paylox_env(),
-                "language": "tr",
-            }
+            #url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
+            #data = {
+            #    "application_key": acquirer.jetcheckout_api_key,
+            #    "card_customer_token": partner.get_paylox_token_ref(),
+            #    "mode": acquirer._get_paylox_env(),
+            #    "language": "tr",
+            #}
+            #response = requests.post(url, data=json.dumps(data))
+            #if response.status_code == 200:
+            #    result = response.json()
+            #    if result['response_code'] == "00":
+            #        cards = result['cards']
+            #        if cards:
+            #            children = []
+            #            values.append({
+            #                'text': _('Saved Credit Cards'),
+            #                'children': children,
+            #            })
 
-            values = [
-                {'id': -1, 'selected': True, 'text': _('Do not save credit card')},
-                {'id': 0, 'text': _('Add new credit card')},
-            ]
+            values = []
+            if acquirer.company_id.payment_page_token_view_type == 'select':
+                values += [
+                    {'id': -1, 'selected': True, 'text': _('Do not save credit card')},
+                    {'id': 0, 'text': _('Add new credit card')},
+                ]
             tokens = request.env['payment.token'].sudo().search([
                 ('acquirer_id', '=', acquirer.id),
                 ('partner_id', '=', partner.id),
@@ -428,22 +441,13 @@ class PayloxController(http.Controller):
                         'family': token.jetcheckout_family,
                         'program': token.jetcheckout_program,
                     })
-                values.append({
-                    'text': _('Saved Credit Cards'),
-                    'children': children,
-                })
-                
-            #response = requests.post(url, data=json.dumps(data))
-            #if response.status_code == 200:
-            #    result = response.json()
-            #    if result['response_code'] == "00":
-            #        cards = result['cards']
-            #        if cards:
-            #            children = []
-            #            values.append({
-            #                'text': _('Saved Credit Cards'),
-            #                'children': children,
-            #            })
+                if acquirer.company_id.payment_page_token_view_type == 'select':
+                    values.append({
+                        'text': _('Saved Credit Cards'),
+                        'children': children,
+                    })
+                else:
+                    values = children
             tokens = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
         return tokens
 

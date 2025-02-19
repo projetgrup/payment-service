@@ -35,11 +35,14 @@ class fields {
             for (const [e, f] of this.events) {
                 if (this._ && e === 'accept') {
                     this._.on(e, f.bind(self));
+                } else if (e === 'start') {
+                    f.apply(self);
                 } else {
                     this.$.on(e, f.bind(self));
                 }
             }
         }
+
         //this.$.prop('field', undefined);
     }
 
@@ -101,13 +104,18 @@ class element extends fields {}
 class selection extends fields {
     async start() {
         super.start(...arguments);
-        let defaults = {
+        const defaults = {
             placeholder: this.$.attr('placeholder'),
             ...this.options,
         };
         this.$.select2(defaults);
-        if (this.options?.data) {
-            const placeholder = this.options.data.find(d => d.selected)
+
+        let data = this.options?.data;
+        if (typeof data === 'function') {
+            data = data()
+        }
+        if (data) {
+            const placeholder = data.find(d => d.selected)
             if (placeholder) {
                 this.value = placeholder.id;
             }

@@ -328,7 +328,7 @@
 
     <template id="payment_token" name="Paylox Payment Token">
         <div t-if="company.payment_page_token_view_type == 'select'" field="card.token.select"/>
-        <div t-elif="company.payment_page_token_view_type == 'radio'" field="card.token.radio"/>
+        <div t-elif="company.payment_page_token_view_type == 'radio'" field="card.token.radio" class="d-flex flex-column" style="gap:10px"/>
         <input type="hidden" t-att-value="tokens" field="card.token.data"/>
     </template>
 

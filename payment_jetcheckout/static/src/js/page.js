@@ -18,6 +18,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        const self = this;
         this.card = {
             number: new fields.string({
                 events: [
@@ -67,11 +68,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             token: {
                 select: new fields.selection({
                     events: [['change', this._onChangeCardTokenSelect]],
-                    formatResult: (t) => {
-                        return qweb.render('paylox.token.select', { search, ...t } );
+                    formatResult: (token) => {
+                        return qweb.render('paylox.token.select', { search, ...token } );
                     },
-                    formatSelection: (t) => {
-                        return qweb.render('paylox.token.select', { search, ...t });
+                    formatSelection: (token) => {
+                        return qweb.render('paylox.token.select', { search, ...token });
                     },
                     minimumResultsForSearch: Infinity,
                     data: function() {
@@ -84,11 +85,40 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             }
                         }
                         return [];
-                    }()
+                    }
                 }),
-                radio: new fields.element(),
+                radio: new fields.element({
+                    events: [['start', function() {
+                        let tokens = [];
+                        const $data = $('[field="card.token.data"]');
+                        if ($data.length) {
+                            const value = $data.val();
+                            $data.remove();
+                            if (value) {
+                                tokens = JSON.parse(atob(value));
+                                self.card.token.value = 0;
+                            }
+                        }
+                        this.card.token.radio.html = qweb.render('paylox.token.radio', { search, tokens });
+                        this.card.token.radio.$.find('button').each(function() {
+                            $(this).click(function() {
+                                const $input = $(this).find('input');
+                                $('input[name="card-token-radio"]').prop('checked', false);
+                                $input.prop('checked', true);
+
+                                self.card.token.text = $input.data('value') || '';
+                                self.card.token.value = $input.val();
+                                if ($.isNumeric(self.card.token.value)) {
+                                    self.card.token.value = Number(self.card.token.value);
+                                }
+                                self._onChangeCardToken();
+                            });
+                        });
+                    }]],
+                }),
                 data: new fields.element(),
                 value: -1,
+                text: '',
             },
             point: new fields.element({
                 events: [['click', this._onClickCardPoint]],
@@ -502,9 +532,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _onChangeCardTokenSelect: function (ev) {
-        this.card.token.value = this.card.token.select.value;
-        if (typeof this.card.token.value === 'string') {
+    _onChangeCardToken: function () {
+        if (isNaN(Number(this.card.token.value))) {
             $('.field-container.field-name').addClass('d-none');
             $('.field-container.field-number').addClass('d-none');
             $('.field-container.field-date').addClass('d-none');
@@ -516,6 +545,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $('.field-container.field-code').removeClass('d-none');
         }
         this._getInstallment();
+    },
+
+    _onChangeCardTokenSelect: function () {
+        this.card.token.value = this.card.token.select.value;
+        this.card.token.text = this.card.token.select.data.at(-1).children.find(c => c.id === tokenValue)?.text || '';
+        this._onChangeCardToken();
     },
 
     _onClickAmountCurrency: function (ev) {
@@ -880,7 +915,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
  
         const tokenValue = this.card.token.value;
         const numberValue = this.card.number.value;
-        if (typeof tokenValue === 'number' && !numberValue) {
+        if (!isNaN(Number(tokenValue)) && !numberValue) {
             if (self.card.sample.exist) {
                 document.getElementById('svgnumber').innerHTML = '0123 4567 8910 1112';
             }
@@ -904,11 +939,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 document.getElementById('svgnumber').innerHTML = this.card.number._.value;
             }
 
-            if (typeof tokenValue === 'string' || numberValue.length >= 6) {
+            if (isNaN(Number(tokenValue)) || numberValue.length >= 6) {
                 let bin;
-                if (typeof tokenValue === 'string') {
-                    const tokenData = this.card.token.select.data.at(-1).children.find(c => c.id === tokenValue);
-                    bin = tokenData.text.substring(0, 6);
+                if (isNaN(Number(tokenValue))) {
+                    bin = this.card.token.text.substring(0, 6);
                 } else {
                     bin = numberValue.substring(0, 6);
                 }
@@ -1027,7 +1061,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         let checked = true;
         const type = this.type.selected;
         if (type === 'virtual_pos') {
-            if (typeof this.card.token.value === 'number') {
+            if (!isNaN(Number(this.card.token.value))) {
                 if (!(this.amount.value > 0)) {
                     this.displayNotification({
                         type: 'warning',
