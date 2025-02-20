@@ -9,7 +9,7 @@
                             <input type="checkbox" class="d-none"/>
                             <span class="slider round fa"/>
                         </label>
-                        <label t-esc="agreement.text"/>
+                        <label t-raw="agreement.text"/>
                     </div>
                 </t>
             </div>

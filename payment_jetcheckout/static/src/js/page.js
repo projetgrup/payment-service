@@ -476,8 +476,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
         }
 
-        if (card.icon) {
-            this.card.icon.html = card.icon;
+        if (card.icon) {                                       
+            this.card.icon.html = `<img src="data:image/svg+xml;base64,${card.icon}" alt="${card.name}"/>`;
             this.card.icon.$.addClass('show');
         } else {
             this.card.icon.html = '';
@@ -1006,7 +1006,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
                             if (result.card) {
                                 if (result.card.family) {
-                                    self.card.logo.html = '<img src="' + result.card.logo + '" alt="' + result.card.family + '"/>';
+                                    const cardFamily = search.family(result.card.family)?.icon;
+                                    if (cardFamily) {
+                                        self.card.logo.html = `<img src="data:image/svg+xml;base64,${cardFamily}" alt="${result.card.family}"/>`;
+                                    } else {
+                                        self.card.logo.html = '';
+                                    }
                                     self.card.logo.$.addClass('show');
                                     self.card.family = result.card.family;
                                 } else {

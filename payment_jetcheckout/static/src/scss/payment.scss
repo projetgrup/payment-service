@@ -1309,6 +1309,7 @@
             .card-token-radio {
                 transition: all 0.2s;
                 border-radius: 6px;
+                border-width: 2px !important;
                 box-shadow: 0 0 0 2px #fff inset;
 
                 &:has(input:checked) {
@@ -1328,7 +1329,7 @@
                 }
 
                 .position-absolute {
-                    top: 2px;
+                    top: 4px;
                     right: 6px;
                 }
             }

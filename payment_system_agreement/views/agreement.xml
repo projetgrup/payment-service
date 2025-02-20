@@ -42,7 +42,7 @@
                         <separator string="End Date"/>
                         <field name="date_end" colspan="2" nolabel="1"/>
                         <separator string="Submit Text"/>
-                        <field name="text" class="font-weight-bold" colspan="2" nolabel="1" placeholder="I have carefully read and agree to the terms and conditions..."/>
+                        <field name="text" class="font-weight-bold" colspan="2" nolabel="1" placeholder="I have carefully read and agree to the terms and conditions..." options="{'codeview': true}"/>
                         <separator string="Company" groups="base.group_multi_company,base.group_system"/>
                         <field name="company_id" colspan="2" nolabel="1" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company,base.group_system"/>
                         <field name="active" invisible="1"/>

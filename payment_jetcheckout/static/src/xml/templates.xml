@@ -262,14 +262,16 @@
             <span t-esc="text"/>
         </div>
         <div t-elif="id" class="card-token-selection d-flex align-items-center">
-            <div>
-                <svg width="64" height="40" viewBox="0 0 128 48" class="border bg-white" style="border-radius:6px"><t t-raw="search.family(family)?.icon || ''"/></svg>
+            <div class="d-flex bg-white align-items-center" style="min-height:36px;border-radius:6px;width:78px;">
+                <t t-set="iconFamily" t-value="search.family(family)?.icon"/>
+                <img t-if="iconFamily" class="m-auto" t-att-src="'data:image/svg+xml;base64,' + iconFamily" style="width:90%"/>
             </div>
             <div class="d-flex flex-column ml-2 font-weight-bold small" style="letter-spacing:1px;">
                 <div>KART ADI</div>
                 <div class="d-flex align-items-center mt-n1">
                     <span t-esc="text.slice(0,4) + ' ' + text.slice(4,8) + ' ' + text.slice(8,12) + ' ' + text.slice(12,16)" class="mr-2"/>
-                    <svg width="750" height="450" viewBox="0 0 750 450" style="width:30px;height:20px;"><t t-raw="search.program(program)?.icon || ''"/></svg>
+                    <t t-set="iconProgram" t-value="search.program(program)?.icon"/>
+                    <img t-if="iconProgram" t-att-src="'data:image/svg+xml;base64,' + iconProgram" style="height:20px"/>
                 </div>
             </div>
         </div>
@@ -281,14 +283,16 @@
     <t t-name="paylox.token.radio">
         <t t-foreach="tokens" t-as="token">
             <button class="btn btn-light text-left text-700 card-token-radio d-flex align-items-center position-relative p-2 border">
-                <div>
-                    <svg width="64" height="40" viewBox="0 0 128 48" class="border bg-white" style="border-radius:6px"><t t-raw="search.family(family)?.icon || ''"/></svg>
+                <div class="d-flex bg-white align-items-center" style="min-height:36px;border-radius:6px;width:78px;">
+                    <t t-set="iconFamily" t-value="search.family(family)?.icon"/>
+                    <img t-if="iconFamily" class="m-auto" t-att-src="'data:image/svg+xml;base64,' + iconFamily" style="width:90%"/>
                 </div>
                 <div class="d-flex flex-column ml-2 font-weight-bold small" style="letter-spacing:1px;">
                     <div>KART ADI</div>
                     <div class="d-flex align-items-center mt-n1">
                         <span t-esc="text.slice(0,4) + ' ' + text.slice(4,8) + ' ' + text.slice(8,12) + ' ' + text.slice(12,16)" class="mr-2"/>
-                        <svg width="750" height="450" viewBox="0 0 750 450" style="width:30px;height:20px;"><t t-raw="search.program(program)?.icon || ''"/></svg>
+                        <t t-set="iconProgram" t-value="search.program(program)?.icon"/>
+                        <img t-if="iconProgram" t-att-src="'data:image/svg+xml;base64,' + iconProgram" style="height:20px"/>
                     </div>
                 </div>
                 <div class="position-absolute">
@@ -297,7 +301,7 @@
                 </div>
             </button>
         </t>
-        <button t-if="tokens.length" class="btn btn-light card-token-radio text-primary position-relative">
+        <button t-if="tokens.length" class="btn btn-light card-token-radio text-primary position-relative p-2" style="font-size:0.9rem">
             <span>Pay with another card</span>
             <div class="position-absolute">
                 <input type="radio" name="card-token-radio" value="0" checked="checked"/>
