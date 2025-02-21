@@ -1083,13 +1083,14 @@ class PayloxController(http.Controller):
     def _get_transaction(self):
         return False
 
-    def _process(self, **kwargs):
-        if 'order_id' not in kwargs:
-            return '/404', None, True
-
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs['order_id'])], limit=1)
+    def _process(self, tx=None, **kwargs):
         if not tx:
-            return '/404', None, True
+            if 'order_id' not in kwargs:
+                return '/404', None, True
+
+            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs['order_id'])], limit=1)
+            if not tx:
+                return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
         corate = kwargs.get('expected_cost_rate', 0)
@@ -1102,7 +1103,7 @@ class PayloxController(http.Controller):
             'successful': kwargs.get('response_code') == '00',
             'pending': kwargs.get('response_code') == '00333',
             'code': kwargs.get('response_code', ''),
-            'message': kwargs.get('response_message', ''),
+            'message': kwargs.get('response_message', '') or kwargs.get('message', ''),
             'service_code': kwargs.get('service_resp_code', ''),
             'service_message': kwargs.get('service_resp_message', ''),
             'service_suggestion': kwargs.get('suggestion', ''),
@@ -1112,6 +1113,11 @@ class PayloxController(http.Controller):
             'vpos_code': kwargs.get('auth_code', ''),
             'preauth': kwargs.get('preauth', tx.jetcheckout_preauth),
             'postauth': kwargs.get('postauth', tx.jetcheckout_postauth),
+            'card_program': kwargs.get('card_program', ''),
+            'card_family': kwargs.get('card_family', ''),
+            'card_type': kwargs.get('card_type', ''),
+            'bin_code': kwargs.get('bin_code', ''),
+            'commission_amount': kwargs.get('commission_amount', 0),
             'commission_rate': corate,
         })
         return url, tx, False
@@ -1467,22 +1473,8 @@ class PayloxController(http.Controller):
                     })
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
-                    tx._paylox_query({
-                        'successful': True,
-                        'code': result.get('response_code', ''),
-                        'message': result.get('message', ''),
-                        'amount': result.get('amount', 0),
-                        'commission_amount': result.get('commission_amount', 0),
-                        'commission_rate': result.get('expected_cost_rate', 0),
-                        'vpos_name': result.get('virtual_pos_name', ''),
-                        'vpos_id': result.get('virtual_pos_id', 0),
-                        'vpos_code': result.get('auth_code', ''),
-                        'card_program': result.get('card_program', ''),
-                        'card_family': result.get('card_family', ''),
-                        'card_type': result.get('card_type', ''),
-                        'bin_code': result.get('bin_code', ''),
-                    })
-                    return {'url': '%s/result?=%s' % (request.httprequest.referrer, tx.jetcheckout_order_id), 'id': tx.id}
+                    url, tx, status = self._process(tx=tx, **result)
+                    return {'url': url, 'id': tx.id}
                 else:
                     tx.state = 'error'
                     message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])

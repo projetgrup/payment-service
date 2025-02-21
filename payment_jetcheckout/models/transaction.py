@@ -507,6 +507,11 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         })
+        self.token_id.write({
+            'jetcheckout_type': values.get('card_type', self.jetcheckout_card_type),
+            'jetcheckout_program': values.get('card_program', self.jetcheckout_card_program),
+            'jetcheckout_family': values.get('card_family', self.jetcheckout_card_family),
+        })
 
         journal_line = self.env['payment.acquirer.jetcheckout.journal'].sudo().search([('res_id', '=', vpos_id)], limit=1)
         if journal_line and not journal_line.name == vpos_name:

@@ -2,6 +2,7 @@
 import base64
 import hashlib
 import logging
+import traceback
 from urllib.parse import quote
 
 from odoo.http import Response, request
@@ -53,8 +54,8 @@ class OrderCheckoutAPIService(Component):
             url = 'https://%s/payment?=%s' % (request.httprequest.host, quote(hash))
             return ResponseOk(id=id, url=url, **RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
-            return Response(str(e), status=500, mimetype="application/json")
+            _logger.error(traceback.format_exc())
+            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
 
     create_payments.__doc__ = _lt("Prepare Payment")
 
@@ -85,8 +86,8 @@ class OrderCheckoutAPIService(Component):
             ResponseOk = self.env.datamodels["oco.payment.cancel.response"]
             return ResponseOk(**RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
-            return Response(str(e), status=500, mimetype="application/json")
+            _logger.error(traceback.format_exc())
+            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
 
     cancel_payments.__doc__ = _lt("Cancel Payment")
 
@@ -117,8 +118,8 @@ class OrderCheckoutAPIService(Component):
             ResponseOk = self.env.datamodels["oco.payment.refund.response"]
             return ResponseOk(**RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
-            return Response(str(e), status=500, mimetype="application/json")
+            _logger.error(traceback.format_exc())
+            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
 
     refund_payments.__doc__ = _lt("Refund Payment")
 
@@ -149,8 +150,8 @@ class OrderCheckoutAPIService(Component):
             ResponseOk = self.env.datamodels["oco.payment.postauth.response"]
             return ResponseOk(**RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
-            return Response(str(e), status=500, mimetype="application/json")
+            _logger.error(traceback.format_exc())
+            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
 
     postauth_payments.__doc__ = _lt("Postauth Payment")
 
@@ -181,8 +182,8 @@ class OrderCheckoutAPIService(Component):
             ResponseOk = self.env.datamodels["oco.payment.query.response"]
             return ResponseOk(**result, **RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
-            return Response(str(e), status=500, mimetype="application/json")
+            _logger.error(traceback.format_exc())
+            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
 
     query_payments.__doc__ = _lt("Query Payment")
 
@@ -197,7 +198,7 @@ class OrderCheckoutAPIService(Component):
         return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
 
     def _get_hash(self, key, hash, id):
-        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, id]).encode('utf-8')).digest()).decode('utf-8')
+        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(id)]).encode('utf-8')).digest()).decode('utf-8')
         if hashed != hash:
             return False
         return hash

@@ -544,7 +544,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $('.field-container.field-date').removeClass('d-none');
             $('.field-container.field-code').removeClass('d-none');
             $('.field-container.field-name input').focus();
-            $('html, body').animate({scrollTop: $('.card-token-radio-add').get(0).scrollHeight + 100}, 1000); 
+
+            const $el = $('.card-token-radio-add');
+            if ($el.length) {
+                $('html, body').animate({ scrollTop: $el.position().top + 72 }, 1000);
+            }
         }
         this._getInstallment();
     },
