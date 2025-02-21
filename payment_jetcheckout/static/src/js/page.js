@@ -85,7 +85,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             }
                         }
                         return [];
-                    }
+                    },
                 }),
                 radio: new fields.element({
                     events: [['start', function() {
@@ -548,8 +548,10 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     },
 
     _onChangeCardTokenSelect: function () {
-        this.card.token.value = this.card.token.select.value;
-        this.card.token.text = this.card.token.select.data.at(-1).children.find(c => c.id === tokenValue)?.text || '';
+        let option = this.card.token.select.options.data.at(-1);
+        let value = this.card.token.select.value;
+        this.card.token.value = value;
+        this.card.token.text = option?.children?.find(c => c.id === value)?.text || '';
         this._onChangeCardToken();
     },
 

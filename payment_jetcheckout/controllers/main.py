@@ -438,6 +438,7 @@ class PayloxController(http.Controller):
                     children.append({
                         'id': token.acquirer_ref,
                         'text': token.name,
+                        'type': token.jetcheckout_type,
                         'family': token.jetcheckout_family,
                         'program': token.jetcheckout_program,
                     })

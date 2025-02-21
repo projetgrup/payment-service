@@ -7,7 +7,7 @@ class fields {
         this.$ = $();
         this._ = undefined;
         this._name = undefined;
-        this.options = options;
+        this.options = options || {};
     }
 
     async start(self, name, force=false) {
@@ -104,18 +104,19 @@ class element extends fields {}
 class selection extends fields {
     async start() {
         super.start(...arguments);
+
+        if (typeof this.options.data === 'function') {
+            this.options.data = this.options.data();
+        }
+
         const defaults = {
             placeholder: this.$.attr('placeholder'),
             ...this.options,
-        };
-        this.$.select2(defaults);
-
-        let data = this.options?.data;
-        if (typeof data === 'function') {
-            data = data()
         }
-        if (data) {
-            const placeholder = data.find(d => d.selected)
+        console.log(defaults);
+        this.$.select2(defaults);
+        if (this.options.data) {
+            const placeholder = this.options.data.find(d => d.selected)
             if (placeholder) {
                 this.value = placeholder.id;
             }

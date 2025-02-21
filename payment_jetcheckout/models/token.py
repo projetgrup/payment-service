@@ -15,8 +15,6 @@ class PaymentToken(models.Model):
     jetcheckout_holder = fields.Char('Credit Card Holder')
     jetcheckout_number = fields.Char('Credit Card Number')
     jetcheckout_family = fields.Char('Credit Card Family')
-    jetcheckout_expiry = fields.Char('Credit Card Expiry')
-    jetcheckout_security = fields.Char('Credit Card Security')
     jetcheckout_limit_card = fields.Float(string='Credit Card Limit')
     jetcheckout_limit_tx = fields.Float(string='Transaction Based Limit')
 
