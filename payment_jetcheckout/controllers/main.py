@@ -439,6 +439,7 @@ class PayloxController(http.Controller):
                         'id': token.acquirer_ref,
                         'text': token.name,
                         'type': token.jetcheckout_type,
+                        'name': token.jetcheckout_holder,
                         'family': token.jetcheckout_family,
                         'program': token.jetcheckout_program,
                     })
