@@ -35,6 +35,7 @@ payloxPage.include({
                         options: options && JSON.parse(atob(options)) || {},
                     };
                     input.data('options', undefined);
+                    this._processOptions(id);
                 });
                 Object.defineProperty(this.agreement, 'confirmed', {
                     get () {
