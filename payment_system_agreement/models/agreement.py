@@ -30,6 +30,7 @@ class PaymentAgreement(models.Model):
     version = fields.Char()
     checked = fields.Boolean()
     required = fields.Boolean(default=True)
+    option_card_save = fields.Boolean(string='Save Card')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     page_ids = fields.Many2many('payment.page', 'payment_agreement_page_rel', 'agreement_id', 'page_id', string='Pages')
     product_ids = fields.Many2many('product.template', 'payment_agreement_product_rel', 'agreement_id', 'product_id', string='Products')
@@ -78,6 +79,15 @@ class PaymentAgreement(models.Model):
             }
         )
         return base64.b64encode(pdf)
+
+    def get_options(self):
+        self.ensure_one()
+        options = {}
+        if self.option_card_save:
+            options.update({'card_save': self.option_card_save})
+        if options:
+            return base64.b64encode(json.dumps(options).encode('utf-8')).decode('utf-8')
+        return None
 
     def action_toggle_active(self):
         self.active = not self.active

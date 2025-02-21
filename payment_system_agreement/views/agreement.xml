@@ -25,7 +25,7 @@
                         <field name="name" colspan="2" nolabel="1"/>
                         <separator string="Version"/>
                         <field name="version" colspan="2" nolabel="1"/>
-                        <separator string="Defaults"/>
+                        <separator string="Options"/>
                         <div colspan="2" class="d-flex flex-column align-items-middle">
                             <div class="o_row">
                                 <field name="checked" widget="boolean_toggle" class="mx-2" colspan="2" style="min-height:unset"/>
@@ -34,6 +34,10 @@
                             <div class="o_row">
                                 <field name="required" widget="boolean_toggle" class="mx-2" colspan="2" style="min-height:unset"/>
                                 <label for="required" string="Required"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="option_card_save" widget="boolean_toggle" class="mx-2" colspan="2" style="min-height:unset"/>
+                                <label for="option_card_save" string="Save Card"/>
                             </div>
                         </div>
                         <separator string="Pages" class="mt16"/>

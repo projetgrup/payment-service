@@ -113,7 +113,6 @@ class selection extends fields {
             placeholder: this.$.attr('placeholder'),
             ...this.options,
         }
-        console.log(defaults);
         this.$.select2(defaults);
         if (this.options.data) {
             const placeholder = this.options.data.find(d => d.selected)

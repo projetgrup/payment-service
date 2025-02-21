@@ -301,14 +301,14 @@
                 </div>
             </button>
         </t>
-        <button t-if="tokens.length" class="btn btn-light card-token-radio text-primary position-relative p-2" style="font-size:0.9rem">
+        <button t-if="tokens.length" class="btn btn-light card-token-radio card-token-radio-add text-primary position-relative p-2" style="font-size:0.9rem">
             <span>Pay with another card</span>
             <div class="position-absolute">
                 <input type="radio" name="card-token-radio" value="0" checked="checked"/>
                 <i class="fa fa-check-circle text-primary"/>
             </div>
         </button>
-        <button t-else="" class="btn btn-light card-token-radio text-primary position-relative">
+        <button t-else="" class="btn btn-light card-token-radio card-token-radio-new text-primary position-relative">
             <span>Save a new credit card</span>
             <div class="position-absolute">
                 <input type="radio" name="card-token-radio" value="0" checked="checked"/>

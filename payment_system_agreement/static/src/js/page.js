@@ -28,10 +28,13 @@ payloxPage.include({
                     const $e = $(e);
                     const id = Number($e.data('id'));
                     const input = $e.find('input');
+                    const options = input.data('options');
                     this.agreement.all[id] = {
                         checked: input.is(':checked'),
                         required: input.prop('required'),
+                        options: options && JSON.parse(atob(options)) || {},
                     };
+                    input.data('options', undefined);
                 });
                 Object.defineProperty(this.agreement, 'confirmed', {
                     get () {
@@ -69,13 +72,36 @@ payloxPage.include({
         }
     },
 
+    _rejectAgreement: function (el, id) {
+        el.find('input').prop('checked', false);
+        this.agreement.all[id]['checked'] = false;
+        this._processOptions(id);
+    },
+
+    _confirmAgreement: function (el, id) {
+        el.find('input').prop('checked', true);
+        this.agreement.all[id]['checked'] = true;
+        this._processOptions(id);
+    },
+
+    _processOptions: function (id) {
+        const checked = this.agreement.all[id]['checked'];
+        const options = this.agreement.all[id]['options'];
+        if (options.card_save) {
+            this.card.token.value = checked ? 0 : -1;
+            this._onChangeCardToken();
+        }
+    },
+
     _onClickAgreement: function (ev) {
-        if(this.agreement.locked) return;
+        const item = $(ev.currentTarget);
+        const agreement_id = Number(item.data('id'));
+        const agreement = this.agreement.all[agreement_id];
+        if (ev.target.tagName === 'INPUT' && agreement.read) return;
+        if (this.agreement.locked) return;
         ev.stopPropagation();
         ev.preventDefault();
 
-        const item = $(ev.currentTarget);
-        const agreement_id = Number(item.data('id'));
         //const buttons = $('button:not(:disabled)');
         this.agreement.locked = true;
         rpc.query({
@@ -86,8 +112,8 @@ payloxPage.include({
                 currency_id: this.currency.id,
                 amount: this.amount.value,
             }
-        }).then((agreement) => {
-            if (!agreement) {
+        }).then((a) => {
+            if (!a) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
@@ -95,26 +121,25 @@ payloxPage.include({
                 });
             } else {
                 const popup = new dialog(this, {
-                    title: agreement.name,
-                    $content: $('<div/>').html(agreement.body),
+                    title: a.name,
+                    $content: $('<div/>').html(a.body),
                     buttons: [{
                         text: _t('I have read and confirmed'),
                         classes: 'btn-primary o_btn_preview m-1 flex-fill',
                     }, {
                         text: _t('Close'),
-                        classes: 'btn-light m-1 flex-fill',
+                        classes: 'btn-light m-1 flex-fill d-none',
                     }],
                 });
                 popup.opened(() => {
-                    let read = this.agreement.all[agreement_id];
                     //const header = popup.$modal.find('.modal-header');
                     const footer = popup.$modal.find('.modal-footer');
                     const body = popup.$modal.find('.modal-body');
                     const confirm = popup.$modal.find('.modal-footer button.btn-primary');
                     const close = popup.$modal.find('.modal-footer button.btn-light');
                     const check = () => {
-                        if (!read && body[0].scrollHeight - body[0].scrollTop - body[0].clientHeight < 10) {
-                            read = true;
+                        if (!agreement.read && body[0].scrollHeight - body[0].scrollTop - body[0].clientHeight < 10) {
+                            agreement.read = true;
                             confirm.prop('disabled', false);
                         }
                     };
@@ -128,9 +153,8 @@ payloxPage.include({
                         popup.close();
                     });
                     confirm.click(() => {
-                        if (read) {
-                            item.find('input').prop('checked', true);
-                            this.agreement.all[agreement_id] = true;
+                        if (agreement.read) {
+                            this._confirmAgreement(item, agreement_id);
                             popup.close();
                         } else {
                             this.displayNotification({
@@ -140,7 +164,7 @@ payloxPage.include({
                             });
                         }
                     });
-                    if (!read) {
+                    if (!agreement.read) {
                         confirm.prop('disabled', 'disabled');
                     }
                     check();

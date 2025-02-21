@@ -6,7 +6,7 @@
                 <t t-foreach="agreements" t-as="agreement">
                     <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
                         <label class="switch">
-                            <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None"/>
+                            <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
                             <span class="slider round fa"/>
                         </label>
                         <label t-raw="agreement.text"/>

@@ -543,6 +543,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $('.field-container.field-number').removeClass('d-none');
             $('.field-container.field-date').removeClass('d-none');
             $('.field-container.field-code').removeClass('d-none');
+            $('.field-container.field-name input').focus();
         }
         this._getInstallment();
     },
