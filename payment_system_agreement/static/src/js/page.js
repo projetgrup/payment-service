@@ -89,8 +89,10 @@ payloxPage.include({
         const checked = this.agreement.all[id]['checked'];
         const options = this.agreement.all[id]['options'];
         if (options.card_save) {
-            this.card.token.value = checked ? 0 : -1;
-            this._onChangeCardToken();
+            if (!isNaN(Number(this.card.token.value))) {
+                this.card.token.value = checked ? 0 : -1;
+                this._onChangeCardToken();
+            }
         }
     },
 
