@@ -13,6 +13,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['account_payment', 'website_payment'],
     'data': [
+        'views/token.xml',
         'views/acquirer.xml',
         'views/transaction.xml',
         'views/partner.xml',
