@@ -228,6 +228,7 @@ class OrderCheckoutAPIService(Component):
  
             if partner:
                 partner.write({
+                    'name': params.partner.name,
                     'email': params.partner.email,
                     'mobile': params.partner.phone,
                     'country_id': country and country.id or False,
@@ -307,7 +308,7 @@ class OrderCheckoutAPIService(Component):
                 }))
                 amount += product.qty * product.price
             values.update({
-                'amount': amount,
+                #'amount': amount,
                 'paylox_product_ids': product_ids,
             })
             #values.update({'jetcheckout_api_product': ','.join(list(map(lambda x: x.name, products)))})

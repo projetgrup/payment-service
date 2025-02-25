@@ -151,7 +151,10 @@ payloxPage.include({
                     footer.addClass('justify-content-center');
                     body.addClass('w-100');
                     body.scroll(check);
-                    close.after(`<div class="font-italic text-600 mt16 mb-3 px-2 text-center">${_t('Please read the whole agreement content entirely to confirm it')}</div>`);
+                    close.after(_.str.sprintf(
+                        '<div class="font-italic text-600 mt16 mb-3 px-2 text-center">%s</div>',
+                        _t('Please read the whole agreement content entirely to confirm it'),
+                    ));
                     close.click(() => {
                         popup.close();
                     });
