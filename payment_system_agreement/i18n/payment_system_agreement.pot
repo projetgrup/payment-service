@@ -381,7 +381,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_system_agreement/static/src/js/page.js:0
 #, python-format
-msgid "Please read the whole agreement content entirely."
+msgid "Please read the whole agreement content entirely to confirm it"
 msgstr ""
 
 #. module: payment_system_agreement

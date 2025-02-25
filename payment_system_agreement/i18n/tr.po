@@ -382,8 +382,8 @@ msgstr "Lütfen onaylanacak sözleşmeleri okuyun ve onaylayın"
 #. openerp-web
 #: code:addons/payment_system_agreement/static/src/js/page.js:0
 #, python-format
-msgid "Please read the whole agreement content entirely."
-msgstr "Lütfen tüm sözleşme metnini baştan sona okuyun."
+msgid "Please read the whole agreement content entirely to confirm it"
+msgstr "Onaylamak için lütfen tüm sözleşme metnini baştan sona okuyun"
 
 #. module: payment_system_agreement
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__product_ids
