@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20240903\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 21:05+0000\n"
-"PO-Revision-Date: 2025-02-10 21:05+0000\n"
+"POT-Creation-Date: 2025-02-25 11:21+0000\n"
+"PO-Revision-Date: 2025-02-25 11:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,25 +63,6 @@ msgstr ""
 #. module: payment_system_agreement
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
 msgid "<code>{{ payment_amount }}</code>: Amount of payment"
-msgstr ""
-
-#. module: payment_system_agreement
-#. openerp-web
-#: code:addons/payment_system_agreement/static/src/js/page.js:0
-#, python-format
-msgid ""
-"<em class=\"ml8 text-700\">Please read the whole agreement content entirely "
-"to confirm it</em>"
-msgstr ""
-
-#. module: payment_system_agreement
-#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
-msgid "<em class=\"text-muted\">Checked</em>"
-msgstr ""
-
-#. module: payment_system_agreement
-#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
-msgid "<em class=\"text-muted\">Unchecked</em>"
 msgstr ""
 
 #. module: payment_system_agreement
@@ -180,6 +161,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__checked
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
 msgid "Checked"
+msgstr ""
+
+#. module: payment_system_agreement
+#. openerp-web
+#: code:addons/payment_system_agreement/static/src/js/page.js:0
+#, python-format
+msgid "Close"
 msgstr ""
 
 #. module: payment_system_agreement
@@ -323,6 +311,11 @@ msgid "No agreement found"
 msgstr ""
 
 #. module: payment_system_agreement
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Options"
+msgstr ""
+
+#. module: payment_system_agreement
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_transaction_agreement__page_id
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.search_transaction_agreement
 msgid "Page"
@@ -381,7 +374,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/payment_system_agreement/static/src/js/page.js:0
 #, python-format
-msgid "Please read and confirm all agreements"
+msgid "Please read and confirm necessary agreements"
 msgstr ""
 
 #. module: payment_system_agreement
@@ -395,6 +388,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__product_ids
 #: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
 msgid "Products"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__required
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Required"
+msgstr ""
+
+#. module: payment_system_agreement
+#: model:ir.model.fields,field_description:payment_system_agreement.field_payment_agreement__option_card_save
+#: model_terms:ir.ui.view,arch_db:payment_system_agreement.form_agreement
+msgid "Save Card"
 msgstr ""
 
 #. module: payment_system_agreement
