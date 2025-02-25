@@ -267,7 +267,7 @@
                 <img t-if="iconFamily" class="m-auto" t-att-src="'data:image/svg+xml;base64,' + iconFamily" style="width:90%"/>
             </div>
             <div class="d-flex flex-column ml-2 font-weight-bold small" style="letter-spacing:1px;">
-                <div>KART ADI</div>
+                <div t-esc="token.name"/>
                 <div class="d-flex align-items-center mt-n1">
                     <span t-esc="text.slice(0,4) + ' ' + text.slice(4,8) + ' ' + text.slice(8,12) + ' ' + text.slice(12,16)" class="mr-2"/>
                     <t t-set="iconProgram" t-value="search.program(program)?.icon"/>
