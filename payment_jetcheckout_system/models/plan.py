@@ -54,6 +54,8 @@ class PaymentPlan(models.Model):
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
     partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True)
     token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True, string='Credit Card')
+    installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', readonly=True, string='Installment', default=lambda self: self.env.ref('payment_jetcheckout.installment_1'))
+    installment_count = fields.Integer(related='installment_id.count', store=True)
     amount = fields.Monetary(readonly=True)
     date = fields.Date(readonly=True)
     result = fields.Html(sanitize=False, readonly=True, compute='_compute_result')
@@ -62,7 +64,6 @@ class PaymentPlan(models.Model):
     paid_date = fields.Datetime(readonly=True, compute='_compute_paid', store=True)
     amount_paid = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Paid Amount')
     amount_cost = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Cost Amount')
-    installment_count = fields.Integer(readonly=True, default=1)
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True, ondelete='restrict')
     system = fields.Selection(related='item_id.system', readonly=True, store=True)
     company_id = fields.Many2one(related='item_id.company_id', readonly=True, store=True)
@@ -90,9 +91,9 @@ class PaymentPlan(models.Model):
             self.message = _('Partner must have at least one bank account which is verified.' % self.partner_id.name)
             return
 
-        if self.installment_count < 1:
-            self.installment_count = 1
-        installment = self.installment_count
+        installment_count = self.installment_id.count or 1
+        if installment_count < 1:
+            installment_count = 1
 
         data = {
             'type': 'virtual_pos',
@@ -114,16 +115,16 @@ class PaymentPlan(models.Model):
             'currency': self.currency_id,
             'website': website,
             'installment': {
-                'id': installment,
+                'id': installment_count,
                 'index': 0,
                 'rows': [{
-                    'id': installment,
-                    'count': installment,
+                    'id': installment_count,
+                    'count': installment_count,
                     'plus': 0,
                     'irate': 0.0,
                     'crate': 0.0,
                     'corate': 0.0,
-                    'idesc': _('%s Installment') % installment if installment > 1 else _('Single Payment'),
+                    'idesc': _('%s Installment') % installment_count if installment_count > 1 else _('Single Payment'),
                 }],
             },
             'request': {
@@ -248,13 +249,21 @@ class PaymentPlanWizard(models.TransientModel):
     _name = 'payment.plan.wizard'
     _description = 'Payment Plan Wizard'
 
-    @api.depends('item_ids')
+    @api.depends('item_ids', 'line_ids.amount_cost')
     def _compute_desc(self):
         for wizard in self:
-            count = len(wizard.item_ids)
             currency = self.env.company.currency_id
-            amount = formatLang(self.env, sum(wizard.item_ids.mapped('amount')) - sum(wizard.item_ids.mapped('planned_amount')), currency_obj=currency)
-            wizard.desc = _('<strong class="text-primary">%s</strong> partner(s) selected. Total amount is <strong class="text-primary">%s</strong>.' % (count, amount))
+            amount_sum = sum(wizard.item_ids.mapped('amount')) 
+            amount_cost = sum(wizard.line_ids.mapped('amount_cost'))
+            amount_planned = sum(wizard.item_ids.mapped('planned_amount')) 
+            amount_total = amount_sum - amount_planned + amount_cost
+            desc_amount = formatLang(self.env, amount_total, currency_obj=currency)
+            desc_count = len(wizard.item_ids)
+            desc = _('<strong class="text-primary">%s</strong> partner(s) selected. Total amount is <strong class="text-primary">%s</strong>.' % (desc_count, desc_amount))
+            if amount_cost:
+                desc_cost = formatLang(self.env, amount_cost, currency_obj=currency)
+                desc += _('Total cost is <strong class="text-primary">%s</strong>.' % (desc_cost,))
+            wizard.desc = desc
 
     item_ids = fields.Many2many('payment.item', 'item_plan_wizard_rel', 'wizard_id', 'item_id', string='Items', readonly=True)
     desc = fields.Html(sanitize=False, compute='_compute_desc')
@@ -262,23 +271,24 @@ class PaymentPlanWizard(models.TransientModel):
 
     def action_confirm(self):
         values = []
-        lines = [[line.token_id.id, line.token_limit_card, line.token_limit_tx] for line in self.line_ids]
+        lines = [[line.token_id.id, line.installment_id.id, line.token_limit_card, line.token_limit_tx] for line in self.line_ids]
         for item in self.item_ids:
             amount = item.amount - item.planned_amount
             for line in lines:
-                while line[1] > 0 and amount > 0:
-                    if line[2] > amount:
+                while line[2] > 0 and amount > 0:
+                    if line[3] > amount:
                         line_amount = amount
-                    elif line[1] > line[2]:
-                        line_amount = line[2]
+                    elif line[2] > line[3]:
+                        line_amount = line[3]
                     else:
-                        line_amount = line[1]
+                        line_amount = line[2]
                     values.append({
                         'date': item.date,
                         'item_id': item.id,
                         'partner_id': item.parent_id.id,
                         'amount': line_amount,
                         'token_id': line[0],
+                        'installment_id': line[1],
                     })
                     line[1] -= line_amount
                     amount -= line_amount
@@ -295,10 +305,70 @@ class PaymentPlanWizardLine(models.TransientModel):
     _name = 'payment.plan.wizard.line'
     _description = 'Payment Plan Wizard Line'
 
+    @api.depends('token_id')
+    def _compute_installment(self):
+        for line in self:
+            data = {}
+            message = ''
+            token = line.token_id
+            installments = { 1 }
+            installments_search = self.env['payment.acquirer.jetcheckout.installment'].search
+            if token:
+                acquirer = token.acquirer_id
+                currency = token.company_id.currency_id
+                campaign = acquirer.jetcheckout_campaign_id.name or ''
+                url = '%s/api/v1/prepayment/bin_installment_options' % (acquirer._get_paylox_api_url(),)
+
+                response = requests.post(url, data=json.dumps({
+                    "application_key": acquirer.jetcheckout_api_key,
+                    "mode": acquirer._get_paylox_env(),
+                    "card_token": token.acquirer_ref,
+                    "currency": currency.name,
+                    "campaign_name": campaign,
+                    "language": "tr",
+                    #"amount": int(float_round(amount, 2) * 100),
+                }))
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == "00":
+                        options = result.get('installments')
+                        if not options:
+                            message = _('No installment found (Error Code: -1)')
+                        else:
+                            for option in options:
+                                lines = option.get('installments', [])
+                                for i in lines:
+                                    count = i.get('installment_count', 1)
+                                    data.update({ count: i })
+                                    installments.add(count)
+                    else:
+                        message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                else:
+                    message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+
+            installments_filtered = installments_search([('count', 'in', list(installments))]).ids
+            line.installment_message = message and f'<i class="fa fa-info-circle text-danger" title="{ message }"/>'
+            line.installment_ids = [(6, 0, installments_filtered)]
+            line.installment_data = json.dumps(data)
+            line.installment_id = installments_filtered and installments_filtered[0] or self.env.ref('payment_jetcheckout.installment_1').id
+
+    @api.depends('installment_id')
+    def _compute_amount_cost(self):
+        for line in self:
+            data = json.loads(line.installment_data)
+            installment = data.get(str(line.installment_id.count), {})
+            line.amount_cost = installment.get('cost_rate', 0) * line.token_limit_tx / 100
+
     wizard_id = fields.Many2one('payment.plan.wizard')
     token_id = fields.Many2one('payment.token', string='Credit Card', domain=[('verified', '=', True)], required=True)
     token_limit_card = fields.Float(string='Card Limit')
     token_limit_tx = fields.Float(string='Transaction Limit')
+    installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', string='Installment', domain='[("id", "in", installment_ids)]', compute='_compute_installment', store=True, readonly=False)
+    installment_message = fields.Html(string='Installment Message', sanitize=False, compute='_compute_installment')
+    installment_ids = fields.Many2many('payment.acquirer.jetcheckout.installment', string='Installments', compute='_compute_installment')
+    installment_data = fields.Text(string='Installment Data', compute='_compute_installment')
+    amount_cost = fields.Monetary(string='Cost Amount', compute='_compute_amount_cost', store=True)
+    currency_id = fields.Many2one(related='token_id.company_id.currency_id')
 
     @api.constrains('token_limit_tx')
     def check_token_limit_tx(self):

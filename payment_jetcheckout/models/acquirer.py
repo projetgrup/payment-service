@@ -144,6 +144,14 @@ class PaymentPayloxJournalLine(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', readonly=True, default=lambda self: self.env.company.website_id)
 
 
+class PaymentPayloxInstallment(models.Model):
+    _name = 'payment.acquirer.jetcheckout.installment'
+    _description = 'Paylox Installments'
+
+    name = fields.Char(translate=True)
+    count = fields.Integer()
+
+
 class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
