@@ -264,6 +264,17 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_plan_use_base_amount"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_plan_use_base_amount" string="Use Base Amount for Payment Plans"/>
+                                    <div class="text-muted">
+                                        When making a payment related to a plan, use base amount
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_description_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
