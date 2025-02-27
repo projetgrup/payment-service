@@ -148,7 +148,7 @@ class PayloxApiController(Controller):
             providers=['jetcheckout'],
             limit=1,
         )
-        values = self._prepare(acquirer=acquirer, company=tx.company_id, transaction=tx, balance=False, filters={'type': ['virtual_pos']})
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['virtual_pos']})
         values.update({'tx': tx})
         template = self._get_template('/payment/card', values)
         return request.render(template, values, headers={

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
+from .. import SYSTEMS
 from odoo import models, fields, api
 
 
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
-    system = fields.Selection(selection=[], readonly=True, default=lambda self: self.env.company.system)
+    system = fields.Selection(selection=SYSTEMS, readonly=True, default=lambda self: self.env.company.system)
 
     @api.model
     def default_get(self, fields):
@@ -24,7 +25,7 @@ class PaymentToken(models.Model):
             return
 
         action = self.env.ref('payment_jetcheckout_system.action_token_verify').sudo().read()[0]
-        action['context'] = {'default_data': json.dumps({'id': self.id, 'name': self.name})}
+        action['context'] = {'default_data': json.dumps({'id': self.acquirer_ref, 'name': self.name})}
         return action
 
 

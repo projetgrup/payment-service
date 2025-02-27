@@ -81,6 +81,8 @@ class Company(models.Model):
     payment_advance_amount_readonly = fields.Boolean(string='Payment Advance Amount Readonly')
     payment_advance_ok = fields.Boolean(string='Payment Advance Active')
 
+    payment_plan_use_base_amount = fields.Boolean(string='Payment Plan User Base Amount')
+
     @api.model
     def create(self, vals):
         company = super(Company, self.with_context(skip_company=True)).create(vals)

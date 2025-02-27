@@ -7,6 +7,7 @@ class fields {
         this.$ = $();
         this._ = undefined;
         this._name = undefined;
+        this.options = options || {};
     }
 
     async start(self, name, force=false) {
@@ -34,11 +35,14 @@ class fields {
             for (const [e, f] of this.events) {
                 if (this._ && e === 'accept') {
                     this._.on(e, f.bind(self));
+                } else if (e === 'start') {
+                    f.apply(self);
                 } else {
                     this.$.on(e, f.bind(self));
                 }
             }
         }
+
         //this.$.prop('field', undefined);
     }
 
@@ -100,9 +104,22 @@ class element extends fields {}
 class selection extends fields {
     async start() {
         super.start(...arguments);
-        this.$.select2({
+
+        if (typeof this.options.data === 'function') {
+            this.options.data = this.options.data();
+        }
+
+        const defaults = {
             placeholder: this.$.attr('placeholder'),
-        });
+            ...this.options,
+        }
+        this.$.select2(defaults);
+        if (this.options.data) {
+            const placeholder = this.options.data.find(d => d.selected)
+            if (placeholder) {
+                this.value = placeholder.id;
+            }
+        }
     }
 
     get value() {

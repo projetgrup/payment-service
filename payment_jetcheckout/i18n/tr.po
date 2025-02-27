@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 20:44+0000\n"
-"PO-Revision-Date: 2025-02-10 23:45+0300\n"
+"POT-Creation-Date: 2025-02-25 11:14+0000\n"
+"PO-Revision-Date: 2025-02-25 14:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -279,8 +279,8 @@ msgid ""
 "signed <strong>manually</strong></span>\n"
 "                        <br/>"
 msgstr ""
-"<span attrs=\"{'invisible': [('jetcheckout_username','!=',"
-"False)]}\"><strong>Elle</strong> giriş yaptınız</span>\n"
+"<span attrs=\"{'invisible': [('jetcheckout_username','!=',False)]}"
+"\"><strong>Elle</strong> giriş yaptınız</span>\n"
 "                        <br/>"
 
 #. module: payment_jetcheckout
@@ -646,6 +646,12 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Add new credit card"
+msgstr "Yeni kredi kartı ekle"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__additional_rate
 msgid "Additional Rate"
 msgstr "Ek Oran"
@@ -1001,6 +1007,7 @@ msgstr "Kart Aileleri"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_family_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_family
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_family
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Family"
 msgstr "Kart Ailesi"
 
@@ -1031,13 +1038,16 @@ msgstr "Kart Numarası"
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_program
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_program
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Program"
 msgstr "Kart Programı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_type
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_type
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_type
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Type"
 msgstr "Kart Tipi"
 
@@ -1288,14 +1298,14 @@ msgid "Credit Card"
 msgstr "Kredi Kartı"
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_expiry
-msgid "Credit Card Expiry"
-msgstr "Kredi Kartı Son Tarihi"
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_family
 msgid "Credit Card Family"
 msgstr "Kredi Kartı Ailesi"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_hash
+msgid "Credit Card Hash"
+msgstr "Kredi Kartı Hash"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_holder
@@ -1316,11 +1326,6 @@ msgstr "Kredi Kartı Numarası"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_program
 msgid "Credit Card Program"
 msgstr "Kredi Kart Programı"
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_security
-msgid "Credit Card Security"
-msgstr "Kredi Kartını Güvenlik Kodu"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_ref
@@ -1555,6 +1560,12 @@ msgid "Display Name"
 msgstr "Görünen Ad"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Do not save credit card"
+msgstr "Bu kredi kartını kaydetme"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid "Do you confirm cancelling transaction?"
 msgstr "İşlemin iptalini onaylıyor musunuz?"
@@ -1584,6 +1595,16 @@ msgstr "Vade Tarihi"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "Email"
 msgstr "Eposta"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_point_ok
+msgid "Enable Payment Credit Card Points"
+msgstr "Ödeme Kredi Kartı Puanlarını Etkinleştir"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_token_ok
+msgid "Enable Payment Credit Card Tokens"
+msgstr "Ödeme Kredi Kartı Jetonlarını Etkinleştir"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__to_date
@@ -1965,6 +1986,13 @@ msgid "Journal default account missing"
 msgstr "Yevmiye varsayılan hesap belirtilmemiş"
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "KART ADI"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_applications____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_bank____last_update
@@ -2327,6 +2355,13 @@ msgid "Pay with Wire Transfer"
 msgstr "Banka Transferi ile Öde"
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Pay with another card"
+msgstr "Başka bir kart ile öde"
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payer:"
 msgstr "Ödeyen:"
@@ -2530,6 +2565,12 @@ msgid "Paylox Terms"
 msgstr "Paylox Koşulları"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__paylox_token_ref
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__paylox_token_ref
+msgid "Paylox Token Reference"
+msgstr "Paylox Jeton Referansı"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_url
 msgid "Paylox Url"
 msgstr "Paylox Adresi"
@@ -2583,6 +2624,11 @@ msgstr "Ödeme Yöntemleri"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_description_ok
 msgid "Payment Page Description"
 msgstr "Ödeme Sayfası Açıklama"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_token_view_type
+msgid "Payment Page Token View Type"
+msgstr "Ödeme Sayfası Jeton Görüntüleme Türü"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.api_pos_form
@@ -2962,6 +3008,11 @@ msgid "Query"
 msgstr "Sorgula"
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__res_company__payment_page_token_view_type__radio
+msgid "Radio"
+msgstr "Radyo"
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_installment_header
@@ -3066,10 +3117,23 @@ msgstr "Kaydet"
 
 #. module: payment_jetcheckout
 #. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Save a new credit card"
+msgstr "Yeni bir kredi kartı ekle"
+
+#. module: payment_jetcheckout
+#. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
 msgid "Saved Cards"
 msgstr "Kayıtlı Kartlar"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Saved Credit Cards"
+msgstr "Kayıtlı Kredi Kartları"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application__second_selection
@@ -3106,6 +3170,11 @@ msgstr "Seç"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "Select currencies. Leave empty to use default."
 msgstr "Para birimleri seçin. Varsayılanı kullanmak için boş bırakın."
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__res_company__payment_page_token_view_type__select
+msgid "Selection"
+msgstr "Seçim"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__sequence
@@ -3747,16 +3816,15 @@ msgstr "jetcheckout"
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "test"
-msgstr ""
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
 msgid ""
 "will be charged from this credit card and it will be refunded immediately."
 msgstr "bu kredi kartından çekilecektir ve anında iade edilecektir."
+
+#~ msgid "Credit Card Expiry"
+#~ msgstr "Kredi Kartı Son Tarihi"
+
+#~ msgid "Credit Card Security"
+#~ msgstr "Kredi Kartını Güvenlik Kodu"
 
 #~ msgid "Jetcheckout"
 #~ msgstr "Jetcheckout"

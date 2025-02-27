@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20240903\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 21:05+0000\n"
-"PO-Revision-Date: 2025-02-10 21:05+0000\n"
+"POT-Creation-Date: 2025-02-25 11:23+0000\n"
+"PO-Revision-Date: 2025-02-25 11:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1287,6 +1287,11 @@ msgid "Credit Card"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_token_verify
+msgid "Credit Card Verify"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__currency_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__currency_id
@@ -1407,6 +1412,11 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
 #, python-format
 msgid "December"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Deduct payment amount with credit card points"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1670,6 +1680,16 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
 #, python-format
 msgid "Emails are going to be sent on %s"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_point_ok
+msgid "Enable Payment Credit Card Points"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_token_ok
+msgid "Enable Payment Credit Card Tokens"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2769,6 +2789,11 @@ msgid "Options"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_token__system__oco
+msgid "Order Checkout"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Other"
 msgstr ""
@@ -3416,6 +3441,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_button_access_transaction
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_button_access_transaction
 msgid "Payment Page See All Transactions"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_token_view_type
+msgid "Payment Page Token View Type"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -4135,6 +4165,11 @@ msgid "Save"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Save Credit Card"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/xml/company.xml:0
 #, python-format
@@ -4488,6 +4523,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
 msgid "Status"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid ""
+"Store credit card tokens of your partners to get payments easily next time"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5006,6 +5047,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__url
 msgid "Url"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Use Credit Card Points"
 msgstr ""
 
 #. module: payment_jetcheckout_system

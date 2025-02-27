@@ -5,7 +5,7 @@
 
 {
     'name': 'Paylox Payment Acquirer',
-    'version': '1.10',
+    'version': '1.11',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -13,6 +13,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['account_payment', 'website_payment'],
     'data': [
+        'views/token.xml',
         'views/acquirer.xml',
         'views/transaction.xml',
         'views/partner.xml',
@@ -35,7 +36,8 @@
             'payment_jetcheckout/static/src/scss/payment.scss',
             'payment_jetcheckout/static/src/xml/templates.xml',
             'payment_jetcheckout/static/src/js/tools.js',
-            'payment_jetcheckout/static/src/js/cards.js',
+            'payment_jetcheckout/static/src/js/cardPrograms.js',
+            'payment_jetcheckout/static/src/js/cardFamilies.js',
             'payment_jetcheckout/static/src/js/framework.js',
             'payment_jetcheckout/static/src/js/form.js',
             'payment_jetcheckout/static/src/js/fields.js',
