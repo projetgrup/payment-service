@@ -27,6 +27,7 @@
         'wizards/transaction_import.xml',
         'report/report.xml',
         'data/data.xml',
+        'data/installment.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
     ],

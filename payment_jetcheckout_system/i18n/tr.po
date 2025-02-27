@@ -4682,7 +4682,7 @@ msgstr "Kaydet"
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Save Credit Card"
-msgstr "Kayıtlı Kredi Kartları"
+msgstr "Kredi Kartlarını Kaydet"
 
 #. module: payment_jetcheckout_system
 #. openerp-web

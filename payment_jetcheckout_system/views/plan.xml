@@ -16,7 +16,7 @@
             <field name="amount" attrs="{'readonly': [('paid', '=', True)]}"/>
             <field name="amount_paid" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <field name="amount_cost" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
-            <field name="installment_count" string="Installment" attrs="{'readonly': [('paid', '=', True)]}" optional="show" class="text-center"/>
+            <field name="installment_id" attrs="{'readonly': [('paid', '=', True)]}" optional="show"/>
             <field name="paid"/>
             <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
@@ -79,17 +79,23 @@
         <form>
             <sheet>
                 <group>
-                    <group class="text-center col-md-6">
+                    <group class="text-center col-md-4">
                         <div colspan="2" class="my-3"><i class="fa fa-calendar-plus-o fa-2x text-primary"/></div>
                         <p colspan="2" class="h3 text-600">Please fill the table to create payment plans</p>
                         <p colspan="2" class="h5 text-400 mt-2 font-italic"><field name="desc"/></p>
                     </group>
-                    <group class="col-md-6 w-100">
+                    <group class="col-md-8 w-100">
                         <field name="line_ids" colspan="2" nolabel="1">
                             <tree editable="bottom">
                                 <field name="token_id" decoration-bf="1" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="installment_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="installment_message" string=" "/>
+                                <field name="amount_cost" widget="badge" force_save="1"/>
                                 <field name="token_limit_card"/>
                                 <field name="token_limit_tx"/>
+                                <field name="installment_ids" invisible="1"/>
+                                <field name="installment_data" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
                     </group>
