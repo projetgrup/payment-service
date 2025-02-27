@@ -1,18 +1,15 @@
 /** @odoo-module alias=paylox.page **/
 'use strict';
 
+import { _t, qweb } from 'web.core';
 import config from 'web.config';
-import core from 'web.core';
 import rpc from 'web.rpc';
-import publicWidget from 'web.public.widget';
 import dialog from 'web.Dialog';
-import cards from 'paylox.cards';
-import framework from 'paylox.framework';
+import publicWidget from 'web.public.widget';
 import fields from 'paylox.fields';
-import { format } from 'paylox.tools';
-
-const _t = core._t;
-const qweb = core.qweb;
+import { format, search } from 'paylox.tools';
+import framework from 'paylox.framework';
+import cardPrograms from 'paylox.card.programs';
 
 publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     selector: '#payment_card',
@@ -21,6 +18,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super(parent, options);
+        const self = this;
         this.card = {
             number: new fields.string({
                 events: [
@@ -28,7 +26,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     ['accept', this._onAcceptCardNumber],
                 ],
                 mask: {
-                    mask: cards,
+                    mask: cardPrograms,
                     dispatch: function (appended, masked) {
                         const number = (masked.value + appended).replace(/\D/g, '');
                         for (const mask of masked.compiledMasks) {
@@ -68,13 +66,59 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickCardSample]],
             }),
             token: {
-                all: [],
-                popup: new fields.element({
-                    events: [['click', this._onClickCardTokenPopup]],
+                select: new fields.selection({
+                    events: [['change', this._onChangeCardTokenSelect]],
+                    formatResult: (token) => {
+                        return qweb.render('paylox.token.select', { search, ...token } );
+                    },
+                    formatSelection: (token) => {
+                        return qweb.render('paylox.token.select', { search, ...token });
+                    },
+                    minimumResultsForSearch: Infinity,
+                    data: function() {
+                        const $data = $('[field="card.token.data"]');
+                        if ($data.length) {
+                            const value = $data.val();
+                            $data.remove();
+                            if (value) {
+                                return JSON.parse(atob(value));
+                            }
+                        }
+                        return [];
+                    },
                 }),
-                selected: new fields.element({
-                    events: [['click', this._onClickCardToken]],
+                radio: new fields.element({
+                    events: [['start', function() {
+                        let tokens = [];
+                        const $data = $('[field="card.token.data"]');
+                        if ($data.length) {
+                            const value = $data.val();
+                            $data.remove();
+                            if (value) {
+                                tokens = JSON.parse(atob(value));
+                                self.card.token.value = 0;
+                            }
+                        }
+                        this.card.token.radio.html = qweb.render('paylox.token.radio', { search, tokens });
+                        this.card.token.radio.$.find('button').each(function() {
+                            $(this).click(function() {
+                                const $input = $(this).find('input');
+                                $('input[name="card-token-radio"]').prop('checked', false);
+                                $input.prop('checked', true);
+
+                                self.card.token.text = $input.data('value') || '';
+                                self.card.token.value = $input.val();
+                                if ($.isNumeric(self.card.token.value)) {
+                                    self.card.token.value = Number(self.card.token.value);
+                                }
+                                self._onChangeCardToken();
+                            });
+                        });
+                    }]],
                 }),
+                data: new fields.element(),
+                value: -1,
+                text: '',
             },
             point: new fields.element({
                 events: [['click', this._onClickCardPoint]],
@@ -82,6 +126,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             preview: new fields.string(),
             type: '',
             family: '',
+            program: '',
             bin: '',
             valid: false,
         };
@@ -402,7 +447,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         this._getInstallment();
         const card = this.card.number._.masked.currentMask;
         const limit = card.code === 'amex' ? 14 : 15;
-        this.card.type = card.name;
+        this.card.program = card.name;
 
         if (card.typedValue.length > limit) {
             const self = this;
@@ -431,8 +476,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
         }
 
-        if (card.icon) {
-            this.card.icon.html = card.icon;
+        if (card.icon) {                                       
+            this.card.icon.html = `<img src="data:image/svg+xml;base64,${card.icon}" alt="${card.name}"/>`;
             this.card.icon.$.addClass('show');
         } else {
             this.card.icon.html = '';
@@ -487,6 +532,35 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
+    _onChangeCardToken: function () {
+        if (isNaN(Number(this.card.token.value))) {
+            $('.field-container.field-name').addClass('d-none');
+            $('.field-container.field-number').addClass('d-none');
+            $('.field-container.field-date').addClass('d-none');
+            $('.field-container.field-code').addClass('d-none');
+        } else {
+            $('.field-container.field-name').removeClass('d-none');
+            $('.field-container.field-number').removeClass('d-none');
+            $('.field-container.field-date').removeClass('d-none');
+            $('.field-container.field-code').removeClass('d-none');
+            $('.field-container.field-name input').focus();
+
+            const $el = $('.card-token-radio-add');
+            if ($el.length) {
+                $('html, body').animate({ scrollTop: $el.position().top + 72 }, 1000);
+            }
+        }
+        this._getInstallment();
+    },
+
+    _onChangeCardTokenSelect: function () {
+        let option = this.card.token.select.options.data.at(-1);
+        let value = this.card.token.select.value;
+        this.card.token.value = value;
+        this.card.token.text = option?.children?.find(c => c.id === value)?.text || '';
+        this._onChangeCardToken();
+    },
+
     _onClickAmountCurrency: function (ev) {
         if (ev.target.nodeName === 'LI') {
             this._updateCurrency(ev.target);
@@ -508,7 +582,38 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
-    _onClickCardTokenPopup: function () {
+    _onClickCardTokenPopup: async function () {
+        ev.stopPropagation();
+        ev.preventDefault();
+        
+        if (true) {
+            await rpc.query({
+                route: '/payment/card/point',
+                params: {        
+                    code: this.card.code.value,
+                    date: this.card.date.value,
+                    holder: this.card.holder.value,
+                    number: this.card.number.value,
+                    currency: this.currency.id,
+                }
+            }).then((result) => {
+                this.displayNotification({
+                    type: 'info',
+                    title: _t('Info'),
+                    message: result,
+                });
+            }).guardedCatch((error) => {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: _t('An error occured. Please contact with your system administrator.'),
+                });
+                if (config.isDebug()) {
+                    console.error(error);
+                }
+            });
+        }
+
         const popup = new dialog(this, {
             title: _t('Saved Cards'),
             $content: qweb.render('paylox.tokens', {}),
@@ -816,7 +921,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             this.card.bin = '';
         }
  
-        if (!this.card.number.value) {
+        const tokenValue = this.card.token.value;
+        const numberValue = this.card.number.value;
+        if (!isNaN(Number(tokenValue)) && !numberValue) {
             if (self.card.sample.exist) {
                 document.getElementById('svgnumber').innerHTML = '0123 4567 8910 1112';
             }
@@ -833,19 +940,26 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
             this.card.logo.$.removeClass('show');
             this.card.family = '';
+            this.card.type = '';
             this.card.bin = '';
         } else {
             if (this.card.sample.exist) {
                 document.getElementById('svgnumber').innerHTML = this.card.number._.value;
             }
 
-            if (this.card.number.value.length >= 6){
-                const bin = this.card.number.value.substring(0, 6);
+            if (isNaN(Number(tokenValue)) || numberValue.length >= 6) {
+                let bin;
+                if (isNaN(Number(tokenValue))) {
+                    bin = this.card.token.text.substring(0, 6);
+                } else {
+                    bin = numberValue.substring(0, 6);
+                }
                 if (this.card.bin !== bin) {
                     await rpc.query({
                         route: '/payment/card/installment',
                         params: {
                             bin: bin,
+                            token: tokenValue,
                             partner: this.partner.value,
                             campaign: this.campaign.name.value,
                             amount: this.amount.value,
@@ -900,7 +1014,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
                             if (result.card) {
                                 if (result.card.family) {
-                                    self.card.logo.html = '<img src="' + result.card.logo + '" alt="' + result.card.family + '"/>';
+                                    const cardFamily = search.family(result.card.family)?.icon;
+                                    if (cardFamily) {
+                                        self.card.logo.html = `<img src="data:image/svg+xml;base64,${cardFamily}" alt="${result.card.family}"/>`;
+                                    } else {
+                                        self.card.logo.html = '';
+                                    }
                                     self.card.logo.$.addClass('show');
                                     self.card.family = result.card.family;
                                 } else {
@@ -955,49 +1074,52 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         let checked = true;
         const type = this.type.selected;
         if (type === 'virtual_pos') {
-            if (!(this.amount.value > 0)) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please enter an amount'),
-                });
-                checked = false;
-            } else if (!this.card.holder.value) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please fill card holder name'),
-                });
-                checked = false;
-            } else if (!this.card.number.value) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please fill card number'),
-                });
-                checked = false;
-            } else if (!this.card.valid) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please enter a valid card number'),
-                });
-                checked = false;
-            } else if (!this.card.date.value) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please fill card expiration date'),
-                });
-                checked = false;
-            } else if (!this.card.code.value) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('Please fill card security code'),
-                });
-                checked = false;
-            } else if ($('.installment-cell').length && !$('.installment-cell input:checked').length) {
+            if (!isNaN(Number(this.card.token.value))) {
+                if (!(this.amount.value > 0)) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please enter an amount'),
+                    });
+                    checked = false;
+                } else if (!this.card.holder.value) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please fill card holder name'),
+                    });
+                    checked = false;
+                } else if (!this.card.number.value) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please fill card number'),
+                    });
+                    checked = false;
+                } else if (!this.card.valid) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please enter a valid card number'),
+                    });
+                    checked = false;
+                } else if (!this.card.date.value) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please fill card expiration date'),
+                    });
+                    checked = false;
+                } else if (!this.card.code.value) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Please fill card security code'),
+                    });
+                    checked = false;
+                }
+            }
+            if ($('.installment-cell').length && !$('.installment-cell input:checked').length) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
@@ -1104,6 +1226,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     holder: this.card.holder.value,
                     date: this.card.date.value,
                     number: this.card.number.value,
+                    token: this.card.token.value,
                 },
                 amount: this.amount.value,
                 currency: this.currency.id,

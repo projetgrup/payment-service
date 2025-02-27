@@ -444,12 +444,14 @@
             .modal-footer {
                 background: #ffffff !important;
                 border-radius: 0 0 10px 10px !important;
+                box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25) !important;
                 padding: 20px !important;
+                position: sticky;
+                bottom: 0;
 
                 button {
                     padding: 10px 40px !important;
                     border-radius: 10px !important;
-                    background-color: theme-color('primary') !important;
                 }
             }
 
@@ -1127,6 +1129,15 @@
             background: none;
             color: #999;
             border: none;
+
+            &:has(.card-token-option) {
+                width: 100%;
+            }
+
+            &:has(.card-token-selection) {
+                min-height: 48px;
+                width: 100%;
+            }
         }
 
         .select2-chosen {
@@ -1270,28 +1281,68 @@
         background-color: #ffffff !important;
         display: grid;
         gap: 1em;
-        grid-template-areas: "name name""number number""expiration security""terms terms";
+        grid-template-areas: "name name""number number""date code""term term""agreement agreement";
         padding: 20px;
         color: #707070;
 
-        .field-container:first-of-type {
+        .field-container.field-name {
             grid-area: name;
         }
 
-        .field-container:nth-of-type(2) {
+        .field-container.field-number {
             grid-area: number;
         }
-    
-        .field-container:nth-of-type(3) {
-            grid-area: expiration;
+
+        .field-container.field-date {
+            grid-area: date;
         }
     
-        .field-container:nth-of-type(4) {
-            grid-area: security;
+        .field-container.field-code {
+            grid-area: code;
         }
     
-        .field-container:nth-of-type(5) {
-            grid-area: terms;
+        .field-container.field-term {
+            grid-area: term;
+        }
+    
+        .field-container.field-token {
+            grid-area: token;
+
+            .card-token-radio {
+                transition: all 0.2s;
+                border-radius: 6px;
+                border-width: 2px !important;
+                box-shadow: 0 0 0 2px #fff inset;
+
+                &:has(input:checked) {
+                    border-color: theme-color('primary') !important;
+                }
+
+                input {
+                    display: none;
+                }
+
+                i {
+                    display: none;
+                }
+
+                input:checked + i {
+                    display: block;
+                }
+
+                .position-absolute {
+                    top: 4px;
+                    right: 6px;
+                }
+            }
+        }
+    
+        .field-container.field-agreement {
+            grid-area: agreement;
+        }
+        
+        &.payment-form-with-token {
+            grid-template-areas: "token token""name name""number number""date code""term term""agreement agreement";
         }
     }
 

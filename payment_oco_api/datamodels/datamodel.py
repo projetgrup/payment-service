@@ -175,6 +175,7 @@ class OrderCheckoutPaymentQueryResponse(Datamodel):
     auth_code = fields.String(required=False, allow_none=True, metadata={"title": _lt("Authorization Code"), "description": _lt("Authorization Code"), "example": "C001"})
     card_family = fields.String(required=False, allow_none=True, metadata={"title": _lt("Credit Card Family"), "description": _lt("Credit Card Family"), "example": "Visa"})
     card_program = fields.String(required=False, allow_none=True, metadata={"title": _lt("Credit Card Program"), "description": _lt("Credit Card Program"), "example": "Bankkart"})
+    card_type = fields.String(required=False, allow_none=True, metadata={"title": _lt("Credit Card Type"), "description": _lt("Credit Card Type"), "example": "Debit"})
     bin_code = fields.String(required=False, allow_none=True, metadata={"title": _lt("Credit Card BIN Code"), "description": _lt("Credit Card BIN Code"), "example": "123456"})
     service_ref_id = fields.String(required=False, allow_none=True, metadata={"title": _lt("Service Reference ID"), "description": _lt("Service Reference ID"), "example": "123456"})
     service_code = fields.String(required=False, allow_none=True, metadata={"title": _lt("Service Code"), "description": _lt("Service Code"), "example": "01"})

@@ -28,7 +28,7 @@ class PayloxAgreementController(Controller):
         }) for agreement_id in agreement_ids]
 
     def _get_agreements(self, agreement_id=None, product_id=None):
-        company = request.env.company
+        company = request.env.company.sudo()
         if company.parent_id:
             company = company.parent_id
         if not company.system_agreement:

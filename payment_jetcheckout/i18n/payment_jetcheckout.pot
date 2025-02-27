@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20240903\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 20:44+0000\n"
-"PO-Revision-Date: 2025-02-10 20:44+0000\n"
+"POT-Creation-Date: 2025-02-25 11:14+0000\n"
+"PO-Revision-Date: 2025-02-25 11:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -585,6 +585,12 @@ msgid "Active"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Add new credit card"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_installment__additional_rate
 msgid "Additional Rate"
 msgstr ""
@@ -626,9 +632,6 @@ msgstr ""
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
 #: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
-#: code:addons/payment_jetcheckout/controllers/main.py:0
 #, python-format
 msgid "An error occured"
 msgstr ""
@@ -650,6 +653,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
@@ -951,6 +955,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_family_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_family
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_family
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Family"
 msgstr ""
 
@@ -981,13 +986,16 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_program
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_program
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Program"
 msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_excluded__card_type
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__card_type
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_card_type
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.search_token
 msgid "Card Type"
 msgstr ""
 
@@ -1238,13 +1246,13 @@ msgid "Credit Card"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_expiry
-msgid "Credit Card Expiry"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_family
+msgid "Credit Card Family"
 msgstr ""
 
 #. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_family
-msgid "Credit Card Family"
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_hash
+msgid "Credit Card Hash"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1265,11 +1273,6 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_program
 msgid "Credit Card Program"
-msgstr ""
-
-#. module: payment_jetcheckout
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_security
-msgid "Credit Card Security"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -1504,6 +1507,12 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Do not save credit card"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid "Do you confirm cancelling transaction?"
 msgstr ""
@@ -1535,6 +1544,16 @@ msgid "Email"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_point_ok
+msgid "Enable Payment Credit Card Points"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_token_ok
+msgid "Enable Payment Credit Card Tokens"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_campaign__to_date
 msgid "End Date"
 msgstr ""
@@ -1562,6 +1581,7 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
@@ -1752,6 +1772,7 @@ msgstr ""
 #. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
 msgid "Info"
 msgstr ""
@@ -1920,6 +1941,13 @@ msgstr ""
 #: code:addons/payment_jetcheckout/models/payment.py:0
 #, python-format
 msgid "Journal default account missing"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "KART ADI"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2282,6 +2310,13 @@ msgid "Pay with Wire Transfer"
 msgstr ""
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Pay with another card"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payer:"
 msgstr ""
@@ -2485,6 +2520,12 @@ msgid "Paylox Terms"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_partner__paylox_token_ref
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_users__paylox_token_ref
+msgid "Paylox Token Reference"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_url
 msgid "Paylox Url"
 msgstr ""
@@ -2535,6 +2576,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_description_ok
 msgid "Payment Page Description"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_res_company__payment_page_token_view_type
+msgid "Payment Page Token View Type"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -2918,6 +2964,11 @@ msgid "Query"
 msgstr ""
 
 #. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__res_company__payment_page_token_view_type__radio
+msgid "Radio"
+msgstr ""
+
+#. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_installment_header
@@ -3023,9 +3074,22 @@ msgstr ""
 
 #. module: payment_jetcheckout
 #. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Save a new credit card"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
 msgid "Saved Cards"
+msgstr ""
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Saved Credit Cards"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -3063,6 +3127,11 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
 msgid "Select currencies. Leave empty to use default."
+msgstr ""
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields.selection,name:payment_jetcheckout.selection__res_company__payment_page_token_view_type__select
+msgid "Selection"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -3719,13 +3788,6 @@ msgstr ""
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_acquirer__provider__jetcheckout
 msgid "jetcheckout"
-msgstr ""
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "test"
 msgstr ""
 
 #. module: payment_jetcheckout

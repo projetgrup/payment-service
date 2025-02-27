@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
-        <xpath expr="//div[hasclass('payment-form-container')]" position="inside">
-            <div t-if="not no_agreements" class="field-container" field="agreements">
+        <xpath expr="//div[@id='paymentFormContainer']" position="inside">
+            <div t-if="not no_agreements" class="field-container field-agreement fade show" field="agreements">
                 <t t-foreach="agreements" t-as="agreement">
                     <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
                         <label class="switch">
-                            <input type="checkbox" class="d-none"/>
+                            <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
                             <span class="slider round fa"/>
                         </label>
-                        <label t-esc="agreement.text"/>
+                        <label t-raw="agreement.text"/>
                     </div>
                 </t>
             </div>

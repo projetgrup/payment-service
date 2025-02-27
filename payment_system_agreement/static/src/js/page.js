@@ -27,16 +27,19 @@ payloxPage.include({
                 this.agreement.$.each((_, e) => {
                     const $e = $(e);
                     const id = Number($e.data('id'));
-                    this.agreement.all[id] = $e.find('input').is(':checked');
-                });
-                Object.defineProperty(this.agreement, 'count', {
-                    get () {
-                        return Object.values(this.all).filter(v => v).length;
-                    },
+                    const input = $e.find('input');
+                    const options = input.data('options');
+                    this.agreement.all[id] = {
+                        checked: input.is(':checked'),
+                        required: input.prop('required'),
+                        options: options && JSON.parse(atob(options)) || {},
+                    };
+                    input.data('options', undefined);
+                    this._processOptions(id);
                 });
                 Object.defineProperty(this.agreement, 'confirmed', {
                     get () {
-                        return this.$.length === this.count;
+                        return Object.values(this.all).filter(v => v.required && !v.checked).length === 0;
                     },
                 });
             }
@@ -46,7 +49,7 @@ payloxPage.include({
     _getParams: function () {
         let params = this._super.apply(this, arguments);
         if (this.agreement.exist) {
-            params['agreements'] = Object.keys(this.agreement.all);
+            params['agreements'] = Object.entries(this.agreement.all).filter(([k, v]) => v.checked).map(x => Number(x[0]));
         }
         return params;
     },
@@ -61,7 +64,7 @@ payloxPage.include({
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
-                message: _t('Please read and confirm all agreements'),
+                message: _t('Please read and confirm necessary agreements'),
             });
             this._enableButton();
             return false;
@@ -70,13 +73,38 @@ payloxPage.include({
         }
     },
 
+    _rejectAgreement: function (el, id) {
+        el.find('input').prop('checked', false);
+        this.agreement.all[id]['checked'] = false;
+        this._processOptions(id);
+    },
+
+    _confirmAgreement: function (el, id) {
+        el.find('input').prop('checked', true);
+        this.agreement.all[id]['checked'] = true;
+        this._processOptions(id);
+    },
+
+    _processOptions: function (id) {
+        const checked = this.agreement.all[id]['checked'];
+        const options = this.agreement.all[id]['options'];
+        if (options.card_save) {
+            if (!isNaN(Number(this.card.token.value))) {
+                this.card.token.value = checked ? 0 : -1;
+                this._onChangeCardToken();
+            }
+        }
+    },
+
     _onClickAgreement: function (ev) {
-        if(this.agreement.locked) return;
+        const item = $(ev.currentTarget);
+        const agreement_id = Number(item.data('id'));
+        const agreement = this.agreement.all[agreement_id];
+        if (ev.target.tagName === 'INPUT' && agreement.read) return;
+        if (this.agreement.locked) return;
         ev.stopPropagation();
         ev.preventDefault();
 
-        const item = $(ev.currentTarget);
-        const agreement_id = Number(item.data('id'));
         //const buttons = $('button:not(:disabled)');
         this.agreement.locked = true;
         rpc.query({
@@ -87,8 +115,8 @@ payloxPage.include({
                 currency_id: this.currency.id,
                 amount: this.amount.value,
             }
-        }).then((agreement) => {
-            if (!agreement) {
+        }).then((a) => {
+            if (!a) {
                 this.displayNotification({
                     type: 'warning',
                     title: _t('Warning'),
@@ -96,33 +124,43 @@ payloxPage.include({
                 });
             } else {
                 const popup = new dialog(this, {
-                    title: agreement.name,
-                    $content: $('<div/>').html(agreement.body),
+                    title: a.name,
+                    $content: $('<div/>').html(a.body),
                     buttons: [{
                         text: _t('I have read and confirmed'),
-                        classes: 'btn-primary',
+                        classes: 'btn-primary o_btn_preview m-1 flex-fill',
+                    }, {
+                        text: _t('Close'),
+                        classes: 'btn-light m-1 flex-fill d-none',
                     }],
                 });
                 popup.opened(() => {
-                    let read = this.agreement.all[agreement_id];
-                    const header = popup.$modal.find('.modal-header');
+                    //const header = popup.$modal.find('.modal-header');
+                    const footer = popup.$modal.find('.modal-footer');
                     const body = popup.$modal.find('.modal-body');
-                    const button = popup.$modal.find('.modal-footer button');
+                    const confirm = popup.$modal.find('.modal-footer button.btn-primary');
+                    const close = popup.$modal.find('.modal-footer button.btn-light');
                     const check = () => {
-                        if (!read && body[0].scrollHeight - body[0].scrollTop - body[0].clientHeight < 10) {
-                            read = true;
-                            button.prop('disabled', false);
+                        if (!agreement.read && body[0].scrollHeight - body[0].scrollTop - body[0].clientHeight < 10) {
+                            agreement.read = true;
+                            confirm.prop('disabled', false);
                         }
                     };
 
-                    header.find('button.close').remove();
+                    //header.find('button.close').remove();
+                    footer.addClass('justify-content-center');
                     body.addClass('w-100');
                     body.scroll(check);
-                    button.after(_t('<em class="ml8 text-700">Please read the whole agreement content entirely to confirm it</em>'));
-                    button.click(() => {
-                        if (read) {
-                            item.find('input').prop('checked', true);
-                            this.agreement.all[agreement_id] = true;
+                    close.after(_.str.sprintf(
+                        '<div class="font-italic text-600 mt16 mb-3 px-2 text-center">%s</div>',
+                        _t('Please read the whole agreement content entirely to confirm it'),
+                    ));
+                    close.click(() => {
+                        popup.close();
+                    });
+                    confirm.click(() => {
+                        if (agreement.read) {
+                            this._confirmAgreement(item, agreement_id);
                             popup.close();
                         } else {
                             this.displayNotification({
@@ -132,8 +170,8 @@ payloxPage.include({
                             });
                         }
                     });
-                    if (!read) {
-                        button.prop('disabled', 'disabled');
+                    if (!agreement.read) {
+                        confirm.prop('disabled', 'disabled');
                     }
                     check();
                 })

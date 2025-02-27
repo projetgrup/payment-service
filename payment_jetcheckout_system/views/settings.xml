@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('payment_page_ok', '=', False)]}">
                                         <div class="row mt16">
-                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_page_ok', '!=', False)]}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -264,6 +264,17 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_plan_use_base_amount"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_plan_use_base_amount" string="Use Base Amount for Payment Plans"/>
+                                    <div class="text-muted">
+                                        When making a payment related to a plan, use base amount
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_description_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -273,7 +284,33 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_token_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_token_ok" string="Save Credit Card"/>
+                                    <div class="text-muted">
+                                        Store credit card tokens of your partners to get payments easily next time
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_token_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <field name="payment_page_token_view_type" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_token_ok', '!=', False)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_point_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_point_ok" string="Use Credit Card Points"/>
+                                    <div class="text-muted">
+                                        Deduct payment amount with credit card points
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Dues" string="Dues" data-key="hr_attendance">
@@ -323,10 +360,11 @@
                                                     <field name="unit" string=" " width="0.2" decoration-bf="1"/>
                                                     <field name="tolerance"/>
                                                     <field name="round" widget="boolean_toggle"/>
-                                                    <field name="partner_tag_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                                                    <field name="partner_tag_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                                                     <field name="campaign_id" options="{'no_create': True, 'no_open': True}" required="1"/>
                                                     <field name="mail_template_id" domain="[('model', '=', 'res.partner')]" options="{'no_create': True, 'no_open': True}" optional="hide" attrs="{'column_invisible': [('parent.payment_page_due_reminder_ok', '=', False)]}"/>
                                                     <field name="campaign_ids" invisible="1"/>
+                                                    <field name="company_id" invisible="1"/>
                                                 </tree>
                                                 <form>
                                                     <sheet>
@@ -345,7 +383,9 @@
                                                                         <field name="name"/>
                                                                     </tree>
                                                                 </field>-->
+                                                                <field name="partner_tag_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                                                                 <field name="campaign_ids" invisible="1"/>
+                                                                <field name="company_id" invisible="1"/>
                                                             </group>
                                                         </group>
                                                     </sheet>

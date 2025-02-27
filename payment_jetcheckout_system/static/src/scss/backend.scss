@@ -75,6 +75,18 @@
                 padding-right: 3px;
             }
         }
+
+        &[name=payment_page_token_view_type] .o_radio_item input {
+            &[data-value=select]::before {
+                content: "\f0dc";
+                padding-right: 3px;
+            }
+
+            &[data-value=radio]::before {
+                content: "\f0ca";
+                padding-right: 3px;
+            }
+        }
     }
 }
 

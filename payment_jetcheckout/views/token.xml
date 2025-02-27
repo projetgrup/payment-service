@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_token" model="ir.ui.view">
+    <field name="model">payment.token</field>
+    <field name="inherit_id" ref="payment.payment_token_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="jetcheckout_type"/>
+            <field name="jetcheckout_family"/>
+            <field name="jetcheckout_program"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="form_token" model="ir.ui.view">
+    <field name="model">payment.token</field>
+    <field name="inherit_id" ref="payment.payment_token_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group[last()]" position="after">
+            <group>
+                <field name="jetcheckout_type"/>
+                <field name="jetcheckout_family"/>
+                <field name="jetcheckout_program"/>
+            </group>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="search_token" model="ir.ui.view">
+    <field name="model">payment.token</field>
+    <field name="inherit_id" ref="payment.payment_token_search"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group/filter[last()]" position="after">
+            <separator/>
+            <filter string="Card Type" name="card_type" context="{'group_by': 'jetcheckout_type'}"/>
+            <filter string="Card Family" name="card_family" context="{'group_by': 'jetcheckout_family'}"/>
+            <filter string="Card Program" name="card_program" context="{'group_by': 'jetcheckout_program'}"/>
+        </xpath>
+    </field>
+    </record>
+</odoo>
