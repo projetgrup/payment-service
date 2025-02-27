@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="installment_1" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">Single Payment</field>
+            <field name="count">1</field>
+        </record>
+
+        <record id="installment_2" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">2 Installments</field>
+            <field name="count">2</field>
+        </record>
+
+        <record id="installment_3" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">3 Installments</field>
+            <field name="count">3</field>
+        </record>
+
+        <record id="installment_4" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">4 Installments</field>
+            <field name="count">4</field>
+        </record>
+
+        <record id="installment_5" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">5 Installments</field>
+            <field name="count">5</field>
+        </record>
+
+        <record id="installment_6" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">6 Installments</field>
+            <field name="count">6</field>
+        </record>
+
+        <record id="installment_7" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">7 Installments</field>
+            <field name="count">7</field>
+        </record>
+
+        <record id="installment_8" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">8 Installments</field>
+            <field name="count">8</field>
+        </record>
+
+        <record id="installment_9" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">9 Installments</field>
+            <field name="count">9</field>
+        </record>
+
+        <record id="installment_10" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">10 Installments</field>
+            <field name="count">10</field>
+        </record>
+
+        <record id="installment_11" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">11 Installments</field>
+            <field name="count">11</field>
+        </record>
+
+        <record id="installment_12" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">12 Installments</field>
+            <field name="count">12</field>
+        </record>
+
+        <record id="installment_13" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">13 Installments</field>
+            <field name="count">13</field>
+        </record>
+
+        <record id="installment_14" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">14 Installments</field>
+            <field name="count">14</field>
+        </record>
+
+        <record id="installment_15" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">15 Installments</field>
+            <field name="count">15</field>
+        </record>
+
+        <record id="installment_16" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">16 Installments</field>
+            <field name="count">16</field>
+        </record>
+
+        <record id="installment_17" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">17 Installments</field>
+            <field name="count">17</field>
+        </record>
+
+        <record id="installment_18" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">18 Installments</field>
+            <field name="count">18</field>
+        </record>
+
+        <record id="installment_19" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">19 Installments</field>
+            <field name="count">19</field>
+        </record>
+
+        <record id="installment_20" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">20 Installments</field>
+            <field name="count">20</field>
+        </record>
+
+        <record id="installment_21" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">21 Installments</field>
+            <field name="count">21</field>
+        </record>
+
+        <record id="installment_22" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">22 Installments</field>
+            <field name="count">22</field>
+        </record>
+
+        <record id="installment_23" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">23 Installments</field>
+            <field name="count">23</field>
+        </record>
+
+        <record id="installment_24" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">24 Installments</field>
+            <field name="count">24</field>
+        </record>
+
+        <record id="installment_25" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">25 Installments</field>
+            <field name="count">25</field>
+        </record>
+
+        <record id="installment_26" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">26 Installments</field>
+            <field name="count">26</field>
+        </record>
+
+        <record id="installment_27" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">27 Installments</field>
+            <field name="count">27</field>
+        </record>
+
+        <record id="installment_28" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">28 Installments</field>
+            <field name="count">28</field>
+        </record>
+
+        <record id="installment_29" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">29 Installments</field>
+            <field name="count">29</field>
+        </record>
+
+        <record id="installment_30" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">30 Installments</field>
+            <field name="count">30</field>
+        </record>
+
+        <record id="installment_31" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">31 Installments</field>
+            <field name="count">31</field>
+        </record>
+
+        <record id="installment_32" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">32 Installments</field>
+            <field name="count">32</field>
+        </record>
+
+        <record id="installment_33" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">33 Installments</field>
+            <field name="count">33</field>
+        </record>
+
+        <record id="installment_34" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">34 Installments</field>
+            <field name="count">34</field>
+        </record>
+
+        <record id="installment_35" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">35 Installments</field>
+            <field name="count">35</field>
+        </record>
+
+        <record id="installment_36" model="payment.acquirer.jetcheckout.installment">
+            <field name="name">36 Installments</field>
+            <field name="count">36</field>
+        </record>
+    </data>
+</odoo>
