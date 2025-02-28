@@ -1252,7 +1252,7 @@ class PayloxController(http.Controller):
             token = 'token' in kwargs['card'] and self._get_token(acquirer, partner, kwargs['card']['token'], not verify) or False
             token_ref = token and token.acquirer_ref or False
             card_number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
-            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, token_ref or card_number or '', str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+            hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, not verify and token_ref or card_number or '', str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
             data = {
                 "application_key": acquirer.jetcheckout_api_key,
                 "mode": acquirer._get_paylox_env(),
@@ -1263,12 +1263,11 @@ class PayloxController(http.Controller):
                 "hash_data": hash,
                 "language": "tr",
             }
-            if token:
-                data.update({"card_token": token_ref})
-                if token.verified:
-                    data.update({"is_3d": False})
-                elif verify:
-                    data.update({"is_3d": True})
+            if token and token.verified:
+                data.update({
+                    "card_token": token_ref,
+                    "is_3d": False,
+                })
 
             elif card_number:
                 data.update({
