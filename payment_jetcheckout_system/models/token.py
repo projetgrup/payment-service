@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import uuid
 import json
+
 from .. import SYSTEMS
 from odoo import models, fields, api
 
@@ -13,11 +15,13 @@ class PaymentToken(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if self.env.company.system:
-            res['system'] = self.env.company.system
-            res['company_id'] = self.env.company.id
-            res['partner_id'] = self.env.company.partner_id.id
-            res['acquirer_id'] = self.acquirer_id._get_acquirer(company=self.env.company, providers=['jetcheckout'], limit=1).id
-            res['acquirer_ref'] = '-'
+            res.update({
+                'system': self.env.company.system,
+                'company_id': self.env.company.id,
+                'partner_id': self.env.company.partner_id.id,
+                'acquirer_id': self.acquirer_id._get_acquirer(company=self.env.company, providers=['jetcheckout'], limit=1).id,
+                'acquirer_ref': str(uuid.uuid4()),
+            })
         return res
 
     def action_verify(self):
