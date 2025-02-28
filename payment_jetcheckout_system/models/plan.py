@@ -286,7 +286,7 @@ class PaymentPlanWizard(models.TransientModel):
                 desc += ' ' + _('Residual amount is <strong class="text-600">%s</strong>.' % (desc_residual,))
             wizard.desc = desc
 
-    @api.depends('line_ids.token_ids')
+    @api.depends('line_ids.token_id')
     def _compute_token_ids(self):
         for wizard in self:
             wizard.token_ids = [(6, 0, wizard.line_ids.mapped('token_id').ids)]
