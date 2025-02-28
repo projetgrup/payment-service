@@ -21,10 +21,10 @@
 
     .payment-card {
         .payment-form-container {
-            grid-template-areas: "name name" "number number" "expiration security" "tokenVerify tokenVerify" !important;
+            grid-template-areas: "name name" "number number" "date code" "button button" !important;
 
             .payment-token-verify-button {
-                grid-area: tokenVerify;
+                grid-area: button;
                 background-color: var(--o-palette-base-1-o-color-1);
                 color: #ffffff;
                 font-weight: bold;
