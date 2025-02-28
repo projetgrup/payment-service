@@ -16,7 +16,7 @@
             <field name="amount" attrs="{'readonly': [('paid', '=', True)]}"/>
             <field name="amount_paid" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
             <field name="amount_cost" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
-            <field name="installment_id" attrs="{'readonly': [('paid', '=', True)]}" optional="show"/>
+            <field name="installment_id" widget="badge" optional="show"/>
             <field name="paid"/>
             <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
             <field name="paid_date" attrs="{'invisible': [('paid', '=', False)]}" optional="show"/>
