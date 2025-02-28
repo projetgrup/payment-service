@@ -101,6 +101,7 @@
                     </group>
                 </group>
                 <field name="item_ids" invisible="1"/>
+                <field name="token_ids" invisible="1"/>
             </sheet>
             <footer>
                 <button name="action_confirm" string="Confirm" type="object" class="btn btn-primary"/>
