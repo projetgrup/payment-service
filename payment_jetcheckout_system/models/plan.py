@@ -5,7 +5,7 @@ import requests
 from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 
 
 class PaymentPlan(models.Model):
@@ -249,25 +249,52 @@ class PaymentPlanWizard(models.TransientModel):
     _name = 'payment.plan.wizard'
     _description = 'Payment Plan Wizard'
 
-    @api.depends('item_ids', 'line_ids.amount_cost')
+    @api.depends('item_ids', 'line_ids.amount_cost', 'line_ids.token_limit_card')
     def _compute_desc(self):
         for wizard in self:
             currency = self.env.company.currency_id
-            amount_sum = sum(wizard.item_ids.mapped('amount')) 
-            amount_cost = sum(wizard.line_ids.mapped('amount_cost'))
-            amount_planned = sum(wizard.item_ids.mapped('planned_amount')) 
-            amount_total = amount_sum - amount_planned + amount_cost
+            amount_sum = sum(wizard.item_ids.mapped('amount'))
+            amount_planned = sum(wizard.item_ids.mapped('planned_amount'))
+            amount_lines = [[line.token_limit_card, line.amount_cost] for line in wizard.line_ids]
+
+            amount_residual = amount_sum - amount_planned
+            amount_cost = 0
+            amount_total = 0
+
+            for line in amount_lines:
+                if line[0] > amount_residual:
+                    residual_cost = amount_residual * line[1] / line[0] if line[0] else 0.0
+                    amount_total += amount_residual + residual_cost
+                    amount_cost += residual_cost
+                    amount_residual = 0
+                    break
+                else:
+                    amount_total += line[0] + line[1]
+                    amount_cost += line[1]
+                    amount_residual -= line[0]
+
+            amount_total = float_round(amount_total, precision_rounding=currency.rounding)
+            amount_cost = float_round(amount_cost, precision_rounding=currency.rounding)
             desc_amount = formatLang(self.env, amount_total, currency_obj=currency)
             desc_count = len(wizard.item_ids)
             desc = _('<strong class="text-primary">%s</strong> partner(s) selected. Total amount is <strong class="text-primary">%s</strong>.' % (desc_count, desc_amount))
             if amount_cost:
                 desc_cost = formatLang(self.env, amount_cost, currency_obj=currency)
-                desc += _('Total cost is <strong class="text-primary">%s</strong>.' % (desc_cost,))
+                desc += ' ' + _('Total cost is <strong class="text-primary">%s</strong>.' % (desc_cost,))
+            if amount_residual:
+                desc_residual = formatLang(self.env, amount_residual, currency_obj=currency)
+                desc += ' ' + _('Residual amount is <strong class="text-600">%s</strong>.' % (desc_residual,))
             wizard.desc = desc
+
+    @api.depends('line_ids.token_ids')
+    def _compute_token_ids(self):
+        for wizard in self:
+            wizard.token_ids = [(6, 0, wizard.line_ids.mapped('token_id').ids)]
 
     item_ids = fields.Many2many('payment.item', 'item_plan_wizard_rel', 'wizard_id', 'item_id', string='Items', readonly=True)
     desc = fields.Html(sanitize=False, compute='_compute_desc')
     line_ids = fields.One2many('payment.plan.wizard.line', 'wizard_id', string='Lines')
+    token_ids = fields.Many2many('payment.token', compute='_compute_token_ids')
 
     def action_confirm(self):
         values = []
@@ -350,9 +377,8 @@ class PaymentPlanWizardLine(models.TransientModel):
             line.installment_message = message and f'<i class="fa fa-info-circle text-danger" title="{ message }"/>'
             line.installment_ids = [(6, 0, installments_filtered)]
             line.installment_data = json.dumps(data)
-            line.installment_id = installments_filtered and installments_filtered[0] or self.env.ref('payment_jetcheckout.installment_1').id
 
-    @api.depends('installment_id')
+    @api.depends('installment_id', 'token_limit_card')
     def _compute_amount_cost(self):
         for line in self:
             data = json.loads(line.installment_data)
@@ -360,10 +386,10 @@ class PaymentPlanWizardLine(models.TransientModel):
             line.amount_cost = installment.get('customer_rate', 0) * line.token_limit_card / 100
 
     wizard_id = fields.Many2one('payment.plan.wizard')
-    token_id = fields.Many2one('payment.token', string='Credit Card', domain=[('verified', '=', True)], required=True)
+    token_id = fields.Many2one('payment.token', string='Credit Card', domain='[("id", "not in", parent.token_ids), ("verified", "=", True)]', required=True)
     token_limit_card = fields.Float(string='Card Limit')
     token_limit_tx = fields.Float(string='Transaction Limit')
-    installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', string='Installment', domain='[("id", "in", installment_ids)]', compute='_compute_installment', store=True, readonly=False)
+    installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', string='Installment', domain='[("id", "in", installment_ids)]', default=lambda self: self.env.ref('payment_jetcheckout.installment_1'))
     installment_message = fields.Html(string='Installment Message', sanitize=False, compute='_compute_installment')
     installment_ids = fields.Many2many('payment.acquirer.jetcheckout.installment', string='Installments', compute='_compute_installment')
     installment_data = fields.Text(string='Installment Data', compute='_compute_installment', store=True)
@@ -378,6 +404,7 @@ class PaymentPlanWizardLine(models.TransientModel):
 
     @api.onchange('token_id')
     def onchange_token_id(self):
+        self.installment_id = self.env.ref('payment_jetcheckout.installment_1').id
         self.token_limit_card = self.token_id.jetcheckout_limit_card if self.token_id else 0
         self.token_limit_tx = self.token_id.jetcheckout_limit_tx if self.token_id else 0
 
