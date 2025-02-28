@@ -357,7 +357,7 @@ class PaymentPlanWizardLine(models.TransientModel):
         for line in self:
             data = json.loads(line.installment_data)
             installment = data.get(str(line.installment_id.count), {})
-            line.amount_cost = installment.get('cost_rate', 0) * line.token_limit_tx / 100
+            line.amount_cost = installment.get('customer_rate', 0) * line.token_limit_card / 100
 
     wizard_id = fields.Many2one('payment.plan.wizard')
     token_id = fields.Many2one('payment.token', string='Credit Card', domain=[('verified', '=', True)], required=True)
@@ -366,7 +366,7 @@ class PaymentPlanWizardLine(models.TransientModel):
     installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', string='Installment', domain='[("id", "in", installment_ids)]', compute='_compute_installment', store=True, readonly=False)
     installment_message = fields.Html(string='Installment Message', sanitize=False, compute='_compute_installment')
     installment_ids = fields.Many2many('payment.acquirer.jetcheckout.installment', string='Installments', compute='_compute_installment')
-    installment_data = fields.Text(string='Installment Data', compute='_compute_installment')
+    installment_data = fields.Text(string='Installment Data', compute='_compute_installment', store=True)
     amount_cost = fields.Monetary(string='Cost Amount', compute='_compute_amount_cost', store=True)
     currency_id = fields.Many2one(related='token_id.company_id.currency_id')
 
