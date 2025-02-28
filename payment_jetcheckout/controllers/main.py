@@ -234,14 +234,14 @@ class PayloxController(http.Controller):
             return False
 
     @staticmethod
-    def _get_token(acquirer, partner, token):
+    def _get_token(acquirer, partner, token, verified=True):
         if isinstance(token, int):
             return False
         return request.env['payment.token'].sudo().search([
             ('acquirer_id', '=', acquirer.id),
             ('partner_id', '=', partner.id),
             ('acquirer_ref', '=', token),
-            ('verified', '=', True),
+            ('verified', '=', verified),
         ], limit=1)
 
     @staticmethod
@@ -1248,7 +1248,7 @@ class PayloxController(http.Controller):
             amount_integer = round(amount_total * 100)
 
             year = str(fields.Date.today().year)[:2]
-            token = 'token' in kwargs['card'] and self._get_token(acquirer, partner, kwargs['card']['token']) or False
+            token = 'token' in kwargs['card'] and self._get_token(acquirer, partner, kwargs['card']['token'], not kwargs.get('verify', False)) or False
             token_ref = token and token.acquirer_ref or False
             card_number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
             hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, token_ref or card_number or '', str(amount_integer), acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')

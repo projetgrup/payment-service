@@ -738,24 +738,24 @@
                 <div class="col-md-6 row justify-content-center mx-0">
                     <div class="payment-table mt-2 p-3">
                         <div id="paymentFormContainer" class="payment-form-container payment-gradient">
-                            <div class="field-container">
+                            <div class="field-container field-name">
                                 <input id="cardholder" type="text" required="required" field="card.holder"/>
                                 <span class="bar-container"/>
                                 <label for="cardholder"><span>Name</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-number">
                                 <input id="cardnumber" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
                                 <span class="bar-container"/>
-                                <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row'}" field="card.logo"/>
-                                <svg t-attf-class="#{'d-none' if no_card_family else 'ccicon fade'}" width="750" height="471" viewBox="0 0 750 471" field="card.icon"/>
+                                <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
+                                <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
                                 <label for="cardnumber"><span>Card Number</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-date">
                                 <input id="carddate" inputmode="numeric" pattern="[0-9\/]*" placeholder="MM/YY" type="text" required="required" field="card.date"/>
                                 <span class="bar-container"/>
                                 <label for="carddate"><span>Expiration</span></label>
                             </div>
-                            <div class="field-container">
+                            <div class="field-container field-code">
                                 <input id="cardcode" inputmode="numeric" pattern="[0-9]*" type="text" required="required" field="card.code"/>
                                 <span class="bar-container"/>
                                 <label for="cardcode"><span t-if="s2s">CVC</span><span t-else="">Security Code</span></label>
