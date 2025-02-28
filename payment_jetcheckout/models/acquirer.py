@@ -289,7 +289,7 @@ class PaymentAcquirer(models.Model):
             return token
 
         return self.env['payment.token'].sudo().create({
-            'acquirer_ref': '-',
+            'acquirer_ref': str(uuid.uuid4()),
             'acquirer_id': int(kwargs['acquirer_id']),
             'jetcheckout_card_holder': kwargs.get('cc_holder_name'),
             'jetcheckout_card_number': kwargs.get('cc_number').replace(' ', ''),
