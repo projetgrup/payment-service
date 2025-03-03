@@ -486,7 +486,7 @@ class Partner(models.Model):
         if tags:
             keys = list(tags.keys())
             payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys)
-            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0].id]).sorted(lambda x: x.date or date_empty).sorted(lambda x: x.amount)
+            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0].id]).sorted(lambda x: (x.date or date_empty, x.amount))
         else:
             payments = payments.sorted(lambda x: x.date or date_empty)
         return payments, payments_tag
