@@ -283,9 +283,8 @@ class PaymentItem(models.Model):
 
         company = self.env.company
         if company.payment_page_due_ok:
-            tag = self.env.context.get('tag')
-            if tag and company.payment_page_due_tag_ok:
-                tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == tag)
+            if company.payment_page_due_tag_ok:
+                tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == self.env.context.get('tag'))
                 if not tag:
                     tag = company.payment_page_due_tag_ids.filtered(lambda t: not t.line_ids)
                 if tag:
@@ -324,7 +323,7 @@ class PaymentItem(models.Model):
 
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
-            dues = tag.due_ids if tag is not None else company.payment_page_due_ids
+            dues = tag.due_ids if company.payment_page_due_tag_ok else company.payment_page_due_ids
             days, campaign, line, advance, hide_payment = dues.get_campaign(partner, days * sign)
 
             if hide_payment:
