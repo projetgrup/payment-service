@@ -284,10 +284,14 @@ class PaymentItem(models.Model):
         company = self.env.company
         if company.payment_page_due_ok:
             if company.payment_page_due_tag_ok:
-                tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == self.env.context.get('tag'))
+                tag = self.env.context.get('tag')
+                if tag:
+                    tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == tag)
                 if not tag:
                     tag = company.payment_page_due_tag_ids.filtered(lambda t: not t.line_ids)
-                if tag:
+                if not tag:
+                    tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == 0)
+                if len(tag) > 1:
                     tag = tag[0]
 
             amount = 0
