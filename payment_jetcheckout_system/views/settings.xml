@@ -231,6 +231,14 @@
                                             <label for="payment_page_item_add_desc_maxlength" string="Description Maximum Length" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_item_add_desc_maxlength" class="flex-fill" placeholder="0"/>
                                         </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_numericonly" string="Description Numeric Only" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_numericonly" class="flex-fill" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_unique" string="Description Unique" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_unique" class="flex-fill" widget="boolean_toggle"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
