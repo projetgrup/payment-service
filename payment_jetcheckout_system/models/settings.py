@@ -91,6 +91,8 @@ class PaymentSettings(models.TransientModel):
     payment_page_item_expire_value = fields.Integer(related='company_id.payment_page_item_expire_value', readonly=False)
     payment_page_item_expire_period = fields.Selection(related='company_id.payment_page_item_expire_period', readonly=False)
     payment_page_item_add_date_readonly = fields.Boolean(related='company_id.payment_page_item_add_date_readonly', readonly=False)
+    payment_page_item_add_desc_numericonly = fields.Boolean(related='company_id.payment_page_item_add_desc_numericonly', readonly=False)
+    payment_page_item_add_desc_unique = fields.Boolean(related='company_id.payment_page_item_add_desc_unique', readonly=False)
     payment_page_item_add_desc_prefix = fields.Char(related='company_id.payment_page_item_add_desc_prefix', readonly=False)
     payment_page_item_add_desc_maxlength = fields.Integer(related='company_id.payment_page_item_add_desc_maxlength', readonly=False)
     payment_page_token_wo_commission = fields.Boolean(related='company_id.payment_page_token_wo_commission', readonly=False)

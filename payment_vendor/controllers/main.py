@@ -58,7 +58,7 @@ class PayloxSystemVendorController(Controller):
 
         campaign = res['campaign']
         payments, payment_tags = partner._get_payments()
-        currency = payments.mapped('currency_id')
+        currency = payments.mapped('currency_id') or company.currency_id
         if len(currency) > 1:
             raise UserError(_('Payment items must share one common currency'))
         if payment_tags and payment_tags[0].campaign_id:

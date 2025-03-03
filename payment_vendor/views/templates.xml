@@ -29,7 +29,7 @@
                     <t t-set="classes" t-value="'mx-0'"/>
                 </t>
                 <div class="row mx-0 my-4 card border shadow p-4">
-                    <div t-if="len(payments) > 0" class="row mx-0 my-2 w-100">
+                    <div t-if="payments or company.payment_page_item_add_ok" class="row mx-0 my-2 w-100">
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
@@ -101,7 +101,7 @@
                             <label class="text-primary"><span>Sale Reference</span></label>
                         </div>
                     </div>
-                    <t t-if="payments">
+                    <t t-if="payments or company.payment_page_item_add_ok">
                         <div class="row bg-white mx-0 px-3 w-100 payment-item">
                             <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
                                 <t t-foreach="payments" t-as="payment">
