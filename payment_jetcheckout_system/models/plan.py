@@ -33,9 +33,9 @@ class PaymentPlan(models.Model):
         for plan in self:
             transactions = plan.transaction_ids.filtered(lambda tx: tx.state == 'done' and not tx.source_transaction_id)
             for transaction in transactions:
-                sources = self.sudo().search([('source_transaction_id', '=', transaction.id)])
+                sources = self.env['payment.transaction'].sudo().search([('source_transaction_id', '=', transaction.id)])
                 refund_amount = -sum(sources.mapped('amount'))
-                if float_compare(refund_amount, transaction.amount, precision_rounding=transaction.currency_id.rounding):
+                if not float_compare(refund_amount, transaction.amount, precision_rounding=transaction.currency_id.rounding):
                     continue
                 plan.paid = True
                 plan.paid_date = transaction.last_state_change
@@ -103,8 +103,6 @@ class PaymentPlan(models.Model):
                 'type': self.token_id.jetcheckout_type or '',
                 'program': self.token_id.jetcheckout_program or '',
                 'family': self.token_id.jetcheckout_family or '',
-                'code': self.token_id.jetcheckout_security or '',
-                'date': self.token_id.jetcheckout_expiry or '',
                 'holder': self.token_id.jetcheckout_holder or '',
                 'token': self.token_id.id or 0,
             },
@@ -317,7 +315,7 @@ class PaymentPlanWizard(models.TransientModel):
                         'token_id': line[0],
                         'installment_id': line[1],
                     })
-                    line[1] -= line_amount
+                    line[2] -= line_amount
                     amount -= line_amount
                 if not amount > 0:
                     break
