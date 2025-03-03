@@ -441,14 +441,14 @@ class PayloxSystemController(Controller):
         if not partner:
             raise UserError(_('Partner not found.'))
 
-        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tags = company.sudo().payment_page_due_tag_ids
         payment_tag = payment_tags.filtered(lambda x: x.id == tag)
-        payment_tag_filter = []
+        payment_tag_filter = ['|', ('due_tag_id', '=', tag)]
 
-        if payment_tag and payment_tag.campaign_id:
+        if len(payment_tag) == 1 and payment_tag.line_ids:
             payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
         else:
-            payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
+            payment_tag_filter.extend([('due_tag_id', '=', False), ('tag', 'not in', payment_tags.mapped('line_ids.name'))])
 
         payments = []
         items = request.env['payment.item'].sudo().search([
@@ -482,9 +482,9 @@ class PayloxSystemController(Controller):
             })
 
         company = {
-            'campaign': payment_tag and payment_tag.campaign_id.name,
+            'campaign': False,
             'due_base': company.payment_page_due_base,
-            'due_ok': company.payment_page_due_ok and not (payment_tag and payment_tag.campaign_id),
+            'due_ok': company.payment_page_due_ok,
             'advance_ok': company.payment_page_advance_ok,
         }
         return payments, company
@@ -506,22 +506,22 @@ class PayloxSystemController(Controller):
             raise UserError(_('Partner not found.'))
 
         payment_tagv = kwargs.get('tag', False)
-        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tags = company.sudo().payment_page_due_tag_ids
         payment_tag = payment_tags.filtered(lambda x: x.id == payment_tagv)
-        payment_tag_filter = []
+        payment_tag_filter = ['|', ('due_tag_id', '=', payment_tagv)]
 
-        if len(payment_tag) == 1 and payment_tag.campaign_id:
+        if len(payment_tag) == 1 and payment_tag.line_ids:
             payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
         else:
-            payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
+            payment_tag_filter.extend([('due_tag_id', '=', False), ('tag', 'not in', payment_tags.mapped('line_ids.name'))])
 
         payment_date = kwargs.get('date', False)
         if payment_date:
             payment_date = datetime.strptime(payment_date, '%d-%m-%Y')
 
         request.env['payment.item'].sudo().create({
+            'due_tag_id': payment_tagv,
             'parent_id': partner.id,
-            'tag': payment_tagv,
             'date': payment_date,
             'manual': True,
             'amount': kwargs.get('amount', False),
@@ -561,10 +561,10 @@ class PayloxSystemController(Controller):
 
         company = request.env.company
         company = {
-            'campaign': payment_tag and payment_tag.campaign_id.name or False,
+            'campaign': False,
             'advance_ok': company.payment_page_advance_ok,
             'due_base': company.payment_page_due_base,
-            'due_ok': payment_tag and not payment_tag.campaign_id and company.payment_page_due_ok or False,
+            'due_ok': company.payment_page_due_ok,
         }
         return payments, company
 
@@ -584,23 +584,18 @@ class PayloxSystemController(Controller):
         if not partner:
             raise UserError(_('Partner not found.'))
 
-        payment_tagv = kwargs.get('tag', False)
-        payment_tags = company.sudo().payment_page_campaign_tag_ids
-        payment_tag = payment_tags.filtered(lambda x: x.id == payment_tagv)
-        payment_tag_filter = []
-
         request.env['payment.item'].sudo().search([
             ('id', '=', kwargs.get('pid', 0)),
             ('parent_id', '=', partner.id),
             ('paid_amount', '=', 0),
             ('manual', '=', True),
-        ] + payment_tag_filter).unlink()
+        ]).unlink()
 
         payments = []
         items = request.env['payment.item'].sudo().search([
             ('parent_id', '=', partner.id),
             ('paid', '=', False),
-        ] + payment_tag_filter, order='date,amount')
+        ], order='date,amount')
 
         for item in items:
             if item.currency_id:
@@ -630,7 +625,7 @@ class PayloxSystemController(Controller):
 
         company = request.env.company
         company = {
-            'campaign': payment_tag and payment_tag.campaign_id.name or False,
+            'campaign': False,
             'due_base': company.payment_page_due_base,
             'due_ok': company.payment_page_due_ok,
             'advance_ok': company.payment_page_advance_ok,
@@ -656,14 +651,14 @@ class PayloxSystemController(Controller):
         if not partner:
             raise UserError(_('Partner not found.'))
 
-        payment_tags = company.sudo().payment_page_campaign_tag_ids
+        payment_tags = company.sudo().payment_page_due_tag_ids
         payment_tag = payment_tags.filtered(lambda x: x.id == tag)
-        payment_tag_filter = []
+        payment_tag_filter = ['|', ('due_tag_id', '=', tag)]
 
-        if len(payment_tag) == 1 and payment_tag.campaign_id:
+        if len(payment_tag) == 1 and payment_tag.line_ids:
             payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
         else:
-            payment_tag_filter.append(('tag', 'not in', payment_tags.mapped('line_ids.name')))
+            payment_tag_filter.extend([('due_tag_id', '=', False), ('tag', 'not in', payment_tags.mapped('line_ids.name'))])
 
         item = request.env['payment.item'].sudo().search([
             ('parent_id', '=', partner.id),
@@ -678,8 +673,8 @@ class PayloxSystemController(Controller):
         else:
             request.env['payment.item'].sudo().create({
                 'parent_id': partner.id,
+                'due_tag_id': tag,
                 'amount': amount,
-                'tag': tag,
                 'advance': True,
                 'description': _('Advance Payment'),
             })
@@ -740,17 +735,22 @@ class PayloxSystemController(Controller):
         if not partner:
             raise UserError(_('Partner not found.'))
 
-        payment_tags = company.sudo().payment_page_campaign_tag_ids
-        payment_tag = payment_tags.filtered(lambda x: x.id == tag)
-        payment_tag_filter = []
-
         request.env['payment.item'].sudo().search([
             ('id', '=', pid),
             ('parent_id', '=', partner.id),
             ('paid_amount', '=', 0)
-        ] + payment_tag_filter).unlink()
+        ]).unlink()
 
         payments = []
+        payment_tags = company.sudo().payment_page_due_tag_ids
+        payment_tag = payment_tags.filtered(lambda x: x.id == tag)
+        payment_tag_filter = ['|', ('due_tag_id', '=', tag)]
+
+        if len(payment_tag) == 1 and payment_tag.line_ids:
+            payment_tag_filter.append(('tag', 'in', payment_tag.line_ids.mapped('name')))
+        else:
+            payment_tag_filter.extend([('due_tag_id', '=', False), ('tag', 'not in', payment_tags.mapped('line_ids.name'))])
+
         items = request.env['payment.item'].sudo().search([
             ('parent_id', '=', partner.id),
             ('paid', '=', False),
@@ -784,10 +784,10 @@ class PayloxSystemController(Controller):
 
         company = request.env.company
         company = {
-            'campaign': payment_tag and payment_tag.campaign_id.name or False,
+            'campaign': False,
+            'advance_ok': company.payment_page_advance_ok,
             'due_base': company.payment_page_due_base,
             'due_ok': company.payment_page_due_ok,
-            'advance_ok': company.payment_page_advance_ok,
         }
         return payments, company
 

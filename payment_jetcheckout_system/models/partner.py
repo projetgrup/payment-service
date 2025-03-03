@@ -455,13 +455,13 @@ class Partner(models.Model):
 
         payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
             ('company_id', '=', company.id),
-            ('campaign_id', '=', False)
+            ('line_ids', '=', False)
         ], limit=1)
         payments = self.payable_ids
         if company.payment_page_item_expire_ok:
             payments = payments.filtered(lambda p: not p.date_expired)
         for payment in payments:
-            if not payment.tag:
+            if not payment.tag and not payment.due_tag_id:
                 if payment_tag:
                     if payment_tag.id not in tags:
                         tags[payment_tag.id] = []
@@ -469,7 +469,7 @@ class Partner(models.Model):
             else:
                 tag = self.env['payment.settings.campaign.tag.line'].sudo().search([
                     ('campaign_id.company_id', '=', company.id),
-                    ('name', '=', payment.tag)
+                    '|', ('name', '=', payment.tag), ('campaign_id', '=', payment.due_tag_id.id)
                 ])
                 if tag:
                     for t in tag:
@@ -485,8 +485,8 @@ class Partner(models.Model):
         payments_tag = []
         if tags:
             keys = list(tags.keys())
-            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys).sorted(lambda x: x.campaign_id)
-            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0].id]).sorted(lambda x: x.date or date_empty)
+            payments_tag = self.env['payment.settings.campaign.tag'].sudo().browse(keys)
+            payments = self.env['payment.item'].sudo().browse(tags[payments_tag[0].id]).sorted(lambda x: x.date or date_empty).sorted(lambda x: x.amount)
         else:
             payments = payments.sorted(lambda x: x.date or date_empty)
         return payments, payments_tag

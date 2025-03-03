@@ -40,7 +40,7 @@ class Company(models.Model):
 
     payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')
-    payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues')
+    payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues', domain='[("tag_id", "=", False)]', context={'no_tag': True})
     payment_page_due_base = fields.Selection([
         ('date_due', 'Due Date'),
         ('date_document', 'Document Date'),
@@ -58,8 +58,9 @@ class Company(models.Model):
     payment_page_due_reminder_partner_ok = fields.Boolean(string='Payment Page Due Reminder Partners Included')
     payment_page_due_reminder_tag_ids = fields.Many2many('res.partner.category', string='Payment Page Due Reminder Partner Tags')
     payment_page_due_reminder_tag_ok = fields.Boolean(string='Payment Page Due Reminder Partner Tags Included')
+    payment_page_due_tag_ok = fields.Boolean('Payment Page Use Due Tags')
+    payment_page_due_tag_ids = fields.One2many('payment.settings.campaign.tag', 'company_id', 'Payment Page Due Tags')
 
-    payment_page_campaign_tag_ids = fields.One2many('payment.settings.campaign.tag', 'company_id', 'Payment Page Campaign Tags')
     payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')
     payment_page_saleref_ok = fields.Boolean(string='Payment Page Can Use Sale Reference')
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')

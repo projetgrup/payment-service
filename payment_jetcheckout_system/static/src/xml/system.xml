@@ -123,7 +123,7 @@
                         <tr>
                             <td class="px-2"><span t-esc="format.date(payment.date)"/></td>
                             <td t-if="company.due_base === 'date_due'" class="px-2"><span t-esc="format.date(payment.due_date)"/></td>
-                            <td class="px-2"><span t-esc="payment.description"/></td>
+                            <td class="px-2"><span t-if="payment.description" t-esc="payment.description"/></td>
                             <td class="text-right px-2"><span t-esc="format.currency(payment.amount, curr.position, curr.symbol, curr.decimal)" class="item-amount-payment"/></td>
                             <td class="text-right px-2"><span t-esc="format.currency(payment.paid_amount, curr.position, curr.symbol, curr.decimal)" class="item-amount-paid"/></td>
                             <td class="text-right px-2"><span t-esc="format.currency(payment.residual_amount, curr.position, curr.symbol, curr.decimal)" class="item-amount-payable"/></td>
