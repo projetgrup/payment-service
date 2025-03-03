@@ -3263,9 +3263,9 @@ msgid "Payment Page Advance"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_campaign_tag_ids
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_campaign_tag_ids
-msgid "Payment Page Campaign Tags"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_due_tag_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_due_tag_ids
+msgid "Payment Page Due Tags"
 msgstr ""
 
 #. module: payment_jetcheckout_system

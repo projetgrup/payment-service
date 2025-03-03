@@ -410,7 +410,6 @@ class PaymentAcquirer(models.Model):
             amount_cost = float_round(amount_total * installment['corate'] / 100, 2)
             amount_integer = round(amount_total * 100)
 
-            year = str(fields.Date.today().year)[:2]
             number = 'number' in kwargs['card'] and str(kwargs['card']['number']) or False
             token = 'token' in kwargs['card'] and kwargs['token'] or False
             hash = base64.b64encode(hashlib.sha256(''.join([self.jetcheckout_api_key, number or token.acquirer_ref, str(amount_integer), self.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
@@ -421,8 +420,6 @@ class PaymentAcquirer(models.Model):
                 "amount": amount_integer,
                 "currency": currency.name,
                 "installment_count": installment['count'],
-                "expire_month": kwargs['card']['date'][:2],
-                "expire_year": year + kwargs['card']['date'][-2:],
                 "is_3d": kwargs.get('threed', True),
                 "hash_data": hash,
                 "language": "tr",
@@ -550,7 +547,6 @@ class PaymentAcquirer(models.Model):
             data.update({
                 "order_id": tx.jetcheckout_order_id,
                 "card_holder_name": kwargs['card']['holder'],
-                "cvc": kwargs['card']['code'],
                 "success_url": "%s%s" % (kwargs['website']['domain'], success_url),
                 "fail_url": "%s%s" % (kwargs['website']['domain'], fail_url),
                 "customer":  {

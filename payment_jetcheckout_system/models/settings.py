@@ -8,14 +8,14 @@ class PaymentSettings(models.TransientModel):
     _name = 'payment.settings'
     _description = 'Payment Settings'
 
-    @api.constrains('payment_page_campaign_tag_ids')
-    def _check_payment_page_campaign_tag_ids(self):
+    @api.constrains('payment_page_due_tag_ids')
+    def _check_payment_page_due_tag_ids(self):
         for setting in self:
-            tags = setting.payment_page_campaign_tag_ids
+            tags = setting.payment_page_due_tag_ids
             if tags:
-                tags = tags.filtered(lambda x: not x.campaign_id)
+                tags = tags.filtered(lambda x: not x.line_ids)
                 if not len(tags) == 1:
-                    raise UserError(_('There must only one campaign tag without campaign selection'))
+                    raise UserError(_('There must be only one due tag without item tags'))
 
     @api.depends('company_id')
     def _compute_payment_page_campaign_table_opt(self):
@@ -96,7 +96,8 @@ class PaymentSettings(models.TransientModel):
     payment_page_token_wo_commission = fields.Boolean(related='company_id.payment_page_token_wo_commission', readonly=False)
     payment_page_token_view_type = fields.Selection(related='company_id.payment_page_token_view_type', readonly=False)
 
-    payment_page_campaign_tag_ids = fields.One2many(related='company_id.payment_page_campaign_tag_ids', readonly=False)
+    payment_page_due_tag_ok = fields.Boolean(related='company_id.payment_page_due_tag_ok', readonly=False)
+    payment_page_due_tag_ids = fields.One2many(related='company_id.payment_page_due_tag_ids', readonly=False)
     payment_page_campaign_table_ok = fields.Boolean(related='company_id.payment_page_campaign_table_ok', readonly=False)
     payment_page_campaign_table_transpose = fields.Boolean(related='company_id.payment_page_campaign_table_transpose', readonly=False)
     payment_page_campaign_table_ids = fields.Many2many(related='company_id.payment_page_campaign_table_ids', readonly=False)
@@ -209,7 +210,7 @@ class PaymentSettingsDue(models.Model):
             else:
                 line.unit = _('Day')
 
-    @api.onchange('due')
+    @api.onchange('company_id')
     def _compute_campaign_ids(self):
         for line in self:
             acquirers = self._get_acquirers()
@@ -228,9 +229,16 @@ class PaymentSettingsDue(models.Model):
     round = fields.Boolean('Round')
     mail_template_id = fields.Many2one('mail.template', string='Email Template')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    tag_id = fields.Many2one('payment.settings.campaign.tag', string='Tag')
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
     campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
-    partner_tag_ids = fields.Many2many('res.partner.category', 'payment_settings_due_partner_tag_rel', 'due_id', 'tag_id', string='Tags')
+    partner_tag_ids = fields.Many2many('res.partner.category', 'payment_settings_due_partner_tag_rel', 'due_id', 'tag_id', string='Partner Tags')
+
+    @api.model
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
+        if self.env.context.get('no_tag'):
+            domain.append(('tag_id', '=', False))
+        return super().search(domain, offset, limit=limit, order=order, count=count)
 
     def get_campaign(self, partner, day):
         advance = None
@@ -244,28 +252,22 @@ class PaymentSettingsDue(models.Model):
             advance = due
 
         days = float_round(day, precision_digits=0)
-        return int(days), '', advance, advance, self.env.company.payment_page_due_hide_payment_ok
+        hide_payment = self.company_id.payment_page_due_hide_payment_ok
+        return int(days), '', advance, advance, hide_payment
 
 
 class PaymentSettingsDueTag(models.Model):
-    _name = 'payment.settings.due.tag'
-    _description = 'Payment Settings Due Tags'
-
-    due_id = fields.Many2one('payment.settings.due')
-    name = fields.Char(required=True)
-
-
-class PaymentSettingsCampaignTag(models.Model):
     _name = 'payment.settings.campaign.tag'
-    _description = 'Payment Settings Campaign Tags'
+    _description = 'Payment Settings Due Tags'
     _order = 'sequence, id'
 
     @api.model
-    def _get_acquirers(self, partner=None, limit=None):
-        company = partner and partner.company_id or self.env.company
+    def _get_acquirers(self, company=None, limit=None):
+        if not company:
+            company = self.env.company
         return self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=limit, raise_exception=False)
 
-    @api.onchange('name')
+    @api.onchange('company_id')
     def _compute_campaign_ids(self):
         for line in self:
             acquirers = self._get_acquirers()
@@ -280,43 +282,18 @@ class PaymentSettingsCampaignTag(models.Model):
 
     sequence = fields.Integer(string='Sequence', default=10)
     name = fields.Char(string='Tag', required=True)
-    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='cascade', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
-    campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', ondelete='set null', domain='[("id", "in", campaign_ids)]', default=_default_campaign_id)
+    campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', 'Campaigns', compute='_compute_campaign_ids')
     line_ids = fields.One2many('payment.settings.campaign.tag.line', 'campaign_id', 'Tags')
-
-    def action_show_lines(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'res_id': self.id,
-            'name': self.name,
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'dialog_size': 'small'}
-        }
-
-        '''return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'payment.settings.campaign.tag.line',
-            'name': self.name,
-            'view_mode': 'tree',
-            'target': 'new',
-            'domain': [('campaign_id', '=', self.id)],
-            'context': {
-                'default_campaign_id': self.id,
-                'dialog_size': 'small',
-                'no_breadcrumbs': True
-            }
-        }'''
-
-    def confirm(self):
-        return
+    due_ok = fields.Boolean('Use Dues')
+    due_ids = fields.One2many('payment.settings.due', 'tag_id', 'Dues')
+    payment_page_due_reminder_ok = fields.Boolean(related='company_id.payment_page_due_reminder_ok')
 
 
-class PaymentSettingsCampaignTagLine(models.Model):
+class PaymentSettingsDueTagLine(models.Model):
     _name = 'payment.settings.campaign.tag.line'
-    _description = 'Payment Settings Campaign Tag Lines'
+    _description = 'Payment Settings Due Tag Lines'
 
     campaign_id = fields.Many2one('payment.settings.campaign.tag')
     name = fields.Char(required=True)

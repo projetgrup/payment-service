@@ -127,6 +127,7 @@ class PaymentItem(models.Model):
     date_expired = fields.Boolean(string='Expiration Date Passed', compute='_compute_date_expired')
     due_date = fields.Date()
     due_amount = fields.Float(compute='_compute_due_amount')
+    due_tag_id = fields.Many2one('payment.settings.campaign.tag', string='Due Tag')
 
     ref = fields.Char('Reference', readonly=True)
     tag = fields.Char(readonly=True)
@@ -283,13 +284,12 @@ class PaymentItem(models.Model):
         company = self.env.company
         if company.payment_page_due_ok:
             tag = self.env.context.get('tag')
-            if tag:
-                tag = company.payment_page_campaign_tag_ids.filtered(lambda t: t.id == tag)
-                if tag.campaign_id:
-                    values.update({
-                        'campaign': tag.campaign_id.name,
-                    })
-                    return values
+            if tag and company.payment_page_due_tag_ok:
+                tag = company.payment_page_due_tag_ids.filtered(lambda t: t.id == tag)
+                if not tag:
+                    tag = company.payment_page_due_tag_ids.filtered(lambda t: not t.line_ids)
+                if tag:
+                    tag = tag[0]
 
             amount = 0
             advance_amount = 0
@@ -324,7 +324,8 @@ class PaymentItem(models.Model):
 
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
-            days, campaign, line, advance, hide_payment = company.payment_page_due_ids.get_campaign(partner, days * sign)
+            dues = tag.due_ids if tag is not None else company.payment_page_due_ids
+            days, campaign, line, advance, hide_payment = dues.get_campaign(partner, days * sign)
 
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message
