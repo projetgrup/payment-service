@@ -82,7 +82,6 @@ class PartnerBank(models.Model):
             message = response.reason
         return {'state': state, 'message': message}
 
-
     @api.model
     def create(self, values):
         if 'api_merchant' in values:
@@ -455,7 +454,7 @@ class Partner(models.Model):
 
         payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
             ('company_id', '=', company.id),
-            ('line_ids', '=', False)
+            ('line_ids', '=', [])
         ], limit=1)
         payments = self.payable_ids
         if company.payment_page_item_expire_ok:

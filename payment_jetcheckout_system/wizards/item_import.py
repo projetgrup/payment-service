@@ -24,6 +24,11 @@ class PaymentItemImport(models.TransientModel):
         return value
 
     def _get_row(self, value):
+        description = value.get('Description', False)
+        if isinstance(description, float):
+            description = str(description)
+            if description.endswith('.0'):
+                description = description[:-2]
         return {
             'partner_name': value['Partner Name'],
             'partner_vat': value['Partner VAT'],
@@ -38,7 +43,7 @@ class PaymentItemImport(models.TransientModel):
             'bank_iban': value.get('Bank IBAN', False),
             'bank_holder': value.get('Bank Holder Name', False),
             'bank_merchant': value.get('Bank Merchant Name', False),
-            'description': value.get('Description', False),
+            'description': description,
             'user_name': value.get('Sales Representative Name', False),
             'user_email': value.get('Sales Representative Email', False),
             'user_mobile': value.get('Sales Representative Mobile', False),

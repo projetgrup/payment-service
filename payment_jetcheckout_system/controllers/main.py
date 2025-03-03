@@ -1517,42 +1517,57 @@ class PayloxSystemController(Controller):
         ]
         result.append(';'.join(headers))
 
-        items = request.env['payment.transaction.item'].sudo().search([
-            ('transaction_id', 'in', list(map(int, data[''].split(',')))),
-            ('transaction_id.jetcheckout_payment_type', '=', 'virtual_pos'),
-            ('transaction_id.company_id', '=', request.env.user.company_ids.ids),
-            ('transaction_id.state', '=', 'done'),
+        txs = request.env['payment.transaction'].sudo().search([
+            ('id', 'in', list(map(int, data[''].split(',')))),
+            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('company_id', '=', request.env.user.company_ids.ids),
+            ('state', '=', 'done'),
         ])
-        for item in items:
-            tx = item.transaction_id
-            rate = item.amount / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
-            values = [
-                '000000000480150',
-                'VP692034',
-                tx.create_date.strftime('%d/%m/%Y'),
-                tx.create_date.strftime('%d/%m/%Y'),
-                tx.create_date.strftime('%d/%m/%Y'),
-                '3120',
-                '869286',
-                'TL',
-                'Peşin Satış - E-Ticaret',
-                '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
-                'KREDİ KART',
-                'YURT İCİ',
-                tx.jetcheckout_installment_count,
-                tx.jetcheckout_installment_count,
-                'A',
-                '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
-                '%0.2f' % (item.amount,),
-                '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
-                '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
-                '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
-                '%0.2f' % (0,),
-                '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                item.desc or '',
-                ''
-            ]
-            result.append(';'.join(map(str, values)))
+        for tx in txs:
+            last = -1
+            items = []
+            for i, item in enumerate(tx.paylox_transaction_item_ids):
+                if item.amount > 0:
+                    last = i
+                items.append({'amount': item.amount, 'desc': item.desc})
+            if last < 0:
+                continue
+            for item in items[:]:
+                if item['amount'] < 0:
+                    items[last]['amount'] += item['amount']
+                    del items[i]
+            if items[last]['amount'] < 0:
+                continue
+
+            for item in items:
+                rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
+                values = [
+                    '000000000480150',
+                    'VP692034',
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    '3120',
+                    '869286',
+                    'TL',
+                    'Peşin Satış - E-Ticaret',
+                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
+                    'KREDİ KART',
+                    'YURT İCİ',
+                    tx.jetcheckout_installment_count,
+                    tx.jetcheckout_installment_count,
+                    'A',
+                    '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
+                    '%0.2f' % (item['amount'],),
+                    '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
+                    '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
+                    '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
+                    '%0.2f' % (0,),
+                    '%0.2f' % (tx.jetcheckout_payment_net * rate,),
+                    item['desc'] or '',
+                    ''
+                ]
+                result.append(';'.join(map(str, values)))
 
         result = '\r\n'.join(result) + '\r\n'
         date = fields.Date.today().strftime('%Y%m%d')
