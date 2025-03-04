@@ -77,6 +77,7 @@
                                     <button class="btn btn-sm btn-light text-primary" field="payment.itemAdd">Add new payment item</button>
                                     <input type="hidden" t-if="company.payment_page_item_add_date_readonly" t-att-value="company.payment_page_item_add_date_readonly" field="payment.itemAddDateReadonly"/>
                                     <input type="hidden" t-if="company.payment_page_item_add_desc_numericonly" t-att-value="company.payment_page_item_add_desc_numericonly" field="payment.itemAddDescNumericonly"/>
+                                    <input type="hidden" t-if="company.payment_page_item_add_desc_required" t-att-value="company.payment_page_item_add_desc_required" field="payment.itemAddDescRequired"/>
                                     <input type="hidden" t-att-value="company.payment_page_item_add_desc_maxlength" field="payment.itemAddDescMaxlength"/>
                                     <input type="hidden" t-att-value="company.payment_page_item_add_desc_prefix" field="payment.itemAddDescPrefix"/>
                                 </div>

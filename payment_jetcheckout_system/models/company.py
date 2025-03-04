@@ -70,6 +70,7 @@ class Company(models.Model):
     payment_page_item_expire_period = fields.Selection([('hours', 'Hour'), ('days', 'Day'), ('weeks', 'Week'), ('months', 'Month'), ('years', 'Year')], string='Payment Page Items Expiration Period')
     payment_page_item_add_date_readonly = fields.Boolean(string='Payment Page Add Payment Item Date Readonly')
     payment_page_item_add_desc_numericonly = fields.Boolean(string='Payment Page Add Payment Item Description Numeric Only')
+    payment_page_item_add_desc_required = fields.Boolean(string='Payment Page Add Payment Item Description Required')
     payment_page_item_add_desc_unique = fields.Boolean(string='Payment Page Add Payment Item Description Unique')
     payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
     payment_page_item_add_desc_maxlength = fields.Integer(string='Payment Page Add Payment Item Description Maximum Length')

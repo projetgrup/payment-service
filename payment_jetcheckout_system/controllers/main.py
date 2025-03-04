@@ -528,6 +528,10 @@ class PayloxSystemController(Controller):
             if company.payment_page_item_add_desc_unique:
                 if request.env['payment.item'].sudo().search_count([('company_id', '=', company.id), ('description', '=', payment_desc)]):
                     raise ValidationError(_('A payment item with the same description already exists.'))
+        else:
+            if company.payment_page_item_add_desc_required:
+                raise ValidationError(_('Payment item description cannot be empty.'))
+
 
         request.env['payment.item'].sudo().create({
             'due_tag_id': payment_tagv,
@@ -1549,36 +1553,37 @@ class PayloxSystemController(Controller):
             if items[last]['amount'] < 0:
                 continue
             items = [item for item in items if item['amount'] >= 0]
-
+            installment_count = tx.jetcheckout_installment_count or 1
             for item in items:
-                rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
-                values = [
-                    '000000000480150',
-                    'VP692034',
-                    tx.create_date.strftime('%d/%m/%Y'),
-                    tx.create_date.strftime('%d/%m/%Y'),
-                    tx.create_date.strftime('%d/%m/%Y'),
-                    '3120',
-                    '869286',
-                    'TL',
-                    '%s Satış - E-Ticaret' % ('Taksitli' if tx.jetcheckout_installment_count > 1 else 'Peşin'),
-                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
-                    'KREDİ KART',
-                    'YURT İCİ',
-                    '1',
-                    tx.jetcheckout_installment_count,
-                    'A',
-                    '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
-                    '%0.2f' % (item['amount'],),
-                    '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
-                    '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
-                    '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
-                    '%0.2f' % (0,),
-                    '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                    item['desc'] or '',
-                    ''
-                ]
-                result.append(';'.join(map(str, values)))
+                for i in range(installment_count):
+                    rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
+                    values = [
+                        '000000000480150',
+                        'VP692034',
+                        tx.create_date.strftime('%d/%m/%Y'),
+                        tx.create_date.strftime('%d/%m/%Y'),
+                        tx.create_date.strftime('%d/%m/%Y'),
+                        '3120',
+                        '869286',
+                        'TL',
+                        '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin'),
+                        '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
+                        'KREDİ KART',
+                        'YURT İCİ',
+                        i,
+                        installment_count,
+                        'A',
+                        '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
+                        '%0.2f' % (item['amount'],),
+                        '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
+                        '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
+                        '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
+                        '%0.2f' % (0,),
+                        '%0.2f' % (tx.jetcheckout_payment_net * rate,),
+                        item['desc'] or '',
+                        ''
+                    ]
+                    result.append(';'.join(map(str, values)))
 
         result = '\r\n'.join(result) + '\r\n'
         date = fields.Date.today().strftime('%Y%m%d')
