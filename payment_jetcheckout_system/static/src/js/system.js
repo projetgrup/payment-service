@@ -186,6 +186,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 events: [['change', this._onChangePaidAll]],
             }),
             itemAddDateReadonly: new fields.element(),
+            itemAddDescNumericonly: new fields.element(),
             itemAddDescMaxlength: new fields.element(),
             itemAddDescPrefix: new fields.element(),
             itemAdd: new fields.element({
@@ -588,12 +589,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             size: 'small',
             buttons: [{
                 text: _t('Add'),
-                classes: 'btn-block btn-primary font-weight-bold',
+                classes: 'btn-block btn-primary font-weight-bold o_btn_preview',
             }],
             $content: qweb.render('paylox.item.add', {
                 currency: this.currency,
                 date: moment().format('DD-MM-YYYY'),
                 readonly: this.payment.itemAddDateReadonly.exist || undefined,
+                numericonly: this.payment.itemAddDescNumericonly.exist || undefined,
                 maxlength: this.payment.itemAddDescMaxlength.value || undefined,
                 prefix: this.payment.itemAddDescPrefix.value || '',
             })
@@ -605,6 +607,11 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             const $amount = popup.$modal.find('input#payment_item_add_amount');
             const mask = payloxPage.prototype._maskAmount.apply(this);
             const amount = new IMask($amount[0], mask);
+
+            let desc = undefined;
+            if (this.payment.itemAddDescNumericonly.exist) {
+                desc = new IMask($desc[0], { mask: Number, scale: 0 });
+            }
 
             const $footer = popup.$modal.find('footer');
             $footer.css('box-shadow', '0 10px 10px -5px #ccc inset');
@@ -619,7 +626,12 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 const context = this._getContext();
                 rpc.query({
                     route: '/p/item/add',
-                    params: { date: $date.val(), desc: $desc.val(), amount: amount.typedValue, lang: context.lang },
+                    params: {
+                        date: $date.val(),
+                        lang: context.lang,
+                        amount: amount.typedValue,
+                        desc: desc?.typedValue || $desc.val(),
+                    },
                 }).then(([payments, company]) => {
                     $('.payment-item').html(qweb.render('paylox.item.all', {
                         payments,
@@ -639,11 +651,17 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                         'payment.advance.remove',
                     ]);
                     this._onChangePaid();
-                }).guardedCatch(() => {
+                }).guardedCatch((e) => {
+                    let message;
+                    if (e?.message?.data?.name === 'odoo.exceptions.ValidationError') {
+                        message = e.message.data.message;
+                    } else {
+                        message = _t('An error occured. Please try again.');
+                    }
                     this.displayNotification({
                         type: 'danger',
                         title: _t('Error'),
-                        message: _t('An error occured. Please try again.'),
+                        message: message,
                         sticky: false,
                     });
                 }).finally(() => {

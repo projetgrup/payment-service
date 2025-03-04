@@ -7,7 +7,7 @@
             <label for="payment_item_add_date" class="text-primary" style="left: 36px; top: 16px;"><span>Date</span></label>
         </div>
         <div class="field-container w-100">
-            <input type="text" id="payment_item_add_desc" name="payment_item_add_amount" class="text-center border-primary" required="required" t-att-maxlength="maxlength"/>
+            <input type="text" id="payment_item_add_desc" name="payment_item_add_amount" class="text-center border-primary" required="required" t-att-maxlength="maxlength" t-att-inputmode="numericonly ? 'numeric' : undefined" t-att-pattern="numericonly ? '\d*' : undefined" />
             <span class="bar-container"/>
             <span class="symbol symbol-before" t-esc="prefix" style="left: 28px; top: 28px; font-size: 18px;"/>
             <label for="payment_item_add_desc" class="text-primary" style="left: 36px; top: 16px;"><span>Description</span></label>

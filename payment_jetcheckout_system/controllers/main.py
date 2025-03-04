@@ -11,7 +11,7 @@ from odoo import fields, http, _, SUPERUSER_ID
 from odoo.http import content_disposition, request, Response
 from odoo.tools import html_escape
 from odoo.tools.misc import xlsxwriter
-from odoo.exceptions import AccessError, UserError, MissingError
+from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
 
 REPORT_NAMES = ['payment_jetcheckout.payment_receipt', 'payment_jetcheckout.payment_conveyance']
@@ -519,13 +519,23 @@ class PayloxSystemController(Controller):
         if payment_date:
             payment_date = datetime.strptime(payment_date, '%d-%m-%Y')
 
+        payment_amount = kwargs.get('amount', False)
+        payment_desc = kwargs.get('desc', False)
+        if payment_desc:
+            payment_desc = str(payment_desc)
+            if company.payment_page_item_add_desc_prefix:
+                payment_desc = company.payment_page_item_add_desc_prefix + payment_desc
+            if company.payment_page_item_add_desc_unique:
+                if request.env['payment.item'].sudo().search_count([('company_id', '=', company.id), ('description', '=', payment_desc)]):
+                    raise ValidationError(_('A payment item with the same description already exists.'))
+
         request.env['payment.item'].sudo().create({
             'due_tag_id': payment_tagv,
             'parent_id': partner.id,
             'date': payment_date,
             'manual': True,
-            'amount': kwargs.get('amount', False),
-            'description': kwargs.get('desc', False),
+            'amount': payment_amount,
+            'description': payment_desc,
         })
 
         payments = []
