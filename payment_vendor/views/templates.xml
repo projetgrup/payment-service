@@ -75,7 +75,8 @@
                                 </div>
                                 <div t-if="company.payment_page_item_add_ok" class="text-right">
                                     <button class="btn btn-sm btn-light text-primary" field="payment.itemAdd">Add new payment item</button>
-                                    <input type="hidden" t-att-value="company.payment_page_item_add_date_readonly" field="payment.itemAddDateReadonly"/>
+                                    <input type="hidden" t-if="company.payment_page_item_add_date_readonly" t-att-value="company.payment_page_item_add_date_readonly" field="payment.itemAddDateReadonly"/>
+                                    <input type="hidden" t-if="company.payment_page_item_add_desc_numericonly" t-att-value="company.payment_page_item_add_desc_numericonly" field="payment.itemAddDescNumericonly"/>
                                     <input type="hidden" t-att-value="company.payment_page_item_add_desc_maxlength" field="payment.itemAddDescMaxlength"/>
                                     <input type="hidden" t-att-value="company.payment_page_item_add_desc_prefix" field="payment.itemAddDescPrefix"/>
                                 </div>
@@ -142,9 +143,9 @@
                                     </div>
                                 </div>
                                 <div class="d-block mt-2 text-600 text-center">
-                                    <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-column border-0">
+                                    <div t-if="company.payment_page_due_ok" class="d-flex flex-column border-0">
                                         <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
-                                        <em t-if="company.payment_page_advance_ok" class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
+                                        <em class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
                                     </div>
                                 </div>
                             </div>
@@ -209,9 +210,9 @@
                                     <tfoot class="shadow bg-light">
                                         <tr>
                                             <td class="text-left" colspan="6">
-                                                <div t-if="company.payment_page_due_ok and (not payment_tags or not payment_tags[0].campaign_id)" class="d-flex flex-wrap gap-1">
+                                                <div t-if="company.payment_page_due_ok" class="d-flex flex-wrap gap-1">
                                                     <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
-                                                    <em t-if="company.payment_page_advance_ok" class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
+                                                    <em class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
                                                 </div>
                                             </td>
                                             <td class="text-right align-middle" t-att-colspan="company.payment_page_due_base == 'date_due' and '2' or '1'"><em>Select All</em></td>
