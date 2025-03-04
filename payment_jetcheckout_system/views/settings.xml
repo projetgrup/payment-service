@@ -239,6 +239,10 @@
                                             <label for="payment_page_item_add_desc_unique" string="Description Unique" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_item_add_desc_unique" class="flex-fill" widget="boolean_toggle"/>
                                         </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_required" string="Description Required" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_required" class="flex-fill" widget="boolean_toggle"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
