@@ -452,10 +452,10 @@ class Partner(models.Model):
         date_empty = date(1, 1, 1)
         company = self.env.company
 
-        payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
-            ('company_id', '=', company.id),
-            ('line_ids', '=', [])
-        ], limit=1)
+        payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([('company_id', '=', company.id)]).filtered(lambda t: not t.line_ids)
+        if payment_tag:
+            payment_tag = payment_tag[0]
+
         payments = self.payable_ids
         if company.payment_page_item_expire_ok:
             payments = payments.filtered(lambda p: not p.date_expired)
