@@ -1555,7 +1555,7 @@ class PayloxSystemController(Controller):
             items = [item for item in items if item['amount'] >= 0]
             installment_count = tx.jetcheckout_installment_count or 1
             for item in items:
-                for i in range(installment_count):
+                for i in range(1, installment_count + 1):
                     rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
                     values = [
                         '000000000480150',
