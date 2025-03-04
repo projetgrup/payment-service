@@ -1532,12 +1532,13 @@ class PayloxSystemController(Controller):
                 items.append({'amount': item.amount, 'desc': item.desc})
             if last < 0:
                 continue
-            for item in items[:]:
+
+            for item in items:
                 if item['amount'] < 0:
                     items[last]['amount'] += item['amount']
-                    del items[i]
             if items[last]['amount'] < 0:
                 continue
+            items = [item for item in items if item['amount'] >= 0]
 
             for item in items:
                 rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
