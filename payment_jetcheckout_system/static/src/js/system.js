@@ -187,6 +187,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }),
             itemAddDateReadonly: new fields.element(),
             itemAddDescNumericonly: new fields.element(),
+            itemAddDescRequired: new fields.element(),
             itemAddDescMaxlength: new fields.element(),
             itemAddDescPrefix: new fields.element(),
             itemAdd: new fields.element({
@@ -624,13 +625,25 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 $amount.prop('disabled', true);
                 $button.prop('disabled', true);
                 const context = this._getContext();
+
+                desc = desc?.typedValue || $desc.val();
+                if (this.payment.itemAddDescRequired.exist && !desc) {
+                    this.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('Payment item description cannot be empty.'),
+                        sticky: false,
+                    });
+                    return;
+                }
+
                 rpc.query({
                     route: '/p/item/add',
                     params: {
+                        desc: desc,
                         date: $date.val(),
                         lang: context.lang,
                         amount: amount.typedValue,
-                        desc: desc?.typedValue || $desc.val(),
                     },
                 }).then(([payments, company]) => {
                     $('.payment-item').html(qweb.render('paylox.item.all', {
