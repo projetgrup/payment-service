@@ -118,6 +118,7 @@ class PaymentCard(Datamodel):
     name = fields.String(metadata={"title": _lt("Credit Card Holder Name"), "description": _lt("Name field which is placed on front side of the card"), "example": "John Doe"})
     number = fields.String(metadata={"title": _lt("Credit Card Number"), "description": _lt("Masked number of related credit card"), "example": "123478******1234"})
     type = fields.String(metadata={"title": _lt("Credit Card Type"), "description": "Visa, MasterCard, Amex, Troy...", "example": "Troy"})
+    program = fields.String(metadata={"title": _lt("Credit Card Program"), "description": "Visa, Mastercard, Troy...", "example": "Troy"})
     family = fields.String(metadata={"title": _lt("Credit Card Family"), "description": "Bonus, Maximum, Axess, Bankkart...", "example": "Paraf"})
 
 
