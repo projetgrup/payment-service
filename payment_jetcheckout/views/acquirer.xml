@@ -225,7 +225,7 @@
             <field name="transaction_id" invisible="1"/>
             <field name="transaction_link" invisible="1"/>
             <footer>
-                <button name="action_query_link" type="object" string="Query Link" attrs="{'invisible': [('transaction_link', '=', False)]}"/>
+                <button name="action_query_link" type="object" string="Query Link" icon="fa-link" class="btn-secondary text-uppercase" attrs="{'invisible': [('transaction_link', '=', False)]}"/>
                 <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
             </footer>
         </form>
