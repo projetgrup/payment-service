@@ -53,7 +53,6 @@ class PaymentPayloxStatus(models.TransientModel):
     preauth = fields.Boolean(readonly=True, string='Pre-Authorization')
     postauth = fields.Boolean(readonly=True, string='Post-Authorization')
     threed = fields.Boolean(readonly=True)
-    currency_id =fields.Many2one('res.currency', readonly=True)
     amount = fields.Monetary(readonly=True)
     commission_amount = fields.Monetary(readonly=True)
     commission_rate = fields.Float(readonly=True)
@@ -67,6 +66,46 @@ class PaymentPayloxStatus(models.TransientModel):
     service_ref_id = fields.Char(readonly=True)
     service_code = fields.Char(readonly=True)
     service_message = fields.Char(readonly=True)
+    currency_id = fields.Many2one('res.currency', readonly=True)
+    transaction_id = fields.Many2one('payment.transaction', readonly=True)
+    transaction_link = fields.Boolean(string='Transaction Link', readonly=True)
+
+    @api.model
+    def create(self, values):
+        if 'transaction_id' in values:
+            transaction = self.env['payment.transaction'].browse(values['transaction_id'])
+            values['transaction_link'] = transaction.jetcheckout_link
+        return super().create(values)
+
+    def action_query_link(self):
+        if self.transaction_id and self.transaction_link:
+            acquirer = self.transaction_id.acquirer_id
+            url = acquirer.jetcheckout_link_url
+            apikey = acquirer.jetcheckout_link_apikey
+            secretkey = acquirer.jetcheckout_link_secretkey
+            hash = self.transaction_id.callback_hash
+            response = requests.post('%s/api/v1/payment/query' % url, json={
+                'apikey': apikey,
+                'secretkey': secretkey,
+                'hash': hash,
+            }, timeout=15)
+            if response.status_code == 200:
+                result = response.json()
+                if result['status'] == 0:
+                    self.transaction_id._paylox_process_query(result)
+                    status = self.env['payment.acquirer.jetcheckout.status'].create(result)
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'payment.acquirer.jetcheckout.status',
+                        'name': _('%s Transaction Status') % self.transaction_id.reference,
+                        'res_id': status.id,
+                        'view_mode': 'form',
+                        'target': 'new',
+                    }
+                else:
+                    raise ValidationError(_('%s - (Error Code: %s)') % (result['message'], result['status']))
+            else:
+                raise ValidationError(_('%s - (Error Code: %s)') % (response.reason, response.status_code))
 
 
 class PaymentPayloxRefund(models.TransientModel):
@@ -189,6 +228,9 @@ class PaymentAcquirer(models.Model):
     jetcheckout_payment_page = fields.Boolean('Show Payment Page')
     jetcheckout_api_key = fields.Char(groups='base.group_user')
     jetcheckout_secret_key = fields.Char(groups='base.group_user')
+    jetcheckout_link_url = fields.Char(groups='base.group_user')
+    jetcheckout_link_apikey = fields.Char(groups='base.group_user')
+    jetcheckout_link_secretkey = fields.Char(groups='base.group_user')
     paylox_url = fields.Char(compute='_get_paylox_url')
     paylox_journal_ids = fields.One2many('payment.acquirer.jetcheckout.journal', 'acquirer_id', groups='base.group_user')
     paylox_campaign_ids = fields.One2many('payment.acquirer.jetcheckout.campaign', 'acquirer_id', groups='base.group_user')

@@ -57,7 +57,7 @@ class PaymentTransaction(models.Model):
         return country.id
 
     partner_vat = fields.Char(string='VAT')
-    state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda recs: recs.write({'state': 'cancel'})})
+    state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda self: self.write({'state': 'cancel'})})
     is_paylox = fields.Boolean(compute='_compute_is_paylox')
     jetcheckout_data = fields.Text()
     jetcheckout_campaign_name = fields.Char('Campaign Name', readonly=True, copy=False)
@@ -76,6 +76,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
     jetcheckout_preauth = fields.Boolean('Pre-Authorization', readonly=True, copy=False)
     jetcheckout_postauth = fields.Boolean('Post-Authorization', readonly=True, copy=False)
+    jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
 
     jetcheckout_payment_type = fields.Selection(selection=[
         ('virtual_pos', 'Virtual PoS'),
@@ -567,11 +568,11 @@ class PaymentTransaction(models.Model):
             if self.source_transaction_id:
                 self.amount = -abs(result.get('amount', self.amount))
             commission_amount = float_round(self.amount * commission_rate / 100, 2)
- 
-            customer_amount = self.jetcheckout_customer_amount # result['commission_amount'] 
-            customer_rate = self.jetcheckout_customer_rate # float_round()
 
             values = {
+                'amount': self.amount,
+                'transaction_id': self.id,
+                'currency_id': self.currency_id.id,
                 'date': result['transaction_date'][:19],
                 'vpos_id': result['virtual_pos_id'],
                 'vpos_name': result['virtual_pos_name'],
@@ -593,10 +594,6 @@ class PaymentTransaction(models.Model):
                 'service_ref_id': result['service_ref_id'],
                 'commission_amount': commission_amount,
                 'commission_rate': commission_rate,
-                'customer_amount': customer_amount,
-                'customer_rate': customer_rate,
-                'currency_id': self.currency_id.id,
-                'amount': self.amount,
             }
 
         self._paylox_process_query(values)
