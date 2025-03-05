@@ -60,6 +60,11 @@
                 </div>
                 <field name="jetcheckout_soft_pos_email" string="Email" placeholder="Enter an account email..." attrs="{'invisible': ['|', ('provider', '!=', 'jetcheckout'), ('jetcheckout_soft_pos_version', '=', False)], 'required': [('provider', '=', 'jetcheckout'), ('jetcheckout_soft_pos_version', '!=', False)]}"/>
             </group>
+            <group string="Payment Link" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
+                <field name="jetcheckout_link_url" string="URL"/>
+                <field name="jetcheckout_link_apikey" string="API Key"/>
+                <field name="jetcheckout_link_secretkey" string="Secret Key"/>
+            </group>
         </xpath>
         <xpath expr='//page[@name="acquirer_credentials"]' position="after">
             <page name="methods" string="Methods" attrs="{'invisible': [('provider', '!=', 'jetcheckout')]}">
@@ -217,7 +222,10 @@
                     <field name="service_ref_id" style="word-break: break-all;"/>
                 </group>
             </group>
+            <field name="transaction_id" invisible="1"/>
+            <field name="transaction_link" invisible="1"/>
             <footer>
+                <button name="action_query_link" type="object" string="Query Link" attrs="{'invisible': [('transaction_link', '=', False)]}"/>
                 <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
             </footer>
         </form>
