@@ -523,8 +523,8 @@ class PayloxSystemController(Controller):
         payment_desc = kwargs.get('desc', False)
         if payment_desc:
             payment_desc = str(payment_desc)
-            if company.payment_page_item_add_desc_prefix:
-                payment_desc = company.payment_page_item_add_desc_prefix + payment_desc
+            #if company.payment_page_item_add_desc_prefix:
+            #    payment_desc = company.payment_page_item_add_desc_prefix + payment_desc
             if company.payment_page_item_add_desc_unique:
                 if request.env['payment.item'].sudo().search_count([('company_id', '=', company.id), ('description', '=', payment_desc)]):
                     raise ValidationError(_('A payment item with the same description already exists.'))
