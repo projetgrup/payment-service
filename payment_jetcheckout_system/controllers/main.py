@@ -37,16 +37,6 @@ class PayloxSystemController(Controller):
 
         return False
 
-    def _check_session(self, **kwargs):
-        if kwargs.get('values', {}).get('no_session_check'):
-            return
-  
-        if request.website.company_id.id != request.env.company.id:
-            user = request.env['res.users'].sudo().search([
-                ('login', '=', request.env.user.login),
-                ('company_id', '=', request.website.company_id.id),
-            ])
-
     def _check_user(self):
         path = urlparse(request.httprequest.referrer).path
         if path and '/my/payment' in path and not request.env.user.active and request.website.user_id.id != request.env.user.id:
@@ -1532,58 +1522,65 @@ class PayloxSystemController(Controller):
         result.append(';'.join(headers))
 
         txs = request.env['payment.transaction'].sudo().search([
+            ('company_id', '=', request.env.user.company_ids.ids),
             ('id', 'in', list(map(int, data[''].split(',')))),
             ('jetcheckout_payment_type', '=', 'virtual_pos'),
-            ('company_id', '=', request.env.user.company_ids.ids),
             ('state', '=', 'done'),
         ])
         for tx in txs:
-            last = -1
-            items = []
-            for i, item in enumerate(tx.paylox_transaction_item_ids):
-                if item.amount > 0:
-                    last = i
-                items.append({'amount': item.amount, 'desc': item.desc})
-            if last < 0:
+            balances = 0
+            negatives = 0
+            positives = []
+            for item in tx.paylox_transaction_item_ids:
+                balances += item.amount
+                if item.amount < 0:
+                    negatives += item.amount
+                else:
+                    positives.append({'amount': item.amount, 'desc': item.desc})
+
+            if balances < 0:
                 continue
 
-            for item in items:
-                if item['amount'] < 0:
-                    items[last]['amount'] += item['amount']
-            if items[last]['amount'] < 0:
-                continue
-            items = [item for item in items if item['amount'] >= 0]
+            items = []
+            for item in positives:
+                if abs(negatives) >= item.amount:
+                    negavites += item.amount
+                    continue
+                elif abs(negatives) > 0:
+                    item['amount'] = item.amount + negatives
+                    negatives = 0
+                items.append(item)
+
             installment_count = tx.jetcheckout_installment_count or 1
             for item in items:
-                for i in range(1, installment_count + 1):
-                    rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
-                    values = [
-                        '000000000480150',
-                        'VP692034',
-                        tx.create_date.strftime('%d/%m/%Y'),
-                        tx.create_date.strftime('%d/%m/%Y'),
-                        tx.create_date.strftime('%d/%m/%Y'),
-                        '3120',
-                        '869286',
-                        'TL',
-                        '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin'),
-                        '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
-                        'KREDİ KART',
-                        'YURT İCİ',
-                        i,
-                        installment_count,
-                        'A',
-                        '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
-                        '%0.2f' % (item['amount'],),
-                        '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
-                        '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
-                        '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
-                        '%0.2f' % (0,),
-                        '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                        item['desc'] or '',
-                        ''
-                    ]
-                    result.append(';'.join(map(str, values)))
+                rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
+                values = [
+                    '000000000480150',
+                    'VP692034',
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    tx.create_date.strftime('%d/%m/%Y'),
+                    '3120',
+                    '869286',
+                    'TL',
+                    '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin'),
+                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
+                    'KREDİ KART',
+                    'YURT İCİ',
+                    '1',
+                    installment_count,
+                    'A',
+                    '%0.2f' % (tx.jetcheckout_installment_amount * rate,),
+                    '%0.2f' % (item['amount'],),
+                    '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
+                    '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
+                    '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
+                    '%0.2f' % (0,),
+                    '%0.2f' % (tx.jetcheckout_payment_net * rate,),
+                    item['desc'] or '',
+                    ''
+                ]
+                result.append(';'.join(map(str, values)))
 
         result = '\r\n'.join(result) + '\r\n'
         date = fields.Date.today().strftime('%Y%m%d')
