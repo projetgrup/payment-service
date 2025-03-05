@@ -1544,7 +1544,7 @@ class PayloxSystemController(Controller):
             items = []
             for item in positives:
                 if abs(negatives) >= item['amount']:
-                    negavites += item['amount']
+                    negatives += item['amount']
                     continue
                 elif abs(negatives) > 0:
                     item['amount'] += negatives
