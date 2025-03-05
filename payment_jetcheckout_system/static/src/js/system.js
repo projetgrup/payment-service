@@ -619,13 +619,6 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
             const $button = popup.$modal.find('footer button');
             $button.click(() => {
-                framework.showLoading();
-                $date.prop('disabled', true);
-                $desc.prop('disabled', true);
-                $amount.prop('disabled', true);
-                $button.prop('disabled', true);
-                const context = this._getContext();
-
                 desc = desc?.typedValue || $desc.val();
                 if (this.payment.itemAddDescRequired.exist && !desc) {
                     this.displayNotification({
@@ -637,6 +630,13 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                     return;
                 }
 
+                framework.showLoading();
+                $date.prop('disabled', true);
+                $desc.prop('disabled', true);
+                $amount.prop('disabled', true);
+                $button.prop('disabled', true);
+
+                const context = this._getContext();
                 rpc.query({
                     route: '/p/item/add',
                     params: {
