@@ -81,17 +81,17 @@ class PaymentPayloxStatus(models.TransientModel):
         if self.transaction_id and self.transaction_link:
             acquirer = self.transaction_id.acquirer_id
             url = acquirer.jetcheckout_link_url
-            apikey = acquirer.jetcheckout_link_apikey
-            secretkey = acquirer.jetcheckout_link_secretkey
             hash = self.transaction_id.callback_hash
-            response = requests.post('%s/api/v1/payment/query' % url, json={
-                'apikey': apikey,
-                'secretkey': secretkey,
+            apikey = acquirer.jetcheckout_link_apikey
+            response = requests.get('%s/api/v1/payment/status' % url, json={
                 'hash': hash,
+                'apikey': apikey,
             }, timeout=15)
             if response.status_code == 200:
                 result = response.json()
                 if result['status'] == 0:
+                    del result['status']
+                    del result['message']
                     self.transaction_id._paylox_process_query(result)
                     status = self.env['payment.acquirer.jetcheckout.status'].create(result)
                     return {
