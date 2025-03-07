@@ -8,3 +8,5 @@ def migrate(cr, version):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_item_add_desc_unique boolean')
     if not column_exists(cr, 'res_company', 'payment_page_item_add_desc_required'):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_item_add_desc_required boolean')
+    if not column_exists(cr, 'res_company', 'payment_page_item_add_desc_minlength'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_item_add_desc_minlength integer')
