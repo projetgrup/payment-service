@@ -1104,6 +1104,7 @@ class PayloxController(http.Controller):
             'pending': kwargs.get('response_code') == '00333',
             'code': kwargs.get('response_code', ''),
             'message': kwargs.get('response_message', '') or kwargs.get('message', ''),
+            'transaction_ref': kwargs.get('transaction_id', False),
             'service_code': kwargs.get('service_resp_code', ''),
             'service_message': kwargs.get('service_resp_message', ''),
             'service_suggestion': kwargs.get('suggestion', ''),

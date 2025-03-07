@@ -518,4 +518,5 @@ class PaymentAPIService(Component):
         vals = tx._paylox_query()
         del vals['currency_id']
         del vals['transaction_id']
+        del vals['transaction_ref']
         return vals
