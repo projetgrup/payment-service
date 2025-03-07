@@ -100,7 +100,7 @@ payloxPage.include({
         const item = $(ev.currentTarget);
         const agreement_id = Number(item.data('id'));
         const agreement = this.agreement.all[agreement_id];
-        if (ev.target.tagName === 'INPUT' && agreement.read) return;
+        if (ev.target.tagName === 'INPUT' && (agreement.read || !agreement.required)) return;
         if (this.agreement.locked) return;
         ev.stopPropagation();
         ev.preventDefault();

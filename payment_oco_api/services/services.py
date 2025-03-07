@@ -358,6 +358,8 @@ class OrderCheckoutAPIService(Component):
         
         result = tx._paylox_query()
         del result['currency_id']
+        del result['transaction_id']
+        del result['transaction_ref']
 
         if result.get('successful'):
             result.update({

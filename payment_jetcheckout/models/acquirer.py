@@ -69,6 +69,7 @@ class PaymentPayloxStatus(models.TransientModel):
     currency_id = fields.Many2one('res.currency', readonly=True)
     transaction_id = fields.Many2one('payment.transaction', readonly=True)
     transaction_link = fields.Boolean(string='Transaction Link', readonly=True)
+    transaction_ref = fields.Char(string='Transaction Reference', readonly=True)
 
     @api.model
     def create(self, values):

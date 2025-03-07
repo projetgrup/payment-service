@@ -490,7 +490,7 @@ class PaymentTransaction(models.Model):
         amount = values.get('amount', self.amount)
         commission = values.get('commission_amount', 0)
 
-        self.write({
+        vals = {
             'amount': amount,
             'fees': commission,
             'jetcheckout_vpos_id': vpos_id,
@@ -507,7 +507,13 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_family': values.get('card_family') or self.jetcheckout_card_family,
             'jetcheckout_card_number': self.jetcheckout_card_number or '%s**********' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
-        })
+        }
+        if values.get('transaction_ref'):
+            vals.update({
+                'jetcheckout_transaction_id': values['transaction_ref'],
+            })
+
+        self.write(vals)
         self.token_id.write({
             'jetcheckout_type': values.get('card_type') or self.jetcheckout_card_type,
             'jetcheckout_program': values.get('card_program') or self.jetcheckout_card_program,
@@ -592,6 +598,7 @@ class PaymentTransaction(models.Model):
                 'card_program': result['card_program'] or '',
                 'bin_code': result['bin_code'],
                 'service_ref_id': result['service_ref_id'],
+                'transaction_ref': result['transaction_id'],
                 'commission_amount': commission_amount,
                 'commission_rate': commission_rate,
             }
