@@ -228,6 +228,10 @@
                                             <field name="payment_page_item_add_desc_prefix" class="flex-fill" placeholder="SO"/>
                                         </div>
                                         <div class="row">
+                                            <label for="payment_page_item_add_desc_minlength" string="Description Minimum Length" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_minlength" class="flex-fill" placeholder="0"/>
+                                        </div>
+                                        <div class="row">
                                             <label for="payment_page_item_add_desc_maxlength" string="Description Maximum Length" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_item_add_desc_maxlength" class="flex-fill" placeholder="0"/>
                                         </div>

@@ -1,0 +1,262 @@
+# -*- coding: utf-8 -*-
+
+import functools
+import json
+import logging
+
+import werkzeug.utils
+from werkzeug.exceptions import BadRequest
+from werkzeug.urls import url_quote_plus
+
+import odoo
+from odoo import SUPERUSER_ID, _, api, http, models, registry as registry_get
+from odoo.http import request
+
+from odoo.addons.web.controllers.main import (
+    Home,
+    Session as WebSession,
+    ensure_db,
+    login_and_redirect,
+    set_cookie_and_redirect,
+)
+
+_logger = logging.getLogger(__name__)
+
+
+def fragment_to_query_string(func):
+    @functools.wraps(func)
+    def wrapper(self, req, **kw):
+        if not kw:
+            return """<html><head><script>
+                var l = window.location;
+                var q = l.hash.substring(1);
+                var r = '/' + l.search;
+                if(q.length !== 0) {
+                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
+                    r = l.pathname + l.search + s + q;
+                }
+                window.location = r;
+            </script></head><body></body></html>"""
+        return func(self, req, **kw)
+
+    return wrapper
+
+
+class SAMLLogin(Home):
+    def _list_saml_providers_domain(self):
+        return []
+
+    def list_saml_providers(self, with_autoredirect: bool = False) -> models.Model:
+        domain = self._list_saml_providers_domain()
+        if with_autoredirect:
+            domain.append(("autoredirect", "=", True))
+        providers = request.env["auth.saml.provider"].sudo().search_read(domain)
+        for provider in providers:
+            provider["auth_link"] = self._auth_saml_request_link(provider)
+        return providers
+
+    def _saml_autoredirect(self):
+        autoredirect_providers = self.list_saml_providers(True)
+        disable_autoredirect = (
+            "disable_autoredirect" in request.params or "error" in request.params
+        )
+        if autoredirect_providers and not disable_autoredirect:
+            return werkzeug.utils.redirect(
+                self._auth_saml_request_link(autoredirect_providers[0]),
+                303,
+            )
+        return None
+
+    def _auth_saml_request_link(self, provider: models.Model):
+        params = {
+            "pid": provider["id"],
+        }
+        redirect = request.params.get("redirect")
+        if redirect:
+            params["redirect"] = redirect
+        return "/auth_saml/get_auth_request?%s" % werkzeug.urls.url_encode(params)
+
+    @http.route()
+    def web_client(self, s_action=None, **kw):
+        ensure_db()
+        if not request.session.uid:
+            result = self._saml_autoredirect()
+            if result:
+                return result
+        return super().web_client(s_action, **kw)
+
+    @http.route()
+    def web_login(self, *args, **kw):
+        ensure_db()
+        if (
+            request.httprequest.method == "GET"
+            and request.session.uid
+            and request.params.get("redirect")
+        ):
+
+            # Redirect if already logged in and redirect param is present
+            return request.redirect(request.params.get("redirect"))
+
+        if request.httprequest.method == "GET":
+            result = self._saml_autoredirect()
+            if result:
+                return result
+
+        providers = self.list_saml_providers()
+
+        response = super().web_login(*args, **kw)
+        if response.is_qweb:
+            error = request.params.get("saml_error")
+            if error == "no-signup":
+                error = _("Sign up is not allowed on this database.")
+            elif error == "access-denied":
+                error = _("Access Denied")
+            elif error == "expired":
+                error = _(
+                    "You do not have access to this database. Please contact"
+                    " support."
+                )
+            else:
+                error = None
+
+            response.qcontext["saml_providers"] = providers
+
+            if error:
+                response.qcontext["error"] = error
+
+        return response
+
+
+class AuthSAMLController(http.Controller):
+    def _get_saml_extra_relaystate(self):
+        redirect = request.params.get("redirect") or "web"
+        if not redirect.startswith(("//", "http://", "https://")):
+            redirect = "{}{}".format(
+                request.httprequest.url_root,
+                redirect[1:] if redirect[0] == "/" else redirect,
+            )
+
+        state = {
+            "r": url_quote_plus(redirect),
+        }
+        return state
+
+    @http.route("/auth_saml/get_auth_request", type="http", auth="none")
+    def get_auth_request(self, pid):
+        provider_id = int(pid)
+
+        provider = request.env["auth.saml.provider"].sudo().browse(provider_id)
+        redirect_url = provider._get_auth_request(
+            self._get_saml_extra_relaystate(), request.httprequest.url_root.rstrip("/")
+        )
+        if not redirect_url:
+            raise Exception(
+                "Failed to get auth request from provider. "
+                "Either misconfigured SAML provider or unknown provider."
+            )
+
+        redirect = werkzeug.utils.redirect(redirect_url, 303)
+        redirect.autocorrect_location_header = True
+        return redirect
+
+    @http.route("/auth_saml/signin", type="http", auth="none", csrf=False)
+    @fragment_to_query_string
+    def signin(self, req, **kw):
+        saml_response = kw.get("SAMLResponse")
+
+        if not kw.get("RelayState"):
+            url = "/?type=signup"
+            redirect = werkzeug.utils.redirect(url, 303)
+            redirect.autocorrect_location_header = True
+            return redirect
+
+        state = json.loads(kw["RelayState"])
+        provider = state["p"]
+        dbname = state["d"]
+        if not http.db_filter([dbname]):
+            return BadRequest()
+        context = state.get("c", {})
+        registry = registry_get(dbname)
+
+        with registry.cursor() as cr:
+            try:
+                env = api.Environment(cr, SUPERUSER_ID, context)
+                credentials = (
+                    env["res.users"]
+                    .sudo()
+                    .auth_saml(
+                        provider,
+                        saml_response,
+                        request.httprequest.url_root.rstrip("/"),
+                    )
+                )
+                action = state.get("a")
+                menu = state.get("m")
+                redirect = (
+                    werkzeug.urls.url_unquote_plus(state["r"])
+                    if state.get("r")
+                    else False
+                )
+                url = "/"
+                if redirect:
+                    url = redirect
+                elif action:
+                    url = "/#action=%s" % action
+                elif menu:
+                    url = "/#menu_id=%s" % menu
+                return login_and_redirect(*credentials, redirect_url=url)
+
+            except odoo.exceptions.AccessDenied:
+                _logger.info("SAML2: access denied")
+
+                url = "/web/login?saml_error=expired"
+                redirect = werkzeug.utils.redirect(url, 303)
+                redirect.autocorrect_location_header = False
+                return redirect
+
+            except Exception as e:
+                _logger.exception("SAML2: failure - %s", str(e))
+                url = "/web/login?saml_error=access-denied"
+
+        return set_cookie_and_redirect(url)
+
+    @http.route("/auth_saml/metadata", type="http", auth="none", csrf=False)
+    def saml_metadata(self, req, **kw):
+        provider = kw.get("p")
+        dbname = kw.get("d")
+        valid = kw.get("valid", None)
+
+        if not dbname or not provider:
+            _logger.debug("Metadata page asked without database name or provider id")
+            return request.not_found(_("Missing parameters"))
+
+        provider = int(provider)
+
+        registry = registry_get(dbname)
+
+        with registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            client = env["auth.saml.provider"].sudo().browse(provider)
+            if not client.exists():
+                return request.not_found(_("Unknown provider"))
+
+            return request.make_response(
+                client._metadata_string(
+                    valid, request.httprequest.url_root.rstrip("/")
+                ),
+                [("Content-Type", "text/xml")],
+            )
+
+
+class Session(WebSession):
+
+    @http.route("/web/session/logout", type="http", auth="none")
+    def logout(self, redirect="/web/login"):
+        if "disable_autoredirect" not in redirect:
+            path, sep, parameters = redirect.partition("?")
+            if parameters:
+                parameters += "&disable_autoredirect="
+            else:
+                parameters = "disable_autoredirect="
+            redirect = path + "?" + parameters
+        return super().logout(redirect=redirect)

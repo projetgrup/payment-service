@@ -73,6 +73,7 @@ class Company(models.Model):
     payment_page_item_add_desc_required = fields.Boolean(string='Payment Page Add Payment Item Description Required')
     payment_page_item_add_desc_unique = fields.Boolean(string='Payment Page Add Payment Item Description Unique')
     payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
+    payment_page_item_add_desc_minlength = fields.Integer(string='Payment Page Add Payment Item Description Minimum Length')
     payment_page_item_add_desc_maxlength = fields.Integer(string='Payment Page Add Payment Item Description Maximum Length')
     payment_page_button_access_transaction = fields.Boolean(string='Payment Page See All Transactions')
     payment_page_flow = fields.Selection([

@@ -1528,6 +1528,7 @@ class PayloxSystemController(Controller):
             ('state', '=', 'done'),
         ])
         for tx in txs:
+            desc_maxlength = tx.company_id.payment_page_item_add_desc_maxlength
             balances = 0
             negatives = 0
             positives = []
@@ -1560,8 +1561,8 @@ class PayloxSystemController(Controller):
                     tx.create_date.strftime('%d/%m/%Y'),
                     tx.create_date.strftime('%d/%m/%Y'),
                     tx.create_date.strftime('%d/%m/%Y'),
-                    '3120',
-                    '869286',
+                    tx.reference.rsplit('/', 1)[-1],
+                    tx.partner_ref,
                     'TL',
                     '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin'),
                     '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
@@ -1579,7 +1580,7 @@ class PayloxSystemController(Controller):
                     '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
                     '%0.2f' % (0,),
                     '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                    item['desc'] or '',
+                    item['desc'] if len(item['desc']) == desc_maxlength else tx.partner_ref,
                     ''
                 ]
                 result.append(';'.join(map(str, values)))
