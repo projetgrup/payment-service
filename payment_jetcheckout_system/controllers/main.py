@@ -495,6 +495,25 @@ class PayloxSystemController(Controller):
         if not partner:
             raise UserError(_('Partner not found.'))
 
+        payment_desc = kwargs.get('desc', False)
+        payment_desc_minlength = company.payment_page_item_add_desc_minlength
+        if payment_desc_minlength and (not payment_desc or len(payment_desc) < payment_desc_minlength):
+            raise ValidationError(_('Description must contain more than %s characters.') % payment_desc_minlength)
+        payment_desc_maxlength = company.payment_page_item_add_desc_maxlength
+        if payment_desc_maxlength and payment_desc and len(payment_desc) > payment_desc_maxlength:
+            raise ValidationError(_('Description must contain less than %s characters.') % payment_desc_maxlength)
+        if payment_desc:
+            payment_desc = str(payment_desc)
+            #if company.payment_page_item_add_desc_prefix:
+            #    payment_desc = company.payment_page_item_add_desc_prefix + payment_desc
+            if company.payment_page_item_add_desc_unique:
+                if request.env['payment.item'].sudo().search_count([('company_id', '=', company.id), ('description', '=', payment_desc)]):
+                    raise ValidationError(_('A payment item with the same description already exists.'))
+        else:
+            if company.payment_page_item_add_desc_required:
+                raise ValidationError(_('Payment item description cannot be empty.'))
+
+        payment_amount = kwargs.get('amount', False)
         payment_tagv = kwargs.get('tag', False)
         payment_tags = company.sudo().payment_page_due_tag_ids
         payment_tag = payment_tags.filtered(lambda x: x.id == payment_tagv)
@@ -508,20 +527,6 @@ class PayloxSystemController(Controller):
         payment_date = kwargs.get('date', False)
         if payment_date:
             payment_date = datetime.strptime(payment_date, '%d-%m-%Y')
-
-        payment_amount = kwargs.get('amount', False)
-        payment_desc = kwargs.get('desc', False)
-        if payment_desc:
-            payment_desc = str(payment_desc)
-            #if company.payment_page_item_add_desc_prefix:
-            #    payment_desc = company.payment_page_item_add_desc_prefix + payment_desc
-            if company.payment_page_item_add_desc_unique:
-                if request.env['payment.item'].sudo().search_count([('company_id', '=', company.id), ('description', '=', payment_desc)]):
-                    raise ValidationError(_('A payment item with the same description already exists.'))
-        else:
-            if company.payment_page_item_add_desc_required:
-                raise ValidationError(_('Payment item description cannot be empty.'))
-
 
         request.env['payment.item'].sudo().create({
             'due_tag_id': payment_tagv,
