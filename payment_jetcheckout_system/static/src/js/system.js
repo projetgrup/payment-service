@@ -188,6 +188,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             itemAddDateReadonly: new fields.element(),
             itemAddDescNumericonly: new fields.element(),
             itemAddDescRequired: new fields.element(),
+            itemAddDescMinlength: new fields.element(),
             itemAddDescMaxlength: new fields.element(),
             itemAddDescPrefix: new fields.element(),
             itemAdd: new fields.element({
@@ -597,6 +598,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                 date: moment().format('DD-MM-YYYY'),
                 readonly: this.payment.itemAddDateReadonly.exist || undefined,
                 numericonly: this.payment.itemAddDescNumericonly.exist || undefined,
+                minlength: this.payment.itemAddDescMinlength.value || undefined,
                 maxlength: this.payment.itemAddDescMaxlength.value || undefined,
                 prefix: this.payment.itemAddDescPrefix.value || '',
             })
