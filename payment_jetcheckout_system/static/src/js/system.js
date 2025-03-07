@@ -621,12 +621,30 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
             const $button = popup.$modal.find('footer button');
             $button.click(() => {
-                desc = desc?.typedValue || $desc.val();
+                desc = String(desc?.typedValue || $desc.val() || '');
                 if (this.payment.itemAddDescRequired.exist && !desc) {
                     this.displayNotification({
-                        type: 'danger',
-                        title: _t('Error'),
-                        message: _t('Payment item description cannot be empty.'),
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Description cannot be empty.'),
+                        sticky: false,
+                    });
+                    return;
+                }
+                if (this.payment.itemAddDescMinlength.value > desc.length) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _.str.sprintf(_t('Description must contain more than %s characters.'), this.payment.itemAddDescMinlength.value),
+                        sticky: false,
+                    });
+                    return;
+                }
+                if (this.payment.itemAddDescMaxlength.value < desc.length) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _.str.sprintf(_t('Description must contain less than %s characters.'), this.payment.itemAddDescMaxlength.value),
                         sticky: false,
                     });
                     return;
