@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import datetime
 import traceback
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.safe_eval import safe_eval, test_python_expr, json, datetime
 
-_logger = logging.getLogger(__name__)
-
-class _json:
-    loads = json.loads
-    dumps = json.dumps
+logger = logging.getLogger(__name__)
 
 
 class PaymentHook(models.Model):
@@ -36,6 +30,11 @@ class PaymentHook(models.Model):
     subtype = fields.Selection([
         ('create', 'Creation'),
         ('finalize', 'Finalization'),
+        ('transaction_create', 'Creation'),
+        ('transaction_authorize', 'Pre-Authorization'),
+        ('transaction_finalize', 'Finalization'),
+        ('item_create', 'Creation'),
+        ('item_finalize', 'Finalization'),
     ])
 
     @api.constrains('code')
@@ -48,9 +47,10 @@ class PaymentHook(models.Model):
     def run(self, **kwargs):
         context = {
             'env': self.env,
-            #'datetime': datetime,
+            'datetime': datetime,
             'UserError': UserError,
-            'json': _json,
+            'logger': logger,
+            'json': json,
             **kwargs
         }
         try:
@@ -59,5 +59,5 @@ class PaymentHook(models.Model):
         except UserError:
             raise
         except:
-            _logger.error(traceback.format_exc())
+            logger.error(traceback.format_exc())
             raise ValidationError(_('An error occured when triggering the hook.'))

@@ -147,6 +147,11 @@ class PaymentTransaction(models.Model):
             }
         }
 
+    def _paylox_auth_postprocess(self):
+        res = super()._paylox_auth_postprocess()
+        self.run_hook('transaction_authorize')
+        return res
+
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()
         self.run_hook('finalize')
