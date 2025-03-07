@@ -1585,7 +1585,7 @@ class PayloxSystemController(Controller):
                     '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
                     '%0.2f' % (0,),
                     '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                    item['desc'] if len(item['desc']) == desc_maxlength else tx.partner_ref,
+                    item['desc'] if item['desc'] and len(item['desc']) == desc_maxlength else tx.partner_ref,
                     ''
                 ]
                 result.append(';'.join(map(str, values)))
