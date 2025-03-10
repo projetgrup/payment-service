@@ -58,7 +58,7 @@ class PaymentTransaction(models.Model):
         transaction = super().create(values)
         if transaction.system and transaction.company_id.id != transaction.partner_id.company_id.id:
             raise ValidationError(_('Payment and partner belong to different companies.'))
-        transaction.run_hook('create')
+        transaction.with_context(hook_next={'state': transaction.state}).run_hook('transaction_create')
         return transaction
 
     def action_items(self):
@@ -148,13 +148,24 @@ class PaymentTransaction(models.Model):
         }
 
     def _paylox_auth_postprocess(self):
+        prev_state = self.state
         res = super()._paylox_auth_postprocess()
-        self.run_hook('transaction_authorize')
+        next_state = self.state
+        self.with_context(hook_prev={'state': prev_state}, hook_next={'state': next_state}).run_hook('transaction_authorize')
+        return res
+
+    def _paylox_cancel_postprocess(self):
+        prev_state = self.state
+        res = super()._paylox_cancel_postprocess()
+        next_state = self.state
+        self.with_context(hook_prev={'state': prev_state}, hook_next={'state': next_state}).run_hook('transaction_cancel')
         return res
 
     def _paylox_done_postprocess(self):
+        prev_state = self.state
         res = super()._paylox_done_postprocess()
-        self.run_hook('finalize')
+        next_state = self.state
+        self.with_context(hook_prev={'state': prev_state}, hook_next={'state': next_state}).run_hook('transaction_finalize')
         webhooks = self.company_id.notif_webhook_ids
         if webhooks:
             self.write({

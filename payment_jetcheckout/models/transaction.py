@@ -71,12 +71,13 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
     jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
     jetcheckout_preauth = fields.Boolean('Pre-Authorization', readonly=True, copy=False)
     jetcheckout_postauth = fields.Boolean('Post-Authorization', readonly=True, copy=False)
-    jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
+    jetcheckout_postauth_amount = fields.Monetary('Post-Authorization Amount', readonly=True, copy=False)
 
     jetcheckout_payment_type = fields.Selection(selection=[
         ('virtual_pos', 'Virtual PoS'),
@@ -348,7 +349,10 @@ class PaymentTransaction(models.Model):
         if response.status_code == 200:
             result = response.json()
             if result['response_code'] == "00":
-                self.jetcheckout_postauth = True
+                self.write({
+                    'jetcheckout_postauth': True,
+                    'jetcheckout_postauth_amount': amount,
+                })
                 self._paylox_done_postprocess()
             else:
                 raise UserError(_('%s (Error Code: %s)') % (result['message'], result['response_code']))

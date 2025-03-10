@@ -28,11 +28,10 @@ class PaymentHook(models.Model):
         ('route', 'Route'),
     ])
     subtype = fields.Selection([
-        ('create', 'Creation'),
-        ('finalize', 'Finalization'),
         ('transaction_create', 'Creation'),
         ('transaction_authorize', 'Pre-Authorization'),
         ('transaction_finalize', 'Finalization'),
+        ('transaction_cancel', 'Cancellation'),
         ('item_create', 'Creation'),
         ('item_finalize', 'Finalization'),
     ])
