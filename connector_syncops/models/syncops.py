@@ -59,13 +59,14 @@ class SyncopsConnector(models.Model):
         return defaults
 
     @api.model
-    def _execute(self, method, reference='', params={}, company=None, message=None):
+    def _execute(self, method, reference='', params={}, connectors=None, company=None, message=None):
         result = []
         try:
             if not company:
                 company = self.env.company
 
-            connectors = self._find(method, company)
+            if not connectors:
+                connectors = self._find(method, company)
             if not connectors:
                 info = _('No connector found for %s') % company.name
                 _logger.info(info)

@@ -8,6 +8,12 @@
         <xpath expr="//tree" position="attributes">
             <attribute name="edit">0</attribute>
         </xpath>
+        <xpath expr="//field[@name='username']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='password']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
     </field>
     </record>
 
@@ -15,7 +21,15 @@
     <field name="model">sms.provider</field>
     <field name="inherit_id" ref="sms_api.provider_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//form" position="attributes">
+        <xpath expr="//field[@name='username']" position="before">
+            <field name="syncops_ok" widget="boolean_toggle"/>
+            <field name="syncops_connector_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('syncops_ok', '=', False)], 'required': [('syncops_ok', '=', True)]}" string="Connector"/>
+        </xpath>
+        <xpath expr="//field[@name='username']" position="attributes">
+            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)]}</attribute>
+        </xpath>
+        <xpath expr="//field[@name='password']" position="attributes">
+            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)]}</attribute>
         </xpath>
     </field>
     </record>
