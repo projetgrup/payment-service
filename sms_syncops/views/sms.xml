@@ -26,10 +26,10 @@
             <field name="syncops_connector_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('syncops_ok', '=', False)], 'required': [('syncops_ok', '=', True)]}" string="Connector"/>
         </xpath>
         <xpath expr="//field[@name='username']" position="attributes">
-            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)]}</attribute>
+            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)], 'required': [('syncops_ok', '=', False)]}</attribute>
         </xpath>
         <xpath expr="//field[@name='password']" position="attributes">
-            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)]}</attribute>
+            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)], 'required': [('syncops_ok', '=', False)]}</attribute>
         </xpath>
     </field>
     </record>

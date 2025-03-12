@@ -9,7 +9,7 @@
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
     'category': 'Hidden/Tools',
-    'depends': ['sms_api'],
+    'depends': ['sms_api', 'sms_syncops'],
     'data': [],
     'auto_install': True,
 }
