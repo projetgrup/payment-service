@@ -36,7 +36,8 @@ class SmsProvider(models.Model):
     def action_test_connection(self):
         if not self.type:
             raise UserError(_('Please select a provider'))
-        message = getattr(self.env['sms.api'], '_get_%s_credit' % self.type)(self)
+
+        message = self.env['sms.api'].get_credit(self)
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -142,10 +143,9 @@ class SmsApi(models.AbstractModel):
         return []
 
     @api.model
-    def get_credit(self):
-        provider = self.env['sms.provider'].get()
+    def get_credit(self, provider):
         if provider:
-            return getattr(self, '_get_%s_credit' % provider.type, _('No SMS provider credit method defined'))()
+            return getattr(self, '_get_%s_credit' % provider.type, _('No SMS provider credit method defined'))(provider)
         return _('No SMS provider defined')
 
 

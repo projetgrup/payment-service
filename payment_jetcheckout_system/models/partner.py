@@ -22,8 +22,10 @@ EMAIL_PATTERN = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 PHONE_PATTERN = r'^[0-9]{10}$'
 
 def normalize(value):
-    table = str.maketrans('ğĞıİöÖüÜşŞçÇ', 'gGiIoOuUsScC')
-    return re.sub(r'[^a-zA-Z0-9]', '_', value.translate(table))
+    if value:
+        table = str.maketrans('ğĞıİöÖüÜşŞçÇ', 'gGiIoOuUsScC')
+        return re.sub(r'[^a-zA-Z0-9]', '_', value.translate(table))
+    return value
 
 
 class PartnerTeam(models.Model):
@@ -452,10 +454,8 @@ class Partner(models.Model):
         date_empty = date(1, 1, 1)
         company = self.env.company
 
-        payment_tag = self.env['payment.settings.campaign.tag'].sudo().search([
-            ('company_id', '=', company.id),
-            ('line_ids', '=', [])
-        ], limit=1)
+        payment_tags = self.env['payment.settings.campaign.tag'].sudo().search([('company_id', '=', company.id)])
+        payment_tag = next(filter(lambda tag: not tag.line_ids, payment_tags), None)
         payments = self.payable_ids
         if company.payment_page_item_expire_ok:
             payments = payments.filtered(lambda p: not p.date_expired)
