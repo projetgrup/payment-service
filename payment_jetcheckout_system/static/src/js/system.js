@@ -258,9 +258,9 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
+            self.amountEditable = self.payment.amount.exist;
             if (self.payment.item.exist) {
                 self.itemPriority = self.payment.priority.exist;
-                self.amountEditable = self.payment.amount.exist;
                 self._onChangePaid();
             } else if (self.payment.preview.grid.exist) {
                 self.isPreview = true;

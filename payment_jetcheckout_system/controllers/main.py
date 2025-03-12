@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import io
+import pytz
 import json
 import base64
 import werkzeug
@@ -1525,23 +1526,29 @@ class PayloxSystemController(Controller):
         ]
         result.append(';'.join(headers))
 
+        tz = pytz.timezone(request.env.user.tz or 'Europe/Istanbul')
+        offset = tz.utcoffset(fields.Datetime.now())
+
         txs = request.env['payment.transaction'].sudo().search([
             ('company_id', '=', request.env.user.company_ids.ids),
             ('id', 'in', list(map(int, data[''].split(',')))),
             ('jetcheckout_payment_type', '=', 'virtual_pos'),
             ('state', '=', 'done'),
-        ])
+        ], order='last_state_change desc')
         for tx in txs:
             desc_maxlength = tx.company_id.payment_page_item_add_desc_maxlength
             balances = 0
             negatives = 0
             positives = []
-            for item in tx.paylox_transaction_item_ids:
-                balances += item.amount
-                if item.amount < 0:
-                    negatives += item.amount
-                else:
-                    positives.append({'amount': item.amount, 'desc': item.desc})
+            if tx.paylox_transaction_item:
+                for item in tx.paylox_transaction_item_ids:
+                    balances += item.amount
+                    if item.amount < 0:
+                        negatives += item.amount
+                    else:
+                        positives.append({'amount': item.amount, 'desc': item.desc})
+            else:
+                positives.append({'amount': tx.amount, 'desc': tx.partner_ref})
 
             if balances < 0:
                 continue
@@ -1562,9 +1569,9 @@ class PayloxSystemController(Controller):
                 values = [
                     '000000000480150',
                     'VP692034',
-                    tx.create_date.strftime('%d/%m/%Y'),
-                    tx.create_date.strftime('%d/%m/%Y'),
-                    tx.create_date.strftime('%d/%m/%Y'),
+                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
+                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
+                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
                     tx.reference.rsplit('/', 1)[-1],
                     tx.partner_ref,
                     'TL',
