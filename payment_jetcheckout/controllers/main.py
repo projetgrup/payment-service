@@ -600,7 +600,7 @@ class PayloxController(http.Controller):
 
         values = {'type': type}
 
-        response = requests.post(url, data=json.dumps(data))
+        response = requests.post(url, data=json.dumps(data), verify=False)
         if response.status_code == 200:
             result = response.json()
 

@@ -31,43 +31,87 @@ class PayloxSyncopsController(Controller):
     def _connector_prepare_transactions(self, tx, tz=None):
         tz = tz or pytz.timezone('Europe/Istanbul')
         offset = tz.utcoffset(fields.Datetime.now())
-        branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
-        values = {
-            'id': tx.id,
-            'ref': tx.jetcheckout_order_id,
-            'state': tx.state,
-            'partner_ref': tx.partner_id.ref or '',
-            'partner_name': tx.partner_id.name or '',
-            'card_6': tx.jetcheckout_card_number[:6] if tx.jetcheckout_card_number else '',
-            'card_4': tx.jetcheckout_card_number[-4:] if tx.jetcheckout_card_number else '',
-            'vpos_id': tx.jetcheckout_vpos_id or 0,
-            'bank_payment_day': 1,
-            'installment_count': tx.jetcheckout_installment_count,
-            'installment_code': tx.jetcheckout_campaign_name or '',
-            'payment_date': (tx.create_date + offset).strftime('%Y-%m-%d'),
-            'payment_time': (tx.create_date + offset).strftime('%H:%M:%S'),
-            'currency_code': tx.currency_id.name or '',
-            'payment_amount': tx.amount,
-            'payment_net_amount': tx.jetcheckout_payment_amount,
-            'plus_installment': tx.jetcheckout_installment_plus,
-            'payment_deferral': 0,
-            'bank_id': 0,
-            'bank_name': '',
-            'refund_payment_id': '',
-            'refund_currency_code': '',
-            'refund_date': '',
-            'refund_time': '',
-            'branch_code': branch and branch.account_code or '',
-            'company_code': tx.company_id.partner_id.ref or '',
-            'payment_ref': '03',
-        }
-        if tx.source_transaction_id:
-            values.update({
-                'refund_payment_id': tx.source_transaction_id.id,
-                'refund_currency_code': tx.source_transaction_id.currency_id.name,
-                'refund_date': (tx.source_transaction_id.create_date + offset).strftime('%Y-%m-%d'),
-                'refund_time': (tx.source_transaction_id.create_date + offset).strftime('%H:%M:%S'),
-            })
+
+        if request.httprequest.host == 'odeme.royalcanin.com.tr':
+            desc_maxlength = tx.company_id.payment_page_item_add_desc_maxlength
+            balances = 0
+            negatives = 0
+            positives = []
+            for item in tx.paylox_transaction_item_ids:
+                balances += item.amount
+                if item.amount < 0:
+                    negatives += item.amount
+                else:
+                    positives.append({'amount': item.amount, 'desc': item.desc})
+
+            if balances < 0:
+                return {}
+
+            items = []
+            for item in positives:
+                if abs(negatives) >= item['amount']:
+                    negatives += item['amount']
+                    continue
+                elif abs(negatives) > 0:
+                    item['amount'] += negatives
+                    negatives = 0
+                items.append(item)
+
+            values = []
+            for item in tx.paylox_transaction_item_ids:
+                rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
+                values.append({
+                    'date': (tx.last_state_change + offset).strftime('%d/%m/%Y'),
+                    'description': item['desc'] if item['desc'] and len(item['desc']) == desc_maxlength else tx.partner_ref or '',
+                    'payment_amount': '%0.2f' % (item['amount'],),
+                    'partner_name': tx.partner_name or '',
+                    'partner_ref': tx.partner_ref or '',
+                    'partner_city': tx.partner_city or '',
+                    'installment_count': tx.jetcheckout_installment_count or 1,
+                    'card_type': tx.jetcheckout_card_type or '',
+                    'card_family': tx.jetcheckout_card_family or '',
+                    'partner_user': tx.partner_id.user_id.name or '',
+                    'payment_net': '%0.2f' % (tx.jetcheckout_payment_net * rate,),
+                    'commission_amount': '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
+                })
+        else:
+            branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
+            values = {
+                'id': tx.id,
+                'ref': tx.jetcheckout_order_id,
+                'state': tx.state,
+                'partner_ref': tx.partner_id.ref or '',
+                'partner_name': tx.partner_id.name or '',
+                'card_6': tx.jetcheckout_card_number[:6] if tx.jetcheckout_card_number else '',
+                'card_4': tx.jetcheckout_card_number[-4:] if tx.jetcheckout_card_number else '',
+                'vpos_id': tx.jetcheckout_vpos_id or 0,
+                'bank_payment_day': 1,
+                'installment_count': tx.jetcheckout_installment_count,
+                'installment_code': tx.jetcheckout_campaign_name or '',
+                'payment_date': (tx.create_date + offset).strftime('%y-%m-%d'),
+                'payment_time': (tx.create_date + offset).strftime('%h:%m:%s'),
+                'currency_code': tx.currency_id.name or '',
+                'payment_amount': tx.amount,
+                'payment_net_amount': tx.jetcheckout_payment_amount,
+                'plus_installment': tx.jetcheckout_installment_plus,
+                'payment_deferral': 0,
+                'bank_id': 0,
+                'bank_name': '',
+                'refund_payment_id': '',
+                'refund_currency_code': '',
+                'refund_date': '',
+                'refund_time': '',
+                'branch_code': branch and branch.account_code or '',
+                'company_code': tx.company_id.partner_id.ref or '',
+                'payment_ref': '03',
+            }
+            if tx.source_transaction_id:
+                values.update({
+                    'refund_payment_id': tx.source_transaction_id.id,
+                    'refund_currency_code': tx.source_transaction_id.currency_id.name,
+                    'refund_date': (tx.source_transaction_id.create_date + offset).strftime('%y-%m-%d'),
+                    'refund_time': (tx.source_transaction_id.create_date + offset).strftime('%h:%m:%s'),
+                })
         return values
 
     def _connector_get_partner(self, partner=None):
@@ -448,35 +492,52 @@ class PayloxSyncopsController(Controller):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet()
-        headers = {
-            'id': 'PAYMENTID',
-            'ref': 'REFERENCECODE',
-            'partner_ref': 'CUST_ERP_CODE',
-            'id': 'CUST_ERP_NAME',
-            'card_6': 'CARD_6',
-            'card_4': 'CARD_4',
-            'vpos_id': 'VPOSID',
-            'bank_payment_day': 'BANK_PAYMENT_DAY',
-            'state': 'STATUS',
-            'installment_count': 'PERIOD',
-            'installment_code': 'PERIOD_CODE',
-            'payment_date': 'PAYMENTDATE',
-            'payment_time': 'PAYMENTTIME',
-            'currency_code': 'CURRENCYCODE',
-            'payment_amount': 'PROCCESSAMOUNT',
-            'payment_net_amount': 'PROCCESSNETAMOUN',
-            'plus_installment': 'PLUS_PERIOD',
-            'payment_deferral': 'PAYMENT_DEFERRAL',
-            'bank_id': 'BANKID',
-            'bank_name': 'BANK_NAME',
-            'branch_code': 'HKONT',
-            'refund_payment_id': 'REV_PAYMENTID',
-            'refund_currency_code': 'REV_CURRENCYCODE',
-            'refund_date': 'REV_DATE',
-            'refund_time': 'REV_TIME',
-            'company_code': 'BRANCH_CODE',
-            'payment_ref': 'SOURCEID',
-        }
+
+        if request.httprequest.host == 'odeme.royalcanin.com.tr':
+            headers = {
+                'date': 'Son Durum Değişiklik Tarihi',
+                'description': 'Ödemeler/Açıklama',
+                'payment_amount': 'Ödenecek Tutar',
+                'partner_name': 'Müşteri',
+                'partner_ref': 'Müşteri/Referans',
+                'partner_city': 'İL',
+                'installment_count': 'TAKSİT SAYISI',
+                'card_type': 'KART TİPİ',
+                'card_family': 'KART SINIFI',
+                'partner_user': 'SATIŞ TEMSİLCİSİ',
+                'payment_net': 'NET TUTAR',
+                'commission_amount': 'KOMİSYON',
+            }
+        else:
+            headers = {
+                'id': 'PAYMENTID',
+                'ref': 'REFERENCECODE',
+                'partner_ref': 'CUST_ERP_CODE',
+                'id': 'CUST_ERP_NAME',
+                'card_6': 'CARD_6',
+                'card_4': 'CARD_4',
+                'vpos_id': 'VPOSID',
+                'bank_payment_day': 'BANK_PAYMENT_DAY',
+                'state': 'STATUS',
+                'installment_count': 'PERIOD',
+                'installment_code': 'PERIOD_CODE',
+                'payment_date': 'PAYMENTDATE',
+                'payment_time': 'PAYMENTTIME',
+                'currency_code': 'CURRENCYCODE',
+                'payment_amount': 'PROCCESSAMOUNT',
+                'payment_net_amount': 'PROCCESSNETAMOUN',
+                'plus_installment': 'PLUS_PERIOD',
+                'payment_deferral': 'PAYMENT_DEFERRAL',
+                'bank_id': 'BANKID',
+                'bank_name': 'BANK_NAME',
+                'branch_code': 'HKONT',
+                'refund_payment_id': 'REV_PAYMENTID',
+                'refund_currency_code': 'REV_CURRENCYCODE',
+                'refund_date': 'REV_DATE',
+                'refund_time': 'REV_TIME',
+                'company_code': 'BRANCH_CODE',
+                'payment_ref': 'SOURCEID',
+            }
         for i, col in enumerate(headers.values()):
             worksheet.write(0, i, col)
 
@@ -485,12 +546,19 @@ class PayloxSyncopsController(Controller):
             ('jetcheckout_payment_type', '=', 'virtual_pos'),
             ('company_id', '=', request.env.user.company_ids.ids)
         ])
-        row = 0
+        row = 1
+        keys = enumerate(headers.keys())
         for transaction in transactions:
-            row += 1
             values = self._connector_prepare_transactions(transaction)
-            for i, key in enumerate(headers.keys()):
-                worksheet.write(row, i, values[key])
+            if not values:
+                continue
+            if not isinstance(values, list):
+                values = [values]
+            
+            for value in values:
+                for i, key in keys:
+                    worksheet.write(row, i, value[key])
+                row += 1
         workbook.close()
 
         xlsx = output.getvalue()
