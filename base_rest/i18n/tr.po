@@ -99,7 +99,7 @@ msgstr "Enum"
 #: code:addons/base_rest/controllers/api_docs.py:0
 #, python-format
 msgid "Event"
-msgstr "Webhook"
+msgstr "Hook"
 
 #. module: base_rest
 #: code:addons/base_rest/controllers/api_docs.py:0

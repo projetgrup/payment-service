@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 20:41+0000\n"
-"PO-Revision-Date: 2025-02-11 00:04+0300\n"
+"POT-Creation-Date: 2025-03-13 21:25+0000\n"
+"PO-Revision-Date: 2025-03-14 00:45+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -295,8 +295,20 @@ msgstr "İşlemi onaylıyor musunuz?"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Auth Code"
+msgstr "Yetki Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Authorization Code"
 msgstr "Yetki Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "BIN Code"
+msgstr "BIN Kodu"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -328,6 +340,12 @@ msgstr "Banka Transferi"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Bank authorization code"
+msgstr "Banka yetki kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Bank code"
 msgstr "Banka kodu"
 
@@ -335,6 +353,22 @@ msgstr "Banka kodu"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_bank
 msgid "Branch"
 msgstr "Şube"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "CVC code of credit card"
+msgstr "Kredi kartı CVC kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + "
+"CARD_NUMBER + AMOUNT + SECRET_KEY))'."
+msgstr ""
+"Şu şekilde hesaplanır: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + CARD_NUMBER "
+"+ AMOUNT + SECRET_KEY))'."
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -376,6 +410,12 @@ msgstr "İptal"
 #, python-format
 msgid "Cancel Payment"
 msgstr "Ödeme İptal Et"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card Bank Name"
+msgstr "Kart Banka Adı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -443,12 +483,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid "Code"
 msgstr "Kod"
-
-#. module: payment_jetcheckout_api
-#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
-#, python-format
-msgid "Code given by service provider"
-msgstr "Hizmet sağlayıcınızdan temin edilen kod"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -574,6 +608,18 @@ msgstr "Kredi Kartı"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Credit Card Expiry Month"
+msgstr "Kredi Kartı Son Kullanım Ayı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Expiry Year"
+msgstr "Kredi Kartı Son Kullanım Yılı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Credit Card Family"
 msgstr "Kredi Kartı Ailesi"
 
@@ -592,6 +638,18 @@ msgstr "Kredi Kartı Numarası"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Credit Card Program"
+msgstr "Kredi Kartı Programı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Security Code"
+msgstr "Kredi Kartı Güvenlik Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Credit Card Type"
 msgstr "Kredi Kartı Türü"
 
@@ -606,6 +664,12 @@ msgstr "Kredi kartı detayları"
 #, python-format
 msgid "Credit card information related to transaction"
 msgstr "Ödeme işlemi ile ilgili kredi kartı bilgisi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Currency"
+msgstr "Para Birimi"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -754,6 +818,12 @@ msgstr "Ödeme Geçersiz Kıl"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Fail URL"
+msgstr "Başarısız URL Adresi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid ""
 "First six digits of card number (Do not use this parameter if you want to "
 "get all installment options)"
@@ -825,10 +895,40 @@ msgstr "Taksit seçeneklerini getirmek için kullanılan para birimi ISO kodu"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "If process result is failed, it will be posted this url with order id"
+msgstr ""
+"Eğer işlem başarısızsa, emir no ile birlikte sonuç bu adrese gönderilir"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "If process result is success, it will be posted this url with order id"
+msgstr ""
+"Eğer işlem başarılıysa, emir no ile birlikte sonuç bu adrese gönderilir"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"If the status code is 307 you need to redirect this url with transaction_id "
+"(that we returned in this response) on the form data"
+msgstr ""
+"Eğer durum kodu 307 ise bu yanıt içinde verilen transaction_id değerini "
+"kullanarak yönlendirme yapmalısınız"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Information whether card is debit or credit or something else"
 msgstr ""
 "Kartın kredi kartı, banka kartı veya başka bir tür kart olduğunu gösteren "
 "bilgi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
+#, python-format
+msgid "Initialize Payment"
+msgstr "Ödeme Başlat"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1004,6 +1104,18 @@ msgstr "Bu seçenekte kullanılacak minimum tutar limiti"
 #, python-format
 msgid "Minimum customer rate for this installment option"
 msgstr "Bu taksit seçeneği için minimum müşteri komisyon oranı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Mode"
+msgstr "Mod"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Month of expiry date of credit card"
+msgstr "Kredi kartının son kullanma ayı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1280,6 +1392,30 @@ msgstr "Ödeme Web Kancası"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Payment amount"
+msgstr "Ödeme tutarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment currency"
+msgstr "Ödeme para birimi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment service response code"
+msgstr "Ödeme servisi yanıt kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment service response message"
+msgstr "Ödeme servisi yanıt mesajı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Payment with 3D Secure"
 msgstr "3D Güvenlik ile ödeme"
 
@@ -1306,6 +1442,15 @@ msgstr "Telefon Numarası"
 #, python-format
 msgid "Phone number"
 msgstr "Telefon numarası"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"Please send it as 'T' for test purposes, otherwise it will be in production "
+"mode."
+msgstr ""
+"Lütfen test için 'T' gönderin, aksi halde canlı ortam devrede olacaktır."
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_bank
@@ -1345,6 +1490,18 @@ msgstr "Artı taksit açıklaması"
 #, python-format
 msgid "PoS name you assigned to track payment flow"
 msgstr "Ödeme akışını takip etmek için atanan PoS adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Post-Authorization"
+msgstr "Provizyon"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Pre-Authorization"
+msgstr "Ön Provizyon"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/services/services.py:0
@@ -1442,14 +1599,14 @@ msgstr "Miktar"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
-msgid "Reference name of payment"
-msgstr "Ödeme referans adı"
+msgid "Redirect URL"
+msgstr "Yönlendirme Adresi"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
-msgid "Reference number given by service provider"
-msgstr "Hizmet sağlayıcı tarafından verilen referans numarası"
+msgid "Reference name of payment"
+msgstr "Ödeme referans adı"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1544,8 +1701,32 @@ msgstr "Ödeme Yöntemi Seçiniz"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Service Code"
+msgstr "Servis Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Message"
+msgstr "Servis Mesajı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Service ReferenceID"
 msgstr "Hizmet ReferansNo"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Response Code"
+msgstr "Servis Yanıt Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Response Message"
+msgstr "Servis Yanıt Mesajı"
 
 #. module: payment_jetcheckout_api
 #: model:ir.model.fields.selection,name:payment_jetcheckout_api.selection__payment_transaction__jetcheckout_api_method__credit
@@ -1609,6 +1790,18 @@ msgstr "Taksit miktarının nasıl biçimlendirildiğini gösteren ifade"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Success URL"
+msgstr "Başarılı URL Adresi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Suggestion"
+msgstr "Öneri"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "System use charge"
 msgstr "Sistem kullanım bedeli"
 
@@ -1616,6 +1809,24 @@ msgstr "Sistem kullanım bedeli"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_payment
 msgid "Test"
 msgstr "Test"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"This is the suggestion about you can take the action if the payment fails"
+msgstr ""
+"Eğer ödeme başarısızsa bu öneriye göre işlemlerinize devam edebilirsiniz"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"This is the unique id of your payment request in our system. You need to "
+"post it to redirect url when redirection needed"
+msgstr ""
+"Sistemimizdeki ödeme isteğinize ait eşsiz kayıt no. Yönlendirme gerektiğinde "
+"yönlendirme adresine göndermelisiniz"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_card
@@ -1655,6 +1866,12 @@ msgstr "Müşteri komisyon oranı olmadan toplam ödeme tutarı"
 #, python-format
 msgid "Total applied installment count if exist"
 msgstr "Var ise, toplam uygulanan taksit miktarı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Transaction ID"
+msgstr "İşlem No"
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -1767,8 +1984,50 @@ msgstr "Vergi No"
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Virtual PoS Code"
+msgstr "Sanal PoS Kodu"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual PoS ID"
+msgstr "Sanal PoS No"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Virtual PoS Name"
 msgstr "Sanal PoS Adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual PoS Reference"
+msgstr "Sanal PoS Referansı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual Pos ID"
+msgstr "Sanal PoS No"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual Pos Name"
+msgstr "Sanal PoS Adı"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual pos id the payment processed"
+msgstr "Ödemenin işlendiği sanal pos no"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual pos name the payment processed"
+msgstr "Ödemenin işlendiği sanal pos adı"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_payment
@@ -1792,6 +2051,12 @@ msgstr "Webhook URL Adresi"
 #, python-format
 msgid "Webhook URL to send a notification"
 msgstr "Bildirim gönderilecek Webhook URL adresi"
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Year of expiry date of credit card"
+msgstr "Kredi kartının son kullanma yılı"
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_payment
@@ -1821,6 +2086,14 @@ msgstr "Posta Kodu"
 msgid "ZIP Code"
 msgstr "Posta Kodu"
 
+#, python-format
+#~ msgid "Code given by service provider"
+#~ msgstr "Hizmet sağlayıcınızdan temin edilen kod"
+
+#, python-format
+#~ msgid "Reference number given by service provider"
+#~ msgstr "Hizmet sağlayıcı tarafından verilen referans numarası"
+
 #~ msgid "API Products"
 #~ msgstr "API Ürünleri"
 
@@ -1829,9 +2102,6 @@ msgstr "Posta Kodu"
 
 #~ msgid "Qty"
 #~ msgstr "Miktar"
-
-#~ msgid "Transaction"
-#~ msgstr "İşlem"
 
 #~ msgid "Unit of Measure"
 #~ msgstr "Ölçü Birimi"

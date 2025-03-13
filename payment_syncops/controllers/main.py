@@ -29,7 +29,7 @@ class PayloxSyncopsController(Controller):
         return connector
 
     def _connector_prepare_transactions(self, tx, tz=None):
-        tz = tz or pytz.timezone('Europe/Istanbul')
+        tz = tz or pytz.timezone(request.env.user.tz or 'Europe/Istanbul')
         offset = tz.utcoffset(fields.Datetime.now())
 
         if request.httprequest.host == 'odeme.royalcanin.com.tr':
@@ -37,12 +37,15 @@ class PayloxSyncopsController(Controller):
             balances = 0
             negatives = 0
             positives = []
-            for item in tx.paylox_transaction_item_ids:
-                balances += item.amount
-                if item.amount < 0:
-                    negatives += item.amount
-                else:
-                    positives.append({'amount': item.amount, 'desc': item.desc})
+            if tx.paylox_transaction_item:
+                for item in tx.paylox_transaction_item_ids:
+                    balances += item.amount
+                    if item.amount < 0:
+                        negatives += item.amount
+                    else:
+                        positives.append({'amount': item.amount, 'desc': item.desc})
+            else:
+                positives.append({'amount': tx.amount, 'desc': tx.partner_ref})
 
             if balances < 0:
                 return {}
@@ -58,16 +61,18 @@ class PayloxSyncopsController(Controller):
                 items.append(item)
 
             values = []
-            for item in tx.paylox_transaction_item_ids:
+            types = dict(tx._fields['jetcheckout_payment_type']._description_selection(tx.env))
+            for item in items:
                 rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
                 values.append({
-                    'date': (tx.last_state_change + offset).strftime('%d/%m/%Y'),
+                    'date': (tx.last_state_change + offset).strftime('%d/%m/%Y %H:%M:%S'),
                     'description': item['desc'] if item['desc'] and len(item['desc']) == desc_maxlength else tx.partner_ref or '',
                     'payment_amount': '%0.2f' % (item['amount'],),
+                    'payment_type': types[tx.jetcheckout_payment_type],
                     'partner_name': tx.partner_name or '',
                     'partner_ref': tx.partner_ref or '',
                     'partner_city': tx.partner_city or '',
-                    'installment_count': tx.jetcheckout_installment_count or 1,
+                    'installment_count': tx.jetcheckout_installment_count or 1 if tx.jetcheckout_payment_type not in ('transfer', 'wallet', 'credit') else '',
                     'card_type': tx.jetcheckout_card_type or '',
                     'card_family': tx.jetcheckout_card_family or '',
                     'partner_user': tx.partner_id.user_id.name or '',
@@ -498,6 +503,7 @@ class PayloxSyncopsController(Controller):
                 'date': 'Son Durum Değişiklik Tarihi',
                 'description': 'Ödemeler/Açıklama',
                 'payment_amount': 'Ödenecek Tutar',
+                'payment_type': 'Ödeme Türü',
                 'partner_name': 'Müşteri',
                 'partner_ref': 'Müşteri/Referans',
                 'partner_city': 'İL',
@@ -543,11 +549,9 @@ class PayloxSyncopsController(Controller):
 
         transactions = request.env['payment.transaction'].sudo().search([
             ('id', 'in', list(map(int, data[''].split(',')))),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
             ('company_id', '=', request.env.user.company_ids.ids)
-        ])
+        ], order='last_state_change desc')
         row = 1
-        keys = enumerate(headers.keys())
         for transaction in transactions:
             values = self._connector_prepare_transactions(transaction)
             if not values:
@@ -556,7 +560,7 @@ class PayloxSyncopsController(Controller):
                 values = [values]
             
             for value in values:
-                for i, key in keys:
+                for i, key in enumerate(headers.keys()):
                     worksheet.write(row, i, value[key])
                 row += 1
         workbook.close()

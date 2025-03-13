@@ -259,6 +259,74 @@ class PaymentInstallment(Datamodel):
     description = fields.String(metadata={"title": _lt("Installment Description"), "description": _lt("Statement describing how installement count is formed"), "example": "6+2 (+2 Campaign)"})
 
 
+class PaymentInitCard(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.init.card"
+
+    name = fields.String(metadata={"title": _lt("Credit Card Holder Name"), "description": _lt("Name field which is placed on front side of the card"), "example": "John Doe"})
+    number = fields.String(metadata={"title": _lt("Credit Card Number"), "description": _lt("Masked number of related credit card"), "example": "123478******1234"})
+    expiry_month = fields.String(metadata={"title": _lt("Credit Card Expiry Month"), "description": _lt("Month of expiry date of credit card"), "example": "12"})
+    expiry_year = fields.String(metadata={"title": _lt("Credit Card Expiry Year"), "description": _lt("Year of expiry date of credit card"), "example": "30"})
+    cvc = fields.String(metadata={"title": _lt("Credit Card Security Code"), "description": _lt("CVC code of credit card"), "example": "30"})
+
+
+class PaymentInitInput(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.init.input"
+    _inherit = "payment.credential.apikey"
+
+    hash = fields.String(required=True, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + CARD_NUMBER + AMOUNT + SECRET_KEY))'."), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
+    card = NestedModel("payment.init.card", metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
+    partner = NestedModel("payment.partner", required=True, metadata={"title": _lt("Partner information related to request"), "description": _lt("Partner information")})
+    campaign = fields.String(metadata={"title": _lt("Campaign Name"), "description": _lt("Name of campaign to be used in getting installment options"), "example": "Standard"})
+    id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique identifier related to your specified record in your database for tracking the payment flow"), "example": '12aaff56a'})
+    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
+    installment_count = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 4})
+    url_success = fields.String(required=True, allow_none=False, metadata={"title": _lt("Success URL"), "description": _lt("If process result is success, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/success"})
+    url_fail = fields.String(required=True, allow_none=False, metadata={"title": _lt("Fail URL"), "description": _lt("If process result is failed, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/fail"})
+    mode = fields.String(required=None, allow_none=False, metadata={"title": _lt("Mode"), "description": _lt("Please send it as 'T' for test purposes, otherwise it will be in production mode."), "example": "P", "default": "P"})
+
+
+class PaymentInitOutputCard(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.init.output.card"
+
+    type = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Credit"})
+    program = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Mastercard"})
+    family = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Axess"})
+    bank_eft_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "046"})
+    bank_name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Card Bank Name"), "description": _lt("Card Bank Name"), "example": "Akbank T.A.Ş."})
+
+
+class PaymentInitOutput(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.init.output"
+    _inherit = "payment.output"
+
+    suggestion = fields.String(required=False, allow_none=False, metadata={"title": _lt("Suggestion"), "description": _lt("This is the suggestion about you can take the action if the payment fails"), "example": "Suggestion about payment success"})
+    service_resp_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Service Response Code"), "description": _lt("Payment service response code"), "example": "5062"})
+    service_resp_message = fields.String(required=False, allow_none=False, metadata={"title": _lt("Service Response Message"), "description": _lt("Payment service response message"), "example": "Gönderilen tutar tüm kırılımların toplam tutarına eşit olmalıdır"})
+    transaction_id = fields.String(required=False, allow_none=False, metadata={"title": _lt("Transaction ID"), "description": _lt("This is the unique id of your payment request in our system. You need to post it to redirect url when redirection needed"), "example": "a9bcbe48-0543-4a0d-be41-e423b64a5550"})
+    url_redirect = fields.String(required=False, allow_none=False, metadata={"title": _lt("Redirect URL"), "description": _lt("If the status code is 307 you need to redirect this url with transaction_id (that we returned in this response) on the form data"), "example": "https://api.payment.com/api/v1/"})
+    virtual_pos_name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Garanti Sanal Pos"})
+    virtual_pos_id = fields.Integer(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos ID"), "description": _lt("Virtual pos id the payment processed"), "example": 35})
+    auth_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Auth Code"), "description": _lt("Bank authorization code"), "example": "058942"})
+    bin_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "521807"})
+    installment_count = fields.Integer(required=False, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment Count"), "example": 4})
+    currency = fields.String(required=False, allow_none=False, metadata={"title": _lt("Currency"), "description": _lt("Payment currency"), "example": "TRY"})
+    amount = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Payment amount"), "example": 150.25})
+    cost = NestedModel("payment.commission.cost", metadata={"title": _lt("Cost commission information"), "description": _lt("Cost commission details")})
+    card = NestedModel("payment.init.output.card", metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
+
+
 class PaymentCommissionCost(Datamodel):
     class Meta:
         ordered = True

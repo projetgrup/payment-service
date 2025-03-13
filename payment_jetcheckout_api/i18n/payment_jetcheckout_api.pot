@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20240903\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 20:41+0000\n"
-"PO-Revision-Date: 2025-02-10 20:41+0000\n"
+"POT-Creation-Date: 2025-03-13 21:25+0000\n"
+"PO-Revision-Date: 2025-03-13 21:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -190,6 +190,8 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Amount"
 msgstr ""
@@ -201,6 +203,7 @@ msgid "Amount details"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
@@ -251,6 +254,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid ""
 "Any unique identifier related to your specified record in your database for "
@@ -274,7 +278,21 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Auth Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Authorization Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "BIN Code"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -307,12 +325,32 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Bank authorization code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Bank code"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_bank
 msgid "Branch"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "CVC code of credit card"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + "
+"CARD_NUMBER + AMOUNT + SECRET_KEY))'."
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -336,6 +374,7 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Campaign Name"
 msgstr ""
@@ -351,6 +390,13 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/services/services.py:0
 #, python-format
 msgid "Cancel Payment"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Card Bank Name"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -417,12 +463,6 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.layout
 msgid "Code"
-msgstr ""
-
-#. module: payment_jetcheckout_api
-#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
-#, python-format
-msgid "Code given by service provider"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -500,11 +540,13 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Cost commission details"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Cost commission information"
@@ -551,10 +593,25 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Credit Card Expiry Month"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Expiry Year"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Credit Card Family"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit Card Holder Name"
@@ -562,11 +619,28 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit Card Number"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Program"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Security Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit Card Type"
@@ -574,14 +648,24 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit card details"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit card information related to transaction"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Currency"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -731,6 +815,12 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Fail URL"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid ""
 "First six digits of card number (Do not use this parameter if you want to "
 "get all installment options)"
@@ -753,6 +843,7 @@ msgid "Hash"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
@@ -804,7 +895,33 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "If process result is failed, it will be posted this url with order id"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "If process result is success, it will be posted this url with order id"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"If the status code is 307 you need to redirect this url with transaction_id "
+"(that we returned in this response) on the form data"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Information whether card is debit or credit or something else"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
+#, python-format
+msgid "Initialize Payment"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -815,6 +932,9 @@ msgid "Installment Amount"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
@@ -852,6 +972,7 @@ msgid "Installment amount"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Installment count"
@@ -924,6 +1045,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Masked number of related credit card"
 msgstr ""
@@ -990,6 +1112,18 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Mode"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Month of expiry date of credit card"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Monthly payment amount"
 msgstr ""
 
@@ -1000,6 +1134,7 @@ msgid "Name"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Name field which is placed on front side of the card"
@@ -1012,6 +1147,7 @@ msgid "Name of campaign"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
@@ -1105,11 +1241,13 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Partner information"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Partner information related to request"
@@ -1190,6 +1328,7 @@ msgid "Payment Information"
 msgstr ""
 
 #. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/services/services.py:0
 #: code:addons/payment_jetcheckout_api/services/services.py:0
 #: code:addons/payment_jetcheckout_api/services/services.py:0
 #, python-format
@@ -1275,6 +1414,30 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Payment amount"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment currency"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment service response code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Payment service response message"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "Payment with 3D Secure"
 msgstr ""
 
@@ -1302,6 +1465,14 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Phone number"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"Please send it as 'T' for test purposes, otherwise it will be in production "
+"mode."
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1339,6 +1510,20 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "PoS name you assigned to track payment flow"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Post-Authorization"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Pre-Authorization"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1438,13 +1623,13 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
-msgid "Reference name of payment"
+msgid "Redirect URL"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
-msgid "Reference number given by service provider"
+msgid "Reference name of payment"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1539,8 +1724,35 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Message"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Service ReferenceID"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Response Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Service Response Message"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1605,12 +1817,39 @@ msgstr ""
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
+msgid "Success URL"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Suggestion"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
 msgid "System use charge"
 msgstr ""
 
 #. module: payment_jetcheckout_api
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_api.page_payment
 msgid "Test"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"This is the suggestion about you can take the action if the payment fails"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid ""
+"This is the unique id of your payment request in our system. You need to "
+"post it to redirect url when redirection needed"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1651,6 +1890,12 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Total applied installment count if exist"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Transaction ID"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1765,8 +2010,65 @@ msgstr ""
 
 #. module: payment_jetcheckout_api
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual PoS Code"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual PoS ID"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Virtual PoS Name"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual PoS Reference"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual Pos ID"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual Pos Name"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual pos id the payment processed"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Virtual pos name the payment processed"
 msgstr ""
 
 #. module: payment_jetcheckout_api
@@ -1787,6 +2089,12 @@ msgstr ""
 #: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Webhook URL to send a notification"
+msgstr ""
+
+#. module: payment_jetcheckout_api
+#: code:addons/payment_jetcheckout_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Year of expiry date of credit card"
 msgstr ""
 
 #. module: payment_jetcheckout_api
