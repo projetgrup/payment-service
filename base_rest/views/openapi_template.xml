@@ -29,21 +29,17 @@
             </t>
             <t t-set="head" t-value="head" />
         </t>
-
-        <body class="openapi">
-            <div id="swagger-ui" t-att-data-settings='json.dumps(settings)' />
-
-            <script>
-                 odoo.define('base_rest.swagger', function (require) {
-                        var SwaggerUi = require('base_rest.swagger_ui');
-                        var swagger_ui = new SwaggerUi('#swagger-ui');
-                        $(function() {
-                            swagger_ui.start();
-                        });
-                        return swagger_ui;
-                    });
-            </script>
-        </body>
+        <div id="swagger-ui" class="openapi" t-att-data-settings='json.dumps(settings)' />
+        <script>
+            odoo.define('base_rest.swagger', function (require) {
+                var SwaggerUi = require('base_rest.swagger_ui');
+                var swagger_ui = new SwaggerUi('#swagger-ui');
+                $(function() {
+                    swagger_ui.start();
+                });
+                return swagger_ui;
+            });
+        </script>
     </template>
 
     <template id="openapi_redoc" name="OpenAPI Redoc">
@@ -65,13 +61,11 @@
                     };
                 </script>
             </t>
-            <body>
-                <div id="redoc"/>
-                <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"/>
-                <script type="text/javascript">
-                    Redoc.init("<t t-esc="settings['urls'][0]['url']"/>", { labels: <t t-raw="labels"/> }, redoc);
-                </script>
-            </body>
+            <div id="redoc"/>
+            <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"/>
+            <script type="text/javascript">
+                Redoc.init("<t t-esc="settings['urls'][0]['url']"/>", { labels: <t t-raw="labels"/> }, redoc);
+            </script>
         </t>
     </template>
 </odoo>

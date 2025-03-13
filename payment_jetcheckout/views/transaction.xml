@@ -87,6 +87,7 @@
                     <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
                         <field name="jetcheckout_fund_rate" class="pr-1"/>%
                     </div>
+                    <field name="jetcheckout_postauth_amount" class="mr-5 float-right" attrs="{'invisible': [('jetcheckout_postauth_amount', '=', 0)]}"/>
                 </group>
                 <group>
                     <field name="jetcheckout_payment_type" string="Type"/>
@@ -169,6 +170,9 @@
                 <button name="action_capture" type="object" string="Capture Transaction"/>
             </header>
         </xpath>
+        <xpath expr='//field[@name="create_date"]' position="after">
+            <field name="last_state_change" optional="hide"/>
+        </xpath>
         <xpath expr='//field[@name="partner_name"]' position="replace">
             <field name="partner_name" optional="hide"/>
         </xpath>
@@ -187,6 +191,7 @@
             <field name="jetcheckout_payment_net" optional="hide"/>
             <field name="jetcheckout_fund_amount" optional="hide" groups="payment_jetcheckout.group_transaction_commission"/>
             <field name="jetcheckout_fund_rate" string="Fund Rate (%)" optional="hide" groups="payment_jetcheckout.group_transaction_commission"/>
+            <field name="jetcheckout_postauth_amount" optional="hide" attrs="{'invisible': [('jetcheckout_postauth_amount', '=', 0)]}"/>
         </xpath>
         <xpath expr='//field[@name="fees"]' position="replace">
             <field name="fees" invisible="1"/>

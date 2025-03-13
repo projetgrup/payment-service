@@ -4,7 +4,7 @@ import traceback
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval, test_python_expr, json, datetime
+from odoo.tools.safe_eval import safe_eval, test_python_expr, json, pytz, datetime
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +50,7 @@ class PaymentHook(models.Model):
             'UserError': UserError,
             'logger': logger,
             'json': json,
+            'pytz': pytz,
             **kwargs
         }
         try:

@@ -41,7 +41,20 @@ function searchProgram(name) {
 }
 
 function searchFamily(name) {
-    return cardFamilies.find(f => f.name === name);
+    const keymap = {
+        'çÇ':'c',
+        'ğĞ':'g',
+        'şŞ':'s',
+        'üÜ':'u',
+        'ıİ':'i',
+        'öÖ':'o'
+    };
+    for (const key in keymap) {
+        name = name.replace(new RegExp('['+key+']','g'), keymap[key]);
+    }
+    name = name.replace(/[^a-zA-Z0-9]/, '_');
+    name = name.toLowerCase();
+    return cardFamilies.find(f => f.code === name);
 }
 
 export default {

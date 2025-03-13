@@ -231,11 +231,11 @@
                                     </t>
                                     <t t-else="">
                                         <t t-if="record.is_portal.raw_value">
-                                            <button name="action_revoke_access" type="object" class="btn btn-secondary">Revoke Access</button>
-                                            <button name="action_invite_again" type="object" class="btn btn-secondary">Re-Invite</button>
+                                            <button name="action_revoke_access" type="object" class="btn btn-secondary" groups="payment_jetcheckout_system.group_system_grant_partner">Revoke Access</button>
+                                            <button name="action_invite_again" type="object" class="btn btn-secondary" groups="payment_jetcheckout_system.group_system_grant_partner">Re-Invite</button>
                                         </t>
                                         <t t-else="">
-                                            <button name="action_grant_access" type="object" class="btn btn-secondary">Grant Access</button>
+                                            <button name="action_grant_access" type="object" class="btn btn-secondary" groups="payment_jetcheckout_system.group_system_grant_partner">Grant Access</button>
                                         </t>
                                     </t>
                                 </div>

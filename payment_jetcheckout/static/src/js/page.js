@@ -1018,7 +1018,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     if (cardFamily) {
                                         self.card.logo.html = `<img src="data:image/svg+xml;base64,${cardFamily}" alt="${result.card.family}"/>`;
                                     } else {
-                                        self.card.logo.html = '';
+                                        self.card.logo.html = `<img src="${result.card.logo}" alt="${result.card.family}"/>`;
                                     }
                                     self.card.logo.$.addClass('show');
                                     self.card.family = result.card.family;

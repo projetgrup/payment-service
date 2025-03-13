@@ -35,6 +35,9 @@
                                 <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
                                 <strong class="text-primary font-weight-bold">Information</strong>
                                 <p>
+                                    <t t-if="partner.ref">
+                                      <t t-esc="partner.ref"/><br/>
+                                    </t>
                                     <t t-esc="partner.name"/><br/>
                                     <span t-field="partner.street"/> <t t-if="partner.state_id"><span t-field="partner.state_id"/> / <span t-field="partner.country_id"/></t><t t-else=""><span t-field="partner.country_id"/></t>
                                 </p>
@@ -196,7 +199,7 @@
                                                     <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
                                                         <i class="fa fa-times mr-1" t-translation="off"/>Remove Advance
                                                     </button>
-                                                    <button t-if="payment.manual" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.itemRemove">
+                                                    <button t-if="payment.manual and not payment.paid_amount" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.itemRemove">
                                                         <i class="fa fa-times mr-1" t-translation="off"/>Remove Item
                                                     </button>
                                                 </td>

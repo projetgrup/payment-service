@@ -135,7 +135,7 @@
                                 <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
                                     <i class="fa fa-times mr-1" t-translation="off"/>Remove Advance
                                 </button>
-                                <button t-if="payment.manual" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.itemRemove">
+                                <button t-if="payment.manual &amp;&amp; !payment.paid_amount" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.itemRemove">
                                     <i class="fa fa-times mr-1" t-translation="off"/>Remove Item
                                 </button>
                             </td>

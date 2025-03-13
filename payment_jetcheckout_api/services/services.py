@@ -51,9 +51,7 @@ class PaymentAPIService(Component):
     )
     def payment_installments(self, params):
         try:
-            company = self.env.company.id
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
@@ -75,9 +73,7 @@ class PaymentAPIService(Component):
     )
     def payment_prepare(self, params):
         try:
-            company = self.env.company.id
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
@@ -95,6 +91,32 @@ class PaymentAPIService(Component):
     payment_prepare.__doc__ = _lt("Prepare Payment")
 
     @restapi.method(
+        [(["/init"], "POST")],
+        input_param=Datamodel("payment.init.input"),
+        output_param=Datamodel("payment.init.output"),
+        auth="public",
+        tags=[_lt("Payment Initialization")]
+    )
+    def payment_init(self, params):
+        try:
+            api = self._get_api(params.apikey)
+            if not api:
+                return Response("Application key is not matched", status=401, mimetype="application/json")
+
+            hash = self._get_hash(api, params.hash, params.id)
+            if not hash:
+                return Response("Hash is not matched", status=401, mimetype="application/json")
+
+            self._initialize_transaction(api, hash, params)
+
+            ResponseOk = self.env.datamodels["payment.init.output"]
+            return ResponseOk(hash=quote(hash), **RESPONSE[200])
+        except Exception as e:
+            _logger.error(e)
+            return Response("Server Error", status=500, mimetype="application/json")
+    payment_init.__doc__ = _lt("Initialize Payment")
+
+    @restapi.method(
         [(["/result"], "GET")],
         input_param=Datamodel("payment.credential.hash"),
         output_param=Datamodel("payment.result.output"),
@@ -103,12 +125,11 @@ class PaymentAPIService(Component):
     )
     def payment_result(self, params):
         try:
-            company = self.env.company.id
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -140,11 +161,11 @@ class PaymentAPIService(Component):
     )
     def payment_status(self, params):
         try:
-            company = self.env.company.id
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -169,11 +190,11 @@ class PaymentAPIService(Component):
     )
     def payment_cancel(self, params):
         try:
-            company = self.env.company.id
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -196,11 +217,11 @@ class PaymentAPIService(Component):
     )
     def payment_refund(self, params):
         try:
-            company = self.env.company.id
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -223,12 +244,11 @@ class PaymentAPIService(Component):
     )
     def payment_expire(self, params):
         try:
-            company = self.env.company.id
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -251,12 +271,11 @@ class PaymentAPIService(Component):
     )
     def payment_delete(self, params):
         try:
-            company = self.env.company.id
-
-            api = self._get_api(company, params.apikey)
+            api = self._get_api(params.apikey)
             if not api:
                 return Response("Application key is not matched", status=401, mimetype="application/json")
 
+            company = api.company_id
             tx = self._get_transaction_from_hash(company, params.hash)
             if not tx:
                 return Response("Transaction not found", status=404, mimetype="application/json")
@@ -272,8 +291,8 @@ class PaymentAPIService(Component):
     # PRIVATE METHODS
     #
 
-    def _get_api(self, company, apikey, secretkey=False):
-        domain = [('company_id', '=', company), ('api_key', '=', apikey)]
+    def _get_api(self, apikey, secretkey=False):
+        domain = [('api_key', '=', apikey)]
         if secretkey:
             domain.append(('secret_key', '=', secretkey))
         return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
@@ -291,10 +310,10 @@ class PaymentAPIService(Component):
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
-            "amount": getattr(params, 'amount', 0) or 0,
-            "campaign": getattr(params, 'campaign_name', '') or '',
-            "currency": getattr(params, 'currency', 'TRY') or 'TRY',
-            "card_type": getattr(params, 'type', 'AllTypes') or 'AllTypes',
+            "amount": getattr(params, 'amount', None) or 0,
+            "campaign": getattr(params, 'campaign_name', None) or '',
+            "currency": getattr(params, 'currency', None) or 'TRY',
+            "card_type": getattr(params, 'type', None) or 'AllTypes',
             "language": "tr",
         }
         if bin:
@@ -312,7 +331,7 @@ class PaymentAPIService(Component):
                         'currency': installment['currency'],
                         'campaign': installment['campaign_name'],
                         'period': installment['inst_period'],
-                        'type': None if bin else installment['card_type'],
+                        'type': installment['card_type'],
                         'excluded': None if bin else installment['excluded_bins'],
                         'options': [{
                             'count': i['installment_count'],
@@ -448,6 +467,9 @@ class PaymentAPIService(Component):
             'partner_country_id': country and country.id or False,
             'partner_state_id': state and state.id or False,
         })
+
+    def _initialize_transaction(self, api, hash, params):
+        pass
 
     def _get_transaction_from_hash(self, company, hash):
         return self.env['payment.transaction'].sudo().search([('company_id', '=', company), ('jetcheckout_api_hash', '=', hash)], limit=1)
