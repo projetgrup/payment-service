@@ -4,12 +4,15 @@ import base64
 import hashlib
 import logging
 import requests
+import datetime
 from urllib.parse import quote
 
 from odoo.http import Response
 from odoo.tools.translate import _, _lt
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import ValidationError
 from odoo.addons.base_rest import restapi
+from odoo.addons.base_rest.components.service import skip_secure_response
 from odoo.addons.base_rest.controllers.main import RestController
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.addons.component.core import Component
@@ -90,6 +93,7 @@ class PaymentAPIService(Component):
             return Response("Server Error", status=500, mimetype="application/json")
     payment_prepare.__doc__ = _lt("Prepare Payment")
 
+    @skip_secure_response
     @restapi.method(
         [(["/init"], "POST")],
         input_param=Datamodel("payment.init.input"),
@@ -107,10 +111,11 @@ class PaymentAPIService(Component):
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
-            self._initialize_transaction(api, hash, params)
+            response = self._initialize_transaction(api, hash, params)
+            if isinstance(response, Response):
+                return response
 
-            ResponseOk = self.env.datamodels["payment.init.output"]
-            return ResponseOk(hash=quote(hash), **RESPONSE[200])
+            return Response(json.dumps({**RESPONSE[200], **response}), status=200, mimetype="application/json")
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
@@ -469,7 +474,186 @@ class PaymentAPIService(Component):
         })
 
     def _initialize_transaction(self, api, hash, params):
-        pass
+        if hasattr(params.partner, 'country'):
+            country = self.env['res.country'].sudo().search([('code', '=', params.partner.country)], limit=1)
+        else:
+            country = False
+
+        if country and hasattr(params.partner, 'state'):
+            state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', params.partner.state)], limit=1)
+        else:
+            state = False
+
+        company = api.company_id
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
+        if not acquirer:
+            return Response("Acquirer cannot be found", status=400, mimetype="application/json")
+
+        partner = self.env['res.partner'].sudo().search([('vat', '=', params.partner.vat), ('company_id', '=', company.id)]).with_company(company)
+        if len(partner) > 1:
+            raise Exception('There is more than one partner with VAT %s' % params.partner.vat)
+
+        if partner:
+            partner.write({
+                'name': params.partner.name,
+                'email': params.partner.email,
+                'mobile': params.partner.phone,
+                'country_id': country and country.id or False,
+                'state_id': state and state.id or False,
+                'street': getattr(params.partner, 'address', '') or '',
+                'city': getattr(params.partner, 'city', '') or '',
+                'zip': getattr(params.partner, 'zip', '') or '',
+                'ref': getattr(params.partner, 'ref', '') or '',
+                'paylox_tax_office': getattr(params.partner, 'taxoffice', False) or False,
+            })
+        else:
+            partner = partner.with_context({'no_vat_validation': True}).create({
+                'is_company': True,
+                'company_id': company.id,
+                'name': params.partner.name,
+                'vat': params.partner.vat,
+                'email': params.partner.email,
+                'mobile': params.partner.phone,
+                'country_id': country and country.id or False,
+                'state_id': state and state.id or False,
+                'street': getattr(params.partner, 'address', '') or '',
+                'city': getattr(params.partner, 'city', '') or '',
+                'zip': getattr(params.partner, 'zip', '') or '',
+                'ref': getattr(params.partner, 'ref', '') or '',
+                'paylox_tax_office': getattr(params.partner, 'taxoffice', False) or False,
+            })
+
+        values = {
+            'state': 'draft',
+            'operation': 'online_direct',
+            'amount': params.amount,
+            'company_id': company.id,
+            'acquirer_id': acquirer.id,
+            'partner_id': partner.id,
+            'currency_id': company.currency_id.id,
+            'jetcheckout_api_ok': True,
+            'jetcheckout_api_hash': hash,
+            'jetcheckout_api_id': params.id,
+            'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_ip_address': params.partner.ip_address,
+            'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
+        }
+        tx = self.env['payment.transaction'].sudo().create(values)
+        tx.write({
+            'partner_name': params.partner.name,
+            'partner_vat': params.partner.vat,
+            'partner_email': params.partner.email,
+            'partner_phone': params.partner.phone,
+            'partner_address': getattr(params.partner, 'address', '') or '',
+            'partner_city': getattr(params.partner, 'city', '') or '',
+            'partner_zip': getattr(params.partner, 'zip', '') or '',
+            'partner_country_id': country and country.id or False,
+            'partner_state_id': state and state.id or False,
+        })
+
+        fullname = tx.partner_name.split(' ', 1)
+        address = []
+        if tx.partner_city:
+            address.append(tx.partner_city)
+        if tx.partner_state_id:
+            address.append(tx.partner_state_id.name)
+        if tx.partner_country_id:
+            address.append(tx.partner_country_id.name)
+
+        year = str(datetime.datetime.now().year)[:2]
+        amount_string = '%.0f' % float_round(tx.amount * 100, 0)
+        hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, params.card.number, amount_string, acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "campaign_name": params.campaign,
+            "amount": amount_string,
+            "currency": tx.currency_id.name,
+            "installment_count": params.installment_count,
+            "hash_data": hash,
+            "language": "tr",
+            "card_number": params.card.number,
+            "expire_month": params.card.expiry_month,
+            "expire_year": year + params.card.expiry_year,
+            "card_holder_name": params.card.name,
+            "cvc": params.card.cvc,
+            "is_3d": True,
+
+            "order_id": tx.jetcheckout_order_id,
+            "success_url": params.url_success,
+            "fail_url": params.url_fail,
+            "customer":  {
+                "name": fullname[0],
+                "surname": fullname[-1],
+                "email": tx.partner_email,
+                "id": str(tx.partner_id.id),
+                "identity_number": tx.partner_id.vat,
+                "phone": tx.partner_phone,
+                "ip_address": tx.jetcheckout_ip_address,
+                "postal_code": tx.partner_zip,
+                "company": tx.partner_id.parent_id and tx.partner_id.parent_id.name or "",
+                "address": "%s %s" % (tx.partner_address, "/".join(address)),
+                "city": tx.partner_state_id and tx.partner_state_id.name or "",
+                "country": tx.partner_country_id and tx.partner_country_id.name or "",
+            },
+        }
+
+        url = '%s/api/v1/payment' % acquirer._get_paylox_api_url()
+        response = requests.post(url, data=json.dumps(data))
+        result = response.json()
+        if response.status_code == 200:
+            txid = result['transaction_id']
+            if result['response_code'] == "00307":
+                message = result['message']
+                tx.write({
+                    'state': 'pending',
+                    'callback_hash': hash,
+                    'state_message': _('Transaction is pending...'),
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
+                    'last_state_change': datetime.datetime.now(),
+                })
+            elif result['response_code'] == "00":
+                message = result['message']
+                self._process_transaction(tx=tx, **result)
+            else:
+                message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
+                    'last_state_change': datetime.datetime.now(),
+                })
+            return {
+                'status': int(result['response_code']),
+                'message': message,
+                'suggestion': result.get('suggestion') or '',
+                'service_resp_code': result.get('service_resp_code') or '',
+                'service_resp_message': result.get('service_resp_message') or '',
+                'transaction_id': result.get('transaction_id') or '',
+                'url_redirect': '%s/%s' % (result.get('redirect_url') or '', result.get('transaction_id') or ''),
+                'virtual_pos_name': result.get('virtual_pos_name') or '',
+                'virtual_pos_id': result.get('virtual_pos_id') or '',
+                'auth_code': result.get('auth_code') or '',
+                'bin_code': result.get('bin_code') or '',
+                'installment_count': result.get('installment_count') or 1,
+                'currency': result.get('currency') or '',
+                'amount': result.get('amount') or 0.0,
+                'cost': {
+                    'rate': result.get('expected_cost_rate') or 0.0,
+                    'amount': result.get('commission_amount') or 0.0,
+                },
+                'card': {
+                    'type': result.get('card_type') or '',
+                    'program': result.get('card_program') or '',
+                    'family': result.get('card_family') or '',
+                    'bank_eft_code': result.get('card_bank_eft_code') or '',
+                    'bank_name': result.get('card_bank_name') or '',
+                },
+            }
+        else:
+            return result
 
     def _get_transaction_from_hash(self, company, hash):
         return self.env['payment.transaction'].sudo().search([('company_id', '=', company), ('jetcheckout_api_hash', '=', hash)], limit=1)
