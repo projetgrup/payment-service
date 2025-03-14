@@ -265,11 +265,11 @@ class PaymentInitCard(Datamodel):
 
     _name = "payment.init.card"
 
-    name = fields.String(metadata={"title": _lt("Credit Card Holder Name"), "description": _lt("Name field which is placed on front side of the card"), "example": "John Doe"})
-    number = fields.String(metadata={"title": _lt("Credit Card Number"), "description": _lt("Masked number of related credit card"), "example": "123478******1234"})
-    expiry_month = fields.String(metadata={"title": _lt("Credit Card Expiry Month"), "description": _lt("Month of expiry date of credit card"), "example": "12"})
-    expiry_year = fields.String(metadata={"title": _lt("Credit Card Expiry Year"), "description": _lt("Year of expiry date of credit card"), "example": "30"})
-    cvc = fields.String(metadata={"title": _lt("Credit Card Security Code"), "description": _lt("CVC code of credit card"), "example": "30"})
+    name = fields.String(required=True, metadata={"title": _lt("Credit Card Holder Name"), "description": _lt("Name field which is placed on front side of the card"), "example": "John Doe"})
+    number = fields.String(required=True, metadata={"title": _lt("Credit Card Number"), "description": _lt("Masked number of related credit card"), "example": "123478******1234"})
+    expiry_month = fields.String(required=True, metadata={"title": _lt("Credit Card Expiry Month"), "description": _lt("Month of expiry date of credit card"), "example": "12"})
+    expiry_year = fields.String(required=True, metadata={"title": _lt("Credit Card Expiry Year"), "description": _lt("Year of expiry date of credit card"), "example": "30"})
+    cvc = fields.String(required=True, metadata={"title": _lt("Credit Card Security Code"), "description": _lt("CVC code of credit card"), "example": "000"})
 
 
 class PaymentInitInput(Datamodel):
@@ -277,18 +277,18 @@ class PaymentInitInput(Datamodel):
         ordered = True
 
     _name = "payment.init.input"
-    _inherit = "payment.credential.apikey"
+    _inherit = "payment.credential.hash"
 
-    hash = fields.String(required=True, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + CARD_NUMBER + AMOUNT + SECRET_KEY))'."), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
-    card = NestedModel("payment.init.card", metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
+    #hash = fields.String(required=True, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + CARD_NUMBER + AMOUNT + SECRET_KEY))'."), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
+    card = NestedModel("payment.init.card", required=True, metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
     partner = NestedModel("payment.partner", required=True, metadata={"title": _lt("Partner information related to request"), "description": _lt("Partner information")})
     campaign = fields.String(metadata={"title": _lt("Campaign Name"), "description": _lt("Name of campaign to be used in getting installment options"), "example": "Standard"})
     id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique identifier related to your specified record in your database for tracking the payment flow"), "example": '12aaff56a'})
+    currency = fields.String(required=False, allow_none=False, metadata={"title": _lt("Currency"), "description": _lt("Payment currency"), "example": "TRY"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
     installment_count = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 4})
     url_success = fields.String(required=True, allow_none=False, metadata={"title": _lt("Success URL"), "description": _lt("If process result is success, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/success"})
     url_fail = fields.String(required=True, allow_none=False, metadata={"title": _lt("Fail URL"), "description": _lt("If process result is failed, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/fail"})
-    mode = fields.String(required=None, allow_none=False, metadata={"title": _lt("Mode"), "description": _lt("Please send it as 'T' for test purposes, otherwise it will be in production mode."), "example": "P", "default": "P"})
 
 
 class PaymentInitOutputCard(Datamodel):
