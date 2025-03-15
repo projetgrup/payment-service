@@ -7,7 +7,7 @@ import requests
 import datetime
 from urllib.parse import quote
 
-from odoo.http import Response
+from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import ValidationError
@@ -536,6 +536,8 @@ class PaymentAPIService(Component):
             'jetcheckout_api_id': params.id,
             'jetcheckout_payment_type': 'virtual_pos',
             'jetcheckout_ip_address': params.partner.ip_address,
+            'jetcheckout_api_success_url': params.url_success,
+            'jetcheckout_api_fail_url': params.url_fail,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
         tx = self.env['payment.transaction'].sudo().create(values)
@@ -563,6 +565,9 @@ class PaymentAPIService(Component):
         year = str(datetime.datetime.now().year)[:2]
         amount_string = '%.0f' % float_round(tx.amount * 100, 0)
         hash = base64.b64encode(hashlib.sha256(''.join([acquirer.jetcheckout_api_key, params.card.number, amount_string, acquirer.jetcheckout_secret_key]).encode('utf-8')).digest()).decode('utf-8')
+        base_url = request.httprequest.host
+        success_url = '/api/payment/success'
+        fail_url = '/api/payment/fail'
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
@@ -579,9 +584,9 @@ class PaymentAPIService(Component):
             "cvc": params.card.cvc,
             "is_3d": True,
 
+            "success_url": "https://%s%s" % (base_url, success_url),
+            "fail_url": "https://%s%s" % (base_url, fail_url),
             "order_id": tx.jetcheckout_order_id,
-            "success_url": params.url_success,
-            "fail_url": params.url_fail,
             "customer":  {
                 "name": fullname[0],
                 "surname": fullname[-1],

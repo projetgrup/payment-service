@@ -375,4 +375,34 @@
             </div>
         </t>
     </template>
+
+    <template id="formpost" name="API Form-Post Payment Page">
+        <script>
+            let form = document.createElement("form");
+            form.method = "POST";
+            form.action = "<t t-esc="action"/>";
+            let input;
+
+            document.createElement("input");
+            input.type = "hidden";
+            input.name = "suggestion";
+            input.value = "<t t-esc="suggestion"/>";
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+        </script>
+    </template>
+
+    <template id="page_api_payment_success" name="API Success Payment Page">
+        <t t-call="payment_jetcheckout_api.formpost">
+            <t t-set="action" t-value="tx.jetcheckout_api_success_url"/>
+        </t>
+    </template>
+
+    <template id="page_api_payment_fail" name="API Fail Payment Page">
+        <t t-call="payment_jetcheckout_api.formpost">
+            <t t-set="action" t-value="tx.jetcheckout_api_fail_url"/>
+        </t>
+    </template>
 </odoo>

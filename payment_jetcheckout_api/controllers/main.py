@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import werkzeug
 import requests
 from werkzeug.exceptions import NotFound
@@ -68,6 +69,9 @@ class PayloxApiController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
+        if kwargs.get('skip_url'):
+            return url, tx, status
+
         if not status and tx.jetcheckout_api_hash:
             status = True
             self._del('hash')
@@ -86,6 +90,38 @@ class PayloxApiController(Controller):
         if path == '/payment/card':
             return 'payment_jetcheckout_api.page_card'
         return 'payment_jetcheckout_api.payment_page'
+
+    @http.route(['/api/payment/success'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_payment_success(self, **kwargs):
+        if request.httprequest.method == 'POST':
+            kwargs['skip_url'] = True
+            url, tx, status = self._process(**kwargs)
+            if not tx.jetcheckout_api_success_url:
+                raise NotFound()
+        else:
+            if '' not in kwargs:
+                raise NotFound()
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            if not tx:
+                raise NotFound()
+        return request.render('payment_jetcheckout_api.page_api_payment_success', {'tx': tx})
+
+    @http.route(['/api/payment/fail'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_payment_fail(self, **kwargs):
+        if request.httprequest.method == 'POST':
+            kwargs['skip_url'] = True
+            url, tx, status = self._process(**kwargs)
+            if not tx.jetcheckout_api_fail_url:
+                raise NotFound()
+        else:
+            if '' not in kwargs:
+                raise NotFound()
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            if not tx:
+                raise NotFound()
+        return request.render('payment_jetcheckout_api.page_api_payment_fail', {'tx': tx})
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api(self, **kwargs):
