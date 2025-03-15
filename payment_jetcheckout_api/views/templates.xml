@@ -377,21 +377,87 @@
     </template>
 
     <template id="formpost" name="API Form-Post Payment Page">
-        <script>
-            let form = document.createElement("form");
-            form.method = "POST";
-            form.action = "<t t-esc="action"/>";
-            let input;
-
-            document.createElement("input");
-            input.type = "hidden";
-            input.name = "suggestion";
-            input.value = "<t t-esc="suggestion"/>";
-            form.appendChild(input);
-
-            document.body.appendChild(form);
-            form.submit();
-        </script>
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" pageEncoding="UTF-8"/>
+                <title>Payment API Response</title>
+                <style>
+                    html, body {
+                        height: 100%;
+                    }
+                    body {
+                        margin: 0;
+                        text-align: center;
+                    }
+                    .flex-container {
+                        height: 100%;
+                        padding: 0;
+                        margin: 0;
+                        display: -webkit-box;
+                        display: -moz-box;
+                        display: -ms-flexbox;
+                        display: -webkit-flex;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .row {
+                        width: auto;
+                    }
+                    .flex-item {
+                        padding: 5px;
+                        width: 750px;
+                        height: 50%;
+                        margin: 1em;
+                        font-weight: bold;
+                        font-size: 1.25em;
+                        text-align: center;
+                    }
+                </style>
+            </head>
+            <body onLoad="javascript:postForm();">
+                <div class="flex-container">
+                    <div class="row">
+                        <div class="flex-item"><span>Ödeme sonucu sayfasına yönlendiriliyorsunuz.</span></div>
+                        <div class="flex-item"><span>Lütfen bekleyin...</span></div>
+                    </div>
+                </div>
+                <form name="postForm" t-att-action="action" method="POST">
+                    <input type="hidden" id="status" name="status" t-att-value="data['status']"/>
+                    <input type="hidden" id="message" name="message" t-att-value="data['message']"/>
+                    <input type="hidden" id="suggestion" name="suggestion" t-att-value="data['suggestion']"/>
+                    <input type="hidden" id="service_resp_code" name="service_resp_code" t-att-value="data['service_resp_code']"/>
+                    <input type="hidden" id="service_resp_message" name="service_resp_message" t-att-value="data['service_resp_message']"/>
+                    <input type="hidden" id="transaction_id" name="transaction_id" t-att-value="data['transaction_id']"/>
+                    <input type="hidden" id="url_redirect" name="url_redirect" t-att-value="data['url_redirect']"/>
+                    <input type="hidden" id="virtual_pos_name" name="virtual_pos_name" t-att-value="data['virtual_pos_name']"/>
+                    <input type="hidden" id="virtual_pos_id" name="virtual_pos_id" t-att-value="data['virtual_pos_id']"/>
+                    <input type="hidden" id="auth_code" name="auth_code" t-att-value="data['auth_code']"/>
+                    <input type="hidden" id="bin_code" name="bin_code" t-att-value="data['bin_code']"/>
+                    <input type="hidden" id="installment_count" name="installment_count" t-att-value="data['installment_count']"/>
+                    <input type="hidden" id="currency" name="currency" t-att-value="data['currency']"/>
+                    <input type="hidden" id="amount" name="amount" t-att-value="data['amount']"/>
+                    <input type="hidden" id="cost_rate" name="cost_rate" t-att-value="data['cost_rate']"/>
+                    <input type="hidden" id="cost_amount" name="cost_amount" t-att-value="data['cost_amount']"/>
+                    <input type="hidden" id="card_type" name="card_type" t-att-value="data['card_type']"/>
+                    <input type="hidden" id="card_program" name="card_program" t-att-value="data['card_program']"/>
+                    <input type="hidden" id="card_family" name="card_family" t-att-value="data['card_family']"/>
+                    <input type="hidden" id="card_bank_eft_code" name="card_bank_eft_code" t-att-value="data['card_bank_eft_code']"/>
+                    <input type="hidden" id="card_bank_name" name="card_bank_name" t-att-value="data['card_bank_name']"/>
+                    <noscript>
+                        <center>
+                            <span>Javascript algılanamadı. Lütfen aşağıdaki devam butonuna basınız</span>
+                            <br/>    
+                            <input type="submit" value="Devam"/>
+                        </center>
+                    </noscript>
+                </form>
+                <script language="Javascript">
+                    function postForm() { document.postForm.submit(); }
+                </script>
+            </body>
+        </html>
     </template>
 
     <template id="page_api_payment_success" name="API Success Payment Page">

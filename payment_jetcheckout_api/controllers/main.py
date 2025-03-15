@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import json
 import werkzeug
 import requests
 from werkzeug.exceptions import NotFound
@@ -105,7 +106,7 @@ class PayloxApiController(Controller):
             tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
             if not tx:
                 raise NotFound()
-        return request.render('payment_jetcheckout_api.page_api_payment_success', {'tx': tx})
+        return request.render('payment_jetcheckout_api.page_api_payment_success', {'tx': tx, 'data': json.loads(tx.jetcheckout_data)})
 
     @http.route(['/api/payment/fail'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_payment_fail(self, **kwargs):
@@ -121,7 +122,7 @@ class PayloxApiController(Controller):
             tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
             if not tx:
                 raise NotFound()
-        return request.render('payment_jetcheckout_api.page_api_payment_fail', {'tx': tx})
+        return request.render('payment_jetcheckout_api.page_api_payment_fail', {'tx': tx, 'data': json.loads(tx.jetcheckout_data)})
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api(self, **kwargs):

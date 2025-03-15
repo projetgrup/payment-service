@@ -607,32 +607,9 @@ class PaymentAPIService(Component):
         response = requests.post(url, data=json.dumps(data))
         result = response.json()
         if response.status_code == 200:
-            txid = result['transaction_id']
-            if result['response_code'] == "00307":
-                message = result['message']
-                tx.write({
-                    'state': 'pending',
-                    'callback_hash': hash,
-                    'state_message': _('Transaction is pending...'),
-                    'acquirer_reference': txid,
-                    'jetcheckout_transaction_id': txid,
-                    'last_state_change': datetime.datetime.now(),
-                })
-            elif result['response_code'] == "00":
-                message = result['message']
-                self._process_transaction(tx=tx, **result)
-            else:
-                message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
-                tx.write({
-                    'state': 'error',
-                    'state_message': message,
-                    'acquirer_reference': txid,
-                    'jetcheckout_transaction_id': txid,
-                    'last_state_change': datetime.datetime.now(),
-                })
-            return {
+            values = {
                 'status': int(result['response_code']),
-                'message': message,
+                'message': result['message'],
                 'suggestion': result.get('suggestion') or '',
                 'service_resp_code': result.get('service_resp_code') or '',
                 'service_resp_message': result.get('service_resp_message') or '',
@@ -645,20 +622,70 @@ class PaymentAPIService(Component):
                 'installment_count': result.get('installment_count') or 1,
                 'currency': result.get('currency') or '',
                 'amount': result.get('amount') or 0.0,
-                'cost': {
-                    'rate': result.get('expected_cost_rate') or 0.0,
-                    'amount': result.get('commission_amount') or 0.0,
-                },
-                'card': {
-                    'type': result.get('card_type') or '',
-                    'program': result.get('card_program') or '',
-                    'family': result.get('card_family') or '',
-                    'bank_eft_code': result.get('card_bank_eft_code') or '',
-                    'bank_name': result.get('card_bank_name') or '',
-                },
+                'cost_rate': result.get('expected_cost_rate') or 0.0,
+                'cost_amount': result.get('commission_amount') or 0.0,
+                'card_type': result.get('card_type') or '',
+                'card_program': result.get('card_program') or '',
+                'card_family': result.get('card_family') or '',
+                'card_bank_eft_code': result.get('card_bank_eft_code') or '',
+                'card_bank_name': result.get('card_bank_name') or '',
             }
+
+            txid = result['transaction_id']
+            if result['response_code'] == "00307":
+                tx.write({
+                    'state': 'pending',
+                    'callback_hash': hash,
+                    'state_message': _('Transaction is pending...'),
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
+                    'jetcheckout_data': json.dumps(values, default=str),
+                    'last_state_change': datetime.datetime.now(),
+                })
+            elif result['response_code'] == "00":
+                self._process_transaction(tx=tx, **result)
+            else:
+                message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'acquirer_reference': txid,
+                    'jetcheckout_transaction_id': txid,
+                    'last_state_change': datetime.datetime.now(),
+                })
+            return values
         else:
             return result
+
+    def _process_transaction(self, tx, **result):
+        corate = result.get('expected_cost_rate', 0)
+        try:
+            corate = float(corate)
+        except:
+            corate = 0
+
+        tx.with_context(domain=request.httprequest.referrer)._paylox_query({
+            'successful': result.get('response_code') == '00',
+            'pending': result.get('response_code') == '00333',
+            'code': result.get('response_code', ''),
+            'message': result.get('response_message', '') or result.get('message', ''),
+            'transaction_ref': result.get('transaction_id', False),
+            'service_code': result.get('service_resp_code', ''),
+            'service_message': result.get('service_resp_message', ''),
+            'service_suggestion': result.get('suggestion', ''),
+            'amount': result.get('amount', 0),
+            'vpos_id': result.get('virtual_pos_id', 0),
+            'vpos_name': result.get('virtual_pos_name', ''),
+            'vpos_code': result.get('auth_code', ''),
+            'preauth': result.get('preauth', tx.jetcheckout_preauth),
+            'postauth': result.get('postauth', tx.jetcheckout_postauth),
+            'card_program': result.get('card_program', ''),
+            'card_family': result.get('card_family', ''),
+            'card_type': result.get('card_type', ''),
+            'bin_code': result.get('bin_code', ''),
+            'commission_amount': result.get('commission_amount', 0),
+            'commission_rate': corate,
+        })
 
     def _get_transaction_from_hash(self, company, hash):
         return self.env['payment.transaction'].sudo().search([('company_id', '=', company.id), ('jetcheckout_api_hash', '=', hash)], limit=1)
