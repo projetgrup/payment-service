@@ -4,7 +4,7 @@
 
 {
     'name': 'syncOPS Payment Integration',
-    'version': '1.9',
+    'version': '1.10',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -16,6 +16,7 @@
     ],
     'data': [
         'data/data.xml',
+        'views/partner.xml',
         'views/transaction.xml',
         'views/acquirer.xml',
         'views/templates.xml',

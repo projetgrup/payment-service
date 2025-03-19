@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import requests
 from pytz import timezone
+from dateutil import parser
 from datetime import datetime, timedelta
-from odoo import models, api, fields
+from odoo import models, api, fields, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.connector_syncops.models.config import DAYS
 
 
@@ -9,6 +12,10 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     syncops_data = fields.Text(string='syncOPS Data')
+    syncops_ok = fields.Boolean('syncOPS Ready', readonly=True)
+    syncops_state = fields.Boolean('syncOPS State', readonly=True)
+    syncops_ref = fields.Char('syncOPS Reference', readonly=True)
+    syncops_state_message = fields.Text('syncOPS State Message', readonly=True)
 
     @api.model
     def cron_sync(self):
@@ -35,6 +42,126 @@ class Partner(models.Model):
                     wizard.with_company(company.id).confirm()
                     wizard.with_company(company.id).with_context(wizard_id=wizard.id).sync()
                     wizard.unlink()
+
+    def action_check_connector(self):
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        connector = self.env['syncops.connector'].sudo()._find('payment_post_partner', company=company)
+        if not connector:
+            raise UserError(_('No syncOPS connector found'))
+
+        if not self.id:
+            raise UserError(_('Please save partner before checking connector logs'))
+
+        result = []
+        try:
+            url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
+            if not url:
+                raise ValidationError(_('No syncOPS endpoint URL found'))
+
+            url += '/api/v1/log'
+            response = requests.get(url, params={
+                'username': connector.username,
+                'token': connector.token,
+                'reference': str(self.id),
+            })
+            if response.status_code == 200:
+                results = response.json()
+                if not results.get('status') == 0:
+                    raise UserError(results['message'])
+                logs = results.get('logs', [])
+                for log in logs:
+                    result.append({
+                        'connector_id': connector.id,
+                        'company_id': self.env.company.id,
+                        'date': parser.parse(log['date']),
+                        'partner_name': log['partner'],
+                        'connector_name': log['connector'],
+                        'token_name': log['token'],
+                        'method_name': log['method'],
+                        'status': log['status'],
+                        'state': log['state'],
+                        'message': log['message'],
+                        'request_data': log['request_data'],
+                        'request_raw': log['request_raw'],
+                        'request_method': log['request_method'],
+                        'request_url': log['request_url'],
+                        'response_code': log['response_code'],
+                        'response_message': log['response_message'],
+                        'response_data': log['response_data'],
+                        'response_raw': log['response_raw'],
+                    })
+            else:
+                raise UserError(response.text or response.reason)
+        except Exception as e:
+            raise UserError(str(e))
+
+        if result:
+            logs = self.env['syncops.log'].sudo().create(result)
+            action = self.env.ref('connector_syncops.action_log').sudo().read()[0]
+            action['context'] = {'create': False, 'delete': False, 'edit': False, 'import': False}
+            action['domain'] = [('id', 'in', logs.ids)]
+            return action
+        else:
+            raise UserError(_('No log found'))
+
+    def action_process_connector(self):
+        self.ensure_one()
+        if not self.syncops_ok or not self.syncops_state:
+            return
+
+        params = {
+            'email': self.email or '',
+            'mobile': self.mobile or '',
+            'city': self.state_id.name or '',
+            'town': self.city or '',
+            'address': self.street or '',
+        }
+        if self.is_company:
+            params.update({
+                'type': 0,
+                'name': self.name,
+                'vat': self.vat or '',
+                'taxOffice': self.paylox_tax_office or '',
+            })
+        else:
+            name, surname = self.name.rsplit(' ', 1)
+            params.update({
+                'type': 1,
+                'name': name or '',
+                'surname': surname or '',
+                'vat': self.vat or '',
+            })
+
+        company = self.company_id or self.env.company
+        result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner', reference=str(self.id), params=params, company=company, message=True)
+
+        if result is None:
+            self.write({
+                'syncops_state': True,
+                'syncops_ref': True,
+                'syncops_state_message': _('This partner has not been successfully posted to connector.\n%s') % message
+            })
+        else:
+            self.write({
+                'syncops_state': False,
+                'syncops_ref': result and result[0].get('ref') or False,
+                'syncops_state_message': _('This partner has been successfully posted to connector.')
+            })
+        self.env.cr.commit()
+
+    @api.model
+    def create(self, values):
+        connector = self.env['syncops.connector'].sudo()._find('payment_post_partner')
+        if connector:
+            values.update({
+                'syncops_ok': True,
+                'syncops_state': True,
+            })
+        res = super().create(values)
+        if connector:
+            res.action_process_connector()
+        return res
 
 
 class PartnerBank(models.Model):

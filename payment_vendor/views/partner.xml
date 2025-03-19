@@ -54,6 +54,35 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <field name="syncops_ok" invisible="1"/>
+            <field name="syncops_state" invisible="1"/>
+            <button
+                name="action_check_connector"
+                type="object"
+                class="oe_stat_button"
+                icon="fa-chain"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '!=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Succeeded</span>
+                </div>
+            </button>
+            <button
+                name="action_check_connector"
+                type="object"
+                class="oe_stat_button"
+                icon="fa-unlink"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Failed</span>
+                </div>
+            </button>
+        </xpath>
+        <xpath expr='//header' position="inside">
+            <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '=', False)]}"/>
+        </xpath>
         <xpath expr='//field[@name="vat"]' position="before">
             <span class="o_form_label o_td_label" name="address_name">
                 <b>Address</b>
@@ -72,7 +101,6 @@
             <field name="phone" widget="phone"/>
         </xpath>
         <xpath expr='//field[@name="mobile"]' position="replace">
-            <field name="phone" widget="phone"/>
             <label for="mobile"/>
             <div class="position-relative">
                 <field name="mobile" widget="phone" nolabel="1" required="1"/>
@@ -93,6 +121,9 @@
                     <field name="should_send_email" widget="boolean_toggle" nolabel="1" style="transform: scale(0.7);"/>
                 </div>
             </div>
+        </xpath>
+        <xpath expr='//field[@name="ref"]' position="after">
+            <field name="syncops_ref" string="Connector Reference" attrs="{'invisible': [('syncops_ref', '=', False)]}"/>
         </xpath>
         <xpath expr='//field[@name="campaign_ids"]' position="after">
             <field name="payment_product_categ_ids" domain="[('system', '!=', False), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" groups="payment_system_product.group_product"/>
@@ -116,6 +147,7 @@
                         <field name="team_id" options="{'no_create': True}"/>
                     </group>
                 </group>
+                <field name="syncops_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('syncops_ok', '=', False)]}"/>
             </page>
         </xpath>
     </field>
