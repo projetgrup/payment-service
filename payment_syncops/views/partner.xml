@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_partner" model="ir.ui.view">
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <field name="syncops_ok" invisible="1"/>
+            <field name="syncops_state" invisible="1"/>
+            <button
+                name="action_check_connector"
+                type="object"
+                class="oe_stat_button"
+                icon="fa-chain"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '!=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Succeeded</span>
+                </div>
+            </button>
+            <button
+                name="action_check_connector"
+                type="object"
+                class="oe_stat_button"
+                icon="fa-unlink"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '=', False)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value">Connector</span><span class="o_stat_text">Failed</span>
+                </div>
+            </button>
+        </xpath>
+        <xpath expr="//sheet" position="before">
+            <header>
+                <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '=', False)]}"/>
+            </header>
+        </xpath>
+        <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="after">
+            <field name="syncops_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('syncops_ok', '=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="search_partner" model="ir.ui.view">
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_res_partner_filter"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group" position="before">
+            <separator/>
+            <filter string="Connector Partners" name="syncops_ok" domain="[('syncops_ok', '=', True)]"/>
+            <separator/>
+            <filter string="Failed Connector Partners" name="syncops_state" domain="[('syncops_ok', '=', True), ('syncops_state', '=', True)]"/>
+            <separator/>
+        </xpath>
+    </field>
+    </record>
+</odoo>

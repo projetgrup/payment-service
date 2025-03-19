@@ -271,7 +271,7 @@ class Partner(models.Model):
             partner.transaction_failed_count = len(partner.transaction_failed_ids)
 
     def _search_payment(self, operator, operand):
-        payables = self.env['payment.item'].search([('paid', '=', False)]).mapped('parent_id')
+        payables = self.env['payment.item'].search([('paid', '=', False), ('amount', '>', 0)]).mapped('parent_id')
         if operator == '!=':
             return [('id', 'in', payables.ids)]
         if operator == '=':

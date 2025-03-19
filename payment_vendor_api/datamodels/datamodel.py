@@ -62,6 +62,7 @@ class VendorPaymentTransaction(Datamodel):
     card_name = fields.String(required=True, allow_none=False, metadata={"title": "Cardholder Name", "description": "Cardholder name", "example": "John Doe"})
     card_number = fields.String(required=True, allow_none=False, metadata={"title": "Card Number", "description": "Card number", "example": "123456******1234"})
     card_type = fields.String(required=True, allow_none=False, metadata={"title": "Card Type", "description": "Card type", "example": "Troy"})
+    card_program = fields.String(required=False, allow_none=False, metadata={"title": "Credit Card Program", "description": "Credit Card Program", "example": ""})
     card_family = fields.String(required=True, allow_none=False, metadata={"title": "Card Family", "description": "Card family", "example": "Bankkart"})
     campaign_name = fields.String(required=True, allow_none=False, metadata={"title": "Campaign Name", "description": "Name of campaign which is used during payment", "example": "Bol Taksit Kampanyası"})
     pos_name = fields.String(required=True, allow_none=False, metadata={"title": "Virtual PoS Name", "description": "Name of virtual pos which is used as payment provider", "example": "Paylox | Banka"})

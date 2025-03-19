@@ -7,6 +7,14 @@
         }
     }
 
+    .gap-1 {
+        gap: 0.2em;
+    }
+
+    .gap-5 {
+        gap: 1em;
+    }
+
     .form-control.o_preloading {
         background: #eeeeee;
         background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);

@@ -1411,6 +1411,9 @@ class PayloxSystemController(Controller):
             return message
 
         values = {**kwargs}
+        if 'phone' in values:
+            values['mobile'] = values['phone']
+
         if 'tax_office' in values:
             values['paylox_tax_office'] = values['tax_office']
             del values['tax_office']
