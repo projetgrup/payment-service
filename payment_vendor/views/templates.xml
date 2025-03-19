@@ -283,10 +283,10 @@
                 <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
                     <div class="field-container d-flex p-2 gap-5">
                         <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
-                            <input type="radio" checked="checked"/><span t-translation="off"/><span>Individual</span>
+                            <input type="radio" checked="checked" autocomplete="off"/><span t-translation="off"/><span>Individual</span>
                         </button>
                         <button class="btn" name="company" field="wizard.register.buttons.company_type">
-                            <input type="radio"/><span t-translation="off"/><span>Company</span>
+                            <input type="radio" autocomplete="off"/><span t-translation="off"/><span>Company</span>
                         </button>
                         <input type="hidden" value="person" field="wizard.register.company_type"/>
                     </div>

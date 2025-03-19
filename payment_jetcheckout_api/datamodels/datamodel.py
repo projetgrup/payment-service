@@ -291,19 +291,6 @@ class PaymentInitInput(Datamodel):
     url_fail = fields.String(required=True, allow_none=False, metadata={"title": _lt("Fail URL"), "description": _lt("If process result is failed, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/fail"})
 
 
-class PaymentInitOutputCard(Datamodel):
-    class Meta:
-        ordered = True
-
-    _name = "payment.init.output.card"
-
-    type = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Credit"})
-    program = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Mastercard"})
-    family = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Axess"})
-    bank_eft_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "046"})
-    bank_name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Card Bank Name"), "description": _lt("Card Bank Name"), "example": "Akbank T.A.Ş."})
-
-
 class PaymentInitOutput(Datamodel):
     class Meta:
         ordered = True
@@ -323,8 +310,13 @@ class PaymentInitOutput(Datamodel):
     installment_count = fields.Integer(required=False, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment Count"), "example": 4})
     currency = fields.String(required=False, allow_none=False, metadata={"title": _lt("Currency"), "description": _lt("Payment currency"), "example": "TRY"})
     amount = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Payment amount"), "example": 150.25})
-    cost = NestedModel("payment.commission.cost", metadata={"title": _lt("Cost commission information"), "description": _lt("Cost commission details")})
-    card = NestedModel("payment.init.output.card", metadata={"title": _lt("Credit card information related to transaction"), "description": _lt("Credit card details")})
+    cost_rate = fields.Float(metadata={"title": _lt("Cost Commision Rate"), "description": _lt("Percentage which is subtracted from total payment amount"), "example": 1.5})
+    cost_amount = fields.Float(metadata={"title": _lt("Cost Commision Amount"), "description": _lt("Amount which is subtracted from total payment amount"), "example": 2.18})
+    card_type = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Credit"})
+    card_program = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Mastercard"})
+    card_family = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "Axess"})
+    card_bank_eft_code = fields.String(required=False, allow_none=False, metadata={"title": _lt("Virtual Pos Name"), "description": _lt("Virtual pos name the payment processed"), "example": "046"})
+    card_bank_name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Card Bank Name"), "description": _lt("Card Bank Name"), "example": "Akbank T.A.Ş."})
 
 
 class PaymentCommissionCost(Datamodel):
