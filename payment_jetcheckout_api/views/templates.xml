@@ -377,7 +377,6 @@
     </template>
 
     <template id="formpost" name="API Form-Post Payment Page">
-        <!DOCTYPE html>
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" pageEncoding="UTF-8"/>
