@@ -8,15 +8,9 @@ class ResUserSaml(models.Model):
     _description = "User to SAML Provider Mapping"
 
     user_id = fields.Many2one("res.users", index=True, required=True)
-    saml_provider_id = fields.Many2one(
-        "auth.saml.provider", string="SAML Provider", index=True
-    )
-    saml_uid = fields.Char("SAML User ID", help="SAML Provider user_id", required=True)
-    saml_access_token = fields.Char(
-        "Current SAML token for this user",
-        required=False,
-        help="The current SAML token in use",
-    )
+    saml_uid = fields.Char("SAML User ID", required=True)
+    saml_access_token = fields.Char("Current SAML token for this user")
+    saml_provider_id = fields.Many2one("auth.saml.provider", string="SAML Provider", index=True)
 
     _sql_constraints = [
         (
