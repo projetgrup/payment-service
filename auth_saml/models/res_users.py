@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import passlib
+import random
 import logging
 
 from typing import Set
@@ -27,7 +29,22 @@ class ResUser(models.Model):
             [("saml_uid", "=", saml_uid), ("saml_provider_id", "=", provider)],
             limit=1,
         )
-        user = user_saml.user_id
+        if user_saml:
+            user = user_saml.user_id
+        else:
+            s = "abcdefghijklmnopqrstuvwxyz034567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
+            user = self.env['res.users'].sudo().create({
+                'name': saml_uid,
+                'login': saml_uid,
+                'password': "".join(random.sample(s, 16)),
+                'company_id': self.env.company.id,
+            })
+            user_saml = self.env['res.users.saml'].sudo().create({
+                'user_id': user.id,
+                'saml_uid': saml_uid,
+                'saml_provider_id': provider,
+            })
+
         if len(user) != 1:
             raise AccessDenied()
 
@@ -58,14 +75,10 @@ class ResUser(models.Model):
 
         except (AccessDenied, passlib.exc.PasswordSizeError):
             token = (
-                self.env["res.users.saml"]
-                .sudo()
-                .search(
-                    [
-                        ("user_id", "=", self.env.user.id),
-                        ("saml_access_token", "=", password),
-                    ]
-                )
+                self.env["res.users.saml"].sudo().search([
+                    ("user_id", "=", self.env.user.id),
+                    ("saml_access_token", "=", password),
+                ])
             )
             if token:
                 return
@@ -81,9 +94,7 @@ class ResUser(models.Model):
 
     @api.model
     def allow_saml_and_password(self) -> bool:
-        return tools.str2bool(
-            self.env["ir.config_parameter"].sudo().get_param(ALLOW_SAML_UID_AND_PASSWORD)
-        )
+        return tools.str2bool(self.env["ir.config_parameter"].sudo().get_param(ALLOW_SAML_UID_AND_PASSWORD))
 
     def _set_password(self):
         if not self.allow_saml_and_password():
@@ -115,14 +126,10 @@ class ResUser(models.Model):
 
     def allow_saml_and_password_changed(self):
         if not self.allow_saml_and_password():
-            users_to_blank_password = self.sudo().search(
-                [
-                    "&",
-                    ("saml_ids", "!=", False),
-                    ("id", "not in", list(self._saml_allowed_user_ids())),
-                ]
-            )
-            _logger.debug(
-                "Removing password from %s user(s)", len(users_to_blank_password)
-            )
+            users_to_blank_password = self.sudo().search([
+                "&",
+                ("saml_ids", "!=", False),
+                ("id", "not in", list(self._saml_allowed_user_ids())),
+            ])
+            _logger.debug("Removing password from %s user(s)", len(users_to_blank_password))
             users_to_blank_password.write({"password": False})

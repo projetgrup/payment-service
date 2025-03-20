@@ -43,13 +43,11 @@ class AuthSamlProvider(models.Model):
     sp_pem_public = fields.Binary(
         string="Public Certificate",
         attachment=True,
-        required=True,
     )
     sp_pem_public_filename = fields.Char("Public Certificate File Name")
     sp_pem_private = fields.Binary(
         string="Private Key",
         attachment=True,
-        required=True,
     )
     sp_pem_private_filename = fields.Char("Private Key File Name")
     sp_metadata_url = fields.Char(
@@ -199,7 +197,7 @@ class AuthSamlProvider(models.Model):
                 },
             },
             "cert_file": self._get_cert_key_path("sp_pem_public"),
-            "key_file": self._get_cert_key_path("sp_pem_private"),
+            #"key_file": self._get_cert_key_path("sp_pem_private"),
         }
         try:
             sp_config = Saml2Config()
