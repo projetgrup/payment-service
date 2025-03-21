@@ -17,6 +17,24 @@ class PaymentHook(models.Model):
         for hook in self:
             hook.name = _('Hook #%s') % (hook.id or '?',)
 
+    @api.depends('subtype')
+    def _compute_subtype_transaction(self):
+        for hook in self:
+            hook.subtype_transaction = hook.subtype and hook.subtype.startswith('transaction') and hook.subtype
+
+    def _set_subtype_transaction(self):
+        for hook in self:
+            hook.subtype = hook.subtype_transaction
+
+    @api.depends('subtype')
+    def _compute_subtype_item(self):
+        for hook in self:
+            hook.subtype_item = hook.subtype and hook.subtype.startswith('item') and hook.subtype
+
+    def _set_subtype_item(self):
+        for hook in self:
+            hook.subtype = hook.subtype_item
+
     company_id = fields.Many2one('res.company', ondelete='cascade', default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
     name = fields.Char(compute='_compute_name')
@@ -35,6 +53,16 @@ class PaymentHook(models.Model):
         ('item_create', 'Creation'),
         ('item_finalize', 'Finalization'),
     ])
+    subtype_transaction = fields.Selection([
+        ('transaction_create', 'Creation'),
+        ('transaction_authorize', 'Pre-Authorization'),
+        ('transaction_finalize', 'Finalization'),
+        ('transaction_cancel', 'Cancellation'),
+    ], compute='_compute_subtype_transaction', inverse='_set_subtype_transaction')
+    subtype_item = fields.Selection([
+        ('item_create', 'Creation'),
+        ('item_finalize', 'Finalization'),
+    ], compute='_compute_subtype_item', inverse='_set_subtype_item')
 
     @api.constrains('code')
     def _check_code(self):
