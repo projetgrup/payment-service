@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*
 import time
 import base64
+import logging
 from http.client import responses
 from odoo import models, fields, api, _
+
+_logger = logging.getLogger(__name__)
 
 LOG_SERVICES= {}
 
@@ -90,12 +93,12 @@ class PayloxLog(models.Model):
         service = self.get_service(value.get('service'))
 
         return {
-            'company_id': self.env.company.id,
+            'company_id': value.get('company', self.env.company.id),
             'partner_id': value.get('partner'),
             'transaction_id': value.get('transaction'),
             'acquirer_id': value.get('acquirer'),
             'service_id': service,
-            'environment': value.get('env'),
+            'environment': value.get('env', 'P'),
             'status': value.get('status'),
             'message': value.get('message'),
             'duration': now - value.get('now', now),
@@ -127,20 +130,26 @@ class PayloxLog(models.Model):
         return service
 
     @api.model
-    def get_state(self):
+    def get_state(self, company=None):
+        if company:
+            company = self.env.company
         log = self.env['ir.config_parameter'].sudo().get_param('paylox.log')
-        return log == 'all' or log == 'opt' and self.env.company.sudo().payment_log_ok
+        return log == 'all' or log == 'opt' and company.sudo().payment_log_ok
 
     @api.model
     def save(self, values):
-        values = self._value(values)
-        keys = values.keys()
-        vals = values.values()
-        self.env.cr.execute('''
-            INSERT INTO payment_paylox_log (%s, create_uid, write_uid, create_date, write_date)
-            VALUES (%s, 1, 1, NOW() at time zone 'UTC', NOW() at time zone 'UTC')
-            ''' % (', '.join(keys), ', '.join(map(self._value_sql, vals)))
-        )
+        with self.env.cr.savepoint():
+            try:
+                values = self._value(values)
+                keys = values.keys()
+                vals = values.values()
+                self.env.cr.execute('''
+                    INSERT INTO payment_paylox_log (%s, create_uid, write_uid, create_date, write_date)
+                    VALUES (%s, 1, 1, NOW() at time zone 'UTC', NOW() at time zone 'UTC')
+                    ''' % (', '.join(keys), ', '.join(map(self._value_sql, vals)))
+                )
+            except Exception as e:
+                _logger.error('An error occured when logging a payment request: %s' % e)
 
 
 class PayloxLogService(models.Model):

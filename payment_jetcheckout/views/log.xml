@@ -54,7 +54,7 @@
                         </div>
                         <br/>
                         <field name="request_data" nolabel="1" colspan="2" attrs="{'invisible': [('request_data', '=', False)]}"/>
-                        <span attrs="{'invisible': [('request_data', '!=', False)]}" class="text-600">No request</span>
+                        <span attrs="{'invisible': [('request_data', '!=', False)]}" class="text-500 font-italic">No request</span>
                         <!--<br/>
                         <field name="request_curl" nolabel="1" colspan="2" class="text-400"/>-->
                     </group>
