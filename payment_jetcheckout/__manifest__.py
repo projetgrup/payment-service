@@ -5,7 +5,7 @@
 
 {
     'name': 'Paylox Payment Acquirer',
-    'version': '1.11',
+    'version': '1.12',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -19,6 +19,7 @@
         'views/partner.xml',
         'views/product.xml',
         'views/report.xml',
+        'views/log.xml',
         'views/templates.xml',
         'wizards/signin.xml',
         'wizards/application.xml',
@@ -27,6 +28,7 @@
         'wizards/transaction_import.xml',
         'report/report.xml',
         'data/data.xml',
+        'data/log.xml',
         'data/installment.xml',
         'security/ir.model.access.csv',
         'security/security.xml',

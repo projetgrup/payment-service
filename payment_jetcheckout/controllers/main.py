@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import uuid
+import time
 import json
 import base64
 import hashlib
@@ -572,12 +573,14 @@ class PayloxController(http.Controller):
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', token='', **kwargs):
         self._check_user()
+        loggable = self._log_state()
         client = self._get_partner(partner, parent=True)
         if not request.env.user.has_group('base.group_user'):
             if client and client.campaign_id:
                 campaign = client.campaign_id.name
 
         acquirer = self._get_acquirer(acquirer=acquirer)
+        transaction = self._get_transaction()
         currency =  self._get_currency(currency, acquirer)
         type = self._get_type()
         url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
@@ -599,11 +602,34 @@ class PayloxController(http.Controller):
             })
 
         values = {'type': type}
+        if loggable:
+            log = {
+                'partner': client and client.id or None,
+                'acquirer': acquirer and acquirer.id or None,
+                'transaction': transaction and transaction.id or None,
+                'service': 'get_installment_%s' % ('bin' if bin else 'all',),
+                'env': data.get('mode') or None,
+                'now': time.time(),
+                'method': 'post',
+                'url': url,
+                'request': json.dumps(data, indent=4, default=str, ensure_ascii=False),
+            }
 
         response = requests.post(url, data=json.dumps(data), verify=False)
-        if response.status_code == 200:
+        try:
             result = response.json()
+        except:
+            result = response.content or None
 
+        if loggable:
+            log.update({
+                'status': response.status_code == 200 and result.get('response_code') == "00",
+                'message': isinstance(result, dict) and result.get('message') or response.reason,
+                'response': isinstance(result, dict) and json.dumps(result, indent=4, default=str, ensure_ascii=False) or result,
+                'code': response.status_code,
+            })
+
+        if response.status_code == 200:
             if result['response_code'] == "00":
                 if type.startswith('i'):
                     if bin:
@@ -959,6 +985,10 @@ class PayloxController(http.Controller):
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
         else:
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
+
+        if loggable:
+            self._log(log)
+
         return values
 
     @staticmethod
@@ -1082,6 +1112,12 @@ class PayloxController(http.Controller):
 
     def _get_transaction(self):
         return False
+
+    def _log_state(self):
+        return request.env['payment.paylox.log'].get_state()
+
+    def _log(self, values):
+        request.env['payment.paylox.log'].save(values)
 
     def _process(self, tx=None, **kwargs):
         if not tx:

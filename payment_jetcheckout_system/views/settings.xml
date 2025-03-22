@@ -327,6 +327,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('payment_log_opt', '=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_log_ok"/>
+                                    <field name="payment_log_opt" invisible="1"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_log_ok" string="Enable Logging"/>
+                                    <div class="text-muted">
+                                        Save logs of payment requests
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Dues" string="Dues" data-key="hr_attendance">
@@ -625,6 +637,19 @@
                                     <br/>
                                     <label for="payment_default_sms_template" string="Template" class="col-3 col-lg-3 o_light_label"/>
                                     <field name="payment_default_sms_template" class="oe_inline" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt16"/>
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_log" string="Enable Logging"/>
+                            <div class="text-muted">
+                                Save logs of payment requests
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="payment_log" class="oe_inline" widget="radio"/>
                                 </div>
                             </div>
                         </div>

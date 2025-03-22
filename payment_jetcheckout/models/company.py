@@ -14,3 +14,4 @@ class Company(models.Model):
     payment_page_description_ok = fields.Boolean(string='Payment Page Description')
     payment_token_ok = fields.Boolean(string='Enable Payment Credit Card Tokens')
     payment_point_ok = fields.Boolean(string='Enable Payment Credit Card Points')
+    payment_log_ok = fields.Boolean(string='Enable Logging for Payment Requests')

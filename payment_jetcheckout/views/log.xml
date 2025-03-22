@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_log" model="ir.ui.view">
+    <field name="name">payment.paylox.log.tree</field>
+    <field name="model">payment.paylox.log</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="create_date" string="Date"/>
+            <field name="acquirer_id" options="{'no_create': True}"/>
+            <field name="partner_id" options="{'no_create': True}"/>
+            <field name="transaction_id" options="{'no_create': True}"/>
+            <field name="service_id" options="{'no_create': True}"/>
+            <field name="environment" widget="badge" decoration-warning="environment == 'T'" decoration-success="environment == 'P'"/>
+            <field name="state" widget="badge" decoration-danger="status == False" decoration-success="status == True"/>
+            <field name="message" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create': True}"/>
+            <field name="status" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="form_log" model="ir.ui.view">
+    <field name="name">payment.paylox.log.form</field>
+    <field name="model">payment.paylox.log</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="status" invisible="1"/>
+                <field name="state" widget="statusbar" statusbar_visible="success"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="acquirer_id" options="{'no_create': True}"/>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                        <field name="transaction_id" options="{'no_create': True}"/>
+                        <field name="service_id" options="{'no_create': True}"/>
+                        <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="create_date" string="Date"/>
+                        <field name="environment" widget="badge" decoration-warning="environment == 'T'" decoration-success="environment == 'P'"/>
+                        <label for="duration"/>
+                        <div class="o_row">
+                            <field name="duration" nolabel="1"/>s
+                        </div>
+                        <field name="message"/>
+                    </group>
+                </group>
+                <group class="mt-5">
+                    <group string="Request">
+                        <div colspan="2">
+                            <field name="request_method" nolabel="1" class="oe_inline fw-bold mr8" widget="badge" decoration-success="request_method == 'get'" decoration-warning="request_method == 'post'" decoration-info="request_method == 'put'" decoration-primary="request_method == 'patch'" decoration-danger="request_method == 'delete'" decoration-muted="request_method == 'options'"/> <field name="request_url" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <br/>
+                        <field name="request_data" nolabel="1" colspan="2" attrs="{'invisible': [('request_data', '=', False)]}"/>
+                        <span attrs="{'invisible': [('request_data', '!=', False)]}" class="text-600">No request</span>
+                        <!--<br/>
+                        <field name="request_curl" nolabel="1" colspan="2" class="text-400"/>-->
+                    </group>
+                    <group string="Response" class="position-relative">
+                        <div colspan="2">
+                            <field name="response_code" nolabel="1" class="oe_inline fw-bold mr8" widget="badge" decoration-success="response_badge == '2'" decoration-warning="response_badge == '4'" decoration-info="response_badge == '1'" decoration-primary="response_badge == '3'" decoration-danger="response_badge == '5'" decoration-muted="response_badge == False"/> <field name="response_message" nolabel="1" class="oe_inline"/>
+                            <field name="response_badge" invisible="1"/>
+                        </div>
+                        <br/>
+                        <field name="response_data" nolabel="1" colspan="2" attrs="{'invisible': [('response_data', '=', False)]}"/>
+                        <span attrs="{'invisible': [('response_data', '!=', False)]}" class="text-600">No response</span>
+                        <div class="position-absolute" style="top: 10px; right: 10px;" groups="base.group_system">
+                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0" string="Show Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '!=', False)]}"/>
+                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0" string="Hide Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}"/>
+                        </div>
+                        <br attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}" groups="base.group_system"/>
+                        <field name="debug_message" nolabel="1" colspan="2" class="text-400" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}" groups="base.group_system"/>
+                        <field name="debug_ok" invisible="1" groups="base.group_system"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="search_log" model="ir.ui.view">
+    <field name="name">payment.paylox.log.search</field>
+    <field name="model">payment.paylox.log</field>
+    <field name="arch" type="xml">
+        <search>
+            <filter string="Failed Requests" name="filterby_error" domain="[('status', '=', False)]"/>
+            <filter string="Successful Requests" name="filterby_success" domain="[('status', '=', True)]"/>
+            <group expand="0" string="Group By">
+                <filter string="Status" name="groupby_status" context="{'group_by': 'state'}"/>
+                <filter string="Acquirer" name="groupby_acquirer" context="{'group_by': 'acquirer_id'}"/>
+            </group>
+        </search>
+    </field>
+    </record>
+
+    <record id="action_log" model="ir.actions.act_window">
+    <field name="name">Logs</field>
+    <field name="res_model">payment.paylox.log</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No logs yet
+        </p>
+        <p>
+            Logs are listed here
+        </p>
+    </field>
+    </record>
+</odoo>

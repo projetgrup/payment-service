@@ -18,6 +18,11 @@ class PaymentSettings(models.TransientModel):
                     raise UserError(_('There must be only one due tag without item tags'))
 
     @api.depends('company_id')
+    def _compute_payment_log_opt(self):
+        for settings in self:
+            settings.payment_log_opt = self.env['ir.config_parameter'].get_param('paylox.log') == 'opt'
+
+    @api.depends('company_id')
     def _compute_payment_page_campaign_table_opt(self):
         for setting in self:
             setting.payment_page_campaign_table_opt = 'include' if setting.company_id.payment_page_campaign_table_included else 'exclude'
@@ -79,6 +84,8 @@ class PaymentSettings(models.TransientModel):
     payment_advance_ok = fields.Boolean(related='company_id.payment_advance_ok', readonly=False)
     payment_token_ok = fields.Boolean(related='company_id.payment_token_ok', readonly=False)
     payment_point_ok = fields.Boolean(related='company_id.payment_point_ok', readonly=False)
+    payment_log_ok = fields.Boolean(related='company_id.payment_log_ok', readonly=False)
+    payment_log_opt = fields.Boolean(string='Optinal Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
 
     payment_page_ok = fields.Boolean(related='company_id.payment_page_ok', readonly=False)
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
