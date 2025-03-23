@@ -25,7 +25,7 @@ class PaymentTransaction(models.Model):
         for tx in self:
             tx.is_paylox = tx.acquirer_id.provider == 'jetcheckout'
 
-    def _calc_installment_description_long(self):
+    def _compute_installment_description_long(self):
         for tx in self:
             desc = tx.jetcheckout_installment_description
             desc_long = ''
@@ -48,6 +48,10 @@ class PaymentTransaction(models.Model):
             tx.jetcheckout_payment_net = tx.jetcheckout_payment_paid - tx.jetcheckout_commission_amount
             tx.jetcheckout_fund_amount = tx.jetcheckout_payment_amount - tx.jetcheckout_payment_net
             tx.jetcheckout_fund_rate = 100 * tx.jetcheckout_fund_amount / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0
+
+    def _compute_paylox_log_count(self):
+        for tx in self:
+            tx.paylox_log_count = len(tx.paylox_log_ids)
 
     @api.model
     def _get_default_partner_country_id(self):
@@ -103,7 +107,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
     jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)
     jetcheckout_installment_description = fields.Char('Installment Description', readonly=True, copy=False)
-    jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
+    jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_compute_installment_description_long')
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True, copy=False)
 
     jetcheckout_commission_rate = fields.Float('Cost Rate', digits=(12,4), readonly=True, copy=False)
@@ -116,6 +120,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
 
     paylox_product_ids = fields.One2many('payment.transaction.product', 'transaction_id', 'Products')
+    paylox_log_ids = fields.One2many('payment.paylox.log', 'transaction_id', 'Logs')
+    paylox_log_count = fields.Integer('Log Count', compute='_compute_paylox_log_count')
     paylox_description = fields.Char()
 
     @api.model
@@ -152,6 +158,11 @@ class PaymentTransaction(models.Model):
             if tx.state not in ('draft', 'pending'):
                 raise ValidationError(_('Only "Draft" or "Pending" payment transactions can be removed'))
         return super().unlink()
+
+    def action_log(self):
+        action = self.env.ref('payment_jetcheckout.action_log').read()[0]
+        action['domain'] = [('transaction_id', '=', self.id)]
+        return action
 
     def _paylox_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_paylox_api_url()
