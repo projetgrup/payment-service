@@ -21,7 +21,7 @@
             <field name="jetcheckout_webhook_state" invisible="1"/>
             <button type="object" name="action_process_notification_webhook" string="Process Notifications" attrs="{'invisible': ['|', ('jetcheckout_webhook_ok', '=', False), ('jetcheckout_webhook_state', '=', False)]}"/>
         </xpath>
-        <xpath expr="//field[@name='partner_id']" position="after">
+        <xpath expr="//field[@name='partner_name']" position="after">
             <field name="partner_ref"/>
         </xpath>
         <xpath expr="//field[@name='state_message']" position="after">
