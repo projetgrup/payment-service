@@ -61,7 +61,8 @@
         </xpath>
         <xpath expr='//group[@name="transaction_partner"]' position="after">
             <group name="transaction_api_partner" attrs="{'invisible': [('jetcheckout_api_ok', '=', False)]}">
-                <field name="partner_name" string="Partner"/>
+                <field name="partner_id" string="Partner" widget="res_partner_many2one"/>
+                <field name="partner_name" string="Partner" invisible="1"/>
                 <field name="partner_vat" string="VAT"/>
                 <label for="partner_address" string="Address"/>
                 <div class="o_address_format">
