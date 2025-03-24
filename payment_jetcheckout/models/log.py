@@ -131,7 +131,7 @@ class PayloxLog(models.Model):
 
     @api.model
     def get_state(self, company=None):
-        if company:
+        if not company:
             company = self.env.company
         log = self.env['ir.config_parameter'].sudo().get_param('paylox.log')
         return log == 'all' or log == 'opt' and company.sudo().payment_log_ok
