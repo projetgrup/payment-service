@@ -131,20 +131,23 @@ class PayloxLog(models.Model):
 
     @api.model
     def get_state(self, company=None):
-        log = self.env['ir.config_parameter'].sudo().get_param('paylox.log')
-        if log == 'all':
-            return True
-        elif log == 'opt':
-            if not company:
-                company = self.env.company
-            if company.sudo().payment_log_ok:
+        try:
+            log = self.env['ir.config_parameter'].sudo().get_param('paylox.log')
+            if log == 'all':
                 return True
-        return False
+            elif log == 'opt':
+                if not company:
+                    company = self.env.company
+                if company.sudo().payment_log_ok:
+                    return True
+            return False
+        except:
+            return False
 
     @api.model
     def save(self, values):
-        with self.env.cr.savepoint():
-            try:
+        try:
+            with self.env.cr.savepoint():
                 values = self._value(values)
                 keys = values.keys()
                 vals = values.values()
@@ -153,8 +156,8 @@ class PayloxLog(models.Model):
                     VALUES (%s, 1, 1, NOW() at time zone 'UTC', NOW() at time zone 'UTC')
                     ''' % (', '.join(keys), ', '.join(map(self._value_sql, vals)))
                 )
-            except Exception as e:
-                _logger.error('An error occured when logging a payment request: %s' % e)
+        except Exception as e:
+            _logger.error('An error occured when logging a payment request: %s' % e)
 
 
 class PayloxLogService(models.Model):

@@ -573,10 +573,7 @@ class PayloxController(http.Controller):
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', token='', **kwargs):
         self._check_user()
-        try:
-            loggable = self._log_state()
-        except:
-            loggable = None
+        loggable = self._log_state()
         client = self._get_partner(partner, parent=True)
         if not request.env.user.has_group('base.group_user'):
             if client and client.campaign_id:
