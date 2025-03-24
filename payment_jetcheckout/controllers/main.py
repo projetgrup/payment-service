@@ -1503,6 +1503,13 @@ class PayloxController(http.Controller):
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
+                if result['response_code'] == "00122":
+                    tx.write({'jetcheckout_order_id': str(uuid.uuid4())})
+                    data.update({"order_id": tx.jetcheckout_order_id})
+                    response = requests.post(url, data=json.dumps(data))
+
+            if response.status_code == 200:
+                result = response.json()
                 txid = result['transaction_id']
                 if result['response_code'] == "00307":
                     rurl = result['redirect_url']
