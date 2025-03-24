@@ -9,6 +9,7 @@ import logging
 import werkzeug
 import requests
 from collections import OrderedDict
+from urllib.parse import unquote, quote_plus
 
 from odoo import fields, models, http, SUPERUSER_ID, _
 from odoo.http import request
@@ -1514,6 +1515,8 @@ class PayloxController(http.Controller):
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
+                    if tx.company_id.payment_page_init_redirect_extra:
+                        url = '/payment/redirect?=%s' % quote_plus(url)
                     return {'url': url, 'id': tx.id}
                 else:
                     tx.state = 'error'
@@ -2404,6 +2407,11 @@ class PayloxController(http.Controller):
                     # tx.with_context(domain=request.httprequest.referrer)._paylox_query() # enable this line to resend query
         except Exception as e:
             _logger.error('An error occured when processing payment callback: %s' % e)
+
+    @http.route(['/payment/redirect'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def redirect(self, **kwargs):
+        url = unquote(kwargs[''])
+        return werkzeug.utils.redirect(url)
 
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result_card(self, **kwargs):
