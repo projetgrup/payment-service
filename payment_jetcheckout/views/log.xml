@@ -45,6 +45,7 @@
                             <field name="duration" nolabel="1"/>s
                         </div>
                         <field name="message"/>
+                        <field name="ip_address"/>
                     </group>
                 </group>
                 <group class="mt-5">

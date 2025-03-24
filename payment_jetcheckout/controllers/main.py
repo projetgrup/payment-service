@@ -403,28 +403,30 @@ class PayloxController(http.Controller):
 
     def _get_payment_tokens(self, acquirer, partner):
         tokens = ''
+        cards = []
         acquirer = self._get_acquirer(acquirer=acquirer)
         if acquirer.company_id.payment_token_ok:
-            #url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
-            #data = {
-            #    "application_key": acquirer.jetcheckout_api_key,
-            #    "card_customer_token": partner.get_paylox_token_ref(),
-            #    "mode": acquirer._get_paylox_env(),
-            #    "language": "tr",
-            #}
-            #response = requests.post(url, data=json.dumps(data))
-            #if response.status_code == 200:
-            #    result = response.json()
-            #    if result['response_code'] == "00":
-            #        cards = result['cards']
-            #        if cards:
-            #            children = []
-            #            values.append({
-            #                'text': _('Saved Credit Cards'),
-            #                'children': children,
-            #            })
+            url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "card_customer_token": partner.get_paylox_token_ref(),
+                "mode": acquirer._get_paylox_env(),
+                "language": "tr",
+            }
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    cards = result['cards']
+                    #if cards:
+                    #    children = []
+                    #    values.append({
+                    #        'text': _('Saved Credit Cards'),
+                    #        'children': children,
+                    #    })
 
             values = []
+            card_names = list(map(lambda c: c['card_alias'], cards))
             if acquirer.company_id.payment_page_token_view_type == 'select':
                 values += [
                     {'id': -1, 'selected': True, 'text': _('Do not save credit card')},
@@ -433,6 +435,7 @@ class PayloxController(http.Controller):
             tokens = request.env['payment.token'].sudo().search([
                 ('acquirer_id', '=', acquirer.id),
                 ('partner_id', '=', partner.id),
+                ('name', 'in', card_names),
                 ('verified', '=', True),
             ])
             if tokens:

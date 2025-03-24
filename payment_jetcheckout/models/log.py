@@ -4,6 +4,7 @@ import base64
 import logging
 from http.client import responses
 from odoo import models, fields, api, _
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -76,6 +77,7 @@ class PayloxLog(models.Model):
     response_message = fields.Char(string='Response Message', readonly=True, copy=False)
     response_data = fields.Text(string='Response Data', readonly=True, copy=False)
     response_badge = fields.Char(string='Response Badge', compute='_compute_response_badge')
+    ip_address = fields.Char(string='IP Address', readonly=True, copy=False)
     debug_ok = fields.Boolean(string='Show Debug')
     debug_message = fields.Text(string='Debug Message')
 
@@ -106,9 +108,10 @@ class PayloxLog(models.Model):
             'request_method': value.get('method'),
             'request_data': value.get('request'),
             'request_url': value.get('url'),
-            'response_message': responses.get(int(code), ''),
-            'response_data': value.get('response'),
             'response_code': code,
+            'response_data': value.get('response'),
+            'response_message': responses.get(int(code), ''),
+            'ip_address': request.httprequest.remote_addr if request else None,
         }
 
     def name_get(self):
