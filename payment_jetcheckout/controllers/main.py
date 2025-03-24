@@ -586,7 +586,7 @@ class PayloxController(http.Controller):
         transaction = self._get_transaction()
         currency =  self._get_currency(currency, acquirer)
         type = self._get_type()
-        url = '/prepayment/%sinstallment_options' % (bin and 'bin_' or '',)
+        path = '/prepayment/%sinstallment_options' % (bin and 'bin_' or '',)
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
@@ -614,11 +614,11 @@ class PayloxController(http.Controller):
                 'env': data.get('mode') or None,
                 'now': time.time(),
                 'method': 'post',
-                'url': url,
+                'url': path,
                 'request': json.dumps(data, indent=4, default=str, ensure_ascii=False),
             }
 
-        url = '%s/api/v1/%s' % (acquirer._get_paylox_api_url(), url)
+        url = '%s/api/v1%s' % (acquirer._get_paylox_api_url(), path)
         response = requests.post(url, data=json.dumps(data), verify=False)
         try:
             result = response.json()
