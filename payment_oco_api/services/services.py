@@ -106,6 +106,7 @@ class OrderCheckoutAPIService(Component):
                     'message': _('Success'),
                     'transaction': tx.id,
                     'acquirer': tx.acquirer_id.id,
+                    'env': tx.acquirer_id._get_paylox_env(),
                     'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
                 })
                 self._log(log)
@@ -672,6 +673,7 @@ class OrderCheckoutAPIService(Component):
             log.update({
                 'transaction': tx.id,
                 'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
             })
 
         tx._paylox_cancel()
@@ -685,6 +687,7 @@ class OrderCheckoutAPIService(Component):
             log.update({
                 'transaction': tx.id,
                 'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
             })
 
         tx._paylox_refund(params.amount)
@@ -698,6 +701,7 @@ class OrderCheckoutAPIService(Component):
             log.update({
                 'transaction': tx.id,
                 'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
             })
 
         tx.with_context(amount=params.amount)._send_capture_request()
@@ -711,6 +715,7 @@ class OrderCheckoutAPIService(Component):
             log.update({
                 'transaction': tx.id,
                 'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
             })
 
         result = tx._paylox_query()
