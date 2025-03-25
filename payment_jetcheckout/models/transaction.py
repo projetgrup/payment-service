@@ -75,6 +75,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_order_aux_id = fields.Char('Auxiliary Order', readonly=True, copy=False)
     jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
@@ -160,7 +161,7 @@ class PaymentTransaction(models.Model):
         return super().unlink()
 
     def action_log(self):
-        action = self.env.ref('payment_jetcheckout.action_log').read()[0]
+        action = self.env.ref('payment_jetcheckout.action_log').sudo().read()[0]
         action['domain'] = [('transaction_id', '=', self.id)]
         return action
 
@@ -168,7 +169,7 @@ class PaymentTransaction(models.Model):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "lang": "tr",
         }
 
@@ -268,7 +269,7 @@ class PaymentTransaction(models.Model):
         url = '%s/api/v1/payment/refund' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "transaction_id": self.jetcheckout_transaction_id,
             "amount": round(amount * 100),
             "currency": self.currency_id.name,
@@ -297,7 +298,7 @@ class PaymentTransaction(models.Model):
         url = '%s/api/v1/payment/cancel' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "transaction_id": self.jetcheckout_transaction_id,
             "language": "tr",
         }
@@ -369,6 +370,15 @@ class PaymentTransaction(models.Model):
                 raise UserError(_('%s (Error Code: %s)') % (result['message'], result['response_code']))
         else:
             raise UserError(_('%s (Error Code: %s)') % (response.reason, response.status_code))
+
+    def paylox_get_order_id(self):
+        return self.jetcheckout_order_aux_id or self.jetcheckout_order_id
+
+    @api.model
+    def paylox_get_transaction(self, order_id):
+        if order_id.startswith('x'):
+            return self.sudo().search([('jetcheckout_order_aux_id', '=', order_id)], limit=1)
+        return self.sudo().search([('jetcheckout_order_id', '=', order_id)], limit=1)
 
     def paylox_verify_token(self):
         try:

@@ -665,7 +665,7 @@ class OrderCheckoutAPIService(Component):
         return self.env['payment.acquirer'].sudo().with_company(company)._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
 
     def _cancel_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
 
@@ -679,7 +679,7 @@ class OrderCheckoutAPIService(Component):
         tx._paylox_cancel()
 
     def _refund_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
         
@@ -693,7 +693,7 @@ class OrderCheckoutAPIService(Component):
         tx._paylox_refund(params.amount)
 
     def _postauth_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
 
@@ -707,7 +707,7 @@ class OrderCheckoutAPIService(Component):
         tx.with_context(amount=params.amount)._send_capture_request()
 
     def _query_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
 

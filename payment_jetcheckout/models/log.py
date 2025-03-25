@@ -100,7 +100,7 @@ class PayloxLog(models.Model):
             'transaction_id': value.get('transaction'),
             'acquirer_id': value.get('acquirer'),
             'service_id': service,
-            'environment': value.get('env', 'P'),
+            'environment': value.get('env'),
             'status': value.get('status'),
             'message': value.get('message'),
             'duration': now - value.get('now', now),

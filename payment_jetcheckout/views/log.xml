@@ -10,7 +10,7 @@
             <field name="partner_id" options="{'no_create': True}"/>
             <field name="transaction_id" options="{'no_create': True}"/>
             <field name="service_id" options="{'no_create': True}"/>
-            <field name="environment" widget="badge" decoration-warning="environment == 'T'" decoration-success="environment == 'P'"/>
+            <field name="environment" widget="badge" decoration-warning="environment == 'T'" decoration-success="environment == 'P'" invisible="1"/>
             <field name="state" widget="badge" decoration-danger="status == False" decoration-success="status == True"/>
             <field name="message" optional="hide"/>
             <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create': True}"/>

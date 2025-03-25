@@ -1393,6 +1393,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     _onClickPaymentButton: function () {
         if (this._checkData()) {
             framework.showLoading();
+            //const href = window.location.href;
+            //window.history.pushState({}, '', '/payment/redirect');
             return rpc.query({
                 route: '/payment/init',
                 params: this._getParams(),
@@ -1405,6 +1407,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
+                    //window.history.pushState({}, '', href);
                     framework.hideLoading();
                 }
             }).guardedCatch(() => {
@@ -1414,6 +1417,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     message: _t('An error occured. Please contact with your system administrator.'),
                 });
                 this._enableButton();
+                //window.history.pushState({}, '', href);
                 framework.hideLoading();
             });
         }

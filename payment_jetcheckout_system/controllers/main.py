@@ -281,7 +281,7 @@ class PayloxSystemController(Controller):
         transaction = None
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            transaction = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
@@ -1179,7 +1179,7 @@ class PayloxSystemController(Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)

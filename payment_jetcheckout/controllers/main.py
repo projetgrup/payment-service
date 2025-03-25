@@ -1130,7 +1130,7 @@ class PayloxController(http.Controller):
             if 'order_id' not in kwargs:
                 return '/404', None, True
 
-            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs['order_id'])], limit=1)
+            tx = request.env['payment.transaction'].sudo().paylox_get_transaction(kwargs['order_id'])
             if not tx:
                 return '/404', None, True
 
@@ -1507,8 +1507,9 @@ class PayloxController(http.Controller):
             if response.status_code == 200:
                 result = response.json()
                 if result['response_code'] == "00122":
-                    tx.write({'jetcheckout_order_id': str(uuid.uuid4())})
-                    data.update({"order_id": tx.jetcheckout_order_id})
+                    order_aux_id = '_%s' % str(uuid.uuid4())
+                    tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                    data.update({"order_id": order_aux_id})
                     response = requests.post(url, data=json.dumps(data))
 
             if response.status_code == 200:
@@ -1526,9 +1527,9 @@ class PayloxController(http.Controller):
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
-                    company = get_main_company(tx.company_id)
-                    if company.payment_page_init_redirect_extra:
-                        url = '/payment/redirect?=%s' % quote_plus(url)
+                    #company = get_main_company(tx.company_id)
+                    #if company.payment_page_init_redirect_extra:
+                    #    url = '/payment/redirect?=%s' % quote_plus(url)
                     return {'url': url, 'id': tx.id}
                 else:
                     tx.state = 'error'
@@ -2315,7 +2316,7 @@ class PayloxController(http.Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2373,7 +2374,7 @@ class PayloxController(http.Controller):
         values = {}
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2411,7 +2412,6 @@ class PayloxController(http.Controller):
             data = json.loads(request.httprequest.data) or {}
             if data.get('is_success'):
                 tx = request.env['payment.transaction'].sudo().search([
-                    ('jetcheckout_order_id', '=', data.get('order_id')),
                     ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
                 ], limit=1)
                 if tx:
@@ -2430,7 +2430,7 @@ class PayloxController(http.Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2447,7 +2447,7 @@ class PayloxController(http.Controller):
 
     @http.route(['/payment/card/report/<string:name>/<string:order>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def report(self, name, order, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', order)], limit=1)
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(order)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
@@ -2505,7 +2505,7 @@ class PayloxController(http.Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)

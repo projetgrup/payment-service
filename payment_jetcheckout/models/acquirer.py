@@ -28,13 +28,9 @@ class PaymentPayloxPrestatus(models.TransientModel):
 
     tx_id = fields.Many2one('payment.transaction', required=True)
     order_id = fields.Char(required=True, string='Order Reference')
-    transaction_id = fields.Char(required=True, string='Transaction ID')
 
     def confirm(self):
-        self.tx_id.write({
-            'jetcheckout_order_id': self.order_id,
-            'jetcheckout_transaction_id': self.transaction_id,
-        })
+        self.tx_id.write({'jetcheckout_order_id': self.order_id})
         return self.tx_id.paylox_query()
 
 

@@ -755,7 +755,7 @@ class PaymentAPIService(Component):
         return self.env['payment.transaction'].sudo().search([('company_id', '=', company.id), ('jetcheckout_api_hash', '=', hash)], limit=1)
 
     def _get_transaction_from_token(self, token):
-        return self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', token)], limit=1)
+        return request.env['payment.transaction'].sudo().paylox_get_transaction(token)
 
     def _get_transaction_result(self, tx):
         return {
