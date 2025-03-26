@@ -15,6 +15,7 @@
     ],
     'data': [
         'data/data.xml',
+        'data/log.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/templates.xml',

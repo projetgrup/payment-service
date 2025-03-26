@@ -152,8 +152,8 @@ class PaymentItem(models.Model):
                     'currency': self.currency_id.name or '',
                     'description': self.description or '',
                     'items': [{
-                        'ref': self.ref,
-                        'number': self.name,
+                        'ref': self.ref or '',
+                        'number': self.description or '',
                         'amount': self.amount,
                         'commission': tx and tx.jetcheckout_commission_amount or 0,
                     }]

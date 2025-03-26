@@ -1017,10 +1017,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     const cardFamily = search.family(result.card.family)?.icon;
                                     if (cardFamily) {
                                         self.card.logo.html = `<img src="data:image/svg+xml;base64,${cardFamily}" alt="${result.card.family}"/>`;
-                                    } else {
+                                        self.card.logo.$.addClass('show');
+                                    } else if (result.card.logo) {
                                         self.card.logo.html = `<img src="${result.card.logo}" alt="${result.card.family}"/>`;
+                                        self.card.logo.$.addClass('show');
                                     }
-                                    self.card.logo.$.addClass('show');
                                     self.card.family = result.card.family;
                                 } else {
                                     self.card.logo.html = '';
@@ -1392,6 +1393,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     _onClickPaymentButton: function () {
         if (this._checkData()) {
             framework.showLoading();
+            //const href = window.location.href;
+            //window.history.pushState({}, '', '/payment/redirect');
             return rpc.query({
                 route: '/payment/init',
                 params: this._getParams(),
@@ -1404,6 +1407,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
+                    //window.history.pushState({}, '', href);
                     framework.hideLoading();
                 }
             }).guardedCatch(() => {
@@ -1413,6 +1417,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     message: _t('An error occured. Please contact with your system administrator.'),
                 });
                 this._enableButton();
+                //window.history.pushState({}, '', href);
                 framework.hideLoading();
             });
         }

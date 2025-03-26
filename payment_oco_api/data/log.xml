@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="log_service_create_payment" model="payment.paylox.log.service">
+            <field name="name">Create Payments</field>
+            <field name="code">api_oco_create_payment</field>
+        </record>
+
+    	<record id="log_service_cancel_payment" model="payment.paylox.log.service">
+            <field name="name">Cancel Payments</field>
+            <field name="code">api_oco_cancel_payment</field>
+        </record>
+
+    	<record id="log_service_refund_payment" model="payment.paylox.log.service">
+            <field name="name">Refund Payments</field>
+            <field name="code">api_oco_refund_payment</field>
+        </record>
+
+    	<record id="log_service_postauth_payment" model="payment.paylox.log.service">
+            <field name="name">Post-Authorize Payments</field>
+            <field name="code">api_oco_postauth_payment</field>
+        </record>
+
+    	<record id="log_service_query_payment" model="payment.paylox.log.service">
+            <field name="name">Query Payments</field>
+            <field name="code">api_oco_query_payment</field>
+        </record>
+    </data>
+</odoo>

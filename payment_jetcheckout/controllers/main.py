@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import uuid
+import time
 import json
 import base64
 import hashlib
@@ -8,6 +9,7 @@ import logging
 import werkzeug
 import requests
 from collections import OrderedDict
+from urllib.parse import unquote, quote_plus
 
 from odoo import fields, models, http, SUPERUSER_ID, _
 from odoo.http import request
@@ -15,6 +17,7 @@ from odoo.tools.misc import formatLang
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal
+from ..models.utils import get_main_company
 
 _logger = logging.getLogger(__name__)
 
@@ -400,28 +403,30 @@ class PayloxController(http.Controller):
 
     def _get_payment_tokens(self, acquirer, partner):
         tokens = ''
+        cards = []
         acquirer = self._get_acquirer(acquirer=acquirer)
         if acquirer.company_id.payment_token_ok:
-            #url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
-            #data = {
-            #    "application_key": acquirer.jetcheckout_api_key,
-            #    "card_customer_token": partner.get_paylox_token_ref(),
-            #    "mode": acquirer._get_paylox_env(),
-            #    "language": "tr",
-            #}
-            #response = requests.post(url, data=json.dumps(data))
-            #if response.status_code == 200:
-            #    result = response.json()
-            #    if result['response_code'] == "00":
-            #        cards = result['cards']
-            #        if cards:
-            #            children = []
-            #            values.append({
-            #                'text': _('Saved Credit Cards'),
-            #                'children': children,
-            #            })
+            url = '%s/api/v1/prepayment/listcustomercards' % acquirer._get_paylox_api_url()
+            data = {
+                "application_key": acquirer.jetcheckout_api_key,
+                "card_customer_token": partner.get_paylox_token_ref(),
+                "mode": acquirer._get_paylox_env(),
+                "language": "tr",
+            }
+            response = requests.post(url, data=json.dumps(data))
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    cards = result['cards']
+                    #if cards:
+                    #    children = []
+                    #    values.append({
+                    #        'text': _('Saved Credit Cards'),
+                    #        'children': children,
+                    #    })
 
             values = []
+            card_names = list(map(lambda c: c['card_alias'], cards))
             if acquirer.company_id.payment_page_token_view_type == 'select':
                 values += [
                     {'id': -1, 'selected': True, 'text': _('Do not save credit card')},
@@ -430,6 +435,7 @@ class PayloxController(http.Controller):
             tokens = request.env['payment.token'].sudo().search([
                 ('acquirer_id', '=', acquirer.id),
                 ('partner_id', '=', partner.id),
+                ('name', 'in', card_names),
                 ('verified', '=', True),
             ])
             if tokens:
@@ -572,15 +578,17 @@ class PayloxController(http.Controller):
 
     def _prepare_installment(self, acquirer=None, partner=0, amount=0, rate=0, currency=None, campaign='', bin='', token='', **kwargs):
         self._check_user()
+        loggable = self._log_state()
         client = self._get_partner(partner, parent=True)
         if not request.env.user.has_group('base.group_user'):
             if client and client.campaign_id:
                 campaign = client.campaign_id.name
 
         acquirer = self._get_acquirer(acquirer=acquirer)
+        transaction = self._get_transaction()
         currency =  self._get_currency(currency, acquirer)
         type = self._get_type()
-        url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
+        path = '/prepayment/%sinstallment_options' % (bin and 'bin_' or '',)
         data = {
             "application_key": acquirer.jetcheckout_api_key,
             "mode": acquirer._get_paylox_env(),
@@ -599,11 +607,35 @@ class PayloxController(http.Controller):
             })
 
         values = {'type': type}
+        if loggable:
+            log = {
+                'partner': client and client.id or None,
+                'acquirer': acquirer and acquirer.id or None,
+                'transaction': transaction and transaction.id or None,
+                'service': 'get_installment_%s' % ('bin' if bin else 'all',),
+                'env': data.get('mode') or None,
+                'now': time.time(),
+                'method': 'post',
+                'url': path,
+                'request': json.dumps(data, indent=4, default=str, ensure_ascii=False),
+            }
 
+        url = '%s/api/v1%s' % (acquirer._get_paylox_api_url(), path)
         response = requests.post(url, data=json.dumps(data), verify=False)
-        if response.status_code == 200:
+        try:
             result = response.json()
+        except:
+            result = response.content or None
 
+        if loggable:
+            log.update({
+                'status': response.status_code == 200 and result.get('response_code') == "00",
+                'message': isinstance(result, dict) and result.get('message') or response.reason,
+                'response': isinstance(result, dict) and json.dumps(result, indent=4, default=str, ensure_ascii=False) or result,
+                'code': response.status_code,
+            })
+
+        if response.status_code == 200:
             if result['response_code'] == "00":
                 if type.startswith('i'):
                     if bin:
@@ -959,6 +991,10 @@ class PayloxController(http.Controller):
                 values = {'error': _('%s (Error Code: %s)') % (result['message'], result['response_code'])}
         else:
             values = {'error': _('%s (Error Code: %s)') % (response.reason, response.status_code)}
+
+        if loggable:
+            self._log(log)
+
         return values
 
     @staticmethod
@@ -1083,12 +1119,18 @@ class PayloxController(http.Controller):
     def _get_transaction(self):
         return False
 
+    def _log_state(self):
+        return request.env['payment.paylox.log'].get_state()
+
+    def _log(self, values):
+        request.env['payment.paylox.log'].save(values)
+
     def _process(self, tx=None, **kwargs):
         if not tx:
             if 'order_id' not in kwargs:
                 return '/404', None, True
 
-            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', kwargs['order_id'])], limit=1)
+            tx = request.env['payment.transaction'].sudo().paylox_get_transaction(kwargs['order_id'])
             if not tx:
                 return '/404', None, True
 
@@ -1464,6 +1506,14 @@ class PayloxController(http.Controller):
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = response.json()
+                if result['response_code'] == "00122":
+                    order_aux_id = '_%s' % str(uuid.uuid4())
+                    tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                    data.update({"order_id": order_aux_id})
+                    response = requests.post(url, data=json.dumps(data))
+
+            if response.status_code == 200:
+                result = response.json()
                 txid = result['transaction_id']
                 if result['response_code'] == "00307":
                     rurl = result['redirect_url']
@@ -1477,6 +1527,9 @@ class PayloxController(http.Controller):
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
+                    #company = get_main_company(tx.company_id)
+                    #if company.payment_page_init_redirect_extra:
+                    #    url = '/payment/redirect?=%s' % quote_plus(url)
                     return {'url': url, 'id': tx.id}
                 else:
                     tx.state = 'error'
@@ -2263,7 +2316,7 @@ class PayloxController(http.Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2321,7 +2374,7 @@ class PayloxController(http.Controller):
         values = {}
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2359,7 +2412,6 @@ class PayloxController(http.Controller):
             data = json.loads(request.httprequest.data) or {}
             if data.get('is_success'):
                 tx = request.env['payment.transaction'].sudo().search([
-                    ('jetcheckout_order_id', '=', data.get('order_id')),
                     ('jetcheckout_transaction_id', '=', data.get('transaction_id')),
                 ], limit=1)
                 if tx:
@@ -2368,12 +2420,17 @@ class PayloxController(http.Controller):
         except Exception as e:
             _logger.error('An error occured when processing payment callback: %s' % e)
 
+    @http.route(['/payment/redirect'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def redirect(self, **kwargs):
+        url = unquote(kwargs[''])
+        return werkzeug.utils.redirect(url)
+
     @http.route(['/payment/card/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result_card(self, **kwargs):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -2390,7 +2447,7 @@ class PayloxController(http.Controller):
 
     @http.route(['/payment/card/report/<string:name>/<string:order>'], type='http', auth='public', methods=['GET'], csrf=False, website=True)
     def report(self, name, order, **kwargs):
-        tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', order)], limit=1)
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(order)
         if not tx:
             raise werkzeug.exceptions.NotFound()
 
@@ -2448,7 +2505,7 @@ class PayloxController(http.Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)

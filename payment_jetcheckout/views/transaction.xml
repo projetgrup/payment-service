@@ -6,7 +6,18 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@name='button_box']" position="inside">
             <field name="is_paylox" invisible="1"/>
+            <field name="paylox_log_ids" invisible="1"/>
             <field name="jetcheckout_payment_ok" invisible="1"/>
+            <button type="object"
+                name="action_log"
+                class="oe_stat_button"
+                icon="fa-file-text"
+                groups="base.group_user"
+                attrs="{'invisible': ['|', ('is_paylox', '=', False), ('paylox_log_count', '=', 0)]}">
+                <div class="o_form_field o_stat_info mr3">
+                    <span class="o_stat_value"><field name="paylox_log_count"/></span><span class="o_stat_text">Logs</span>
+                </div>
+            </button>
             <button type="object"
                 name="paylox_payment"
                 class="oe_stat_button"

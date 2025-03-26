@@ -97,11 +97,17 @@ payloxPage.include({
     },
 
     _onClickAgreement: function (ev) {
+        if (this.agreement.locked) return;
+
         const item = $(ev.currentTarget);
         const agreement_id = Number(item.data('id'));
         const agreement = this.agreement.all[agreement_id];
-        if (ev.target.tagName === 'INPUT' && (agreement.read || !agreement.required)) return;
-        if (this.agreement.locked) return;
+        if (ev.target.tagName === 'INPUT' && (agreement.read || !agreement.required)) {
+            this.agreement.all[agreement_id]['checked'] = ev.target.checked;
+            this._processOptions(agreement_id);
+            return;
+        };
+
         ev.stopPropagation();
         ev.preventDefault();
 

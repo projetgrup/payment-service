@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 import base64
 import hashlib
 import logging
 import requests
 import datetime
 from urllib.parse import quote
+from typing import Optional, Any
 
 from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
@@ -19,6 +21,7 @@ from odoo.addons.component.core import Component
 
 _logger = logging.getLogger(__name__)
 
+TIMEOUT = 30
 RESPONSE = {
     200: {"status": 0, "message": "Success"}
 }
@@ -54,17 +57,69 @@ class PaymentAPIService(Component):
     )
     def payment_installments(self, params):
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_get_installment',
+                    'now': time.time(),
+                    'method': 'get',
+                    'url': '/payment/installments',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             api = self._get_api(params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
 
-            installments = self._get_installments(api, params)
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
+
+            installments = self._get_installments(api, params, log=log)
+            response = dict(**installments, **RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
 
             ResponseOk = self.env.datamodels["payment.installment.output"]
-            return ResponseOk(**installments, **RESPONSE[200])
+            return ResponseOk(**response)
+
         except Exception as e:
+            status, message = 500, _('An error occured')
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'response': str(e),
+                })
+                self._log(log)
+
             _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
+            return Response(message, status=status, mimetype="application/json")
+
     payment_installments.__doc__ = _lt("Get Installments")
 
     @restapi.method(
@@ -296,6 +351,12 @@ class PaymentAPIService(Component):
     # PRIVATE METHODS
     #
 
+    def _log_state(self):
+        return self.env['payment.paylox.log'].get_state()
+
+    def _log(self, values):
+        self.env['payment.paylox.log'].save(values)
+
     def _get_api(self, apikey, secretkey=False):
         domain = [('api_key', '=', apikey)]
         if secretkey:
@@ -308,9 +369,12 @@ class PaymentAPIService(Component):
             return False
         return hash
 
-    def _get_installments(self, api, params):
+    def _get_installments(self, api, params, log: Optional[dict[str, Any]] = None):
         bin = getattr(params, 'bin')
         acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=['jetcheckout'], limit=1)
+        if log:
+            log.update({'acquirer': acquirer.id})
+
         url = '%s/api/v1/prepayment/%sinstallment_options' % (acquirer._get_paylox_api_url(), bin and 'bin_' or '')
         data = {
             "application_key": acquirer.jetcheckout_api_key,
@@ -324,7 +388,7 @@ class PaymentAPIService(Component):
         if bin:
             data.update({"bin": bin})
 
-        response = requests.post(url, data=json.dumps(data))
+        response = requests.post(url, data=json.dumps(data), timeout=TIMEOUT)
         if response.status_code == 200:
             result = response.json()
             if result['response_code'] == "00":
@@ -691,7 +755,7 @@ class PaymentAPIService(Component):
         return self.env['payment.transaction'].sudo().search([('company_id', '=', company.id), ('jetcheckout_api_hash', '=', hash)], limit=1)
 
     def _get_transaction_from_token(self, token):
-        return self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', token)], limit=1)
+        return request.env['payment.transaction'].sudo().paylox_get_transaction(token)
 
     def _get_transaction_result(self, tx):
         return {
