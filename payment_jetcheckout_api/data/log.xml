@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="log_service_get_installment" model="payment.paylox.log.service">
+            <field name="name">Get Installments</field>
+            <field name="code">api_get_installment</field>
+        </record>
+    </data>
+</odoo>

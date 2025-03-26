@@ -13,6 +13,7 @@
         'payment_jetcheckout_system_api'
     ],
     'data': [
+        'data/log.xml',
         'views/views.xml',
     ],
 }

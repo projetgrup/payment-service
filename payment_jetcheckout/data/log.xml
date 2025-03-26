@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="log_service_get_installment_all" model="payment.paylox.log.service">
+            <field name="name">Get Installment Options</field>
+            <field name="code">get_installment_all</field>
+        </record>
+
+    	<record id="log_service_get_installment_bin" model="payment.paylox.log.service">
+            <field name="name">Get Installment BIN Options</field>
+            <field name="code">get_installment_bin</field>
+        </record>
+    </data>
+</odoo>

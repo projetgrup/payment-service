@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
+import time
 import base64
 import hashlib
 import logging
 import traceback
 from urllib.parse import quote
+from typing import Optional, Any
 
 from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
@@ -37,25 +40,95 @@ class OrderCheckoutAPIService(Component):
         Create Payments
         """
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_create_payment',
+                    'now': time.time(),
+                    'method': 'post',
+                    'url': '/oco/payment/create',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
 
             api = self._get_api(company, params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
 
             hash = self._get_hash(api, params.hash, params.id)
             if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
 
             tx = self._create_transaction(api, hash, params)
-
-            ResponseOk = self.env.datamodels["oco.payment.create.response"]
             id = tx.jetcheckout_order_id
             url = 'https://%s/payment?=%s' % (request.httprequest.host, quote(hash))
-            return ResponseOk(id=id, url=url, **RESPONSE[200])
+            response = dict(id=id, url=url, **RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'transaction': tx.id,
+                    'acquirer': tx.acquirer_id.id,
+                    'env': tx.acquirer_id._get_paylox_env(),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
+
+            ResponseOk = self.env.datamodels["oco.payment.create.response"]
+            return ResponseOk(**response)
+
         except Exception as e:
-            _logger.error(traceback.format_exc())
-            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
 
     create_payments.__doc__ = _lt("Prepare Payment")
 
@@ -71,23 +144,89 @@ class OrderCheckoutAPIService(Component):
         Cancel Payments
         """
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_cancel_payment',
+                    'now': time.time(),
+                    'method': 'post',
+                    'url': '/oco/payment/cancel',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
 
             api = self._get_api(company, params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
 
             hash = self._get_hash(api, params.hash, params.id)
             if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
 
-            self._cancel_transaction(api, params)
+            self._cancel_transaction(api, params, log=log)
+            response = dict(**RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
 
             ResponseOk = self.env.datamodels["oco.payment.cancel.response"]
-            return ResponseOk(**RESPONSE[200])
+            return ResponseOk(**response)
+
         except Exception as e:
-            _logger.error(traceback.format_exc())
-            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
 
     cancel_payments.__doc__ = _lt("Cancel Payment")
 
@@ -103,23 +242,89 @@ class OrderCheckoutAPIService(Component):
         Refund Payments
         """
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_refund_payment',
+                    'now': time.time(),
+                    'method': 'post',
+                    'url': '/oco/payment/refund',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
 
             api = self._get_api(company, params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
 
             hash = self._get_hash(api, params.hash, params.id)
             if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
 
-            self._refund_transaction(api, params)
+            self._refund_transaction(api, params, log=log)
+            response = dict(**RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
 
             ResponseOk = self.env.datamodels["oco.payment.refund.response"]
-            return ResponseOk(**RESPONSE[200])
+            return ResponseOk(**response)
+
         except Exception as e:
-            _logger.error(traceback.format_exc())
-            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
 
     refund_payments.__doc__ = _lt("Refund Payment")
 
@@ -135,23 +340,89 @@ class OrderCheckoutAPIService(Component):
         Postauth Payments
         """
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_postauth_payment',
+                    'now': time.time(),
+                    'method': 'post',
+                    'url': '/oco/payment/postauth',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
 
             api = self._get_api(company, params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
 
             hash = self._get_hash(api, params.hash, params.id)
             if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
 
-            self._postauth_transaction(api, params)
+            self._postauth_transaction(api, params, log=log)
+            response = dict(**RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
 
             ResponseOk = self.env.datamodels["oco.payment.postauth.response"]
-            return ResponseOk(**RESPONSE[200])
+            return ResponseOk(**response)
+
         except Exception as e:
-            _logger.error(traceback.format_exc())
-            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
 
     postauth_payments.__doc__ = _lt("Postauth Payment")
 
@@ -167,29 +438,92 @@ class OrderCheckoutAPIService(Component):
         Query Payments
         """
         try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_query_payment',
+                    'now': time.time(),
+                    'method': 'get',
+                    'url': '/oco/payment/query',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
             company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
 
             api = self._get_api(company, params.apikey)
             if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
 
             hash = self._get_hash(api, params.hash, params.id)
             if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
 
-            result = self._query_transaction(api, params)
+            result = self._query_transaction(api, params, log=log)
+            response = dict(**result, **RESPONSE[200])
 
             ResponseOk = self.env.datamodels["oco.payment.query.response"]
-            return ResponseOk(**result, **RESPONSE[200])
+            return ResponseOk(**response)
+
         except Exception as e:
-            _logger.error(traceback.format_exc())
-            return Response('An error occured.\n%s' % str(e), status=500, mimetype="application/json")
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
 
     query_payments.__doc__ = _lt("Query Payment")
 
     #
     # PRIVATE METHODS
     #
+
+    def _log_state(self):
+        return self.env['payment.paylox.log'].get_state()
+
+    def _log(self, values):
+        self.env['payment.paylox.log'].save(values)
 
     def _get_api(self, company, apikey, secretkey=False):
         domain = [('company_id', '=', company), ('api_key', '=', apikey)]
@@ -330,32 +664,60 @@ class OrderCheckoutAPIService(Component):
     def _get_acquirer(self, company):
         return self.env['payment.acquirer'].sudo().with_company(company)._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
 
-    def _cancel_transaction(self, api, params):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+    def _cancel_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
-        
+
+        if log:
+            log.update({
+                'transaction': tx.id,
+                'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
+            })
+
         tx._paylox_cancel()
 
-    def _refund_transaction(self, api, params):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+    def _refund_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
         
+        if log:
+            log.update({
+                'transaction': tx.id,
+                'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
+            })
+
         tx._paylox_refund(params.amount)
 
-    def _postauth_transaction(self, api, params):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+    def _postauth_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
+
+        if log:
+            log.update({
+                'transaction': tx.id,
+                'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
+            })
 
         tx.with_context(amount=params.amount)._send_capture_request()
 
-    def _query_transaction(self, api, params):
-        tx = self.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', params.id)])
+    def _query_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
         if not tx:
             raise Exception('Transaction cannot be found')
-        
+
+        if log:
+            log.update({
+                'transaction': tx.id,
+                'acquirer': tx.acquirer_id.id,
+                'env': tx.acquirer_id._get_paylox_env(),
+            })
+
         result = tx._paylox_query()
         del result['currency_id']
         del result['transaction_id']

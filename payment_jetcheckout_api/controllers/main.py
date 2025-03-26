@@ -103,7 +103,7 @@ class PayloxApiController(Controller):
             if '' not in kwargs:
                 raise NotFound()
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            tx = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
             if not tx:
                 raise NotFound()
         return request.render('payment_jetcheckout_api.page_api_payment_success', {'tx': tx, 'data': json.loads(tx.jetcheckout_data)})
@@ -119,7 +119,7 @@ class PayloxApiController(Controller):
             if '' not in kwargs:
                 raise NotFound()
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            tx = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            tx = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
             if not tx:
                 raise NotFound()
         return request.render('payment_jetcheckout_api.page_api_payment_fail', {'tx': tx, 'data': json.loads(tx.jetcheckout_data)})

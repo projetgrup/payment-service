@@ -25,7 +25,7 @@ class PaymentTransaction(models.Model):
         for tx in self:
             tx.is_paylox = tx.acquirer_id.provider == 'jetcheckout'
 
-    def _calc_installment_description_long(self):
+    def _compute_installment_description_long(self):
         for tx in self:
             desc = tx.jetcheckout_installment_description
             desc_long = ''
@@ -49,6 +49,10 @@ class PaymentTransaction(models.Model):
             tx.jetcheckout_fund_amount = tx.jetcheckout_payment_amount - tx.jetcheckout_payment_net
             tx.jetcheckout_fund_rate = 100 * tx.jetcheckout_fund_amount / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0
 
+    def _compute_paylox_log_count(self):
+        for tx in self:
+            tx.paylox_log_count = len(tx.paylox_log_ids)
+
     @api.model
     def _get_default_partner_country_id(self):
         country = self.env.company.country_id
@@ -71,6 +75,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
     jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_order_aux_id = fields.Char('Auxiliary Order', readonly=True, copy=False)
     jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
@@ -103,7 +108,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
     jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)
     jetcheckout_installment_description = fields.Char('Installment Description', readonly=True, copy=False)
-    jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_calc_installment_description_long')
+    jetcheckout_installment_description_long = fields.Char('Installment Long Description', readonly=True, compute='_compute_installment_description_long')
     jetcheckout_installment_amount = fields.Monetary('Installment Amount', readonly=True, copy=False)
 
     jetcheckout_commission_rate = fields.Float('Cost Rate', digits=(12,4), readonly=True, copy=False)
@@ -116,6 +121,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
 
     paylox_product_ids = fields.One2many('payment.transaction.product', 'transaction_id', 'Products')
+    paylox_log_ids = fields.One2many('payment.paylox.log', 'transaction_id', 'Logs')
+    paylox_log_count = fields.Integer('Log Count', compute='_compute_paylox_log_count')
     paylox_description = fields.Char()
 
     @api.model
@@ -153,11 +160,16 @@ class PaymentTransaction(models.Model):
                 raise ValidationError(_('Only "Draft" or "Pending" payment transactions can be removed'))
         return super().unlink()
 
+    def action_log(self):
+        action = self.env.ref('payment_jetcheckout.action_log').sudo().read()[0]
+        action['domain'] = [('transaction_id', '=', self.id)]
+        return action
+
     def _paylox_api_status(self):
         url = '%s/api/v1/payment/status' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "lang": "tr",
         }
 
@@ -257,7 +269,7 @@ class PaymentTransaction(models.Model):
         url = '%s/api/v1/payment/refund' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "transaction_id": self.jetcheckout_transaction_id,
             "amount": round(amount * 100),
             "currency": self.currency_id.name,
@@ -286,7 +298,7 @@ class PaymentTransaction(models.Model):
         url = '%s/api/v1/payment/cancel' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
-            "order_id": self.jetcheckout_order_id,
+            "order_id": self.paylox_get_order_id(),
             "transaction_id": self.jetcheckout_transaction_id,
             "language": "tr",
         }
@@ -358,6 +370,15 @@ class PaymentTransaction(models.Model):
                 raise UserError(_('%s (Error Code: %s)') % (result['message'], result['response_code']))
         else:
             raise UserError(_('%s (Error Code: %s)') % (response.reason, response.status_code))
+
+    def paylox_get_order_id(self):
+        return self.jetcheckout_order_aux_id or self.jetcheckout_order_id
+
+    @api.model
+    def paylox_get_transaction(self, order_id):
+        if order_id.startswith('x'):
+            return self.sudo().search([('jetcheckout_order_aux_id', '=', order_id)], limit=1)
+        return self.sudo().search([('jetcheckout_order_id', '=', order_id)], limit=1)
 
     def paylox_verify_token(self):
         try:
@@ -436,13 +457,14 @@ class PaymentTransaction(models.Model):
     def _paylox_cancel(self):
         self.ensure_one()
 
-        now = datetime.now()
-        tz = pytz.timezone('Europe/Istanbul')
-        offset = tz.utcoffset(now)
-        expired = (self.create_date + offset).date() + relativedelta(days=1)
-        today = (now + offset).date()
-        if today >= expired:
-            raise UserError(_('Cancellation period seems expired. Please consider refunding the transaction.'))
+        if self.state == 'done':
+            now = datetime.now()
+            tz = pytz.timezone('Europe/Istanbul')
+            offset = tz.utcoffset(now)
+            expired = (self.last_state_change + offset).date() + relativedelta(days=1)
+            today = (now + offset).date()
+            if today >= expired:
+                raise UserError(_('Cancellation period seems expired. Please consider refunding the transaction.'))
 
         if not self.state == 'cancel':
             if not self.state in ('draft', 'pending'):

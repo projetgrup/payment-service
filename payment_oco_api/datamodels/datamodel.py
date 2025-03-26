@@ -100,7 +100,7 @@ class OrderCheckoutPaymentQueryRequest(Datamodel):
     _name = "oco.payment.query.request"
     _inherit = "payment.credential.hash"
 
-    id = fields.UUID(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique number related to your specified record in your database for tracking the payment flow"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
+    id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique number related to your specified record in your database for tracking the payment flow"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
 
 
 class OrderCheckoutPaymentPostauthRequest(Datamodel):

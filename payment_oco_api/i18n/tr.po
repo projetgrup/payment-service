@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 20:43+0000\n"
-"PO-Revision-Date: 2025-02-10 23:59+0300\n"
+"POT-Creation-Date: 2025-03-24 11:10+0000\n"
+"PO-Revision-Date: 2025-03-24 14:11+0300\n"
 "Last-Translator: \n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
 "Language: tr\n"
@@ -57,6 +57,12 @@ msgstr ""
 "Ödenecek tutar. Eğer gönderilmesze, ürünlerin toplam fiyatı gönderilecektir."
 
 #. module: payment_oco_api
+#: code:addons/payment_oco_api/services/services.py:0
+#, python-format
+msgid "An error occured"
+msgstr "Bir hata meydana geldi"
+
+#. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
 #, python-format
 msgid ""
@@ -77,6 +83,12 @@ msgstr ""
 "herhangi bir eşsiz numarası"
 
 #. module: payment_oco_api
+#: code:addons/payment_oco_api/services/services.py:0
+#, python-format
+msgid "Application key does not match."
+msgstr "Uygulama anahtarı uyuşmuyor."
+
+#. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Authorization Code"
@@ -93,6 +105,11 @@ msgstr "Kampanya Adı"
 #, python-format
 msgid "Cancel Payment"
 msgstr "Ödemeyi İptal Et"
+
+#. module: payment_oco_api
+#: model:payment.paylox.log.service,name:payment_oco_api.log_service_cancel_payment
+msgid "Cancel Payments"
+msgstr "Ödeme İptal Et"
 
 #. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
@@ -191,6 +208,11 @@ msgid "Country code"
 msgstr "Ülke kodu"
 
 #. module: payment_oco_api
+#: model:payment.paylox.log.service,name:payment_oco_api.log_service_create_payment
+msgid "Create Payments"
+msgstr "Ödeme Oluştur"
+
+#. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Credit Card BIN Code"
@@ -207,6 +229,12 @@ msgstr "Kredi Kartı Ailesi"
 #, python-format
 msgid "Credit Card Program"
 msgstr "Kredi Kartı Programı"
+
+#. module: payment_oco_api
+#: code:addons/payment_oco_api/datamodels/datamodel.py:0
+#, python-format
+msgid "Credit Card Type"
+msgstr "Kredi Kartı Türü"
 
 #. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
@@ -261,6 +289,12 @@ msgstr "Eposta adresi"
 #, python-format
 msgid "Expiration Date"
 msgstr "Geçerlilik Tarihi"
+
+#. module: payment_oco_api
+#: code:addons/payment_oco_api/services/services.py:0
+#, python-format
+msgid "Hash does not match."
+msgstr "Hash uyuşmuyor."
 
 #. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
@@ -413,6 +447,11 @@ msgid "Post-Authorization"
 msgstr "Provizyon"
 
 #. module: payment_oco_api
+#: model:payment.paylox.log.service,name:payment_oco_api.log_service_postauth_payment
+msgid "Post-Authorize Payments"
+msgstr "Ödeme Provizyon Onayla"
+
+#. module: payment_oco_api
 #: code:addons/payment_oco_api/services/services.py:0
 #, python-format
 msgid "Postauth Payment"
@@ -449,6 +488,11 @@ msgid "Query Payment"
 msgstr "Ödeme Sorgula"
 
 #. module: payment_oco_api
+#: model:payment.paylox.log.service,name:payment_oco_api.log_service_query_payment
+msgid "Query Payments"
+msgstr "Ödeme Sorgula"
+
+#. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0
 #, python-format
 msgid "Receipt URL"
@@ -476,6 +520,11 @@ msgstr "Referans"
 #: code:addons/payment_oco_api/services/services.py:0
 #, python-format
 msgid "Refund Payment"
+msgstr "Ödeme İade Al"
+
+#. module: payment_oco_api
+#: model:payment.paylox.log.service,name:payment_oco_api.log_service_refund_payment
+msgid "Refund Payments"
 msgstr "Ödeme İade Al"
 
 #. module: payment_oco_api
@@ -513,6 +562,12 @@ msgstr "Durum Kodu"
 #, python-format
 msgid "State code"
 msgstr "Durum kodu"
+
+#. module: payment_oco_api
+#: code:addons/payment_oco_api/services/services.py:0
+#, python-format
+msgid "Success"
+msgstr "Başarılı"
 
 #. module: payment_oco_api
 #: code:addons/payment_oco_api/datamodels/datamodel.py:0

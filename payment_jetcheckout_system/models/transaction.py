@@ -2,6 +2,7 @@
 import requests
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.payment_jetcheckout.models.utils import get_main_company
 
 
 class PaymentTransaction(models.Model):
@@ -39,12 +40,13 @@ class PaymentTransaction(models.Model):
     jetcheckout_partner_categ_ids = fields.Many2many('res.partner.category', 'transaction_partner_category_rel', 'transaction_id', 'category_id', 'Tags', related='partner_id.category_id', store=True, readonly=True, ondelete='set null')
 
     def run_hook(self, subtype, **kwargs):
-        hook = self.env['payment.hook'].sudo().search([
+        company = get_main_company(self.company_id)
+        hooks = self.env['payment.hook'].sudo().search([
             ('type', '=', 'transaction'),
             ('subtype', '=', subtype),
-            ('company_id', '=', self.company_id.id),
-        ], limit=1)
-        if hook:
+            ('company_id', '=', company.id),
+        ])
+        for hook in hooks:
             hook.run(transaction=self, **kwargs)
 
     @api.model

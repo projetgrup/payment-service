@@ -281,7 +281,7 @@ class PayloxSystemController(Controller):
         transaction = None
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            transaction = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            transaction = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
@@ -1179,7 +1179,7 @@ class PayloxSystemController(Controller):
         values = self._prepare()
         if '' in kwargs:
             txid = re.split(r'\?|%3F', kwargs[''])[0]
-            values['tx'] = request.env['payment.transaction'].sudo().search([('jetcheckout_order_id', '=', txid)], limit=1)
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
         else:
             txid = self._get('tx', 0)
             values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
@@ -1535,7 +1535,7 @@ class PayloxSystemController(Controller):
         txs = request.env['payment.transaction'].sudo().search([
             ('company_id', '=', request.env.user.company_ids.ids),
             ('id', 'in', list(map(int, data[''].split(',')))),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
             ('state', '=', 'done'),
         ], order='last_state_change desc')
         for tx in txs:
@@ -1578,13 +1578,13 @@ class PayloxSystemController(Controller):
                     tx.reference.rsplit('/', 1)[-1],
                     tx.partner_ref,
                     'TL',
-                    '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin'),
-                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]),
+                    '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin') if tx.jetcheckout_payment_type == 'virtual_pos' else 'Transfer',
+                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]) if tx.jetcheckout_payment_type == 'virtual_pos' else 'Transfer',
                     'KREDİ KART',
                     'YURT İCİ',
                     #'1',
-                    installment_count,
-                    installment_count,
+                    installment_count or '1',
+                    installment_count or '1',
                     'A',
                     #'%0.2f' % (tx.jetcheckout_installment_amount * rate,),
                     '%0.2f' % (item['amount'],),
