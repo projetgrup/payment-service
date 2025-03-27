@@ -46,21 +46,23 @@ class PayloxSystemVendorController(Controller):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if system == 'vendor':
             try:
-                wizard = request.env['syncops.sync.wizard'].sudo().create({
-                    'type': 'item',
-                    'system': 'vendor',
-                    'type_item_subtype': company.syncops_sync_item_subtype,
-                })
-                wizard.with_context(partner=partner).confirm()
-                wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
+                with request.env.cr.savepoint():
+                    wizard = request.env['syncops.sync.wizard'].sudo().create({
+                        'type': 'item',
+                        'system': 'vendor',
+                        'type_item_subtype': company.syncops_sync_item_subtype,
+                    })
+                    wizard.with_context(partner=partner).confirm()
+                    wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
             except:
                 pass
 
-        campaign = res['campaign']
         payments, payment_tags = partner._get_payments()
         currency = payments.mapped('currency_id') or company.currency_id
         if len(currency) > 1:
             raise UserError(_('Payment items must share one common currency'))
+
+        campaign = res['campaign']
         if payment_tags and payment_tags[0].campaign_id:
             campaign = payment_tags[0].campaign_id.name
 

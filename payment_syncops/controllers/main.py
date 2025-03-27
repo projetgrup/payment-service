@@ -37,7 +37,7 @@ class PayloxSyncopsController(Controller):
             balances = 0
             negatives = 0
             positives = []
-            if tx.paylox_transaction_item:
+            if tx.paylox_transaction_item_ids:
                 for item in tx.paylox_transaction_item_ids:
                     balances += item.amount
                     if item.amount < 0:
@@ -72,7 +72,7 @@ class PayloxSyncopsController(Controller):
                     'partner_name': tx.partner_name or '',
                     'partner_ref': tx.partner_ref or '',
                     'partner_city': tx.partner_city or '',
-                    'installment_count': tx.jetcheckout_installment_count or 1 if tx.jetcheckout_payment_type not in ('transfer', 'wallet', 'credit') else '',
+                    'installment_count': tx.jetcheckout_installment_count or 1 if tx.jetcheckout_payment_type not in ('transfer', 'wallet', 'credit') else 1,
                     'card_type': tx.jetcheckout_card_type or '',
                     'card_family': tx.jetcheckout_card_family or '',
                     'partner_user': tx.partner_id.user_id.name or '',
@@ -470,7 +470,7 @@ class PayloxSyncopsController(Controller):
                 ('company_id', 'in', connector.get_company_ids()),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
-                ('jetcheckout_payment_type', '=', 'virtual_pos'),
+                ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
             ]
             if 'payment_type' in data:
                 if data['payment_type'] == 'payment':

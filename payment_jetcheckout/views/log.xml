@@ -68,8 +68,8 @@
                         <field name="response_data" nolabel="1" colspan="2" attrs="{'invisible': [('response_data', '=', False)]}"/>
                         <span attrs="{'invisible': [('response_data', '!=', False)]}" class="text-600">No response</span>
                         <div class="position-absolute" style="top: 10px; right: 10px;" groups="base.group_system">
-                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0" string="Show Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '!=', False)]}"/>
-                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0" string="Hide Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}"/>
+                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0 text-muted" string="Show Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '!=', False)]}"/>
+                            <button name="action_toggle_debug" type="object" class="btn-sm btn-secondary bg-transparent border-0 text-muted" string="Hide Debug" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}"/>
                         </div>
                         <br attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}" groups="base.group_system"/>
                         <field name="debug_message" nolabel="1" colspan="2" class="text-400" attrs="{'invisible': ['|', ('debug_message', '=', False), ('debug_ok', '=', False)]}" groups="base.group_system"/>
