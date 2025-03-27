@@ -7,7 +7,6 @@ import logging
 import requests
 import datetime
 from urllib.parse import quote
-from typing import Optional, Any
 
 from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
@@ -369,7 +368,7 @@ class PaymentAPIService(Component):
             return False
         return hash
 
-    def _get_installments(self, api, params, log: Optional[dict[str, Any]] = None):
+    def _get_installments(self, api, params, log=None):
         bin = getattr(params, 'bin')
         acquirer = self.env['payment.acquirer']._get_acquirer(company=api.company_id, providers=['jetcheckout'], limit=1)
         if log:

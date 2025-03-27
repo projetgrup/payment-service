@@ -1543,7 +1543,7 @@ class PayloxSystemController(Controller):
             balances = 0
             negatives = 0
             positives = []
-            if tx.paylox_transaction_item:
+            if tx.paylox_transaction_item_ids:
                 for item in tx.paylox_transaction_item_ids:
                     balances += item.amount
                     if item.amount < 0:

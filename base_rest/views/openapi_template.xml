@@ -63,7 +63,7 @@
             </t>
             <div id="redoc"/>
             <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"/>
-            <script type="text/javascript">
+            <script t-if="settings['urls']" type="text/javascript">
                 Redoc.init("<t t-esc="settings['urls'][0]['url']"/>", { labels: <t t-raw="labels"/> }, redoc);
             </script>
         </t>

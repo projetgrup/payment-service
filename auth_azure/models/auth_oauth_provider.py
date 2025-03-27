@@ -6,4 +6,8 @@ class AuthOauthProvider(models.Model):
     _inherit = 'auth.oauth.provider'
 
     client_secret_id = fields.Char(string='Client Secret')
-    response_type = fields.Selection([('token', 'Token'), ('code', 'Code')], default='token', required=True, String="Response Type")
+    azure_tenant_id = fields.Char(string='Azure Tenant ID')
+    response_type = fields.Selection([
+        ('token', 'Token'),
+        ('code', 'Code')
+    ], default='token', string='Response Type')

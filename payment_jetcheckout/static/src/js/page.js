@@ -1028,6 +1028,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     self.card.logo.$.removeClass('show');
                                     self.card.family = '';
                                 }
+                                self.card.type = result.card.type || '';
                             }
 
                             self.card.bin = bin;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="provider_microsoft" model="auth.oauth.provider">
             <field name="name">Microsoft</field>
             <field name="auth_endpoint">https://login.microsoftonline.com/common/oauth2/v2.0/authorize</field>
