@@ -388,9 +388,9 @@ class PaymentPlanWizardLine(models.TransientModel):
     token_limit_card = fields.Float(string='Card Limit')
     token_limit_tx = fields.Float(string='Transaction Limit')
     installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', string='Installment', domain='[("id", "in", installment_ids)]', default=lambda self: self.env.ref('payment_jetcheckout.installment_1'))
-    installment_message = fields.Html(string='Installment Message', sanitize=False, compute='_compute_installment')
-    installment_ids = fields.Many2many('payment.acquirer.jetcheckout.installment', string='Installments', compute='_compute_installment')
-    installment_data = fields.Text(string='Installment Data', compute='_compute_installment', store=True)
+    installment_message = fields.Html(string='Installment Message', sanitize=False, compute='_compute_installment', compute_sudo=True)
+    installment_ids = fields.Many2many('payment.acquirer.jetcheckout.installment', string='Installments', compute='_compute_installment', compute_sudo=True)
+    installment_data = fields.Text(string='Installment Data', compute='_compute_installment', compute_sudo=True, store=True)
     amount_cost = fields.Monetary(string='Cost Amount', compute='_compute_amount_cost', store=True)
     currency_id = fields.Many2one(related='token_id.company_id.currency_id')
 

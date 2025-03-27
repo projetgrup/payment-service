@@ -493,6 +493,15 @@ class OrderCheckoutAPIService(Component):
             result = self._query_transaction(api, params, log=log)
             response = dict(**result, **RESPONSE[200])
 
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
+
             ResponseOk = self.env.datamodels["oco.payment.query.response"]
             return ResponseOk(**response)
 

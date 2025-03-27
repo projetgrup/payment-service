@@ -119,11 +119,14 @@ class PaymentTransaction(models.Model):
             user = self.partner_id.users_id
 
         line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=user)
+        if not line or not line.account_code:
+            if not self.env.context.get('no_button'):
+                raise UserError(_('There is no account line for %s.') % self.jetcheckout_vpos_name)
+            return
+
         tz = timezone('Europe/Istanbul')
         date = self.create_date
         date += tz.utcoffset(date)
-        if not line or not line.account_code:
-            raise UserError(_('There is no account line for this provider'))
 
         result, message = None, ''
         if self.company_id.syncops_sync_item_split:
@@ -236,21 +239,21 @@ class PaymentTransaction(models.Model):
         if self.company_id.syncops_sync_item_force:
             self.env['payment.item'].sudo().search([('parent_id', '=', self.partner_id.id), '|', ('advance', '=', True), ('paid', '=', True)]).unlink()
         if self.jetcheckout_connector_ok:
-            self.action_process_connector()
+            self.with_context(no_button=True).action_process_connector()
         return res
 
     def _paylox_cancel_postprocess(self):
         res = super()._paylox_cancel_postprocess()
         if self.jetcheckout_connector_ok:
             self.write({'jetcheckout_connector_state': True})
-            self.action_process_connector()
+            self.with_context(no_button=True).action_process_connector()
         return res
 
     def _paylox_refund_postprocess(self, amount=0):
         res = super()._paylox_refund_postprocess(amount=amount)
         if self.jetcheckout_connector_ok:
             res.write({'jetcheckout_connector_ok': True, 'jetcheckout_connector_state': True})
-            res.action_process_connector()
+            res.with_context(no_button=True).action_process_connector()
         return res
 
     @api.model

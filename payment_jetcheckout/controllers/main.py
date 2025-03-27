@@ -622,7 +622,7 @@ class PayloxController(http.Controller):
             }
 
         url = '%s/api/v1%s' % (acquirer._get_paylox_api_url(), path)
-        response = requests.post(url, data=json.dumps(data), verify=False)
+        response = requests.post(url, data=json.dumps(data))
         try:
             result = response.json()
         except:
@@ -1142,37 +1142,54 @@ class PayloxController(http.Controller):
         except:
             corate = 0
 
-        tx.with_context(domain=request.httprequest.referrer)._paylox_query({
-            'successful': kwargs.get('response_code') == '00',
-            'pending': kwargs.get('response_code') == '00333',
-            'code': kwargs.get('response_code', ''),
-            'message': kwargs.get('response_message', '') or kwargs.get('message', ''),
-            'transaction_ref': kwargs.get('transaction_id', False),
-            'service_code': kwargs.get('service_resp_code', ''),
-            'service_message': kwargs.get('service_resp_message', ''),
-            'service_suggestion': kwargs.get('suggestion', ''),
-            'amount': kwargs.get('amount', 0),
-            'vpos_id': kwargs.get('virtual_pos_id', 0),
-            'vpos_name': kwargs.get('virtual_pos_name', ''),
-            'vpos_code': kwargs.get('auth_code', ''),
-            'preauth': kwargs.get('preauth', tx.jetcheckout_preauth),
-            'postauth': kwargs.get('postauth', tx.jetcheckout_postauth),
-            'card_program': kwargs.get('card_program', ''),
-            'card_family': kwargs.get('card_family', ''),
-            'card_type': kwargs.get('card_type', ''),
-            'bin_code': kwargs.get('bin_code', ''),
-            'commission_amount': kwargs.get('commission_amount', 0),
-            'commission_rate': corate,
-        })
+        try:
+            with request.env.cr.savepoint():
+                tx.with_context(domain=request.httprequest.referrer)._paylox_query({
+                    'successful': kwargs.get('response_code') == '00',
+                    'pending': kwargs.get('response_code') == '00333',
+                    'code': kwargs.get('response_code', ''),
+                    'message': kwargs.get('response_message', '') or kwargs.get('message', ''),
+                    'transaction_ref': kwargs.get('transaction_id', False),
+                    'service_code': kwargs.get('service_resp_code', ''),
+                    'service_message': kwargs.get('service_resp_message', ''),
+                    'service_suggestion': kwargs.get('suggestion', ''),
+                    'amount': kwargs.get('amount', 0),
+                    'vpos_id': kwargs.get('virtual_pos_id', 0),
+                    'vpos_name': kwargs.get('virtual_pos_name', ''),
+                    'vpos_code': kwargs.get('auth_code', ''),
+                    'preauth': kwargs.get('preauth', tx.jetcheckout_preauth),
+                    'postauth': kwargs.get('postauth', tx.jetcheckout_postauth),
+                    'card_program': kwargs.get('card_program', ''),
+                    'card_family': kwargs.get('card_family', ''),
+                    'card_type': kwargs.get('card_type', ''),
+                    'bin_code': kwargs.get('bin_code', ''),
+                    'commission_amount': kwargs.get('commission_amount', 0),
+                    'commission_rate': corate,
+                })
+        except Exception as e:
+            _logger.error('An error occured when processing transaction %s: %s' % (tx.reference, e))
 
-        messages = [kwargs.get('response_message', '') or kwargs.get('message', ''),],
-        if kwargs.get('service_resp_code'):
-            messages.append(kwargs['service_resp_code'])
-        if kwargs.get('service_resp_message'):
-            messages.append(kwargs['service_resp_message'])
-        if kwargs.get('suggestion'):
-            messages.append(kwargs['suggestion'])
-        tx.message_post(body='\n'.join(messages))
+        try:
+            with request.env.cr.savepoint():
+                messages = [kwargs.get('response_message', '') or kwargs.get('message', ''),],
+                if kwargs.get('service_resp_code'):
+                    if isinstance(kwargs['service_resp_code'], list):
+                        messages.extend(kwargs['service_resp_code'])
+                    else:
+                        messages.append(kwargs['service_resp_code'])
+                if kwargs.get('service_resp_message'):
+                    if isinstance(kwargs['service_resp_message'], list):
+                        messages.extend(kwargs['service_resp_message'])
+                    else:
+                        messages.append(kwargs['service_resp_message'])
+                if kwargs.get('suggestion'):
+                    if isinstance(kwargs['suggestion'], list):
+                        messages.extend(kwargs['suggestion'])
+                    else:
+                        messages.append(kwargs['suggestion'])
+                tx.message_post(body='\n'.join(map(str, messages)))
+        except Exception as e:
+            _logger.error('An error occured when informing transaction %s: %s' % (tx.reference, e))
 
         return url, tx, False
 
