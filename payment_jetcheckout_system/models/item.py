@@ -328,7 +328,7 @@ class PaymentItem(models.Model):
             days = amount/total if total else 0
             date = (today + timedelta(days=days)).strftime(lang.date_format)
             dues = tag.due_ids if company.payment_page_due_tag_ok else company.payment_page_due_ids
-            days, campaign, line, advance, hide_payment = dues.get_campaign(partner, days * sign)
+            days, campaign, line, advance, hide_payment = dues.get_campaign(partner, days)
 
             if hide_payment:
                 hide_payment_message = company.payment_page_due_hide_payment_message

@@ -6,7 +6,6 @@ import hashlib
 import logging
 import traceback
 from urllib.parse import quote
-from typing import Optional, Any
 
 from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
@@ -664,8 +663,8 @@ class OrderCheckoutAPIService(Component):
     def _get_acquirer(self, company):
         return self.env['payment.acquirer'].sudo().with_company(company)._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
 
-    def _cancel_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
+    def _cancel_transaction(self, api, params, log=None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
         if not tx:
             raise Exception('Transaction cannot be found')
 
@@ -678,8 +677,8 @@ class OrderCheckoutAPIService(Component):
 
         tx._paylox_cancel()
 
-    def _refund_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
+    def _refund_transaction(self, api, params, log=None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
         if not tx:
             raise Exception('Transaction cannot be found')
         
@@ -692,8 +691,8 @@ class OrderCheckoutAPIService(Component):
 
         tx._paylox_refund(params.amount)
 
-    def _postauth_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
+    def _postauth_transaction(self, api, params, log=None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
         if not tx:
             raise Exception('Transaction cannot be found')
 
@@ -706,8 +705,8 @@ class OrderCheckoutAPIService(Component):
 
         tx.with_context(amount=params.amount)._send_capture_request()
 
-    def _query_transaction(self, api, params, log: Optional[dict[str, Any]] = None):
-        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(params.id)
+    def _query_transaction(self, api, params, log=None):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
         if not tx:
             raise Exception('Transaction cannot be found')
 

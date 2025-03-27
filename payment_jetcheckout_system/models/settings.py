@@ -255,7 +255,7 @@ class PaymentSettingsDue(models.Model):
     def get_campaign(self, partner, day):
         advance = None
         for due in self:
-            if due.partner_tag_ids and due.partner_tag_ids.ids not in partner.category_id.ids:
+            if due.partner_tag_ids and not any(tag_id in due.partner_tag_ids.ids for tag_id in partner.category_id.ids):
                 continue
             rounding_method = 'HALF-UP' if due.round else 'DOWN'
             days = float_round(day, precision_digits=0, rounding_method=rounding_method)

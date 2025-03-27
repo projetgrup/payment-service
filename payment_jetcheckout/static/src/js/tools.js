@@ -37,7 +37,7 @@ function formatDate(value, format='DD-MM-YYYY') {
 }
 
 function searchProgram(name) {
-    return cardPrograms.find(p => p.name === name);
+    return cardPrograms.find(p => p.code === name.toLowerCase());
 }
 
 function searchFamily(name) {

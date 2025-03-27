@@ -323,7 +323,7 @@ class PaymentTransaction(models.Model):
         }
 
     def _paylox_auth_postprocess(self):
-        if not self.state == 'auth':
+        if not self.state == 'authorized':
             self.write(self._paylox_auth_postprocess_values())
         self.paylox_verify_token()
 
