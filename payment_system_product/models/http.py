@@ -19,7 +19,12 @@ class IrHttp(models.AbstractModel):
         if xmlid:
             obj = self._xmlid_to_obj(self.env, xmlid)
         elif id and model in self.env:
-            obj = self.env[model].browse(int(id))
+            try:
+                obj_id = int(id)
+            except:
+                obj_id = None
+            if obj_id:
+                obj = self.env[model].browse(obj_id)
         if obj and 'payment_page_ok' in obj._fields and field in obj._fields and not obj._fields[field].groups and obj.sudo().payment_page_ok:
             self = self.sudo()
         return super(IrHttp, self).binary_content(
