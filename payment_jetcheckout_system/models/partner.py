@@ -939,6 +939,7 @@ class PartnerBankToken(models.Model):
     acc_holder_name = fields.Char(related='partner_bank_id.acc_holder_name')
     partner_id = fields.Many2one(related='partner_bank_id.partner_id', store=True)
     sanitized_acc_number = fields.Char(store=False)
+    #report_route_ids = fields.Many2many(relation='res_partner_bank_token_report_rel')
 
 
 class PartnerBankSubmerchantQuery(models.Model):
