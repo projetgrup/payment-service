@@ -139,13 +139,14 @@ class Partner(models.Model):
         if result is None:
             self.write({
                 'syncops_state': True,
-                'syncops_ref': True,
                 'syncops_state_message': _('This partner has not been successfully posted to connector.\n%s') % message
             })
         else:
+            ref = result and result[0].get('ref') or False
             self.write({
+                'ref': ref,
+                'syncops_ref': ref,
                 'syncops_state': False,
-                'syncops_ref': result and result[0].get('ref') or False,
                 'syncops_state_message': _('This partner has been successfully posted to connector.')
             })
         self.env.cr.commit()
