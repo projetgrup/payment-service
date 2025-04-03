@@ -195,6 +195,7 @@ class PaymentTransaction(models.Model):
                 'state': 'refund' if self.source_transaction_id else self.state,
                 'card_number': self.jetcheckout_card_number or '',
                 'card_name': self.jetcheckout_card_name,
+                'reference_id': self.jetcheckout_order_id,
                 'order_id': self.source_transaction_id.jetcheckout_order_id if self.source_transaction_id else self.jetcheckout_order_id,
                 'transaction_id': self.source_transaction_id.jetcheckout_transaction_id if self.source_transaction_id else self.jetcheckout_transaction_id,
                 'virtual_pos_id': self.jetcheckout_vpos_id or 0,
