@@ -24,7 +24,7 @@ publicWidget.registry.payloxTokenVerify = payloxPage.extend({
             } else {
                 document.body.classList.add('d-none');
             }
-            setInterval(() => $('.o_loading em').removeClass('d-none'), 2000);
+            setTimeout(() => $('.o_loading em').removeClass('d-none'), 2000);
         });
     },
 
@@ -131,7 +131,7 @@ publicWidget.registry.payloxTokenVerifyResult = publicWidget.Widget.extend({
 
     start: function () {
         return this._super.apply(this, arguments).then(() => {
-            setInterval(() => {
+            setTimeout(() => {
                 if (document.getElementById('success')) {
                     window.parent.document.querySelector('.o_form_payment_token_verify').closest('.modal-content').querySelector('header button.close').click();
                 }

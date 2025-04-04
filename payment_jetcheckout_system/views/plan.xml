@@ -27,6 +27,8 @@
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}" optional="hide" force_save="1"/>
             <field name="system" invisible="1"/>
             <field name="approval_state" invisible="1"/>
+            <field name="transaction_state" invisible="1"/>
+            <field name="transaction_ids" invisible="1"/>
             <field name="result" string=" "/>
             <field name="message" optional="hide"/>
         </tree>
@@ -146,5 +148,37 @@
             </footer>
         </form>
     </field>
+    </record>
+
+    <record id="form_plan_pay" model="ir.ui.view">
+    <field name="name">payment.plan.pay.form</field>
+    <field name="model">payment.plan.pay</field>
+    <field name="arch" type="xml">
+        <form class="o_form_payment_plan_pay">
+            <sheet>
+                <script type="text/javascript">
+                    function paymentPlanIframeLoaded() {
+                        let loading = document.querySelector('.o_form_payment_plan_loading');
+                        if (loading) {
+                            loading.classList.remove('show');
+                            setTimeout(() => loading.classList.add('d-none'), 2000);
+                        }
+                    }                        
+                </script>
+                <div class="o_form_payment_plan_loading position-absolute bg-white fade show" style="z-index:1" attrs="{'invisible': [('show', '=', False)]}"><i class="fa fa-5x fa-spin fa-circle-o-notch text-primary"/></div>
+                <field name="iframe" class="position-absolute w-100 h-100"/>
+                <field name="data" class="d-none"/>
+                <field name="show" invisible="1"/>
+            </sheet>
+            <footer/>
+        </form>
+    </field>
+    </record>
+
+    <record id="action_plan_pay" model="ir.actions.act_window">
+    <field name="name">Pay Plan</field>
+    <field name="res_model">payment.plan.pay</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
     </record>
 </odoo>

@@ -1,3 +1,30 @@
+.o_dialog {
+    .o_form_payment_plan_pay {
+        .o_form_sheet {
+            height: 400px;
+
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                inset: 0;
+                cursor: wait;
+            }
+
+            > iframe {
+                inset: 0;
+                z-index: 9;
+            }
+        }
+    }
+
+    &:has(.o_form_payment_plan_pay) {
+        footer {
+            display: none;
+        }
+    }
+}
+
 .o_form_view {
     .table-p-0 > tbody > tr > td {
         padding: 0 !important;

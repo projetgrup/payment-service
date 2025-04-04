@@ -20,7 +20,9 @@ class PaymentPlan(models.Model):
     @api.depends('paid', 'message')    
     def _compute_result(self):
         for plan in self:
-            if plan.paid and plan.message:
+            if plan.transaction_state == 'pending':
+                plan.result = '<i class="fa fa-circle-o-notch fa-spin text-600" title="%s"/>' % _('Transaction in progress')
+            elif plan.paid and plan.message:
                 plan.result = '<i class="fa fa-check text-primary" title="%s"/>' % plan.message
             elif plan.message:
                 plan.result = '<i class="fa fa-times text-danger" title="%s"/>' % plan.message
@@ -31,24 +33,33 @@ class PaymentPlan(models.Model):
     @api.depends('transaction_ids.state')    
     def _compute_paid(self):
         for plan in self:
-            transactions = plan.transaction_ids.filtered(lambda tx: tx.state == 'done' and not tx.source_transaction_id)
+            state = False
+            message = False
+            transactions = plan.transaction_ids
             for transaction in transactions:
-                sources = self.env['payment.transaction'].sudo().search([('source_transaction_id', '=', transaction.id)])
-                refund_amount = -sum(sources.mapped('amount'))
-                if not float_compare(refund_amount, transaction.amount, precision_rounding=transaction.currency_id.rounding):
-                    continue
-                plan.paid = True
-                plan.paid_date = transaction.last_state_change
-                plan.message = transaction.state_message
-                plan.amount_paid = transaction.jetcheckout_payment_paid
-                plan.amount_cost = transaction.jetcheckout_commission_amount
-                break
+                if transaction.state == 'done' and not transaction.source_transaction_id:
+                    sources = self.env['payment.transaction'].sudo().search([('source_transaction_id', '=', transaction.id)])
+                    refund_amount = -sum(sources.mapped('amount'))
+                    if not float_compare(refund_amount, transaction.amount, precision_rounding=transaction.currency_id.rounding):
+                        continue
+                    plan.paid = True
+                    plan.paid_date = transaction.last_state_change
+                    plan.amount_paid = transaction.jetcheckout_payment_paid
+                    plan.amount_cost = transaction.jetcheckout_commission_amount
+                    plan.transaction_state = transaction.state
+                    plan.message = transaction.state_message
+                    break
+                if not state:
+                    state = transaction.state
+                if not message:
+                    message = transaction.state_message
             else:
                 plan.paid = False
                 plan.paid_date = False
-                plan.message = False
                 plan.amount_paid = False
                 plan.amount_cost = False
+                plan.transaction_state = state
+                plan.message = message
 
     name = fields.Char(compute='_compute_name')
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
@@ -64,6 +75,7 @@ class PaymentPlan(models.Model):
     paid_date = fields.Datetime(readonly=True, compute='_compute_paid', store=True)
     amount_paid = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Paid Amount')
     amount_cost = fields.Monetary(readonly=True, compute='_compute_paid', store=True, string='Cost Amount')
+    transaction_state = fields.Char(readonly=True, compute='_compute_paid', store=True, string='Transaction State')
     transaction_ids = fields.Many2many('payment.transaction', 'transaction_plan_rel', 'plan_id', 'transaction_id', string='Transactions', readonly=True, ondelete='restrict')
     system = fields.Selection(related='item_id.system', readonly=True, store=True)
     company_id = fields.Many2one(related='item_id.company_id', readonly=True, store=True)
@@ -88,7 +100,7 @@ class PaymentPlan(models.Model):
 
         reference = self.item_id.bank_ref
         if not reference:
-            self.message = _('Partner must have at least one bank account which is verified.' % self.partner_id.name)
+            self.message = _('%s must have at least one bank account which is verified.' % self.partner_id.name)
             return
 
         installment_count = self.installment_id.count or 1
@@ -98,7 +110,7 @@ class PaymentPlan(models.Model):
         data = {
             'type': 'virtual_pos',
             'payment': False,
-            'threed': False,
+            'threed': self.company_id.payment_plan_threed_ok,
             'card': {
                 'type': self.token_id.jetcheckout_type or '',
                 'program': self.token_id.jetcheckout_program or '',
@@ -111,6 +123,8 @@ class PaymentPlan(models.Model):
             'token': self.token_id,
             'partner': self.partner_id,
             'currency': self.currency_id,
+            'successurl': '/my/plan/success',
+            'failurl': '/my/plan/fail',
             'website': website,
             'installment': {
                 'id': installment_count,
@@ -136,9 +150,13 @@ class PaymentPlan(models.Model):
             'campaign': '',
         }
 
-        result = acquirer.action_payment(options={'simulate': True}, **data)
+        result = acquirer.action_payment(options=dict(simulate=True, fullscreen=self.company_id.payment_plan_fullscreen_ok), **data)
         if result.get('ok'):
             self.write({'transaction_ids': [(4, result['id'])]})
+        if result.get('url'):
+            action = self.env.ref('payment_jetcheckout_system.action_plan_pay').sudo().read()[0]
+            action['context'] = {'default_data': json.dumps({'url': result['url']})}
+            return action
         else:
             self.message = result.get('message') or result.get('error') or _('An error occured')
 
@@ -207,7 +225,9 @@ class PaymentPlan(models.Model):
 
     def action_payment(self):
         for plan in self:
-            plan.payment()
+            action = plan.payment()
+            if action:
+                return action
 
     def action_approve(self):
         for plan in self:
@@ -241,6 +261,26 @@ class PaymentPlan(models.Model):
             if plan.paid:
                 raise UserError(_('Paid payment plans cannot be deleted'))
         return super().unlink()
+
+
+class PaymentPlanPay(models.TransientModel):
+    _name = 'payment.plan.pay'
+    _description = 'Payment Plan Pay'
+
+    @api.depends('data')
+    def _compute_iframe(self):
+        for wizard in self:
+            data = json.loads(wizard.data)
+            if data.get('url'):
+                wizard.show = True
+                wizard.iframe = '<iframe src="%s" class="position-absolute w-100 h-100 border-0" style="inset:0" onload="paymentPlanIframeLoaded()"></iframe>' % data['url']
+            else:
+                wizard.show = False
+                wizard.iframe = '<div class="alert alert-danger text-center p-3 h5">%s</div>' % _('An error occured. Please try again later.')
+
+    iframe = fields.Html(string='Iframe', compute='_compute_iframe', sanitize=False)
+    show = fields.Boolean(string='Show Iframe', compute='_compute_iframe')
+    data = fields.Char(readonly=True)
 
 
 class PaymentPlanWizard(models.TransientModel):

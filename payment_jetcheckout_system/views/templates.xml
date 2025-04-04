@@ -663,6 +663,79 @@
         </t>
     </template>
 
+    <template id="page_plan_result" name="Paylox Payment Plan Result Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="'%s | Payment Plan Payment Result' % website.name"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-set="body_classname" t-value="'payment-plan-result'"/>
+            <t t-if="tx">
+                <div t-if="tx.state == 'error'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-danger">Payment has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <t t-if="tx.state_message">
+                        <br/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_message">
+                        <br/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                        <t t-if="tx.jetcheckout_service_code">
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                        </t>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                        <br/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                </div>
+                <div t-elif="tx.state == 'done'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-700">Payment has been successfully completed.</div>
+                    <input id="success" type="hidden"/>
+                    <em class="d-block mt-1 text-600">Redirecting...</em>
+                </div>
+                <div t-else="" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100h2 text-danger">Payment status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <t t-if="tx.state_message">
+                        <br/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_message">
+                        <br/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                        <t t-if="tx.jetcheckout_service_code">
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                        </t>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                        <br/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
+                    <div class="w-100 h2 text-danger">Payment status could not be retrieved. Please close the dialog and check the verification again.</div>
+                    <t t-if="tx.state_message">
+                        <br/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_message">
+                        <br/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                        <t t-if="tx.jetcheckout_service_code">
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                        </t>
+                    </t>
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                        <br/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
     <template id="page_transaction_list" name="Payment System Page Transactions List">
         <t t-if="txs">
             <table class="table table-borderless table-responsive-md w-100 table-fold small">
