@@ -3,6 +3,7 @@ import json
 import requests
 
 from odoo import models, fields, api, _
+from odoo.http import request
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_round
@@ -107,6 +108,27 @@ class PaymentPlan(models.Model):
         if installment_count < 1:
             installment_count = 1
 
+        url_query = []
+        url_params = self.env.context.get('params', {})
+        if 'action' in url_params:
+            url_query.append('action=%s' % url_params['action'])
+        if 'model' in url_params:
+            url_query.append('model=%s' % url_params['model'])
+        if 'cids' in url_params:
+            url_query.append('cids=%s' % url_params['cids'])
+        if 'id' in url_params:
+            url_query.append('id=%s' % url_params['id'])
+        if 'menu_id' in url_params:
+            url_query.append('menu_id=%s' % url_params['menu_id'])
+        if 'view_type' in url_params:
+            url_query.append('view_type=%s' % url_params['view_type'])
+        if 'active_id' in url_params:
+            url_query.append('active_id=%s' % url_params['active_id'])
+        if url_query:
+            url_query = '#' + '&'.join(url_query)
+        else:
+            url_query = ''
+
         data = {
             'type': 'virtual_pos',
             'payment': False,
@@ -140,8 +162,8 @@ class PaymentPlan(models.Model):
                 }],
             },
             'request': {
-                'address': '',
-                'referrer': '',
+                'address': request.httprequest.remote_addr,
+                'referrer': request.httprequest.referrer + url_query,
             },
             'submerchant': {
                 'ref': reference,
@@ -150,13 +172,20 @@ class PaymentPlan(models.Model):
             'campaign': '',
         }
 
-        result = acquirer.action_payment(options=dict(simulate=True, fullscreen=self.company_id.payment_plan_fullscreen_ok), **data)
+        result = acquirer.action_payment(options=dict(simulate=True), **data)
         if result.get('ok'):
             self.write({'transaction_ids': [(4, result['id'])]})
         if result.get('url'):
-            action = self.env.ref('payment_jetcheckout_system.action_plan_pay').sudo().read()[0]
-            action['context'] = {'default_data': json.dumps({'url': result['url']})}
-            return action
+            if self.company_id.payment_plan_fullscreen_ok:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': result['url'],
+                    'target': 'self',
+                }
+            else:
+                action = self.env.ref('payment_jetcheckout_system.action_plan_pay').sudo().read()[0]
+                action['context'] = {'default_data': json.dumps({'url': result['url']})}
+                return action
         else:
             self.message = result.get('message') or result.get('error') or _('An error occured')
 

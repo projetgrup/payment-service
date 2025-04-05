@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_provider" model="ir.ui.view">
+    <field name="model">auth.oauth.provider</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="auth_oauth.view_oauth_provider_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//sheet" position="inside">
+            <group name="multitenant">
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+            </group>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -691,7 +691,7 @@
                 </div>
                 <div t-elif="tx.state == 'done'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
                     <div class="w-100 h2 text-700">Payment has been successfully completed.</div>
-                    <input id="success" type="hidden"/>
+                    <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <em class="d-block mt-1 text-600">Redirecting...</em>
                 </div>
                 <div t-else="" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
@@ -766,8 +766,8 @@
                                         <td class="pl-2">Commission Amount</td>
                                         <td>Installment Count</td>
                                         <td rowspan="2" class="border-left p-2">
-                                            <a t-attf-href="#{token and '/p/%s' % token or ''}/report/html/payment_jetcheckout.payment_receipt/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
-                                            <a t-attf-href="#{token and '/p/%s' % token or ''}/report/html/payment_jetcheckout.payment_conveyance/#{tx.id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
+                                            <a t-attf-href="/payment/card/report/receipt/#{tx.jetcheckout_order_id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Receipt"><i class="fa fa-file-text-o mr-2" t-translation="off"/></a>
+                                            <a t-attf-href="/payment/card/report/conveyance/#{tx.jetcheckout_order_id}" class="btn btn-outline-primary btn-block font-weight-bold text-uppercase" target="_blank" title="Conveyance"><i class="fa fa-edit mr-2" t-translation="off"/></a>
                                         </td>
                                     </tr>
                                     <tr class="border">

@@ -320,6 +320,14 @@ class Partner(models.Model):
         for partner in self:
             partner.is_contactless = is_contactless
 
+    def _compute_email_sent(self):
+        for partner in self:
+            partner.email_sent_count = self.env['mail.message'].search_count([
+                ('res_id', '=', partner.id),
+                ('model', '=', 'res.partner'),
+                ('message_type', '=', 'email')
+            ])
+
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
         ids = group_portal.users.mapped('partner_id').ids
@@ -341,6 +349,7 @@ class Partner(models.Model):
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
     transaction_done_ids = fields.One2many('payment.transaction', string='Done Transactions', copy=False, compute='_compute_payment', compute_sudo=True)
     transaction_failed_ids = fields.One2many('payment.transaction', string='Failed Transactions', copy=False, compute='_compute_payment', compute_sudo=True)
+    email_sent_count = fields.Integer(string='Email Sent', compute='_compute_email_sent', compute_sudo=True)
     sibling_ids = fields.One2many('res.partner', compute='_compute_sibling')
     paid_count = fields.Integer(string='Items Paid', compute='_compute_payment', compute_sudo=True)
     payable_count = fields.Integer(string='Items To Pay', compute='_compute_payment', compute_sudo=True)
@@ -770,6 +779,27 @@ class Partner(models.Model):
             'active_type': 'page',
             'company': self.company_id.id or self.env.company.id,
         }
+        return action
+
+    def action_view_emails(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('mail.action_view_mail_message')
+        action.update({
+            'domain': [
+                ('res_id', '=', self.id),
+                ('model', '=', 'res.partner'),
+                ('message_type', '=', 'email')
+            ],
+            'context': {
+                'create': False,
+                'delete': False,
+                'edit': False,
+            },
+            'views':[
+                (self.env.ref('payment_jetcheckout_system.tree_partner_mail_message').id, 'tree'),
+                (self.env.ref('payment_jetcheckout_system.form_partner_mail_message').id, 'form')
+            ]
+        })
         return action
 
     def action_share_payment_link(self):
