@@ -92,16 +92,22 @@
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
+                    <button name="action_view_emails" type="object" class="oe_stat_button" icon="fa-envelope-open-o" attrs="{'invisible': [('id','=',False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="email_sent_count" nolabel="1"/></span>
+                        <span class="o_stat_text" style="font-weight: bold;">Emails Sent</span>
+                    </div>
+                    </button>
                     <button name="action_transaction_done" type="object" class="oe_stat_button" icon="fa-check-square-o" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="transaction_done_count" nolabel="1"/></span>
-                        <span class="o_stat_text" style="font-weight: bold;">Transaction Done</span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transactions Done</span>
                     </div>
                     </button>
                     <button name="action_transaction_failed" type="object" class="oe_stat_button" icon="fa-share-square-o" attrs="{'invisible': [('id','=',False)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="transaction_failed_count" nolabel="1"/></span>
-                        <span class="o_stat_text" style="font-weight: bold;">Transaction Failed</span>
+                        <span class="o_stat_text" style="font-weight: bold;">Transactions Failed</span>
                     </div>
                     </button>
                     <button name="action_paid" type="object" class="oe_stat_button" icon="fa-edit" attrs="{'invisible': [('id','=',False)]}">
@@ -405,6 +411,71 @@
             <footer>
                 <button special="cancel" class="btn-secondary text-uppercase" string="Close"/>
             </footer>
+        </form>
+    </field>
+    </record>
+ 
+    <record id="tree_partner_mail_message" model="ir.ui.view">
+    <field name="name">res.partner.mail.message.tree</field>
+    <field name="model">mail.message</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="date"/>
+            <field name="subject"/>
+            <field name="author_id"/>
+            <field name="mail_state" widget="badge" decoration-success="mail_state == 'sent'" decoration-danger="mail_state == 'exception'"/>
+        </tree>
+    </field>
+    </record>
+ 
+    <record id="form_partner_mail_message" model="ir.ui.view">
+    <field name="name">res.partner.mail.message.form</field>
+    <field name="model">mail.message</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <widget name="web_ribbon" title="Sent" bg_color="bg-success" attrs="{'invisible': [('mail_state', '!=', 'sent')]}"/>
+                <widget name="web_ribbon" title="Failed" bg_color="bg-danger" attrs="{'invisible': [('mail_state', '!=', 'exception')]}"/>
+                <group>
+                    <group>
+                        <field name="subject"/>
+                        <field name="email_from"/>
+                        <field name="author_id"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                        <field name="mail_state" widget="badge"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Body" name="body">
+                        <field name="body"/>
+                    </page>
+                    <page string="Gateway" name="gateway">
+                        <group>
+                            <group>
+                                <field name="reply_to"/>
+                                <field name="reply_to_force_new"/>
+                            </group>
+                            <group>
+                                <field name="message_id"/>
+                                <field name="mail_server_id"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Recipients" name="recipients">
+                        <group>
+                            <group>
+                                <field name="partner_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="notified_partner_ids" widget="many2many_tags"/>
+                                <field name="starred_partner_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
         </form>
     </field>
     </record>

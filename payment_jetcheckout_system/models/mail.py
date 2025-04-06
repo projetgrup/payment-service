@@ -16,6 +16,27 @@ class MailTemplate(models.Model):
             res['company_id'] = self.env.company.id
         return res
 
+class MailMessage(models.Model):
+    _inherit = 'mail.message'
+
+    def _compute_mail_state(self):
+        for message in self:
+            if message.mail_ids:
+                if any(m.state == 'sent' for m in message.mail_ids):
+                    message.mail_state = 'sent'
+                else:
+                    message.mail_state = message.mail_ids[0].state
+            else:
+                message.mail_state = False
+
+    mail_state = fields.Selection([
+        ('outgoing', 'Outgoing'),
+        ('sent', 'Sent'),
+        ('received', 'Received'),
+        ('exception', 'Failed'),
+        ('cancel', 'Cancelled'),
+    ], string='Email State', compute='_compute_mail_state')
+
 
 class SmsTemplate(models.Model):
     _inherit = 'sms.template'

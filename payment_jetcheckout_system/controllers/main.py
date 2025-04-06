@@ -1404,6 +1404,26 @@ class PayloxSystemController(Controller):
             return values
         return {}
 
+    @http.route(['/my/plan/success', '/my/plan/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
+    def payment_plan_finalize(self, **kwargs):
+        url, tx, status = self._process(**kwargs)
+        url = '/my/plan/result'
+        if tx.jetcheckout_order_id:
+            url += '?=%s' % tx.jetcheckout_order_id
+        return werkzeug.utils.redirect(url)
+
+    @http.route(['/my/plan/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def payment_plan_result(self, **kwargs):
+        values = {}
+        if '' in kwargs:
+            txid = re.split(r'\?|%3F', kwargs[''])[0]
+            values['tx'] = request.env['payment.transaction'].sudo().paylox_get_transaction(txid)
+        else:
+            txid = self._get('tx', 0)
+            values['tx'] = request.env['payment.transaction'].sudo().browse(txid)
+        self._del()
+        return request.render('payment_jetcheckout_system.page_plan_result', values)
+
     @http.route(['/my/payment/create/partner'], type='json', auth='public', website=True)
     def page_system_payment_create_partner(self, **kwargs):
         message = self._check_create_partner(**kwargs)

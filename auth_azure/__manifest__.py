@@ -7,8 +7,8 @@
     'website': 'https://bulutkobi.io',
     'depends': ['auth_oauth'],
     'data': [
-        'data/auth_oauth_provider_data.xml',
-        'views/auth_oauth_provider_views.xml',
+        'data/auth_oauth_provider.xml',
+        'views/auth_oauth_provider.xml',
     ],
     'license': 'LGPL-3',
     'external_dependencies': {

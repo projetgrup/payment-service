@@ -25,6 +25,7 @@
         'views/item.xml',
         'wizards/sync.xml',
         'report/company.xml',
+        'report/report.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
     ],

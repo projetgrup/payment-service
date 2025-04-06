@@ -80,6 +80,9 @@ class PaymentSettings(models.TransientModel):
     payment_transaction_export_txt = fields.Boolean(related='company_id.payment_transaction_export_txt', readonly=False)
 
     payment_plan_use_base_amount = fields.Boolean(related='company_id.payment_plan_use_base_amount', readonly=False)
+    payment_plan_fullscreen_ok = fields.Boolean(related='company_id.payment_plan_fullscreen_ok', readonly=False)
+    payment_plan_threed_ok = fields.Boolean(related='company_id.payment_plan_threed_ok', readonly=False)
+
     payment_advance_amount_readonly = fields.Boolean(related='company_id.payment_advance_amount_readonly', readonly=False)
     payment_advance_ok = fields.Boolean(related='company_id.payment_advance_ok', readonly=False)
     payment_token_ok = fields.Boolean(related='company_id.payment_token_ok', readonly=False)
