@@ -72,8 +72,8 @@
         <xpath expr="//field[@name='state_message']" position="after">
             <separator string="Service Message" colspan="2"/>
             <div class="o_row" colspan="2">
-                <field name="jetcheckout_service_code" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_code', '=', False)]}"/>
-                <span attrs="{'invisible': [('jetcheckout_service_message', '=', False)]}">(<field name="jetcheckout_service_message" class="oe_inline" nolabel="1"/>)</span>
+                <field name="jetcheckout_service_message" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_message', '=', False)]}"/>
+                <span attrs="{'invisible': [('jetcheckout_service_code', '=', False)]}">(<field name="jetcheckout_service_code" class="oe_inline" nolabel="1"/>)</span>
                 <span class="text-muted font-italic" attrs="{'invisible': [('jetcheckout_service_code', '!=', False), ('jetcheckout_service_message', '!=', False)]}">No message</span>
             </div>
             <separator string="Service Suggestion" colspan="2"/>

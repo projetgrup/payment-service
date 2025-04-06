@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
+        <xpath expr="//td[@name='receipt_id']" position="inside">
+            <t if="doc.jetcheckout_connector_payment_ref">
+                <br/>
+                Reference ID: <strong style="color: #ff6b6b;"><span t-field="doc.jetcheckout_connector_payment_ref"/></strong>
+            </t>
+        </xpath>
+    </template>
+</odoo>

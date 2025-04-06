@@ -701,7 +701,7 @@ class PaymentAcquirer(models.Model):
                         'jetcheckout_transaction_id': txid,
                         'last_state_change': fields.Datetime.now(),
                     })
-                    return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                    return {'ok': True, 'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     tx.write({
                         'acquirer_reference': txid,

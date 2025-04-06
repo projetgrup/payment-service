@@ -291,6 +291,28 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_plan_threed_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_plan_threed_ok" string="Pay Plans with 3D Secure"/>
+                                    <div class="text-muted">
+                                        Pay payment plans with 3D secure
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_plan_fullscreen_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_plan_fullscreen_ok" string="Pay Plans in Fullscreen"/>
+                                    <div class="text-muted">
+                                        Make payments of plan in fullscreen window
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_description_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
