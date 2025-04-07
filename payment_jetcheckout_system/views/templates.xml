@@ -672,7 +672,8 @@
             <t t-set="body_classname" t-value="'payment-plan-result'"/>
             <t t-if="tx">
                 <div t-if="tx.state == 'error'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
-                    <div class="w-100 h2 text-danger">Payment has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <div class="w-100 mx-auto h2 text-danger mx-auto">Payment has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <t t-if="tx.state_message">
                         <br/>
                         <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
@@ -688,14 +689,16 @@
                         <br/>
                         <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
+                    <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
                 </div>
                 <div t-elif="tx.state == 'done'" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
-                    <div class="w-100 h2 text-700">Payment has been successfully completed.</div>
+                    <div class="w-100 mx-auto h2 text-700">Payment has been successfully completed.</div>
                     <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <em class="d-block mt-1 text-600">Redirecting...</em>
                 </div>
                 <div t-else="" class="text-center justify-content-center flex-column mt-4 my-2 mx-4">
-                    <div class="w-100h2 text-danger">Payment status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <div class="w-100 mx-auto h2 text-danger">Payment status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
+                    <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <t t-if="tx.state_message">
                         <br/>
                         <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
@@ -711,6 +714,8 @@
                         <br/>
                         <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
+                    <br/>
+                    <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
                 </div>
             </t>
             <t t-else="">
@@ -731,6 +736,8 @@
                         <br/>
                         <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
+                    <br/>
+                    <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
                 </div>
             </t>
         </t>
