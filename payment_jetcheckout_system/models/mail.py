@@ -35,7 +35,7 @@ class MailMessage(models.Model):
         ('received', 'Received'),
         ('exception', 'Failed'),
         ('cancel', 'Cancelled'),
-    ], string='Email State', compute='_compute_mail_state')
+    ], string='Email State', compute='_compute_mail_state', compute_sudo=True)
 
 
 class SmsTemplate(models.Model):
