@@ -11,7 +11,6 @@
     'sequence': 1000,
     'depends': ['base_multitenant', 'auth_oauth'],
     'data': [
-        'views/templates.xml',
-        'views/oauth.xml',
+        'views/auth_oauth_provider.xml',
     ],
 }
