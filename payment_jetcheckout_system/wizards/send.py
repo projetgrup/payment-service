@@ -182,6 +182,7 @@ class PaymentPayloxSend(models.TransientModel):
 
     def _compute_partner(self):
         for send in self:
+            partners = self.env['res.partner'].sudo
             send.partner_ids = [(6, 0, self.env.context.get('active_ids', []))]
             send.partner_count = len(send.partner_ids)
 
