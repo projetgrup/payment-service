@@ -560,6 +560,9 @@
     .o_main_navbar {
         display: none;
     }
+    .w-100 {
+        max-width: 800px;
+    }
 }
 
 @keyframes welcomeTopText {
