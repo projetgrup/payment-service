@@ -108,14 +108,11 @@ class SAMLLogin(Home):
         if response.is_qweb:
             error = request.params.get("saml_error")
             if error == "no-signup":
-                error = _("Sign up is not allowed on this database.")
+                error = _("Sign up is not allowed.")
             elif error == "access-denied":
                 error = _("Access Denied")
             elif error == "expired":
-                error = _(
-                    "You do not have access to this database. Please contact"
-                    " support."
-                )
+                error = _("Access Denied")
             else:
                 error = None
 
