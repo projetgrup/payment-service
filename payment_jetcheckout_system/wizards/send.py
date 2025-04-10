@@ -175,24 +175,61 @@ class PaymentPayloxSendType(models.Model):
             return False
         return super().unlink()
 
+class PaymentPayloxSendPartner(models.TransientModel):
+    _name = 'payment.acquirer.jetcheckout.send.partner'
+    _description = 'Paylox System Send Partners'
+
+    @api.depends('partner_id')
+    def _compute_child_ok(self):
+        for partner in self:
+            partner.child_ok = len(partner.child_ids)
+
+    @api.depends('child_ids')
+    def _compute_child_html(self):
+        for partner in self:
+            partner.child_html = '\n'.join(['<div><i class="fa fa-check-square text-primary"/> %s</div>' % child.name for child in partner.child_ids])
+
+    wizard_id = fields.Many2one('payment.acquirer.jetcheckout.send')
+    partner_id = fields.Many2one('res.partner')
+    child_ids = fields.Many2many('res.partner', 'system_send_partner_child_rel', 'partner_id', 'child_id', domain='[("parent_id", "=", partner_id)]')
+    child_ok = fields.Boolean(compute='_compute_child_ok')
+    child_html = fields.Html(sanitize=False, compute='_compute_child_html')
+
 
 class PaymentPayloxSend(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.send'
     _description = 'Paylox System Send'
 
+    @api.depends('partner_ids.partner_id', 'partner_ids.child_ids')
     def _compute_partner(self):
         for send in self:
-            partners = self.env['res.partner'].sudo
-            send.partner_ids = [(6, 0, self.env.context.get('active_ids', []))]
-            send.partner_count = len(send.partner_ids)
+            partner_ids = []
+            for partner in send.partner_ids:
+                partner_ids.append(partner.partner_id.id)
+                for child in partner.child_ids:
+                    partner_ids.append(child.id)
+            send.partner_count = len(partner_ids)
+            send.partner_raw_ids = [(6, 0, partner_ids)]
 
-    partner_ids = fields.Many2many('res.partner', compute='_compute_partner', string='Partners', compute_sudo=True)
+    partner_ids = fields.One2many('payment.acquirer.jetcheckout.send.partner', 'wizard_id', string='Partners')
+    partner_raw_ids = fields.Many2many('res.partner', compute='_compute_partner', compute_sudo=True)
     partner_count = fields.Integer(compute='_compute_partner', compute_sudo=True)
+    partner_show = fields.Boolean('Show Partners')
     selection = fields.Many2many('payment.acquirer.jetcheckout.send.type', 'system_send_type_rel', 'send_id', 'type_id', string='Selection')
     type_ids = fields.Many2many('payment.acquirer.jetcheckout.send.type', 'system_send_type_rel', 'send_id', 'type_id', string='Types')
     mail_template_id = fields.Many2one('mail.template')
     sms_template_id = fields.Many2one('sms.template')
     company_id = fields.Many2one('res.company')
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        partners = self.env['res.partner'].sudo().browse(self.env.context.get('active_ids', []))
+        res['partner_ids'] = [(0, 0, {
+            'partner_id': partner.id,
+            'child_ids': [(6, 0, partner.child_ids.ids)]
+        }) for partner in partners]
+        return res
 
     @api.onchange('selection')
     def onchange_selection(self):
@@ -201,7 +238,7 @@ class PaymentPayloxSend(models.TransientModel):
     def send(self):
         user = self.env.user
         self = self.sudo()
-        partner_ids = self.env.context.get('partners', self.partner_ids)
+        partner_ids = self.env.context.get('partners', self.partner_raw_ids)
         company = self.company_id or partner_ids.mapped('company_id') or self.env.company
         if len(company) > 1:
             raise UserError(_('Partners must belong to only one company to get sent properly'))
