@@ -110,9 +110,17 @@ class VendorAPIService(Component):
             result = []
             company = api.company_id
             vendors = self.env['res.partner'].sudo()
+            acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
             for item in params.items:
                 vendor = self._get_vendor(company, item.vendor)
+                campaign = False
+                if hasattr(item.vendor, 'campaign'):
+                    campaign = self._get_campaign(acquirer, item.vendor.campaign)
+                    if not campaign:
+                        return Response("Campaign name cannot be found for partner %s" % vendor.name, status=404, mimetype="application/json")
                 if vendor:
+                    if campaign:
+                        vendor.write({'campaign_id': campaign.id})
                     if company.api_item_new_data_only:
                         domain = [('paid', '=', False)]
                         if vendor.parent_id:
@@ -121,7 +129,9 @@ class VendorAPIService(Component):
                             domain.append(('parent_id', '=', vendor.id))
                         self.env['payment.item'].sudo().search(domain).unlink()
                 else:
-                    vendor = self._create_vendor(company, item.vendor)
+                    if not campaign:
+                        campaign = acquirer.jetcheckout_campaign_id
+                    vendor = self._create_vendor(company, campaign, item.vendor)
 
                 result.append({
                     'vat': vendor.vat,
@@ -287,15 +297,7 @@ class VendorAPIService(Component):
             ('name', '=', campaign),
         ], limit=1)
 
-    def _create_vendor(self, company, vendor):
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
-        if hasattr(vendor, 'campaign') and vendor.campaign:
-            campaign = acquirer.paylox_campaign_ids.filtered(lambda x: x.name == vendor.campaign)
-            if len(campaign) > 1:
-                campaign = campaign[0]
-        else:
-            campaign = acquirer.jetcheckout_campaign_id
-
+    def _create_vendor(self, company, campaign, vendor):
         return self.env['res.partner'].sudo().with_context({'no_vat_validation': True, 'active_system': 'vendor'}).create({
             'is_company': True,
             'company_id': company.id,
