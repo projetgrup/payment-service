@@ -25,18 +25,18 @@ class ResUser(models.Model):
 
     def _auth_saml_signin(self, provider: int, validation: dict, saml_response) -> str:
         saml_uid = validation["user_id"]
-        user_saml = self.env["res.users.saml"].search(
-            [("saml_uid", "=", saml_uid), ("saml_provider_id", "=", provider)],
-            limit=1,
-        )
+        user_saml = self.env["res.users.saml"].search([
+            ("saml_uid", "=", saml_uid),
+            ("saml_provider_id", "=", provider)
+        ], limit=1)
         if user_saml:
             user = user_saml.user_id
         else:
             s = "abcdefghijklmnopqrstuvwxyz034567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
-            user = self.env['res.users'].sudo().create({
+            user = self.env['res.users'].sudo()._create_user_from_template({
                 'name': saml_uid,
                 'login': saml_uid,
-                'password': "".join(random.sample(s, 16)),
+                'password': ''.join(random.sample(s, 16)),
                 'company_id': self.env.company.id,
             })
             user_saml = self.env['res.users.saml'].sudo().create({

@@ -3,6 +3,7 @@ import base64
 import json
 import logging
 import os
+import re
 import tempfile
 import urllib.parse
 import requests
@@ -336,19 +337,27 @@ class AuthSamlProvider(models.Model):
         attrs = response.get_identity()
 
         for attribute in self.attribute_mapping_ids:
-            if attribute.attribute_name not in attrs:
-                _logger.debug(
-                    "SAML attribute '%s' found in response %s",
-                    attribute.attribute_name,
-                    attrs,
-                )
-                continue
+            attribute_names = re.findall(r'([a-zA-Z0-9]+)', attribute.attribute_name)
+            attribute_values = []
+            for attribute_name in attribute_names:
+                if attribute_name not in attrs:
+                    _logger.debug(
+                        "SAML attribute '%s' found in response %s",
+                        attribute_name,
+                        attrs,
+                    )
+                    break
 
-            attribute_value = attrs[attribute.attribute_name]
-            if isinstance(attribute_value, list):
-                attribute_value = attribute_value[0]
+                attribute_value = attrs[attribute_name]
+                if isinstance(attribute_value, list):
+                    attribute_value = attribute_value[0]
+                attribute_values.append(attribute_values)
 
-            vals[attribute.field_name] = attribute_value
+            else:
+                attribute_name = attribute.attribute_name
+                for i, attribute_value in enumerate(attribute_values):
+                    attribute_name.replace(attribute_names[i], attribute_value)
+                vals[attribute.field_name] = attribute_name
 
         return {"mapped_attrs": vals}
 
