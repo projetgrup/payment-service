@@ -208,6 +208,9 @@
     <field name="arch" type="xml">
         <xpath expr='//div[@name="button_box"]' position="replace"/>
         <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="lang"]' position="after">
+            <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
+        </xpath>
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
             <field name="is_company" invisible="1"/>

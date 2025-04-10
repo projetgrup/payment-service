@@ -11,7 +11,7 @@
             <field name="template_name"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click shadow-sm my-2 p-0 overflow-hidden">
+                    <div class="oe_kanban_global_click shadow-sm my-2 p-0 overflow-hidden" style="padding-left: 0 !important; padding-right: 0 !important;">
                         <div class="font-weight-bold p-2 align-items-center border-bottom shadow-sm">
                             <span t-esc="record.name.value"/>
                             <span t-raw="record.icon_preview.value" class="float-right text-primary"/>
@@ -20,11 +20,17 @@
                             <table class="w-100">
                                 <tr>
                                     <td class="px-2 pt-2 align-top"><strong>Template</strong></td>
-                                    <td class="px-2 pt-2 align-top"><t t-esc="record.template_name.value"/></td>
+                                    <td class="px-2 pt-2 align-top">
+                                        <span t-if="record.template_name.raw_value != false" t-esc="record.template_name.value"/>
+                                        <span t-else="" class="font-italic text-500">No template selected</span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="px-2 pb-2 align-top"><strong>Note</strong></td>
-                                    <td class="px-2 pb-2 align-top"><t t-esc="record.message.value"/></td>
+                                    <td class="px-2 pb-2 align-top">
+                                        <span t-if="record.message.raw_value != false" t-esc="record.message.value"/>
+                                        <span t-else="" class="font-italic text-500">No message</span>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -95,6 +101,72 @@
     </field>
     </record>
 
+    <record id="system_send_partner_kanban" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.send.partner.kanban</field>
+    <field name="model">payment.acquirer.jetcheckout.send.partner</field>
+    <field name="arch" type="xml">
+        <kanban create="0" delete="0">
+            <field name="partner_id"/>
+            <field name="child_ids"/>
+            <field name="child_html"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click shadow-sm my-2 p-0 overflow-hidden" style="padding-left: 0 !important; padding-right: 0 !important;">
+                        <div class="font-weight-bold p-2 align-items-center border-bottom shadow-sm">
+                            <i class="fa fa-user mx-2 text-muted"/>
+                            <field name="partner_id"/>
+                        </div>
+                        <div class="oe_kanban_details p-3 mx-2">
+                            <t t-if="record.child_ids.raw_value != false">
+                                <t t-raw="record.child_html.raw_value"/>
+                            </t>
+                            <t t-else="">
+                                <span class="font-italic text-center w-100 d-block text-500">No additional contact</span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+    </record>
+
+    <record id="system_send_partner_form" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.send.partner.form</field>
+    <field name="model">payment.acquirer.jetcheckout.send.partner</field>
+    <field name="arch" type="xml">
+        <form class="o_form_system_send_partner">
+            <sheet>
+                <group>
+                    <group class="text-center">
+                        <div colspan="2" class="my-3"><i class="fa fa-user-plus fa-2x text-primary"/></div>
+                        <p class="h4 my-3 text-700 text-center" colspan="2">Please select contacts to send</p>
+                            <p colspan="2" class="h5 text-500 mt-2 font-italic"><field name="partner_id" options="{'no_create': True, 'no_open': True}" readonly="1" force_save="1"/></p>
+                    </group>
+                    <group attrs="{'invisible': [('child_ok', '=', False)]}">
+                        <field name="child_ids" widget="many2many_checkboxes" colspan="2" nolabel="1"/>
+                    </group>
+                    <group attrs="{'invisible': [('child_ok', '!=', False)]}">
+                        <span class="font-italic text-center w-100 d-block p-3 text-500">No additional contact</span>
+                    </group>
+                    <field name="child_ok" invisible="1"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+    <record id="system_send_partner_tree" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.send.partner.tree</field>
+    <field name="model">payment.acquirer.jetcheckout.send.partner</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="partner_id" options="{'no_create': True, 'no_open': True}"/>
+            <field name="child_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags"/>
+        </tree>
+    </field>
+    </record>
+
     <record id="system_send_form" model="ir.ui.view">
     <field name="name">payment.acquirer.jetcheckout.send.form</field>
     <field name="model">payment.acquirer.jetcheckout.send</field>
@@ -105,14 +177,23 @@
                     <div class="col-md-3 d-flex flex-column justify-content-center p-4 shadow">
                         <field name="selection" nolabel="1" widget="many2many_checkboxes" class="align-self-center"/>
                         <div class="text-muted text-center mt-2">
-                            <field name="partner_count" nolabel="1"/> partner selected
+                            <span class="font-italic">
+                                <field name="partner_count" nolabel="1"/> partner selected
+                            </span>
+                            <br/>
+                            <label for="partner_show" class="btn text-primary" string="Show All" attrs="{'invisible': [('partner_show','!=', False)]}"/>
+                            <label for="partner_show" class="btn text-primary" string="Hide All" attrs="{'invisible': [('partner_show','=', False)]}"/>
+                            <field name="partner_show" class="d-none"/>
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <field name="type_ids" nolabel="1" mode="kanban" can_delete="0" options="{'link': 0}" context="{'partner_ids': partner_ids, 'company_id': company_id, 'parent': id}"/>
+                    <div class="col-md-9" attrs="{'invisible': [('partner_show','!=', False)]}">
+                        <field name="type_ids" nolabel="1" mode="kanban" can_delete="0" options="{'link': 0}" context="{'partner_ids': partner_raw_ids, 'company_id': company_id, 'parent': id}"/>
+                    </div>
+                    <div class="col-md-9" attrs="{'invisible': [('partner_show','=', False)]}">
+                        <field name="partner_ids" nolabel="1" mode="kanban" can_delete="0"/>
                     </div>
                 </div>
-                <field name="partner_ids" invisible="1"/>
+                <field name="partner_raw_ids" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="id" invisible="1"/>
             </sheet>

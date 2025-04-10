@@ -15,6 +15,13 @@ class PaymentItemImport(models.TransientModel):
     filename = fields.Char()
     line_ids = fields.One2many('payment.item.import.line', 'wizard_id', 'Lines', readonly=True)
 
+    def _cast_to_string(self, value):
+        if isinstance(value, float):
+            value = str(value)
+            if value.endswith('.0'):
+                value = value[:-2]
+        return value
+
     def _get_date(self, value):
         if value:
             try:
@@ -24,11 +31,6 @@ class PaymentItemImport(models.TransientModel):
         return value
 
     def _get_row(self, value):
-        description = value.get('Description', False)
-        if isinstance(description, float):
-            description = str(description)
-            if description.endswith('.0'):
-                description = description[:-2]
         return {
             'partner_name': value['Partner Name'],
             'partner_vat': value['Partner VAT'],
@@ -43,33 +45,13 @@ class PaymentItemImport(models.TransientModel):
             'bank_iban': value.get('Bank IBAN', False),
             'bank_holder': value.get('Bank Holder Name', False),
             'bank_merchant': value.get('Bank Merchant Name', False),
-            'description': description,
+            'description': self._cast_to_string(value.get('Description', False)),
             'user_name': value.get('Sales Representative Name', False),
             'user_email': value.get('Sales Representative Email', False),
-            'user_mobile': value.get('Sales Representative Mobile', False),
+            'user_mobile': self._cast_to_string(value.get('Sales Representative Mobile', False)),
         }
 
     def _prepare_row(self, line):
-        partner = self.env['res.partner'].search([('vat', '=', line.partner_vat), ('company_id', '=', line.company_id.id)], limit=1)
-        if partner:
-            partner.write({
-                'vat': line.partner_vat,
-                'street': line.partner_street,
-                'paylox_tax_office': line.partner_tax_office,
-                'email': line.partner_email,
-                'system': line.company_id.system,
-            })
-        else:
-            partner = partner.create({
-                'name': line.partner_name,
-                'vat': line.partner_vat,
-                'street': line.partner_street,
-                'paylox_tax_office': line.partner_tax_office,
-                'email': line.partner_email,
-                'system': line.company_id.system,
-                'company_id': line.company_id.id,
-            })
-
         if line.user_name:
             user = self.env['res.users'].search([('partner_id.name', '=', line.user_name)], limit=1)
             user_values = {}
@@ -78,11 +60,30 @@ class PaymentItemImport(models.TransientModel):
             if line.user_mobile:
                 user_values.update({'mobile': line.user_mobile})
             if not user:
-                user = self.env['res.users'].create({'name': line.user_name})
+                user = self.env['res.users'].create({'name': line.user_name, 'login': line.user_email or line.user_name})
             if user_values:
                 user.partner_id.write(user_values)
-            partner.user_id = user.id
-        
+        else:
+            user = False
+
+        partner = self.env['res.partner'].search([('vat', '=', line.partner_vat), ('company_id', '=', line.company_id.id)], limit=1)
+        partner_values = {
+                'name': line.partner_name,
+                'street': line.partner_street,
+                'paylox_tax_office': line.partner_tax_office,
+                'email': line.partner_email,
+                'system': line.company_id.system,
+                'user_id': user and user.id,
+            }
+        if partner:
+            partner.write(partner_values)
+        else:
+            partner_values.update({
+                'vat': line.partner_vat,
+                'company_id': line.company_id.id,
+            })
+            partner = partner.create(partner_values)
+
         bank = False
         bank_token = False
         bank_token_ok = self.env.company.payment_item_bank_token_ok
