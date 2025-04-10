@@ -52,29 +52,47 @@ class PaymentItemImport(models.TransientModel):
         }
 
     def _prepare_row(self, line):
-        if line.user_name:
-            user = self.env['res.users'].search([('partner_id.name', '=', line.user_name)], limit=1)
+        if line.user_email:
             user_values = {}
-            if line.user_email:
-                user_values.update({'email': line.user_email})
+            if line.user_name:
+                user_values.update({'name': line.user_name})
             if line.user_mobile:
                 user_values.update({'mobile': line.user_mobile})
-            if not user:
-                user = self.env['res.users'].create({'name': line.user_name, 'login': line.user_email or line.user_name})
-            if user_values:
-                user.partner_id.write(user_values)
+
+            user = self.env['res.users'].search([
+                ('partner_id.parent_id', '=', line.company_id.partner_id.id),
+                ('partner_id.email', '=', line.user_email),
+                ('company_id', '=', line.company_id.id),
+                ('system', '=', line.company_id.system),
+            ], limit=1)
+            if user:
+                user.write(user_values)
+            else:
+                user_values.update({
+                    'name': user_values.get('name', line.user_email),
+                    'parent_id': line.company_id.partner_id.id,
+                    'login': line.user_email,
+                    'company_id': line.company_id.id,
+                    'company_ids': [(4, line.company_id.id)]
+                })
+                user = self.env['res.users'].create(user_values)
         else:
             user = False
 
-        partner = self.env['res.partner'].search([('vat', '=', line.partner_vat), ('company_id', '=', line.company_id.id)], limit=1)
+        partner = self.env['res.partner'].search([
+            ('parent_id', '=', False),
+            ('vat', '=', line.partner_vat),
+            ('company_id', '=', line.company_id.id),
+            ('system', '=', line.company_id.system),
+            ], limit=1)
         partner_values = {
-                'name': line.partner_name,
-                'street': line.partner_street,
-                'paylox_tax_office': line.partner_tax_office,
-                'email': line.partner_email,
-                'system': line.company_id.system,
-                'user_id': user and user.id,
-            }
+            'name': line.partner_name,
+            'street': line.partner_street,
+            'paylox_tax_office': line.partner_tax_office,
+            'email': line.partner_email,
+            'system': line.company_id.system,
+            'user_id': user and user.id,
+        }
         if partner:
             partner.write(partner_values)
         else:
