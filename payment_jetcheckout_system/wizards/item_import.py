@@ -52,25 +52,27 @@ class PaymentItemImport(models.TransientModel):
         }
 
     def _prepare_row(self, line):
+        company = line.company_id
         if line.user_email:
             user_values = {}
             if line.user_name:
                 user_values.update({'name': line.user_name})
             if line.user_mobile:
                 user_values.update({'mobile': line.user_mobile})
+            parent = company.partner_id
 
-            user = self.env['res.users'].search([
-                ('login', '=', line.user_email),
-            ], limit=1)
+            user = self.env['res.users'].search([('login', '=', line.user_email)], limit=1)
             if user:
+                if user.parent_id.id != parent.id:
+                    user_values.update({'parent_id': parent.id})
                 user.write(user_values)
             else:
                 user_values.update({
                     'name': user_values.get('name', line.user_email),
                     'login': line.user_email,
-                    'company_id': line.company_id.id,
-                    'company_ids': [(4, line.company_id.id)],
-                    'parent_id': line.company_id.partner_id.id,
+                    'parent_id': parent.id,
+                    'company_id': company.id,
+                    'company_ids': [(4, company.id)],
                 })
                 user = self.env['res.users'].create(user_values)
         else:
@@ -79,15 +81,14 @@ class PaymentItemImport(models.TransientModel):
         partner = self.env['res.partner'].search([
             ('parent_id', '=', False),
             ('vat', '=', line.partner_vat),
-            ('company_id', '=', line.company_id.id),
-            ('system', '=', line.company_id.system),
-            ], limit=1)
+            ('system', '=', company.system),
+            ('company_id', '=', company.id),
+        ], limit=1)
         partner_values = {
             'name': line.partner_name,
+            'email': line.partner_email,
             'street': line.partner_street,
             'paylox_tax_office': line.partner_tax_office,
-            'email': line.partner_email,
-            'system': line.company_id.system,
             'user_id': user and user.id,
         }
         if partner:
@@ -95,13 +96,14 @@ class PaymentItemImport(models.TransientModel):
         else:
             partner_values.update({
                 'vat': line.partner_vat,
-                'company_id': line.company_id.id,
+                'system': company.system,
+                'company_id': company.id,
             })
             partner = partner.create(partner_values)
 
         bank = False
         bank_token = False
-        bank_token_ok = self.env.company.payment_item_bank_token_ok
+        bank_token_ok = company.payment_item_bank_token_ok
         if line.bank_iban:
             bank = partner.bank_ids.filtered(lambda b: b.acc_number == line.bank_iban)
             if bank:
@@ -143,9 +145,9 @@ class PaymentItemImport(models.TransientModel):
             'ref': line.ref,
             'tag': line.tag,
             'description': line.description,
-            'system': line.company_id.system,
+            'system': company.system,
+            'company_id': company.id,
             'currency_id': line.currency_id.id,
-            'company_id': line.company_id.id,
             'bank_id': bank_token_ok and bank and bank.id or False,
             'bank_token_id': bank_token_ok and bank_token and bank_token.id or False,
         }
