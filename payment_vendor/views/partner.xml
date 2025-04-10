@@ -143,8 +143,8 @@
             <page name="other" string="Other">
                 <group>
                     <group string="Representatives">
-                        <field name="user_id" options="{'no_create': True}" domain="[('share', '=', False)]"/>
-                        <field name="team_id" options="{'no_create': True}"/>
+                        <field name="user_id" options="{'no_create': True}" domain="[('share', '=', False), ('company_id', '=', company_id)]"/>
+                        <field name="team_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]"/>
                     </group>
                 </group>
                 <field name="syncops_state_message" nolabel="1" colspan="2" attrs="{'invisible': [('syncops_ok', '=', False)]}"/>
