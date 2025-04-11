@@ -3,6 +3,9 @@ from odoo import models, _
 from odoo.tools.misc import ustr
 from odoo.addons.auth_signup.models.res_partner import SignupError
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class ResUsers(models.Model):
     _inherit = 'res.users'

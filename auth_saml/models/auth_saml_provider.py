@@ -26,88 +26,33 @@ class AuthSamlProvider(models.Model):
     _order = "sequence, name"
 
     name = fields.Char("Provider Name", required=True, index=True)
-    entity_id = fields.Char(
-        "Entity ID",
-        required=True,
-    )
-    idp_metadata = fields.Text(
-        string="Identity Provider Metadata",
-        required=True,
-    )
-    idp_metadata_url = fields.Char(
-        string="Identity Provider Metadata URL",
-    )
+    entity_id = fields.Char("Entity ID", required=True)
+    company_id = fields.Many2one("res.company")
+    idp_metadata = fields.Text(string="Identity Provider Metadata", required=True)
+    idp_metadata_url = fields.Char(string="Identity Provider Metadata URL")
 
-    sp_baseurl = fields.Text(
-        string="Override Base URL",
-    )
-    sp_pem_public = fields.Binary(
-        string="Public Certificate",
-        attachment=True,
-    )
+    sp_baseurl = fields.Text(string="Override Base URL")
+    sp_pem_public = fields.Binary(string="Public Certificate", attachment=True)
     sp_pem_public_filename = fields.Char("Public Certificate File Name")
-    sp_pem_private = fields.Binary(
-        string="Private Key",
-        attachment=True,
-    )
+    sp_pem_private = fields.Binary(string="Private Key", attachment=True)
     sp_pem_private_filename = fields.Char("Private Key File Name")
-    sp_metadata_url = fields.Char(
-        compute="_compute_sp_metadata_url",
-        string="Metadata URL",
-        readonly=True,
-    )
-    matching_attribute = fields.Char(
-        string="Identity Provider matching attribute",
-        default="subject.nameId",
-        required=True,
-    )
-    matching_attribute_to_lower = fields.Boolean(
-        string="Lowercase IDP Matching Attribute",
-    )
-    attribute_mapping_ids = fields.One2many(
-        "auth.saml.attribute.mapping",
-        "provider_id",
-        string="Attribute Mapping",
-    )
+    sp_metadata_url = fields.Char(compute="_compute_sp_metadata_url", string="Metadata URL", readonly=True)
+    matching_attribute = fields.Char(string="Identity Provider matching attribute", default="subject.nameId", required=True)
+    matching_attribute_to_lower = fields.Boolean(string="Lowercase IDP Matching Attribute")
+    attribute_mapping_ids = fields.One2many("auth.saml.attribute.mapping", "provider_id", string="Attribute Mapping")
     active = fields.Boolean(default=True)
     sequence = fields.Integer(index=True)
-    css_class = fields.Char(
-        string="Button Icon CSS class",
-        default="fa fa-fw fa-sign-in text-primary",
-    )
-    body = fields.Char(
-        string="Login button label", translate=True
-    )
-    autoredirect = fields.Boolean(
-        "Automatic Redirection",
-        default=False,
-    )
-    sig_alg = fields.Selection(
-        selection=lambda s: s._sig_alg_selection(),
-        required=True,
-        string="Signature Algorithm",
-    )
-    authn_requests_signed = fields.Boolean(
-        default=True,
-    )
-    logout_requests_signed = fields.Boolean(
-        default=True,
-    )
-    want_assertions_signed = fields.Boolean(
-        default=True,
-    )
-    want_response_signed = fields.Boolean(
-        default=True,
-    )
-    want_assertions_or_response_signed = fields.Boolean(
-        default=True,
-    )
-    sign_authenticate_requests = fields.Boolean(
-        default=True,
-    )
-    sign_metadata = fields.Boolean(
-        default=True,
-    )
+    css_class = fields.Char(string="Button Icon CSS class", default="fa fa-fw fa-sign-in text-primary")
+    body = fields.Char(string="Login button label", translate=True)
+    autoredirect = fields.Boolean("Automatic Redirection", default=False)
+    sig_alg = fields.Selection(selection=lambda s: s._sig_alg_selection(), required=True, string="Signature Algorithm")
+    authn_requests_signed = fields.Boolean(default=True)
+    logout_requests_signed = fields.Boolean(default=True)
+    want_assertions_signed = fields.Boolean(default=True)
+    want_response_signed = fields.Boolean(default=True)
+    want_assertions_or_response_signed = fields.Boolean(default=True)
+    sign_authenticate_requests = fields.Boolean(default=True)
+    sign_metadata = fields.Boolean(default=True)
 
     @api.model
     def _sig_alg_selection(self):
@@ -224,8 +169,8 @@ class AuthSamlProvider(models.Model):
         if extra_state is None:
             extra_state = {}
         state = {
-            "d": self.env.cr.dbname,
             "p": self.id,
+            "d": self.env.cr.dbname,
         }
         state.update(extra_state)
 
@@ -351,12 +296,12 @@ class AuthSamlProvider(models.Model):
                 attribute_value = attrs[attribute_name]
                 if isinstance(attribute_value, list):
                     attribute_value = attribute_value[0]
-                attribute_values.append(attribute_values)
+                attribute_values.append(attribute_value)
 
             else:
                 attribute_name = attribute.attribute_name
                 for i, attribute_value in enumerate(attribute_values):
-                    attribute_name.replace(attribute_names[i], attribute_value)
+                    attribute_name = attribute_name.replace(attribute_names[i], attribute_value)
                 vals[attribute.field_name] = attribute_name
 
         return {"mapped_attrs": vals}

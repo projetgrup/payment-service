@@ -44,6 +44,7 @@ class ResUser(models.Model):
                 'saml_uid': saml_uid,
                 'saml_provider_id': provider,
             })
+            user.with_user(user)._update_last_login()
 
         if len(user) != 1:
             raise AccessDenied()

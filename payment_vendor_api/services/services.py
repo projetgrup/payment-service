@@ -117,7 +117,7 @@ class VendorAPIService(Component):
                 if hasattr(item.vendor, 'campaign'):
                     campaign = self._get_campaign(acquirer, item.vendor.campaign)
                     if not campaign:
-                        return Response("Campaign name cannot be found for partner %s" % vendor.name, status=404, mimetype="application/json")
+                        return Response("Campaign name cannot be found", status=404, mimetype="application/json")
                 if vendor:
                     if campaign:
                         vendor.write({'campaign_id': campaign.id})

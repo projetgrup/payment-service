@@ -64,17 +64,7 @@ class ResUsers(models.Model):
     @api.model
     def _signup_create_user(self, values):
         if self.env.context.get('oauth_signup'):
-            user = self._create_user_from_template(values)
-            group_portal = self.env.ref('base.group_portal')
-            group_internal = self.env.ref('base.group_user')
-            group_portal.sudo().write({'users': [(3, user.id)]})
-            group_internal.sudo().write({'users': [(4, user.id)]})
-            try:
-                group_system_user = self.env.ref('payment_jetcheckout_system.group_system_user')
-                group_system_user.sudo().write({'users': [(4, user.id)]})
-            except:
-                pass
-            return user
+            return self._create_user_from_template(values)
         return super()._signup_create_user(values)
 
     @api.model

@@ -371,7 +371,7 @@
                                     <div class="content-group">
                                         <div class="mt16">
                                             <label for="user_template_id" class="col-lg-4 o_light_label" string="User"/>
-                                            <field name="user_template_id" class="mx-2" options="{'no_quick_create': True}" domain="[('company_id', '=', company_id), ('active', '=', False), ('share', '=', False)]" context="{'default_company_id': company_id, 'default_active': False, 'form_view_ref': 'payment_jetcheckout_system.user_form'}" placeholder="No user selected"/>
+                                            <field name="user_template_id" class="mx-2" options="{'no_quick_create': True}" domain="[('company_id', '=', company_id), ('active', '=', False), ('share', '=', False)]" context="{'default_company_id': company_id, 'default_active': False, 'install_mode': True, 'form_view_ref': 'payment_jetcheckout_system.user_form'}" placeholder="No user selected"/>
                                         </div>
                                     </div>
                                 </div>
