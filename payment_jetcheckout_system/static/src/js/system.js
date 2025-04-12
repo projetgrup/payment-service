@@ -434,12 +434,16 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
 
     _onChangeAmount: function (ev) {
         let amount = 0;
-        let items = this.payment.item.$.filter(function () {
-            return $(this).hasClass('input-switch');
+        this.payment.item.$.each(function () {
+            const $this = $(this);
+            if ($this.hasClass('input-switch')) {
+                amount += parseFloat($this.data('amount'));
+            }
         });
-        items.each(function () {
-            amount += parseFloat($(this).data('amount'));
-        });
+        if (amount < this.payment.amount.value) {
+            this.payment.amount.value = amount;
+            this.payment.amount._.updateValue();
+        }
 
         // Do not add new line
         //if (amount < this.payment.amount.value) {
