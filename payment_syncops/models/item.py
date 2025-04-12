@@ -185,6 +185,20 @@ class PaymentItem(models.Model):
                 self.write(values)
                 self.flush()
 
+    def get_file(self):
+        file = super().get_file()
+        if not file:
+            if self.ref:
+                file = self.env['syncops.connector'].sudo()._execute('payment_get_partner_invoice_view', params={
+                    "uuid": self.ref,
+                    "invoiceID": "",
+                    "identifier": "urn:mail:com",
+                    "vat": self.company_id.vat,
+                    "type": "OUTBOUND",
+                    "docType": "PDF",
+                }, company=self.company_id) or False
+        return file
+
     @api.model
     def cron_sync(self):
         self = self.sudo()

@@ -9,7 +9,7 @@
     'license': 'LGPL-3',
     'sequence': 1453,
     'category': 'Tools',
-    'depends': ['base_setup', 'web'],
+    'depends': ['auth_multitenant'],
     'external_dependencies': {
         'python': ['pysaml2'],
         'bin': ['xmlsec1'],

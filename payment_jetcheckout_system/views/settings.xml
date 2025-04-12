@@ -362,6 +362,21 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="user_template_id" string="Select Default User"/>
+                                    <div class="text-muted">
+                                        Use template when creating users
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <label for="user_template_id" class="col-lg-4 o_light_label" string="User"/>
+                                            <field name="user_template_id" class="mx-2" options="{'no_quick_create': True}" domain="[('company_id', '=', company_id), ('active', '=', False), ('share', '=', False)]" context="{'default_company_id': company_id, 'default_active': False, 'install_mode': True, 'form_view_ref': 'payment_jetcheckout_system.user_form'}" placeholder="No user selected"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_page_init_redirect_extra"/>
                                 </div>

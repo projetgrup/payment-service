@@ -16,6 +16,7 @@
         'sms_api',
         'payment_jetcheckout',
         'web_multitenant',
+        'auth_multitenant',
     ],
     'data': [
         'data/data.xml',
