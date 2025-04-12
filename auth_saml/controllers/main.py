@@ -44,7 +44,7 @@ def fragment_to_query_string(func):
 
 class SAMLLogin(Home):
     def _list_saml_providers_domain(self):
-        return []
+        return ['|', ('company_id', '=', False), ('company_id', '=', request.env.company.id)]
 
     def list_saml_providers(self, with_autoredirect: bool = False) -> models.Model:
         domain = self._list_saml_providers_domain()
@@ -70,6 +70,7 @@ class SAMLLogin(Home):
     def _auth_saml_request_link(self, provider: models.Model):
         params = {
             "pid": provider["id"],
+            "cid": request.env.company.id,
         }
         redirect = request.params.get("redirect")
         if redirect:
@@ -133,19 +134,20 @@ class AuthSAMLController(http.Controller):
                 redirect[1:] if redirect[0] == "/" else redirect,
             )
 
-        state = {
+        return {
             "r": url_quote_plus(redirect),
         }
-        return state
 
     @http.route("/auth_saml/get_auth_request", type="http", auth="none")
-    def get_auth_request(self, pid):
+    def get_auth_request(self, pid, cid):
         provider_id = int(pid)
+        company_id = int(cid)
 
         provider = request.env["auth.saml.provider"].sudo().browse(provider_id)
-        redirect_url = provider._get_auth_request(
-            self._get_saml_extra_relaystate(), request.httprequest.url_root.rstrip("/")
-        )
+        state = self._get_saml_extra_relaystate()
+        state.update({'i': company_id})
+        url = request.httprequest.url_root.rstrip("/")
+        redirect_url = provider._get_auth_request(state, url)
         if not redirect_url:
             raise Exception(
                 "Failed to get auth request from provider. "
@@ -170,6 +172,7 @@ class AuthSAMLController(http.Controller):
         state = json.loads(kw["RelayState"])
         provider = state["p"]
         dbname = state["d"]
+        company = state["i"]
         if not http.db_filter([dbname]):
             return BadRequest()
         context = state.get("c", {})
@@ -179,9 +182,7 @@ class AuthSAMLController(http.Controller):
             try:
                 env = api.Environment(cr, SUPERUSER_ID, context)
                 credentials = (
-                    env["res.users"]
-                    .sudo()
-                    .auth_saml(
+                    env["res.users"].with_company(company).sudo().auth_saml(
                         provider,
                         saml_response,
                         request.httprequest.url_root.rstrip("/"),

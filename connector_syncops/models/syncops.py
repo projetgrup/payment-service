@@ -94,11 +94,16 @@ class SyncopsConnector(models.Model):
                         'environment': connector.environment and 'P' or 'T',
                     })
                     if response.status_code == 200:
-                        results = response.json()
-                        if not results['status'] == 0:
-                            _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
-                            return (None, results['message']) if message else None
-                        result += results.get('result', [])
+                        headers = response.headers
+                        if headers.get('Content-Type') == 'application/json':
+                            results = response.json()
+                            if not results['status'] == 0:
+                                _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
+                                return (None, results['message']) if message else None
+                            result += results.get('result', [])
+                        elif headers.get('Content-Type') == 'application/octet-stream':
+                            result = response.content
+                            continue
                     else:
                         _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.text or response.reason))
                         return (None, response.text or response.reason) if message else None

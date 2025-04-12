@@ -5,7 +5,7 @@
     'category': 'Extra Tools',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
-    'depends': ['auth_oauth'],
+    'depends': ['auth_multitenant'],
     'data': [
         'data/auth_oauth_provider.xml',
         'views/auth_oauth_provider.xml',
