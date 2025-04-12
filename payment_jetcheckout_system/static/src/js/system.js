@@ -441,10 +441,11 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             amount += parseFloat($(this).data('amount'));
         });
 
-        if (amount < this.payment.amount.value) {
-            this.payment.advance.amount = this.payment.amount.value - amount;
-            this._onClickAdvanceAdd(ev);
-        }
+        // Do not add new line
+        //if (amount < this.payment.amount.value) {
+        //    this.payment.advance.amount = this.payment.amount.value - amount;
+        //    this._onClickAdvanceAdd(ev);
+        //}
     },
 
     _applyPriority: function () {
