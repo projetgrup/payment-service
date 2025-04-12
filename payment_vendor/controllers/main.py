@@ -44,7 +44,9 @@ class PayloxSystemVendorController(Controller):
     def _prepare_system(self, company, system, partner, transaction, options={}):
         options['no_compute_payment_tags'] = True
         res = super()._prepare_system(company, system, partner, transaction, options=options)
+        show_invoices = False
         if system == 'vendor':
+            show_invoices = self._connector_can_show_partner_invoice()
             try:
                 with request.env.cr.savepoint():
                     wizard = request.env['syncops.sync.wizard'].sudo().create({
@@ -71,5 +73,6 @@ class PayloxSystemVendorController(Controller):
             'campaign': campaign,
             'payments': payments,
             'payment_tags': payment_tags,
+            'show_invoices': show_invoices,
         })
         return res
