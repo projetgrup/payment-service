@@ -309,14 +309,12 @@ class PayloxSyncopsController(Controller):
         balances, show_total = self._connector_get_partner_balance(partner['vat'], partner['ref'], company)
         show_balance = self._connector_can_show_partner_balance()
         show_ledger = self._connector_can_show_partner_ledger()
-        show_invoices = self._connector_can_show_partner_invoice()
         show_partners = self._connector_can_access_partner_list(company)
 
         values.update({
             'balances': balances,
             'show_total': show_total,
             'show_balance': show_balance,
-            'show_invoices': show_invoices,
             'partner_connector': partner,
             'partner_name': partner['name'],
         })
