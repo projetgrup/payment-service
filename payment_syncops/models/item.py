@@ -190,10 +190,10 @@ class PaymentItem(models.Model):
         if not file:
             if self.ref:
                 file = self.env['syncops.connector'].sudo()._execute('payment_get_partner_invoice_view', params={
-                    "uuid": self.ref,
+                    "uuid": self.ref or '',
                     "invoiceID": "",
-                    "identifier": "urn:mail:com",
-                    "vat": self.company_id.vat,
+                    "identifier": self.company_id.payment_einvoice_identifier or '',
+                    "vat": self.company_id.vat or '',
                     "type": "OUTBOUND",
                     "docType": "PDF",
                 }, company=self.company_id) or False
