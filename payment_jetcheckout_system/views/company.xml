@@ -10,6 +10,9 @@
     <field name="model">res.company</field>
     <field name="inherit_id" ref="base.view_company_form"/>
     <field name="arch" type="xml">
+        <xpath expr='//field[@name="company_registry"]' position="after">
+            <field name="payment_einvoice_identifier"/>
+        </xpath>
         <xpath expr='//group[@name="social_media"]' position="before">
             <group name="settings" string="Settings">
                 <field name="system" attrs="{'readonly': [('is_admin', '=', False)]}"/>
