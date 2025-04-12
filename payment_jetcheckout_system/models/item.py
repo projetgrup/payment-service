@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -355,6 +356,11 @@ class PaymentItem(models.Model):
             })
 
         return values
+
+    def get_file(self):
+        if self.file:
+            return base64.b64decode(self.file)
+        return False
 
     def send_done_mail(self):
         pass

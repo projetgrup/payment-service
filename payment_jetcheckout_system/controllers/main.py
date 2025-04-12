@@ -313,11 +313,10 @@ class PayloxSystemController(Controller):
         if not payment.parent_id.id == partner.id or payment.paid:
             raise werkzeug.exceptions.NotFound()
 
-        pdf = payment.file
+        pdf = payment.get_file()
         if not pdf:
             raise werkzeug.exceptions.NotFound()
 
-        pdf = base64.b64decode(pdf)
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Disposition', 'attachment; filename="%s.pdf"' % html_escape(payment.description)),
