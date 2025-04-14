@@ -7,6 +7,28 @@ from odoo.exceptions import AccessDenied
 class Users(models.Model):
     _inherit = 'res.users'
 
+    def _default_fields(self):
+        res = super(Users, self)._default_fields()
+        res += [
+            'privilege',
+            'group_own_partner',
+            'group_own_transaction',
+            'group_create_partner',
+            'group_delete_partner',
+            'group_grant_partner',
+            'group_show_payment_link',
+            'group_show_campaign_button',
+            'group_transaction_commission',
+            'group_transaction_cancel',
+            'group_transaction_refund',
+            'payment_page_item_priority',
+            'payment_page_item_priority_selection',
+            'payment_page_ok',
+            'payment_contactless_ok',
+            'payment_preview_ok',
+        ]
+        return res
+
     def _compute_privilege(self):
         for user in self:
             system = user.company_id.system

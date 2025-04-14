@@ -118,6 +118,7 @@
                         <field name="payment_contactless_ok" widget="boolean_toggle"/>
                         <field name="payment_preview_ok" widget="boolean_toggle"/>
                     </group>
+                    <!--<field name="groups_id" invisible="1"/>-->
                 </group>
             </sheet>
         </form>
