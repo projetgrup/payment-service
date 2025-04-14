@@ -133,6 +133,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
         this.isPreview = false;
         this.itemPriority = false;
         this.amountEditable = false;
+        this.amountEditableWoExceed = false;
         this.amount = new fields.float({
             events: [
                 ['update', function() { this.amount._.updateValue(); }],
@@ -185,6 +186,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             items: new fields.element({
                 events: [['change', this._onChangePaidAll]],
             }),
+            amountEditableWoExceed: new fields.element(),
             itemAddDateReadonly: new fields.element(),
             itemAddDescNumericonly: new fields.element(),
             itemAddDescRequired: new fields.element(),
@@ -259,6 +261,7 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(self);
             payloxPage.prototype._start.apply(self);
             self.amountEditable = self.payment.amount.exist;
+            self.amountEditableWoExceed = self.payment.amountEditableWoExceed.exist;
             if (self.payment.item.exist) {
                 self.itemPriority = self.payment.priority.exist;
                 self._onChangePaid();
@@ -441,15 +444,14 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
             }
         });
         if (amount < this.payment.amount.value) {
-            this.payment.amount.value = amount;
-            this.payment.amount._.updateValue();
+            if (this.amountEditableWoExceed) {
+                this.payment.amount.value = amount;
+                this.payment.amount._.updateValue();
+            } else {
+                this.payment.advance.amount = this.payment.amount.value - amount;
+                this._onClickAdvanceAdd(ev);
+            }
         }
-
-        // Do not add new line
-        //if (amount < this.payment.amount.value) {
-        //    this.payment.advance.amount = this.payment.amount.value - amount;
-        //    this._onClickAdvanceAdd(ev);
-        //}
     },
 
     _applyPriority: function () {

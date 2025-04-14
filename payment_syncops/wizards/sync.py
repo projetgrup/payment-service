@@ -87,6 +87,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     'partner_campaign': line.get('campaign', False),
                     'partner_address': line.get('address', False),
                     'partner_tag': line.get('tag', False),
+                    'partner_tax_office': line.get('tax_office', False),
                 },
                 'filter': lambda line: True,
             }
@@ -247,6 +248,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'email': line['partner_email'],
                         'phone': line['partner_phone'],
                         'street': line['partner_address'],
+                        'paylox_tax_office': line['partner_tax_office'],
                         'mobile': line['partner_mobile'] or line['partner_phone'],
                         'campaign_id': campaigns.get(line['partner_campaign'], False),
                         'category_id': [(6, 0, tags.get(line['partner_tag'], []))],
@@ -262,6 +264,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'email': line['partner_email'],
                         'phone': line['partner_phone'],
                         'street': line['partner_address'],
+                        'paylox_tax_office': line['partner_tax_office'],
                         'mobile': line['partner_mobile'] or line['partner_phone'],
                         'campaign_id': campaigns.get(line['partner_campaign'], False),
                         'category_id': [(6, 0, tags.get(line['partner_tag'], []))],
@@ -526,6 +529,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     partner_user_email = fields.Char(string='Partner Salesperson Email', readonly=True)
     partner_user_phone = fields.Char(string='Partner Salesperson Phone', readonly=True)
     partner_user_mobile = fields.Char(string='Partner Salesperson Mobile', readonly=True)
+    partner_tax_office = fields.Char(string='Partner Tax Office', readonly=True)
     invoice_id = fields.Char(readonly=True)
     invoice_tag = fields.Char(readonly=True)
     invoice_name = fields.Char(readonly=True)

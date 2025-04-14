@@ -63,6 +63,7 @@ class Company(models.Model):
     payment_page_due_tag_ids = fields.One2many('payment.settings.campaign.tag', 'company_id', 'Payment Page Due Tags')
 
     payment_page_amount_editable = fields.Boolean(string='Payment Page Editable Amount')
+    payment_page_amount_editable_wo_exceed = fields.Boolean(string='Payment Page Editable Amount Without Exceeding')
     payment_page_saleref_ok = fields.Boolean(string='Payment Page Can Use Sale Reference')
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
     payment_page_item_add_ok = fields.Boolean(string='Payment Page Can Add Payment Item')

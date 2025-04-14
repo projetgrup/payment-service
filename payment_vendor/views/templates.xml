@@ -56,6 +56,7 @@
                                 <div class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
                                     <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
                                     <t t-if="company.payment_page_amount_editable">
+                                        <input type="hidden" t-if="company.payment_page_amount_editable_wo_exceed" field="payment.amountEditableWoExceed"/>
                                         <div>
                                             <span t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                             <input name="amount" type="text" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), currency.round(amount), grouping=True, monetary=True)" autocomplete="off" field="payment.amount"/>
@@ -123,7 +124,7 @@
                                                 <i class="fa fa-times mr-1" t-translation="off"/>Remove
                                             </button>
                                             <div class="payment-kanban-pdf position-absolute">
-                                                <form t-if="payment.file or (show_invoices and payment.ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                <form t-if="payment.file or (show_invoices and payment.invoice_ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
                                                     <button type="submit" class="btn text-danger px-2 py-0 fa fa-file-pdf-o"/>
                                                 </form>
                                             </div>
@@ -193,7 +194,7 @@
                                                 <td class="text-right px-2"><span t-field="payment.residual_amount" class="item-amount-payable"/></td>
                                                 <td class="text-right px-2"><span t-esc="total_amount" t-options="{'widget': 'monetary', 'display_currency': currency}" class="item-amount-total"/></td>
                                                 <td class="text-center">
-                                                    <form t-if="payment.file or (show_invoices and payment.ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
+                                                    <form t-if="payment.file or (show_invoices and payment.invoice_ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
                                                         <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
                                                     </form>
                                                     <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
