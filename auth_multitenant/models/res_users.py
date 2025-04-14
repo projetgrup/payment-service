@@ -1,14 +1,39 @@
 # -*- coding: utf-8 -*-
-from odoo import models, _
+from odoo import models, api, _
 from odoo.tools.misc import ustr
 from odoo.addons.auth_signup.models.res_partner import SignupError
-
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
+
+    def _default_groups(self):
+        template_user = self.env.company.user_template_id
+        if template_user.exists():
+            return template_user.groups_id
+        return super(ResUsers, self)._default_groups()
+
+    def _default_fields(self):
+        return [
+            'tz',
+            'lang',
+            'signature',
+            'action_id',
+            'tz_offset',
+            'company_id',
+            'company_ids',
+            'notification_type',
+        ]
+
+    @api.model
+    def default_get(self, fields):
+        values = super(ResUsers, self).default_get(fields)
+        template_user = self.env.company.user_template_id
+        if template_user.exists():
+            field = self._default_fields()
+            value = template_user.read(field, load=None)[0]
+            values.update(value)
+        return values
 
     def _create_user_from_template(self, values):
         template_user = self.env.company.user_template_id
