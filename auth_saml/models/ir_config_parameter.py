@@ -22,9 +22,7 @@ class IrConfigParameter(models.Model):
         return result
 
     def unlink(self):
-        param_saml = self.filtered(
-            lambda param: param.key == ALLOW_SAML_UID_AND_PASSWORD
-        )
+        param_saml = self.filtered(lambda param: param.key == ALLOW_SAML_UID_AND_PASSWORD)
         result = super().unlink()
         if result and param_saml:
             self.env["res.users"].allow_saml_and_password_changed()
