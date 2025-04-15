@@ -135,6 +135,7 @@ class PaymentItem(models.Model):
     file = fields.Binary()
     description = fields.Char()
     manual = fields.Boolean()
+    invoice_ref = fields.Char('Invoice Reference', readonly=True)
 
     paid = fields.Boolean(compute='_compute_paid', store=True, readonly=True)
     paid_amount = fields.Monetary(compute='_compute_paid_amount', store=True, readonly=True)

@@ -65,7 +65,10 @@ class PaymentItemImport(models.TransientModel):
             if user:
                 if user.parent_id.id != parent.id:
                     user_values.update({'parent_id': parent.id})
-                user.write(user_values)
+                user_entries = user.read(list(user_values.keys()), load=None)[0]
+                user_values = {key: val for key, val in user_values.items() if user_entries[key] != val}
+                if user_values:
+                    user.write(user_values)
             else:
                 user_values.update({
                     'name': user_values.get('name', line.user_email),
@@ -84,15 +87,20 @@ class PaymentItemImport(models.TransientModel):
             ('system', '=', company.system),
             ('company_id', '=', company.id),
         ], limit=1)
-        partner_values = {
-            'name': line.partner_name,
-            'email': line.partner_email,
-            'street': line.partner_street,
-            'paylox_tax_office': line.partner_tax_office,
-            'user_id': user and user.id,
-        }
+        partner_values = {'user_id': user and user.id}
+        if line.partner_name:
+            partner_values.update({'name': line.partner_name})
+        if line.partner_email:
+            partner_values.update({'email': line.partner_email})
+        if line.partner_street:
+            partner_values.update({'street': line.partner_street})
+        if line.partner_tax_office:
+            partner_values.update({'paylox_tax_office': line.partner_tax_office})
         if partner:
-            partner.write(partner_values)
+            partner_entries = partner.read(list(partner_values.keys()), load=None)[0]
+            partner_values = {key: val for key, val in partner_values.items() if partner_entries[key] != val}
+            if partner_values:
+                partner.write(partner_values)
         else:
             partner_values.update({
                 'vat': line.partner_vat,

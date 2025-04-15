@@ -15,6 +15,7 @@
             <field name="date_expired" invisible="1"/>
             <field name="due_date" optional="hide"/>
             <field name="ref" optional="hide"/>
+            <field name="invoice_ref" optional="hide"/>
             <field name="tag" optional="hide"/>
             <field name="description" optional="hide"/>
             <field name="file" optional="hide"/>

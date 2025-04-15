@@ -188,9 +188,9 @@ class PaymentItem(models.Model):
     def get_file(self):
         file = super().get_file()
         if not file:
-            if self.ref:
+            if self.invoice_ref:
                 file = self.env['syncops.connector'].sudo()._execute('payment_get_partner_invoice_view', params={
-                    "uuid": self.ref or '',
+                    "uuid": self.invoice_ref or '',
                     "invoiceID": "",
                     "identifier": self.company_id.payment_einvoice_identifier or '',
                     "vat": self.company_id.vat or '',

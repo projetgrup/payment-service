@@ -43,6 +43,7 @@
             <field name="partner_address" string="Address" optional="hide"/>
             <field name="partner_campaign" string="Campaign" optional="hide"/>
             <field name="partner_tag" string="Tag" widget="badge" optional="hide"/>
+            <field name="partner_tax_office" string="Tax Office" optional="hide"/>
             <field name="partner_user_name" string="Salesperson Name" optional="hide"/>
             <field name="partner_user_email" string="Salesperson Email" optional="hide"/>
             <field name="partner_user_phone" string="Salesperson Phone" optional="hide"/>
@@ -63,6 +64,7 @@
             <field name="partner_name" invisible="1"/>
             <field name="invoice_id" invisible="1"/>
             <field name="partner_vat" string="VAT"/>
+            <field name="partner_tax_office" string="Tax Office" optional="hide"/>
         </xpath>
         <xpath expr="//tree/field[@name='name']" position="after">
             <field name="partner_balance" string="Balance"/>
