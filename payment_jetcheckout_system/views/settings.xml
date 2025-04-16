@@ -472,6 +472,28 @@
                             </div>
                         </div>
                     </div>
+                    <div class="app_settings_block" data-string="Security" string="Security" data-key="test_exceptions">
+                        <h2>Security</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="sec_dlp_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="sec_dlp_ok" string="Use DLP"/>
+                                    <div class="text-muted">
+                                        Specify a DLP tag to inject it into relevant documents
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('sec_dlp_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="sec_dlp_tag" string="Tag" class="col-lg-4 o_light_label"/>
+                                            <field name="sec_dlp_tag" password="1" placeholder="Enter DLP tag here..."/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">
                         <h2>Notifications</h2>
                         <div class="row mt16 o_settings_container" id="system_notification">
