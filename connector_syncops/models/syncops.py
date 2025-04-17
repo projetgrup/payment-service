@@ -577,6 +577,10 @@ class SyncopsLog(models.TransientModel):
     _description = 'syncOPS Logs'
     _order = 'date DESC'
 
+    def _compute_response_badge(self):
+        for log in self:
+            log.response_badge = log.response_code and str(log.response_code)[0] or False
+
     connector_id = fields.Many2one('syncops.connector', readonly=True, copy=False, index=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', readonly=True, copy=False, ondelete='cascade')
     date = fields.Datetime(string='Date', readonly=True, copy=False)
@@ -601,6 +605,7 @@ class SyncopsLog(models.TransientModel):
     response_message = fields.Char(string='Response Message', readonly=True, copy=False)
     response_data = fields.Text(string='Response Data', readonly=True, copy=False)
     response_raw = fields.Text(string='Response Raw', readonly=True, copy=False)
+    response_badge = fields.Char(string='Response Badge', compute='_compute_response_badge')
 
     def name_get(self):
         return [(log.id, 'Log #%s' % log.id) for log in self]
