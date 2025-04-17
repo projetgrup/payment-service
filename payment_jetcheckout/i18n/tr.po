@@ -3328,7 +3328,7 @@ msgstr "Provizyon Onaylandı"
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_postauth_amount
 msgid "Post-Authorization Amount"
-msgstr "Son Provizyon Tutarı"
+msgstr "Son Otorizasyon Tutarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__preauth
