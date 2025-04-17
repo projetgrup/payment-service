@@ -381,7 +381,7 @@
                 <group class="mt-5">
                     <group string="Request">
                         <div colspan="2">
-                            <field name="request_method" nolabel="1"/>: <field name="request_url" nolabel="1"/>
+                            <field name="request_method" nolabel="1" class="oe_inline fw-bold mr8" widget="badge" decoration-success="request_method == 'get'" decoration-warning="request_method == 'post'" decoration-info="request_method == 'put'" decoration-primary="request_method == 'patch'" decoration-danger="request_method == 'delete'" decoration-muted="request_method == 'options'"/> <field name="request_url" nolabel="1" class="oe_inline"/>
                         </div>
                         <br/>
                         <field name="request_data" nolabel="1" colspan="2"/>
@@ -390,7 +390,8 @@
                     </group>
                     <group string="Response">
                         <div colspan="2">
-                            <field name="response_code" nolabel="1"/> - <field name="response_message" nolabel="1"/>
+                            <field name="response_code" nolabel="1" class="oe_inline fw-bold mr8" widget="badge" decoration-success="response_badge == '2'" decoration-warning="response_badge == '4'" decoration-info="response_badge == '1'" decoration-primary="response_badge == '3'" decoration-danger="response_badge == '5'" decoration-muted="response_badge == False"/> <field name="response_message" nolabel="1" class="oe_inline"/>
+                            <field name="response_badge" invisible="1"/>
                         </div>
                         <br/>
                         <field name="response_data" nolabel="1" colspan="2"/>
