@@ -14,6 +14,7 @@
         'sale',
         'sales_team',
         'sms_api',
+        'sec_dlp',
         'payment_jetcheckout',
         'web_multitenant',
         'auth_multitenant',
