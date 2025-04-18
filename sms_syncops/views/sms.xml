@@ -23,7 +23,7 @@
     <field name="arch" type="xml">
         <xpath expr="//field[@name='username']" position="before">
             <field name="syncops_ok" widget="boolean_toggle"/>
-            <field name="syncops_connector_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('syncops_ok', '=', False)], 'required': [('syncops_ok', '=', True)]}" string="Connector"/>
+            <field name="syncops_connector_id" options="{'no_create': True}" attrs="{'invisible': [('syncops_ok', '=', False)], 'required': [('syncops_ok', '=', True)]}" string="Connector"/>
         </xpath>
         <xpath expr="//field[@name='username']" position="attributes">
             <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)], 'required': [('syncops_ok', '=', False)]}</attribute>

@@ -31,6 +31,7 @@ class SyncopsConnector(models.Model):
     active = fields.Boolean(default=True)
     connected = fields.Boolean(readonly=True)
     environment = fields.Boolean(default=False)
+    variable_ids = fields.One2many('syncops.connector.variable', 'connector_id', string='Variables')
 
     #@api.constrains('token')
     def _check_token(self):
@@ -87,11 +88,15 @@ class SyncopsConnector(models.Model):
                     response = requests.post(url, json={
                         'username': connector.username,
                         'token': connector.token,
+                        #'code': '%s@%s' % (method, line.res_id),
+                        #'ref': reference,
+                        #'env': connector.environment and 'P' or 'T',
                         'method': method,
-                        'params': params,
                         'line': line.res_id,
+                        'params': params,
                         'reference': reference,
                         'environment': connector.environment and 'P' or 'T',
+                        'vars': {var.name: var.value for var in connector.variable_ids},
                     })
                     if response.status_code == 200:
                         headers = response.headers
@@ -510,6 +515,17 @@ class SyncopsConnectorLineDefault(models.Model):
         if io:
             values.update({'%s_id' % io['type']: io['id']})
         return super().write(values)
+
+
+class SyncopsConnectorVariable(models.Model):
+    _name = 'syncops.connector.variable'
+    _description = 'syncOPS Connector Variables'
+    _order = 'sequence'
+
+    connector_id = fields.Many2one('syncops.connector', 'Connector', index=True, ondelete='cascade')
+    sequence = fields.Integer(default=10)
+    name = fields.Char(required=True)
+    value = fields.Char()
 
 
 class SyncopsConnectorHook(models.Model):

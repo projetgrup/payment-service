@@ -116,7 +116,21 @@
         <t t-if="tx">
             <div t-if="tx.state == 'error'" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 #{classes}">
                 <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
-                <small class="d-block mt-1" t-esc="tx.state_message"/>
+                <t t-if="tx.state_message">
+                    <br/>
+                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                </t>
+                <t t-if="tx.jetcheckout_service_message">
+                    <br/>
+                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                    <t t-if="tx.jetcheckout_service_code">
+                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                    </t>
+                </t>
+                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                    <br/>
+                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                </t>
             </div>
             <div t-elif="tx.state == 'done'" t-attf-class="row alert alert-success text-center justify-content-center flex-column mt-4 my-2 #{classes}">
                 <div class="w-100">Your transaction has been succeeded. Thank you.</div>
@@ -135,7 +149,21 @@
             </div>
             <div t-else="" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 #{classes}">
                 <div>Your transaction status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
-                <small class="d-block mt-1" t-esc="tx.state_message"/>
+                <t t-if="tx.state_message">
+                    <br/>
+                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                </t>
+                <t t-if="tx.jetcheckout_service_message">
+                    <br/>
+                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                    <t t-if="tx.jetcheckout_service_code">
+                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                    </t>
+                </t>
+                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                    <br/>
+                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                </t>
             </div>
         </t>
     </template>
