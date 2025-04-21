@@ -117,7 +117,7 @@ class PaymentAPIService(Component):
                 self._log(log)
 
             _logger.error(e)
-            return Response(message, status=status, mimetype="application/json")
+            return Response('%s.\n%s' % (message, e), status=status, mimetype="application/json")
 
     payment_installments.__doc__ = _lt("Get Installments")
 
