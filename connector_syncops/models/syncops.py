@@ -88,10 +88,7 @@ class SyncopsConnector(models.Model):
                     response = requests.post(url, json={
                         'username': connector.username,
                         'token': connector.token,
-                        #'code': '%s@%s' % (method, line.res_id),
-                        #'ref': reference,
-                        #'env': connector.environment and 'P' or 'T',
-                        'method': method,
+                        'method': '%s@%s' % (method, line.res_id),
                         'line': line.res_id,
                         'params': params,
                         'reference': reference,
