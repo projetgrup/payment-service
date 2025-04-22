@@ -1171,7 +1171,7 @@ class PayloxController(http.Controller):
 
         try:
             with request.env.cr.savepoint():
-                messages = [kwargs.get('response_message', '') or kwargs.get('message', ''),],
+                messages = [kwargs.get('response_message', '') or kwargs.get('message', ''),]
                 if kwargs.get('service_resp_code'):
                     if isinstance(kwargs['service_resp_code'], list):
                         messages.extend(kwargs['service_resp_code'])
