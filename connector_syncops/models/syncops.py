@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import requests
 import traceback
 from datetime import datetime
 
 from odoo import models, api, fields, _
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.safe_eval import safe_eval, test_python_expr, json
 from odoo.exceptions import RedirectWarning, ValidationError, UserError
 
-_logger = logging.getLogger(__name__)
-
-class _json:
-    loads = json.loads
-    dumps = json.dumps
+logger = logging.getLogger(__name__)
 
 
 class SyncopsConnector(models.Model):
@@ -74,7 +69,7 @@ class SyncopsConnector(models.Model):
                 connectors = self._find(method, company)
             if not connectors:
                 info = _('No connector found for %s') % company.name
-                _logger.info(info)
+                logger.info(info)
                 return (None, info) if message else None
 
 
@@ -88,10 +83,7 @@ class SyncopsConnector(models.Model):
                     response = requests.post(url, json={
                         'username': connector.username,
                         'token': connector.token,
-                        #'code': '%s@%s' % (method, line.res_id),
-                        #'ref': reference,
-                        #'env': connector.environment and 'P' or 'T',
-                        'method': method,
+                        'method': '%s@%s' % (method, line.res_id),
                         'line': line.res_id,
                         'params': params,
                         'reference': reference,
@@ -103,19 +95,19 @@ class SyncopsConnector(models.Model):
                         if headers.get('Content-Type') == 'application/json':
                             results = response.json()
                             if not results['status'] == 0:
-                                _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
+                                logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
                                 return (None, results['message']) if message else None
                             result += results.get('result', [])
                         elif headers.get('Content-Type') == 'application/octet-stream':
                             result = response.content
                             continue
                     else:
-                        _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.text or response.reason))
+                        logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', response.text or response.reason))
                         return (None, response.text or response.reason) if message else None
 
         except Exception as e:
-            _logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', e))
-            _logger.error(traceback.format_exc())
+            logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', e))
+            logger.error(traceback.format_exc())
             return (None, str(e)) if message else None
 
         return (result, None) if message else result
@@ -264,7 +256,7 @@ class SyncopsConnector(models.Model):
                         'message': _('An error occured when connecting: %s' % response.reason)
                     }
             except Exception as e:
-                _logger.error(traceback.format_exc())
+                logger.error(traceback.format_exc())
                 connector.write({
                     'connected': False,
                 })
@@ -574,8 +566,8 @@ class SyncopsConnectorHook(models.Model):
             'env': self.env,
             'datetime': datetime,
             'UserError': UserError,
-            'logger': _logger,
-            'json': _json,
+            'logger': logger,
+            'json': json,
             **values
         }
         try:
@@ -584,7 +576,7 @@ class SyncopsConnectorHook(models.Model):
         except UserError:
             raise
         except:
-            _logger.error(traceback.format_exc())
+            logger.error(traceback.format_exc())
             raise ValidationError(_('An error occured when triggering the hook.'))
 
 
