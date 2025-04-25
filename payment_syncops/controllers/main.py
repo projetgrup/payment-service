@@ -120,26 +120,31 @@ class PayloxSyncopsController(Controller):
         return values
 
     def _connector_get_partner(self, partner=None):
+        name, vat, ref = False, False, False
         data = self._get('syncops')
         if data:
-            return {
-                'name': data['name'],
-                'vat': data['vat'],
-                'ref': data['ref'],
-                'connector': True,
-            }
+            name = data.get('name', False)
+            vat = data.get('vat', False)
+            ref = data.get('ref', False)
         else:
             partner = partner and partner.commercial_partner_id or request.env.user.sudo().partner_id.commercial_partner_id
-            data = {
-                'name': partner.name,
-                'vat': partner.vat,
-                'ref': partner.ref,
-            }
-            self._set('syncops', {**data})
-            return {
-                **data,
-                'connector': True,
-            }
+            if partner.active:
+                name = partner.name
+                vat = partner.vat
+                ref = partner.ref
+                self._set('syncops', {
+                    'name': name,
+                    'vat': vat,
+                    'ref': ref,
+                })
+            else:
+                self._del('syncops')
+        return {
+            'name': name,
+            'vat': vat,
+            'ref': ref,
+            'connector': True,
+        }
 
     def _connector_get_partner_balance(self, vat, ref, company=None):
         balances, show_total = {}, False

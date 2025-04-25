@@ -72,7 +72,6 @@ class SyncopsConnector(models.Model):
                 logger.info(info)
                 return (None, info) if message else None
 
-
             url += '/api/v1/execute'
             for connector in connectors:
                 lines = connector.line_ids.filtered(lambda l: l.code == method)
@@ -94,9 +93,9 @@ class SyncopsConnector(models.Model):
                         headers = response.headers
                         if headers.get('Content-Type') == 'application/json':
                             results = response.json()
-                            if not results['status'] == 0:
-                                logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results['message']))
-                                return (None, results['message']) if message else None
+                            if not results.get('status') == 0:
+                                logger.error('An error occured when executing method %s for %s: %s' % (method, company and company.name or '', results.get('message', 'Please try again.')))
+                                return (None, results.get('message', 'Please try again.')) if message else None
                             result += results.get('result', [])
                         elif headers.get('Content-Type') == 'application/octet-stream':
                             result = response.content
