@@ -511,18 +511,12 @@ class PaymentTransaction(models.Model):
         if 'commission_amount' not in values:
             values['commission_amount'] = float_round(self.amount * values['commission_rate'] / 100, 2)
 
-        vpos_id = values.get('vpos_id', 0) or self.jetcheckout_vpos_id
-        vpos_name = values.get('vpos_name', '') or self.jetcheckout_vpos_name
         amount = values.get('amount', self.amount)
         commission = values.get('commission_amount', 0)
 
         vals = {
             'amount': amount,
             'fees': commission,
-            'jetcheckout_vpos_id': vpos_id,
-            'jetcheckout_vpos_name': vpos_name,
-            'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
-            'jetcheckout_vpos_code': values.get('vpos_code', ''),
             'jetcheckout_service_code': values.get('service_code', False),
             'jetcheckout_service_message': values.get('service_message', False),
             'jetcheckout_commission_rate': values.get('commission_rate', 0),
@@ -537,6 +531,23 @@ class PaymentTransaction(models.Model):
             vals.update({
                 'jetcheckout_transaction_id': values['transaction_ref'],
             })
+
+        try:
+            values.update({'jetcheckout_vpos_id': int(values.get('vpos_id'))})
+        except:
+            pass
+
+        vpos_name = values.get('vpos_name')
+        if vpos_name and vpos_name != 'None':
+            values.update({'jetcheckout_vpos_name': vpos_name})
+
+        vpos_ref = values.get('vpos_ref')
+        if vpos_ref and vpos_ref != 'None':
+            values.update({'jetcheckout_vpos_ref': vpos_ref})
+
+        vpos_code = values.get('vpos_code')
+        if vpos_code and vpos_code != 'None':
+            values.update({'jetcheckout_vpos_code': vpos_code})
 
         self.write(vals)
         self.token_id.write({
