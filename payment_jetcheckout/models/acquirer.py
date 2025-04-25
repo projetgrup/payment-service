@@ -710,18 +710,18 @@ class PaymentAcquirer(models.Model):
                     })
                     tx._paylox_query({
                         'successful': True,
-                        'code': result.get('response_code', ''),
-                        'message': result.get('message', ''),
-                        'amount': result.get('amount', 0),
-                        'customer_amount': result.get('commission_amount', 0),
-                        'commission_rate': result.get('expected_cost_rate', 0),
-                        'vpos_name': result.get('virtual_pos_name', ''),
-                        'vpos_id': result.get('virtual_pos_id', 0),
-                        'vpos_code': result.get('auth_code', ''),
-                        'card_program': result.get('card_program', ''),
-                        'card_family': result.get('card_family', ''),
-                        'card_type': result.get('card_type', ''),
-                        'bin_code': result.get('bin_code', ''),
+                        'code': result.get('response_code', '') or False,
+                        'message': result.get('message', '') or False,
+                        'amount': result.get('amount', 0) or 0.0,
+                        'customer_amount': result.get('commission_amount', 0) or 0.0,
+                        'commission_rate': result.get('expected_cost_rate', 0) or 0.0,
+                        'vpos_name': result.get('virtual_pos_name', '') or False,
+                        'vpos_id': result.get('virtual_pos_id', 0) or 0.0,
+                        'vpos_code': result.get('auth_code', '') or False,
+                        'card_program': result.get('card_program', '') or False,
+                        'card_family': result.get('card_family', '') or False,
+                        'card_type': result.get('card_type', '') or False,
+                        'bin_code': result.get('bin_code', '') or False,
                     })
                     return {'ok': True, 'id': tx.id}
                 else:
