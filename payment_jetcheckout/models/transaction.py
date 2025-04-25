@@ -534,7 +534,7 @@ class PaymentTransaction(models.Model):
 
         vpos_id = values.get('vpos_id')
         try:
-            values.update({'jetcheckout_vpos_id': int(vpos_id)})
+            vals.update({'jetcheckout_vpos_id': int(vpos_id)})
         except:
             pass
 
