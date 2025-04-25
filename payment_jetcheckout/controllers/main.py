@@ -1551,10 +1551,10 @@ class PayloxController(http.Controller):
                         'jetcheckout_transaction_id': txid,
                         'last_state_change': fields.Datetime.now(),
                     }
-                    if isinstance(kwargs.get('virtual_pos_id'), int):
-                        values.update({'jetcheckout_vpos_id': kwargs['virtual_pos_id']})
-                    if isinstance(kwargs.get('virtual_pos_name'), str):
-                        values.update({'jetcheckout_vpos_name': kwargs['virtual_pos_name']})
+                    if isinstance(result.get('virtual_pos_id'), int):
+                        values.update({'jetcheckout_vpos_id': result['virtual_pos_id']})
+                    if isinstance(result.get('virtual_pos_name'), str):
+                        values.update({'jetcheckout_vpos_name': result['virtual_pos_name']})
                     tx.write(values)
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
