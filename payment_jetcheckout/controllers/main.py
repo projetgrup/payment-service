@@ -1544,13 +1544,18 @@ class PayloxController(http.Controller):
                 txid = result['transaction_id']
                 if result['response_code'] == "00307":
                     rurl = result['redirect_url']
-                    tx.write({
+                    values = {
                         'state': 'pending',
                         'state_message': _('Transaction is pending...'),
                         'acquirer_reference': txid,
                         'jetcheckout_transaction_id': txid,
                         'last_state_change': fields.Datetime.now(),
-                    })
+                    }
+                    if isinstance(kwargs.get('virtual_pos_id'), int):
+                        values.update({'jetcheckout_vpos_id': kwargs['virtual_pos_id']})
+                    if isinstance(kwargs.get('virtual_pos_name'), str):
+                        values.update({'jetcheckout_vpos_name': kwargs['virtual_pos_name']})
+                    tx.write(values)
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)

@@ -532,22 +532,23 @@ class PaymentTransaction(models.Model):
                 'jetcheckout_transaction_id': values['transaction_ref'],
             })
 
+        vpos_id = values.get('vpos_id')
         try:
-            values.update({'jetcheckout_vpos_id': int(values.get('vpos_id'))})
+            values.update({'jetcheckout_vpos_id': int(vpos_id)})
         except:
             pass
 
         vpos_name = values.get('vpos_name')
         if vpos_name and vpos_name != 'None':
-            values.update({'jetcheckout_vpos_name': vpos_name})
+            vals.update({'jetcheckout_vpos_name': vpos_name})
 
         vpos_ref = values.get('vpos_ref')
         if vpos_ref and vpos_ref != 'None':
-            values.update({'jetcheckout_vpos_ref': vpos_ref})
+            vals.update({'jetcheckout_vpos_ref': vpos_ref})
 
         vpos_code = values.get('vpos_code')
         if vpos_code and vpos_code != 'None':
-            values.update({'jetcheckout_vpos_code': vpos_code})
+            vals.update({'jetcheckout_vpos_code': vpos_code})
 
         self.write(vals)
         self.token_id.write({
