@@ -511,8 +511,8 @@ class PaymentTransaction(models.Model):
         if 'commission_amount' not in values:
             values['commission_amount'] = float_round(self.amount * values['commission_rate'] / 100, 2)
 
-        vpos_id = values.get('vpos_id', 0)
-        vpos_name = values.get('vpos_name', '')
+        vpos_id = values.get('vpos_id', 0) or self.jetcheckout_vpos_id
+        vpos_name = values.get('vpos_name', '') or self.jetcheckout_vpos_name
         amount = values.get('amount', self.amount)
         commission = values.get('commission_amount', 0)
 
@@ -521,7 +521,6 @@ class PaymentTransaction(models.Model):
             'fees': commission,
             'jetcheckout_vpos_id': vpos_id,
             'jetcheckout_vpos_name': vpos_name,
-            'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
             'jetcheckout_vpos_ref': values.get('vpos_ref', ''),
             'jetcheckout_vpos_code': values.get('vpos_code', ''),
             'jetcheckout_service_code': values.get('service_code', False),
