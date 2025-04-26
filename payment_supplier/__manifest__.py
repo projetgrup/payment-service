@@ -17,6 +17,7 @@
         'views/actions.xml',
         'views/menu.xml',
         'views/settings.xml',
+        'views/templates.xml',
     ],
     'assets': {
         'web.assets_backend': [

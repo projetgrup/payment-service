@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="page_payment" name="Supplier Payment Page">
+        <t t-call="payment_jetcheckout_system.page_payment"/>
+    </template>
+</odoo>

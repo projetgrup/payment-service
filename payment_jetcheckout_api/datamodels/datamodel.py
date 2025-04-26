@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import _lt
 from marshmallow import fields
+from odoo import _lt
 from odoo.addons.datamodel.core import Datamodel
 from odoo.addons.datamodel.fields import NestedModel
 
@@ -76,6 +76,17 @@ class PaymentCredential(Datamodel):
     token = fields.String(required=False, allow_none=False, metadata={"title": _lt("Payment Token"), "description": _lt("UUID which is generated especially for credit card payments"), "example": "15a8ecc1-731c-411b-89fd-283e1c55cfaf"})
 
 
+class PaymentPartnerBank(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.partner.bank"
+
+    name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Account Name"), "description": _lt("Account name"), "example": "Bank Account"})
+    iban = fields.String(required=True, allow_none=False, metadata={"title": _lt("Account IBAN"), "description": _lt("Account IBAN"), "example": "TR000000000000000000000000"})
+
+
+
 class PaymentPartner(Datamodel):
     class Meta:
         ordered = True
@@ -93,6 +104,7 @@ class PaymentPartner(Datamodel):
     address = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Address"), "description": _lt("Partner address"), "example": "Example Street, No: 1"})
     zip = fields.String(required=False, allow_none=True, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
     contact = fields.String(required=False, allow_none=False, metadata={"title": _lt("Contact Name"), "description": _lt("Contact name"), "example": "Jane Doe"})
+    banks = fields.List(NestedModel("payment.partner.bank"), required=False, metadata={"title": _lt("Banks List"), "description": _lt("List of bank accounts of partner")})
 
 
 class PaymentProduct(Datamodel):
