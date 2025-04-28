@@ -4,7 +4,7 @@
     <menuitem id="menu_dashboard" action="payment_jetcheckout_system.action_dashboard" parent="menu_main" sequence="0"/>
     <menuitem id="menu_ad" action="action_ad" parent="menu_main" sequence="1"/>
     <menuitem id="menu_customer" action="action_customer" parent="menu_main" sequence="2"/>
-    <menuitem id="menu_supplier" action="action_supplier" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_owner" action="action_owner" parent="menu_main" sequence="3"/>
     <menuitem id="menu_sale" action="action_sale" name="Sales" parent="menu_main" sequence="4"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="5"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="6"/>

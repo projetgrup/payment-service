@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_supplier_api
+# 	* payment_escrow_api
 #
 # fi3ei2 <fi3ei2@gmail.com>, 2023.
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.3.2\n"
 
-#. module: payment_supplier_api
-#: model:ir.ui.menu,name:payment_supplier_api.menu_api
+#. module: payment_escrow_api
+#: model:ir.ui.menu,name:payment_escrow_api.menu_api
 msgid "API Keys"
 msgstr "API Anahtarları"

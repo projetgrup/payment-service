@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="tree_supplier" model="ir.ui.view">
-    <field name="name">res.partner.escrow.supplier.tree</field>
+    <record id="tree_owner" model="ir.ui.view">
+    <field name="name">res.partner.escrow.owner.tree</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
@@ -28,8 +28,8 @@
     </field>
     </record>
 
-    <record id="kanban_supplier" model="ir.ui.view">
-    <field name="name">res.partner.escrow.supplier.kanban</field>
+    <record id="kanban_owner" model="ir.ui.view">
+    <field name="name">res.partner.escrow.owner.kanban</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_kanban"/>
@@ -48,8 +48,8 @@
     </field>
     </record>
 
-    <record id="form_supplier" model="ir.ui.view">
-    <field name="name">res.partner.escrow.supplier.form</field>
+    <record id="form_owner" model="ir.ui.view">
+    <field name="name">res.partner.escrow.owner.form</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
@@ -153,8 +153,8 @@
     </field>
     </record>
 
-    <record id="search_supplier" model="ir.ui.view">
-    <field name="name">res.partner.escrow.supplier.search</field>
+    <record id="search_owner" model="ir.ui.view">
+    <field name="name">res.partner.escrow.owner.search</field>
     <field name="model">res.partner</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_search"/>

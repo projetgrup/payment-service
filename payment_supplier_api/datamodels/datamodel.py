@@ -12,7 +12,7 @@ class SupplierPaymentPartnerBank(Datamodel):
     merchant = fields.String(required=True, allow_none=False, metadata={"title": "Merchant Name", "description": "Merchant name", "example": "Jane Doe Inc."})
 
 
-class SupplierPaymentPartnerBank(Datamodel):
+class SupplierPaymentPartner(Datamodel):
     _name = "supplier.payment.partner"
 
     class Meta:
