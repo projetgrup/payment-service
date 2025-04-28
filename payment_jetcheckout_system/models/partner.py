@@ -663,6 +663,8 @@ class Partner(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if self.env.context.get('skip_view_mapping'):
+            return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form' and self.env.context.get('form_view_ref'):
             view_id = self.env.ref(self.env.context['form_view_ref']).id
         elif view_type == 'tree' and self.env.context.get('tree_view_ref'):
