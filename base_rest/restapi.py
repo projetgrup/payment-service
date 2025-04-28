@@ -1,17 +1,20 @@
 # Copyright 2018 ACSONE SA/NV
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import logging
 import functools
 
 from cerberus import Validator
 
 from odoo import _, http
-from odoo.exceptions import UserError
+from odoo.http import Response
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 from .tools import cerberus_to_json
 
+_logger = logging.getLogger(__name__)
 
-def method(routes, input_param=None, output_param=None, **kw):
+def method(routes, input_param=None, output_param=None, **kwargs):
     """Decorator marking the decorated method as being a handler for
       REST requests. The method must be part of a component inheriting from
     ``base.rest.service``.
@@ -86,7 +89,7 @@ def method(routes, input_param=None, output_param=None, **kw):
                 paths = [paths]
             if not isinstance(http_methods, list):
                 http_methods = [http_methods]
-            if kw.get("cors") and "OPTIONS" not in http_methods:
+            if kwargs.get("cors") and "OPTIONS" not in http_methods:
                 http_methods.append("OPTIONS")
             for m in http_methods:
                 _routes.append(([p for p in paths], m))
@@ -95,15 +98,27 @@ def method(routes, input_param=None, output_param=None, **kw):
             "routes": _routes,
             "input_param": input_param,
             "output_param": output_param,
-            **kw
+            **kwargs
         }
 
         @functools.wraps(f)
-        def wrap(*args, **kw):
-            return f(*args, **kw)
+        def wrap(*args, **kwargs):
+            try:
+                return f(*args, **kwargs)
+            except AccessError as e:
+                return Response(str(e), status=401, mimetype="application/json")
+            except UserError as e:
+                return Response(str(e), status=400, mimetype="application/json")
+            except ValidationError as e:
+                return Response(str(e), status=400, mimetype="application/json")
+            except Exception as e:
+                _logger.error(e, exc_info=True)
+                return Response("Server Error", status=500, mimetype="application/json")
 
         wrap.routing = routing
         wrap.original_func = f
+        if kwargs.get('name'):
+            wrap.__doc__ = kwargs.get('name')
         return wrap
 
     return decorator

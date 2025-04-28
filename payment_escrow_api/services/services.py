@@ -11,6 +11,8 @@ from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.addons.component.core import Component
 from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.payment_jetcheckout_api.services.services import auth
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +21,7 @@ RESPONSE = {
     200: {"status": 0, "message": "Success"}
 }
 
+
 class EscrowAPIService(Component):
     _inherit = "base.rest.service"
     _name = "escrow"
@@ -26,24 +29,49 @@ class EscrowAPIService(Component):
     _collection = "payment"
     _description = _lt("""
         <br/>
-        <h1 class="dCEJze">Description</h1>
-        <p>This API helps you create payments and query their statuses with a special key which is privately generated for you.</p>
+        <h1>Description</h1>
+        <p>This API helps you create ads, payments and query their statuses with a special key which is privately generated for you. This service uses <em>Basic Authentication</em>.</p>
         <p>Firstly, use "Prepare Payment" method to initialize a payment request. Then, if everything goes well, server will send you a hash string.</p>
-        <p>Now, you can navigate to <code>/payment/card?=&lt;hash&gt;</code> address to get payment form.</p>
+        <p>Now, you can navigate to <code>/payment?=&lt;hash&gt;</code> address to get payment form.</p>
         <p>When payment is done, its result will send to the address which you have specified when initializing the payment.</p>
         <p>Afterwards, you can use "Payment Operation" methods for cancelling, refunding, expiring or deleting the payment.</p>
     """)
+    _components = {
+        "securitySchemes": {
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic",
+            },
+        },
+        "security": {
+            "basicAuth": [],
+        },
+        "responses": {
+            "unauthorizedError": {
+                "description": "Eksik veya geçersiz erişim bilgileri",
+                "headers": {
+                    "WWW_Authenticate": {
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                },
+            },
+        },
+    }
 
     @restapi.method(
         [(["/ads/create"], "POST")],
         input_param=Datamodel("escrow.request.ads.create"),
         output_param=Datamodel("escrow.response.ads.create"),
         auth="public",
-        tags=[_lt("Ad Operations")]
+        tags=[_lt("Ad Operations")],
+        name=_lt("Create Ads")
     )
     def ads_create(self, params):
-        pass
-    ads_create.__doc__ = _lt("Create Ads")
+        token = auth(self.env)
+        ads = self._ads_create(token, params)
+        return dict(ads=[dict(id=ad.uid, reference=ad.default_code) for ad in ads], **RESPONSE[200])
 
     @restapi.method(
         [(["/ads/get"], "GET")],
@@ -253,17 +281,101 @@ class EscrowAPIService(Component):
     # PRIVATE METHODS
     #
 
-    def _get_api(self, apikey, secretkey=False):
-        domain = [('api_key', '=', apikey)]
-        if secretkey:
-            domain.append(('secret_key', '=', secretkey))
-        return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)
+    def _ads_create_owner(self, token, owner):
+        company = token.company_id
 
-    def _get_hash(self, key, hash, id):
-        hashed = base64.b64encode(hashlib.sha256(''.join([key.api_key, key.secret_key, str(id)]).encode('utf-8')).digest()).decode('utf-8')
-        if hashed != hash:
-            return False
-        return hash
+        if hasattr(owner, 'country'):
+            country = self.env['res.country'].sudo().search([('code', '=', owner.country)], limit=1)
+        else:
+            country = False
+
+        if country and hasattr(owner, 'state'):
+            state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', owner.state)], limit=1)
+        else:
+            state = False
+
+        partner = self.env['res.partner'].sudo().search([('vat', '=', owner.vat), ('company_id', '=', company.id)], limit=1)
+        if partner:
+            values = {}
+            if partner.name != owner.name:
+                values.update({'name': owner.name})
+            if partner.email != owner.email:
+                values.update({'email': owner.email})
+            if partner.phone != owner.phone:
+                values.update({'phone': owner.phone})
+            if country and partner.country_id.id != country.id:
+                values.update({'country_id': country.id})
+            if state and partner.state_id.id != state.id:
+                values.update({'state_id': state.id})
+            if getattr(owner, 'city', None) and partner.city != owner.city:
+                values.update({'city': owner.city})
+            if getattr(owner, 'address', None) and partner.street != owner.address:
+                values.update({'street': owner.address})
+            if getattr(owner, 'zip', None) and partner.zip != owner.zip:
+                values.update({'zip': owner.zip})
+
+            banks_values = []
+            for bank in owner.banks:
+                banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', partner.id)])
+                iban = sanitize_account_number(bank.iban)
+                record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
+                if record:
+                    bank_values = {}
+                    if record.acc_holder_name != bank.name:
+                        bank_values.update({'acc_holder_name': bank.name})
+                    if record.api_merchant != bank.merchant:
+                        bank_values.update({'api_merchant': bank.merchant})
+                    if bank_values:
+                        banks_values.append((1, record.id, bank_values))
+                else:
+                    banks_values.append((0, 0, {
+                        'acc_number': bank.iban,
+                        'acc_holder_name': bank.name,
+                        'api_merchant': bank.merchant,
+                    }))
+            if banks_values:
+                values.update({'bank_ids': banks_values})
+            if values:
+                partner.write(values)
+
+        else:
+            partner = partner.create({
+                'name': owner.name,
+                'vat': owner.vat,
+                'email': owner.email,
+                'phone': owner.phone,
+                'country_id': country and country.id,
+                'company_id': company.id,
+                'system': company.system,
+                'state_id': state and state.id,
+                'city': getattr(owner, 'city', False),
+                'street': getattr(owner, 'address', False),
+                'zip': getattr(owner, 'zip', False),
+                'bank_ids': [(0, 0, {
+                    'acc_number': bank.iban,
+                    'acc_holder_name': bank.name,
+                    'api_merchant': bank.merchant,
+                }) for bank in owner.banks],
+            })
+        return partner
+
+    def _ads_create(self, token, params):
+        values = []
+        for ad in params.ads:
+            owner = self._ads_create_owner(token, ad.owner)
+            value = {
+                'name': ad.name,
+                'default_code': ad.reference,
+                'description': ad.description,
+                'owner_id': owner.id,
+            }
+            if getattr(params, 'images', []):
+                values.update({
+                    'image_1920': params.images[0]
+                })
+            values.append(value)
+        ads = self.env['product.product'].sudo().with_company(token.company_id).create(values)
+        return ads
 
     def _create_transaction(self, api, hash, params):
         company = api.company_id

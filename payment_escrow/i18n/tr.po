@@ -879,16 +879,6 @@ msgid "Country"
 msgstr "Ülke"
 
 #. module: payment_escrow
-#: model_terms:ir.actions.act_window,help:payment_escrow.action_parent
-msgid "Create a escrow"
-msgstr "Bir bayi oluştur"
-
-#. module: payment_escrow
-#: model_terms:ir.actions.act_window,help:payment_escrow.action_child
-msgid "Create a escrow contact"
-msgstr "Bir bayi yetkilisi oluştur"
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
 msgid "Create subscription with chosen products"
 msgstr "Seçilen ürünler ile abonelik oluştur"
@@ -1331,6 +1321,12 @@ msgstr "VKN"
 
 #. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_main
+#: model_terms:ir.ui.view,arch_db:payment_escrow.child_form
+#: model_terms:ir.ui.view,arch_db:payment_escrow.child_search
+#: model_terms:ir.ui.view,arch_db:payment_escrow.child_tree
+#: model_terms:ir.ui.view,arch_db:payment_escrow.item_search
+#: model_terms:ir.ui.view,arch_db:payment_escrow.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
 msgid "Escrow"
 msgstr "Escrow"
 
@@ -1347,18 +1343,9 @@ msgid "Vat"
 msgstr "TCKN"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.child_form
-#: model_terms:ir.ui.view,arch_db:payment_escrow.child_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.child_tree
-#: model_terms:ir.ui.view,arch_db:payment_escrow.item_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.item_tree
-msgid "Escrow"
-msgstr "Bayi"
-
-#. module: payment_escrow
 #: model:mail.template,name:payment_escrow.escrow_mail
 msgid "Escrow Payment Email"
-msgstr "Bayi Tahsilat Epostası"
+msgstr "Escrow Tahsilat Epostası"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__payment_item__system__escrow
@@ -1371,14 +1358,8 @@ msgstr "Bayi Tahsilat Epostası"
 #: model:ir.module.category,description:payment_escrow.module_category_escrow
 #: model:ir.module.category,name:payment_escrow.module_category_escrow
 msgid "Escrow Payment System"
-msgstr "Bayi Tahsilat Sistemi"
+msgstr "Escrow Tahsilat Sistemi"
 
-#. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_parent
-#: model:ir.ui.menu,name:payment_escrow.menu_parent
-#: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
-msgid "Escrows"
-msgstr "Bayiler"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_payment
@@ -1716,6 +1697,3 @@ msgstr "{{ ctx['domain'] }} | Başarılı İşlem Bildirimi"
 
 #~ msgid "SMS"
 #~ msgstr "SMS"
-
-#~ msgid "Parent"
-#~ msgstr "Bayi"
