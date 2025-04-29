@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import uuid
 import base64
 import hashlib
 import logging
@@ -12,7 +13,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.addons.component.core import Component
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.addons.payment_jetcheckout_api.services.services import auth
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 
 _logger = logging.getLogger(__name__)
 
@@ -91,193 +92,113 @@ class EscrowAPIService(Component):
         input_param=Datamodel("escrow.request.ads.update"),
         output_param=Datamodel("escrow.response.ads.update"),
         auth="public",
-        tags=[_lt("Ad Operations")]
+        tags=[_lt("Ad Operations")],
+        name=_lt("Update Ads")
     )
-    def ad_patch(self, params):
-        pass
-    ad_patch.__doc__ = _lt("Update Ads")
+    def ads_update(self, params):
+        token = auth(self.env)
+        ads = self._ads_update(token, params)
+        return dict(ads=ads, **RESPONSE[200])
 
     @restapi.method(
         [(["/ads/delete"], "DELETE")],
         input_param=Datamodel("escrow.request.ads.delete"),
         output_param=Datamodel("escrow.response.ads.delete"),
         auth="public",
-        tags=[_lt("Ad Operations")]
+        tags=[_lt("Ad Operations")],
+        name=_lt("Delete Ads")
     )
-    def ad_delete(self, params):
-        pass
-    ad_delete.__doc__ = _lt("Delete Ads")
+    def ads_delete(self, params):
+        token = auth(self.env)
+        ads = self._ads_delete(token, params)
+        return dict(ads=ads, **RESPONSE[200])
 
     @restapi.method(
         [(["/payment/result"], "GET")],
         input_param=Datamodel("escrow.request.payment.result"),
         output_param=Datamodel("escrow.response.payment.result"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Payment Result")
     )
     def payment_result(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            company = api.company_id
-            tx = self._get_transaction_from_hash(company, params.hash)
-            if not tx:
-                return Response("Transaction not found", status=404, mimetype="application/json")
-
-            result = self._get_transaction_result(tx)
-
-            ResponseOk = self.env.datamodels["payment.result.output"]
-            return ResponseOk(**result, **RESPONSE[200])
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_result.__doc__ = _lt("Payment Result")
+        token = auth(self.env)
+        result = self._payment_result(token, params)
+        return dict(**result, **RESPONSE[200])
 
     @restapi.webhook(
         input_param=Datamodel("escrow.response.payment.webhook"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Payment Webhook")
     )
     def payment_webhook(self):
         pass
-    payment_webhook.__doc__ = _lt("Payment Webhook")
 
     @restapi.method(
         [(["/payment/prepare"], "POST")],
         input_param=Datamodel("escrow.request.payment.prepare"),
         output_param=Datamodel("escrow.response.payment.prepare"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Prepare Payment")
     )
     def payment_prepare(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            hash = self._get_hash(api, params.hash, params.id)
-            if not hash:
-                return Response("Hash is not matched", status=401, mimetype="application/json")
-
-            self._create_transaction(api, hash, params)
-
-            tx = self._create_transaction(api, hash, params)
-            id = tx.jetcheckout_order_id
-            url = 'https://%s/payment?=%s' % (request.httprequest.host, quote(hash))
-            ResponseOk = self.env.datamodels["escrow.payment.prepare.output"]
-            return ResponseOk(id=id, url=url, **RESPONSE[200])
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_prepare.__doc__ = _lt("Prepare Payment")
+        token = auth(self.env)
+        tx = self._payment_prepare(token, params)
+        return dict(**tx, **RESPONSE[200])
 
     @restapi.method(
         [(["/payment/cancel"], "PUT")],
         input_param=Datamodel("escrow.request.payment.cancel"),
         output_param=Datamodel("escrow.response.payment.cancel"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Cancel Payment")
     )
     def payment_cancel(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            company = api.company_id
-            tx = self._get_transaction_from_hash(company, params.hash)
-            if not tx:
-                return Response("Transaction not found", status=404, mimetype="application/json")
-
-            self._cancel_transaction(tx)
-
-            ResponseOk = self.env.datamodels["payment.output"]
-            return ResponseOk(**RESPONSE[200])
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_cancel.__doc__ = _lt("Cancel Payment")
+        token = auth(self.env)
+        tx = self._payment_cancel(token, params)
+        return dict(**tx, **RESPONSE[200])
 
     @restapi.method(
         [(["/payment/refund"], "PUT")],
         input_param=Datamodel("escrow.request.payment.refund"),
         output_param=Datamodel("escrow.response.payment.refund"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Refund Payment")
     )
     def payment_refund(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            company = api.company_id
-            tx = self._get_transaction_from_hash(company, params.hash)
-            if not tx:
-                return Response("Transaction not found", status=404, mimetype="application/json")
-
-            self._refund_transaction(tx, params.amount)
-
-            ResponseOk = self.env.datamodels["payment.output"]
-            return ResponseOk(**RESPONSE[200])
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_refund.__doc__ = _lt("Refund Payment")
+        token = auth(self.env)
+        tx = self._payment_refund(token, params)
+        return dict(**tx, **RESPONSE[200])
 
     @restapi.method(
         [(["/payment/expire"], "PATCH")],
         input_param=Datamodel("escrow.request.payment.expire"),
         output_param=Datamodel("escrow.response.payment.expire"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Expire Payment")
     )
     def payment_expire(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            company = api.company_id
-            tx = self._get_transaction_from_hash(company, params.hash)
-            if not tx:
-                return Response("Transaction not found", status=404, mimetype="application/json")
-
-            self._expire_transaction(tx)
-
-            ResponseOk = self.env.datamodels["payment.output"]
-            return ResponseOk(**RESPONSE[200])
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_expire.__doc__ = _lt("Expire Payment")
+        token = auth(self.env)
+        tx = self._payment_expire(token, params)
+        return dict(**tx, **RESPONSE[200])
 
     @restapi.method(
         [(["/payment/delete"], "DELETE")],
         input_param=Datamodel("escrow.request.payment.delete"),
         output_param=Datamodel("escrow.response.payment.delete"),
         auth="public",
-        tags=[_lt("Payment Operations")]
+        tags=[_lt("Payment Operations")],
+        name=_lt("Delete Payment")
     )
     def payment_delete(self, params):
-        try:
-            api = self._get_api(params.apikey)
-            if not api:
-                return Response("Application key is not matched", status=401, mimetype="application/json")
-
-            company = api.company_id
-            tx = self._get_transaction_from_hash(company, params.hash)
-            if not tx:
-                return Response("Transaction not found", status=404, mimetype="application/json")
-
-            self._delete_transaction(tx)
-            return Response("Deleted", status=204, mimetype="application/json")
-        except Exception as e:
-            _logger.error(e)
-            return Response("Server Error", status=500, mimetype="application/json")
-    payment_delete.__doc__ = _lt("Delete Payment")
+        token = auth(self.env)
+        tx = self._payment_delete(token, params)
+        return dict(**tx, **RESPONSE[200])
 
     #
     # PRIVATE METHODS
@@ -286,11 +207,15 @@ class EscrowAPIService(Component):
     def _ads_create_owner(self, company, owner):
         if hasattr(owner, 'country'):
             country = self.env['res.country'].sudo().search([('code', '=', owner.country)], limit=1)
+            if not country:
+                raise MissingError(_('Country %s cannot be found') % owner.country)
         else:
             country = False
 
         if country and hasattr(owner, 'state'):
             state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', owner.state)], limit=1)
+            if not state:
+                raise MissingError(_('State %s cannot be found') % owner.state)
         else:
             state = False
 
@@ -369,9 +294,9 @@ class EscrowAPIService(Component):
                 'description': ad.description,
                 'owner_id': owner.id,
             }
-            if getattr(params, 'images', []):
+            if getattr(ad, 'images', []):
                 values.update({
-                    'image_1920': params.images[0]
+                    'image_1920': ad.images[0]
                 })
             values.append(value)
         ads = self.env['product.product'].sudo().with_company(token.company_id).create(values)
@@ -424,108 +349,116 @@ class EscrowAPIService(Component):
         )
         return ads, page
 
-    def _create_transaction(self, api, hash, params):
-        company = api.company_id
+    def _ads_update(self, token, params):
+        ads = []
+        for ad in params.ads:
+            _ad = self.env['product.product'].sudo() \
+                 .with_company(token.company_id) \
+                 .with_context(system=token.company_id.system) \
+                 .search([('uid', '=', str(ad.id))], limit=1)
+            if not _ad:
+                raise MissingError(_('Ad %s cannot be found') % str(ad.id))
 
-        if hasattr(params.escrow, 'country'):
-            country = self.env['res.country'].sudo().search([('code', '=', params.escrow.country)], limit=1)
-        else:
-            country = False
-
-        if country and hasattr(params.escrow, 'state'):
-            state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', params.escrow.state)], limit=1)
-        else:
-            state = False
-
-        escrow = self.env['res.partner'].sudo().search([('vat', '=', params.escrow.vat), ('company_id', '=', company.id)], limit=1)
-        if escrow:
             values = {}
-            if escrow.name != params.escrow.name:
-                values.update({'name': params.escrow.name})
-            if escrow.email != params.escrow.email:
-                values.update({'email': params.escrow.email})
-            if escrow.phone != params.escrow.phone:
-                values.update({'phone': params.escrow.phone})
-            if country and escrow.country_id.id != country.id:
-                values.update({'country_id': country.id})
-            if state and escrow.state_id.id != state.id:
-                values.update({'state_id': state.id})
-            if getattr(params.escrow, 'city', None) and escrow.city != params.escrow.city:
-                values.update({'city': params.escrow.city})
-            if getattr(params.escrow, 'address', None) and escrow.street != params.escrow.address:
-                values.update({'street': params.escrow.address})
-            if getattr(params.escrow, 'zip', None) and escrow.zip != params.escrow.zip:
-                values.update({'zip': params.escrow.zip})
-
-            banks_values = []
-            for bank in params.escrow.banks:
-                banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', escrow.id)])
-                iban = sanitize_account_number(bank.iban)
-                record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
-                if record:
-                    bank_values = {}
-                    if record.acc_holder_name != bank.name:
-                        bank_values.update({'acc_holder_name': bank.name})
-                    if record.api_merchant != bank.merchant:
-                        bank_values.update({'api_merchant': bank.merchant})
-                    if bank_values:
-                        banks_values.append((1, record.id, bank_values))
-                else:
-                    banks_values.append((0, 0, {
-                        'acc_number': bank.iban,
-                        'acc_holder_name': bank.name,
-                        'api_merchant': bank.merchant,
-                    }))
-            if banks_values:
-                values.update({'bank_ids': banks_values})
+            if getattr(ad, 'name', None) and _ad.name != ad.name:
+                values.update({'name': ad.name})
+            if getattr(ad, 'reference', None) and _ad.default_code != ad.reference:
+                values.update({'default_code': ad.reference})
+            if getattr(ad, 'description', None) and _ad.description != ad.description:
+                values.update({'description': ad.description})
+            if hasattr(ad, 'images'):
+                values.update({'image_1920': ad.images and ad.images[0] or False})
+            if getattr(ad, 'owner', None):
+                values_owner = {}
+                if getattr(ad.owner, 'name', None) and _ad.owner_id.name != ad.owner.name:
+                    values_owner.update({'name': ad.owner.name})
+                if getattr(ad.owner, 'vat', None) and _ad.owner_id.vat != ad.owner.vat:
+                    values_owner.update({'vat': ad.vat})
+                if getattr(ad.owner, 'email', None) and _ad.owner_id.email != ad.owner.email:
+                    values_owner.update({'email': ad.email})
+                if getattr(ad.owner, 'phone', None) and _ad.owner_id.phone != ad.owner.phone:
+                    values_owner.update({'phone': ad.phone})
+                if hasattr(ad.owner, 'country') and _ad.owner_id.country_id.code != ad.owner.country:
+                    country = self.env['res.country'].sudo().search([('code', '=', ad.owner.country)], limit=1)
+                    if not country:
+                        raise MissingError(_('Country %s cannot be found') % ad.owner.country)
+                    values_owner.update({'country_id': country.id})
+                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.name != ad.owner.state:
+                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
+                    if not state:
+                        raise MissingError(_('State %s cannot be found') % ad.owner.country)
+                    values_owner.update({'state_id': state.id})
+                if hasattr(ad, 'city') and _ad.owner_id.city != ad.owner.city:
+                    values_owner.update({'city': ad.city or False})
+                if hasattr(ad, 'address') and _ad.owner_id.street != ad.owner.address:
+                    values_owner.update({'street': ad.address or False})
+                if hasattr(ad, 'zip') and _ad.owner_id.zip != ad.owner.zip:
+                    values_owner.update({'zip': ad.zip or False})
+                if hasattr(ad, 'banks'):
+                    values_banks = []
+                    for bank in ad.banks:
+                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner.id)])
+                        iban = sanitize_account_number(bank.iban)
+                        _bank = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
+                        if _bank:
+                            value_bank = {}
+                            if getattr(bank, 'name', None) and _bank.acc_holder_name != bank.name:
+                                value_bank.update({'acc_holder_name': bank.name})
+                            if getattr(bank, 'merchant', None) and _bank.api_merchant != bank.merchant:
+                                value_bank.update({'api_merchant': bank.merchant})
+                            if value_bank:
+                                values_banks.append((1, _bank.id, value_bank))
+                        else:
+                            values_banks.append((0, 0, {
+                                'acc_number': bank.iban,
+                                'acc_holder_name': bank.name,
+                                'api_merchant': bank.merchant,
+                            }))
+                    if values_banks:
+                        values_owner.update({'bank_ids': values_banks})
+                if values_owner:
+                    _ad.owner_id.write(values_owner)
             if values:
-                escrow.write(values)
+                _ad.write(values)
+            ads.append(dict(id=_ad.uid, reference=_ad.default_code))
+        return ads
 
-        else:
-            escrow = escrow.create({
-                'name': params.escrow.name,
-                'vat': params.escrow.vat,
-                'email': params.escrow.email,
-                'phone': params.escrow.phone,
-                'country_id': country and country.id,
-                'company_id': company.id,
-                'system': company.system,
-                'state_id': state and state.id,
-                'city': getattr(params, 'city', False),
-                'street': getattr(params, 'address', False),
-                'zip': getattr(params, 'zip', False),
-                'bank_ids': [(0, 0, {
-                    'acc_number': bank.iban,
-                    'acc_holder_name': bank.name,
-                    'api_merchant': bank.merchant,
-                }) for bank in params.escrow.banks],
-            })
+    def _ads_delete(self, token, params):
+        _ads = self.env['product.product'].sudo() \
+              .with_company(token.company_id) \
+              .with_context(system=token.company_id.system) \
+              .search([('uid', 'in', list(map(str, params.ads)))])
+        if not _ads:
+            raise MissingError(_('No ads found'))
 
+        ads = [dict(id=ad.uid, reference=ad.default_code) for ad in _ads]
+        _ads.unlink()
+        return ads
+
+    def _payment_prepare(self, token, params):
+        ad = self.env['product.product'].sudo() \
+                .with_company(token.company_id) \
+                .with_context(system=token.company_id.system) \
+                .search([('uid', '=', str(params.ad))], limit=1)
+        if not ad:
+            raise MissingError(_('Ad %s cannot be found') % str(params.ad))
+
+        company = token.company_id
+        uid = str(uuid.uuid4())
+        hash = base64.b64encode(hashlib.sha256(''.join([uid, params.id]).encode('utf-8')).digest()).decode('utf-8')
         acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
-        values = {
+        self.env['payment.transaction'].sudo().create({
             'state': 'draft',
             'amount': getattr(params, 'amount', 0.0),
             'company_id': company.id,
             'acquirer_id': acquirer.id,
-            'partner_id': escrow.id,
+            'partner_id': ad.owner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_order_id': uid,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
             'jetcheckout_api_method': 'card',
-        }
-
-        tx = self.env['payment.transaction'].sudo().create(values)
-        tx.write({
-            'partner_name': params.escrow.name,
-            'partner_vat': params.escrow.vat,
-            'partner_email': params.escrow.email,
-            'partner_address': params.escrow.address,
-            'partner_phone': params.escrow.phone,
-            'partner_zip': getattr(params.escrow, 'zip', '') or '',
-            'partner_city': getattr(params.escrow, 'city', '') or '',
-            'partner_country_id': country and country.id or False,
-            'partner_state_id': state and state.id or False,
         })
-        return tx
+        return dict(id=uid, url='https://%s/payment?=%s' % (request.httprequest.host, quote(hash)))

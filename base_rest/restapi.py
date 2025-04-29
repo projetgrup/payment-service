@@ -8,7 +8,7 @@ from cerberus import Validator
 
 from odoo import _, http
 from odoo.http import Response
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 
 from .tools import cerberus_to_json
 
@@ -111,6 +111,8 @@ def method(routes, input_param=None, output_param=None, **kwargs):
                 return Response(str(e), status=400, mimetype="application/json")
             except ValidationError as e:
                 return Response(str(e), status=400, mimetype="application/json")
+            except MissingError as e:
+                return Response(str(e), status=404, mimetype="application/json")
             except Exception as e:
                 _logger.error(e, exc_info=True)
                 return Response("Server Error", status=500, mimetype="application/json")
