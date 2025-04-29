@@ -86,7 +86,6 @@ class PaymentPartnerBank(Datamodel):
     iban = fields.String(required=True, allow_none=False, metadata={"title": _lt("Account IBAN"), "description": _lt("Account IBAN"), "example": "TR000000000000000000000000"})
 
 
-
 class PaymentPartner(Datamodel):
     class Meta:
         ordered = True
