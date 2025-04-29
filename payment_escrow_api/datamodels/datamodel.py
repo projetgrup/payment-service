@@ -82,8 +82,8 @@ class EscrowResponseAdsCreate(Datamodel):
     ads = fields.List(NestedModel("escrow.response.ads.create.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
 
 
-class EscrowRequestAdsGetPage(Datamodel):
-    _name = "escrow.request.ads.get.page"
+class EscrowRequestAdsReadPage(Datamodel):
+    _name = "escrow.request.ads.read.page"
 
     class Meta:
         ordered = True
@@ -92,18 +92,18 @@ class EscrowRequestAdsGetPage(Datamodel):
     number = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Number"), "description": _lt("Page number"), "example": 1})
 
 
-class EscrowRequestAdsGet(Datamodel):
-    _name = "escrow.request.ads.get"
+class EscrowRequestAdsRead(Datamodel):
+    _name = "escrow.request.ads.read"
 
     class Meta:
         ordered = True
 
-    page = NestedModel("escrow.request.ads.get.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page options")})
-    ads = fields.List(fields.UUID, required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
+    page = NestedModel("escrow.request.ads.read.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page options")})
+    ads = fields.List(fields.UUID, required=False, allow_none=True, metadata={"title": _lt("Ads"), "description": _lt("Array of ads"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
 
 
-class EscrowResponseAdsGetPage(Datamodel):
-    _name = "escrow.response.ads.get.page"
+class EscrowResponseAdsReadPage(Datamodel):
+    _name = "escrow.response.ads.read.page"
 
     class Meta:
         ordered = True
@@ -113,8 +113,8 @@ class EscrowResponseAdsGetPage(Datamodel):
     count = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Count"), "description": _lt("Total page count"), "example": 1})
 
 
-class EscrowResponseAdsGetAds(Datamodel):
-    _name = "escrow.response.ads.get.ads"
+class EscrowResponseAdsReadAds(Datamodel):
+    _name = "escrow.response.ads.read.ads"
 
     class Meta:
         ordered = True
@@ -127,16 +127,16 @@ class EscrowResponseAdsGetAds(Datamodel):
     images = fields.List(fields.String, required=False, allow_none=False, metadata={"title": _lt("Images"), "description": _lt("Array of ad images which are encoded with base64"), "example": []})
 
 
-class EscrowResponseAdsGet(Datamodel):
+class EscrowResponseAdsRead(Datamodel):
     _inherit = "escrow.response"
-    _name = "escrow.response.ads.get"
+    _name = "escrow.response.ads.read"
 
     class Meta:
         ordered = True
 
 
-    page = NestedModel("escrow.response.ads.get.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page information")})
-    ads = fields.List(NestedModel("escrow.response.ads.get.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
+    page = NestedModel("escrow.response.ads.read.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page information")})
+    ads = fields.List(NestedModel("escrow.response.ads.read.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
 
 
 class EscrowRequestAdsUpdateAds(Datamodel):

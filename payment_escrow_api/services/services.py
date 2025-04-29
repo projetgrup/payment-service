@@ -71,18 +71,20 @@ class EscrowAPIService(Component):
     def ads_create(self, params):
         token = auth(self.env)
         ads = self._ads_create(token, params)
-        return dict(ads=[dict(id=ad.uid, reference=ad.default_code) for ad in ads], **RESPONSE[200])
+        return dict(ads=ads, **RESPONSE[200])
 
     @restapi.method(
-        [(["/ads/get"], "GET")],
-        input_param=Datamodel("escrow.request.ads.get"),
-        output_param=Datamodel("escrow.response.ads.get"),
+        [(["/ads/read"], "GET")],
+        input_param=Datamodel("escrow.request.ads.read"),
+        output_param=Datamodel("escrow.response.ads.read"),
         auth="public",
-        tags=[_lt("Ad Operations")]
+        tags=[_lt("Ad Operations")],
+        name=_lt("Read Ads")
     )
-    def ads_get(self, params):
-        pass
-    ads_get.__doc__ = _lt("List Ads")
+    def ads_read(self, params):
+        token = auth(self.env)
+        ads, page = self._ads_read(token, params)
+        return dict(ads=ads, page=page, **RESPONSE[200])
 
     @restapi.method(
         [(["/ads/update"], "PATCH")],
@@ -281,9 +283,7 @@ class EscrowAPIService(Component):
     # PRIVATE METHODS
     #
 
-    def _ads_create_owner(self, token, owner):
-        company = token.company_id
-
+    def _ads_create_owner(self, company, owner):
         if hasattr(owner, 'country'):
             country = self.env['res.country'].sudo().search([('code', '=', owner.country)], limit=1)
         else:
@@ -362,7 +362,7 @@ class EscrowAPIService(Component):
     def _ads_create(self, token, params):
         values = []
         for ad in params.ads:
-            owner = self._ads_create_owner(token, ad.owner)
+            owner = self._ads_create_owner(token.company_id, ad.owner)
             value = {
                 'name': ad.name,
                 'default_code': ad.reference,
@@ -375,7 +375,54 @@ class EscrowAPIService(Component):
                 })
             values.append(value)
         ads = self.env['product.product'].sudo().with_company(token.company_id).create(values)
+        ads = [dict(id=ad.uid, reference=ad.default_code) for ad in ads]
         return ads
+
+    def _ads_read_owner(self, owner):
+        return {
+            'name': owner.name or '',
+            'vat': owner.vat or '',
+            'email': owner.email or '',
+            'phone': owner.phone or '',
+            'country': owner.country_id.name or '',
+            'state': owner.state_id.name or '',
+            'city': owner.city or '',
+            'street': owner.street or '',
+            'zip': owner.zip or '',
+            'banks': [{
+                'name': bank.acc_number,
+                'iban': bank.acc_holder_name,
+                'merchant': bank.api_merchant,
+            } for bank in owner.bank_ids],
+        }
+
+    def _ads_read(self, token, params):
+        domain = []
+        if getattr(params, 'ads', None):
+            domain.append(('uid', 'in', list(map(str, params.ads))))
+
+        limit = params.page.size
+        offset = (params.page.number - 1) * limit
+        ads = self.env['product.product'].sudo() \
+              .with_company(token.company_id) \
+              .with_context(system=token.company_id.system) \
+              .search(domain, limit=limit, offset=offset)
+        ads = [
+            dict(
+                id=ad.uid or '',
+                name=ad.name or '',
+                reference=ad.default_code or '',
+                description=ad.description or '',
+                owner=self._ads_read_owner(ad.owner_id),
+                images=[base64.b64encode(ad.image_1920)] if ad.image_1920 else [],
+            ) for ad in ads
+        ]
+        page = dict(
+            size=params.page.size,
+            number=params.page.number,
+            count=len(ads),
+        )
+        return ads, page
 
     def _create_transaction(self, api, hash, params):
         company = api.company_id
