@@ -278,6 +278,8 @@ class ProductProduct(models.Model):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if self.env.context.get('skip_view_mapping'):
+            return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         system, company = _get_system(self.env)
         if system and view_type in ('form', 'tree', 'kanban', 'search'):
             view_id = self.env.ref('payment_system_product.%s_product_product' % (view_type,)).id
