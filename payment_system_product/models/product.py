@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import uuid
 from psycopg2 import sql
 from time import mktime
 from datetime import datetime, timedelta
@@ -198,6 +199,8 @@ class ProductProduct(models.Model):
             else:
                 product.payment_price_method_result = 0
 
+    uid = fields.Char('Unique ID', readonly=True, copy=False, default=lambda self: str(uuid.uuid4()))
+    owner_id = fields.Many2one('res.partner', string='Owner')
     price_dynamic = fields.Float('Price Dynamic', digits='Product Price')
     payment_name = fields.Char()
     payment_pid = fields.Integer()

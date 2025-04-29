@@ -6,12 +6,13 @@ import hashlib
 import logging
 import requests
 import datetime
+import functools
 from urllib.parse import quote
 
 from odoo.http import Response, request
+from odoo.exceptions import AccessError
 from odoo.tools.translate import _, _lt
 from odoo.tools.float_utils import float_round
-from odoo.exceptions import ValidationError
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest.components.service import skip_secure_response
 from odoo.addons.base_rest.controllers.main import RestController
@@ -24,6 +25,22 @@ TIMEOUT = 30
 RESPONSE = {
     200: {"status": 0, "message": "Success"}
 }
+
+def auth(env):
+    headers = request.httprequest.headers
+    if 'Authorization' not in headers:
+        raise AccessError('No Authorization header set')
+
+    code = headers.get('Authorization').split(' ', 1)[1]
+    auth = base64.b64decode(code).decode('utf-8')
+    username, password = auth.split(':', 1)
+    token = env['payment.acquirer.jetcheckout.api'].sudo().search([
+        ('api_key', '=', username),
+        ('secret_key', '=', password)
+    ], limit=1)
+    if not token:
+        raise AccessError('Wrong username or password')
+    return token
 
 
 class PaymentAPIController(RestController):

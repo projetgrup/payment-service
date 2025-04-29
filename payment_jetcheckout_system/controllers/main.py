@@ -111,7 +111,15 @@ class PayloxSystemController(Controller):
                 }
             })
             return template.view_id.id
-        return 'payment_%s.page_payment' % values['system']
+        system = values.get('system')
+        if not system:
+            if values.get('tx'):
+                system = values['tx']['system']
+                if not system:
+                    system = values['tx']['company_id']['system']
+        if not system:
+            system = request.env.company.system
+        return 'payment_%s.page_payment' % system
 
     def _get_tx_values(self, **kwargs):
         values = super()._get_tx_values(**kwargs)
