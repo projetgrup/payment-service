@@ -26,12 +26,13 @@
                             <div class="o_kanban_tags_section">
                                 <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
                             </div>
-                            <div name="product_lst_price" class="mt-1">
+                            <div name="product_owner" class="mt-1">
+                                <strong>Owner:</strong>
+                                <field name="owner_id"/>
+                            </div>
+                            <div name="product_lst_price" class="mt-1" attrs="{'invisible': [('price', '&lt;=', 1.0)]}">
                                 <strong>Price:</strong>
                                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <div t-attf-style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #{record.payment_color_foreground.value}; background-color: #{record.payment_color_background.value};"/>
                             </div>
                         </div>
                     </div>
@@ -73,30 +74,21 @@
                 <field name="active" invisible="1"/>
                 <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                 <div class="oe_title">
-                    <label for="name" string="Product Name"/>
+                    <label for="name" string="Ad Name"/>
                     <h1>
                         <div class="d-flex">
                             <field name="priority" widget="priority" class="mr-3"/>
-                            <field class="text-break" name="name" placeholder="Type a product name..." readonly="1"/>
+                            <field class="text-break" name="name" placeholder="Type an ad name..." readonly="1"/>
                         </div>
                     </h1>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                 </div>
                 <group>
                     <group name="group_price">
-                        <field name="payment_price_flow" invisible="1"/>
-                        <field name="payment_price_flow_option" string="Price Flow" widget="radio" options="{'horizontal': True}" readonly="1"/>
-                        <field name="payment_price_method" string="Price Method" widget="radio" options="{'horizontal': True}" readonly="1"/>
-                        <field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_method', '=', 'formula')], 'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>
+                        <!--<field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_method', '=', 'formula')], 'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>-->
                         <field name="default_code"/>
                         <field name="barcode"/>
                     </group>
                     <group name="group_general">
-                        <label for="payment_color_background" string="Colors"/>
-                        <div class="d-flex">
-                            <field name="payment_color_background" nolabel="1" widget="color" class="w-auto" readonly="1"/>
-                            <field name="payment_color_foreground" nolabel="1" widget="color" class="w-auto" readonly="1"/>
-                        </div>
                         <field name="categ_id" string="Category" options="{'no_create': True}" readonly="1"/>
                         <field name="system" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
@@ -108,15 +100,8 @@
                     </group>
                 </group>
                 <notebook>
-                    <page name="formula" string="Price Formula" attrs="{'invisible': [('payment_price_method', '!=', 'formula')]}">
-                        <group>
-                            <field name="payment_price_method_product_id" string="Base Product" attrs="{'required': [('payment_price_method', '=', 'formula')]}" options="{'no_create': False, 'no_open': False}"/>
-                            <field name="payment_price_method_formula" string="Price Formula" attrs="{'required': [('payment_price_method', '=', 'formula')]}"/>
-                            <field name="payment_price_method_result" string="Calculated Price" class="font-weight-bold"/>
-                            <p class="oe_grey oe_edit_only" colspan="2">
-                                <strong>Note</strong>: you can use <em>x</em> as unknown parameter, which is linked to price of the base product, in formula.
-                            </p>
-                        </group>
+                    <page name="description" string="Description">
+                        <field name="description"/>
                     </page>
                 </notebook>
             </sheet>

@@ -19,7 +19,7 @@ class EscrowRequestAdOwnerBanks(Datamodel):
     _inherit = "payment.partner.bank"
     _name = "escrow.request.ad.owner.banks"
 
-    merchant = fields.String(required=True, allow_none=False, metadata={"title": "Merchant Name", "description": "Merchant name", "example": "Jane Doe Inc."})
+    merchant = fields.String(required=True, allow_none=False, metadata={"title": _lt("Merchant Name"), "description": _lt("Merchant name"), "example": "Jane Doe Inc."})
 
 
 class EscrowRequestAdOwner(Datamodel):
@@ -139,6 +139,32 @@ class EscrowResponseAdsRead(Datamodel):
     ads = fields.List(NestedModel("escrow.response.ads.read.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
 
 
+class EscrowRequestAdsUpdateAdsOwnerBanks(Datamodel):
+    _name = "escrow.request.ads.update.ads.owner.banks"
+
+    name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Account Name"), "description": _lt("Account name"), "example": "Bank Account"})
+    iban = fields.String(required=True, allow_none=False, metadata={"title": _lt("Account IBAN"), "description": _lt("Account IBAN"), "example": "TR000000000000000000000000"})
+    merchant = fields.String(required=False, allow_none=False, metadata={"title": _lt("Merchant Name"), "description": _lt("Merchant name"), "example": "Jane Doe Inc."})
+
+
+class EscrowRequestAdsUpdateAdsOwner(Datamodel):
+    _name = "escrow.request.ads.update.ads.owner"
+
+    class Meta:
+        ordered = True
+
+    name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Name"), "description": _lt("Partner name"), "example": "John Doe"})
+    vat = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner VAT"), "description": _lt("Partner VAT number"), "example": "12345678910"})
+    email = fields.String(required=False, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
+    phone = fields.String(required=False, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
+    country = fields.String(required=False, allow_none=True, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
+    state = fields.String(required=False, allow_none=True, metadata={"title": _lt("State Code"), "description": _lt("State code"), "example": "34"})
+    city = fields.String(required=False, allow_none=True, metadata={"title": _lt("City/Town Name"), "description": _lt("City/Town name"), "example": "Beyoğlu"})
+    address = fields.String(required=False, allow_none=True, metadata={"title": _lt("Partner Address"), "description": _lt("Partner address"), "example": "Example Street, No: 1"})
+    zip = fields.String(required=False, allow_none=True, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
+    banks = fields.List(NestedModel("escrow.request.ads.update.ads.owner.banks"), required=False, allow_none=False, metadata={"title": _lt("List of Bank Accounts"), "description": _lt("List of bank accounts of owner")})
+
+
 class EscrowRequestAdsUpdateAds(Datamodel):
     _name = "escrow.request.ads.update.ads"
 
@@ -148,8 +174,8 @@ class EscrowRequestAdsUpdateAds(Datamodel):
     id = fields.UUID(required=True, allow_none=False, metadata={"title": _lt("ID"), "description": _lt("Ad unique number"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
     name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Name"), "description": _lt("Ad name"), "example": "Advertisement"})
     reference = fields.String(required=False, allow_none=False, metadata={"title": _lt("Reference"), "description": _lt("Ad reference"), "example": "AD001"})
-    description = fields.String(required=False, allow_none=True, metadata={"title": _lt("Description"), "description": _lt("Ad description in HTML format"), "example": "<h1>Description</h1>"})
-    owner = NestedModel("escrow.request.ad.owner", required=True, allow_none=False, metadata={"title": _lt("Owner information"), "description": _lt("Owner information related to request")})
+    description = fields.String(required=False, allow_none=False, metadata={"title": _lt("Description"), "description": _lt("Ad description in HTML format"), "example": "<h1>Description</h1>"})
+    owner = NestedModel("escrow.request.ads.update.ads.owner", required=False, allow_none=False, metadata={"title": _lt("Owner information"), "description": _lt("Owner information related to request")})
     images = fields.List(fields.String, required=False, allow_none=True, metadata={"title": _lt("Images"), "description": _lt("Array of ad images which are encoded with base64"), "example": []})
 
 
@@ -160,7 +186,6 @@ class EscrowRequestAdsUpdate(Datamodel):
         ordered = True
 
     ads = fields.List(NestedModel("escrow.request.ads.update.ads"), required=True, allow_none=False, metadata={"title": _lt("Array of Ads"), "description": _lt("Array of ads")})
-
 
 
 class EscrowResponseAdsUpdate(Datamodel):
@@ -179,7 +204,17 @@ class EscrowRequestAdsDelete(Datamodel):
     class Meta:
         ordered = True
 
-    ads = fields.List(fields.String, required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
+    ads = fields.List(fields.UUID, required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
+
+
+class EscrowResponseAdsDelete(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.ads.delete"
+
+    class Meta:
+        ordered = True
+
+    ads = fields.List(NestedModel("escrow.response.ads.create.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
 
 
 class EscrowResponsePaymentTransaction(Datamodel):
@@ -190,14 +225,6 @@ class EscrowResponsePaymentTransaction(Datamodel):
     _name = "escrow.response.payment.transaction"
 
     ad = NestedModel("escrow.request.ad", allow_none=False, metadata={"title": _lt("Ad"), "description": _lt("Ad information")})
-
-
-class EscrowResponseAdsDelete(Datamodel):
-    _inherit = "escrow.response"
-    _name = "escrow.response.ads.delete"
-
-    class Meta:
-        ordered = True
 
 
 class EscrowResponsePaymentWebhook(Datamodel):
