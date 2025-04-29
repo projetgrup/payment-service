@@ -39,6 +39,7 @@ class BaseRestServiceAPISpec(APISpec):
             servers=self._get_servers(),
             plugins=self._get_plugins(),
             tags = [],
+            components=getattr(self._service, "_components", {}),
         )
         self._params = params
 
