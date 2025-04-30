@@ -6,399 +6,109 @@
             <t t-set="no_footer" t-value="True"/>
             <t t-set="class" t-value="True"/>
             <t t-set="title" t-value="website.name"/>
-            <t t-set="body_classname" t-value="'payment-page payment-escrow navbar-light'"/>
+            <t t-set="body_classname" t-value="'payment-page payment-api-page payment-escrow navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <t t-set="amount" t-value="sum(payments.mapped('amount'))"/>
-            <t t-set="due" t-value="payments.with_context(tag=payment_tags and payment_tags[0]).get_due()"/>
-            <t t-set="due_amount" t-value="due['amount']"/>
-            <t t-set="due_days" t-value="due['days']"/>
-            <t t-set="due_date" t-value="due['date']"/>
-            <t t-set="due_campaign" t-value="due['campaign']"/>
-            <t t-set="due_hide_payment" t-value="due['hide_payment']"/>
-            <t t-set="due_hide_payment_message" t-value="due['hide_payment_message']"/>
-            <t t-set="authorized" t-value="partner.child_ids and partner.child_ids[0]"/>
-            <t t-set="prioritize" t-value="company.payment_page_item_priority and request.env.user.payment_page_item_priority if user else company.payment_page_item_priority"/>
-            <div class="header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
-                <div>
-                    <img t-att-src="'/p/company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+            <div class="header row mx-0 card border p-2 px-lg-5">
+                <div class="px-xl-3 mx-xl-auto mw-xl-128">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % tx.company_id.id" t-att-alt="tx.company_id.name"/>
                 </div>
-                <t t-call="payment_jetcheckout_system.payment_company"/>
             </div>
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
-                <t t-call="payment_jetcheckout_system.payment_state">
-                    <t t-set="classes" t-value="'mx-0'"/>
-                </t>
                 <div class="row mx-0 my-4 card border shadow p-4">
-                    <div t-if="payments or company.payment_page_item_add_ok" class="row mx-0 my-2 w-100">
+                    <div class="text-center text-primary h5 font-weight-bold position-relative">
+                        <a t-if="not tx_pending and back_url" class="btn card d-block ml-3 position-absolute shadow-sm text-600" t-att-href="back_url"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
+                        Payment Information
+                    </div>
+                    <div class="row mx-0 my-2">
                         <div class="col-md-6 p-3">
                             <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
-                                <strong class="text-primary font-weight-bold">Information</strong>
-                                <p>
-                                    <t t-if="partner.ref">
-                                      <t t-esc="partner.ref"/><br/>
-                                    </t>
-                                    <t t-esc="partner.name"/><br/>
-                                    <span t-field="partner.street"/> <t t-if="partner.state_id"><span t-field="partner.state_id"/> / <span t-field="partner.country_id"/></t><t t-else=""><span t-field="partner.country_id"/></t>
-                                </p>
-                                <strong t-if="authorized" class="text-primary font-weight-bold">Authorized</strong>
-                                <p t-if="authorized">
-                                    <t t-esc="authorized.name"/><br/>
-                                    <t t-esc="authorized.email"/>
-                                </p>
+                                <div class="position-absolute info-icon">
+                                    <i class="fa fa-info"/>
+                                </div>
+                                <div>
+                                    <strong class="text-primary font-weight-bold">Partner</strong>
+                                    <p class="mr-5 pr-5">
+                                        <t t-esc="tx.partner_name"/><br/>
+                                        <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
+                                    </p>
+                                </div>
+                                <div t-if="tx.jetcheckout_api_contact">
+                                    <strong class="text-primary font-weight-bold">Contact</strong>
+                                    <p>
+                                        <t t-esc="tx.jetcheckout_api_contact"/><br/>
+                                        <t t-esc="tx.partner_email"/>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100 justify-content-end">
-                                <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
-                                <strong class="text-primary font-weight-bold z-index-1 flex-fill">Payment</strong>
-                                <strong class="text-primary font-weight-bold text-right z-index-1 mt-3">Amount</strong>
-                                <div class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
-                                    <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
-                                    <t t-if="company.payment_page_amount_editable">
-                                        <input type="hidden" t-if="company.payment_page_amount_editable_wo_exceed" field="payment.amountEditableWoExceed"/>
-                                        <div>
-                                            <span t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <input name="amount" type="text" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), currency.round(amount), grouping=True, monetary=True)" autocomplete="off" field="payment.amount"/>
-                                            <span t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                        </div>
-                                    </t>
-                                    <t t-else="">
-                                        <span class="payment-amount-total-readonly">
-                                            <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                        </span>
-                                        <div t-if="company.payment_page_saleref_ok" class="payment-amount-total-editonly d-none">
-                                            <span t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <input name="amount" type="text" t-att-value="language.format('%.{0}f'.format(currency.decimal_places), currency.round(amount), grouping=True, monetary=True)" autocomplete="off" field="payment.amount"/>
-                                            <span t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                        </div>
-                                    </t>
+                            <div class="border card info-card p-4 h-100">
+                                <div class="position-absolute info-icon">
+                                    <i class="fa fa-shopping-basket"/>
                                 </div>
-                                <div t-if="company.payment_page_saleref_ok" class="text-right">
-                                    <button class="btn btn-sm btn-light text-primary" field="payment.saleRef.button">Pay with payment items</button>
+                                <div t-if="len(tx.paylox_product_ids) == 1 and tx.paylox_product_ids[0]['qty'] &lt;= 1.0">
+                                    <strong class="text-primary font-weight-bold z-index-1">Product</strong>
+                                    <p class="z-index-1">
+                                        <t t-esc="tx.paylox_product_ids[0]['product_id']['name']"/>
+                                    </p>
                                 </div>
-                                <div t-if="company.payment_page_item_add_ok" class="text-right">
-                                    <button class="btn btn-sm btn-light text-primary" field="payment.itemAdd">Add new payment item</button>
-                                    <input type="hidden" t-if="company.payment_page_item_add_date_readonly" t-att-value="company.payment_page_item_add_date_readonly" field="payment.itemAddDateReadonly"/>
-                                    <input type="hidden" t-if="company.payment_page_item_add_desc_numericonly" t-att-value="company.payment_page_item_add_desc_numericonly" field="payment.itemAddDescNumericonly"/>
-                                    <input type="hidden" t-if="company.payment_page_item_add_desc_required" t-att-value="company.payment_page_item_add_desc_required" field="payment.itemAddDescRequired"/>
-                                    <input type="hidden" t-att-value="company.payment_page_item_add_desc_minlength" field="payment.itemAddDescMinlength"/>
-                                    <input type="hidden" t-att-value="company.payment_page_item_add_desc_maxlength" field="payment.itemAddDescMaxlength"/>
-                                    <input type="hidden" t-att-value="company.payment_page_item_add_desc_prefix" field="payment.itemAddDescPrefix"/>
+                                <div t-elif="tx.jetcheckout_api_order">
+                                    <strong class="text-primary font-weight-bold z-index-1">Reference</strong>
+                                    <p class="z-index-1">
+                                        <t t-esc="tx.jetcheckout_api_order"/>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-right mt-3 mb-0">
+                                        <strong class="text-primary font-weight-bold text-right z-index-1 mt-5">Amount</strong>
+                                    </p>
+                                    <p class="h3 text-right font-weight-bold z-index-1">
+                                        <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex">
-                        <div t-if="payments and payment_tags" class="row bg-white mx-0 px-3 mb-1 gap-1 w-100">
-                            <t t-set="i" t-value="0"/>
-                            <t t-foreach="payment_tags" t-as="tag">
-                                <button t-attf-class="btn #{'btn-secondary' if i else 'btn-primary'} px-3 font-weight-bold text-uppercase" t-att-data-id="tag.id" t-att-data-name="tag.name" t-esc="tag.name" field="payment.due.tag"/>
-                                <t t-set="i" t-value="i+1"/>
-                            </t>
-                        </div>
-                        <div t-if="company.payment_page_button_access_transaction" class="mb-1 ml-auto mx-0 px-3 text-nowrap">
-                            <a role="button" class="btn btn-secondary px-3 font-weight-bold text-uppercase" t-attf-href="/p/#{token}/transaction">See All Transactions</a>
-                        </div>
-                    </div>
-                    <div t-if="company.payment_page_saleref_ok" class="row px-3 justify-content-center bg-100 py-3 rounded border mx-3 payment-saleref d-none">
-                        <div class="field-container" style="min-width: 50%;">
-                            <input type="text" class="text-center border-primary" required="required" field="payment.saleRef.value"/>
-                            <span class="bar-container"/>
-                            <label class="text-primary"><span>Sale Reference</span></label>
-                        </div>
-                    </div>
-                    <t t-if="payments or company.payment_page_item_add_ok">
-                        <div class="row bg-white mx-0 px-3 w-100 payment-item">
-                            <div class="payment-kanban bg-white card overflow-auto text-nowrap w-100 p-2">
-                                <t t-foreach="payments" t-as="payment">
-                                    <div class="card shadow-sm w-100 text-700 position-relative">
-                                        <div class="p-2 text-center"><span t-field="payment.date"/><span class="text-500">Date</span></div>
-                                        <div class="p-2 text-center"><span t-field="payment.amount"/><span class="text-500">Amount</span></div>
-                                        <div t-if="company.payment_page_due_base == 'date_due'" class="p-2 text-center"><span t-field="payment.due_date"/><span class="text-500">Due Date</span></div>
-                                        <div class="p-2 text-center"><span t-field="payment.residual_amount"/><span class="text-500">Residual</span></div>
-                                        <div class="align-items-center bg-100 d-flex flex-column justify-content-center p-2 text-center">
-                                            <span t-if="payment.description" t-field="payment.description"/>
-                                            <span t-else="" class="text-500">Description</span>
-                                            <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
-                                                <i class="fa fa-times mr-1" t-translation="off"/>Remove
-                                            </button>
-                                            <div class="payment-kanban-pdf position-absolute">
-                                                <form t-if="payment.file or (show_invoices and payment.invoice_ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
-                                                    <button type="submit" class="btn text-danger px-2 py-0 fa fa-file-pdf-o"/>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="payment-kanban-checkbox position-absolute">
-                                            <label t-attf-class="checkmark #{'disabled' if prioritize else ''}">
-                                                <input type="checkbox" class="payment-items input-checkmark" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-payable="payment.residual_amount" t-att-data-paid="payment.paid_amount" checked="checked" field="payment.item"/>
-                                                <span><i class="fa fa-check"/></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </t>
-                                <div class="btn d-block card shadow-sm w-100 text-700 position-relative p-0 overflow-hidden payment-all-items-btn" field="payment.itemsBtn">
-                                    <div class="p-2 text-center border-0">
-                                        <span class="text-600 font-weight-bold">Select All</span>
-                                    </div>
-                                    <div class="payment-kanban-checkbox position-absolute border-0">
-                                        <label class="checkmark">
-                                            <input type="checkbox" class="payment-all-items" checked="checked" autocomplete="off" field="payment.items"/>
-                                            <span><i class="fa fa-check"/></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="d-block mt-2 text-600 text-center">
-                                    <div t-if="company.payment_page_due_ok" class="d-flex flex-column border-0">
-                                        <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
-                                        <em class="mt-2 cursor-pointer" style="text-wrap: balance;" field="payment.advance.add"></em>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="payment-list bg-white card table-responsive overflow-auto text-nowrap">
-                                <table class="table table-sm sidebar-table mb-0 text-700">
-                                    <colgroup>
-                                        <col width="10%"/>
-                                        <col t-if="company.payment_page_due_base == 'date_due'" width="10%"/>
-                                        <col width="20%"/>
-                                        <col width="10%"/>
-                                        <col width="10%"/>
-                                        <col width="10%"/>
-                                        <col width="10%"/>
-                                        <col width="15%"/>
-                                        <col width="5%"/>
-                                    </colgroup>
-                                    <thead>
-                                        <tr class="shadow-sm font-weight-bold bg-white">
-                                            <th class="px-2">Date</th>
-                                            <th t-if="company.payment_page_due_base == 'date_due'" class="px-2">Due Date</th>
-                                            <th class="px-2">Description</th>
-                                            <th class="text-right px-2">Amount</th>
-                                            <th class="text-right px-2">Paid</th>
-                                            <th class="text-right px-2">Residual</th>
-                                            <th class="text-right px-2">Total</th>
-                                            <th class="text-center px-2">Document</th>
-                                            <th/>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-set="total_amount" t-value="0"/>
-                                        <t t-foreach="payments" t-as="payment">
-                                            <t t-set="total_amount" t-value="total_amount + payment.residual_amount"/>
-                                            <tr>
-                                                <td class="px-2"><span t-field="payment.date"/></td>
-                                                <td t-if="company.payment_page_due_base == 'date_due'" class="px-2"><span t-field="payment.due_date"/></td>
-                                                <td class="px-2 text-wrap"><span t-if="payment.description" t-field="payment.description"/></td>
-                                                <td class="text-right px-2"><span t-field="payment.amount" class="item-amount-payment"/></td>
-                                                <td class="text-right px-2"><span t-field="payment.paid_amount" class="item-amount-paid"/></td>
-                                                <td class="text-right px-2"><span t-field="payment.residual_amount" class="item-amount-payable"/></td>
-                                                <td class="text-right px-2"><span t-esc="total_amount" t-options="{'widget': 'monetary', 'display_currency': currency}" class="item-amount-total"/></td>
-                                                <td class="text-center">
-                                                    <form t-if="payment.file or (show_invoices and payment.invoice_ref)" t-att-action="'/p/%s/%s' % (token, payment.id)" method="POST">
-                                                        <button type="submit" class="btn btn-outline-danger bg-100 text-danger px-2 py-0 fa fa-file-pdf-o"/>
-                                                    </form>
-                                                    <button t-if="payment.advance" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.advance.remove">
-                                                        <i class="fa fa-times mr-1" t-translation="off"/>Remove Advance
-                                                    </button>
-                                                    <button t-if="payment.manual and not payment.paid_amount" class="btn btn-sm text-danger font-weight-bold float-right" t-att-data-id="payment.id" field="payment.itemRemove">
-                                                        <i class="fa fa-times mr-1" t-translation="off"/>Remove Item
-                                                    </button>
-                                                </td>
-                                                <td class="text-center">
-                                                    <label t-attf-class="switch mb-0 #{'disabled' if prioritize else ''}">
-                                                        <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="payment.id" t-att-data-amount="payment.residual_amount" t-att-data-payable="payment.residual_amount" t-att-data-paid="payment.paid_amount" checked="checked" field="payment.item"/>
-                                                        <span class="slider round fa"/>
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                    <tfoot class="shadow bg-light">
+                    <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
+                        <div class="card table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th class="text-right">Price</th>
+                                        <!--<th class="text-right">Quantity</th>
+                                        <th></th>
+                                        <th class="text-right">Total</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="tx.paylox_product_ids" t-as="product">
                                         <tr>
-                                            <td class="text-left" colspan="6">
-                                                <div t-if="company.payment_page_due_ok" class="d-flex flex-wrap gap-1">
-                                                    <em class="font-weight-bold">Average Due: <span t-esc="due_date" field="payment.due.date"/> (<span t-esc="due_days" field="payment.due.days"/> Days)</em>
-                                                    <em class="cursor-pointer" field="payment.advance.add"><i class="fa fa-circle-o-notch fa-spin text-600"/></em>
-                                                </div>
-                                            </td>
-                                            <td class="text-right align-middle" t-att-colspan="company.payment_page_due_base == 'date_due' and '2' or '1'"><em>Select All</em></td>
-                                            <td class="text-center align-middle">
-                                                <label class="switch mb-0">
-                                                    <input type="checkbox" class="payment-all-items" checked="checked" autocomplete="off" field="payment.items"/>
-                                                    <span class="slider round fa"/>
-                                                </label>
+                                            <td><span t-esc="product.product_id.name"/></td>
+                                            <td class="text-right"><span t-esc="product.price" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>
+                                            <!--<td class="text-right"><span t-esc="product.qty" t-options="{'widget': 'float', 'precision': 2}"/></td>
+                                            <td><span t-esc="product.uom or ''"/></td>
+                                            <td class="text-right"><span t-esc="product.price * product.qty" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>-->
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <t t-raw="product.product_id.description"/>
                                             </td>
                                         </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                                    </t>
+                                </tbody>
+                            </table>
                         </div>
-                        <div t-attf-class="justify-content-center mx-0 w-100 #{'d-none' if due_hide_payment else ''}" t-att-field="'payment.due.payment' if company.payment_page_due_ok else None">
-                            <t t-call="payment_jetcheckout.s2s">
-                                <t t-set="amount" t-value="amount or 0"/>
-                                <t t-set="no_border" t-value="True"/>
-                                <t t-set="partner" t-value="partner"/>
-                                <t t-if="due_campaign and (not payment_tags or not payment_tags[0].campaign_id)" t-set="campaign" t-value="due_campaign"/>
-                            </t>
-                        </div>
-                        <div t-if="company.payment_page_due_hide_payment_ok" t-attf-class="row justify-content-center flex-column m-3 #{'d-none' if not due_hide_payment else ''}" field="payment.due.warning">
-                            <div class="bg-100 border card overflow-auto p-4 shadow table-responsive text-600 text-center">
-                                <strong class="h4"><i class="fa fa-warning mr-2" t-translation="off"/>Warning</strong><br/><p t-esc="due_hide_payment_message"/>
-                            </div>
-                        </div>
-                        <input t-if="prioritize" type="hidden" field="payment.priority"/>
-                    </t>
-                    <t t-else="">
-                        <div class="row justify-content-center flex-column mx-3">
-                            <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
-                                <strong class="h4">Thank You!</strong><br/>There is not any unpaid transaction related to you
-                            </div>
-                        </div>
-                    </t>
+                    </div>
+                    <div t-attf-class="row mx-0 #{classname}">
+                        <t t-call="payment_jetcheckout.s2s">
+                            <t t-set="amount" t-value="tx.amount"/>
+                            <t t-set="no_border" t-value="True"/>
+                            <t t-set="partner" t-value="partner"/>
+                        </t>
+                    </div>
                 </div>
-                <t t-call="payment_jetcheckout_system.payment_agreement"/>
-                <t t-call="payment_jetcheckout_system.payment_footer"/>
             </div>
         </t>
-    </template>
-
-    <template id="page_payment_system" inherit_id="payment_jetcheckout_system.page_payment">
-        <xpath expr="//t[@t-set='labels']" position="inside">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <label name="country" class="text-primary font-weight-bold mb-0 d-block">Country</label>
-                <span name="country" class="text-600" t-esc="partner and partner.country_id.name or '-'"/>
-                <label name="state" class="text-primary font-weight-bold mb-0 d-block">State</label>
-                <span name="state" class="text-600" t-esc="partner and partner.state_id.name or '-'"/>
-                <label name="city" class="text-primary font-weight-bold mb-0 d-block">City</label>
-                <span name="city" class="text-600" t-esc="partner and partner.city or '-'"/>
-                <label name="street" class="text-primary font-weight-bold mb-0 d-block">Street</label>
-                <span name="street" class="text-600" t-esc="partner and partner.street or '-'"/>
-                <label name="phone" class="text-primary font-weight-bold mb-0 d-block">Phone</label>
-                <span name="phone" class="text-600" t-esc="partner and partner.phone or '-'"/>
-                <label name="email" class="text-primary font-weight-bold mb-0 d-block">Email</label>
-                <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
-                    <div class="field-container d-flex p-2 gap-5">
-                        <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
-                            <input type="radio" checked="checked" autocomplete="off"/><span t-translation="off"/><span>Individual</span>
-                        </button>
-                        <button class="btn" name="company" field="wizard.register.buttons.company_type">
-                            <input type="radio" autocomplete="off"/><span t-translation="off"/><span>Company</span>
-                        </button>
-                        <input type="hidden" value="person" field="wizard.register.company_type"/>
-                    </div>
-                </div>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="field-container d-none">
-                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.tax_office"/>
-                    <span class="bar-container"/>
-                    <label class="text-primary"><span>Tax Office</span></label>
-                </div>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="d-flex flex-column gap-5">
-                    <div class="field-container">
-                        <select class="text-center border-primary" required="required" field="wizard.register.state_id" placeholder="Select a state">
-                            <option/>
-                            <t t-foreach="company.env['res.country.state'].sudo().search_read([('country_id', '=', company.country_id.id)])" t-as="state">
-                                <option t-att-value="state['id']" t-esc="state['name']"/>
-                            </t>
-                        </select>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>State</span></label>
-                    </div>
-                    <div class="field-container">
-                        <input type="text" class="text-center border-primary" required="required" field="wizard.register.city"/>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>City</span></label>
-                    </div>
-                    <div class="field-container">
-                        <textarea type="text" class="text-center border-primary" required="required" field="wizard.register.street"/>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>Address</span></label>
-                    </div>
-                    <input type="hidden" field="wizard.register.country_id" t-att-value="company.country_id.id"/>
-                </div>
-            </t>
-        </xpath>
-    </template>
-
-    <template id="page_payment_system_product" inherit_id="payment_system_product.page_payment">
-        <xpath expr="//t[@t-set='labels']" position="inside">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <label name="country" class="text-primary font-weight-bold mb-0 d-block">Country</label>
-                <span name="country" class="text-600" t-esc="partner and partner.country_id.name or '-'"/>
-                <label name="state" class="text-primary font-weight-bold mb-0 d-block">State</label>
-                <span name="state" class="text-600" t-esc="partner and partner.state_id.name or '-'"/>
-                <label name="city" class="text-primary font-weight-bold mb-0 d-block">City</label>
-                <span name="city" class="text-600" t-esc="partner and partner.city or '-'"/>
-                <label name="street" class="text-primary font-weight-bold mb-0 d-block">Street</label>
-                <span name="street" class="text-600" t-esc="partner and partner.street or '-'"/>
-                <label name="phone" class="text-primary font-weight-bold mb-0 d-block">Phone</label>
-                <span name="phone" class="text-600" t-esc="partner and partner.phone or '-'"/>
-                <label name="email" class="text-primary font-weight-bold mb-0 d-block">Email</label>
-                <span name="email" class="text-600" t-esc="partner and partner.email or '-'"/>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="before">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="d-flex flex-column m-3 gap-5" style="min-width:250px;">
-                    <div class="field-container d-flex p-2 gap-5">
-                        <button class="btn selected" name="person" field="wizard.register.buttons.company_type">
-                            <input type="radio" checked="checked"/><span t-translation="off"/><span>Individual</span>
-                        </button>
-                        <button class="btn" name="company" field="wizard.register.buttons.company_type">
-                            <input type="radio"/><span t-translation="off"/><span>Company</span>
-                        </button>
-                        <input type="hidden" value="person" field="wizard.register.company_type"/>
-                    </div>
-                </div>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']//input[@field='wizard.register.vat']/.." position="after">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="field-container d-none">
-                    <input type="text" class="text-center border-primary" required="required" field="wizard.register.tax_office"/>
-                    <span class="bar-container"/>
-                    <label class="text-primary"><span>Tax Office</span></label>
-                </div>
-            </t>
-        </xpath>
-        <xpath expr="//div[@name='wizard']//div[@name='register']//div[@name='fields']" position="inside">
-            <t t-if="flow == 'dynamic' and system == 'escrow'">
-                <div class="d-flex flex-column gap-5">
-                    <div class="field-container">
-                        <select class="text-center border-primary" required="required" field="wizard.register.state_id" placeholder="Select a state">
-                            <option/>
-                            <t t-foreach="company.env['res.country.state'].sudo().search_read([('country_id', '=', company.country_id.id)])" t-as="state">
-                                <option t-att-value="state['id']" t-esc="state['name']"/>
-                            </t>
-                        </select>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>State</span></label>
-                    </div>
-                    <div class="field-container">
-                        <input type="text" class="text-center border-primary" required="required" field="wizard.register.city"/>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>City</span></label>
-                    </div>
-                    <div class="field-container">
-                        <textarea type="text" class="text-center border-primary" required="required" field="wizard.register.street"/>
-                        <span class="bar-container"/>
-                        <label class="text-primary"><span>Address</span></label>
-                    </div>
-                    <input type="hidden" field="wizard.register.country_id" t-att-value="company.country_id.id"/>
-                </div>
-            </t>
-        </xpath>
     </template>
 </odoo>
