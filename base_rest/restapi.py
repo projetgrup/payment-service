@@ -125,21 +125,23 @@ def method(routes, input_param=None, output_param=None, **kwargs):
 
     return decorator
 
-def webhook(input_param=None, **kw):
+def webhook(input_param=None, **kwargs):
     def decorator(f):
         routing = {
             "routes": [],
             "webhook": True,
             "input_param": input_param,
-            **kw
+            **kwargs
         }
 
         @functools.wraps(f)
-        def wrap(*args, **kw):
-            return f(*args, **kw)
+        def wrap(*args, **kwargs):
+            return f(*args, **kwargs)
 
         wrap.routing = routing
         wrap.original_func = f
+        if kwargs.get('name'):
+            wrap.__doc__ = kwargs.get('name')
         return wrap
 
     return decorator

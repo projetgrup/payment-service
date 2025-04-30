@@ -30,6 +30,7 @@ class EscrowRequestAdOwner(Datamodel):
 
     name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner Name"), "description": _lt("Partner name"), "example": "John Doe"})
     vat = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner VAT"), "description": _lt("Partner VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office"), "example": "MERKEZ"})
     email = fields.String(required=True, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
     phone = fields.String(required=True, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
     country = fields.String(required=False, allow_none=False, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
@@ -50,6 +51,7 @@ class EscrowRequestAd(Datamodel):
     reference = fields.String(required=True, allow_none=False, metadata={"title": _lt("Reference"), "description": _lt("Ad reference"), "example": "AD001"})
     description = fields.String(required=True, allow_none=False, metadata={"title": _lt("Description"), "description": _lt("Ad description in HTML format"), "example": "<h1>Description</h1>"})
     owner = NestedModel("escrow.request.ad.owner", required=True, allow_none=False, metadata={"title": _lt("Owner information"), "description": _lt("Owner information related to request")})
+    price = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Price Unit"), "description": _lt("Price unit"), "example": 145.3})
     images = fields.List(fields.String, required=False, allow_none=False, metadata={"title": _lt("Images"), "description": _lt("Array of ad images which are encoded with base64"), "example": []})
 
 
@@ -124,6 +126,7 @@ class EscrowResponseAdsReadAds(Datamodel):
     reference = fields.String(required=True, allow_none=False, metadata={"title": _lt("Reference"), "description": _lt("Ad reference"), "example": "AD001"})
     description = fields.String(required=True, allow_none=False, metadata={"title": _lt("Description"), "description": _lt("Ad description in HTML format"), "example": "<h1>Description</h1>"})
     owner = NestedModel("escrow.request.ad.owner", required=True, allow_none=False, metadata={"title": _lt("Owner information"), "description": _lt("Owner information related to request")})
+    price = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Price Unit"), "description": _lt("Price unit"), "example": 145.3})
     images = fields.List(fields.String, required=False, allow_none=False, metadata={"title": _lt("Images"), "description": _lt("Array of ad images which are encoded with base64"), "example": []})
 
 
@@ -155,6 +158,7 @@ class EscrowRequestAdsUpdateAdsOwner(Datamodel):
 
     name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Name"), "description": _lt("Partner name"), "example": "John Doe"})
     vat = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner VAT"), "description": _lt("Partner VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office"), "example": "MERKEZ"})
     email = fields.String(required=False, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
     phone = fields.String(required=False, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
     country = fields.String(required=False, allow_none=True, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
@@ -176,6 +180,7 @@ class EscrowRequestAdsUpdateAds(Datamodel):
     reference = fields.String(required=False, allow_none=False, metadata={"title": _lt("Reference"), "description": _lt("Ad reference"), "example": "AD001"})
     description = fields.String(required=False, allow_none=False, metadata={"title": _lt("Description"), "description": _lt("Ad description in HTML format"), "example": "<h1>Description</h1>"})
     owner = NestedModel("escrow.request.ads.update.ads.owner", required=False, allow_none=False, metadata={"title": _lt("Owner information"), "description": _lt("Owner information related to request")})
+    price = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Price Unit"), "description": _lt("Price unit"), "example": 145.3})
     images = fields.List(fields.String, required=False, allow_none=True, metadata={"title": _lt("Images"), "description": _lt("Array of ad images which are encoded with base64"), "example": []})
 
 
@@ -256,6 +261,16 @@ class EscrowResponsePaymentResult(Datamodel):
     transaction = NestedModel("escrow.response.payment.transaction", metadata={"title": _lt("Transaction information related to request"), "description": _lt("Transaction details")})
 
 
+class EscrowRequestPaymentPrepareAds(Datamodel):
+    _name = "escrow.request.payment.prepare.ads"
+
+    class Meta:
+        ordered = True
+
+    id = fields.UUID(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Unique identifier of related ad"), "example": '1x2cdaa3-35df-2eff-aeq2-5d74387701xd'})
+    price = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Price Unit"), "description": _lt("Price unit"), "example": 145.3})
+
+
 class EscrowRequestPaymentPrepare(Datamodel):
     _name = "escrow.request.payment.prepare"
 
@@ -263,8 +278,7 @@ class EscrowRequestPaymentPrepare(Datamodel):
         ordered = True
 
     id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique identifier related to your specified record in your database for tracking the payment flow"), "example": '12aaff56a'})
-    ad = fields.UUID(required=True, allow_none=False, metadata={"title": "Ad", "description": _lt("Unique identifier of related ad"), "example": '1x2cdaa3-35df-2eff-aeq2-5d74387701xd'})
-    amount = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
+    ads = fields.List(NestedModel("escrow.request.payment.prepare.ads"), required=True, allow_none=False, metadata={"title": "Ads", "description": _lt("List of ads")})
 
 
 class EscrowResponsePaymentPrepare(Datamodel):
