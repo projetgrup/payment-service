@@ -224,6 +224,8 @@ class EscrowAPIService(Component):
             values = {}
             if partner.name != owner.name:
                 values.update({'name': owner.name})
+            if partner.paylox_tax_office != owner.taxOffice:
+                values.update({'paylox_tax_office': owner.taxOffice})
             if partner.email != owner.email:
                 values.update({'email': owner.email})
             if partner.phone != owner.phone:
@@ -267,6 +269,7 @@ class EscrowAPIService(Component):
             partner = partner.create({
                 'name': owner.name,
                 'vat': owner.vat,
+                'paylox_tax_office': owner.taxOffice,
                 'email': owner.email,
                 'phone': owner.phone,
                 'country_id': country and country.id,
@@ -293,6 +296,7 @@ class EscrowAPIService(Component):
                 'default_code': ad.reference,
                 'description': ad.description,
                 'owner_id': owner.id,
+                'price': getattr(ad, 'price', 0.0),
             }
             if getattr(ad, 'images', []):
                 values.update({
@@ -307,6 +311,7 @@ class EscrowAPIService(Component):
         return {
             'name': owner.name or '',
             'vat': owner.vat or '',
+            'taxOffice': owner.paylox_tax_office or '',
             'email': owner.email or '',
             'phone': owner.phone or '',
             'country': owner.country_id.name or '',
@@ -339,6 +344,7 @@ class EscrowAPIService(Component):
                 reference=ad.default_code or '',
                 description=ad.description or '',
                 owner=self._ads_read_owner(ad.owner_id),
+                price=ad.price or 0.0,
                 images=[base64.b64encode(ad.image_1920)] if ad.image_1920 else [],
             ) for ad in ads
         ]
@@ -366,6 +372,8 @@ class EscrowAPIService(Component):
                 values.update({'default_code': ad.reference})
             if getattr(ad, 'description', None) and _ad.description != ad.description:
                 values.update({'description': ad.description})
+            if hasattr(ad, 'price'):
+                values.update({'price': ad.price or 0.0})
             if hasattr(ad, 'images'):
                 values.update({'image_1920': ad.images and ad.images[0] or False})
             if getattr(ad, 'owner', None):
@@ -373,11 +381,13 @@ class EscrowAPIService(Component):
                 if getattr(ad.owner, 'name', None) and _ad.owner_id.name != ad.owner.name:
                     values_owner.update({'name': ad.owner.name})
                 if getattr(ad.owner, 'vat', None) and _ad.owner_id.vat != ad.owner.vat:
-                    values_owner.update({'vat': ad.vat})
+                    values_owner.update({'vat': ad.owner.vat})
+                if getattr(ad.owner, 'taxOffice', None) and _ad.owner_id.paylox_tax_office != ad.owner.taxOffice:
+                    values_owner.update({'paylox_tax_office': ad.taxOffice})
                 if getattr(ad.owner, 'email', None) and _ad.owner_id.email != ad.owner.email:
-                    values_owner.update({'email': ad.email})
+                    values_owner.update({'email': ad.owner.email})
                 if getattr(ad.owner, 'phone', None) and _ad.owner_id.phone != ad.owner.phone:
-                    values_owner.update({'phone': ad.phone})
+                    values_owner.update({'phone': ad.owner.phone})
                 if hasattr(ad.owner, 'country') and _ad.owner_id.country_id.code != ad.owner.country:
                     country = self.env['res.country'].sudo().search([('code', '=', ad.owner.country)], limit=1)
                     if not country:
@@ -388,13 +398,13 @@ class EscrowAPIService(Component):
                     if not state:
                         raise MissingError(_('State %s cannot be found') % ad.owner.country)
                     values_owner.update({'state_id': state.id})
-                if hasattr(ad, 'city') and _ad.owner_id.city != ad.owner.city:
-                    values_owner.update({'city': ad.city or False})
-                if hasattr(ad, 'address') and _ad.owner_id.street != ad.owner.address:
-                    values_owner.update({'street': ad.address or False})
-                if hasattr(ad, 'zip') and _ad.owner_id.zip != ad.owner.zip:
-                    values_owner.update({'zip': ad.zip or False})
-                if hasattr(ad, 'banks'):
+                if hasattr(ad.owner, 'city') and _ad.owner_id.city != ad.owner.city:
+                    values_owner.update({'city': ad.owner.city or False})
+                if hasattr(ad.owner, 'address') and _ad.owner_id.street != ad.owner.address:
+                    values_owner.update({'street': ad.owner.address or False})
+                if hasattr(ad.owner, 'zip') and _ad.owner_id.zip != ad.owner.zip:
+                    values_owner.update({'zip': ad.owner.zip or False})
+                if hasattr(ad.owner, 'banks'):
                     values_banks = []
                     for bank in ad.banks:
                         banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner.id)])
@@ -436,12 +446,22 @@ class EscrowAPIService(Component):
         return ads
 
     def _payment_prepare(self, token, params):
-        ad = self.env['product.product'].sudo() \
-                .with_company(token.company_id) \
-                .with_context(system=token.company_id.system) \
-                .search([('uid', '=', str(params.ad))], limit=1)
-        if not ad:
-            raise MissingError(_('Ad %s cannot be found') % str(params.ad))
+        amount = 0
+        ads = []
+        for ad in params.ads:
+            _ad = self.env['product.product'].sudo() \
+                    .with_company(token.company_id) \
+                    .with_context(system=token.company_id.system) \
+                    .search([('uid', '=', str(ad.id))], limit=1)
+            if not _ad:
+                raise MissingError(_('Ad %s cannot be found') % str(ad.id))
+            price = getattr(ad, 'price', _ad.price)
+            ads.append((0, 0, {
+                'product_id': _ad.id,
+                'price': price,
+                'qty': 1,
+            }))
+            amount += price
 
         company = token.company_id
         uid = str(uuid.uuid4())
@@ -452,7 +472,7 @@ class EscrowAPIService(Component):
             'amount': getattr(params, 'amount', 0.0),
             'company_id': company.id,
             'acquirer_id': acquirer.id,
-            'partner_id': ad.owner_id.id,
+            'partner_id': company.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_payment_type': 'virtual_pos',
             'jetcheckout_order_id': uid,
@@ -460,5 +480,7 @@ class EscrowAPIService(Component):
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
             'jetcheckout_api_method': 'card',
+            'paylox_product_ids': ads,
+            'amount': amount,
         })
         return dict(id=uid, url='https://%s/payment?=%s' % (request.httprequest.host, quote(hash)))
