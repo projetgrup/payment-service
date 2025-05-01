@@ -47,17 +47,7 @@ class PayloxSystemVendorController(Controller):
         show_invoices = False
         if system == 'vendor':
             show_invoices = self._connector_can_show_partner_invoice()
-            try:
-                with request.env.cr.savepoint():
-                    wizard = request.env['syncops.sync.wizard'].sudo().create({
-                        'type': 'item',
-                        'system': 'vendor',
-                        'type_item_subtype': company.syncops_sync_item_subtype,
-                    })
-                    wizard.with_context(partner=partner).confirm()
-                    wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
-            except:
-                pass
+            self._connector_sync_item_before_page(company, system, partner)
 
         payments, payment_tags = partner._get_payments()
         currency = payments.mapped('currency_id') or company.currency_id

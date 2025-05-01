@@ -299,7 +299,7 @@ class EscrowAPIService(Component):
                 'price': getattr(ad, 'price', 0.0),
             }
             if getattr(ad, 'images', []):
-                values.update({
+                value.update({
                     'image_1920': ad.images[0]
                 })
             values.append(value)

@@ -30,7 +30,7 @@ class EscrowRequestAdOwner(Datamodel):
 
     name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner Name"), "description": _lt("Partner name"), "example": "John Doe"})
     vat = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner VAT"), "description": _lt("Partner VAT number"), "example": "12345678910"})
-    taxOffice = fields.String(required=True, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office"), "example": "MERKEZ"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office (required if lenght of VAT is ten)"), "example": "MERKEZ"})
     email = fields.String(required=True, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
     phone = fields.String(required=True, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
     country = fields.String(required=False, allow_none=False, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
@@ -158,7 +158,7 @@ class EscrowRequestAdsUpdateAdsOwner(Datamodel):
 
     name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Name"), "description": _lt("Partner name"), "example": "John Doe"})
     vat = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner VAT"), "description": _lt("Partner VAT number"), "example": "12345678910"})
-    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office"), "example": "MERKEZ"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Partner Tax Office"), "description": _lt("Partner tax office (required if lenght of VAT is ten)"), "example": "MERKEZ"})
     email = fields.String(required=False, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
     phone = fields.String(required=False, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
     country = fields.String(required=False, allow_none=True, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
@@ -304,7 +304,6 @@ class EscrowRequestPaymentCancel(Datamodel):
 class EscrowResponsePaymentCancel(Datamodel):
     _inherit = "escrow.response"
     _name = "escrow.response.payment.cancel"
-
 
 
 class EscrowRequestPaymentRefund(Datamodel):
