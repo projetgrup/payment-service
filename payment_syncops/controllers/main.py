@@ -265,6 +265,19 @@ class PayloxSyncopsController(Controller):
         user = request.env.user.sudo()
         company = company or request.env.company
         return not user.share and company.id in user.company_ids.ids and request.env['syncops.connector'].sudo().count('payment_get_partner_list_page', company=company)
+    
+    def _connector_sync_item_before_page(self, company, system, partner):
+            try:
+                with request.env.cr.savepoint():
+                    wizard = request.env['syncops.sync.wizard'].sudo().create({
+                        'type': 'item',
+                        'system': system,
+                        'type_item_subtype': company.syncops_sync_item_subtype,
+                    })
+                    wizard.with_context(partner=partner).confirm()
+                    wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
+            except:
+                pass
 
     def _get_tx_values(self, **kwargs):
         vals = super()._get_tx_values(**kwargs)
