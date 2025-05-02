@@ -19,16 +19,24 @@ class AuditController(Controller):
         raise AccessError('Wrong username or password')
 
     @http.route(['/security/audit/log'], type='json', auth='user')
-    def audit_log(self, action, view=None, record=None):
-        log(request.cr, uid=request.session.uid, action=action, view=view, record=record)
+    def audit_log(self, company, action, view=None, record=None):
+        log(request.cr, company=company, uid=request.session.uid, action=action, view=view, record=record)
 
     @http.route(['/security/audit/get'], type='http', auth='public', methods=['GET'], website=True)
     def audit_get(self):
         try:
             token = self._auth()
-            domain = json.loads(token.company_id.sec_audit_webservice_filter) or []
+            filter = token.company_id.sec_audit_webservice_filter
+            domain = json.loads(filter) if filter else []
             domain += [('company_id', '=', token.company_id.id)]
-            logs = request.env['security.audit'].sudo().search_read(domain, ['action'])
+            logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_date', 'action'])
+            for log in logs:
+                del log['id']
+            logs = [{
+                'date': log['create_date'].strftime('%Y-%d-%m %H:%M:%S') if log['create_date'] else None,
+                'user': log['create_uid'][1] if log['create_uid'] else None,
+                'action': log['action'] or None,
+            } for log in logs]
             return Response(json.dumps(logs), status=200, mimetype="application/json")
         except AccessError as e:
             return Response(str(e), status=401, mimetype="application/json")

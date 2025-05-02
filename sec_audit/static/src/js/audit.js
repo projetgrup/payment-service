@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import rpc from 'web.rpc';
+import session from 'web.session';
 import { actionService } from "@web/webclient/actions/action_service";
 
 const actionStart = actionService.start;
@@ -27,10 +28,13 @@ actionService.start = async function start(env) {
 
     const log = async function ({ view, record }) {
         if (view) {
-            rpc.query({
-                route: '/security/audit/log',
-                params: { action:'view', view, record },
-            });
+            let company = session.user_context.allowed_company_ids?.[0];
+            if (company) {
+                rpc.query({
+                    route: '/security/audit/log',
+                    params: { company: company, action: 'view', view, record },
+                });
+            }
         }
     }
 

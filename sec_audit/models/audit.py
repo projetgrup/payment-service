@@ -16,20 +16,35 @@ def _log_sql_value(value):
     else:
         return "NULL"
 
-def log(cr, **values):
+def log(cr, company=None, **values):
+    try:
+        if company and isinstance(company, int):
+            company = request.env['res.company'].sudo().browse(company)
+        if not company:
+            company = request.env.company
+        if not company:
+            return
+    except:
+        return
+
+    names = company.sec_audit_model_ids.mapped('model')
     if 'record' in values:
         if isinstance(values['record'], models.Model):
-            if values['record']._name not in []:#MODELS:
+            if values['record']._name not in names:
                 return
             values['record'] = '%s,%s' % (values['record']._name, values['record'].id)
         if isinstance(values['record'], str):
-            if values['record'].split(',', 1)[0] not in []:#MODELS:
+            if values['record'].split(',', 1)[0] not in names:
                 return
         else:
             return
 
     if 'action' not in values:
         values['action'] = 'other'
+
+    actions = company.sec_audit_action_ids.mapped('code')
+    if values['action'] not in actions:
+        return
 
     if 'uid' in values:
         values.update({
@@ -64,17 +79,7 @@ def log(cr, **values):
             _logger.error(e)
 
     if 'company_id' not in values:
-        try:
-            values['company_id'] = request.env.company.id or None
-        except:
-            cr.execute('''
-                SELECT company_id
-                FROM res_users
-                WHERE id = %s
-            ''', (values['create_uid'],))
-            res = cr.fetchone()
-            if res:
-                values['company_id'] = res[0] or None
+        values['company_id'] = company.id or None
 
     keys = values.keys()
     vals = values.values()
@@ -115,9 +120,15 @@ class Audit(models.Model):
 
     @api.depends('action', 'button')
     def _compute_badge(self):
+        self.env.cr.execute('''
+            SELECT name, code, icon
+            FROM security_audit_action
+        ''')
+        result = self.env.cr.dictfetchall() or []
+        actions = {res['code']: res for res in result}
         for log in self:
-            if log.action in ACTIONS:
-                action = ACTIONS[log.action]
+            if log.action in actions:
+                action = actions[log.action]
                 icon = action['icon']
                 name = action['name']
                 log.badge = '<span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier" name="badge"><i class="fa fa-%s"/> %s</span>' % (icon, name)
@@ -141,11 +152,11 @@ class Audit(models.Model):
                 length = len(ids) if ids else self.env[model].sudo().search_count(domain)
 
                 domain = [('id', 'in', ids)] if ids else domain
-                records = self.env[model].sudo().search_read(domain, ['name'])
+                records = self.env[model].sudo().search_read(domain, ['display_name'])
                 if len(records) <= 2:
-                    records = [rec['name'] for rec in records]
+                    records = [rec['display_name'] for rec in records]
                 else:
-                    records = [records[0]['name'], '...', records[-1]['name']]
+                    records = [records[0]['display_name'], '...', records[-1]['display_name']]
 
                 log.download_table = '''<div class="text-center"><strong>%s</strong> Records</div><table class="table">%s</table>''' % (
                     length,
@@ -172,8 +183,8 @@ class Audit(models.Model):
     tracking_table = fields.Html(string='Tracking Table', compute='_compute_tracking_table', sanitize=False, readonly=True)
     download_table = fields.Html(string='Download Table', compute='_compute_download_table', sanitize=False, readonly=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, readonly=True)
-    badge = fields.Html(string='Badge', compute='_compute_badge', sanitize=False)
-    action = fields.Selection([], string='Action', readonly=True)
+    badge = fields.Html(string='Badge', compute='_compute_badge', compute_sudo=True, sanitize=False)
+    action = fields.Char(string='Action', readonly=True)
 
     def _update_registry(self):
         if self.env.registry.ready and not self.env.context.get('import_file'):
@@ -216,7 +227,8 @@ class Audit(models.Model):
                             field = self.env['ir.model.fields'].sudo()._get(self._name, f)
                             if not field:
                                 continue
-                            tracking.append((field.field_description, v, vals[f]))
+                            if v != vals[f]:
+                                tracking.append((field.field_description, v, vals[f]))
                     if tracking:
                         tracking = json.dumps(tracking, default=str)
                     else:
@@ -243,7 +255,7 @@ class Audit(models.Model):
                 wrapped.origin = origin
                 setattr(ModelClass, name, wrapped)
 
-        for model in []:#MODELS:
+        for model in self.env['res.company'].sudo().search([]).mapped('sec_audit_model_ids.model'):
             Model = self.env.get(model)
             patch(Model, 'create', make_create())
             patch(Model, 'write', make_write())
