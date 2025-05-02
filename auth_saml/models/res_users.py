@@ -8,6 +8,7 @@ from typing import Set
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry, tools
 from odoo.exceptions import AccessDenied, ValidationError
+from odoo.addons.auth_signup.models.res_partner import SignupError
 
 from .ir_config_parameter import ALLOW_SAML_UID_AND_PASSWORD
 
@@ -32,19 +33,22 @@ class ResUser(models.Model):
         if user_saml:
             user = user_saml.user_id
         else:
-            s = "abcdefghijklmnopqrstuvwxyz034567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
-            user = self.env['res.users'].sudo()._create_user_from_template({
-                'name': saml_uid,
-                'login': saml_uid,
-                'password': ''.join(random.sample(s, 16)),
-                'company_id': self.env.company.id,
-            })
-            user_saml = self.env['res.users.saml'].sudo().create({
-                'user_id': user.id,
-                'saml_uid': saml_uid,
-                'saml_provider_id': provider,
-            })
-            user.with_user(user)._update_last_login()
+            if self.env.company.auth_unauthorized_action == 'create':
+                s = "abcdefghijklmnopqrstuvwxyz034567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
+                user = self.env['res.users'].sudo()._create_user_from_template({
+                    'name': saml_uid,
+                    'login': saml_uid,
+                    'password': ''.join(random.sample(s, 16)),
+                    'company_id': self.env.company.id,
+                })
+                user_saml = self.env['res.users.saml'].sudo().create({
+                    'user_id': user.id,
+                    'saml_uid': saml_uid,
+                    'saml_provider_id': provider,
+                })
+                user.with_user(user)._update_last_login()
+            else:
+                raise SignupError(_('Signup is not allowed for uninvited users'))
 
         if len(user) != 1:
             raise AccessDenied()

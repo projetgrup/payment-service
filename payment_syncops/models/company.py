@@ -49,3 +49,4 @@ class ResCompany(models.Model):
     syncops_check_iban = fields.Boolean()
     syncops_check_card = fields.Boolean()
     syncops_payment_page_partner_required = fields.Boolean()
+    syncops_payment_page_sync_item = fields.Boolean()

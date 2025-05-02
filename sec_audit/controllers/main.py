@@ -1,18 +1,46 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 import operator
 
 from odoo import http, _
-from odoo.http import request, Controller
+from odoo.http import request, Response, Controller
 from odoo.addons.web.controllers.main import WebClient, Home, Session, DataSet, ExcelExport, ensure_db
+from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 from ..models.audit import log
+
+_logger = logging.getLogger(__name__)
 
 
 class AuditController(Controller):
+
+    def _auth(self):
+        raise AccessError('Wrong username or password')
+
     @http.route(['/security/audit/log'], type='json', auth='user')
     def audit_log(self, action, view=None, record=None):
         log(request.cr, uid=request.session.uid, action=action, view=view, record=record)
+
+    @http.route(['/security/audit/get'], type='http', auth='public', methods=['GET'], website=True)
+    def audit_get(self):
+        try:
+            token = self._auth()
+            domain = json.loads(token.company_id.sec_audit_webservice_filter) or []
+            domain += [('company_id', '=', token.company_id.id)]
+            logs = request.env['security.audit'].sudo().search_read(domain, ['action'])
+            return Response(json.dumps(logs), status=200, mimetype="application/json")
+        except AccessError as e:
+            return Response(str(e), status=401, mimetype="application/json")
+        except UserError as e:
+            return Response(str(e), status=400, mimetype="application/json")
+        except ValidationError as e:
+            return Response(str(e), status=400, mimetype="application/json")
+        except MissingError as e:
+            return Response(str(e), status=404, mimetype="application/json")
+        except Exception as e:
+            _logger.error(e, exc_info=True)
+            return Response("Server Error", status=500, mimetype="application/json")
 
 
 class AuditHomeController(Home):

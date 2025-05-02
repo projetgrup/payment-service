@@ -13,12 +13,12 @@ from odoo.http import content_disposition, request, Response
 from odoo.tools import html_escape
 from odoo.tools.misc import xlsxwriter
 from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
-from odoo.addons.payment_jetcheckout.controllers.main import PayloxController as Controller
+from odoo.addons.payment_jetcheckout.controllers.main import PayloxController
 
 REPORT_NAMES = ['payment_jetcheckout.payment_receipt', 'payment_jetcheckout.payment_conveyance']
 
 
-class PayloxSystemController(Controller):
+class PayloxSystemController(PayloxController):
 
     def _check_redirect(self, partner):
         if request.session.get('company_selected'):

@@ -8,58 +8,6 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
-MODELS = ['payment.transaction', 'res.partner', 'sale.order']
-ACTIONS = {
-    'login': {
-        'name': 'Login',
-        'icon': 'sign-in',
-    },
-    'logout': {
-        'name': 'Logout',
-        'icon': 'sign-out',
-    },
-    'close': {
-        'name': 'Close',
-        'icon': 'times',
-    },
-    'create': {
-        'name': 'Create',
-        'icon': 'plus',
-    },
-    'write': {
-        'name': 'Write',
-        'icon': 'edit',
-    },
-    'unlink': {
-        'name': 'Delete',
-        'icon': 'minus',
-    },
-    'upload': {
-        'name': 'Upload',
-        'icon': 'upload',
-    },
-    'download': {
-        'name': 'Download',
-        'icon': 'download',
-    },
-    'send': {
-        'name': 'Send',
-        'icon': 'send-o',
-    },
-    'view': {
-        'name': 'View',
-        'icon': 'eye',
-    },
-    'button': {
-        'name': 'Button',
-        'icon': 'hand-pointer-o',
-    },
-    'other': {
-        'name': 'Other',
-        'icon': 'dot-circle-o',
-    },
-}
-
 def _log_sql_value(value):
     if isinstance(value, str):
         return "$$%s$$" % value
@@ -71,11 +19,11 @@ def _log_sql_value(value):
 def log(cr, **values):
     if 'record' in values:
         if isinstance(values['record'], models.Model):
-            if values['record']._name not in MODELS:
+            if values['record']._name not in []:#MODELS:
                 return
             values['record'] = '%s,%s' % (values['record']._name, values['record'].id)
         if isinstance(values['record'], str):
-            if values['record'].split(',', 1)[0] not in MODELS:
+            if values['record'].split(',', 1)[0] not in []:#MODELS:
                 return
         else:
             return
@@ -142,9 +90,9 @@ def log(cr, **values):
         _logger.error('Log cannot be saved. Details as follows:\n%s' % (json.dumps(values, default=str, indent=4),))
 
 
-class AuditLogUser(models.Model):
+class Audit(models.Model):
     _name = 'security.audit'
-    _description = 'Audit User Logs'
+    _description = 'Audits'
     _order = 'id desc'
 
     def _compute_name(self):
@@ -225,7 +173,7 @@ class AuditLogUser(models.Model):
     download_table = fields.Html(string='Download Table', compute='_compute_download_table', sanitize=False, readonly=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, readonly=True)
     badge = fields.Html(string='Badge', compute='_compute_badge', sanitize=False)
-    action = fields.Selection([(k, v['name']) for k, v in ACTIONS.items()], string='Action', readonly=True)
+    action = fields.Selection([], string='Action', readonly=True)
 
     def _update_registry(self):
         if self.env.registry.ready and not self.env.context.get('import_file'):
@@ -295,7 +243,7 @@ class AuditLogUser(models.Model):
                 wrapped.origin = origin
                 setattr(ModelClass, name, wrapped)
 
-        for model in MODELS:
+        for model in []:#MODELS:
             Model = self.env.get(model)
             patch(Model, 'create', make_create())
             patch(Model, 'write', make_write())
@@ -309,6 +257,15 @@ class AuditLogUser(models.Model):
                     delattr(Model, name)
                 except AttributeError:
                     pass
+
+
+class AuditAction(models.Model):
+    _name = 'security.audit.action'
+    _description = 'Audit Actions'
+
+    name = fields.Char(translate=True)
+    code = fields.Char()
+    icon = fields.Char()
 
 
 class Import(models.TransientModel):

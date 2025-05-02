@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="audit_action_login" model="security.audit.action">
+            <field name="name">Login</field>
+            <field name="code">login</field>
+            <field name="code">sign-in</field>
+        </record>
+
+    	<record id="audit_action_logout" model="security.audit.action">
+            <field name="name">Logout</field>
+            <field name="code">logout</field>
+            <field name="code">sign-out</field>
+        </record>
+
+    	<record id="audit_action_close" model="security.audit.action">
+            <field name="name">Close</field>
+            <field name="code">close</field>
+            <field name="code">times</field>
+        </record>
+
+    	<record id="audit_action_create" model="security.audit.action">
+            <field name="name">Create</field>
+            <field name="code">create</field>
+            <field name="code">plus</field>
+        </record>
+
+    	<record id="audit_action_write" model="security.audit.action">
+            <field name="name">Write</field>
+            <field name="code">write</field>
+            <field name="code">edit</field>
+        </record>
+
+    	<record id="audit_action_delete" model="security.audit.action">
+            <field name="name">Delete</field>
+            <field name="code">delete</field>
+            <field name="code">minus</field>
+        </record>
+
+    	<record id="audit_action_upload" model="security.audit.action">
+            <field name="name">Upload</field>
+            <field name="code">upload</field>
+            <field name="code">upload</field>
+        </record>
+
+    	<record id="audit_action_download" model="security.audit.action">
+            <field name="name">Download</field>
+            <field name="code">download</field>
+            <field name="code">download</field>
+        </record>
+
+    	<record id="audit_action_send" model="security.audit.action">
+            <field name="name">Send</field>
+            <field name="code">send</field>
+            <field name="code">send-o</field>
+        </record>
+
+    	<record id="audit_action_view" model="security.audit.action">
+            <field name="name">View</field>
+            <field name="code">view</field>
+            <field name="code">eye</field>
+        </record>
+
+    	<record id="audit_action_button" model="security.audit.action">
+            <field name="name">Button</field>
+            <field name="code">button</field>
+            <field name="code">hand-pointer-o</field>
+        </record>
+
+    	<record id="audit_action_other" model="security.audit.action">
+            <field name="name">Other</field>
+            <field name="code">other</field>
+            <field name="code">dot-circle-o</field>
+        </record>
+    </data>
+</odoo>

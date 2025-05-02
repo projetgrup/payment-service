@@ -12,9 +12,10 @@
     'category': 'Hidden',
     'depends': ['mail'],
     'data': [
-        'views/audit.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
+        'data/data.xml',
+        'views/audit.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -1,7 +1,32 @@
 # -*- coding: utf-8 -*-
 
+import base64
+
 from odoo.http import request
+from odoo.exceptions import AccessError, MissingError
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
+from odoo.addons.sec_audit.controllers.main import AuditController
+
+
+class PayloxAuditController(AuditController):
+    
+    def _auth(self):
+        headers = request.httprequest.headers
+        if 'Authorization' not in headers:
+            raise AccessError('No Authorization header set')
+
+        code = headers.get('Authorization').split(' ', 1)[1]
+        auth = base64.b64decode(code).decode('utf-8')
+        username, password = auth.split(':', 1)
+        token = request.env['payment.acquirer.jetcheckout.api'].sudo().search([
+            ('api_key', '=', username),
+            ('secret_key', '=', password)
+        ], limit=1)
+        if not token:
+            raise AccessError('Wrong username or password')
+        if not token.company_id.sec_audit_webservice_ok:
+            raise MissingError('Not Found')
+        return token
 
 
 class PayloxSystemApiController(Controller):
