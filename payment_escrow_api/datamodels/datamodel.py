@@ -271,6 +271,23 @@ class EscrowRequestPaymentPrepareAds(Datamodel):
     price = fields.Float(required=False, allow_none=False, metadata={"title": _lt("Price Unit"), "description": _lt("Price unit"), "example": 145.3})
 
 
+class EscrowRequestPaymentPrepareCustomer(Datamodel):
+    _name = "escrow.request.payment.prepare.customer"
+
+    class Meta:
+        ordered = True
+
+    name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Customer Name"), "description": _lt("Customer name"), "example": "John Doe"})
+    vat = fields.String(required=False, allow_none=False, metadata={"title": _lt("Customer VAT"), "description": _lt("Customer VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Customer Tax Office"), "description": _lt("Customer tax office (required if lenght of VAT is ten)"), "example": "MERKEZ"})
+    email = fields.String(required=False, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "test@example.com"})
+    phone = fields.String(required=False, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
+    country = fields.String(required=False, allow_none=True, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
+    state = fields.String(required=False, allow_none=True, metadata={"title": _lt("State Code"), "description": _lt("State code"), "example": "34"})
+    city = fields.String(required=False, allow_none=True, metadata={"title": _lt("City/Town Name"), "description": _lt("City/Town name"), "example": "Beyoğlu"})
+    address = fields.String(required=False, allow_none=True, metadata={"title": _lt("Customer Address"), "description": _lt("Customer address"), "example": "Example Street, No: 1"})
+    zip = fields.String(required=False, allow_none=True, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
+
 class EscrowRequestPaymentPrepare(Datamodel):
     _name = "escrow.request.payment.prepare"
 
@@ -279,6 +296,7 @@ class EscrowRequestPaymentPrepare(Datamodel):
 
     id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique identifier related to your specified record in your database for tracking the payment flow"), "example": '12aaff56a'})
     ads = fields.List(NestedModel("escrow.request.payment.prepare.ads"), required=True, allow_none=False, metadata={"title": "Ads", "description": _lt("List of ads")})
+    customer = NestedModel("escrow.request.payment.prepare.customer", required=True, allow_none=False, metadata={"title": "Customer", "description": _lt("Customer")})
 
 
 class EscrowResponsePaymentPrepare(Datamodel):

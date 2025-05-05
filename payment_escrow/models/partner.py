@@ -7,6 +7,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
+    escrow_type = fields.Selection([('customer', 'Customer'), ('owner', 'Owner')], string='Escrow Type')
 
     def action_payable(self):
         action = super(Partner, self).action_payable()
