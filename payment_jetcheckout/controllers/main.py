@@ -1383,7 +1383,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_url_address': tx and tx.jetcheckout_url_address or request.httprequest.referrer,
                 'jetcheckout_campaign_name': campaign,
                 'jetcheckout_card_name': 'holder' in kwargs['card'] and kwargs['card']['holder'] or False,
-                'jetcheckout_card_number': card_number and ''.join([card_number[:6], '*'*6, card_number[-4:]]) or False,
+                'jetcheckout_card_number': card_number and ''.join([card_number[:6], 'X'*6, card_number[-4:]]) or False,
                 'jetcheckout_card_type': 'type' in kwargs['card'] and kwargs['card']['type'].capitalize() or False,
                 'jetcheckout_card_program': 'program' in kwargs['card'] and kwargs['card']['program'].capitalize() or False,
                 'jetcheckout_card_family': 'family' in kwargs['card'] and kwargs['card']['family'].capitalize() or False,

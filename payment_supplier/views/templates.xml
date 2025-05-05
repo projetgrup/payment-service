@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="page_payment" name="Supplier Payment Page">
-        <t t-call="payment_jetcheckout_system.page_payment"/>
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-supplier navbar-light'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-set="amount" t-value="(plan and plan.amount) or (tx and tx.amount) or 0.0"/>
+            <t t-if="not plan and tx" t-set="plan" t-value="tx.jetcheckout_plan_ids and tx.jetcheckout_plan_ids[0]"/>
+            <div class="header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div>
+                    <img t-att-src="'/p/company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+            </div>
+            <div class="px-lg-5 mx-xl-auto mw-xl-128">
+                <t t-call="payment_jetcheckout_system.payment_state">
+                    <t t-set="classes" t-value="'mx-0'"/>
+                    <t t-set="hide_button_payment" t-value="True"/>
+                    <t t-set="hide_report_iframe" t-value="True"/>
+                </t>
+                <div class="row mx-0 my-4 card border shadow p-4">
+                    <div class="row mx-0 my-2 w-100">
+                        <div class="col-md-6 p-3">
+                            <div class="border card info-card p-4 h-100">
+                                <div class="position-absolute info-icon"><i class="fa fa-info"></i></div>
+                                <strong class="text-primary font-weight-bold">Information</strong>
+                                <p>
+                                    <t t-if="partner.ref">
+                                      <t t-esc="partner.ref"/><br/>
+                                    </t>
+                                    <t t-esc="partner.name"/><br/>
+                                    <span t-field="partner.street"/> <t t-if="partner.state_id"><span t-field="partner.state_id"/> / <span t-field="partner.country_id"/></t><t t-else=""><span t-field="partner.country_id"/></t>
+                                </p>
+                                <strong t-if="authorized" class="text-primary font-weight-bold">Authorized</strong>
+                                <p t-if="authorized">
+                                    <t t-esc="authorized.name"/><br/>
+                                    <t t-esc="authorized.email"/>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-3">
+                            <div class="border card info-card p-4 h-100 justify-content-end">
+                                <div class="position-absolute info-icon"><i class="fa fa-shopping-basket"></i></div>
+                                <strong class="text-primary font-weight-bold z-index-1 flex-fill">Payment</strong>
+                                <strong t-if="plan" class="text-primary font-weight-bold text-right z-index-1 mt-3">Amount</strong>
+                                <div t-if="plan" class="h2 text-right font-weight-bold z-index-1 payment-amount-total">
+                                    <span class="payment-amount-total-readonly">
+                                        <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-if="plan and not plan.paid">
+                        <div class="justify-content-center mx-0 w-100">
+                            <t t-call="payment_jetcheckout.s2s">
+                                <t t-set="amount" t-value="amount or 0"/>
+                                <t t-set="no_border" t-value="True"/>
+                                <t t-set="partner" t-value="partner"/>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="row justify-content-center flex-column mx-3">
+                            <div class="bg-white border card table-responsive overflow-auto p-5 text-muted text-center">
+                                <strong class="h4">Thank You!</strong><br/>Payment plan is successfully paid
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <t t-call="payment_jetcheckout_system.payment_agreement"/>
+                <t t-call="payment_jetcheckout_system.payment_footer"/>
+            </div>
+        </t>
     </template>
 </odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_audit" model="ir.ui.view">
+    <field name="name">security.audit.tree</field>
+    <field name="model">security.audit</field>
+    <field name="arch" type="xml">
+        <tree sample="1" editable="top">
+            <field name="create_uid" decoration-bf="1"/>
+            <field name="create_date"/>
+            <field name="end_date" optional="hide"/>
+            <field name="badge" string="Action" decoration-info="action == 'view' and end_date == False" decoration-primary="action == 'button'"/>
+            <field name="button" decoration-bf="1"/>
+            <field name="record" decoration-bf="1"/>
+            <field name="view"/>
+            <field name="time" widget="float_time" class="text-right" attrs="{'invisible': [('action', '!=', 'view')]}" sum="Total Time"/>
+            <field name="tracking" invisible="1"/>
+            <field name="tracking_table" string="Tracking" optional="hide"/>
+            <field name="download" invisible="1"/>
+            <field name="download_table" string="Download" optional="hide"/>
+            <field name="action" invisible="1"/>
+        </tree>
+    </field>
+    </record>
+
+    <record id="pivot_user_log" model="ir.ui.view">
+    <field name="name">security.audit.pivot</field>
+    <field name="model">security.audit</field>
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="create_uid" type="row"/>
+            <field name="duration" type="measure"/>
+        </pivot>
+    </field>
+    </record>
+
+    <record id="action_audit" model="ir.actions.act_window">
+    <field name="name">Audit Logs</field>
+    <field name="res_model">security.audit</field>
+    <field name="view_mode">tree,pivot</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            No audit logs yet
+        </p>
+        <p>
+            Audit logs are listed here
+        </p>
+    </field>
+    </record>
+</odoo>

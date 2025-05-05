@@ -23,6 +23,17 @@
                     </div>
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
+                            <field name="syncops_payment_page_sync_item"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_payment_page_sync_item" string="Sync Items Before Payment Page"/>
+                            <div class="text-muted">
+                                Sync relevant items before opening a payment page
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
                             <field name="syncops_cron_sync_partner"/>
                         </div>
                         <div class="o_setting_right_pane">

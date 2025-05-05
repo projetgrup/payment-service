@@ -23,5 +23,8 @@
         'web.assets_backend': [
             'payment_supplier/static/src/scss/backend.scss',
         ],
+        'web.assets_frontend': [
+            'payment_supplier/static/src/scss/page.scss',
+        ],
     },
 }
