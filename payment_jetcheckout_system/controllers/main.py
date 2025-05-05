@@ -123,13 +123,13 @@ class PayloxSystemController(PayloxController):
 
     def _get_tx_values(self, **kwargs):
         values = super()._get_tx_values(**kwargs)
-        ids = kwargs.get('payments', [])
-        items = request.env['payment.item'].sudo().browse(ids)
+        item_ids = kwargs.get('payments', [])
+        items = request.env['payment.item'].sudo().browse(item_ids)
         for item in items:
             if item.date_expired:
                 raise Exception(_('Payment item with date "%s" has been expired. Please refresh the page and continue.') % (item.date.stftime('%d/%m/%Y')))
-        if ids:
-            values.update({'jetcheckout_item_ids': [(6, 0, ids)]})
+        if item_ids:
+            values.update({'jetcheckout_item_ids': [(6, 0, item_ids)]})
         if request.env.company.system:
             values.update({'jetcheckout_payment_ok': False})
 
@@ -140,6 +140,13 @@ class PayloxSystemController(PayloxController):
         sale_ref = kwargs.get('sale_ref', False)
         if sale_ref:
             values.update({'paylox_sale_ref': sale_ref})
+
+        path = urlparse(request.httprequest.referrer).path
+        if path.startswith('/p/plan/'):
+            token = path.rsplit('/', 1).pop()
+            plan = request.env['payment.plan'].sudo().search([('uid', '=', token), ('company_id', '=', request.env.company.id)], limit=1)
+            if plan:
+                values.update({'jetcheckout_plan_ids': [(6, 0, plan.ids)]})
 
         return values
 
@@ -331,6 +338,27 @@ class PayloxSystemController(PayloxController):
             ('Content-Length', len(pdf)),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @http.route('/p/plan/<token>', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    def page_system_link_plan(self, token, **kwargs):
+        plan = request.env['payment.plan'].sudo().search([('uid', '=', token), ('company_id', '=', request.env.company.id)], limit=1)
+        if not plan:
+            raise werkzeug.exceptions.NotFound()
+
+        self._del()
+
+        company = plan.company_id
+        partner = plan.partner_id
+        system = company.system or partner.system or 'jetcheckout_system'
+        values = self._prepare_system(company, system, partner, None)
+        values['plan'] = plan
+        template = self._get_template('/p/plan', values)
+
+        return request.render(template, values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)
     def page_system_link_privacy_policy(self):
@@ -996,7 +1024,6 @@ class PayloxSystemController(PayloxController):
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
-        #request.uid = 62
         if request.env.user.has_group('base.group_public'):
             raise werkzeug.exceptions.NotFound()
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import uuid
 import requests
 
 from odoo import models, fields, api, _
@@ -63,6 +64,7 @@ class PaymentPlan(models.Model):
                 plan.message = message
 
     name = fields.Char(compute='_compute_name')
+    uid = fields.Char('Unique ID', readonly=True, copy=False, default=lambda self: str(uuid.uuid4()))
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
     partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True)
     token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True, string='Credit Card')
@@ -257,6 +259,14 @@ class PaymentPlan(models.Model):
             action = plan.payment()
             if action:
                 return action
+
+    def action_payment_page(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': '%s/p/plan/%s' % (self.get_base_url(), self.uid)
+        }
 
     def action_approve(self):
         for plan in self:
