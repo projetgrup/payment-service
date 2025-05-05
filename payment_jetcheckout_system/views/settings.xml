@@ -377,6 +377,21 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="auth_unauthorized_action" string="Reaction to Unauthorized User"/>
+                                    <div class="text-muted">
+                                        Select which action will be triggered upon signing in as an unauthorized user
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <label for="auth_unauthorized_action" class="col-lg-4 o_light_label" string="Action"/>
+                                            <field name="auth_unauthorized_action" widget="radio"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_page_init_redirect_extra"/>
                                 </div>
@@ -474,6 +489,37 @@
                     </div>
                     <div class="app_settings_block" data-string="Security" string="Security" data-key="test_exceptions">
                         <h2>Security</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="sec_audit_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="sec_audit_ok" string="Enable Audit Logs"/>
+                                    <div class="text-muted">
+                                        Record user activities for specified actions
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('sec_audit_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="sec_audit_action_ids" string="Actions" class="col-lg-4 o_light_label"/>
+                                            <field name="sec_audit_action_ids" widget="many2many_checkboxes" class="o_syncops_checkboxes_horizontal" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="sec_audit_model_ids" string="Models" class="col-lg-4 o_light_label"/>
+                                            <field name="sec_audit_model_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" domain="[('model', 'in', ('payment.transaction', 'res.partner', 'sale.order'))]"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="sec_audit_webservice_ok" string="Webservice" class="col-lg-4 font-weight-bold"/>
+                                            <field name="sec_audit_webservice_ok" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16" attrs="{'invisible': [('sec_audit_webservice_ok', '=', False)]}">
+                                            <label for="sec_audit_webservice_filter" string="Filter" class="col-lg-4 o_light_label"/>
+                                            <field name="sec_audit_webservice_filter" widget="domain" options="{'model': 'security.audit', 'in_dialog': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">

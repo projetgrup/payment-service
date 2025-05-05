@@ -15,6 +15,9 @@
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="string">Supplier</attribute>
         </xpath>
+        <xpath expr='//tree' position="inside">
+            <button name="action_redirect_payment_page" type="object" string="Payment Page" icon="fa-credit-card"/>
+        </xpath>
     </field>
     </record>
 

@@ -63,7 +63,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _signup_create_user(self, values):
-        if self.env.context.get('oauth_signup'):
+        if self.env.context.get('oauth_signup') and self.env.company.auth_unauthorized_action == 'create':
             return self._create_user_from_template(values)
         return super()._signup_create_user(values)
 
