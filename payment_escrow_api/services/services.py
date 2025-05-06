@@ -397,6 +397,8 @@ class EscrowAPIService(Component):
                 values.update({'image_1920': ad.images and ad.images[0] or False})
             if getattr(ad, 'owner', None):
                 values_owner = {}
+                if _ad.owner_id.paylox_escrow_type != 'owner':
+                    values_owner.update({'paylox_escrow_type': 'owner'})
                 if getattr(ad.owner, 'name', None) and _ad.owner_id.name != ad.owner.name:
                     values_owner.update({'name': ad.owner.name})
                 if getattr(ad.owner, 'vat', None) and _ad.owner_id.vat != ad.owner.vat:
@@ -412,8 +414,8 @@ class EscrowAPIService(Component):
                     if not country:
                         raise MissingError(_('Country %s cannot be found') % ad.owner.country)
                     values_owner.update({'country_id': country.id})
-                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.name != ad.owner.state:
-                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
+                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.code != ad.owner.state:
+                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.owner_id.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
                     if not state:
                         raise MissingError(_('State %s cannot be found') % ad.owner.country)
                     values_owner.update({'state_id': state.id})
@@ -425,8 +427,8 @@ class EscrowAPIService(Component):
                     values_owner.update({'zip': ad.owner.zip or False})
                 if hasattr(ad.owner, 'banks'):
                     values_banks = []
-                    for bank in ad.banks:
-                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner.id)])
+                    for bank in ad.owner.banks:
+                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner_id.id)])
                         iban = sanitize_account_number(bank.iban)
                         _bank = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
                         if _bank:

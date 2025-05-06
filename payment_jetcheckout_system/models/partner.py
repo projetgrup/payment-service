@@ -126,8 +126,9 @@ class PartnerBank(models.Model):
                     method = 'put'
 
                 vat = self.partner_id.vat and re.sub(r'\D', '', self.partner_id.vat) or ''
-                mobile = self.partner_id.mobile and re.sub(r'\D', '', self.partner_id.mobile)[-10:] or ''
-             
+                phone = self.partner_id.mobile or self.partner_id.phone
+                mobile = phone and re.sub(r'\D', '', phone)[-10:] or ''
+
                 if len(vat) > 10:
                     if self.partner_id.is_company:
                         partner_type = "PersonalCompany"
@@ -147,7 +148,7 @@ class PartnerBank(models.Model):
                     if self.partner_id.is_company:
                         partner_type = "Company"
                         contact_name = self.acc_holder_name
-                        contact_surname = ""
+                        contact_surname = self.acc_holder_name
                         #if self.partner_id.child_ids:
                         #    contact_names = self.partner_id.child_ids[0].name.split(' ')
                         #    contact_surname = contact_names.pop()
