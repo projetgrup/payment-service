@@ -101,6 +101,10 @@ class PaymentTransaction(models.Model):
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_payment_net = fields.Monetary('Amount Net', compute='_compute_amounts', readonly=True, copy=False, store=True)
 
+    jetcheckout_approval_ok = fields.Boolean('Approval Required', readonly=True, copy=False)
+    jetcheckout_approval_state = fields.Selection([('+', 'Approved'), ('-', 'Rejected')], readonly=True, copy=False)
+    jetcheckout_approval_state_message = fields.Text('Approval Message', readonly=True, copy=False)
+
     jetcheckout_service_code = fields.Char('Paylox Service Code', readonly=True, copy=False)
     jetcheckout_service_message = fields.Char('Paylox Service Message', readonly=True, copy=False)
     jetcheckout_service_suggestion = fields.Char('Paylox Service Suggestion', readonly=True, copy=False)
@@ -412,6 +416,74 @@ class PaymentTransaction(models.Model):
     def action_payment(self):
         for tx in self:
             tx.paylox_payment()
+
+    def action_approve(self):
+        for tx in self:
+            tx._action_approve()
+
+    def _action_approve(self):
+        if self.jetcheckout_approval_state:
+            return
+
+        if self.state != 'done':
+            self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
+            return
+
+        url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
+        data = {
+            "application_key": self.acquirer_id.jetcheckout_api_key,
+            "transaction_id": self.jetcheckout_transaction_id,
+            "language": "tr",
+        }
+
+        response = requests.post(url, data=json.dumps(data))
+        try:
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    self.jetcheckout_approval_state = '+'
+                    self.jetcheckout_approval_state_message = _('Approved')
+                else:
+                    self.jetcheckout_approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+            else:
+                self.jetcheckout_approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+            self.env.cr.commit()
+        except:
+            self.env.cr.rollback()
+
+    def action_disapprove(self):
+        for tx in self:
+            tx._action_disapprove()
+
+    def _action_disapprove(self):
+        if self.jetcheckout_approval_state:
+            return
+
+        if self.state != 'done':
+            self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
+            return
+
+        url = '%s/api/v1/payment/submerchant/disapprove' % self.acquirer_id._get_paylox_api_url()
+        data = {
+            "application_key": self.acquirer_id.jetcheckout_api_key,
+            "transaction_id": self.jetcheckout_transaction_id,
+            "language": "tr",
+        }
+
+        response = requests.post(url, data=json.dumps(data))
+        try:
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    self.jetcheckout_approval_state = '-'
+                    self.jetcheckout_approval_state_message = _('Disapproved')
+                else:
+                    self.jetcheckout_approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+            else:
+                self.jetcheckout_approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+            self.env.cr.commit()
+        except:
+            self.env.cr.rollback()
 
     def paylox_payment(self):
         self.ensure_one()

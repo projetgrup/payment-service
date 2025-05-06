@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from odoo import _
 from odoo.http import route, request
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
+from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
 
 class CustomerPortal(portal.CustomerPortal):
+
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kwargs):
         system = kwargs.get('system', request.env.company.system)
@@ -18,61 +20,36 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     def _get_tx_values(self, **kwargs):
+        return {
+            'paylox_description': kwargs.get('description', False),
+            'jetcheckout_payment_ok': kwargs.get('payment_ok', True),
+        }
+
+    def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
-            items = kwargs.get('items', [])
-            ids = [i for i, null in items]
-            item = {
-                item.id: {
-                    'ref': item.ref,
-                    'date': item.date,
-                    'desc': item.description,
-                    'advance': item.advance,
-                } for item in request.env['payment.item'].sudo().browse(ids)
-            }
-            res['paylox_transaction_item_ids'] = [(0, 0, {
-                'item_id': id,
-                'amount': amount,
-                'ref': item[id]['ref'],
-                'date': item[id]['date'],
-                'desc': item[id]['desc'],
-                'advance': item[id]['advance'],
-            }) for id, amount in items]
+            res.update({
+                'jetcheckout_approval_ok': True,
+            })
         return res
 
-    def _prepare_system(self, company, system, partner, transaction, options={}):
-        options['no_compute_payment_tags'] = True
-        res = super()._prepare_system(company, system, partner, transaction, options=options)
-        show_invoices = False
-        if system == 'escrow':
-            show_invoices = self._connector_can_show_partner_invoice()
-            try:
-                with request.env.cr.savepoint():
-                    wizard = request.env['syncops.sync.wizard'].sudo().create({
-                        'type': 'item',
-                        'system': 'escrow',
-                        'type_item_subtype': company.syncops_sync_item_subtype,
-                    })
-                    wizard.with_context(partner=partner).confirm()
-                    wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
-            except:
-                pass
+    def _get_data_values(self, data, transaction, **kwargs):
+        values = super()._get_data_values(data, transaction, **kwargs)
+        if transaction and transaction.system == 'escrow':
+            partner = transaction.paylox_product_ids[0]['product_id']['owner_id']
+            reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
+            if not reference:
+                raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
 
-        payments, payment_tags = partner._get_payments()
-        currency = payments.mapped('currency_id') or company.currency_id
-        if len(currency) > 1:
-            raise UserError(_('Payment items must share one common currency'))
+            if transaction.company_id.payment_page_token_wo_commission:
+                amount = float_round(transaction.amount * (1 - (transaction.jetcheckout_commission_rate / 100)), 4)
+            else:
+                amount = float(kwargs['amount'])
 
-        campaign = res['campaign']
-        if payment_tags and payment_tags[0].campaign_id:
-            campaign = payment_tags[0].campaign_id.name
-
-        res.update({
-            'currency': currency,
-            'campaign': campaign,
-            'payments': payments,
-            'payment_tags': payment_tags,
-            'show_invoices': show_invoices,
-        })
-        return res
+            values.update({
+                'is_submerchant_payment': True,
+                'submerchant_external_id': reference,
+                'submerchant_price': amount,
+            })
+        return values

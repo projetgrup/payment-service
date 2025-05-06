@@ -108,9 +108,15 @@ class PaymentItem(models.Model):
     def action_process_connector(self):
         self.ensure_one()
         if self.paid and self.jetcheckout_connector_ok and self.jetcheckout_connector_state:
+            tx = self.transaction_ids and self.transaction_ids[0] or False
             if self.syncops_ok:
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params={
                     'reference': self.description or '',
+                    'amount': tx and tx.amount or 0.0,
+                    'amount_commission_cost': tx and tx.jetcheckout_commission_cost or 0.0,
+                    'transaction_id': tx and tx.jetcheckout_transaction_id or '',
+                    'order_id': tx and tx.jetcheckout_order_id or '',
+                    'card_number': tx and tx.jetcheckout_card_number or '',
                 }, company=self.company_id, message=True)
 
                 if result is None:
@@ -130,7 +136,6 @@ class PaymentItem(models.Model):
                 self.write(values)
                 self.flush()
             else:
-                tx = self.transaction_ids and self.transaction_ids[0] or False
                 line = tx and tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=self.create_uid)
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_collection', reference=str(self.id), params={
                     'id': self.id,

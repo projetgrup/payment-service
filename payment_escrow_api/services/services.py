@@ -33,7 +33,7 @@ class EscrowAPIService(Component):
         <h1>Description</h1>
         <p>This API helps you create ads, payments and query their statuses with a special key which is privately generated for you. This service uses <em>Basic Authentication</em>.</p>
         <p>Firstly, use "Prepare Payment" method to initialize a payment request. Then, if everything goes well, server will send you a hash string.</p>
-        <p>Now, you can navigate to <code>/payment?=&lt;hash&gt;</code> address to get payment form.</p>
+        <p>Now, you can navigate to <code>url</code> address to get payment form.</p>
         <p>When payment is done, its result will send to the address which you have specified when initializing the payment.</p>
         <p>Afterwards, you can use "Payment Operation" methods for cancelling, refunding, expiring or deleting the payment.</p>
     """)
@@ -149,6 +149,19 @@ class EscrowAPIService(Component):
         return dict(**tx, **RESPONSE[200])
 
     @restapi.method(
+        [(["/payment/postauth"], "PUT")],
+        input_param=Datamodel("escrow.request.payment.postauth"),
+        output_param=Datamodel("escrow.response.payment.postauth"),
+        auth="public",
+        tags=[_lt("Payment Operations")],
+        name=_lt("Postauth Payment")
+    )
+    def payment_postauth(self, params):
+        token = auth(self.env)
+        tx = self._payment_postauth(token, params)
+        return dict(**tx, **RESPONSE[200])
+
+    @restapi.method(
         [(["/payment/cancel"], "PUT")],
         input_param=Datamodel("escrow.request.payment.cancel"),
         output_param=Datamodel("escrow.response.payment.cancel"),
@@ -204,93 +217,99 @@ class EscrowAPIService(Component):
     # PRIVATE METHODS
     #
 
-    def _ads_create_owner(self, company, owner):
-        if hasattr(owner, 'country'):
-            country = self.env['res.country'].sudo().search([('code', '=', owner.country)], limit=1)
+    def _get_partner(self, type, company, values):
+        if hasattr(values, 'country'):
+            country = self.env['res.country'].sudo().search([('code', '=', values.country)], limit=1)
             if not country:
-                raise MissingError(_('Country %s cannot be found') % owner.country)
+                raise MissingError(_('Country %s cannot be found') % values.country)
         else:
             country = False
 
-        if country and hasattr(owner, 'state'):
-            state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', owner.state)], limit=1)
+        if country and hasattr(values, 'state'):
+            state = self.env['res.country.state'].sudo().search([('country_id', '=', country.id), ('code', '=', values.state)], limit=1)
             if not state:
-                raise MissingError(_('State %s cannot be found') % owner.state)
+                raise MissingError(_('State %s cannot be found') % values.state)
         else:
             state = False
 
-        partner = self.env['res.partner'].sudo().search([('vat', '=', owner.vat), ('company_id', '=', company.id)], limit=1)
+        partner = self.env['res.partner'].sudo().search([('vat', '=', values.vat), ('company_id', '=', company.id)], limit=1)
         if partner:
-            values = {}
-            if partner.name != owner.name:
-                values.update({'name': owner.name})
-            if partner.paylox_tax_office != owner.taxOffice:
-                values.update({'paylox_tax_office': owner.taxOffice})
-            if partner.email != owner.email:
-                values.update({'email': owner.email})
-            if partner.phone != owner.phone:
-                values.update({'phone': owner.phone})
+            value = {}
+            if partner.name != values.name:
+                value.update({'name': values.name})
+            if partner.paylox_tax_office != values.taxOffice:
+                value.update({'paylox_tax_office': values.taxOffice})
+            if partner.email != values.email:
+                value.update({'email': values.email})
+            if partner.phone != values.phone:
+                value.update({'phone': values.phone})
             if country and partner.country_id.id != country.id:
-                values.update({'country_id': country.id})
+                value.update({'country_id': country.id})
             if state and partner.state_id.id != state.id:
-                values.update({'state_id': state.id})
-            if getattr(owner, 'city', None) and partner.city != owner.city:
-                values.update({'city': owner.city})
-            if getattr(owner, 'address', None) and partner.street != owner.address:
-                values.update({'street': owner.address})
-            if getattr(owner, 'zip', None) and partner.zip != owner.zip:
-                values.update({'zip': owner.zip})
+                value.update({'state_id': state.id})
+            if getattr(values, 'city', None) and partner.city != values.city:
+                value.update({'city': values.city})
+            if getattr(values, 'address', None) and partner.street != values.address:
+                value.update({'street': values.address})
+            if getattr(values, 'zip', None) and partner.zip != values.zip:
+                value.update({'zip': values.zip})
 
-            banks_values = []
-            for bank in owner.banks:
-                banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', partner.id)])
-                iban = sanitize_account_number(bank.iban)
-                record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
-                if record:
-                    bank_values = {}
-                    if record.acc_holder_name != bank.name:
-                        bank_values.update({'acc_holder_name': bank.name})
-                    if record.api_merchant != bank.merchant:
-                        bank_values.update({'api_merchant': bank.merchant})
-                    if bank_values:
-                        banks_values.append((1, record.id, bank_values))
-                else:
-                    banks_values.append((0, 0, {
-                        'acc_number': bank.iban,
-                        'acc_holder_name': bank.name,
-                        'api_merchant': bank.merchant,
-                    }))
-            if banks_values:
-                values.update({'bank_ids': banks_values})
-            if values:
-                partner.write(values)
+            if type == 'owner':
+                bank_values = []
+                for bank in values.banks:
+                    banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', partner.id)])
+                    iban = sanitize_account_number(bank.iban)
+                    record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
+                    if record:
+                        bank_value = {}
+                        if record.acc_holder_name != bank.name:
+                            bank_value.update({'acc_holder_name': bank.name})
+                        if record.api_merchant != bank.merchant:
+                            bank_value.update({'api_merchant': bank.merchant})
+                        if bank_value:
+                            bank_values.append((1, record.id, bank_value))
+                    else:
+                        bank_values.append((0, 0, {
+                            'acc_number': bank.iban,
+                            'acc_holder_name': bank.name,
+                            'api_merchant': bank.merchant,
+                        }))
+                if bank_values:
+                    value.update({'bank_ids': bank_values})
+            if value:
+                partner.write(value)
 
         else:
-            partner = partner.create({
-                'name': owner.name,
-                'vat': owner.vat,
-                'paylox_tax_office': owner.taxOffice,
-                'email': owner.email,
-                'phone': owner.phone,
+            value = {
+                'name': values.name,
+                'vat': values.vat,
+                'paylox_tax_office': values.taxOffice,
+                'email': values.email,
+                'phone': values.phone,
                 'country_id': country and country.id,
                 'company_id': company.id,
                 'system': company.system,
                 'state_id': state and state.id,
-                'city': getattr(owner, 'city', False),
-                'street': getattr(owner, 'address', False),
-                'zip': getattr(owner, 'zip', False),
-                'bank_ids': [(0, 0, {
-                    'acc_number': bank.iban,
-                    'acc_holder_name': bank.name,
-                    'api_merchant': bank.merchant,
-                }) for bank in owner.banks],
-            })
+                'city': getattr(values, 'city', False),
+                'street': getattr(values, 'address', False),
+                'zip': getattr(values, 'zip', False),
+                'paylox_escrow_type': type,
+            }
+            if type == 'owner':
+                value.update({
+                    'bank_ids': [(0, 0, {
+                        'acc_number': bank.iban,
+                        'acc_holder_name': bank.name,
+                        'api_merchant': bank.merchant,
+                    }) for bank in values.banks],
+                })
+            partner = partner.create(value)
         return partner
 
     def _ads_create(self, token, params):
         values = []
         for ad in params.ads:
-            owner = self._ads_create_owner(token.company_id, ad.owner)
+            owner = self._get_partner('owner', token.company_id, ad.owner)
             value = {
                 'name': ad.name,
                 'default_code': ad.reference,
@@ -450,9 +469,9 @@ class EscrowAPIService(Component):
         ads = []
         for ad in params.ads:
             _ad = self.env['product.product'].sudo() \
-                    .with_company(token.company_id) \
-                    .with_context(system=token.company_id.system) \
-                    .search([('uid', '=', str(ad.id))], limit=1)
+                  .with_company(token.company_id) \
+                  .with_context(system=token.company_id.system) \
+                  .search([('uid', '=', str(ad.id))], limit=1)
             if not _ad:
                 raise MissingError(_('Ad %s cannot be found') % str(ad.id))
             price = getattr(ad, 'price', _ad.price)
@@ -463,24 +482,39 @@ class EscrowAPIService(Component):
             }))
             amount += price
 
-        company = token.company_id
         uid = str(uuid.uuid4())
-        hash = base64.b64encode(hashlib.sha256(''.join([uid, params.id]).encode('utf-8')).digest()).decode('utf-8')
+        company = token.company_id
+        customer = self._get_partner('customer', token.company_id, params.customer)
+        hash = base64.b64encode(hashlib.sha256(''.join([uid, params.reference]).encode('utf-8')).digest()).decode('utf-8')
         acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
-        self.env['payment.transaction'].sudo().create({
+        value = {
             'state': 'draft',
-            'amount': getattr(params, 'amount', 0.0),
             'company_id': company.id,
+            'partner_id': customer.id,
             'acquirer_id': acquirer.id,
-            'partner_id': company.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_payment_type': 'virtual_pos',
             'jetcheckout_order_id': uid,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
-            'jetcheckout_api_id': params.id,
+            'jetcheckout_api_id': params.reference,
             'jetcheckout_api_method': 'card',
+            'jetcheckout_api_card_redirect_url': params.redirectUrl,
+            'jetcheckout_api_card_result_url': 'https://%s/payment/card/result' % request.httprequest.host,
             'paylox_product_ids': ads,
             'amount': amount,
-        })
-        return dict(id=uid, url='https://%s/payment?=%s' % (request.httprequest.host, quote(hash)))
+        }
+        if hasattr(params, 'amount'):
+            value.update({'amount': params.amount})
+        if hasattr(params, 'preauth'):
+            value.update({'jetcheckout_preauth': params.preauth})
+        tx = self.env['payment.transaction'].sudo().create(value)
+        return dict(id=uid, url='https://%s/tx/%s' % (request.httprequest.host, tx.jetcheckout_order_id))
+
+    def _payment_postauth(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+
+        tx.with_context(amount=params.amount)._send_capture_request()
+        return dict()
