@@ -14,6 +14,11 @@
                 </div>
             </div>
             <div class="px-lg-5 mx-xl-auto mw-xl-128">
+                <t t-call="payment_jetcheckout_system.payment_state">
+                    <t t-set="classes" t-value="'mx-0'"/>
+                    <t t-set="hide_button_payment" t-value="True"/>
+                    <t t-set="hide_report_iframe" t-value="True"/>
+                </t>
                 <div class="row mx-0 my-4 card border shadow p-4">
                     <div class="text-center text-primary h5 font-weight-bold position-relative">
                         <a t-if="not tx_pending and back_url" class="btn card d-block ml-3 position-absolute shadow-sm text-600" t-att-href="back_url"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
@@ -26,7 +31,7 @@
                                     <i class="fa fa-info"/>
                                 </div>
                                 <div>
-                                    <strong class="text-primary font-weight-bold">Partner</strong>
+                                    <strong class="text-primary font-weight-bold">Customer</strong>
                                     <p class="mr-5 pr-5">
                                         <t t-esc="tx.partner_name"/><br/>
                                         <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
@@ -100,7 +105,7 @@
                             </table>
                         </div>
                     </div>
-                    <div t-attf-class="row mx-0 #{classname}">
+                    <div t-if="tx.state in ('draft', 'pending', 'error')" t-attf-class="row mx-0 #{classname}">
                         <t t-call="payment_jetcheckout.s2s">
                             <t t-set="amount" t-value="tx.amount"/>
                             <t t-set="no_border" t-value="True"/>

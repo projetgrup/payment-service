@@ -113,7 +113,7 @@
     </template>
 
     <template id="payment_state" name="Payment System Page Result">
-        <t t-if="tx">
+        <t t-if="tx and tx.state != 'draft'">
             <div t-if="tx.state == 'error'" t-attf-class="row alert alert-danger text-center justify-content-center flex-column mt-4 #{classes}">
                 <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
                 <t t-if="tx.state_message">

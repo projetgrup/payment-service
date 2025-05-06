@@ -199,7 +199,7 @@ class PaymentSystemProductController(SystemController):
             path += '?' + query.decode('utf-8')
         return werkzeug.utils.redirect(path)
 
-    def _prepare_system(self,  company, system, partner, transaction, options={}):
+    def _prepare_system(self, company, system, partner, transaction, options={}):
         res = super()._prepare_system(company, system, partner, transaction, options=options)
         if company.system_product:
             products = request.env['product.template'].sudo().with_context(system=system, include_margin=True).search([

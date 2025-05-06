@@ -48,7 +48,8 @@ class PayloxSystemApiController(Controller):
                     }
                 })
                 return template.view_id.id
-            if path == '/payment/card':
-                return 'payment_jetcheckout_api.page_card'
-            return 'payment_jetcheckout_api.payment_page'
+            if path.startswith('/payment'):
+                if path.startswith('/payment/card'):
+                    return 'payment_jetcheckout_api.page_card'
+                return 'payment_jetcheckout_api.payment_page'
         return super()._get_template(path, values)

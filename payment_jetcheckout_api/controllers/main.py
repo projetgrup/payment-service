@@ -47,17 +47,19 @@ class PayloxApiController(Controller):
         return hash
 
     def _get_transaction(self):
-        hash = self._get('hash')
-        if not hash:
-            return False
-
-        tx = request.env['payment.transaction'].sudo().search([
-            ('jetcheckout_api_hash', '!=', False),
-            ('jetcheckout_api_hash', '=', hash),
-            ('state', 'in', ('draft', 'pending', 'error'))
-        ], limit=1)
+        tx = super()._get_transaction()
         if not tx:
-            raise ValidationError(_('An error occured. Please restart your payment transaction.'))
+            hash = self._get('hash')
+            if not hash:
+                return False
+
+            tx = request.env['payment.transaction'].sudo().search([
+                ('jetcheckout_api_hash', '!=', False),
+                ('jetcheckout_api_hash', '=', hash),
+                ('state', 'in', ('draft', 'pending', 'error'))
+            ], limit=1)
+            if not tx:
+                raise ValidationError(_('An error occured. Please restart your payment transaction.'))
         return tx
 
     def _prepare(self, transaction=None, partner=None, **kwargs):
@@ -74,15 +76,16 @@ class PayloxApiController(Controller):
             return url, tx, status
 
         if not status and tx.jetcheckout_api_hash:
-            status = True
             self._del('hash')
 
             redirect_url = getattr(tx, 'jetcheckout_api_%s_redirect_url' % tx.jetcheckout_api_method, None)
             if redirect_url:
+                status = True
                 url = '%s/%s' % (redirect_url, tx.jetcheckout_order_id)
             else:
                 result_url = getattr(tx, 'jetcheckout_api_%s_result_url' % tx.jetcheckout_api_method, None)
                 if result_url:
+                    status = True
                     url = result_url
 
         return url, tx, status

@@ -24,7 +24,7 @@ PHONE_PATTERN = r'^[0-9]{10}$'
 def normalize(value):
     if value:
         table = str.maketrans('ğĞıİöÖüÜşŞçÇ', 'gGiIoOuUsScC')
-        return re.sub(r'[^a-zA-Z0-9]', '_', value.translate(table))
+        return re.sub(r'[^a-zA-Z0-9]', '_', value.translate(table)).upper()
     return value
 
 
