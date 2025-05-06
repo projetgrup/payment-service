@@ -1118,7 +1118,16 @@ class PayloxController(http.Controller):
             raise Exception(_('An error occured'))
 
     def _get_transaction(self):
-        return False
+        token = self._get('token')
+        if not token:
+            return False
+
+        tx = request.env['payment.transaction'].sudo().search([
+            ('jetcheckout_order_id', '!=', False),
+            ('jetcheckout_order_id', '=', token),
+            ('state', 'in', ('draft', 'pending', 'error'))
+        ], limit=1)
+        return tx or False
 
     def _log_state(self):
         return request.env['payment.paylox.log'].get_state()

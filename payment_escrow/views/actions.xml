@@ -24,8 +24,8 @@
     <field name="name">Customers</field>
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
-    <field name="domain">[('system', '=', 'escrow'), ('partner_share', '!=', False)]</field>
-    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'customer', 'default_system': 'escrow', 'default_escrow_type': 'customer', 'default_is_company': False}</field>
+    <field name="domain">[('system', '=', 'escrow'), ('paylox_escrow_type', '=', 'customer'), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'customer', 'default_system': 'escrow', 'default_paylox_escrow_type': 'customer', 'default_is_company': False}</field>
     <field name="search_view_id" ref="search_customer"/>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
@@ -44,8 +44,8 @@
     <field name="name">Owners</field>
     <field name="res_model">res.partner</field>
     <field name="view_mode">tree,kanban,form,activity</field>
-    <field name="domain">[('system', '=', 'escrow'), ('partner_share', '!=', False)]</field>
-    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'owner', 'default_system': 'escrow', 'default_escrow_type': 'owner', 'default_is_company': False}</field>
+    <field name="domain">[('system', '=', 'escrow'), ('paylox_escrow_type', '=', 'owner'), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'owner', 'default_system': 'escrow', 'default_paylox_escrow_type': 'owner', 'default_is_company': False}</field>
     <field name="search_view_id" ref="search_owner"/>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">

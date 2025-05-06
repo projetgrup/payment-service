@@ -28,8 +28,11 @@ class Http(models.AbstractModel):
             request.env.cr.execute(query)
 
             context = dict(request.context)
-            context['system'], context['subsystem'] = request.cr.fetchone()
-            request.context = frozendict(context)
+            try:
+                context['system'], context['subsystem'] = request.cr.fetchone()
+                request.context = frozendict(context)
+            except:
+                pass
 
     def webclient_rendering_context(self):
         return {

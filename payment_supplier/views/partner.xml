@@ -77,6 +77,9 @@
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="ref"/>
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
+            <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '!=', False)]}"/>
+            <field name="campaign_table" invisible="1"/>
+            <field name="acquirer_ids" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>

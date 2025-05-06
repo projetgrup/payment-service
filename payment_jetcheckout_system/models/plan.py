@@ -65,9 +65,9 @@ class PaymentPlan(models.Model):
 
     name = fields.Char(compute='_compute_name')
     uid = fields.Char('Unique ID', readonly=True, copy=False, default=lambda self: str(uuid.uuid4()))
-    item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True)
-    partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True)
-    token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True, string='Credit Card')
+    item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True, domain='[("company_id", "=", company_id)]')
+    partner_id = fields.Many2one('res.partner', ondelete='restrict', readonly=True, domain='[("company_id", "=", company_id)]')
+    token_id = fields.Many2one('payment.token', ondelete='restrict', readonly=True, string='Credit Card', domain='[("company_id", "=", company_id)]')
     installment_id = fields.Many2one('payment.acquirer.jetcheckout.installment', readonly=True, string='Installment', default=lambda self: self.env.ref('payment_jetcheckout.installment_1'))
     installment_count = fields.Integer(related='installment_id.count', store=True)
     amount = fields.Monetary(readonly=True)

@@ -205,35 +205,41 @@ class Audit(models.Model):
 
         def make_write():
             def write(self, vals, **kw):
+                keys = []
                 values = {}
-                self.env.cr.execute('''
-                    SELECT id,%s
-                    FROM %s
-                    WHERE id IN (%s)
-                ''' % (','.join(vals.keys()), self._table, ','.join(map(str, self.ids))))
-                res = self.env.cr.dictfetchall()
-                for rec in res:
-                    values[rec['id']] = rec
+                for key in vals.keys():
+                    if not self._fields[key].relational:
+                        keys.append(key)
+                if keys:
+                    self.env.cr.execute('''
+                        SELECT id,%s
+                        FROM %s
+                        WHERE id IN (%s)
+                    ''' % (','.join(keys), self._table, ','.join(map(str, self.ids))))
+                    res = self.env.cr.dictfetchall()
+                    for rec in res:
+                        values[rec['id']] = rec
 
                 write.origin(self, vals, **kw)
 
-                for record in self:
-                    tracking = []
-                    if record.id in values:
-                        value = values[record['id']]
-                        for f, v in value.items():
-                            if f == 'id':
-                                continue
-                            field = self.env['ir.model.fields'].sudo()._get(self._name, f)
-                            if not field:
-                                continue
-                            if v != vals[f]:
-                                tracking.append((field.field_description, v, vals[f]))
-                    if tracking:
-                        tracking = json.dumps(tracking, default=str)
-                    else:
-                        tracking = None
-                    log(self.env.cr, uid=self.env.uid, action='write', record=record, tracking=tracking)
+                if values:
+                    for record in self:
+                        tracking = []
+                        if record.id in values:
+                            value = values[record['id']]
+                            for f, v in value.items():
+                                if f == 'id':
+                                    continue
+                                field = self.env['ir.model.fields'].sudo()._get(self._name, f)
+                                if not field:
+                                    continue
+                                if v != vals[f]:
+                                    tracking.append((field.field_description, v, vals[f]))
+                        if tracking:
+                            tracking = json.dumps(tracking, default=str)
+                        else:
+                            tracking = None
+                        log(self.env.cr, uid=self.env.uid, action='write', record=record, tracking=tracking)
                 return True
             return write
 
