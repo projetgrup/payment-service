@@ -520,3 +520,56 @@ class EscrowAPIService(Component):
 
         tx.with_context(amount=params.amount)._send_capture_request()
         return dict()
+
+    def _payment_result(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+    
+        return {
+            'transaction': {
+                'state': tx.state,
+                'provider': tx.acquirer_id.provider,
+                'virtual_pos_name': tx.jetcheckout_vpos_name or '',
+                'order_id': tx.jetcheckout_order_id or '',
+                'transaction_id': tx.jetcheckout_transaction_id or '',
+                'message': tx.state_message or '',
+                'service_code': tx.jetcheckout_service_code or '',
+                'service_message': tx.jetcheckout_service_message or '',
+                'service_suggestion': tx.jetcheckout_service_suggestion or '',
+                'partner': {
+                    'name': tx.partner_id.name or '',
+                    'ip_address': tx.jetcheckout_ip_address or '',
+                },
+                'card': {
+                    'name': tx.jetcheckout_card_name or '',
+                    'number': tx.jetcheckout_card_number or '',
+                    'type': tx.jetcheckout_card_type or '',
+                    'program': tx.jetcheckout_card_program or '',
+                    'family': tx.jetcheckout_card_family or '',
+                },
+                'credit': {
+                    'bank': tx.jetcheckout_payment_type_credit_bank_code or '',
+                },
+                'amounts': {
+                    'amount': tx.amount,
+                    'raw': tx.jetcheckout_payment_amount,
+                    'fees': tx.fees,
+                    'installment': {
+                        'amount': tx.jetcheckout_installment_amount,
+                        'count': tx.jetcheckout_installment_count,
+                        'description': tx.jetcheckout_installment_description,
+                    },
+                    'commission': {
+                        'cost': {
+                            'rate': tx.jetcheckout_commission_rate,
+                            'amount': tx.jetcheckout_commission_amount,
+                        },
+                        'customer': {
+                            'rate': tx.jetcheckout_customer_rate,
+                            'amount': tx.jetcheckout_customer_amount,
+                        }
+                    },
+                },
+            }
+        }
