@@ -232,7 +232,11 @@ class EscrowAPIService(Component):
         else:
             state = False
 
-        partner = self.env['res.partner'].sudo().search([('vat', '=', values.vat), ('company_id', '=', company.id)], limit=1)
+        partner = self.env['res.partner'].sudo().search([
+            ('vat', '=', values.vat),
+            ('company_id', '=', company.id)
+            ('paylox_escrow_type', '=', type),
+        ], limit=1)
         if partner:
             value = {}
             if partner.name != values.name:
