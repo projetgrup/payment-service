@@ -27,6 +27,7 @@ def log(cr, company=None, **values):
     except:
         return
 
+    company = company.sudo()
     names = company.sec_audit_model_ids.mapped('model')
     if 'record' in values:
         if isinstance(values['record'], models.Model):

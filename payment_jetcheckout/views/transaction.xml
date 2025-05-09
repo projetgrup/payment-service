@@ -5,8 +5,8 @@
     <field name="inherit_id" ref="payment.payment_transaction_form"/>
     <field name="arch" type="xml">
         <xpath expr="//header/field[@name='state']" position="before">
-            <button type="object" name="action_approve" string="Approve Transaction" attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', False)]}"/>
-            <button type="object" name="action_disapprove" string="Disapprove Transaction" attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', False)]}"/>
+            <button type="object" name="action_approve" string="Approve Transaction" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', False)]}"/>
+            <button type="object" name="action_disapprove" string="Disapprove Transaction" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', False)]}"/>
         </xpath>
         <xpath expr="//div[@name='button_box']" position="inside">
             <field name="is_paylox" invisible="1"/>
@@ -67,8 +67,8 @@
             </button>
         </xpath>
         <xpath expr="//div[@name='button_box']" position="after">
-            <widget name="web_ribbon" title="Approved" bg_color="bg-success" attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', '+')]}"/>
-            <widget name="web_ribbon" title="Disapproved" bg_color="bg-danger" attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', '-')]}"/>
+            <widget name="web_ribbon" title="Approved" bg_color="bg-success" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', '+')]}"/>
+            <widget name="web_ribbon" title="Disapproved" bg_color="bg-danger" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '!=', '-')]}"/>
         </xpath>
         <xpath expr="//field[@name='payment_id']" position="attributes">
             <attribute name="attrs">{'invisible': [('jetcheckout_payment_ok', '=', False)]}</attribute>
@@ -80,7 +80,7 @@
             <attribute name="colspan">2</attribute>
         </xpath>
         <xpath expr="//field[@name='state_message']" position="after">
-            <field name="jetcheckout_approval_state_message" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', '|', ('is_paylox', '=', False), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '=', '+')]}"/>
+            <field name="jetcheckout_approval_state_message" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '=', '+')]}"/>
             <separator string="Service Message" colspan="2"/>
             <div class="o_row" colspan="2">
                 <field name="jetcheckout_service_message" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_message', '=', False)]}"/>
