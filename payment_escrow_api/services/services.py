@@ -234,7 +234,7 @@ class EscrowAPIService(Component):
 
         partner = self.env['res.partner'].sudo().search([
             ('vat', '=', values.vat),
-            ('company_id', '=', company.id)
+            ('company_id', '=', company.id),
             ('paylox_escrow_type', '=', type),
         ], limit=1)
         if partner:
