@@ -232,7 +232,11 @@ class EscrowAPIService(Component):
         else:
             state = False
 
-        partner = self.env['res.partner'].sudo().search([('vat', '=', values.vat), ('company_id', '=', company.id)], limit=1)
+        partner = self.env['res.partner'].sudo().search([
+            ('vat', '=', values.vat),
+            ('company_id', '=', company.id)
+            ('paylox_escrow_type', '=', type),
+        ], limit=1)
         if partner:
             value = {}
             if partner.name != values.name:
@@ -397,6 +401,8 @@ class EscrowAPIService(Component):
                 values.update({'image_1920': ad.images and ad.images[0] or False})
             if getattr(ad, 'owner', None):
                 values_owner = {}
+                if _ad.owner_id.paylox_escrow_type != 'owner':
+                    values_owner.update({'paylox_escrow_type': 'owner'})
                 if getattr(ad.owner, 'name', None) and _ad.owner_id.name != ad.owner.name:
                     values_owner.update({'name': ad.owner.name})
                 if getattr(ad.owner, 'vat', None) and _ad.owner_id.vat != ad.owner.vat:
@@ -412,8 +418,8 @@ class EscrowAPIService(Component):
                     if not country:
                         raise MissingError(_('Country %s cannot be found') % ad.owner.country)
                     values_owner.update({'country_id': country.id})
-                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.name != ad.owner.state:
-                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
+                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.code != ad.owner.state:
+                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.owner_id.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
                     if not state:
                         raise MissingError(_('State %s cannot be found') % ad.owner.country)
                     values_owner.update({'state_id': state.id})
@@ -425,8 +431,8 @@ class EscrowAPIService(Component):
                     values_owner.update({'zip': ad.owner.zip or False})
                 if hasattr(ad.owner, 'banks'):
                     values_banks = []
-                    for bank in ad.banks:
-                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner.id)])
+                    for bank in ad.owner.banks:
+                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner_id.id)])
                         iban = sanitize_account_number(bank.iban)
                         _bank = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
                         if _bank:
@@ -518,3 +524,56 @@ class EscrowAPIService(Component):
 
         tx.with_context(amount=params.amount)._send_capture_request()
         return dict()
+
+    def _payment_result(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+    
+        return {
+            'transaction': {
+                'state': tx.state,
+                'provider': tx.acquirer_id.provider,
+                'virtual_pos_name': tx.jetcheckout_vpos_name or '',
+                'order_id': tx.jetcheckout_order_id or '',
+                'transaction_id': tx.jetcheckout_transaction_id or '',
+                'message': tx.state_message or '',
+                'service_code': tx.jetcheckout_service_code or '',
+                'service_message': tx.jetcheckout_service_message or '',
+                'service_suggestion': tx.jetcheckout_service_suggestion or '',
+                'partner': {
+                    'name': tx.partner_id.name or '',
+                    'ip_address': tx.jetcheckout_ip_address or '',
+                },
+                'card': {
+                    'name': tx.jetcheckout_card_name or '',
+                    'number': tx.jetcheckout_card_number or '',
+                    'type': tx.jetcheckout_card_type or '',
+                    'program': tx.jetcheckout_card_program or '',
+                    'family': tx.jetcheckout_card_family or '',
+                },
+                'credit': {
+                    'bank': tx.jetcheckout_payment_type_credit_bank_code or '',
+                },
+                'amounts': {
+                    'amount': tx.amount,
+                    'raw': tx.jetcheckout_payment_amount,
+                    'fees': tx.fees,
+                    'installment': {
+                        'amount': tx.jetcheckout_installment_amount,
+                        'count': tx.jetcheckout_installment_count,
+                        'description': tx.jetcheckout_installment_description,
+                    },
+                    'commission': {
+                        'cost': {
+                            'rate': tx.jetcheckout_commission_rate,
+                            'amount': tx.jetcheckout_commission_amount,
+                        },
+                        'customer': {
+                            'rate': tx.jetcheckout_customer_rate,
+                            'amount': tx.jetcheckout_customer_amount,
+                        }
+                    },
+                },
+            }
+        }
