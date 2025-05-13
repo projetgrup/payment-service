@@ -80,6 +80,7 @@ class ResUsers(models.Model):
         headers = {'Accept': 'application/json'}
         token_info = requests.post(auth_oauth_provider.validation_endpoint, headers=headers, data=data).json()
         if token_info.get('error'):
+            _logger.error('An error occured when getting token information from Azure OAuth request: %s' % json.dumps(token_info, default=str))
             raise Exception(token_info['error'])
 
         access_token = token_info.get('access_token')
@@ -114,7 +115,7 @@ class ResUsers(models.Model):
         else:
             data = self._auth_oauth_rpc(auth_oauth_provider.data_endpoint, access_token)
         validation = {'access_token': code, **data}
-        _logger.error('Azure OAuth login response: %s' % json.dumps(validation, default=str))
+        _logger.info('Azure OAuth login response: %s' % json.dumps(validation, default=str))
         return validation
 
     @api.model
