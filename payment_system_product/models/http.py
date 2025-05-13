@@ -27,6 +27,8 @@ class IrHttp(models.AbstractModel):
                 obj = self.env[model].browse(obj_id)
         if obj and 'payment_page_ok' in obj._fields and field in obj._fields and not obj._fields[field].groups and obj.sudo().payment_page_ok:
             self = self.sudo()
+        if id == 'False':
+            id = None
         return super(IrHttp, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,

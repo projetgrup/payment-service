@@ -114,6 +114,7 @@ class ResUsers(models.Model):
         else:
             data = self._auth_oauth_rpc(auth_oauth_provider.data_endpoint, access_token)
         validation = {'access_token': code, **data}
+        _logger.error('Azure OAuth login response: %s' % json.dumps(validation, default=str))
         return validation
 
     @api.model
@@ -128,12 +129,20 @@ class ResUsers(models.Model):
                     raise AccessDenied()
 
             validation.update({
+                'ref': str(validation.get('name', '')),
                 'name': ' '.join([
-                    str(validation.get('given_name')),
-                    str(validation.get('family_name'))
+                    str(validation.get('given_name', '')),
+                    str(validation.get('family_name', ''))
                 ]),
             })
         return super()._auth_oauth_signin(provider, validation, params)
+
+    @api.model
+    def _generate_signup_values(self, provider, validation, params):
+        values = super()._generate_signup_values(provider, validation, params)
+        if 'ref' in validation:
+            values.update({'oauth_ref': validation['ref']})
+        return values
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):

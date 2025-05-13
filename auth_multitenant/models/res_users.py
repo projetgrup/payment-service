@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, _
+from odoo import models, fields, api, _
 from odoo.tools.misc import ustr
 from odoo.addons.auth_signup.models.res_partner import SignupError
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
+
+    oauth_ref = fields.Char('OAuth Reference')
 
     def _default_groups(self):
         template_user = self.env.company.user_template_id
