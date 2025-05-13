@@ -596,7 +596,7 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_type': values.get('card_type') or self.jetcheckout_card_type,
             'jetcheckout_card_program': values.get('card_program') or self.jetcheckout_card_program,
             'jetcheckout_card_family': values.get('card_family') or self.jetcheckout_card_family,
-            'jetcheckout_card_number': self.jetcheckout_card_number or '%sXXXXXXXXXX' % (values.get('bin_code', '') or '',),
+            'jetcheckout_card_number': self.token_id and self.token_id.jetcheckout_number or self.jetcheckout_card_number or '%sXXXXXXXXXX' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         }
         if values.get('transaction_ref'):

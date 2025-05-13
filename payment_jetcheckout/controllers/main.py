@@ -1145,11 +1145,18 @@ class PayloxController(http.Controller):
                 return '/404', None, True
 
         url = kwargs.get('result_url', '/payment/card/result')
+
         corate = kwargs.get('expected_cost_rate', 0)
         try:
             corate = float(corate)
         except:
             corate = 0
+
+        amount = kwargs.get('amount', 0)
+        try:
+            amount = float(amount)
+        except:
+            amount = 0
 
         try:
             tx.with_context(domain=request.httprequest.referrer)._paylox_query({
@@ -1161,7 +1168,6 @@ class PayloxController(http.Controller):
                 'service_code': kwargs.get('service_resp_code', '') or False,
                 'service_message': kwargs.get('service_resp_message', '') or False,
                 'service_suggestion': kwargs.get('suggestion', '') or False,
-                'amount': kwargs.get('amount', 0) or 0.0,
                 'vpos_id': kwargs.get('virtual_pos_id', 0) or False,
                 'vpos_name': kwargs.get('virtual_pos_name', '') or False,
                 'vpos_code': kwargs.get('auth_code', '') or False,
@@ -1171,8 +1177,9 @@ class PayloxController(http.Controller):
                 'card_family': kwargs.get('card_family', '') or False,
                 'card_type': kwargs.get('card_type', '') or False,
                 'bin_code': kwargs.get('bin_code', '') or False,
-                'commission_amount': kwargs.get('commission_amount', 0) or 0.0,
+                'commission_amount': float_round(amount * corate / 100, 2),
                 'commission_rate': corate,
+                'amount': amount,
             })
         except Exception as e:
             _logger.error('An error occured when processing transaction %s: %s' % (tx.reference, e))
