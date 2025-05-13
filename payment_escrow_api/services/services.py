@@ -258,11 +258,13 @@ class EscrowAPIService(Component):
             if getattr(values, 'zip', None) and partner.zip != values.zip:
                 value.update({'zip': values.zip})
 
+            ibans = []
             if type == 'owner':
                 bank_values = []
                 for bank in values.banks:
                     banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', partner.id)])
                     iban = sanitize_account_number(bank.iban)
+                    ibans.append(bank.iban)
                     record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
                     if record:
                         bank_value = {}
@@ -282,6 +284,10 @@ class EscrowAPIService(Component):
                     value.update({'bank_ids': bank_values})
             if value:
                 partner.write(value)
+            for iban in ibans:
+                bank = fields.first(partner.bank_ids.filtered(lambda b: b.acc_number == iban))
+                if not bank.api_state:
+                    raise ValidationError(_('IBAN %s has been rejected by payment provider.\n%s') % (bank.acc_number, bank.api_message))
 
         else:
             value = {
@@ -299,15 +305,24 @@ class EscrowAPIService(Component):
                 'zip': getattr(values, 'zip', False),
                 'paylox_escrow_type': type,
             }
+
+            ibans = []
             if type == 'owner':
-                value.update({
-                    'bank_ids': [(0, 0, {
+                bank_values = []
+                for bank in values.banks:
+                    ibans.append(bank.iban)
+                    bank_values.append((0, 0, {
                         'acc_number': bank.iban,
                         'acc_holder_name': bank.name,
                         'api_merchant': bank.merchant,
-                    }) for bank in values.banks],
-                })
+                    }))
+                if bank_values:
+                    value.update({'bank_ids': bank_values})
             partner = partner.create(value)
+            for iban in ibans:
+                bank = fields.first(partner.bank_ids)
+                if not bank.api_state:
+                    raise ValidationError(_('IBAN %s has been rejected by payment provider.\n%s') % (bank.acc_number, bank.api_message))
         return partner
 
     def _ads_create(self, token, params):

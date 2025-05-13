@@ -238,8 +238,8 @@ msgstr "<span>TCKN</span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
-msgid "<span>Name</span>"
-msgstr "<span>Adı</span>"
+msgid "<span>Name Surname</span>"
+msgstr "<span>Adı Soyadı</span>"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment

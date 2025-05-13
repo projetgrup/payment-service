@@ -137,8 +137,9 @@ class PartnerBank(models.Model):
                             contact_surname = contact_names.pop()
                             contact_name = ' '.join(contact_names)
                         else:
-                            contact_name = ""
-                            contact_surname = ""
+                            contact_names = self.partner_id.name.split(' ')
+                            contact_surname = contact_names.pop()
+                            contact_name = ' '.join(contact_names)
                     else:
                         partner_type = "Individual"
                         contact_names = self.partner_id.name.split(' ')

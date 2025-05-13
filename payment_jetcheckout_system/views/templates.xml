@@ -472,7 +472,7 @@
                                                 <div class="field-container">
                                                     <input type="text" class="text-center border-primary" required="required" field="wizard.register.name"/>
                                                     <span class="bar-container"/>
-                                                    <label class="text-primary"><span>Name</span></label>
+                                                    <label class="text-primary"><span>Name Surname</span></label>
                                                 </div>
                                                 <div class="field-container">
                                                     <input type="text" inputmode="decimal" class="text-center border-primary" required="required" field="wizard.register.vat"/>

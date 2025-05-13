@@ -205,6 +205,7 @@ class PaymentTransaction(models.Model):
                 'installment_code': self.jetcheckout_campaign_name or '',
                 'installments': self.jetcheckout_installment_description or '',
                 'installment_description': self.jetcheckout_installment_description_long or '',
+                'amount_net': abs(self.amount * (100 - self.jetcheckout_commission_rate) / 100) if self.source_transaction_id else abs(self.jetcheckout_payment_net or 0),
                 'amount_commission_cost': 0 if self.source_transaction_id else abs(self.jetcheckout_commission_amount or 0),
                 'amount_customer_cost': 0 if self.source_transaction_id else abs(self.jetcheckout_customer_amount or 0),
                 'amount_commission_rate': 0 if self.source_transaction_id else abs(self.jetcheckout_commission_rate or 0),
