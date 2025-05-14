@@ -107,7 +107,7 @@ class PaymentTransaction(models.Model):
 
     jetcheckout_service_code = fields.Char('Paylox Service Code', readonly=True, copy=False)
     jetcheckout_service_message = fields.Char('Paylox Service Message', readonly=True, copy=False)
-    jetcheckout_service_suggestion = fields.Char('Paylox Service Suggestion', readonly=True, copy=False)
+    jetcheckout_service_suggestion = fields.Html('Paylox Service Suggestion', readonly=True, copy=False)
 
     jetcheckout_installment_count = fields.Integer('Installment Count', readonly=True, copy=False)
     jetcheckout_installment_plus = fields.Integer('Plus Installment Count', readonly=True, copy=False)

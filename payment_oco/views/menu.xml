@@ -6,7 +6,7 @@
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="2"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="3"/>
 
-    <menuitem id="menu_sale" name="Sales" parent="menu_main" sequence="3"/>
+    <menuitem id="menu_sale" name="Sales" parent="menu_main" sequence="3" groups="payment_sytem_sale.group_view_sale_order_menu,base.group_system"/>
     <menuitem id="menu_sale_order" action="action_sale_order" name="Orders" parent="menu_sale" sequence="0"/>
 
     <menuitem id="menu_product" name="Products" parent="menu_main" sequence="4" groups="payment_system_product.group_product"/>
