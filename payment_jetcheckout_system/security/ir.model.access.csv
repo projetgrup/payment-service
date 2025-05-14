@@ -89,3 +89,5 @@ jetcheckout_view_manager,jetcheckout_view_manager,model_payment_view,base.group_
 
 jetcheckout_hook_user,jetcheckout_hook_user,model_payment_hook,base.group_user,1,0,0,0
 jetcheckout_hook_manager,jetcheckout_hook_manager,model_payment_hook,base.group_system,1,1,1,1
+
+security_audit_model,security_audit_model,base.model_ir_model,payment_jetcheckout_system.group_system_manager,1,0,0,0
