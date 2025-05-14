@@ -12,7 +12,7 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': ['sale', 'payment_system_product'],
     'data': [
-        'security/security.xml'
+        'security/security.xml',
         'views/sale.xml',
     ],
     'images': ['static/description/icon.png'],
