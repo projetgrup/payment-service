@@ -89,8 +89,8 @@
             </div>
             <separator string="Service Suggestion" colspan="2"/>
             <div class="o_row" colspan="2">
-                <field name="jetcheckout_service_suggestion" nolabel="1" attrs="{'invisible': [('jetcheckout_service_suggestion', '=', False)]}"/>
-                <span class="text-muted font-italic" attrs="{'invisible': [('jetcheckout_service_suggestion', '!=', False)]}">No suggestion</span>
+                <field name="jetcheckout_service_suggestion" nolabel="1" attrs="{'invisible': [('jetcheckout_service_suggestion', 'in', [False, ''])]}"/>
+                <span class="text-muted font-italic" attrs="{'invisible': [('jetcheckout_service_suggestion', 'not in', [False, ''])]}">No suggestion</span>
             </div>
         </xpath>
         <xpath expr="//field[@name='acquirer_id']" position="after">
