@@ -313,6 +313,13 @@ class Users(models.Model):
                 user.partner_id.company_id = user.company_id.system and user.company_id.id or False
         return res
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'name' in default:
+            default['name'].replace('Public user for ', '')
+        return super().copy(default=default)
+
     def context_get(self):
         ctx = super(Users, self).context_get()
         context = dict(ctx)

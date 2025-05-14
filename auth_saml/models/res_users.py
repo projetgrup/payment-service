@@ -30,6 +30,7 @@ class ResUser(models.Model):
             ("saml_uid", "=", saml_uid),
             ("saml_provider_id", "=", provider)
         ], limit=1)
+        user = False
         if user_saml:
             user = user_saml.user_id
         else:
@@ -48,7 +49,18 @@ class ResUser(models.Model):
                 })
                 user.with_user(user)._update_last_login()
             else:
-                raise SignupError(_('Signup is not allowed for uninvited users'))
+                email = validation.get('mapped_attrs', {}).get('email')
+                if email:
+                    user = self.env["res.users"].sudo().search([("login", "=", email)], limit=1)
+                    if user:
+                        user_saml = self.env['res.users.saml'].sudo().create({
+                            'user_id': user.id,
+                            'saml_uid': saml_uid,
+                            'saml_provider_id': provider,
+                        })
+
+        if not user:
+            raise SignupError(_('Signup is not allowed for uninvited users'))
 
         if len(user) != 1:
             raise AccessDenied()

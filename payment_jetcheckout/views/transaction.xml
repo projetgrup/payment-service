@@ -83,9 +83,9 @@
             <field name="jetcheckout_approval_state_message" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', '|', '|', ('is_paylox', '=', False), ('state', '!=', 'done'), ('jetcheckout_approval_ok', '=', False), ('jetcheckout_approval_state', '=', '+')]}"/>
             <separator string="Service Message" colspan="2"/>
             <div class="o_row" colspan="2">
-                <field name="jetcheckout_service_message" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_message', '=', False)]}"/>
-                <span attrs="{'invisible': [('jetcheckout_service_code', '=', False)]}">(<field name="jetcheckout_service_code" class="oe_inline" nolabel="1"/>)</span>
-                <span class="text-muted font-italic" attrs="{'invisible': [('jetcheckout_service_code', '!=', False), ('jetcheckout_service_message', '!=', False)]}">No message</span>
+                <field name="jetcheckout_service_message" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_message', 'in', [False, ''])]}"/>
+                <span attrs="{'invisible': [('jetcheckout_service_message', 'in', [False, ''])]}">(<field name="jetcheckout_service_code" class="oe_inline" nolabel="1" attrs="{'invisible': [('jetcheckout_service_code', '=', False)]}"/><span attrs="{'invisible': [('jetcheckout_service_code', '!=', False)]}">-1</span>)</span>
+                <span class="text-muted font-italic" attrs="{'invisible': [('jetcheckout_service_code', 'not in', [False, ''])]}">No message</span>
             </div>
             <separator string="Service Suggestion" colspan="2"/>
             <div class="o_row" colspan="2">
