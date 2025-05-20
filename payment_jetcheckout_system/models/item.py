@@ -363,6 +363,14 @@ class PaymentItem(models.Model):
             return base64.b64decode(self.file)
         return False
 
+    def get_iban(self):
+        self.ensure_one()
+        if self.company_id.payment_item_bank_token_ok:
+            bank = self.bank_token_id
+        else:
+            bank = self.bank_id or fields.first(self.parent_id.bank_ids)
+        return bank.api_state and bank.sanitized_acc_number
+
     def send_done_mail(self):
         pass
 

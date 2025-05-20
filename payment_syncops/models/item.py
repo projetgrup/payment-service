@@ -117,6 +117,7 @@ class PaymentItem(models.Model):
                     'transaction_id': tx and tx.jetcheckout_transaction_id or '',
                     'order_id': tx and tx.jetcheckout_order_id or '',
                     'card_number': tx and tx.jetcheckout_card_number or '',
+                    'partner_iban': self.get_iban() or '',
                 }, company=self.company_id, message=True)
 
                 if result is None:
@@ -140,7 +141,7 @@ class PaymentItem(models.Model):
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_collection', reference=str(self.id), params={
                     'id': self.id,
                     'collection_id': self.id,
-                    'partner_iban': self.bank_id.acc_number or '',
+                    'partner_iban': self.get_iban() or '',
                     'partner_ref': self.parent_id.ref or '',
                     'partner_vat': self.parent_id.vat or '',
                     'transaction_id': tx and tx.jetcheckout_transaction_id or '',
