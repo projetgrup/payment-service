@@ -229,6 +229,16 @@ class Users(models.Model):
             group = self.env.ref('payment_jetcheckout_system.group_show_campaign_button')
             group.sudo().write({'users': [(code, user.id)]})
 
+    def _compute_group_item_manager(self):
+        for user in self:
+            user.group_item_manager = user.has_group('payment_jetcheckout_system.group_item_manager')
+
+    def _set_group_item_manager(self):
+        for user in self:
+            code = user.group_item_manager and 4 or 3
+            group = self.env.ref('payment_jetcheckout_system.group_item_manager')
+            group.sudo().write({'users': [(code, user.id)]})
+
     def _compute_payment_page_item_priority(self):
         for user in self:
             user.payment_page_item_priority_selection = user.payment_page_item_priority and 'ok' or 'no'
@@ -237,7 +247,7 @@ class Users(models.Model):
         for user in self:
             user.payment_page_item_priority = user.payment_page_item_priority_selection == 'ok'
 
-    privilege = fields.Selection([('user','User'),('admin','Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
+    privilege = fields.Selection([('user', 'User'), ('admin', 'Administrator')], string='Privilege Type', compute='_compute_privilege', inverse='_set_privilege')
     group_transaction_commission = fields.Boolean(string='Transaction Commissions', compute='_compute_group_transaction_commission', inverse='_set_group_transaction_commission')
     group_transaction_cancel = fields.Boolean(string='Transaction Cancel', compute='_compute_group_transaction_cancel', inverse='_set_group_transaction_cancel')
     group_transaction_refund = fields.Boolean(string='Transaction Refund', compute='_compute_group_transaction_refund', inverse='_set_group_transaction_refund')
@@ -248,6 +258,7 @@ class Users(models.Model):
     group_grant_partner = fields.Boolean(string='Grant Partners', compute='_compute_group_grant_partner', inverse='_set_group_grant_partner')
     group_show_payment_link = fields.Boolean(string='Show Payment Link', compute='_compute_group_show_payment_link', inverse='_set_group_show_payment_link')
     group_show_campaign_button = fields.Boolean(string='Show Campaign Button', compute='_compute_group_show_campaign_button', inverse='_set_group_show_campaign_button')
+    group_item_manager = fields.Boolean(string='Manage Payment Items', compute='_compute_group_item_manager', inverse='_set_group_item_manager')
 
     payment_page_ok = fields.Boolean(string='Payment Page Active', default=True)
     payment_contactless_ok = fields.Boolean(string='Contactless Payment Page Active')
