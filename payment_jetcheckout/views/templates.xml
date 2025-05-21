@@ -367,7 +367,7 @@
                             <div class="field-container field-name fade show">
                                 <input id="cardholder" type="text" required="required" field="card.holder"/>
                                 <span class="bar-container"/>
-                                <label for="cardholder"><span>Name</span></label>
+                                <label for="cardholder"><span>Card Holder Name Surname</span></label>
                             </div>
                             <div class="field-container field-number fade show">
                                 <input id="cardnumber" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
