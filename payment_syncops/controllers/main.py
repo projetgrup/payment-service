@@ -515,6 +515,34 @@ class PayloxSyncopsController(Controller):
         headers = [('Content-Type', 'application/json; charset=utf-8'), ('Cache-Control', 'no-store')]
         return request.make_response(json.dumps(response), headers)
 
+    @http.route(['/syncops/payment/transactions/txt'], type='http', auth='public', methods=['GET'], csrf=False, sitemap=False, save_session=False, website=True)
+    def page_syncops_transactions_txt(self, **data):
+        headers = request.httprequest.headers
+        if 'Authorization' not in headers:
+            return Response('Access Denied', status=401)
+
+        connector = self._connector_auth(headers['Authorization'])
+        if not connector:
+            return Response('Access Denied', status=401)
+
+        if data:
+            now = fields.Datetime.now()
+            date_start = datetime.strptime(data['payment_date_start'], DT) if 'payment_date_start' in data else now
+            date_end = datetime.strptime(data['payment_date_end'], DT) if 'payment_date_end' in data else now
+            tz = pytz.timezone('Europe/Istanbul')
+            offset = tz.utcoffset(now)
+            txt = request.env['payment.transaction'].sudo().export_txt([
+                ('company_id', 'in', connector.get_company_ids()),
+                ('create_date', '>=', date_start - offset),
+                ('create_date', '<=', date_end - offset),
+            ])
+            headers = [
+                ('Content-Type', 'text/plain'),
+                ('Content-Disposition', content_disposition(txt.get('filename', '')))
+            ]
+            return request.make_response(txt.get('content', ''), headers=headers)
+        return Response('No Data Provided', status=404)
+
     @http.route(['/syncops/payment/transactions/xlsx'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_syncops_transactions_xlsx(self, **data):
         output = io.BytesIO()

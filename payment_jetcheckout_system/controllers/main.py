@@ -1581,10 +1581,10 @@ class PayloxSystemController(PayloxController):
 
     @http.route(['/paylox/payment/transactions/txt'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_transactions_txt(self, **data):
-        txt = request.env['payment.transaction'].sudo().export_txt(
-            list(map(int, data[''].split(','))),
-            request.env.user.company_ids.ids,
-        )
+        txt = request.env['payment.transaction'].sudo().export_txt([
+            ('id', 'in', list(map(int, data[''].split(',')))),
+            ('company_id', 'in', request.env.user.company_ids.ids),
+        ])
         headers = [
             ('Content-Type', 'text/plain'),
             ('Content-Disposition', content_disposition(txt.get('filename', '')))
