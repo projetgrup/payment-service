@@ -195,6 +195,7 @@
                 </div>
                 <field name="partner_raw_ids" invisible="1"/>
                 <field name="company_id" invisible="1"/>
+                <field name="recompute" invisible="1"/>
                 <field name="id" invisible="1"/>
             </sheet>
             <footer>
