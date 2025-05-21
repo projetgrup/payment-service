@@ -124,17 +124,14 @@ class PaymentTransaction(models.Model):
             'url': '/paylox/payment/transactions/txt?=%s' % ','.join(map(str, txs.ids))
         }
 
-    def export_txt(self, ids=[], company_ids=[]):
-        if not ids:
-            ids = self.ids
+    def export_txt(self, domain=[]):
+        if not domain:
+            domain = [('id', 'in', self.ids)]
 
-        domain = [
-            ('id', 'in', ids),
+        domain += [
             ('state', '=', 'done'),
             ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
         ]
-        if company_ids:
-            domain.append(('company_id', '=', company_ids))
 
         transactions = self.env['payment.transaction'].sudo().search(domain, order='last_state_change desc')
         if not transactions:

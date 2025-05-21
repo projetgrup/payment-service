@@ -866,7 +866,7 @@ class Partner(models.Model):
             'partner_ids': [(0, 0, {
                 'partner_id': partner.id,
                 'child_ids': [(6, 0, partner.child_ids.ids)]
-            }) for partner in self.ids]
+            }) for partner in self]
         })
     
         action = self.env.ref('payment_jetcheckout_system.action_system_send').sudo().read()[0]
