@@ -15,6 +15,6 @@
     "depends": [],
     "data": [],
     "demo": [],
-    "external_dependencies": {"python": ["marshmallow", "marshmallow-objects>=2.0.0"]},
+    "external_dependencies": {"python": ["marshmallow==3.15.0", "marshmallow-objects==2.3.0"]},
     "installable": True,
 }

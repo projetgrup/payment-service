@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 import requests
+import traceback
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import formatLang
+from odoo.exceptions import UserError, ValidationError, MissingError
 from odoo.addons.payment_jetcheckout.models.utils import get_main_company
+from odoo.tools.safe_eval import safe_eval, json as _json, pytz as _pytz, datetime as _datetime
 
+_logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _name = 'payment.transaction'
@@ -119,6 +124,50 @@ class PaymentTransaction(models.Model):
             'url': '/paylox/payment/transactions/txt?=%s' % ','.join(map(str, txs.ids))
         }
 
+    def export_txt(self, ids=[], company_ids=[]):
+        if not ids:
+            ids = self.ids
+
+        domain = [
+            ('id', 'in', ids),
+            ('state', '=', 'done'),
+            ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
+        ]
+        if company_ids:
+            domain.append(('company_id', '=', company_ids))
+
+        transactions = self.env['payment.transaction'].sudo().search(domain, order='last_state_change desc')
+        if not transactions:
+            raise MissingError(_('Transaction cannot be found.'))
+
+        company = transactions.mapped('company_id')
+        if len(company) > 1:
+            raise ValidationError(_('You can export TXT of transactions only for one company at a time.'))
+        if not company.payment_transaction_export_txt:
+            raise ValidationError(_('Company "%s" is not allow to export TXT.') % company.name)
+        if not company.payment_transaction_export_txt_code:
+            raise ValidationError(_('Company "%s" does not have any TXT format code.') % company.name)
+
+        context = {
+            'txt': {},
+            'env': self.env,
+            'UserError': UserError,
+            'datetime': _datetime,
+            'logger': _logger,
+            'json': _json,
+            'pytz': _pytz,
+            'company': company,
+            'transactions': transactions,
+            'formatter': formatLang,
+        }
+        try:
+            safe_eval(company.payment_transaction_export_txt_code.strip(), context, mode='exec', nocopy=True)
+            return context.get('txt', {})
+        except UserError:
+            raise
+        except:
+            _logger.error(traceback.format_exc())
+            raise ValidationError(_('An error occured when getting TXT.'))
 
     def _get_notification_webhook_data(self):
         return {
