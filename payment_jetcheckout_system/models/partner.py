@@ -857,13 +857,18 @@ class Partner(models.Model):
             sms_template = self.env['sms.template'].browse(id)
  
         type_email = self.env.ref('payment_jetcheckout_system.send_type_email')
-        res = self.env['payment.acquirer.jetcheckout.send'].create({
+        res = self.env['payment.acquirer.jetcheckout.send'].with_company(company).create({
             'selection': [(6, 0, type_email.ids)],
             'type_ids': [(6, 0, type_email.ids)],
             'mail_template_id': mail_template.id,
             'sms_template_id': sms_template.id,
             'company_id': company.id,
+            'partner_ids': [(0, 0, {
+                'partner_id': partner.id,
+                'child_ids': [(6, 0, partner.child_ids.ids)]
+            }) for partner in self.ids]
         })
+    
         action = self.env.ref('payment_jetcheckout_system.action_system_send').sudo().read()[0]
         action['res_id'] = res.id
         action['context'] = {
