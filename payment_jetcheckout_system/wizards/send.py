@@ -200,7 +200,7 @@ class PaymentPayloxSend(models.TransientModel):
     _name = 'payment.acquirer.jetcheckout.send'
     _description = 'Paylox System Send'
 
-    @api.depends('partner_ids.partner_id', 'partner_ids.child_ids')
+    @api.depends('recompute', 'partner_ids.partner_id', 'partner_ids.child_ids')
     def _compute_partner(self):
         for send in self:
             partner_ids = []
@@ -220,16 +220,7 @@ class PaymentPayloxSend(models.TransientModel):
     mail_template_id = fields.Many2one('mail.template')
     sms_template_id = fields.Many2one('sms.template')
     company_id = fields.Many2one('res.company')
-
-    @api.model
-    def default_get(self, fields):
-        res = super().default_get(fields)
-        partners = self.env['res.partner'].sudo().browse(self.env.context.get('active_ids', []))
-        res['partner_ids'] = [(0, 0, {
-            'partner_id': partner.id,
-            'child_ids': [(6, 0, partner.child_ids.ids)]
-        }) for partner in partners]
-        return res
+    recompute = fields.Boolean(default=True)
 
     @api.onchange('selection')
     def onchange_selection(self):
