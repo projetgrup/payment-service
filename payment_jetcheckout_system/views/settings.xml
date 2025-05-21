@@ -176,6 +176,15 @@
                                     <div class="text-muted">
                                         Select transactions and export them as TXT file
                                     </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_transaction_export_txt', '=', False)]}">
+                                        <div class="row mt16">
+                                            <notebook class="w-100 mx-3">
+                                                <page string="Code">
+                                                    <field name="payment_transaction_export_txt_code" class="oe_inline" widget="ace" options="{'mode': 'python'}" attrs="{'required': [('payment_transaction_export_txt', '!=', False)]}"/>
+                                                </page>
+                                            </notebook>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">

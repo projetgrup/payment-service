@@ -87,6 +87,7 @@ class PaymentSettings(models.TransientModel):
     payment_dashboard_field_amount = fields.Selection(related='company_id.payment_dashboard_field_amount', readonly=False)
 
     payment_transaction_export_txt = fields.Boolean(related='company_id.payment_transaction_export_txt', readonly=False)
+    payment_transaction_export_txt_code = fields.Text(related='company_id.payment_transaction_export_txt_code', readonly=False)
 
     payment_plan_use_base_amount = fields.Boolean(related='company_id.payment_plan_use_base_amount', readonly=False)
     payment_plan_fullscreen_ok = fields.Boolean(related='company_id.payment_plan_fullscreen_ok', readonly=False)
@@ -208,7 +209,6 @@ class PaymentSettings(models.TransientModel):
                 values.pop(field.name)
 
         return super(PaymentSettings, self).create(values)
-
 
     @api.onchange('sec_dlp_tag')
     def onchange_sec_dlp_tag(self):

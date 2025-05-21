@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import test_python_expr
 
 
 class Company(models.Model):
@@ -37,7 +39,8 @@ class Company(models.Model):
         ('jetcheckout_fund_amount', 'Fund Amount'),
     ], string='Dashboard Payment Amount Field', default='jetcheckout_payment_paid')
 
-    payment_transaction_export_txt = fields.Boolean(string='Payment Trasansaction Export TXT')
+    payment_transaction_export_txt = fields.Boolean(string='Payment Transaction Export TXT')
+    payment_transaction_export_txt_code = fields.Text(string='Payment Transaction Export TXT Code')
 
     payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')
@@ -91,6 +94,13 @@ class Company(models.Model):
     payment_plan_use_base_amount = fields.Boolean(string='Payment Plan Use Base Amount')
     payment_plan_fullscreen_ok = fields.Boolean(string='Payment Plan Fullscreen')
     payment_plan_threed_ok = fields.Boolean(string='Payment Plan 3D Secure')
+
+    @api.constrains('payment_transaction_export_txt_code')
+    def _check_code(self):
+        for company in self.sudo().filtered('payment_transaction_export_txt_code'):
+            msg = test_python_expr(expr=company.payment_transaction_export_txt_code.strip(), mode='exec')
+            if msg:
+                raise ValidationError(msg)
 
     @api.model
     def create(self, vals):
