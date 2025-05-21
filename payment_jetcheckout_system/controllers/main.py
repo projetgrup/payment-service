@@ -1581,110 +1581,12 @@ class PayloxSystemController(PayloxController):
 
     @http.route(['/paylox/payment/transactions/txt'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_transactions_txt(self, **data):
-        result = []
-        headers = [
-            'UYEISYERINO',
-            'TERMID',
-            'ISLEMTARIHI',
-            'GUNSONUTARIHI',
-            'VALOR',
-            'BATCHNO',
-            'AUTHCODE',
-            'PARABIRIMI',
-            'ISLEMTIPI',
-            'KARTNO',
-            'KARTTIPI',
-            'KARTKAYNAK',
-            'TAKSITNO',
-            'TAKSITSAYISI',
-            'HAREKETTIPI',
-            'TAKSITTUTARI',
-            'ISLEMTUTARI',
-            'KOMISYONTUTARI',
-            'SERVISUCRETTUTARI',
-            'KATKITUTARI',
-            'KAMPANYAKATKITUTARI',
-            'NETTUTAR',
-            'MUSTERINO',
-            ''
-        ]
-        result.append(';'.join(headers))
-
-        tz = pytz.timezone(request.env.user.tz or 'Europe/Istanbul')
-        offset = tz.utcoffset(fields.Datetime.now())
-
-        txs = request.env['payment.transaction'].sudo().search([
-            ('company_id', '=', request.env.user.company_ids.ids),
-            ('id', 'in', list(map(int, data[''].split(',')))),
-            ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
-            ('state', '=', 'done'),
-        ], order='last_state_change desc')
-        for tx in txs:
-            desc_maxlength = tx.company_id.payment_page_item_add_desc_maxlength
-            balances = 0
-            negatives = 0
-            positives = []
-            if tx.paylox_transaction_item_ids:
-                for item in tx.paylox_transaction_item_ids:
-                    balances += item.amount
-                    if item.amount < 0:
-                        negatives += item.amount
-                    else:
-                        positives.append({'amount': item.amount, 'desc': item.desc})
-            else:
-                positives.append({'amount': tx.amount, 'desc': tx.partner_ref})
-
-            if balances < 0:
-                continue
-
-            items = []
-            for item in positives:
-                if abs(negatives) >= item['amount']:
-                    negatives += item['amount']
-                    continue
-                elif abs(negatives) > 0:
-                    item['amount'] += negatives
-                    negatives = 0
-                items.append(item)
-
-            installment_count = tx.jetcheckout_installment_count or 1
-            for item in items:
-                rate = item['amount'] / tx.jetcheckout_payment_amount if tx.jetcheckout_payment_amount != 0 else 0.0
-                values = [
-                    '000000000480150',
-                    'VP692034',
-                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
-                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
-                    (tx.last_state_change + offset).strftime('%d/%m/%Y'),
-                    tx.reference.rsplit('/', 1)[-1],
-                    tx.partner_ref,
-                    'TL',
-                    '%s Satış - E-Ticaret' % ('Taksitli' if installment_count > 1 else 'Peşin') if tx.jetcheckout_payment_type == 'virtual_pos' else 'Transfer',
-                    '%sXXXXXXXX%s' % (tx.jetcheckout_card_number[:4], tx.jetcheckout_card_number[-4:]) if tx.jetcheckout_payment_type == 'virtual_pos' else 'Transfer',
-                    'KREDİ KART',
-                    'YURT İCİ',
-                    #'1',
-                    installment_count or '1',
-                    installment_count or '1',
-                    'A',
-                    #'%0.2f' % (tx.jetcheckout_installment_amount * rate,),
-                    '%0.2f' % (item['amount'],),
-                    '%0.2f' % (item['amount'],),
-                    '%0.2f' % (tx.jetcheckout_customer_amount * rate,),
-                    '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
-                    '%0.2f' % (tx.jetcheckout_fund_amount * rate,),
-                    '%0.2f' % (0,),
-                    '%0.2f' % (tx.jetcheckout_payment_net * rate,),
-                    item['desc'] if item['desc'] and len(item['desc']) == desc_maxlength else tx.partner_ref,
-                    ''
-                ]
-                result.append(';'.join(map(str, values)))
-
-        result = '\r\n'.join(result) + '\r\n'
-        date = fields.Date.today().strftime('%Y%m%d')
-        filename = '%s_%s_%s_%s.txt' % (date, 'ROYAL_CANIN', 3, date)
+        txt = request.env['payment.transaction'].sudo().export_txt(
+            list(map(int, data[''].split(','))),
+            request.env.user.company_ids.ids,
+        )
         headers = [
             ('Content-Type', 'text/plain'),
-            ('Content-Disposition', content_disposition(filename))
+            ('Content-Disposition', content_disposition(txt.get('filename', '')))
         ]
-        return request.make_response(result, headers=headers)
+        return request.make_response(txt.get('content', ''), headers=headers)
