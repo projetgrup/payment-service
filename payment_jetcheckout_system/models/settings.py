@@ -210,9 +210,9 @@ class PaymentSettings(models.TransientModel):
 
         return super(PaymentSettings, self).create(values)
 
-    @api.onchange('sec_dlp_tag')
-    def onchange_sec_dlp_tag(self):
-        self.sec_dlp_tag = self.company_id.get_dlp_tag(self.sec_dlp_tag)
+    #@api.onchange('sec_dlp_tag')
+    #def onchange_sec_dlp_tag(self):
+    #    self.sec_dlp_tag = self.company_id.get_dlp_tag(self.sec_dlp_tag)
 
 
 class PaymentSettingsNotificationWebhook(models.Model):

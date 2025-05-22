@@ -437,7 +437,7 @@ class PayloxController(http.Controller):
                 ('partner_id', '=', partner.id),
                 ('name', 'in', card_names),
                 ('verified', '=', True),
-                ('jetcheckout_type', 'in', ('Credit', 'Credit-Business'))
+                ('jetcheckout_type', 'ilike', 'Credit%')
             ])
             if tokens:
                 children = []
@@ -1547,12 +1547,31 @@ class PayloxController(http.Controller):
 
             data.update(self._get_data_values(data, tx, **kwargs))
             response = requests.post(url, data=json.dumps(data))
-            if response.status_code == 200:
+            result = None
+
+            if not result and response.status_code == 200:
                 result = response.json()
                 if result['response_code'] == "00122":
+                    result = None
                     order_aux_id = 'x%s' % str(uuid.uuid4())
                     tx.write({'jetcheckout_order_aux_id': order_aux_id})
                     data.update({"order_id": order_aux_id})
+                    response = requests.post(url, data=json.dumps(data))
+
+            if not result and response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00124":
+                    result = None
+                    try:
+                        del data['save_card']
+                        del data['card_alias']
+                        del data['card_owner_key']
+                        del data['card_owner_email']
+                        del data['card_customer_token']
+                    except:
+                        pass
+                    finally:
+                        tx.token_id.write({'verified': True})
                     response = requests.post(url, data=json.dumps(data))
 
             if response.status_code == 200:
