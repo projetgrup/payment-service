@@ -482,6 +482,9 @@ class PaymentAcquirer(models.Model):
             invoice_id = int(kwargs.get('invoice', 0))
 
             #tx = self._get_transaction()
+            #if tx and tx.state not in ('draft', 'pending', 'error'):
+            #    return {'error': _('This transaction has been posted already')}
+
             tx = False
             vals = {
                 'acquirer_id': self.id,

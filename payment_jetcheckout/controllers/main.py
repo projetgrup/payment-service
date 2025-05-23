@@ -1125,7 +1125,7 @@ class PayloxController(http.Controller):
         tx = request.env['payment.transaction'].sudo().search([
             ('jetcheckout_order_id', '!=', False),
             ('jetcheckout_order_id', '=', token),
-            ('state', 'in', ('draft', 'pending', 'error'))
+            #('state', 'in', ('draft', 'pending', 'error'))
         ], limit=1)
         return tx or False
 
@@ -1384,7 +1384,11 @@ class PayloxController(http.Controller):
                         'acquirer_ref': str(uuid.uuid4()),
                         'jetcheckout_hash': token_hash,
                     })
+
             tx = self._get_transaction()
+            if tx and tx.state not in ('draft', 'pending', 'error'):
+                return {'error': _('This transaction has been posted already')}
+
             vals = {
                 'acquirer_id': acquirer.id,
                 'callback_hash': hash,
@@ -1675,6 +1679,9 @@ class PayloxController(http.Controller):
             invoice_id = int(kwargs.get('invoice', 0))
 
             tx = self._get_transaction()
+            if tx and tx.state not in ('draft', 'pending', 'error'):
+                return {'error': _('This transaction has been posted already')}
+
             vals = {
                 'acquirer_id': acquirer.id,
                 'callback_hash': hash,
@@ -1847,6 +1854,9 @@ class PayloxController(http.Controller):
             invoice_id = int(kwargs.get('invoice', 0))
 
             tx = self._get_transaction()
+            if tx and tx.state not in ('draft', 'pending', 'error'):
+                return {'error': _('This transaction has been posted already')}
+
             vals = {
                 'acquirer_id': acquirer.id,
                 'callback_hash': hash,
@@ -2020,6 +2030,9 @@ class PayloxController(http.Controller):
             invoice_id = int(kwargs.get('invoice', 0))
 
             tx = self._get_transaction()
+            if tx and tx.state not in ('draft', 'pending', 'error'):
+                return {'error': _('This transaction has been posted already')}
+
             vals = {
                 'acquirer_id': acquirer.id,
                 'callback_hash': hash,
@@ -2192,6 +2205,9 @@ class PayloxController(http.Controller):
             invoice_id = int(kwargs.get('invoice', 0))
 
             tx = self._get_transaction()
+            if tx and tx.state not in ('draft', 'pending', 'error'):
+                return {'error': _('This transaction has been posted already')}
+
             vals = {
                 'acquirer_id': acquirer.id,
                 'callback_hash': hash,

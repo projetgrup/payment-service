@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="payment_receipt" inherit_id="payment_jetcheckout.payment_receipt">
+        <xpath expr="//td[@width='322']/strong[@t-field='doc.partner_name']" position="before">
+            <strong t-if="doc.company_id.system == 'supplier'" t-field="doc.company_id.name"/>
+        </xpath>
+        <xpath expr="//td[@width='322']/strong[@t-field='doc.partner_name']" position="attributes">
+            <attribute name="t-else"> </attribute>
+        </xpath>
+    </template>
+</odoo>

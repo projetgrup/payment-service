@@ -32,6 +32,7 @@ class PaymentPayloxAPI(models.Model):
     partner_id = fields.Many2one('res.partner', required=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', required=True, ondelete='cascade')
     active = fields.Boolean(default=True)
+    perm_payment = fields.Boolean(string='Allow Payment Services', default=True)
 
     @api.model
     def default_get(self, fields):

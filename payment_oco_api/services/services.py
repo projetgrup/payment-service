@@ -534,7 +534,7 @@ class OrderCheckoutAPIService(Component):
         self.env['payment.paylox.log'].save(values)
 
     def _get_api(self, company, apikey, secretkey=False):
-        domain = [('company_id', '=', company), ('api_key', '=', apikey)]
+        domain = [('company_id', '=', company), ('api_key', '=', apikey), ('perm_payment', '=', True)]
         if secretkey:
             domain.append(('secret_key', '=', secretkey))
         return self.env['payment.acquirer.jetcheckout.api'].sudo().search(domain, limit=1)

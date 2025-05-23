@@ -123,6 +123,10 @@
             pointer-events: none;
         }
     }
+
+    .o_MessagingMenu, .o_ChatWindowManager {
+        display: none;
+    }
 }
 
 .o_settings_campaign_tag {
