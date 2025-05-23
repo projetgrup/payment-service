@@ -1387,7 +1387,7 @@ class PayloxController(http.Controller):
 
             tx = self._get_transaction()
             if tx and tx.state not in ('draft', 'pending', 'error'):
-                return {'error': _('This transaction has been posted already')}
+                return {'error': _('This transaction has been posted already.')}
 
             vals = {
                 'acquirer_id': acquirer.id,
@@ -1680,7 +1680,7 @@ class PayloxController(http.Controller):
 
             tx = self._get_transaction()
             if tx and tx.state not in ('draft', 'pending', 'error'):
-                return {'error': _('This transaction has been posted already')}
+                return {'error': _('This transaction has been posted already.')}
 
             vals = {
                 'acquirer_id': acquirer.id,
@@ -1855,7 +1855,7 @@ class PayloxController(http.Controller):
 
             tx = self._get_transaction()
             if tx and tx.state not in ('draft', 'pending', 'error'):
-                return {'error': _('This transaction has been posted already')}
+                return {'error': _('This transaction has been posted already.')}
 
             vals = {
                 'acquirer_id': acquirer.id,
@@ -2031,7 +2031,7 @@ class PayloxController(http.Controller):
 
             tx = self._get_transaction()
             if tx and tx.state not in ('draft', 'pending', 'error'):
-                return {'error': _('This transaction has been posted already')}
+                return {'error': _('This transaction has been posted already.')}
 
             vals = {
                 'acquirer_id': acquirer.id,
@@ -2206,7 +2206,7 @@ class PayloxController(http.Controller):
 
             tx = self._get_transaction()
             if tx and tx.state not in ('draft', 'pending', 'error'):
-                return {'error': _('This transaction has been posted already')}
+                return {'error': _('This transaction has been posted already.')}
 
             vals = {
                 'acquirer_id': acquirer.id,
