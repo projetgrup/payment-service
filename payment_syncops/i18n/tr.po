@@ -604,7 +604,7 @@ msgstr "Bildirim Türü"
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Notify Partners"
-msgstr "İş Ortaklarına Bildirim Gönder"
+msgstr "Bildirim Gönder"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import requests
 from pytz import timezone
 from dateutil import parser
@@ -9,6 +10,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.connector_syncops.models.config import DAYS
 
+_logger = logging.getLogger(__name__)
 
 class PaymentItem(models.Model):
     _inherit = 'payment.item'
@@ -294,8 +296,8 @@ class PaymentItem(models.Model):
                                                 'mail_server_id': mail_server.id,
                                             }
                                         )
-                                except:
-                                    pass
+                                except Exception as e:
+                                    _logger.error('An error occured when sending notification email to %s: %s' % (item.parent_id.name, e))
 
                             if 'sms' in types:
                                 try:
@@ -317,8 +319,8 @@ class PaymentItem(models.Model):
                                         }
                                         sms_message = self.env['sms.sms'].sudo().create(sms_values)
                                         sms_message.send(unlink_failed=False, unlink_sent=True, raise_exception=False)
-                                except:
-                                    pass
+                                except Exception as e:
+                                    _logger.error('An error occured when sending notification sms to %s: %s' % (item.parent_id.name, e))
 
                             item.syncops_notif = False
                             partners.add(item.parent_id.id)
