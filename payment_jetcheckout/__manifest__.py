@@ -5,7 +5,7 @@
 
 {
     'name': 'Paylox Payment Acquirer',
-    'version': '1.13',
+    'version': '1.14',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',

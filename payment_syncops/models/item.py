@@ -276,20 +276,33 @@ class PaymentItem(models.Model):
                                 sms_provider = self.env['sms.provider'].browse(id)
 
                         for item in items:
-                            if item.parent_id.id in partners:
+                            partner = item.parent_id
+                            if partner.id in partners:
                                 item.syncops_notif = False
                                 continue
 
+                            tag_ids = company.syncops_cron_sync_item_notif_tag_ids.ids
+                            if company.syncops_cron_sync_item_notif_tag_ok:
+                                if not any(tag_id not in partner.category_id.ids for tag_id in tag_ids):
+                                    item.syncops_notif = False
+                                    continue
+                            else:
+                                if any(tag_id in partner.category_id.ids for tag_id in tag_ids):
+                                    item.syncops_notif = False
+                                    continue
+
+                            link = partner._get_payment_url()
+                            context.update({
+                                'link': link,
+                                'partner': partner,
+                                'lang': partner.lang,
+                                'domain': urlparse(link).netloc,
+                            })
                             if 'email' in types:
                                 try:
                                     with self.env.cr.savepoint():
-                                        mail_template.with_context(
-                                            **context,
-                                            partner=item.parent_id,
-                                            lang=item.parent_id.lang,
-                                            link=item.parent_id._get_payment_url(),
-                                        ).send_mail(
-                                            item.parent_id.id,
+                                        mail_template.with_context(**context).send_mail(
+                                            item.id,
                                             force_send=True,
                                             email_values={
                                                 'is_notification': True,
@@ -297,33 +310,26 @@ class PaymentItem(models.Model):
                                             }
                                         )
                                 except Exception as e:
-                                    _logger.error('An error occured when sending notification email to %s: %s' % (item.parent_id.name, e))
+                                    _logger.error('An error occured when sending notification email to %s: %s' % (partner.name, e))
 
                             if 'sms' in types:
                                 try:
                                     with self.env.cr.savepoint():
-                                        link = item.parent_id._get_payment_url()
-                                        body = sms_template.with_context(
-                                            **context,
-                                            link=link,
-                                            partner=item.parent_id,
-                                            lang=item.parent_id.lang,
-                                            domain=urlparse(link).netloc,
-                                        )._render_field('body', [item.parent_id.id], set_lang=item.parent_id.lang)[item.parent_id.id]
+                                        body = sms_template.with_context(**context)._render_field('body', [item.id], set_lang=partner.lang)[item.id]
                                         sms_values = {
-                                            'partner_id': item.parent_id.id,
-                                            'body': body,
-                                            'number': item.parent_id.mobile,
                                             'state': 'outgoing',
+                                            'partner_id': partner.id,
+                                            'number': partner.mobile,
                                             'provider_id': sms_provider.id,
+                                            'body': body,
                                         }
                                         sms_message = self.env['sms.sms'].sudo().create(sms_values)
                                         sms_message.send(unlink_failed=False, unlink_sent=True, raise_exception=False)
                                 except Exception as e:
-                                    _logger.error('An error occured when sending notification sms to %s: %s' % (item.parent_id.name, e))
+                                    _logger.error('An error occured when sending notification sms to %s: %s' % (partner.name, e))
 
                             item.syncops_notif = False
-                            partners.add(item.parent_id.id)
+                            partners.add(partner.id)
 
                         self.env.cr.commit()
             except:

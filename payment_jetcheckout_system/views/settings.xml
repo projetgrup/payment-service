@@ -411,6 +411,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_warning_commission_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_warning_commission_ok" string="Commission Warning Before Payment"/>
+                                    <div class="text-muted">
+                                        Show a warning dialog to payer if any commission is calculated for relevant payment
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_init_warning_commission_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_rate" string="Show Rate" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_rate" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_primary_advice" string="Show Secondary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_primary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_secondary_advice" string="Show Secondary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_secondary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_description" string="Description" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_description"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Dues" string="Dues" data-key="hr_attendance">

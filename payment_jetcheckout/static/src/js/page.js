@@ -217,6 +217,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             order: new fields.integer(),
             invoice: new fields.integer(),
             subscription: new fields.integer(),
+            initWarningCommission: new fields.boolean({
+                default: false,
+            }),
         };
         this.partner = new fields.integer({
             default: 0,
@@ -1072,6 +1075,25 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
+    _getInstallmentData: function () {
+        const installment = $('.installment-cell input:checked');
+        if (!installment.length) return {}
+        return {
+            id: installment.data('id') || 1,
+            index: installment.data('index') || 0,
+        }
+    },
+
+    _getInstallmentRow: function (id=0) {
+        if (!id) {
+            const installment = this._getInstallmentData();
+            id = installment.id;
+        }
+
+        const rows = this.installment.rows || [];
+        return rows.find(r => r.id === id);
+    },
+
     _checkData: function () {
         let checked = true;
         const type = this.type.selected;
@@ -1393,6 +1415,38 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _onClickPaymentButton: function () {
         if (this._checkData()) {
+            if (this.payment.initWarningCommission.value) {
+                const installmentData = this._getInstallmentData();
+                const row = this._getInstallmentRow(installmentData.id || 1);
+                if (row.crate > 0) {    
+                    const popup = new dialog(this, {
+                        title: _t('Warning'),
+                        size: 'small',
+                        $content: qweb.render('paylox.warning.commission', {
+                            row,
+                            format,
+                            amount: this.amount.value,
+                            ...this.currency,
+                        }),
+                        buttons: [{
+                            text: _t('Confirm'),
+                            classes: 'btn-primary',
+                            click: () => {
+                                console.log(124);
+                            },
+                        }, {
+                            text: _t('Cancel'),
+                            classes: 'btn-secondary',
+                            close: true,
+                        }],
+                    });
+                    popup.open();
+                    return false;
+                };
+            }
+            console.log(123);
+            return false;
+
             framework.showLoading();
             //const href = window.location.href;
             //window.history.pushState({}, '', '/payment/redirect');

@@ -123,7 +123,7 @@
             <field name="model_id" ref="payment_jetcheckout_system.model_payment_item"/>
             <field name="body">Hello, you can get payment page on {{ ctx['domain'] }} by clicking the following link.\n{{ ctx['link'] }}</field>
             <field name="system" eval="True"/>
-            <field name="lang">{{ object.lang }}</field>
+            <field name="lang">{{ ctx['lang'] }}</field>
         </record>
     </data>
 </odoo>

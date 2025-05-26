@@ -342,4 +342,36 @@
             </t>
         </table>
     </t>
+
+    <t t-name="paylox.warning.commission">
+        <t t-set="total" t-value="amount * (1 + (row.crate / 100)) * (1 + (row.irate / 100))"/>
+        <main class="text-center">
+            <i class="fa fa-exclamation-triangle fa-3x text-warning"/>
+            <div class="mt-4 text-700" style="font-size:1.5em">
+                You're about to make payment with <strong t-esc="row.id" class="text-primary"/> installment and <strong t-esc="format.percentage(row.crate)" class="text-primary" /> commission rate.
+            </div>
+            <div class="mt-4 text-700" style="font-size:1.5em">
+                Calculated payment amount will be <strong t-esc="format.currency(total, position, symbol, decimal)" class="text-primary" />
+            </div>
+            <div class="mt-4 text-muted">
+                <table align="center">
+                    <tr>
+                        <td style="width:10px"/>
+                        <td class="text-right"><span t-esc="format.currency(amount, position, symbol, decimal)"/></td>
+                        <td class="font-italic text-left pl-2">(Base Amount)</td>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td class="text-right"><span t-esc="format.percentage(row.crate)"/></td>
+                        <td class="font-italic text-left pl-2">(Commission Rate)</td>
+                    </tr>
+                    <tr>
+                        <td class="border-top"/>
+                        <td class="text-right border-top"><span t-esc="format.currency(total, position, symbol, decimal)"/></td>
+                        <td class="border-top text-left font-italic pl-2">(Payment Amount)</td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+    </t>
 </templates>

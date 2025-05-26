@@ -93,6 +93,7 @@ class PaymentSettings(models.TransientModel):
     payment_plan_fullscreen_ok = fields.Boolean(related='company_id.payment_plan_fullscreen_ok', readonly=False)
     payment_plan_threed_ok = fields.Boolean(related='company_id.payment_plan_threed_ok', readonly=False)
 
+    payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_advance_amount_readonly = fields.Boolean(related='company_id.payment_advance_amount_readonly', readonly=False)
     payment_advance_ok = fields.Boolean(related='company_id.payment_advance_ok', readonly=False)
     payment_token_ok = fields.Boolean(related='company_id.payment_token_ok', readonly=False)
@@ -121,6 +122,11 @@ class PaymentSettings(models.TransientModel):
     payment_page_token_wo_commission = fields.Boolean(related='company_id.payment_page_token_wo_commission', readonly=False)
     payment_page_token_view_type = fields.Selection(related='company_id.payment_page_token_view_type', readonly=False)
     payment_page_init_redirect_extra = fields.Boolean(related='company_id.payment_page_init_redirect_extra', readonly=False)
+    payment_page_init_warning_commission_ok = fields.Boolean(related='company_id.payment_page_init_warning_commission_ok', readonly=False)
+    payment_page_init_warning_commission_show_rate = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_rate', readonly=False)
+    payment_page_init_warning_commission_show_primary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_primary_advice', readonly=False)
+    payment_page_init_warning_commission_show_secondary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_secondary_advice', readonly=False)
+    payment_page_init_warning_commission_description = fields.Html(related='company_id.payment_page_init_warning_commission_description', readonly=False)
 
     payment_page_due_tag_ok = fields.Boolean(related='company_id.payment_page_due_tag_ok', readonly=False)
     payment_page_due_tag_ids = fields.One2many(related='company_id.payment_page_due_tag_ids', readonly=False)
@@ -131,7 +137,6 @@ class PaymentSettings(models.TransientModel):
     payment_page_campaign_table_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_campaign_table_opt', inverse='_set_payment_page_campaign_table_opt', string='Campaigns on Campaign Table Included on Payment Page Option')
 
     payment_page_advance_ok = fields.Boolean(related='company_id.payment_page_advance_ok', readonly=False)
-    payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_page_button_access_transaction = fields.Boolean(related='company_id.payment_page_button_access_transaction', readonly=False)
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)
     payment_page_due_ids = fields.One2many(related='company_id.payment_page_due_ids', readonly=False)

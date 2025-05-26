@@ -32,16 +32,6 @@ class SyncopsSyncWizard(models.TransientModel):
             return True
         return res
 
-    def _set_notif(self, company, partner):
-        if company.syncops_cron_sync_item_notif_ok:
-            cids = company.syncops_cron_sync_item_notif_tag_ids.ids
-            if company.syncops_cron_sync_item_notif_tag_ok:
-                return partner.category_id.id in cids
-            else:
-                return partner.category_id.id not in cids
-        else:
-            return False
-
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -342,7 +332,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     models['item'].create({
                         'syncops_ok': True,
                         'syncops_data': line['data'],
-                        'syncops_notif': self._set_notif(company, partner),
+                        'syncops_notif': True,
                         'syncops_data': json.dumps(line['data'], default=str),
                         'system': self.system or company.system,
                         'amount': line['partner_balance'],
@@ -421,7 +411,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     item = models['item'].create({
                         'syncops_ok': True,
                         'syncops_data': line['data'],
-                        'syncops_notif': self._set_notif(company, partner),
+                        'syncops_notif': True,
                         'system': self.system or company.system,
                         'amount': line['invoice_amount'],
                         'description': line['invoice_name'],
@@ -448,7 +438,6 @@ class SyncopsSyncWizard(models.TransientModel):
         wizard = self.browse(self.env.context.get('wizard_id', 0))
         if wizard:
             company = self.env.company
-
             users_model = self.env['res.users']
             users = users_model.search_read([
                 ('email', 'in', wizard.line_ids.mapped('partner_user_email'))
@@ -502,6 +491,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
             elif wizard.type == 'item':
                 pairs['models']['item'] = self.env['payment.item']
+                pairs['models']['item'].search([('company_id', '=', company.id), ('syncops_notif', '=', True)]).write({'syncops_notif': False})
                 if wizard.type_item_subtype == 'balance':
                     wizard._sync_item_balance(**pairs)
                 elif wizard.type_item_subtype == 'invoice':
