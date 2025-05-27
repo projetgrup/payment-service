@@ -14,6 +14,7 @@ class Company(models.Model):
     payment_page_init_redirect_extra = fields.Boolean(string='Payment Page Extra Redirection Upon Payment Initialization')
     payment_page_init_warning_commission_ok = fields.Boolean(string='Payment Page Commission Warning Before Payment Initialization')
     payment_page_init_warning_commission_show_rate = fields.Boolean(string='Payment Page Commission Warning Show Rate')
+    payment_page_init_warning_commission_show_calculation = fields.Boolean(string='Payment Page Commission Warning Show Calculation')
     payment_page_init_warning_commission_show_primary_advice = fields.Boolean(string='Payment Page Commission Warning Show Primary Advice')
     payment_page_init_warning_commission_show_secondary_advice = fields.Boolean(string='Payment Page Commission Warning Show Secondary Advice')
     payment_page_init_warning_commission_description = fields.Html(string='Payment Page Commission Warning Description')

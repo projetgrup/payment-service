@@ -44,7 +44,7 @@
                             <div class="content-group" attrs="{'invisible': [('syncops_cron_sync_partner', '=', False)]}">
                                 <div class="row mt16">
                                     <label for="syncops_cron_sync_partner_day_ids" string="Sync Day" class="col-lg-4 o_light_label"/>
-                                    <field name="syncops_cron_sync_partner_day_ids" class="o_syncops_checkboxes_horizontal" widget="many2many_checkboxes"/>
+                                    <field name="syncops_cron_sync_partner_day_ids" class="o_checkboxes_horizontal" widget="many2many_checkboxes"/>
                                 </div>
                                 <div class="row">
                                     <label for="syncops_cron_sync_partner_hour" string="Sync Time" class="col-lg-4 o_light_label"/>
@@ -133,7 +133,7 @@
                             <div class="content-group" attrs="{'invisible': [('syncops_cron_sync_item', '=', False)]}">
                                 <div class="row mt16">
                                     <label for="syncops_cron_sync_item_day_ids" string="Sync Day" class="col-lg-4 o_light_label"/>
-                                    <field name="syncops_cron_sync_item_day_ids" class="o_syncops_checkboxes_horizontal" widget="many2many_checkboxes"/>
+                                    <field name="syncops_cron_sync_item_day_ids" class="o_checkboxes_horizontal" widget="many2many_checkboxes"/>
                                 </div>
                                 <div class="row">
                                     <label for="syncops_cron_sync_item_hour" string="Sync Time" class="col-lg-4 o_light_label"/>
@@ -152,7 +152,7 @@
                                 </div>
                                 <div class="row ml-0 border-left" style="border-width:2px !important" attrs="{'invisible': [('syncops_cron_sync_item_notif_ok', '=', False)]}">
                                     <label for="syncops_cron_sync_item_notif_type_ids" string="Notification Type" class="col-lg-4 o_light_label"/>
-                                    <field name="syncops_cron_sync_item_notif_type_ids" class="o_syncops_checkboxes_horizontal" widget="many2many_checkboxes"/>
+                                    <field name="syncops_cron_sync_item_notif_type_ids" class="o_checkboxes_horizontal" widget="many2many_checkboxes"/>
                                 </div>
                                 <div class="row ml-0 border-left" style="border-width:2px !important" attrs="{'invisible': [('syncops_cron_sync_item_notif_ok', '=', False)]}">
                                     <label for="syncops_cron_sync_item_notif_hour" string="Notification Time" class="col-lg-4 o_light_label"/>

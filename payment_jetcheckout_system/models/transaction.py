@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 import requests
 import traceback
+from pytz import timezone
+from urllib.parse import urlparse
+from datetime import datetime, timedelta
+
 from odoo import fields, models, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError, MissingError
 from odoo.addons.payment_jetcheckout.models.utils import get_main_company
 from odoo.tools.safe_eval import safe_eval, json as _json, pytz as _pytz, datetime as _datetime
+
+from .settings import DAYS
 
 _logger = logging.getLogger(__name__)
 
@@ -123,6 +130,69 @@ class PaymentTransaction(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/paylox/payment/transactions/txt?=%s' % ','.join(map(str, txs.ids))
         }
+
+    @api.model
+    def cron_export_txt(self):
+        self = self.sudo()
+        now = datetime.now()
+        tz = timezone('Europe/Istanbul')
+        now += tz.utcoffset(now)
+        pre = now - timedelta(hours=1)
+        companies = self.env['res.company'].search([
+            ('system', '!=', False),
+            ('payment_transaction_export_txt', '=', True),
+            ('payment_transaction_export_txt_code', '!=', False),
+            ('payment_transaction_export_txt_cron_ok', '=', True),
+        ])
+        for company in companies:
+            try:
+                days = map(lambda d: DAYS[d], company.payment_transaction_export_txt_cron_day_ids.mapped('code'))
+                if now.weekday() in days:
+                    hour = company.payment_transaction_export_txt_cron_hour % 24
+                    time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+                    if pre < time <= now:
+                        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+                        txt = self.export_txt([
+                            #('create_date', '>=', today - timedelta(days=1)),
+                            #('create_date', '<', today),
+                            ('create_date', '>', today),
+                            ('company_id', '=', company.id),
+                        ])
+
+                        context = self.env.context.copy()
+                        mail_server = company.mail_server_id
+                        email_from = mail_server.email_formatted or company.email_formatted
+                        context.update({'server': mail_server, 'from': email_from, 'company': company})
+                        mail_template = self.env.ref('payment_jetcheckout_system.mail_template_export_txt')
+                        for partner in company.payment_transaction_export_txt_cron_user_ids.mapped('partner_id'):
+                            context.update({
+                                'partner': partner,
+                                'lang': partner.lang,
+                                'receiver': partner.email_formatted,
+                                'company': company,
+                                'server': mail_server,
+                                'sender': mail_server.email_formatted or company.email_formatted,
+                                'domain': urlparse(self.get_base_url()).netloc,
+                            })
+                            try:
+                                with self.env.cr.savepoint():
+                                    mail_template.with_context(**context).send_mail(
+                                        partner.id,
+                                        force_send=True,
+                                        email_values={
+                                            'is_notification': True,
+                                            'mail_server_id': mail_server.id,
+                                            'attachments': [(
+                                                txt.get('filename', ''),
+                                                base64.b64encode(txt.get('content', '').encode('utf-8'))
+                                            )]
+                                        }
+                                    )
+                            except Exception as e:
+                                _logger.error('An error occured when sending export txt email to %s: %s' % (partner.name, e))
+                            self.env.cr.commit()
+            except:
+                self.env.cr.rollback()
 
     def export_txt(self, domain=[]):
         if not domain:

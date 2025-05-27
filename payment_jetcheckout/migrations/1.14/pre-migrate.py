@@ -10,5 +10,7 @@ def migrate(cr, version):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_init_warning_commission_show_primary_advice boolean')
     if not column_exists(cr, 'res_company', 'payment_page_init_warning_commission_show_secondary_advice'):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_init_warning_commission_show_secondary_advice boolean')
+    if not column_exists(cr, 'res_company', 'payment_page_init_warning_commission_show_calculation'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_init_warning_commission_show_calculation boolean')
     if not column_exists(cr, 'res_company', 'payment_page_init_warning_commission_description'):
         cr.execute('ALTER TABLE res_company ADD COLUMN payment_page_init_warning_commission_description text')

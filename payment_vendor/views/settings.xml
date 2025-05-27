@@ -54,9 +54,9 @@
                                 Allow dealers to edit payable amount on payment link
                             </div>
                             <div class="content-group">
-                                <div class="mt16">
-                                    <field name="payment_page_amount_editable_wo_exceed" class="mx-2"/>
-                                    <label for="payment_page_amount_editable_wo_exceed" class="o_light_label" string="Disallow to exceed amount"/>
+                                <div class="row mt16">
+                                    <label for="payment_page_amount_editable_wo_exceed" class="col-lg-4 o_light_label" string="Disallow to exceed amount"/>
+                                    <field name="payment_page_amount_editable_wo_exceed" widget="boolean_toggle"/>
                                 </div>
                             </div>
                         </div>

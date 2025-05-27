@@ -37,7 +37,6 @@
             <field name="nextcall" eval="(DateTime.now() + relativedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')"/>
         </record>
 
-
         <record id="mail_template_item_notif" model="mail.template">
             <field name="name">Payment: syncOPS Item Notification</field>
             <field name="model_id" ref="payment_jetcheckout_system.model_payment_item"/>
