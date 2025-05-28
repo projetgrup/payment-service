@@ -25,7 +25,7 @@
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                         <field name="active" widget="boolean_toggle"/>
                     </group>
-                    <group attrs="{'invisible': [('api_key','!=',False)]}">
+                    <group attrs="{'invisible': [('api_key','!=',False)]}" string="Credentials">
                         <label for="api_key"/>
                         <div class="o_row text-400 font-italic">
                             API Key will be here
@@ -35,13 +35,26 @@
                             Secret Key will be here
                         </div>
                     </group>
-                    <group attrs="{'invisible': [('api_key','=',False)]}">
+                    <group attrs="{'invisible': [('api_key','=',False)]}" string="Credentials">
                         <field name="api_key" widget="CopyClipboardChar" options="{'string': 'Copy API Key'}"/>
                         <field name="secret_key" widget="CopyClipboardChar" options="{'string': 'Copy Secret Key'}"/>
                         <br colspan="2" class="oe_edit_only" groups="base.group_system"/>
                         <separator colspan="2" string="Hash" class="oe_edit_only" groups="base.group_system"/>
                         <field name="hash_id" string="ID" class="oe_edit_only" groups="base.group_system"/>
                         <field name="hash_key" string="Key" class="oe_edit_only" groups="base.group_system" widget="CopyClipboardChar" options="{'string': 'Copy Hash Key'}"/>
+                    </group>
+                    <group>
+                    </group>
+                    <group>
+                        <group name="perm" string="Permissions">
+                            <div class="o_row text-nowrap">
+                                <field name="perm_payment" nolabel="1" class="oe_inline"/>
+                                <label for="perm_payment" class="font-weight-bold"/>
+                            </div>
+                            <em class="text-muted text-nowrap ml-4">grant access to use payment services like create, prepare, cancel, refund and so on</em>
+                        </group>
+                        <group>
+                        </group>
                     </group>
                 </group>
             </sheet>

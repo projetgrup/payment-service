@@ -256,32 +256,31 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     },
 
     start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
-            payloxPage.prototype._setCurrency.apply(self);
-            payloxPage.prototype._start.apply(self);
-            self.amountEditable = self.payment.amount.exist;
-            self.amountEditableWoExceed = self.payment.amountEditableWoExceed.exist;
-            if (self.payment.item.exist) {
-                self.itemPriority = self.payment.priority.exist;
-                self._onChangePaid();
-            } else if (self.payment.preview.grid.exist) {
-                self.isPreview = true;
-                self.amount = new fields.float({
+        return this._super.apply(this, arguments).then(() => {
+            payloxPage.prototype._setCurrency.apply(this);
+            payloxPage.prototype._start.apply(this);
+            this.amountEditable = this.payment.amount.exist;
+            this.amountEditableWoExceed = this.payment.amountEditableWoExceed.exist;
+            if (this.payment.item.exist) {
+                this.itemPriority = this.payment.priority.exist;
+                this._onChangePaid();
+            } else if (this.payment.preview.grid.exist) {
+                this.isPreview = true;
+                this.amount = new fields.float({
                     events: [
-                        ['input', self._onInputRawAmount],
+                        ['input', this._onInputRawAmount],
                     ],
                     default: 0,
-                    mask: payloxPage.prototype._maskAmount.bind(self),
+                    mask: payloxPage.prototype._maskAmount.bind(this),
                 });
-                payloxPage.prototype._start.apply(self, ['amount']);
-                self._getPreviewGrid();
+                payloxPage.prototype._start.apply(this, ['amount']);
+                this._getPreviewGrid();
             }
-            if (self.payment.shareqr.exist) {
-                self.amount.$.change(() => {
-                    const params = self._prepareLink();
+            if (this.payment.shareqr.exist) {
+                this.amount.$.change(() => {
+                    const params = this._prepareLink();
                     const link = window.location.origin + window.location.pathname + '?=' + encodeURIComponent(btoa(params));
-                    self.payment.shareqr.$[0].src = '/report/barcode/?type=QR&width=160&height=160&value=' + link;
+                    this.payment.shareqr.$[0].src = '/report/barcode/?type=QR&width=160&height=160&value=' + link;
                 });
             }
         });

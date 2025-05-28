@@ -16,4 +16,4 @@ class ResConfigSettings(models.TransientModel):
         ('all', 'Save for all'),
     ], string='Enable Logging for Paylox Requests', config_parameter='paylox.log')
     payment_log_ok = fields.Boolean(related='company_id.payment_log_ok', readonly=False)
-    payment_log_opt = fields.Boolean(string='Optinal Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
+    payment_log_opt = fields.Boolean(string='Optional Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)

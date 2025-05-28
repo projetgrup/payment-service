@@ -32,7 +32,6 @@
     'assets': {
         'web.assets_backend': [
             'payment_syncops/static/src/js/button.js',
-            'payment_syncops/static/src/scss/settings.scss',
         ],
         'web.assets_frontend': [
             'payment_syncops/static/src/xml/connector.xml',

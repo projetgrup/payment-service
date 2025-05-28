@@ -24,8 +24,10 @@ class PayloxAuditController(AuditController):
         ], limit=1)
         if not token:
             raise AccessError('Wrong username or password')
+        if not token.perm_audit:
+            raise AccessError('This token is not allowed to use audit services')
         if not token.company_id.sec_audit_webservice_ok:
-            raise MissingError('Not Found')
+            raise AccessError('Audit service is not active for this company')
         return token
 
 

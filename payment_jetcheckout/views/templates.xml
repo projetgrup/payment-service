@@ -104,6 +104,7 @@
         <input type="hidden" name="success_url" t-att-value="success_url" field="payment.successurl"/>
         <input type="hidden" name="fail_url" t-att-value="fail_url" field="payment.failurl"/>
         <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
+        <input t-if="company.payment_page_init_warning_commission_ok" type="hidden" name="init_warning_commission" t-att-value="json.dumps({'show_rate': company.payment_page_init_warning_commission_show_rate, 'show_calculation': company.payment_page_init_warning_commission_show_calculation,'show_primary_advice': company.payment_page_init_warning_commission_show_primary_advice,'show_secondary_advice': company.payment_page_init_warning_commission_show_secondary_advice, 'description': company.payment_page_init_warning_commission_description})" field="payment.initWarningCommission"/>
         <div id="payment_card" class="w-100">
             <t t-call="payment_jetcheckout.payment_form">
                 <t t-set="s2s" t-value="True"/>

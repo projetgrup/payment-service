@@ -28,5 +28,4 @@
         ],
     },
     'images': ['static/description/icon.png'],
-    'external_dependencies': {'python': ['jsondiff']},
 }

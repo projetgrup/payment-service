@@ -3,6 +3,8 @@
 import json
 import logging
 import operator
+from pytz import timezone
+from datetime import datetime
 
 from odoo import http, _
 from odoo.http import request, Response, Controller
@@ -23,12 +25,26 @@ class AuditController(Controller):
         log(request.cr, company=company, uid=request.session.uid, action=action, view=view, record=record)
 
     @http.route(['/security/audit/get'], type='http', auth='public', methods=['GET'], website=True)
-    def audit_get(self):
+    def audit_get(self, **params):
         try:
             token = self._auth()
             filter = token.company_id.sec_audit_webservice_filter
             domain = json.loads(filter) if filter else []
             domain += [('company_id', '=', token.company_id.id)]
+            if params:
+                date_offset = timezone('Europe/Istanbul').utcoffset(datetime.now())
+                if params.get('date_start'):
+                    try:
+                        date_start = datetime.strptime(params['date_start'], '%Y-%d-%m %H:%M:%S') - date_offset
+                    except Exception:
+                        raise UserError(_('Bad start date format'))
+                    domain += [('create_date', '>=', date_start)]
+                if params.get('date_end'):
+                    try:
+                        date_end = datetime.strptime(params['date_end'], '%Y-%d-%m %H:%M:%S') - date_offset
+                    except Exception:
+                        raise UserError(_('Bad end date format'))
+                    domain += [('create_date', '<=', date_end)]
             logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_date', 'action'])
             for log in logs:
                 del log['id']

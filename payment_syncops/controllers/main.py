@@ -7,7 +7,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 from odoo import http, fields, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError, MissingError
 from odoo.http import content_disposition, request, Response
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.tools.misc import xlsxwriter, formatLang
@@ -531,16 +531,24 @@ class PayloxSyncopsController(Controller):
             date_end = datetime.strptime(data['payment_date_end'], DT) if 'payment_date_end' in data else now
             tz = pytz.timezone('Europe/Istanbul')
             offset = tz.utcoffset(now)
-            txt = request.env['payment.transaction'].sudo().export_txt([
-                ('company_id', 'in', connector.get_company_ids()),
-                ('create_date', '>=', date_start - offset),
-                ('create_date', '<=', date_end - offset),
-            ])
-            headers = [
-                ('Content-Type', 'text/plain'),
-                ('Content-Disposition', content_disposition(txt.get('filename', '')))
-            ]
-            return request.make_response(txt.get('content', ''), headers=headers)
+            try:
+                txt = request.env['payment.transaction'].sudo().export_txt([
+                    ('company_id', 'in', connector.get_company_ids()),
+                    ('create_date', '>=', date_start - offset),
+                    ('create_date', '<=', date_end - offset),
+                ])
+                headers = [
+                    ('Content-Type', 'text/plain'),
+                    ('Content-Disposition', content_disposition(txt.get('filename', '')))
+                ]
+                return request.make_response(txt.get('content', ''), headers=headers)
+            except MissingError as e:
+                return Response(str(e), status=404)
+            except ValidationError as e:
+                return Response(str(e), status=400)
+            except UserError as e:
+                return Response(str(e), status=400)
+
         return Response('No Data Provided', status=404)
 
     @http.route(['/syncops/payment/transactions/xlsx'], type='http', auth='user', methods=['GET'], sitemap=False, website=True)
