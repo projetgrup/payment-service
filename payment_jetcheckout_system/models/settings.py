@@ -3,6 +3,15 @@ from odoo import models, fields, api, _
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 
+DAYS = {'MO': 0, 'TU': 1, 'WE': 2, 'TH': 3, 'FR': 4, 'SA': 5, 'SU': 6}
+
+class PaymentSettingsDay(models.Model):
+    _name = 'payment.settings.day'
+    _description = 'Payment Settings Days'
+
+    name = fields.Char(translate=True, required=True)
+    code = fields.Char(required=True)
+
 
 class PaymentSettings(models.TransientModel):
     _name = 'payment.settings'
@@ -88,17 +97,22 @@ class PaymentSettings(models.TransientModel):
 
     payment_transaction_export_txt = fields.Boolean(related='company_id.payment_transaction_export_txt', readonly=False)
     payment_transaction_export_txt_code = fields.Text(related='company_id.payment_transaction_export_txt_code', readonly=False)
+    payment_transaction_export_txt_cron_ok = fields.Boolean(related='company_id.payment_transaction_export_txt_cron_ok', readonly=False)
+    payment_transaction_export_txt_cron_hour = fields.Integer(related='company_id.payment_transaction_export_txt_cron_hour', readonly=False)
+    payment_transaction_export_txt_cron_day_ids = fields.Many2many(related='company_id.payment_transaction_export_txt_cron_day_ids', readonly=False)
+    payment_transaction_export_txt_cron_user_ids = fields.Many2many(related='company_id.payment_transaction_export_txt_cron_user_ids', readonly=False)
 
     payment_plan_use_base_amount = fields.Boolean(related='company_id.payment_plan_use_base_amount', readonly=False)
     payment_plan_fullscreen_ok = fields.Boolean(related='company_id.payment_plan_fullscreen_ok', readonly=False)
     payment_plan_threed_ok = fields.Boolean(related='company_id.payment_plan_threed_ok', readonly=False)
 
+    payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_advance_amount_readonly = fields.Boolean(related='company_id.payment_advance_amount_readonly', readonly=False)
     payment_advance_ok = fields.Boolean(related='company_id.payment_advance_ok', readonly=False)
     payment_token_ok = fields.Boolean(related='company_id.payment_token_ok', readonly=False)
     payment_point_ok = fields.Boolean(related='company_id.payment_point_ok', readonly=False)
     payment_log_ok = fields.Boolean(related='company_id.payment_log_ok', readonly=False)
-    payment_log_opt = fields.Boolean(string='Optinal Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
+    payment_log_opt = fields.Boolean(string='Optional Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
 
     payment_page_ok = fields.Boolean(related='company_id.payment_page_ok', readonly=False)
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
@@ -121,6 +135,12 @@ class PaymentSettings(models.TransientModel):
     payment_page_token_wo_commission = fields.Boolean(related='company_id.payment_page_token_wo_commission', readonly=False)
     payment_page_token_view_type = fields.Selection(related='company_id.payment_page_token_view_type', readonly=False)
     payment_page_init_redirect_extra = fields.Boolean(related='company_id.payment_page_init_redirect_extra', readonly=False)
+    payment_page_init_warning_commission_ok = fields.Boolean(related='company_id.payment_page_init_warning_commission_ok', readonly=False)
+    payment_page_init_warning_commission_show_rate = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_rate', readonly=False)
+    payment_page_init_warning_commission_show_calculation = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_calculation', readonly=False)
+    payment_page_init_warning_commission_show_primary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_primary_advice', readonly=False)
+    payment_page_init_warning_commission_show_secondary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_secondary_advice', readonly=False)
+    payment_page_init_warning_commission_description = fields.Html(related='company_id.payment_page_init_warning_commission_description', readonly=False)
 
     payment_page_due_tag_ok = fields.Boolean(related='company_id.payment_page_due_tag_ok', readonly=False)
     payment_page_due_tag_ids = fields.One2many(related='company_id.payment_page_due_tag_ids', readonly=False)
@@ -131,7 +151,6 @@ class PaymentSettings(models.TransientModel):
     payment_page_campaign_table_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_campaign_table_opt', inverse='_set_payment_page_campaign_table_opt', string='Campaigns on Campaign Table Included on Payment Page Option')
 
     payment_page_advance_ok = fields.Boolean(related='company_id.payment_page_advance_ok', readonly=False)
-    payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_page_button_access_transaction = fields.Boolean(related='company_id.payment_page_button_access_transaction', readonly=False)
     payment_page_due_ok = fields.Boolean(related='company_id.payment_page_due_ok', readonly=False)
     payment_page_due_ids = fields.One2many(related='company_id.payment_page_due_ids', readonly=False)
@@ -210,9 +229,9 @@ class PaymentSettings(models.TransientModel):
 
         return super(PaymentSettings, self).create(values)
 
-    @api.onchange('sec_dlp_tag')
-    def onchange_sec_dlp_tag(self):
-        self.sec_dlp_tag = self.company_id.get_dlp_tag(self.sec_dlp_tag)
+    #@api.onchange('sec_dlp_tag')
+    #def onchange_sec_dlp_tag(self):
+    #    self.sec_dlp_tag = self.company_id.get_dlp_tag(self.sec_dlp_tag)
 
 
 class PaymentSettingsNotificationWebhook(models.Model):

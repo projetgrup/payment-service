@@ -217,6 +217,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             order: new fields.integer(),
             invoice: new fields.integer(),
             subscription: new fields.integer(),
+            initWarningCommission: new fields.boolean({
+                default: false,
+            }),
         };
         this.partner = new fields.integer({
             default: 0,
@@ -435,43 +438,49 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(() => {
             this._setCurrency();
             this._start();
+            if (this.payment.initWarningCommission.exist) {
+                const node = this.payment.initWarningCommission.$;
+                this.payment.initWarningCommission = JSON.parse(this.payment.initWarningCommission.value);
+                node.remove();
+            } else {
+                this.payment.initWarningCommission = false;
+            }
             const $currency = $('[field=currency]');
             $currency.on('update', () => {
                 this._setCurrency();
             });
+            this._onAcceptCardNumber({ noWarning: true });
             framework.hideLoading();
         });
     },
 
-    _onAcceptCardNumber: function () {
+    _onAcceptCardNumber: function (ev) {
         this._getInstallment();
         const card = this.card.number._.masked.currentMask;
         const limit = card.code === 'amex' ? 14 : 15;
         this.card.program = card.name;
 
         if (card.typedValue.length > limit) {
-            const self = this;
             rpc.query({
                 route: '/payment/card/valid',
                 params: { number: card.typedValue },
-            }).then(function (valid) {
-                self.card.valid = valid;
-                if (!valid) {
-                    self.displayNotification({
+            }).then((valid) => {
+                this.card.valid = valid;
+                if (!valid && !ev?.detail?.noWarning) {
+                    this.displayNotification({
                         type: 'warning',
                         title: _t('Warning'),
                         message: _t('Please enter a valid card number'),
                     });
                 }
-            }).guardedCatch(function (error) {
-                self.card.valid = false;
-                self.displayNotification({
-                    type: 'danger',
-                    title: _t('Error'),
-                    message: _t('An error occured. Please contact with your system administrator.'),
-                });
-                if (config.isDebug()) {
-                    console.error(error);
+            }).guardedCatch((error) => {
+                this.card.valid = false;
+                if (!ev?.detail?.noWarning) {
+                    this.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occured. Please contact with your system administrator.'),
+                    });
                 }
             });
         }
@@ -1072,6 +1081,25 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }
     },
 
+    _getInstallmentData: function () {
+        const installment = $('.installment-cell input:checked');
+        if (!installment.length) return {}
+        return {
+            id: installment.data('id') || 1,
+            index: installment.data('index') || 0,
+        }
+    },
+
+    _getInstallmentRow: function (id=0) {
+        if (!id) {
+            const installment = this._getInstallmentData();
+            id = installment.id;
+        }
+
+        const rows = this.installment.rows || [];
+        return rows.find(r => r.id === id);
+    },
+
     _checkData: function () {
         let checked = true;
         const type = this.type.selected;
@@ -1391,8 +1419,86 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         })
     },
 
-    _onClickPaymentButton: function () {
+    _onClickPaymentButton: function (ev) {
         if (this._checkData()) {
+            if (!ev?.detail?.noWarning && this.payment.initWarningCommission) {
+                const installmentData = this._getInstallmentData();
+                const installmentCount = installmentData.id || 1;
+                const row = this._getInstallmentRow(installmentCount);
+                const installmentRate = row.crate;
+                if (installmentRate > 0) {
+                    const advisor = (advice) => {
+                        if (advice === 1) {
+                            if (installmentCount === 1) {
+                                return false;
+                            } else {
+                                const rows = this.installment.rows || [];
+                                let index = rows.findIndex(r => r.id === installmentData.id);
+                                while (index > 0) {
+                                    index--;
+                                    if (rows[index]['crate'] === 0) {
+                                        return rows[index]['id'];
+                                    }
+                                }
+                            }
+                        } else if (advice === 2) {
+                            let rowId = installmentCount;
+                            let rowRate = installmentRate;
+                            const rows = this.installment.rows || [];
+                            for (const row of rows) {
+                                if (!row.id || row.id === installmentCount || row.crate === 0) {
+                                    continue;
+                                } else {
+                                    let monthlyRate = row.crate/row.id;
+                                    if (rowRate >= monthlyRate) {
+                                        rowId = row.id;
+                                        rowRate = monthlyRate;
+                                    }
+                                }
+                            }
+                            if (rowId === installmentCount) {
+                                return false;
+                            }
+                            return { id: rowId, rate: rowRate};
+                        }
+                        return false;
+                    };
+                    const popup = new dialog(this, {
+                        title: _t('Warning'),
+                        size: 'small',
+                        $content: qweb.render('paylox.warning.commission', {
+                            row,
+                            format,
+                            advisor,
+                            warning: this.payment.initWarningCommission,
+                            amount: this.amount.value,
+                            ...this.currency,
+                        }),
+                        buttons: [{
+                            text: _.str.sprintf(_t('Pay with %s installment(s)'), row.id),
+                            classes: 'btn-primary btn-block font-weight-bold',
+                            click: () => {
+                                this._onClickPaymentButton({ noWarning: true });
+                                popup.destroy();
+                            },
+                        }, {
+                            text: _t('Cancel'),
+                            classes: 'btn-secondary btn-block font-weight-bold',
+                            close: true,
+                        }],
+                    });
+                    popup.open().opened(() => {
+                        $('button[name=popupWarningCommissionButton]').click((e) => {
+                            const id = e.currentTarget.dataset.id;
+                            $('[field="installment.row"]').find(`input[name=${id}]`).closest('div.installment-line').click(); 
+                            this._onClickPaymentButton({ noWarning: true });
+                            popup.destroy();
+                        });
+                    });
+                    return false;
+                };
+            }
+
             framework.showLoading();
             //const href = window.location.href;
             //window.history.pushState({}, '', '/payment/redirect');

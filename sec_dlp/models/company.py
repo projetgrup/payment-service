@@ -4,7 +4,7 @@ import hashlib
 from odoo import models, fields
 
 def get_main_company(company):
-    if not company.sec_dlp_tag and company.parent_id:
+    if (not company.sec_dlp_ok or not company.sec_dlp_tag) and company.parent_id:
         return get_main_company(company.parent_id)
     return company
 
@@ -21,4 +21,4 @@ class ResCompany(models.Model):
             return base64.b64encode(hashed).decode('utf-8')
         else:
             company = get_main_company(self)
-            return company.sec_dlp_tag or ''
+            return company.sec_dlp_ok and company.sec_dlp_tag or ''

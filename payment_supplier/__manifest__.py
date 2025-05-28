@@ -12,6 +12,7 @@
     'data': [
         'security/security.xml',
         'data/data.xml',
+        'report/report.xml',
         'views/item.xml',
         'views/partner.xml',
         'views/actions.xml',

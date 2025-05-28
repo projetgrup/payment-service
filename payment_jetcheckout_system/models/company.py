@@ -41,7 +41,23 @@ class Company(models.Model):
 
     payment_transaction_export_txt = fields.Boolean(string='Payment Transaction Export TXT')
     payment_transaction_export_txt_code = fields.Text(string='Payment Transaction Export TXT Code')
-
+    payment_transaction_export_txt_cron_ok = fields.Boolean(string='Payment Transaction Export TXT Cronjob')
+    payment_transaction_export_txt_cron_hour = fields.Integer(string='Payment Transaction Export TXT Cronjob Hour')
+    payment_transaction_export_txt_cron_day_ids = fields.Many2many(
+        comodel_name='payment.settings.day',
+        relation='payment_settings_day_txt_rel',
+        column1='company_id',
+        column2='day_id',
+        string='Payment Transaction Export TXT Cronjob Days'
+    )
+    payment_transaction_export_txt_cron_user_ids = fields.Many2many(
+        comodel_name='res.users',
+        relation='res_company_user_txt_rel',
+        column1='company_id',
+        column2='user_id',
+        domain="[('company_id', '=', company_id)]",
+        string='Payment Transaction Export TXT Cronjob Users'
+    )
     payment_page_advance_ok = fields.Boolean(string='Payment Page Advance')
     payment_page_due_ok = fields.Boolean(string='Payment Page Due')
     payment_page_due_ids = fields.One2many('payment.settings.due', 'company_id', 'Payment Page Dues', domain='[("tag_id", "=", False)]', context={'no_tag': True})

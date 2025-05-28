@@ -1,52 +1,26 @@
 # -*- coding: utf-8 -*-
 from . import company
+from . import report
 
 import logging
-from odoo import models, api
-from odoo.http import request
+from odoo.http import request, root
 
 _logger = logging.getLogger(__name__)
-
-
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
-
-    @api.model
-    def _run_wkhtmltopdf(
-            self,
-            bodies,
-            header=None,
-            footer=None,
-            landscape=False,
-            specific_paperformat_args=None,
-            set_viewport_size=False):
-        try:
-            dlptag = self.env.company.get_dlp_tag()
-            bodies[-1] += f'<div style="display:none">{dlptag}</div>'
-        except:
-            pass
-        return super(IrActionsReport, self)._run_wkhtmltopdf(
-            bodies,
-            header=header,
-            footer=footer,
-            landscape=landscape,
-            specific_paperformat_args=specific_paperformat_args,
-            set_viewport_size=set_viewport_size
-        )
 
 try:
     import xlwt
 
     class PatchedWorkbook(xlwt.Workbook):
 
-        def save(self, filename_or_stream):
-            try:
-                dlptag = request.env.company.get_dlp_tag()
-                dlpsheet = self.add_sheet()
-                dlpsheet.write(0, 0, dlptag)
-            except:
-                pass
-            return super(PatchedWorkbook, self).save(filename_or_stream)
+        def add_sheet(self, name, cell_overwrite_ok=False):
+            res = super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
+            cids = request.httprequest.cookies.get('cids')
+            if cids:
+                cid = cids.split(',', 1)[0]
+                company = request.env['res.company'].sudo().browse(int(cid))
+                if company.sec_dlp_ok:
+                    res.write(1040000, 1040000, company.get_dlp_tag())
+            return res
 
     xlwt.Workbook = PatchedWorkbook
 
@@ -58,15 +32,28 @@ try:
 
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
 
-        def close(self):
+        def add_worksheet(self, name=None, **kw):
+            res = super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
             try:
-                dlptag = request.env.company.get_dlp_tag()
-                dlpsheet = self.add_worksheet()
-                dlpsheet.hide()
-                dlpsheet.write('A1', dlptag)
+                cids = request.httprequest.cookies.get('cids')
+                sid = request.httprequest.cookies.get('session_id')
+                uid = root.session_store.get(sid)['uid']
             except:
-                pass
-            return super(PatchedXlsxWorkbook, self).close()
+                cids, uid = None, None
+            if cids:
+                cid = cids.split(',', 1)[0]
+                company = request.env['res.company'].sudo().browse(int(cid))
+                if company.sec_dlp_ok:
+                    formatter = self.add_format({'num_format': ';;;', 'font_color': '#FFFFFF'})
+                    res.write('XEV1040000', company.get_dlp_tag(), formatter)
+                    res.set_row(1039999, None, None, {'hidden': True})
+                    res.set_column('XEV:XEV', None, None, {'hidden': True})
+                    if uid:
+                        user = request.env['res.users'].sudo().browse(int(uid))
+                        if user:
+                            res.write('XEW1040000', user.email or user.login or '', formatter)
+                            res.set_column('XEW:XEW', None, None, {'hidden': True})
+            return res
 
     xlsxwriter.Workbook = PatchedXlsxWorkbook
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="form_api" model="ir.ui.view">
+    <field name="model">payment.acquirer.jetcheckout.api</field>
+    <field name="inherit_id" ref="payment_jetcheckout_api.api_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='perm']" position="inside">
+            <div class="o_row text-nowrap">
+                <field name="perm_audit" nolabel="1" class="oe_inline"/>
+                <label for="perm_audit" class="font-weight-bold"/>
+            </div>
+            <em class="text-muted text-nowrap ml-4">grant access to get audit logs with given date range</em>
+        </xpath>
+    </field>
+    </record>
+</odoo>

@@ -179,6 +179,29 @@
                                     <div class="content-group" attrs="{'invisible': [('payment_transaction_export_txt', '=', False)]}">
                                         <div class="row mt16">
                                             <notebook class="w-100 mx-3">
+                                                <page string="Options">
+                                                    <div class="content-group">
+                                                        <div class="row mt16">
+                                                            <label for="payment_transaction_export_txt_cron_ok" string="Send Email" class="col-lg-4 o_light_label"/>
+                                                            <field name="payment_transaction_export_txt_cron_ok" class="oe_inline" widget="boolean_toggle"/>
+                                                        </div>
+                                                        <div class="row mt16" attrs="{'invisible': [('payment_transaction_export_txt_cron_ok', '=', False)]}">
+                                                            <label for="payment_transaction_export_txt_cron_day_ids" string="Days" class="col-lg-4 o_light_label"/>
+                                                            <field name="payment_transaction_export_txt_cron_day_ids" class="o_checkboxes_horizontal" widget="many2many_checkboxes"/>
+                                                        </div>
+                                                        <div class="row mt16" attrs="{'invisible': [('payment_transaction_export_txt_cron_ok', '=', False)]}">
+                                                            <label for="payment_transaction_export_txt_cron_hour" string="Hour" class="col-lg-4 o_light_label"/>
+                                                            <span class="border rounded pr-2 pt-1">
+                                                                <field name="payment_transaction_export_txt_cron_hour" class="text-right text-700 m-0 font-weight-bold bg-none" style="width:24px;margin-top:-2px;border:none" placeholder="00"/>
+                                                                <span class="text-muted">: 00</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="row mt16" attrs="{'invisible': [('payment_transaction_export_txt_cron_ok', '=', False)]}">
+                                                            <label for="payment_transaction_export_txt_cron_user_ids" string="Users" class="col-lg-4 o_light_label"/>
+                                                            <field name="payment_transaction_export_txt_cron_user_ids" widget="many2many_avatar_user" options="{'no_create': True, 'no_open': True}"/>
+                                                        </div>
+                                                    </div>
+                                                </page>
                                                 <page string="Code">
                                                     <field name="payment_transaction_export_txt_code" class="oe_inline" widget="ace" options="{'mode': 'python'}" attrs="{'required': [('payment_transaction_export_txt', '!=', False)]}"/>
                                                 </page>
@@ -408,6 +431,39 @@
                                     <label for="payment_page_init_redirect_extra" string="Add Extra Redirection Upon Payment"/>
                                     <div class="text-muted">
                                         Redirect user to an extra path before result page
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_warning_commission_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_warning_commission_ok" string="Commission Warning Before Payment"/>
+                                    <div class="text-muted">
+                                        Show a warning dialog to payer if any commission is calculated for relevant payment
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_init_warning_commission_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_rate" string="Show Rate" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_rate" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_calculation" string="Show Calculation" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_calculation" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_primary_advice" string="Show Primary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_primary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_secondary_advice" string="Show Secondary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_secondary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_description" string="Description" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_description"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

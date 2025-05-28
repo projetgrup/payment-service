@@ -145,6 +145,7 @@ class PayloxApiController(Controller):
             return self._redirect(company_id=company_id)
 
         self._set('company', tx.company_id.id) #TODO Its acquirer bound has been released
+        self._set('token', tx.jetcheckout_order_id)
 
         if tx.jetcheckout_api_method:
             return werkzeug.utils.redirect('/payment/%s' % tx.jetcheckout_api_method)
