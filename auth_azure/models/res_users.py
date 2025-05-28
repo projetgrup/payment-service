@@ -64,7 +64,9 @@ class ResUsers(models.Model):
     @api.model
     def _signup_create_user(self, values):
         if self.env.context.get('oauth_signup') and self.env.company.auth_unauthorized_action == 'create':
-            return self._create_user_from_template(values)
+            user = self._create_user_from_template(values)
+            user.with_user(user)._update_last_login()
+            return user
         return super()._signup_create_user(values)
 
     @api.model
@@ -130,12 +132,16 @@ class ResUsers(models.Model):
                     raise AccessDenied()
 
             validation.update({
-                'ref': str(validation.get('name', '')),
+                'ref': str(validation.get('unique_name', '')),
                 'name': ' '.join([
                     str(validation.get('given_name', '')),
                     str(validation.get('family_name', ''))
                 ]),
             })
+            if not validation.get('email'):
+                validation.update({
+                    'email': validation.get('upn', '')
+                })
         return super()._auth_oauth_signin(provider, validation, params)
 
     @api.model
@@ -153,6 +159,9 @@ class ResUsers(models.Model):
 
     @api.model
     def auth_oauth(self, provider, params):
+        company = self.env['auth.oauth.provider'].sudo().browse(provider).company_id
+        if company:
+            self = self.with_company(company)
         if params.get('code'):
             params['access_token'] = params['code']
             self = self.with_context(oauth_code=True, oauth_signup=True)
