@@ -351,7 +351,7 @@
                 You're about to make payment with <strong t-esc="row.id" class="text-primary"/> installment(s)<t t-if="warning.show_rate"> and <strong t-esc="format.percentage(row.crate)" class="text-primary" /> commission rate</t>.
             </div>-->
             <div class="mt-4 text-700" style="font-size:1.1em">
-                Ödemenizi <strong t-esc="row.id" class="text-primary"/> taksit <t t-if="warning.show_rate"> ve <strong t-esc="format.percentage(row.crate)" class="text-primary" />komisyon oranı</t> ile tamamlamak üzeresiniz.
+                Ödemenizi <strong t-esc="row.id" class="text-primary"/> taksit <t t-if="warning.show_rate"> ve <strong t-esc="format.percentage(row.crate)" class="text-primary" /> komisyon oranı </t> ile tamamlamak üzeresiniz.
             </div>
             <!--<div class="mt-4 text-700" style="font-size:1.1em">
                 Calculated payment amount will be <strong t-esc="format.currency(total, position, symbol, decimal)" class="text-primary"/>.
@@ -385,7 +385,7 @@
                         <td class="font-italic pt-2" colspan="3">* Monthly <t t-if="show_rate">commission amount</t><t t-else="">service fee</t> will be <span t-esc="format.currency(total/row.id, position, symbol, decimal)"/> (<span t-esc="format.percentage(row.crate/row.id)" class="small"/>)</td>
                     </tr>-->
                     <tr t-if="row.id > 0">
-                        <td class="font-italic pt-2" colspan="3">* Aylık <t t-if="show_rate">komisyon tutarı</t><t t-else="">hizmet bedeli</t> <span t-esc="format.currency(total/row.id, position, symbol, decimal)"/> olacaktır (<span t-esc="format.percentage(row.crate/row.id)" class="small"/>)</td>
+                        <td class="font-italic pt-2" colspan="3">* <t t-if="show_rate">komisyon tutarı</t><t t-else="">hizmet bedeli</t> <span t-esc="format.currency((total-amount)/row.id, position, symbol, decimal)"/> olacaktır (<span t-esc="format.percentage(row.crate/row.id)" class="small"/>)</td>
                     </tr>
                 </table>
             </div>

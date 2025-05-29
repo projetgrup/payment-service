@@ -149,6 +149,8 @@ class PaymentTransaction(models.Model):
                     'tag': self.paylox_item_tag_name or '',
                     'date': date.strftime('%Y-%m-%d %H:%M:%S'),
                     'amount': abs(item.amount),
+                    'user': self.create_uid,
+                    'user_login': self.create_uid.login or '',
                     'reference': item.item_id.description or '',
                     'provider': self.acquirer_id.provider,
                     'partner_name': self.partner_id.name,
