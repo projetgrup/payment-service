@@ -655,6 +655,15 @@ publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
                     });
                     return;
                 }
+                if (amount.typedValue <= 0) {
+                    this.displayNotification({
+                        type: 'warning',
+                        title: _t('Warning'),
+                        message: _t('Amount must be higher than zero.'),
+                        sticky: false,
+                    });
+                    return;
+                }
 
                 framework.showLoading();
                 $date.prop('disabled', true);
