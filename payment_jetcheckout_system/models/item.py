@@ -89,10 +89,10 @@ class PaymentItem(models.Model):
         for item in self:
             item.plan_exist = float_compare(item.amount, item.planned_amount, precision_rounding=item.currency_id.rounding) <= 0
 
-    @api.depends('parent_id.bank_ids.api_state')
+    @api.depends('parent_id.bank_ids.api_state', 'bank_id.api_state', 'bank_token_id.api_state')
     def _compute_plan_iban_exist(self):
         for item in self:
-            item.plan_iban_exist = bool(item.bank_ref)
+            item.plan_iban_exist = bool(item._get_bank_ref())
 
     def _compute_plan_error(self):
         for item in self:
@@ -108,11 +108,14 @@ class PaymentItem(models.Model):
 
     def _compute_bank_ref(self):
         for item in self:
-            if item.company_id.payment_item_bank_token_ok:
-                item.bank_ref = item.bank_token_id.api_state and item.bank_token_id.api_ref
-            else:
-                bank = item.parent_id.bank_ids and item.parent_id.bank_ids[0]
-                item.bank_ref = bank and bank.api_state and bank.api_ref
+            item.bank_ref = item._get_bank_ref()
+
+    def _get_bank_ref(self):
+        if self.company_id.payment_item_bank_token_ok:
+            return self.bank_token_id.api_state and self.bank_token_id.api_ref
+        else:
+            bank = self.parent_id.bank_ids and self.parent_id.bank_ids[0]
+            return bank and bank.api_state and bank.api_ref
 
     name = fields.Char(compute='_compute_name')
     child_id = fields.Many2one('res.partner', ondelete='restrict')
