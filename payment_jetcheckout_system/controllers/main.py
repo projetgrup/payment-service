@@ -111,6 +111,10 @@ class PayloxSystemController(PayloxController):
                 }
             })
             return template.view_id.id
+
+        if values.get('tx') and values['tx']['paylox_view_id']:
+            return values['tx']['paylox_view_id']['id']
+
         system = values.get('system')
         if not system:
             if values.get('tx'):
@@ -153,18 +157,20 @@ class PayloxSystemController(PayloxController):
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
         if not status:
+            status = True
+            path = ''
+            address = tx.jetcheckout_url_address
+            if address:
+                path = urlparse(address).path
+
+            if path.startswith('/tx/'):
+                return address, tx, status
+
             system = tx.company_id.system or tx.partner_id.system or request.env.company.system
             if system:
-                status = True
-                url = False
-                address = tx.jetcheckout_url_address
-                if address:
-                    path = urlparse(address).path
-                    if path.startswith('/p/'):
-                        url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
-                    elif path.startswith('/tx/'):
-                        url = address
-                if not url:
+                if address and path.startswith('/p/'):
+                    url = '%s?=%s' % (tx.partner_id._get_share_url(), kwargs.get('order_id'))
+                else:
                     url = '/my/payment/result?=%s' % kwargs.get('order_id')
         return url, tx, status
 
