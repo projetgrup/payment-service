@@ -307,6 +307,9 @@ class PayloxSystemController(PayloxController):
         if not transaction:
             raise werkzeug.exceptions.NotFound()
 
+        if transaction.jetcheckout_transaction_id:
+            transaction.paylox_query()
+
         self._del()
         self._set('token', transaction.jetcheckout_order_id)
 

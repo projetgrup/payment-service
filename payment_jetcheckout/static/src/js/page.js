@@ -1514,6 +1514,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         title: _t('Error'),
                         message: _t('An error occured.') + ' ' + result.error,
                     });
+                    if (result.reload) {
+                        window.location.reload();
+                    }
                     //window.history.pushState({}, '', href);
                     framework.hideLoading();
                 }
