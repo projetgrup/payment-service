@@ -2263,16 +2263,28 @@ class PayloxController(http.Controller):
             }
 
             if tx.paylox_product_ids:
-                data.update({
-                    "basket_items": [{
+                basket_items = []
+                for i, product in enumerate(tx.paylox_product_ids, start=1):
+                    if not product.categ:
+                        message = _('Product "%s" cannot be used in shopping credit')
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+                        return {'error': message}
+
+                    basket_items.append({
                         "id": str(i),
                         "unitPrice": product.price,
                         "name": product.name or "Diğer",
                         "brandName": product.brand or "Diğer",
                         "category": product.categ and int(product.categ) or 3,
                         "qty": product.qty and float_round(product.qty, product.qty % 1 and 2 or 0) or 1,
-                    } for i, product in enumerate(tx.paylox_product_ids, start=1)],
-                })
+                    })
+
+                data.update({"basket_items": basket_items})
+
             else:
                 data.update({
                     "basket_items": [{
