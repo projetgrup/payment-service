@@ -102,6 +102,9 @@ class PartnerBank(models.Model):
                     bank.action_api_save(mode='update')
                 else:
                     bank.action_api_save(mode='create')
+            for bank in self:
+                if not bank.api_state:
+                    bank.action_api_save()
         return res
 
     def action_api_save(self, mode=None):

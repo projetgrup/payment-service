@@ -128,6 +128,7 @@ class PaymentTransaction(models.Model):
     paylox_log_ids = fields.One2many('payment.paylox.log', 'transaction_id', 'Logs')
     paylox_log_count = fields.Integer('Log Count', compute='_compute_paylox_log_count')
     paylox_description = fields.Char()
+    paylox_view_id = fields.Many2one('ir.ui.view')
 
     @api.model
     def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):

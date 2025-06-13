@@ -100,6 +100,9 @@ class PaymentTransaction(models.Model):
         if not self.source_transaction_id and self.state not in ('done', 'cancel'):
             return
 
+        if self.jetcheckout_plan_ids or not self.env.context.get('plan_approved'):
+            return
+
         if self.state in self.acquirer_id.sudo().syncops_exclude_state_ids.mapped('value'):
             if self.jetcheckout_connector_sent:
                 self.write({'jetcheckout_connector_state': False})
@@ -149,8 +152,9 @@ class PaymentTransaction(models.Model):
                     'tag': self.paylox_item_tag_name or '',
                     'date': date.strftime('%Y-%m-%d %H:%M:%S'),
                     'amount': abs(item.amount),
-                    'user': self.create_uid,
+                    'user_id': self.create_uid.id,
                     'user_login': self.create_uid.login or '',
+                    'user_email': self.create_uid.email or '',
                     'reference': item.item_id.description or '',
                     'provider': self.acquirer_id.provider,
                     'partner_name': self.partner_id.name,
@@ -188,6 +192,9 @@ class PaymentTransaction(models.Model):
                 'tag': self.paylox_item_tag_name or '',
                 'date': date.strftime('%Y-%m-%d %H:%M:%S'),
                 'amount': abs(self.amount),
+                'user_id': self.create_uid.id,
+                'user_login': self.create_uid.login or '',
+                'user_email': self.create_uid.email or '',
                 'reference': self.reference or '',
                 'provider': self.acquirer_id.provider,
                 'partner_name': self.partner_id.name,
