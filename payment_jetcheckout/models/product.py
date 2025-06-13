@@ -9,6 +9,11 @@ from odoo.exceptions import UserError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    jetcheckout_credit_categ_id = fields.Many2one('product.category.jetcheckout.credit')
+
+    def update_jetcheckout_credit_categ(self):
+        return self.categ_id.update_jetcheckout_credit_categ()
+
     def _sanitize_vals(self, vals):
         super(ProductTemplate, self)._sanitize_vals(vals)
         if 'base_unit_count' in self._fields and ('base_unit_count' not in vals or not vals['base_unit_count']):

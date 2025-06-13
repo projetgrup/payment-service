@@ -40,8 +40,8 @@ class PaymentTransaction(models.Model):
     paylox_prepayment_amount = fields.Monetary('Prepayment Amount', readonly=True, copy=False)
     paylox_sale_ref = fields.Char('Sale Reference', readonly=True, copy=False)
     paylox_transaction_item_ids = fields.One2many('payment.transaction.item', 'transaction_id', string='Transaction Items')
-    jetcheckout_can_export_txt = fields.Boolean('Can Export TXT', compute='_compute_jetcheckout_can_export_txt')
 
+    jetcheckout_can_export_txt = fields.Boolean('Can Export TXT', compute='_compute_jetcheckout_can_export_txt')
     jetcheckout_item_ids = fields.Many2many('payment.item', 'transaction_item_rel', 'transaction_id', 'item_id', string='Payment Items')
     jetcheckout_plan_ids = fields.Many2many('payment.plan', 'transaction_plan_rel', 'transaction_id', 'plan_id', string='Payment Plans')
     jetcheckout_webhook_ok = fields.Boolean('Webhook Notification', readonly=True)
@@ -151,11 +151,10 @@ class PaymentTransaction(models.Model):
                     hour = company.payment_transaction_export_txt_cron_hour % 24
                     time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
                     if pre < time <= now:
-                        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+                        today = now.replace(hour=0, minute=0, second=0, microsecond=0) + tz.utcoffset(now)
                         txt = self.export_txt([
-                            #('create_date', '>=', today - timedelta(days=1)),
-                            #('create_date', '<', today),
-                            ('create_date', '>', today),
+                            ('create_date', '>=', today - timedelta(days=1)),
+                            ('create_date', '<', today),
                             ('company_id', '=', company.id),
                         ])
 
