@@ -449,7 +449,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $currency.on('update', () => {
                 this._setCurrency();
             });
-            this._onAcceptCardNumber({ noWarning: true });
+            this._onAcceptCardNumber({ detail: { noWarning: true } });
             framework.hideLoading();
         });
     },
@@ -1478,7 +1478,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             text: _.str.sprintf(_t('Pay with %s installment(s)'), row.id),
                             classes: 'btn-primary btn-block font-weight-bold',
                             click: () => {
-                                this._onClickPaymentButton({ noWarning: true });
+                                this._onClickPaymentButton({ detail: { noWarning: true } });
                                 popup.destroy();
                             },
                         }, {
@@ -1491,7 +1491,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         $('button[name=popupWarningCommissionButton]').click((e) => {
                             const id = e.currentTarget.dataset.id;
                             $('[field="installment.row"]').find(`input[name=${id}]`).closest('div.installment-line').click(); 
-                            this._onClickPaymentButton({ noWarning: true });
+                            this._onClickPaymentButton({ detail: { noWarning: true } });
                             popup.destroy();
                         });
                     });
