@@ -100,7 +100,7 @@ class PaymentTransaction(models.Model):
         if not self.source_transaction_id and self.state not in ('done', 'cancel'):
             return
 
-        if self.jetcheckout_plan_ids or not self.env.context.get('plan_approved'):
+        if self.jetcheckout_plan_ids and not self.env.context.get('plan_approved'):
             return
 
         if self.state in self.acquirer_id.sudo().syncops_exclude_state_ids.mapped('value'):
