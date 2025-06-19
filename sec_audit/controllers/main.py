@@ -35,13 +35,13 @@ class AuditController(Controller):
                 date_offset = timezone('Europe/Istanbul').utcoffset(datetime.now())
                 if params.get('date_start'):
                     try:
-                        date_start = datetime.strptime(params['date_start'], '%Y-%d-%m %H:%M:%S') - date_offset
+                        date_start = datetime.strptime(params['date_start'], '%Y-%m-%d %H:%M:%S') - date_offset
                     except Exception:
                         raise UserError(_('Bad start date format'))
                     domain += [('create_date', '>=', date_start)]
                 if params.get('date_end'):
                     try:
-                        date_end = datetime.strptime(params['date_end'], '%Y-%d-%m %H:%M:%S') - date_offset
+                        date_end = datetime.strptime(params['date_end'], '%Y-%m-%d %H:%M:%S') - date_offset
                     except Exception:
                         raise UserError(_('Bad end date format'))
                     domain += [('create_date', '<=', date_end)]

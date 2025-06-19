@@ -102,11 +102,7 @@
         content: "\f00c" !important;
     }
 
-    nav.o_main_navbar {
-        display: none !important;
-    }
-
-    nav.oe_main_menu_navbar {
+    nav.o_main_navbar, nav.oe_main_menu_navbar, nav#oe_main_menu_navbar {
         display: none !important;
     }
 
