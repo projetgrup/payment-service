@@ -425,6 +425,18 @@ class OrderCheckoutAPIService(Component):
 
     postauth_payments.__doc__ = _lt("Postauth Payment")
 
+    @restapi.webhook(
+        input_param=Datamodel("oco.payment.webhook"),
+        auth="public",
+        tags=['Payments']
+    )
+    def webhook_payments(self):
+        """
+        Postauth Payments
+        """
+        pass
+    webhook_payments.__doc__ = _lt("Payment Webhook")
+
     @restapi.method(
         [(["/payment/query"], "GET")],
         input_param=Datamodel("oco.payment.query.request"),
