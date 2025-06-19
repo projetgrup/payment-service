@@ -132,7 +132,7 @@ msgstr "SMS API"
 #: model:ir.model,name:sms_api.model_sms_provider
 #: model:ir.ui.menu,name:sms_api.menu_sms_provider
 msgid "SMS Providers"
-msgstr "SMS Sağlayıcılar"
+msgstr "SMS Sağlayıcıları"
 
 #. module: sms_api
 #: model:ir.model,name:sms_api.model_sms_resend

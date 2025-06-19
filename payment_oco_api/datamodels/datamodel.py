@@ -182,3 +182,11 @@ class OrderCheckoutPaymentQueryResponse(Datamodel):
     service_message = fields.String(required=False, allow_none=True, metadata={"title": _lt("Service Message"), "description": _lt("Service Message"), "example": "Success"})
     receipt_url = fields.String(required=False, allow_none=True, metadata={"title": _lt("Receipt URL"), "description": _lt("Receipt URL Address"), "example": "example.com/receipt"})
     conveyance_url = fields.String(required=False, allow_none=True, metadata={"title": _lt("Conveyance URL"), "description": _lt("Conveyance URL Address"), "example": "example.com/conveyance"})
+
+
+class OrderCheckoutPaymentWebhook(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "oco.payment.webhook"
+    _inherit = "oco.payment.query.response"

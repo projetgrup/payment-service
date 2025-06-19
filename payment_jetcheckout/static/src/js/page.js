@@ -449,7 +449,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             $currency.on('update', () => {
                 this._setCurrency();
             });
-            this._onAcceptCardNumber({ detail: { noWarning: true } });
+            if (this.card.number.exist) {
+                this._onAcceptCardNumber({ detail: { noWarning: true } });
+            }
             framework.hideLoading();
         });
     },
