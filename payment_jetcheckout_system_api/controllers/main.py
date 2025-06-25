@@ -15,9 +15,13 @@ class PayloxAuditController(AuditController):
         if 'Authorization' not in headers:
             raise AccessError('No Authorization header set')
 
-        code = headers.get('Authorization').split(' ', 1)[1]
-        auth = base64.b64decode(code).decode('utf-8')
-        username, password = auth.split(':', 1)
+        try:
+            code = headers.get('Authorization').split(' ', 1)[1]
+            auth = base64.b64decode(code).decode('utf-8')
+            username, password = auth.split(':', 1)
+        except:
+            raise AccessError('Authorization header format is not correct')
+
         token = request.env['payment.acquirer.jetcheckout.api'].sudo().search([
             ('api_key', '=', username),
             ('secret_key', '=', password)
