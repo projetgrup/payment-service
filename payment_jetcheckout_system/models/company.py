@@ -15,6 +15,7 @@ class Company(models.Model):
         for company in self:
             company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
 
+    active = fields.Boolean(default=True)
     tax_office = fields.Char()
     system = fields.Selection([])
     subsystem = fields.Selection([])
@@ -126,11 +127,20 @@ class Company(models.Model):
                 'company_id': company.id,
                 'system': vals['system'],
             })
+        if 'parent_id' in vals:
+            company.write({
+                'system': company.parent_id.system,
+                'subsystem': company.parent_id.subsystem,
+            })
+        self.sudo().search([('parent_id', '=', company.id)]).write({
+            'system': company.system,
+            'subsystem': company.subsystem,
+        })
         return company
 
     def write(self, vals):
         if 'system' in vals:
-            if self.env.user.has_group('base.group_system'):
+            if self.env.su or self.env.user.has_group('base.group_system'):
                 for company in self:
                     company.partner_id.write({
                         'company_id': company.id,
@@ -142,6 +152,13 @@ class Company(models.Model):
         res = super().write(vals)
         if 'subsystem' in vals:
             self._update_subsystem()
+
+        if 'system' in vals:
+            for company in self:
+                self.sudo().search([('parent_id', '=', company.id)]).write({'system': company.system})
+        if 'subsystem' in vals:
+            for company in self:
+                self.sudo().search([('parent_id', '=', company.id)]).write({'subsystem': company.subsystem})
         return res
 
     @api.onchange('system')

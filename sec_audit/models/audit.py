@@ -208,20 +208,25 @@ class Audit(models.Model):
         def make_write():
             def write(self, vals, **kw):
                 if self.env.company.sec_audit_ok:
-                    keys = []
+                    keys = ['id']
                     values = {}
                     for key in vals.keys():
-                        if not self._fields[key].relational:
+                        if self._fields[key].store:
                             keys.append(key)
-                    if keys:
-                        self.env.cr.execute('''
-                            SELECT id,%s
-                            FROM %s
-                            WHERE id IN (%s)
-                        ''' % (','.join(keys), self._table, ','.join(map(str, self.ids))))
-                        res = self.env.cr.dictfetchall()
-                        for rec in res:
-                            values[rec['id']] = rec
+                    if len(keys) > 1:
+                        self.env.cr.execute(f'''
+                            SELECT format('SELECT %s FROM public.{self._table} WHERE id IN ({','.join(map(str, self.ids))})', string_agg(quote_ident(column_name), ','))
+                            FROM information_schema.columns
+                            WHERE table_schema = 'public'
+                            AND table_name = '{self._table}'
+                            AND column_name IN ({','.join(["'%s'" % key for key in keys])});
+                        ''')
+                        res = request.cr.fetchone()
+                        if res:
+                            self.env.cr.execute(res[0])
+                            res = self.env.cr.dictfetchall()
+                            for rec in res:
+                                values[rec['id']] = rec
 
                 write.origin(self, vals, **kw)
 
