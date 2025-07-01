@@ -93,7 +93,8 @@ systemPage.include({
         const popup = new Dialog(this, {
             title: _t('Select a partner'),
             $content: qweb.render('paylox.syncops.partner.list', { partner }),
-            dialogClass: 'o_connector_partner_table'
+            dialogClass: 'o_connector_partner_table',
+            technical: false,
         });
         popup.opened(function() {
             self._renderConnectorPages('partner');
@@ -154,13 +155,13 @@ systemPage.include({
                 self._hideLoading();
             });
 
-            //let regex = new RegExp(query, 'i');
-            //partners = partners.filter((p) => p.name.match(regex));
-            //partner.flist = partners;
-            //partner.filter = true;
-            //this._renderConnectorPages('partner');
+            /*let regex = new RegExp(query, 'i');
+            const partners = partner.list.filter((p) => p.name.match(regex));
+            partner.flist = partners;
+            partner.filter = true;
+            this._renderConnectorPages('partner')*/
         } else {
-            partner.list = [];
+            partner.list = [];//
             partner.flist = [];
             partner.filter = false;
             this._renderConnectorPages('partner');
