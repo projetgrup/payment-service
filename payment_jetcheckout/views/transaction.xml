@@ -245,6 +245,7 @@
             <separator/>
             <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
             <filter string="Pending" name="state_pending" domain="[('state', '=', 'pending')]"/>
+            <filter string="Authorized" name="state_authorized" domain="[('state', '=', 'authorized')]"/>
             <filter string="Done" name="state_done" domain="[('state', '=', 'done')]"/>
             <filter string="Error" name="state_error" domain="[('state', '=', 'error')]"/>
             <filter string="Cancel" name="state_cancel" domain="[('state', '=', 'cancel')]"/>

@@ -333,6 +333,20 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_partner_unique_field" string="Unique Partner Field"/>
+                                    <div class="text-muted">
+                                        Select which field must be used for uniqueness when taking care of partners
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <field name="payment_partner_unique_field" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_plan_fullscreen_ok"/>
                                 </div>

@@ -177,6 +177,8 @@ class PaymentSettings(models.TransientModel):
     notif_sms_success_ok = fields.Boolean(related='company_id.notif_sms_success_ok', readonly=False)
     notif_webhook_ids = fields.One2many(related='company_id.notif_webhook_ids', readonly=False)
 
+    payment_partner_unique_field = fields.Selection(related='company_id.payment_partner_unique_field', readonly=False)
+
     def start(self):
         return self.next()
 

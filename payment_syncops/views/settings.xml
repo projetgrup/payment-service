@@ -66,6 +66,17 @@
                     </div>
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
+                            <field name="syncops_payment_page_repull_partners"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_payment_page_repull_partners" string="Repull Partners when Searching"/>
+                            <div class="text-muted">
+                                When searching partners on payment page, repull partners all over again
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
                             <field name="syncops_check_card"/>
                         </div>
                         <div class="o_setting_right_pane">

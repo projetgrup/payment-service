@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 06:57+0000\n"
-"PO-Revision-Date: 2025-05-28 10:53+0300\n"
+"POT-Creation-Date: 2025-07-02 12:32+0000\n"
+"PO-Revision-Date: 2025-07-02 15:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -1463,6 +1463,7 @@ msgstr "Avans Ödemelerini Etkinleştir"
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_hook__active
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_view__active
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__active
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__active
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
 msgid "Active"
@@ -1582,6 +1583,13 @@ msgstr "Ortalama Tutar"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Amount Readonly"
 msgstr "Tutar Salt Okunur"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
+#, python-format
+msgid "Amount must be higher than zero."
+msgstr "Tutar sıfırdan büyük olmalıdır."
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
@@ -3144,6 +3152,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_partner_unique_field__vat
+msgid "ID Number"
+msgstr "Vergi No"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_view__xml_id
 msgid "ID of the view defined in xml file"
 msgstr "XML dosyasında tanımlanmış görünüm ID"
@@ -3337,6 +3350,12 @@ msgstr "İç Kullanıcı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_portal
 msgid "Is Portal"
 msgstr "Portal Kullanıcısı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__is_subdealer
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_subdealer
+msgid "Is Subdealer"
+msgstr "Altbayi"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__item_id
@@ -4825,6 +4844,12 @@ msgid "Payment Pages"
 msgstr "Ödeme Sayfaları"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_partner_unique_field
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_partner_unique_field
+msgid "Payment Partner Unique Field"
+msgstr "Ödeme İş Ortağı Tekil Alanı"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_plan_threed_ok
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_plan_threed_ok
 msgid "Payment Plan 3D Secure"
@@ -5472,6 +5497,7 @@ msgstr "Sonuç sayfasından önce kullanıcıyı ek bir yola yönlendir"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__api_ref
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__api_ref
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_company__payment_partner_unique_field__ref
 #, python-format
 msgid "Reference"
 msgstr "Referans"
@@ -5502,6 +5528,11 @@ msgstr "Avansı Kaldır"
 #, python-format
 msgid "Remove Item"
 msgstr "Ödemeyi Kaldır"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Remove from Subdealers"
+msgstr "Altbayilerden Kaldır"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
@@ -5755,6 +5786,12 @@ msgstr ""
 "seçin"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Select which field must be used for uniqueness when taking care of partners"
+msgstr ""
+"İş ortakları ile ilgili işlemlerde hangi alanın tekil olarak kullanılacağını seçin"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__selection
 msgid "Selection"
 msgstr "Seçim"
@@ -5895,6 +5932,11 @@ msgstr "Parola Ayarla"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Set Reminder"
 msgstr "Hatırlatıcı Ayarla"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Set as Subdealer"
+msgstr "Altbayi olarak ayarla"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_form
@@ -6326,6 +6368,18 @@ msgstr "Kişi \"%s\" portal yetkisine sahip değil."
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
+msgid "The partner \"%s\" is already a subdealer of \"%s\"."
+msgstr "İş ortağı \"%s\"  zaten \"%s\" için altbayidir."
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "The partner \"%s\" is already not a subdealer."
+msgstr "İş ortağı \"%s\" zaten bir altbayi değil."
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal user."
 msgstr ""
@@ -6704,6 +6758,11 @@ msgstr "Takibi Bırak"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__uid
 msgid "Unique ID"
 msgstr "Eşsiz ID"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Unique Partner Field"
+msgstr "Tekil İş Ortağı Alanı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__unit

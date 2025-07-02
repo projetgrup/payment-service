@@ -1226,6 +1226,14 @@ class PayloxController(http.Controller):
         self._del()
         return self._get_payment_types(acquirer=kwargs['acquirer'])
 
+    @http.route('/payment/card/remove', type='json', auth='public', website=True)
+    def payment_card_remove(self, token):
+        partner = self._get_partner()
+        request.env['payment.token'].sudo().search([
+            ('partner_id', '=', partner.id),
+            ('acquirer_ref', '=', token),
+        ], limit=1).write({'active': False})
+        return {}
 
     @http.route('/payment/card/type', type='json', auth='user', website=True)
     def payment_card_type(self, acquirer=False):

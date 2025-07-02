@@ -6,14 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-25 17:42+0000\n"
-"PO-Revision-Date: 2025-01-25 17:42+0000\n"
+"POT-Creation-Date: 2025-07-02 12:32+0000\n"
+"PO-Revision-Date: 2025-07-02 12:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<em class=\"text-600 small\" attrs=\"{'invisible': [('should_send_email', '=', False)]}\">Active</em>\n"
+"                    <em class=\"text-600 small\" attrs=\"{'invisible': [('should_send_email', '=', True)]}\">Passive</em>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<em class=\"text-600 small\" attrs=\"{'invisible': [('should_send_sms', '=', False)]}\">Active</em>\n"
+"                    <em class=\"text-600 small\" attrs=\"{'invisible': [('should_send_sms', '=', True)]}\">Passive</em>"
+msgstr ""
 
 #. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
@@ -57,6 +71,20 @@ msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
 "                <b>Address</b>\n"
 "            </span>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<span class=\"o_stat_value\">Connector</span><span "
+"class=\"o_stat_text\">Failed</span>"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid ""
+"<span class=\"o_stat_value\">Connector</span><span "
+"class=\"o_stat_text\">Succeeded</span>"
 msgstr ""
 
 #. module: payment_vendor
@@ -453,6 +481,11 @@ msgid "Configuration"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "Connector Reference"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -526,6 +559,11 @@ msgid "Description"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
+msgid "Disallow to exceed amount"
+msgstr ""
+
+#. module: payment_vendor
 #: model_terms:ir.ui.view,arch_db:payment_vendor.page_payment
 msgid "Document"
 msgstr ""
@@ -576,6 +614,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_integrations
 msgid "Integration Settings"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_log
+msgid "Logs"
 msgstr ""
 
 #. module: payment_vendor
@@ -688,6 +731,11 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
+msgid "Process Connector"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.model,name:payment_vendor.model_product_attribute
 msgid "Product Attribute"
 msgstr ""
@@ -717,6 +765,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_reason
 msgid "Reasons"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_tree
+msgid "Reference"
 msgstr ""
 
 #. module: payment_vendor
@@ -811,6 +864,26 @@ msgid "Send daily report email of transactions"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
+msgid "Sending Email active"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
+msgid "Sending Email passive"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
+msgid "Sending SMS active"
+msgstr ""
+
+#. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.parent_search
+msgid "Sending SMS passive"
+msgstr ""
+
+#. module: payment_vendor
 #: model:ir.actions.act_window,name:payment_vendor.action_settings
 #: model:ir.ui.menu,name:payment_vendor.menu_settings
 msgid "Settings"
@@ -869,6 +942,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: payment_vendor
+#: model_terms:ir.ui.view,arch_db:payment_vendor.child_form
 #: model_terms:ir.ui.view,arch_db:payment_vendor.parent_form
 msgid "Tags..."
 msgstr ""
@@ -876,6 +950,11 @@ msgstr ""
 #. module: payment_vendor
 #: model:ir.ui.menu,name:payment_vendor.menu_conf_subscription_template
 msgid "Templates"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_token
+msgid "Tokens"
 msgstr ""
 
 #. module: payment_vendor
@@ -969,6 +1048,11 @@ msgstr ""
 #: model:ir.ui.menu,name:payment_vendor.menu_parent
 #: model_terms:ir.ui.view,arch_db:payment_vendor.settings_form
 msgid "Vendors"
+msgstr ""
+
+#. module: payment_vendor
+#: model:ir.ui.menu,name:payment_vendor.menu_view
+msgid "Views"
 msgstr ""
 
 #. module: payment_vendor

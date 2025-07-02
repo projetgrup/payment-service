@@ -49,15 +49,22 @@ systemPage.include({
                 getRows: () => self.connector.ledger.list,
                 lines: 'paylox.syncops.partner.ledger.line',
                 $lines: () => $('.o_connector_partner_ledger_table tbody'),
+            },
+            options: {
+                search: {
+                    repullPartners: false,
+                },
             }
         };
     },
 
     start: function () {
-        const self = this;
-        return this._super.apply(this, arguments).then(function () {
+        return this._super.apply(this, arguments).then(() => {
             if ($('.o_connector_partner_ledger_date').length) {
-                self._getConnectorPartnerLedgerList();
+                this._getConnectorPartnerLedgerList();
+            }
+            if ($('#connectorOptionsSearchRepullPartners').length) {
+                this.connector.options.search.repullPartners = true;
             }
         });
     },
@@ -140,28 +147,34 @@ systemPage.include({
         const partner = this.connector.partner;
         partner.search = query;
         if (query) {
-            const self = this;
-            self._showLoading();
-            rpc.query({
-                route: '/my/payment/partners',
-                params: { search: query }
-            }).then(function (partners) {
-                partner.list = partners;
-                partner.flist = [];
-                partner.filter = false;
-                self._renderConnectorPages('partner');
-                self._hideLoading();
-            }).guardedCatch(function (error) {
-                self._hideLoading();
-            });
+            if (this.connector.options.search.repullPartners) {
+                this._showLoading();
+                rpc.query({
+                    route: '/my/payment/partners',
+                    params: { search: query }
+                }).then((partners) => {
+                    partner.list = partners;
+                    partner.flist = [];
+                    partner.filter = false;
+                    this._renderConnectorPages('partner');
+                    this._hideLoading();
+                }).guardedCatch(() => {
+                }).finally(() => {
+                    this._hideLoading();
+                });
+            } else {
+                let regex = new RegExp(query, 'i');
+                const partners = partner.list.filter((p) => p.name.match(regex));
+                partner.flist = partners;
+                partner.filter = true;
+                this._renderConnectorPages('partner');
+            }
 
-            /*let regex = new RegExp(query, 'i');
-            const partners = partner.list.filter((p) => p.name.match(regex));
-            partner.flist = partners;
-            partner.filter = true;
-            this._renderConnectorPages('partner')*/
+            
         } else {
-            partner.list = [];//
+            if (this.connector.options.search.repullPartners) {
+                partner.list = [];
+            }
             partner.flist = [];
             partner.filter = false;
             this._renderConnectorPages('partner');

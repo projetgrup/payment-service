@@ -112,6 +112,11 @@ class Company(models.Model):
     payment_plan_fullscreen_ok = fields.Boolean(string='Payment Plan Fullscreen')
     payment_plan_threed_ok = fields.Boolean(string='Payment Plan 3D Secure')
 
+    payment_partner_unique_field = fields.Selection([
+        ('vat', 'ID Number'),
+        ('ref', 'Reference'),
+    ], string='Payment Partner Unique Field')
+
     @api.constrains('payment_transaction_export_txt_code')
     def _check_code(self):
         for company in self.sudo().filtered('payment_transaction_export_txt_code'):
@@ -209,3 +214,6 @@ class Company(models.Model):
                         ('company_id', '=', company.id),
                     ])
                 users.write({'groups_id': values})
+
+    def _get_payment_partner_unique_field(self):
+        return self._get_payment_partner_unique_field or 'vat'
