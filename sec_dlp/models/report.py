@@ -15,8 +15,9 @@ class IrActionsReport(models.Model):
             specific_paperformat_args=None,
             set_viewport_size=False):
         try:
-            dlptag = self.env.company.get_dlp_tag()
-            bodies[-1] += f'<div style="display:none">{dlptag}</div>'
+            if self.env.company.sec_dlp_ok:
+                dlptag = self.env.company.get_dlp_tag()
+                bodies[-1] += f'<div style="display:none">{dlptag}</div>'
         except:
             pass
         return super(IrActionsReport, self)._run_wkhtmltopdf(

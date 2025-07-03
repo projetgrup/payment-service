@@ -295,22 +295,26 @@
                         <img t-if="iconProgram" t-att-src="'data:image/svg+xml;base64,' + iconProgram" style="height:20px"/>
                     </div>
                 </div>
-                <div class="position-absolute">
+                <div class="card-token-check">
                     <input type="radio" name="card-token-radio" t-att-value="token.id" t-att-data-value="token.text"/>
                     <i class="fa fa-check-circle text-primary"/>
                 </div>
+                <div class="card-token-remove">
+                    <span class="btn"><i class="fa fa-trash text-500"/></span>
+                </div>
+                <div class="card-token-loading fade"/>
             </button>
         </t>
-        <button t-if="tokens.length" class="btn btn-light card-token-radio card-token-radio-add text-primary position-relative p-2" style="font-size:0.9rem">
+        <button t-if="tokens.length" class="btn btn-light card-token-radio card-token-radio-add text-primary position-relative p-2">
             <span>Pay with another card</span>
-            <div class="position-absolute">
+            <div class="card-token-check">
                 <input type="radio" name="card-token-radio" value="0" checked="checked"/>
                 <i class="fa fa-check-circle text-primary"/>
             </div>
         </button>
         <button t-else="" class="btn btn-light card-token-radio card-token-radio-new text-primary position-relative">
             <span>Save a new credit card</span>
-            <div class="position-absolute">
+            <div class="card-token-check">
                 <input type="radio" name="card-token-radio" value="0" checked="checked"/>
                 <i class="fa fa-check-circle text-primary"/>
             </div>

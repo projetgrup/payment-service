@@ -58,7 +58,10 @@ class PaymentItemImport(models.TransientModel):
             if line.user_name:
                 user_values.update({'name': line.user_name})
             if line.user_mobile:
-                user_values.update({'mobile': line.user_mobile})
+                user_values.update({
+                    'phone': line.user_mobile,
+                    'mobile': line.user_mobile
+                })
             parent = company.partner_id
 
             user = self.env['res.users'].search([('login', '=', line.user_email)], limit=1)

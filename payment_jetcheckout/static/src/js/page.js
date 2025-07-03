@@ -101,8 +101,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                         }
                         this.card.token.radio.html = qweb.render('paylox.token.radio', { search, tokens });
                         this.card.token.radio.$.find('button').each(function() {
-                            $(this).click(function() {
-                                const $input = $(this).find('input');
+                            const $button = $(this);
+                            const $input = $button.find('input');
+                            $button.click(function() {
                                 $('input[name="card-token-radio"]').prop('checked', false);
                                 $input.prop('checked', true);
 
@@ -112,6 +113,55 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     self.card.token.value = Number(self.card.token.value);
                                 }
                                 self._onChangeCardToken();
+                            });
+
+                            $button.find('.card-token-remove').on('click', function(ev) {
+                                ev.stopPropagation();
+                                ev.preventDefault();
+
+                                const popup = new dialog(self, {
+                                    title: _t('Are you sure?'),
+                                    $content: $('<div/>').text(_t('This action cannot be undone.')),
+                                    size: 'small',
+                                    technical: false,
+                                    buttons: [{
+                                        text: _t('Cancel'),
+                                        classes: 'btn-secondary text-white',
+                                        close: true,
+                                    }, {
+                                        text: _t('Remove'),
+                                        classes: 'btn-danger text-white',
+                                        click: () => {
+                                            $button.find('.card-token-loading').addClass('show');
+                                            $button.find('.card-token-radio-add').click();
+                                            popup.destroy();
+                                            rpc.query({
+                                                route: '/payment/card/remove',
+                                                params: { token: $input.val() },
+                                            }).then((res) => {
+                                                if (res.error) {
+                                                    self.displayNotification({
+                                                        type: 'danger',
+                                                        title: _t('Error'),
+                                                        message: _t('An error occured. Please contact with your system administrator.'),
+                                                    });
+                                                } else {
+                                                    $button.remove();
+                                                }
+                                            }).guardedCatch((error) => {
+                                                $button.find('.card-token-loading').removeClass('show');
+                                                if (!ev?.detail?.noWarning) {
+                                                    self.displayNotification({
+                                                        type: 'danger',
+                                                        title: _t('Error'),
+                                                        message: _t('An error occured. Please contact with your system administrator.'),
+                                                    });
+                                                }
+                                            });
+                                        },
+                                    }],
+                                });
+                                popup.open();
                             });
                         });
                     }]],

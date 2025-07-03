@@ -15,6 +15,7 @@ class Company(models.Model):
         for company in self:
             company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
 
+    active = fields.Boolean(default=True)
     tax_office = fields.Char()
     system = fields.Selection([])
     subsystem = fields.Selection([])
@@ -111,6 +112,11 @@ class Company(models.Model):
     payment_plan_fullscreen_ok = fields.Boolean(string='Payment Plan Fullscreen')
     payment_plan_threed_ok = fields.Boolean(string='Payment Plan 3D Secure')
 
+    payment_partner_unique_field = fields.Selection([
+        ('vat', 'ID Number'),
+        ('ref', 'Reference'),
+    ], string='Payment Partner Unique Field')
+
     @api.constrains('payment_transaction_export_txt_code')
     def _check_code(self):
         for company in self.sudo().filtered('payment_transaction_export_txt_code'):
@@ -126,11 +132,20 @@ class Company(models.Model):
                 'company_id': company.id,
                 'system': vals['system'],
             })
+        if 'parent_id' in vals:
+            company.write({
+                'system': company.parent_id.system,
+                'subsystem': company.parent_id.subsystem,
+            })
+        self.sudo().search([('parent_id', '=', company.id)]).write({
+            'system': company.system,
+            'subsystem': company.subsystem,
+        })
         return company
 
     def write(self, vals):
         if 'system' in vals:
-            if self.env.user.has_group('base.group_system'):
+            if self.env.su or self.env.user.has_group('base.group_system'):
                 for company in self:
                     company.partner_id.write({
                         'company_id': company.id,
@@ -142,6 +157,13 @@ class Company(models.Model):
         res = super().write(vals)
         if 'subsystem' in vals:
             self._update_subsystem()
+
+        if 'system' in vals:
+            for company in self:
+                self.sudo().search([('parent_id', '=', company.id)]).write({'system': company.system})
+        if 'subsystem' in vals:
+            for company in self:
+                self.sudo().search([('parent_id', '=', company.id)]).write({'subsystem': company.subsystem})
         return res
 
     @api.onchange('system')
@@ -192,3 +214,6 @@ class Company(models.Model):
                         ('company_id', '=', company.id),
                     ])
                 users.write({'groups_id': values})
+
+    def _get_payment_partner_unique_field(self):
+        return self._get_payment_partner_unique_field or 'vat'

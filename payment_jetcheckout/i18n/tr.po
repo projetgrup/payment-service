@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 06:57+0000\n"
-"PO-Revision-Date: 2025-05-28 10:21+0300\n"
+"POT-Creation-Date: 2025-07-02 12:32+0000\n"
+"PO-Revision-Date: 2025-07-02 15:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -57,13 +57,6 @@ msgstr "(Ana Tutar)"
 #, python-format
 msgid "(Payment Amount)"
 msgstr "(Ödeme Tutarı)"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "* Monthly"
-msgstr "* Aylık"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_token_result
@@ -1049,6 +1042,13 @@ msgid "Approved"
 msgstr "Onaylandı"
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
+#, python-format
+msgid "Are you sure?"
+msgstr "Emin misiniz?"
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__auth_code
 msgid "Auth Code"
 msgstr "Yetki Kodu"
@@ -1056,8 +1056,9 @@ msgstr "Yetki Kodu"
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction_import_line__state__authorized
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_transaction_search
 msgid "Authorized"
-msgstr "Yetkili"
+msgstr "Ön Provizyon"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_order_aux_id
@@ -1171,13 +1172,6 @@ msgstr "CVC"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_pos__calc_cust_rates
 msgid "Calculate Customer Rates"
 msgstr "Müşteri Oranlarını Hesapla"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "Calculated payment amount will be"
-msgstr "Hesaplanan ödeme tutarı"
 
 #. module: payment_jetcheckout
 #. openerp-web
@@ -1412,11 +1406,8 @@ msgid "Commission Amount"
 msgstr "Komisyon Tutarı"
 
 #. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__commission_rate
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
-#, python-format
 msgid "Commission Rate"
 msgstr "Komisyon Oranı"
 
@@ -2140,6 +2131,13 @@ msgid "Hide Terms"
 msgstr "Koşulları Gizle"
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Hizmet Bedeli"
+msgstr ""
+
+#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_bank__iban_number
 msgid "IBAN"
 msgstr "IBAN"
@@ -2331,6 +2329,8 @@ msgstr "Jetcheckout Onay Durumu"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_product_category__jetcheckout_credit_categ_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_product_product__jetcheckout_credit_categ_id
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_product_template__jetcheckout_credit_categ_id
 msgid "Jetcheckout Credit Categ"
 msgstr "Jetcheckout Kredi Kategorisi"
 
@@ -2415,6 +2415,13 @@ msgstr "Yevmiye"
 #, python-format
 msgid "Journal default account missing"
 msgstr "Yevmiye varsayılan hesap belirtilmemiş"
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Komisyon Oranı"
+msgstr ""
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_api_application____last_update
@@ -2739,7 +2746,7 @@ msgstr "Sadece tamamlanan işlemler onaylanabilir"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_res_config_settings__payment_log_opt
-msgid "Optinal Logging for Payment Requests"
+msgid "Optional Logging for Payment Requests"
 msgstr "Ödeme İstekleri için Tercihen Günlükleme"
 
 #. module: payment_jetcheckout
@@ -2826,13 +2833,6 @@ msgstr "Temassız Öde"
 
 #. module: payment_jetcheckout
 #. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "Pay with"
-msgstr "Ödeme"
-
-#. module: payment_jetcheckout
-#. openerp-web
 #: code:addons/payment_jetcheckout/static/src/js/page.js:0
 #, python-format
 msgid "Pay with %s installment(s)"
@@ -2873,6 +2873,11 @@ msgstr "Başka bir kart ile öde"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_receipt
 msgid "Payer:"
 msgstr "Ödeyen:"
+
+#. module: payment_jetcheckout
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_template
+msgid "Paylox"
+msgstr "Paylox"
 
 #. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_payment_acquirer_jetcheckout_api_application
@@ -2992,6 +2997,7 @@ msgstr "Paylox Günlükleri"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_category
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_template
 msgid "Paylox Options"
 msgstr "Paylox Seçenekleri"
 
@@ -3096,6 +3102,11 @@ msgstr "Paylox Jeton Referansı"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer__paylox_url
 msgid "Paylox Url"
 msgstr "Paylox Adresi"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__paylox_view_id
+msgid "Paylox View"
+msgstr "Paylox Görünüm"
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
@@ -3536,6 +3547,12 @@ msgid "Product"
 msgstr "Ürün"
 
 #. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "Product \"%s\" cannot be used in shopping credit"
+msgstr "\"%s\" ürünü alışveriş kredisinde kullanılamaz"
+
+#. module: payment_jetcheckout
 #: model:ir.model,name:payment_jetcheckout.model_product_category
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
@@ -3666,6 +3683,13 @@ msgstr "İade tutarı, toplam tutardan fazla olamaz"
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_transaction__jetcheckout_approval_state__-
 msgid "Rejected"
 msgstr "Reddedildi"
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
+#, python-format
+msgid "Remove"
+msgstr "Kaldır"
 
 #. module: payment_jetcheckout
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_report
@@ -3839,13 +3863,6 @@ msgid "Service Code"
 msgstr "Hizmet Kodu"
 
 #. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "Service Fee"
-msgstr "Hizmet Bedeli"
-
-#. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__service_message
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.transaction_form
 msgid "Service Message"
@@ -3897,6 +3914,7 @@ msgstr "Alışveriş Kredisi"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_category
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_template
 msgid "Shopping Credit Category"
 msgstr "Alışveriş Kredisi Kategorisi"
 
@@ -4073,10 +4091,29 @@ msgid "Third Selection Criteria"
 msgstr "Üçüncü Seçim Kriteri"
 
 #. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/js/page.js:0
+#, python-format
+msgid "This action cannot be undone."
+msgstr "Bu işlem geri alınamaz."
+
+#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "This transaction could not be found on payment server"
 msgstr "Bu işlem ödeme sunucusunda bulunamadı"
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "This transaction has been cancelled."
+msgstr "İşlem iptal edildi."
+
+#. module: payment_jetcheckout
+#: code:addons/payment_jetcheckout/controllers/main.py:0
+#, python-format
+msgid "This transaction has been expired."
+msgstr "İşlem süresi geçti."
 
 #. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/controllers/main.py:0
@@ -4276,6 +4313,7 @@ msgstr "Birim"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_category
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout.form_product_template
 msgid "Update"
 msgstr "Güncelle"
 
@@ -4430,13 +4468,6 @@ msgid "You are signed as"
 msgstr "Giriş yapılan kullanıcı"
 
 #. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "You can choose"
-msgstr "Dilerseniz"
-
-#. module: payment_jetcheckout
 #: code:addons/payment_jetcheckout/models/transaction.py:0
 #, python-format
 msgid "You do not have any permission to cancel this transaction"
@@ -4453,13 +4484,6 @@ msgstr "Bu işlemi iade etmek için bir izniniz yok"
 #, python-format
 msgid "You have to define a sequence for %s"
 msgstr "%s için bir sıra dizisi oluşturun"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "You're about to make payment with"
-msgstr "Seçilen taksit sayısı"
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_token_result
@@ -4501,13 +4525,6 @@ msgid "Your payment is successfully processed. Thank you!"
 msgstr "Ödemeniz başarılı bir şekilde alındı. Teşekkür ederiz!"
 
 #. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "and"
-msgstr "ve"
-
-#. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.payment_sidebar
 msgid "and more"
 msgstr "ve dahası"
@@ -4516,22 +4533,15 @@ msgstr "ve dahası"
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "commission amount"
-msgstr "komisyon tutarı"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "commission rate"
-msgstr "komisyon oranı"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
 msgid "commission)"
 msgstr "komisyon)"
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "hizmet bedeli"
+msgstr ""
 
 #. module: payment_jetcheckout
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.acquirer_form
@@ -4548,21 +4558,14 @@ msgstr "https://app.jetcheckout.com"
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "installment(s)"
-msgstr "taksit"
-
-#. module: payment_jetcheckout
-#. openerp-web
-#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
-#, python-format
-msgid "installment(s) to make payment with lowest monthly"
+msgid "ile tamamlamak üzeresiniz."
 msgstr ""
 
 #. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "installment(s) to make payment without"
+msgid "ile ödemenizi tamamlayabilirsiniz ("
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -4574,14 +4577,63 @@ msgstr "jetcheckout"
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "service fee"
-msgstr "hizmet bedeli"
+msgid "komisyon oranı"
+msgstr ""
 
 #. module: payment_jetcheckout
 #. openerp-web
 #: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
 #, python-format
-msgid "will be"
+msgid "komisyon tutarı"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "olacaktır ("
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "olarak hesaplanmıştır."
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "taksit"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "taksit ile öde"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "taksit seçerek aylık bazda en düşük"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "taksit seçerek herhangi bir"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "ve"
 msgstr ""
 
 #. module: payment_jetcheckout
@@ -4592,11 +4644,73 @@ msgid ""
 "will be charged from this credit card and it will be refunded immediately."
 msgstr "bu kredi kartından çekilecektir ve anında iade edilecektir."
 
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Ödemenizi"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "Ödenecek tutar"
+msgstr ""
+
+#. module: payment_jetcheckout
+#. openerp-web
+#: code:addons/payment_jetcheckout/static/src/xml/templates.xml:0
+#, python-format
+msgid "ödemeden ödemeninizi tamamlayabilirsiniz."
+msgstr ""
+
+#, python-format
+#~ msgid "* Monthly"
+#~ msgstr "* Aylık"
+
+#, python-format
+#~ msgid "Calculated payment amount will be"
+#~ msgstr "Hesaplanan ödeme tutarı"
+
+#, python-format
+#~ msgid "Pay with"
+#~ msgstr "Ödeme"
+
+#, python-format
+#~ msgid "Service Fee"
+#~ msgstr "Hizmet Bedeli"
+
+#, python-format
+#~ msgid "You can choose"
+#~ msgstr "Dilerseniz"
+
+#, python-format
+#~ msgid "You're about to make payment with"
+#~ msgstr "Seçilen taksit sayısı"
+
+#, python-format
+#~ msgid "and"
+#~ msgstr "ve"
+
+#, python-format
+#~ msgid "commission amount"
+#~ msgstr "komisyon tutarı"
+
+#, python-format
+#~ msgid "commission rate"
+#~ msgstr "komisyon oranı"
+
+#, python-format
+#~ msgid "installment(s)"
+#~ msgstr "taksit"
+
+#, python-format
+#~ msgid "service fee"
+#~ msgstr "hizmet bedeli"
+
 #~ msgid "Transaction ID"
 #~ msgstr "İşlem No"
-
-#~ msgid "Paylox"
-#~ msgstr "Paylox"
 
 #~ msgid "Credit Card Expiry"
 #~ msgstr "Kredi Kartı Son Tarihi"
