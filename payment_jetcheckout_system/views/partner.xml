@@ -31,6 +31,17 @@
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
         </xpath>
+        <xpath expr="//sheet" position="inside">
+            <notebook>
+                <page name="options" string="Options">
+                    <group>
+                        <group string="Payment Page">
+                            <field name="payment_page_item_add_desc_prefix" string="Description Prefix" placeholder="SO"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </xpath>
     </field>
     </record>
 
@@ -289,6 +300,20 @@
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
             </group>
         </search>
+    </field>
+    </record>
+
+    <record id="form_user_simple" model="ir.ui.view">
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base.view_users_simple_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//sheet" position="inside">
+            <group>
+                <group>
+                    <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
+                </group>
+            </group>
+        </xpath>
     </field>
     </record>
 

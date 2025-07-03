@@ -237,6 +237,8 @@ class PartnerCategory(models.Model):
     company_id = fields.Many2one('res.company')
     code = fields.Char()
 
+    payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -769,6 +771,16 @@ class Partner(models.Model):
 
         template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
         return True
+
+    def _get_payment_page_item_add_desc_prefix(self):
+        self.ensure_one()
+        for tag in self.user_id.partner_id.category_id:
+            if tag.payment_page_item_add_desc_prefix:
+                return tag.payment_page_item_add_desc_prefix
+        for tag in self.category_id:
+            if tag.payment_page_item_add_desc_prefix:
+                return tag.payment_page_item_add_desc_prefix
+        return False
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
