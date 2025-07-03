@@ -212,6 +212,17 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
+                                    <field name="payment_subdealer_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_subdealer_ok" string="Define Subdealers"/>
+                                    <div class="text-muted">
+                                        Allow dealers to create and track their own subdealers
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
                                     <field name="payment_page_saleref_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -256,18 +267,6 @@
                                             <field name="payment_page_item_add_date_readonly" widget="boolean_toggle"/>
                                         </div>
                                         <div class="row">
-                                            <label for="payment_page_item_add_desc_prefix" string="Description Prefix" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_page_item_add_desc_prefix" class="flex-fill" placeholder="SO"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="payment_page_item_add_desc_minlength" string="Description Minimum Length" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_page_item_add_desc_minlength" class="flex-fill" placeholder="0"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="payment_page_item_add_desc_maxlength" string="Description Maximum Length" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_page_item_add_desc_maxlength" class="flex-fill" placeholder="0"/>
-                                        </div>
-                                        <div class="row">
                                             <label for="payment_page_item_add_desc_numericonly" string="Description Numeric Only" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_item_add_desc_numericonly" class="flex-fill" widget="boolean_toggle"/>
                                         </div>
@@ -278,6 +277,44 @@
                                         <div class="row">
                                             <label for="payment_page_item_add_desc_required" string="Description Required" class="col-lg-4 o_light_label"/>
                                             <field name="payment_page_item_add_desc_required" class="flex-fill" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_minlength" string="Description Minimum Length" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_minlength" class="flex-fill" placeholder="0"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_maxlength" string="Description Maximum Length" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_maxlength" class="flex-fill" placeholder="0"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_prefix" string="Description Prefix" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_prefix" class="flex-fill" placeholder="SO"/>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_prefix_partner_category_ids" string="Description Prefix for Partner Tags" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_prefix_partner_category_ids" class="flex-fill">
+                                                <tree editable="bottom">
+                                                    <field name="category_ids" widget="many2many_tags" placeholder="Partner Tag(s)..." options="{'color_field': 'color', 'no_create': True, 'no_open': True}"/>
+                                                    <field name="prefix" placeholder="SO"/>
+                                                </tree>
+                                                <form>
+                                                    <field name="category_ids" widget="many2many_tags" placeholder="Partner Tag(s)..." options="{'color_field': 'color', 'no_create': True, 'no_open': True}"/>
+                                                    <field name="prefix" placeholder="SO"/>
+                                                </form>
+                                            </field>
+                                        </div>
+                                        <div class="row">
+                                            <label for="payment_page_item_add_desc_prefix_partner_user_ids" string="Description Prefix for Sales Representatives" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_item_add_desc_prefix_partner_user_ids" class="flex-fill">
+                                                <tree editable="bottom">
+                                                    <field name="user_ids" widget="many2many_tags" placeholder="Sales representative(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                                    <field name="prefix" placeholder="SO"/>
+                                                </tree>
+                                                <form>
+                                                    <field name="user_ids" widget="many2many_tags" placeholder="Sales representative(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                                    <field name="prefix" placeholder="SO"/>
+                                                </form>
+                                            </field>
                                         </div>
                                     </div>
                                 </div>

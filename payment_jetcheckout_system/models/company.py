@@ -86,15 +86,17 @@ class Company(models.Model):
     payment_page_amount_editable_wo_exceed = fields.Boolean(string='Payment Page Editable Amount Without Exceeding')
     payment_page_saleref_ok = fields.Boolean(string='Payment Page Can Use Sale Reference')
     payment_page_item_priority = fields.Boolean(string='Payment Page Items Priority')
-    payment_page_item_add_ok = fields.Boolean(string='Payment Page Can Add Payment Item')
     payment_page_item_expire_ok = fields.Boolean(string='Payment Page Items Expiration')
     payment_page_item_expire_value = fields.Integer(string='Payment Page Items Expiration Value')
     payment_page_item_expire_period = fields.Selection([('hours', 'Hour'), ('days', 'Day'), ('weeks', 'Week'), ('months', 'Month'), ('years', 'Year')], string='Payment Page Items Expiration Period')
+    payment_page_item_add_ok = fields.Boolean(string='Payment Page Can Add Payment Item')
     payment_page_item_add_date_readonly = fields.Boolean(string='Payment Page Add Payment Item Date Readonly')
     payment_page_item_add_desc_numericonly = fields.Boolean(string='Payment Page Add Payment Item Description Numeric Only')
     payment_page_item_add_desc_required = fields.Boolean(string='Payment Page Add Payment Item Description Required')
     payment_page_item_add_desc_unique = fields.Boolean(string='Payment Page Add Payment Item Description Unique')
     payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
+    payment_page_item_add_desc_prefix_partner_category_ids = fields.One2many('payment.item.prefix.partner.category', 'company_id', string='Payment Page Add Payment Item Description Prefix Partner Categories')
+    payment_page_item_add_desc_prefix_partner_user_ids = fields.One2many('payment.item.prefix.partner.user', 'company_id',string='Payment Page Add Payment Item Description Prefix Partner Sales Representatives')
     payment_page_item_add_desc_minlength = fields.Integer(string='Payment Page Add Payment Item Description Minimum Length')
     payment_page_item_add_desc_maxlength = fields.Integer(string='Payment Page Add Payment Item Description Maximum Length')
     payment_page_button_access_transaction = fields.Boolean(string='Payment Page See All Transactions')
@@ -116,6 +118,8 @@ class Company(models.Model):
         ('vat', 'ID Number'),
         ('ref', 'Reference'),
     ], string='Payment Partner Unique Field')
+
+    payment_subdealer_ok = fields.Boolean(string='Payment Subdealer')
 
     @api.constrains('payment_transaction_export_txt_code')
     def _check_code(self):
@@ -216,4 +220,17 @@ class Company(models.Model):
                 users.write({'groups_id': values})
 
     def _get_payment_partner_unique_field(self):
-        return self._get_payment_partner_unique_field or 'vat'
+        return self.payment_partner_unique_field or 'vat'
+
+    def _get_payment_page_item_add_desc_prefix(self, partner):
+        self.ensure_one()
+        if partner:
+            if partner.user_id and self.payment_page_item_add_desc_prefix_partner_user_ids:
+                for tag in self.payment_page_item_add_desc_prefix_partner_user_ids:
+                    if partner.user_id.id in tag.user_ids.ids:
+                        return tag.prefix
+            if partner.category_id and self.payment_page_item_add_desc_prefix_partner_category_ids:
+                for tag in self.payment_page_item_add_desc_prefix_partner_category_ids:
+                    if any(category_id in tag.category_ids.ids for category_id in partner.category_id.ids) :
+                        return tag.prefix
+        return self.payment_page_item_add_desc_prefix or None

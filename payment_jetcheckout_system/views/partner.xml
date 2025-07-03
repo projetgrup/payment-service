@@ -31,17 +31,6 @@
             <field name="code"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
         </xpath>
-        <xpath expr="//sheet" position="inside">
-            <notebook>
-                <page name="options" string="Options">
-                    <group>
-                        <group string="Payment Page">
-                            <field name="payment_page_item_add_desc_prefix" string="Description Prefix" placeholder="SO"/>
-                        </group>
-                    </group>
-                </page>
-            </notebook>
-        </xpath>
     </field>
     </record>
 
@@ -95,13 +84,14 @@
                 <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
-                <button name="action_set_subdealer" type="object" string="Set as Subdealer" attrs="{'invisible': [('is_subdealer', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
-                <button name="action_unset_subdealer" type="object" string="Remove from Subdealers" attrs="{'invisible': [('is_subdealer', '=', False)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
+                <button name="action_set_subdealer" type="object" string="Set as Subdealer" attrs="{'invisible': ['|', ('show_subdealer', '=', False), ('is_subdealer', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
+                <button name="action_unset_subdealer" type="object" string="Remove from Subdealers" attrs="{'invisible': ['|', ('show_subdealer', '=', False), ('is_subdealer', '=', False)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
                 <field name="is_portal" invisible="1"/>
                 <field name="is_subdealer" invisible="1"/>
                 <field name="is_internal" invisible="1"/>
                 <field name="is_company" invisible="1"/>
+                <field name="show_subdealer" invisible="1"/>
                 <field name="users_id" invisible="1"/>
             </header>
             <sheet>
@@ -300,20 +290,6 @@
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
             </group>
         </search>
-    </field>
-    </record>
-
-    <record id="form_user_simple" model="ir.ui.view">
-    <field name="model">res.users</field>
-    <field name="inherit_id" ref="base.view_users_simple_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="//sheet" position="inside">
-            <group>
-                <group>
-                    <field name="category_id" widget="many2many_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" options="{'color_field': 'color', 'no_create': True}" placeholder="Tags..."/>
-                </group>
-            </group>
-        </xpath>
     </field>
     </record>
 

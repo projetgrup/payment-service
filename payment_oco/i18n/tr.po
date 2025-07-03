@@ -841,7 +841,7 @@ msgstr "Etiketler..."
 #. module: payment_oco
 #: model:ir.ui.menu,name:payment_oco.menu_token
 msgid "Tokens"
-msgstr "Jetonlar"
+msgstr "Kayıtlı Kartlar"
 
 #. module: payment_oco
 #: model:mail.template,name:payment_oco.mail_transaction_daily

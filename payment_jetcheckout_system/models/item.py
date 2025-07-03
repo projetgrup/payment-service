@@ -427,3 +427,21 @@ class PaymentItem(models.Model):
                                 })
                         except Exception as e:
                             _logger.error('An error occured when sending payment due date email to partner %s (%s)' % (partner.id, e))
+
+
+class PaymentItemPrefixPartnerCategory(models.Model):
+    _name = 'payment.item.prefix.partner.category'
+    _description = 'Payment Items Add Description Prefix for Partner Categories'
+
+    company_id = fields.Many2one('res.company', ondelete='cascade')
+    category_ids = fields.Many2many('res.partner.category', 'payment_item_prefix_partner_category_rel', 'prefix_id', 'category_id', string='Tags', domain='["|", ("company_id", "=", False), ("company_id", "=", parent.company_id)]')
+    prefix = fields.Char()
+
+
+class PaymentItemPrefixPartnerUser(models.Model):
+    _name = 'payment.item.prefix.partner.user'
+    _description = 'Payment Items Add Description Prefix for Sales Representatives'
+
+    company_id = fields.Many2one('res.company', ondelete='cascade')
+    user_ids = fields.Many2many('res.users', 'payment_item_prefix_partner_user_rel', 'prefix_id', 'user_id', string='Users', domain='[("company_id", "=", parent.company_id)]')
+    prefix = fields.Char()

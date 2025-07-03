@@ -130,6 +130,8 @@ class PaymentSettings(models.TransientModel):
     payment_page_item_add_desc_required = fields.Boolean(related='company_id.payment_page_item_add_desc_required', readonly=False)
     payment_page_item_add_desc_unique = fields.Boolean(related='company_id.payment_page_item_add_desc_unique', readonly=False)
     payment_page_item_add_desc_prefix = fields.Char(related='company_id.payment_page_item_add_desc_prefix', readonly=False)
+    payment_page_item_add_desc_prefix_partner_category_ids = fields.One2many(related='company_id.payment_page_item_add_desc_prefix_partner_category_ids', readonly=False)
+    payment_page_item_add_desc_prefix_partner_user_ids = fields.One2many(related='company_id.payment_page_item_add_desc_prefix_partner_user_ids', readonly=False)
     payment_page_item_add_desc_minlength = fields.Integer(related='company_id.payment_page_item_add_desc_minlength', readonly=False)
     payment_page_item_add_desc_maxlength = fields.Integer(related='company_id.payment_page_item_add_desc_maxlength', readonly=False)
     payment_page_token_wo_commission = fields.Boolean(related='company_id.payment_page_token_wo_commission', readonly=False)
@@ -178,6 +180,8 @@ class PaymentSettings(models.TransientModel):
     notif_webhook_ids = fields.One2many(related='company_id.notif_webhook_ids', readonly=False)
 
     payment_partner_unique_field = fields.Selection(related='company_id.payment_partner_unique_field', readonly=False)
+
+    payment_subdealer_ok = fields.Boolean(related='company_id.payment_subdealer_ok', readonly=False)
 
     def start(self):
         return self.next()
