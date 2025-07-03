@@ -575,8 +575,12 @@ class OrderCheckoutAPIService(Component):
                 raise Exception('Company cannot be found')
 
         partner = api.partner_id
+        partner_field = api.company_id._get_payment_partner_unique_field()
         if getattr(params, 'partner', None):
-            partner = self.env['res.partner'].sudo().search([('vat', '=', params.partner.vat), ('company_id', '=', company.id)]).with_company(company)
+            if not hasattr(params.partner, partner_field):
+                raise Exception('Field "%s" must be set' % partner_field)
+
+            partner = self.env['res.partner'].sudo().search([(partner_field, '=', getattr(params.partner, partner_field)), ('company_id', '=', company.id)]).with_company(company)
             if len(partner) > 1:
                 raise Exception('There is more than one partner with VAT %s' % params.partner.vat)
  

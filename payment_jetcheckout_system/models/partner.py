@@ -237,6 +237,8 @@ class PartnerCategory(models.Model):
     company_id = fields.Many2one('res.company')
     code = fields.Char()
 
+    payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -312,6 +314,11 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
+            if partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id:
+                partner.is_subdealer = True
+            else:
+                partner.is_subdealer = False
+
     def _compute_payment_link_url(self):
         for partner in self:
             partner.payment_link_url = partner._get_payment_url()
@@ -349,6 +356,14 @@ class Partner(models.Model):
         op = 'in' if operator * operand == 1 else 'not in'
         return [('id', op, ids)]
 
+    def _search_is_subdealer(self, operator, operand):
+        group_user = self.env.ref('base.group_user')
+        ids = group_user.users.mapped('partner_id').ids
+        operator = 1 if operator == '=' else -1
+        operand = 1 if operand else -1
+        op = 'in' if operator * operand == 1 else 'not in'
+        return [('id', op, ids)]
+
     system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -364,6 +379,7 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     should_send_email = fields.Boolean('Should Send Email', default=True)
     should_send_sms = fields.Boolean('Should Send SMS', default=True)
+    is_subdealer = fields.Boolean(compute='_compute_user_details', search='_search_is_subdealer', compute_sudo=True, readonly=True)
     is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     is_contactless = fields.Boolean(compute='_compute_is_contactless', compute_sudo=True, readonly=True)
@@ -579,7 +595,7 @@ class Partner(models.Model):
 
             user = partner.users_id
             if not user:
-                company = self.company_id or self.env.company
+                company = partner.company_id or self.env.company
                 try:
                     user = partner_sudo.with_company(company.id)._create_portal_user()
                 except SignupError:
@@ -602,6 +618,96 @@ class Partner(models.Model):
                 message = _('%s partners have been successfully granted. But some error occured for following records:\n%s')
             raise UserError(message % (count, '\n'.join(error)))
 
+        return True
+
+    def action_set_subdealer(self):
+        count = len(self)
+        errors = {}
+
+        def _prepare_error(partner, error):
+            if count > 1:
+                errors[partner.id] = {
+                    'id': partner.id,
+                    'name': partner.name,
+                    'error': str(error)
+                }
+            else:
+                raise error
+                
+        for partner in self:
+            try:
+                partner._check_portal_user()
+            except Exception as e:
+                _prepare_error(partner, e)
+                continue
+
+            if partner.is_subdealer:
+                e = UserError(_('The partner "%s" is already a subdealer of "%s".', partner.name, partner.company_id.parent_id.name))
+                _prepare_error(partner, e)
+                continue
+
+            company = self.env['res.company'].sudo().with_context(active_test=False).search([('partner_id', '=', partner.id)], limit=1)
+            if company:
+                company.write({'active': True})
+            else:
+                partner.company_id = False
+                company = company.create({
+                    'name': partner.name,
+                    'partner_id': partner.id,
+                    'parent_id': partner.company_id.id or self.env.company.id,
+                })
+            partner.company_id = company.id
+
+            partner_sudo = partner.sudo()
+            group_user = partner_sudo.env.ref('base.group_user')
+            group_portal = partner_sudo.env.ref('base.group_portal')
+            group_public = partner_sudo.env.ref('base.group_public')
+
+            user = partner.users_id
+            if not user:
+                try:
+                    user = partner_sudo.with_company(company.id)._create_portal_user()
+                except SignupError:
+                    raise ValidationError(_('You can not have two users with the same login!'))
+
+            user = user.sudo()
+            if not user.active:
+                user.write({'active': True})
+            if not user.has_group('base.group_user') or not user.has_group('base.group_portal'):
+                user.write({'groups_id': [(4, group_user.id), (3, group_portal.id), (3, group_public.id)]})
+                partner_sudo.signup_prepare()
+                partner_sudo.with_context(active_test=True)._send_portal_email()
+
+        if errors:
+            error = ['%s (%s): %s' % (partner['name'], partner['id'], partner['error']) for partner in errors.values()]
+            count = count - len(error)
+            if count == 0:
+                message = _('%s partners have been granted. Errors are as following:\n%s')
+            else:
+                message = _('%s partners have been successfully granted. But some error occured for following records:\n%s')
+            raise UserError(message % (count, '\n'.join(error)))
+
+        return True
+
+    def action_unset_subdealer(self):
+        self.ensure_one()
+
+        if not self.is_subdealer:
+            raise UserError(_('The partner "%s" is already not a subdealer.', self.name))
+
+        self_sudo = self.sudo()
+        group_user = self_sudo.env.ref('base.group_user')
+        group_portal = self_sudo.env.ref('base.group_portal')
+        group_public = self_sudo.env.ref('base.group_public')
+        self_sudo.signup_token = False
+
+        user = self.users_id
+        if not user:
+            return True
+
+        user.sudo().write({'groups_id': [(3, group_user.id), (3, group_portal.id), (4, group_public.id)], 'active': False})
+        self_sudo.company_id.write({'active': False})
+        self_sudo.write({'company_id': self_sudo.company_id.parent_id.id, 'active': True})
         return True
 
     def action_revoke_access(self):
@@ -665,6 +771,16 @@ class Partner(models.Model):
 
         template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
         return True
+
+    def _get_payment_page_item_add_desc_prefix(self):
+        self.ensure_one()
+        for tag in self.user_id.partner_id.category_id:
+            if tag.payment_page_item_add_desc_prefix:
+                return tag.payment_page_item_add_desc_prefix
+        for tag in self.category_id:
+            if tag.payment_page_item_add_desc_prefix:
+                return tag.payment_page_item_add_desc_prefix
+        return False
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

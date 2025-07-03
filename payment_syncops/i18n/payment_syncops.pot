@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20240903\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 21:05+0000\n"
-"PO-Revision-Date: 2025-02-10 21:05+0000\n"
+"POT-Creation-Date: 2025-07-02 13:18+0000\n"
+"PO-Revision-Date: 2025-07-02 13:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,14 @@ msgid ":00"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_receipt
+msgid ""
+"<br/>\n"
+"                Reference ID:"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Connector</span><span "
@@ -41,10 +49,16 @@ msgid ""
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Connector</span><span "
 "class=\"o_stat_text\">Succeeded</span>"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "<span class=\"text-muted\">: 00</span>"
 msgstr ""
 
 #. module: payment_syncops
@@ -249,6 +263,11 @@ msgid "Connector Partner VAT"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.search_partner
+msgid "Connector Partners"
+msgstr ""
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_item__jetcheckout_connector_payment_ref
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_payment_ref
 msgid "Connector Payment Reference"
@@ -416,6 +435,11 @@ msgid "Failed"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.search_partner
+msgid "Failed Connector Partners"
+msgstr ""
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.item_search
 msgid "Failed Connector Payments"
 msgstr ""
@@ -518,6 +542,7 @@ msgstr ""
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No log found"
@@ -539,6 +564,7 @@ msgstr ""
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No syncOPS connector found"
@@ -546,6 +572,7 @@ msgstr ""
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No syncOPS endpoint URL found"
@@ -653,6 +680,11 @@ msgid "Partner Tags..."
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_tax_office
+msgid "Partner Tax Office"
+msgstr ""
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_vat
 msgid "Partner Vat"
 msgstr ""
@@ -663,6 +695,7 @@ msgid "Partners"
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.actions.server,name:payment_syncops.cron_sync_ir_actions_server
 #: model:ir.actions.server,name:payment_syncops.cron_sync_partner_ir_actions_server
 #: model:ir.cron,cron_name:payment_syncops.cron_sync_partner
 #: model:ir.cron,name:payment_syncops.cron_sync_partner
@@ -705,6 +738,11 @@ msgid "Payment Notification | {{ ctx['company']['name'] }}"
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_payment_plan
+msgid "Payment Plans"
+msgstr ""
+
+#. module: payment_syncops
 #: model:ir.model,name:payment_syncops.model_payment_settings
 msgid "Payment Settings"
 msgstr ""
@@ -726,6 +764,12 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid "Please save partner before checking connector logs"
+msgstr ""
+
+#. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
@@ -744,6 +788,7 @@ msgid "Process"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Process Connector"
 msgstr ""
@@ -774,6 +819,11 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Reference"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Repull Partners when Searching"
 msgstr ""
 
 #. module: payment_syncops
@@ -892,6 +942,11 @@ msgstr ""
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Items Before Payment Page"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync Partners Automatically"
 msgstr ""
 
@@ -938,6 +993,11 @@ msgstr ""
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync payment items without syncing new partners"
+msgstr ""
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync relevant items before opening a payment page"
 msgstr ""
 
 #. module: payment_syncops
@@ -1051,6 +1111,18 @@ msgid "Syncops Payment Page Partner Required"
 msgstr ""
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_repull_partners
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_repull_partners
+msgid "Syncops Payment Page Repull Partners"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_sync_item
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_sync_item
+msgid "Syncops Payment Page Sync Item"
+msgstr ""
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_sync_item_force
 #: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_sync_item_force
 msgid "Syncops Sync Item Force"
@@ -1091,9 +1163,29 @@ msgid "Tag"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
+msgid "Tax Office"
+msgstr ""
+
+#. module: payment_syncops
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
-msgid "There is no account line for this provider"
+msgid "There is no account line for %s."
+msgstr ""
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid "This partner has been successfully posted to connector."
+msgstr ""
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid ""
+"This partner has not been successfully posted to connector.\n"
+"%s"
 msgstr ""
 
 #. module: payment_syncops
@@ -1196,6 +1288,12 @@ msgid "Verify whether your partners' bank IBAN numbers are correct"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid ""
+"When searching partners on payment page, repull partners all over again"
+msgstr ""
+
+#. module: payment_syncops
 #: model:ir.model.fields.selection,name:payment_syncops.selection__payment_settings__syncops_cron_sync_item_notif_tag_opt__exclude
 msgid "exclude"
 msgstr ""
@@ -1257,6 +1355,30 @@ msgstr ""
 #. module: payment_syncops
 #: model:ir.model,name:payment_syncops.model_syncops_partner_iban
 msgid "syncOPS Partner Bank IBAN"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_ok
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_ok
+msgid "syncOPS Ready"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_ref
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_ref
+msgid "syncOPS Reference"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_state
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_state
+msgid "syncOPS State"
+msgstr ""
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_state_message
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_state_message
+msgid "syncOPS State Message"
 msgstr ""
 
 #. module: payment_syncops

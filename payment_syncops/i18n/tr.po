@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 21:05+0000\n"
-"PO-Revision-Date: 2025-02-11 00:14+0300\n"
+"POT-Creation-Date: 2025-07-02 13:18+0000\n"
+"PO-Revision-Date: 2025-07-02 16:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/wizards/sync.py:0
@@ -38,6 +38,16 @@ msgid ":00"
 msgstr ""
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.payment_receipt
+msgid ""
+"<br/>\n"
+"                Reference ID:"
+msgstr ""
+"<br/>\r\n"
+"                Referans No:"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Connector</span><span "
@@ -47,6 +57,7 @@ msgstr ""
 "class=\"o_stat_value\">Başarısız</span>"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid ""
 "<span class=\"o_stat_value\">Connector</span><span "
@@ -54,6 +65,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">Bağlayıcı</span><span "
 "class=\"o_stat_value\">Başarılı</span>"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "<span class=\"text-muted\">: 00</span>"
+msgstr ""
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
@@ -93,9 +109,9 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -125,9 +141,9 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -286,6 +302,11 @@ msgstr "Bağlayıcı İş Ortağı Referansı"
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_transaction__jetcheckout_connector_partner_vat
 msgid "Connector Partner VAT"
 msgstr "Bağlayıcı İş Ortağı Vergi No"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.search_partner
+msgid "Connector Partners"
+msgstr "Bağlayıcı İş Ortakları"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_item__jetcheckout_connector_payment_ref
@@ -454,6 +475,11 @@ msgid "Failed"
 msgstr "Başarısız"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.search_partner
+msgid "Failed Connector Partners"
+msgstr "Başarısız Bağlayıcı İş Ortakları"
+
+#. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.item_search
 msgid "Failed Connector Payments"
 msgstr "Başarısız Bağlayıcı Ödemeleri"
@@ -558,6 +584,7 @@ msgstr "Ad"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No log found"
@@ -579,6 +606,7 @@ msgstr "Kayıt bulunamadı"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No syncOPS connector found"
@@ -586,10 +614,11 @@ msgstr "syncOPS bağlayıcı bulunamadı"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
+#: code:addons/payment_syncops/models/partner.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
 msgid "No syncOPS endpoint URL found"
-msgstr "syncOPS uç nokta adresi bulunamadı"
+msgstr "syncOPS uç nokta adresi bulunXamadı"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
@@ -693,6 +722,11 @@ msgid "Partner Tags..."
 msgstr "İş Ortağı Etiketleri..."
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_tax_office
+msgid "Partner Tax Office"
+msgstr "İş Ortağı Vergi Dairesi"
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_syncops_sync_wizard_line__partner_vat
 msgid "Partner Vat"
 msgstr "İş Ortağı VKN"
@@ -703,6 +737,7 @@ msgid "Partners"
 msgstr "İş Ortakları"
 
 #. module: payment_syncops
+#: model:ir.actions.server,name:payment_syncops.cron_sync_ir_actions_server
 #: model:ir.actions.server,name:payment_syncops.cron_sync_partner_ir_actions_server
 #: model:ir.cron,cron_name:payment_syncops.cron_sync_partner
 #: model:ir.cron,name:payment_syncops.cron_sync_partner
@@ -745,6 +780,11 @@ msgid "Payment Notification | {{ ctx['company']['name'] }}"
 msgstr "Ödeme Bildirimi | {{ ctx['company']['name'] }}"
 
 #. module: payment_syncops
+#: model:ir.model,name:payment_syncops.model_payment_plan
+msgid "Payment Plans"
+msgstr "Ödeme Planları"
+
+#. module: payment_syncops
 #: model:ir.model,name:payment_syncops.model_payment_settings
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
@@ -766,6 +806,13 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid "Please save partner before checking connector logs"
+msgstr ""
+"Bağlayıcı günlüklerini kontrol etmeden önce lütfen iş ortağını kaydedin"
+
+#. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
@@ -785,6 +832,7 @@ msgid "Process"
 msgstr "İşle"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.form_partner
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Process Connector"
 msgstr "Bağlayıcıyı Çalıştır"
@@ -816,6 +864,11 @@ msgstr "İlişkili İş Ortağı Vergi No"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.transaction_form
 msgid "Related Reference"
 msgstr "İlgili Referans"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Repull Partners when Searching"
+msgstr "Arama Yaparken İş Ortaklarını Tekrar Çek"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.payment_sidebar
@@ -934,6 +987,11 @@ msgstr "Eşleme Günü"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync Items Before Payment Page"
+msgstr "Ödeme Sayfasından önce Kalemleri Eşle"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync Partners Automatically"
 msgstr "İş Ortaklarını Otomatik Olarak Eşle"
 
@@ -981,6 +1039,11 @@ msgstr "Ödeme kalemlerini birer birer eşle"
 #: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
 msgid "Sync payment items without syncing new partners"
 msgstr "Yeni iş ortakları olmadan ödeme kalemlerini eşle"
+
+#. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "Sync relevant items before opening a payment page"
+msgstr "Ödeme sayfasını açmadan önce ilgili kalemleri eşle"
 
 #. module: payment_syncops
 #: model_terms:ir.ui.view,arch_db:payment_syncops.form_wizard_sync
@@ -1093,6 +1156,18 @@ msgid "Syncops Payment Page Partner Required"
 msgstr "Syncops Ödeme Sayfası İş Ortağı Zorunlu"
 
 #. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_repull_partners
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_repull_partners
+msgid "Syncops Payment Page Repull Partners"
+msgstr "Syncops Ödeme Sayfası İş Ortaklarını Tekrar Çek"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_payment_page_sync_item
+#: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_payment_page_sync_item
+msgid "Syncops Payment Page Sync Item"
+msgstr "Syncops Ödeme Sayfası Kalem Eşle"
+
+#. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_payment_settings__syncops_sync_item_force
 #: model:ir.model.fields,field_description:payment_syncops.field_res_company__syncops_sync_item_force
 msgid "Syncops Sync Item Force"
@@ -1133,10 +1208,32 @@ msgid "Tag"
 msgstr "Etiket"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_item_balance
+#: model_terms:ir.ui.view,arch_db:payment_syncops.tree_wizard_sync_line_partner
+msgid "Tax Office"
+msgstr "Veri Dairesi"
+
+#. module: payment_syncops
 #: code:addons/payment_syncops/models/transaction.py:0
 #, python-format
-msgid "There is no account line for this provider"
-msgstr "Bu ödeme alıcı için bir hesap satırı yok"
+msgid "There is no account line for %s."
+msgstr "%s için hesap satırı bulunamadı."
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid "This partner has been successfully posted to connector."
+msgstr "Bu iş ortağı başarıyla bağlayıcıya gönderildi."
+
+#. module: payment_syncops
+#: code:addons/payment_syncops/models/partner.py:0
+#, python-format
+msgid ""
+"This partner has not been successfully posted to connector.\n"
+"%s"
+msgstr ""
+"Bu iş ortağı başarıyla bağlayıcıya gönderilemedi.\n"
+"%s"
 
 #. module: payment_syncops
 #: code:addons/payment_syncops/models/item.py:0
@@ -1240,6 +1337,11 @@ msgid "Verify whether your partners' bank IBAN numbers are correct"
 msgstr "İş ortakları IBAN numaralarının doğruluğunu kontrol et"
 
 #. module: payment_syncops
+#: model_terms:ir.ui.view,arch_db:payment_syncops.settings_form
+msgid "When searching partners on payment page, repull partners all over again"
+msgstr "Ödeme sayfasında iş ortaklarını ararken, onlar baştan tekrar çekin"
+
+#. module: payment_syncops
 #: model:ir.model.fields.selection,name:payment_syncops.selection__payment_settings__syncops_cron_sync_item_notif_tag_opt__exclude
 msgid "exclude"
 msgstr "hariç"
@@ -1302,6 +1404,30 @@ msgstr "syncOPS Bildirim"
 #: model:ir.model,name:payment_syncops.model_syncops_partner_iban
 msgid "syncOPS Partner Bank IBAN"
 msgstr "syncOPS İş Ortağı Banka IBAN"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_ok
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_ok
+msgid "syncOPS Ready"
+msgstr "syncOPS Hazır"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_ref
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_ref
+msgid "syncOPS Reference"
+msgstr "syncOPS Referans"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_state
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_state
+msgid "syncOPS State"
+msgstr "syncOPS Durumu"
+
+#. module: payment_syncops
+#: model:ir.model.fields,field_description:payment_syncops.field_res_partner__syncops_state_message
+#: model:ir.model.fields,field_description:payment_syncops.field_res_users__syncops_state_message
+msgid "syncOPS State Message"
+msgstr "syncOPS Durum Mesajı"
 
 #. module: payment_syncops
 #: model:ir.model.fields,field_description:payment_syncops.field_res_users__group_syncops_sync

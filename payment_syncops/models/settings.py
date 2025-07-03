@@ -38,6 +38,7 @@ class PaymentSettings(models.TransientModel):
     )
     syncops_payment_page_partner_required = fields.Boolean(related='company_id.syncops_payment_page_partner_required', readonly=False)
     syncops_payment_page_sync_item = fields.Boolean(related='company_id.syncops_payment_page_sync_item', readonly=False)
+    syncops_payment_page_repull_partners = fields.Boolean(related='company_id.syncops_payment_page_repull_partners', readonly=False)
     syncops_check_iban = fields.Boolean(related='company_id.syncops_check_iban', readonly=False)
     syncops_check_card = fields.Boolean(related='company_id.syncops_check_card', readonly=False)
 

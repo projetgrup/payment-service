@@ -222,11 +222,10 @@ class SyncopsSyncWizard(models.TransientModel):
                     user = None
 
                 pid = 0
-                if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                partner_field = company._get_payment_partner_unique_field()
+                if partner_field == 'vat' and line['partner_vat'] in vats:
                     pid = vats[line['partner_vat']]
-                elif line['partner_vat'] in vats:
-                    pid = vats[line['partner_vat']]
-                elif line['partner_ref'] in refs:
+                elif partner_field == 'ref' and line['partner_ref'] in refs:
                     pid = refs[line['partner_ref']]
 
                 if pid:
@@ -294,12 +293,12 @@ class SyncopsSyncWizard(models.TransientModel):
 
         def method_sync():
             for line in self.line_ids.read():
+
                 pid = 0
-                if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                partner_field = company._get_payment_partner_unique_field()
+                if partner_field == 'vat' and line['partner_vat'] in vats:
                     pid = vats[line['partner_vat']]
-                elif line['partner_vat'] in vats:
-                    pid = vats[line['partner_vat']]
-                elif line['partner_ref'] in refs:
+                elif partner_field == 'ref' and line['partner_ref'] in refs:
                     pid = refs[line['partner_ref']]
 
                 if pid and pid in items:
@@ -373,12 +372,12 @@ class SyncopsSyncWizard(models.TransientModel):
             items = models['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
             for line in self.line_ids:
+
                 pid = 0
-                if line['partner_vat'] in vats and line['partner_ref'] in refs and vats[line['partner_vat']] == refs[line['partner_ref']]:
+                partner_field = company._get_payment_partner_unique_field()
+                if partner_field == 'vat' and line['partner_vat'] in vats:
                     pid = vats[line['partner_vat']]
-                elif line['partner_vat'] in vats:
-                    pid = vats[line['partner_vat']]
-                elif line['partner_ref'] in refs:
+                elif partner_field == 'ref' and line['partner_ref'] in refs:
                     pid = refs[line['partner_ref']]
 
                 inv = line['invoice_id'] if pid else None
