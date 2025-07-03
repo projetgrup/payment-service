@@ -237,8 +237,6 @@ class PartnerCategory(models.Model):
     company_id = fields.Many2one('res.company')
     code = fields.Char()
 
-    payment_page_item_add_desc_prefix = fields.Char(string='Payment Page Add Payment Item Description Prefix')
-
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -314,10 +312,8 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
-            if partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id:
-                partner.is_subdealer = True
-            else:
-                partner.is_subdealer = False
+            partner.is_subdealer = partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id
+            partner.show_subdealer = self.env.company.payment_subdealer_ok
 
     def _compute_payment_link_url(self):
         for partner in self:
@@ -380,6 +376,7 @@ class Partner(models.Model):
     should_send_email = fields.Boolean('Should Send Email', default=True)
     should_send_sms = fields.Boolean('Should Send SMS', default=True)
     is_subdealer = fields.Boolean(compute='_compute_user_details', search='_search_is_subdealer', compute_sudo=True, readonly=True)
+    show_subdealer = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
     is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     is_contactless = fields.Boolean(compute='_compute_is_contactless', compute_sudo=True, readonly=True)
@@ -621,6 +618,9 @@ class Partner(models.Model):
         return True
 
     def action_set_subdealer(self):
+        if not self.env.company.payment_subdealer_ok:
+            raise UserError(_('This company is not allowed to create subdealers'))
+
         count = len(self)
         errors = {}
 
@@ -771,16 +771,6 @@ class Partner(models.Model):
 
         template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
         return True
-
-    def _get_payment_page_item_add_desc_prefix(self):
-        self.ensure_one()
-        for tag in self.user_id.partner_id.category_id:
-            if tag.payment_page_item_add_desc_prefix:
-                return tag.payment_page_item_add_desc_prefix
-        for tag in self.category_id:
-            if tag.payment_page_item_add_desc_prefix:
-                return tag.payment_page_item_add_desc_prefix
-        return False
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

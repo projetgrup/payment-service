@@ -278,6 +278,7 @@ class SyncopsSyncWizard(models.TransientModel):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
+        users = pairs.get('users')
         models = pairs.get('models')
         company = pairs.get('company')
         campaigns = pairs.get('campaigns')
@@ -293,6 +294,35 @@ class SyncopsSyncWizard(models.TransientModel):
 
         def method_sync():
             for line in self.line_ids.read():
+                if line['partner_user_email'] in users:
+                    user = self.env['res.users'].browse(users[line['partner_user_email']])
+                    user.with_context(mail_create_nolog=True).write({
+                        'name': line['partner_user_name'],
+                        'phone': line['partner_user_phone'],
+                        'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                        'company_ids': [(4, company.id)],
+                    })
+                elif line['partner_user_email']:
+                    user = models['user'].sudo().search([
+                        ('email', '=', line['partner_user_email']),
+                    ], limit=1)
+                    if user:
+                        user.with_context(mail_create_nolog=True).write({
+                            'company_ids': [(4, company.id)],
+                        })
+                    else:
+                        user = models['user'].with_context(mail_create_nolog=True).create({
+                            'system': self.system or company.system,
+                            'name': line['partner_user_name'],
+                            'login': line['partner_user_email'],
+                            'email': line['partner_user_email'],
+                            'phone': line['partner_user_phone'],
+                            'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                            'company_id': company.id,
+                            'privilege': 'user',
+                        })
+                else:
+                    user = None
 
                 pid = 0
                 partner_field = company._get_payment_partner_unique_field()
@@ -305,9 +335,11 @@ class SyncopsSyncWizard(models.TransientModel):
                     models['item'].browse(items[pid]).write({
                         'amount': line['partner_balance'],
                     })
-                else:
+                else:                
                     if pid:
                         partner = models['partner'].browse(pid)
+                        if user:
+                            partner.write({'user': user.id})
                     else:
                         partner = models['partner'].create({
                             'system': self.system or company.system,
@@ -320,6 +352,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'street': line['partner_address'],
                             'campaign_id': campaigns.get(line['partner_campaign'], False),
                             'category_id': [(6, 0, tags.get(line['partner_tag'], []))],
+                            'user_id': user and user.id,
                             'company_id': company.id,
                             'is_company': True,
                         })
@@ -350,6 +383,7 @@ class SyncopsSyncWizard(models.TransientModel):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
+        users = pairs.get('users')
         models = pairs.get('models')
         company = pairs.get('company')
         campaigns = pairs.get('campaigns')
@@ -372,6 +406,35 @@ class SyncopsSyncWizard(models.TransientModel):
             items = models['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
             for line in self.line_ids:
+                if line['partner_user_email'] in users:
+                    user = self.env['res.users'].browse(users[line['partner_user_email']])
+                    user.with_context(mail_create_nolog=True).write({
+                        'name': line['partner_user_name'],
+                        'phone': line['partner_user_phone'],
+                        'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                        'company_ids': [(4, company.id)],
+                    })
+                elif line['partner_user_email']:
+                    user = models['user'].sudo().search([
+                        ('email', '=', line['partner_user_email']),
+                    ], limit=1)
+                    if user:
+                        user.with_context(mail_create_nolog=True).write({
+                            'company_ids': [(4, company.id)],
+                        })
+                    else:
+                        user = models['user'].with_context(mail_create_nolog=True).create({
+                            'system': self.system or company.system,
+                            'name': line['partner_user_name'],
+                            'login': line['partner_user_email'],
+                            'email': line['partner_user_email'],
+                            'phone': line['partner_user_phone'],
+                            'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
+                            'company_id': company.id,
+                            'privilege': 'user',
+                        })
+                else:
+                    user = None
 
                 pid = 0
                 partner_field = company._get_payment_partner_unique_field()
