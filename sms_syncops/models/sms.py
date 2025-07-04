@@ -44,4 +44,4 @@ class SmsApi(models.AbstractModel):
         )
         if result is None:
             raise ValidationError(message)
-        return _('%s SMS credit(s) left') % result[0].get('credit', 0)
+        return _('%s SMS credit(s) left') % (result and result[0].get('credit', 0) or 0)
