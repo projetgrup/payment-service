@@ -22,14 +22,13 @@
     <field name="inherit_id" ref="sms_api.provider_form"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='username']" position="before">
-            <field name="syncops_ok" widget="boolean_toggle"/>
-            <field name="syncops_connector_id" options="{'no_create': True}" attrs="{'invisible': [('syncops_ok', '=', False)], 'required': [('syncops_ok', '=', True)]}" string="Connector"/>
+            <field name="syncops_connector_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'syncops')], 'required': [('type', '=', 'syncops')]}" string="Connector"/>
         </xpath>
         <xpath expr="//field[@name='username']" position="attributes">
-            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)], 'required': [('syncops_ok', '=', False)]}</attribute>
+            <attribute name="attrs">{'invisible': [('type', '=', 'syncops')], 'required': [('type', '!=', 'syncops')]}</attribute>
         </xpath>
         <xpath expr="//field[@name='password']" position="attributes">
-            <attribute name="attrs">{'invisible': [('syncops_ok', '=', True)], 'required': [('syncops_ok', '=', False)]}</attribute>
+            <attribute name="attrs">{'invisible': [('type', '=', 'syncops')], 'required': [('type', '!=', 'syncops')]}</attribute>
         </xpath>
     </field>
     </record>
