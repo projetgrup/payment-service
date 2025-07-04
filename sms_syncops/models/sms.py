@@ -11,6 +11,10 @@ class SmsProvider(models.Model):
     username = fields.Char(required=False)
     password = fields.Char(required=False)
 
+
+class SmsApi(models.AbstractModel):
+    _inherit = 'sms.api'
+
     @api.model
     def _send_syncops_sms(self, messages, provider):
         is_otp = True #self.env.context.get('otp')
