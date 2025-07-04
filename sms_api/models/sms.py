@@ -145,7 +145,9 @@ class SmsApi(models.AbstractModel):
     @api.model
     def get_credit(self, provider):
         if provider:
-            return getattr(self, '_get_%s_credit' % provider.type, _('No SMS provider credit method defined'))(provider)
+            if hasattr(self, '_get_%s_credit' % provider.type):
+                return getattr(self, '_get_%s_credit' % provider.type)(provider)
+            return _('No SMS provider credit method defined')
         return _('No SMS provider defined')
 
 
