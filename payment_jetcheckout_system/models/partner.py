@@ -312,8 +312,15 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
+    @api.depends('company_id')
+    def _compute_is_subdealer(self):
+        for partner in self:
             partner.is_subdealer = partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id
-            partner.show_subdealer = self.env.company.payment_subdealer_ok
+
+    def _compute_show_subdealer(self):
+        show_subdealer = self.env.company.payment_subdealer_ok
+        for partner in self:
+            partner.show_subdealer = show_subdealer
 
     def _compute_payment_link_url(self):
         for partner in self:
@@ -353,11 +360,17 @@ class Partner(models.Model):
         return [('id', op, ids)]
 
     def _search_is_subdealer(self, operator, operand):
-        group_user = self.env.ref('base.group_user')
-        ids = group_user.users.mapped('partner_id').ids
+        company = self.env.company
+        partners = self.env['res.partner'].sudo().search([('company_id', '=', company.id)])
+        ids = []
+        for partner in partners:
+            if partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id:
+                ids.append(partner.id)
         operator = 1 if operator == '=' else -1
         operand = 1 if operand else -1
         op = 'in' if operator * operand == 1 else 'not in'
+        _logger.error([operator, operand])
+        _logger.error([('id', op, ids)])
         return [('id', op, ids)]
 
     system = fields.Selection(selection=[], readonly=True)
@@ -375,8 +388,8 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     should_send_email = fields.Boolean('Should Send Email', default=True)
     should_send_sms = fields.Boolean('Should Send SMS', default=True)
-    is_subdealer = fields.Boolean(compute='_compute_user_details', search='_search_is_subdealer', compute_sudo=True, readonly=True)
-    show_subdealer = fields.Boolean(compute='_compute_user_details', compute_sudo=True, readonly=True)
+    show_subdealer = fields.Boolean(compute='_compute_show_subdealer', compute_sudo=True, readonly=True)
+    is_subdealer = fields.Boolean(compute='_compute_is_subdealer', compute_sudo=True, readonly=True, store=True)
     is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     is_contactless = fields.Boolean(compute='_compute_is_contactless', compute_sudo=True, readonly=True)
@@ -656,9 +669,10 @@ class Partner(models.Model):
                     'partner_id': partner.id,
                     'parent_id': partner.company_id.id or self.env.company.id,
                 })
-            partner.company_id = company.id
 
             partner_sudo = partner.sudo()
+            partner_sudo.company_id = company.id
+
             group_user = partner_sudo.env.ref('base.group_user')
             group_portal = partner_sudo.env.ref('base.group_portal')
             group_public = partner_sudo.env.ref('base.group_public')

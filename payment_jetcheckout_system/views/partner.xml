@@ -271,6 +271,7 @@
             <filter name="filterby_passive" string="Passive" domain="[('active', '=', False)]"/>
             <separator/>
             <filter name="filterby_authorized" string="Authorized" domain="[('is_portal', '=', True)]"/>
+            <filter name="filterby_subdealer" string="Subdealer" domain="[('is_subdealer', '=', True)]"/>
             <filter name="filterby_user" string="User" domain="[('is_internal', '=', True)]"/>
             <separator/>
             <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>

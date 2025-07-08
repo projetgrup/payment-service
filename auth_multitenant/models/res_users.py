@@ -48,8 +48,4 @@ class ResUsers(models.Model):
             raise ValueError(_('Signup: no name or partner given for new user'))
 
         values['active'] = True
-        try:
-            with self.env.cr.savepoint():
-                return template_user.with_context(no_reset_password=True).copy(values)
-        except Exception as e:
-            raise SignupError(ustr(e))
+        return template_user.with_context(no_reset_password=True).copy(values)
