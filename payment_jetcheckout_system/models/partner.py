@@ -312,15 +312,20 @@ class Partner(models.Model):
                 partner.is_internal = False
                 partner.is_portal = False
 
-    @api.depends('company_id')
-    def _compute_is_subdealer(self):
+    @api.depends('company_id.parent_id')
+    def _compute_use_subpartner(self):
         for partner in self:
-            partner.is_subdealer = partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id
+            partner.use_subpartner = partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id
 
-    def _compute_show_subdealer(self):
-        show_subdealer = self.env.company.payment_subdealer_ok
+    @api.depends('company_id.parent_id')
+    def _compute_is_subpartner(self):
         for partner in self:
-            partner.show_subdealer = show_subdealer
+            partner.is_subpartner = partner.company_id.parent_id and partner.company_id.partner_id.id != partner.id
+
+    def _compute_can_use_subpartner(self):
+        can_use_subpartner = self.env.company.payment_subpartner_ok
+        for partner in self:
+            partner.can_use_subpartner = can_use_subpartner
 
     def _compute_payment_link_url(self):
         for partner in self:
@@ -359,20 +364,6 @@ class Partner(models.Model):
         op = 'in' if operator * operand == 1 else 'not in'
         return [('id', op, ids)]
 
-    def _search_is_subdealer(self, operator, operand):
-        company = self.env.company
-        partners = self.env['res.partner'].sudo().search([('company_id', '=', company.id)])
-        ids = []
-        for partner in partners:
-            if partner.company_id.parent_id and partner.company_id.partner_id.id == partner.id:
-                ids.append(partner.id)
-        operator = 1 if operator == '=' else -1
-        operand = 1 if operand else -1
-        op = 'in' if operator * operand == 1 else 'not in'
-        _logger.error([operator, operand])
-        _logger.error([('id', op, ids)])
-        return [('id', op, ids)]
-
     system = fields.Selection(selection=[], readonly=True)
     payable_ids = fields.One2many('payment.item', string='Payable Items', copy=False, compute='_compute_payment', search='_search_payment', compute_sudo=True)
     paid_ids = fields.One2many('payment.item', string='Paid Items', copy=False, compute='_compute_payment', compute_sudo=True)
@@ -388,8 +379,9 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     should_send_email = fields.Boolean('Should Send Email', default=True)
     should_send_sms = fields.Boolean('Should Send SMS', default=True)
-    show_subdealer = fields.Boolean(compute='_compute_show_subdealer', compute_sudo=True, readonly=True)
-    is_subdealer = fields.Boolean(compute='_compute_is_subdealer', compute_sudo=True, readonly=True, store=True)
+    can_use_subpartner = fields.Boolean(string='Can Use Subpartner', compute='_compute_can_use_subpartner', compute_sudo=True, readonly=True)
+    use_subpartner = fields.Boolean(string='Use Subpartner', compute='_compute_use_subpartner', compute_sudo=True, readonly=True, store=True)
+    is_subpartner = fields.Boolean(string='Is Subpartner', compute='_compute_is_subpartner', compute_sudo=True, readonly=True, store=True)
     is_portal = fields.Boolean(compute='_compute_user_details', search='_search_is_portal', compute_sudo=True, readonly=True)
     is_internal = fields.Boolean(compute='_compute_user_details', search='_search_is_internal', compute_sudo=True, readonly=True)
     is_contactless = fields.Boolean(compute='_compute_is_contactless', compute_sudo=True, readonly=True)
@@ -630,9 +622,27 @@ class Partner(models.Model):
 
         return True
 
-    def action_set_subdealer(self):
-        if not self.env.company.payment_subdealer_ok:
-            raise UserError(_('This company is not allowed to create subdealers'))
+    def action_revoke_access(self):
+        self.ensure_one()
+
+        if not self.is_portal:
+            raise UserError(_('The partner "%s" has no portal access.', self.name))
+
+        self_sudo = self.sudo()
+        group_portal = self_sudo.env.ref('base.group_portal')
+        group_public = self_sudo.env.ref('base.group_public')
+        self_sudo.signup_token = False
+
+        user = self.users_id
+        if not user:
+            return True
+
+        user.sudo().write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
+        return True
+
+    def action_allow_use_subpartner(self):
+        if not self.env.company.payment_subpartner_ok:
+            raise UserError(_('This company is not allowed to create subpartners'))
 
         count = len(self)
         errors = {}
@@ -654,8 +664,8 @@ class Partner(models.Model):
                 _prepare_error(partner, e)
                 continue
 
-            if partner.is_subdealer:
-                e = UserError(_('The partner "%s" is already a subdealer of "%s".', partner.name, partner.company_id.parent_id.name))
+            if partner.use_subpartner:
+                e = UserError(_('The partner "%s" is already a parent partner of "%s".', partner.name, partner.company_id.parent_id.name))
                 _prepare_error(partner, e)
                 continue
 
@@ -687,6 +697,8 @@ class Partner(models.Model):
             user = user.sudo()
             if not user.active:
                 user.write({'active': True})
+            if not user.privilege == 'user':
+                user._set_privilege('user')
             if not user.has_group('base.group_user') or not user.has_group('base.group_portal'):
                 user.write({'groups_id': [(4, group_user.id), (3, group_portal.id), (3, group_public.id)]})
                 partner_sudo.signup_prepare()
@@ -703,11 +715,11 @@ class Partner(models.Model):
 
         return True
 
-    def action_unset_subdealer(self):
+    def action_disallow_use_subpartner(self):
         self.ensure_one()
 
-        if not self.is_subdealer:
-            raise UserError(_('The partner "%s" is already not a subdealer.', self.name))
+        if not self.can_use_subpartner:
+            raise UserError(_('The partner "%s" is already not a parent partner.', self.name))
 
         self_sudo = self.sudo()
         group_user = self_sudo.env.ref('base.group_user')
@@ -722,24 +734,6 @@ class Partner(models.Model):
         user.sudo().write({'groups_id': [(3, group_user.id), (3, group_portal.id), (4, group_public.id)], 'active': False})
         self_sudo.company_id.write({'active': False})
         self_sudo.write({'company_id': self_sudo.company_id.parent_id.id, 'active': True})
-        return True
-
-    def action_revoke_access(self):
-        self.ensure_one()
-
-        if not self.is_portal:
-            raise UserError(_('The partner "%s" has no portal access.', self.name))
-
-        self_sudo = self.sudo()
-        group_portal = self_sudo.env.ref('base.group_portal')
-        group_public = self_sudo.env.ref('base.group_public')
-        self_sudo.signup_token = False
-
-        user = self.users_id
-        if not user:
-            return True
-
-        user.sudo().write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
         return True
 
     def action_invite_again(self):

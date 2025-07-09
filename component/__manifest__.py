@@ -13,7 +13,7 @@
     "depends": ["base"],
     "external_dependencies": {
         "python": [
-            "cachetools",
+            "cachetools==5.5.0",
         ]
     },
     "installable": True,

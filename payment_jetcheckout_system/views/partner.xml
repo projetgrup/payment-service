@@ -81,17 +81,18 @@
                 <button name="action_share_payment_link" type="object" string="Payment Link" class="oe_highlight" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
                 <button name="action_share_payment_page" type="object" string="Payment Page" class="oe_highlight" attrs="{'invisible': [('is_portal', '=', False)]}"/>
                 <button name="action_send" type="object" string="Send Message" attrs="{'invisible': [('payable_count', '=', 0)]}"/>
+                <button name="action_allow_use_subpartner" type="object" string="Allow to Use Subpartner" attrs="{'invisible': ['|', ('can_use_subpartner', '=', False), ('use_subpartner', '=', True)]}" groups="payment_jetcheckout_system.group_system_grant_partner"/>
+                <button name="action_disallow_use_subpartner" type="object" string="Disallow to Use Subpartner" attrs="{'invisible': ['|', ('can_use_subpartner', '=', False), ('use_subpartner', '=', False)]}" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Grant Access" name="action_grant_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', True), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Revoke Access" name="action_revoke_access" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Re-Invite" name="action_invite_again" type="object" attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
-                <button name="action_set_subdealer" type="object" string="Set as Subdealer" attrs="{'invisible': ['|', ('show_subdealer', '=', False), ('is_subdealer', '=', True)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
-                <button name="action_unset_subdealer" type="object" string="Remove from Subdealers" attrs="{'invisible': ['|', ('show_subdealer', '=', False), ('is_subdealer', '=', False)]}" class="disabled" groups="payment_jetcheckout_system.group_system_grant_partner"/>
                 <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}" disabled="True" title="This partner is linked to an internal User and already has access to the Portal." class="disabled" style="pointer-events: none"/>
                 <field name="is_portal" invisible="1"/>
-                <field name="is_subdealer" invisible="1"/>
-                <field name="is_internal" invisible="1"/>
                 <field name="is_company" invisible="1"/>
-                <field name="show_subdealer" invisible="1"/>
+                <field name="is_internal" invisible="1"/>
+                <field name="is_subpartner" invisible="1"/>
+                <field name="use_subpartner" invisible="1"/>
+                <field name="can_use_subpartner" invisible="1"/>
                 <field name="users_id" invisible="1"/>
             </header>
             <sheet>
@@ -271,8 +272,10 @@
             <filter name="filterby_passive" string="Passive" domain="[('active', '=', False)]"/>
             <separator/>
             <filter name="filterby_authorized" string="Authorized" domain="[('is_portal', '=', True)]"/>
-            <filter name="filterby_subdealer" string="Subdealer" domain="[('is_subdealer', '=', True)]"/>
             <filter name="filterby_user" string="User" domain="[('is_internal', '=', True)]"/>
+            <separator/>
+            <filter name="filterby_parentpartner" string="Parent Partner" domain="[('use_subpartner', '=', True)]"/>
+            <filter name="filterby_subpartner" string="Sub Partner" domain="[('is_subpartner', '=', True)]"/>
             <separator/>
             <filter name="filterby_payment" string="Has Payments" domain="[('payable_ids', '!=', False)]"/>
             <filter name="filterby_no_payment" string="Has No Payments" domain="[('payable_ids', '=', False)]"/>

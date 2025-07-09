@@ -25,10 +25,10 @@
     "demo": [],
     "external_dependencies": {
         "python": [
-            "cerberus",
-            "pyquerystring",
-            "parse-accept-language",
-            "apispec>=4.0.0",
+            "cerberus==1.3.5",
+            "pyquerystring==1.1",
+            "parse-accept-language==0.1.2",
+            "apispec==6.6.1",
         ]
     },
     "installable": True,

@@ -119,7 +119,7 @@ class Company(models.Model):
         ('ref', 'Reference'),
     ], string='Payment Partner Unique Field')
 
-    payment_subdealer_ok = fields.Boolean(string='Payment Subdealer')
+    payment_subpartner_ok = fields.Boolean(string='Payment Subpartner')
 
     @api.constrains('payment_transaction_export_txt_code')
     def _check_code(self):

@@ -12,6 +12,6 @@
     "depends": ["base_rest", "datamodel"],
     "data": [],
     "demo": [],
-    "external_dependencies": {"python": ["apispec>=4.0.0", "marshmallow"]},
+    "external_dependencies": {"python": ["apispec==6.6.1", "marshmallow==3.15.0"]},
     "installable": True,
 }

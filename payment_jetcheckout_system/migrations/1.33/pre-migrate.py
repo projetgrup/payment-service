@@ -2,5 +2,5 @@
 from odoo.tools.sql import column_exists
 
 def migrate(cr, version):
-    if not column_exists(cr, 'res_company', 'payment_subdealer_ok'):
-        cr.execute('ALTER TABLE res_company ADD COLUMN payment_subdealer_ok boolean')
+    if not column_exists(cr, 'res_company', 'payment_subpartner_ok'):
+        cr.execute('ALTER TABLE res_company ADD COLUMN payment_subpartner_ok boolean')

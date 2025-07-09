@@ -41,8 +41,9 @@ class Users(models.Model):
             else:
                 user.privilege = ''
 
-    def _set_privilege(self):
+    def _set_privilege(self, privilege=None):
         for user in self:
+            user_privilege = privilege or user.privilege
             system = user.company_id.system
             module = system or 'jetcheckout_system'
             name = system or 'system'
@@ -72,7 +73,7 @@ class Users(models.Model):
             if not user.has_group('base.group_user'):
                 group_internal.sudo().write({'users': [(4, user.id)]})
 
-            if user.privilege == 'admin':
+            if user_privilege == 'admin':
                 group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(4, user.id)]})
@@ -89,7 +90,7 @@ class Users(models.Model):
                 except:
                     pass
 
-            elif user.privilege == 'user':
+            elif user_privilege == 'user':
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(3, user.id)]})
