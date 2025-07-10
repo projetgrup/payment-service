@@ -204,7 +204,10 @@ class PaymentTransaction(models.Model):
 
         transactions = self.env['payment.transaction'].sudo().search(domain, order='last_state_change desc')
         if not transactions:
-            raise MissingError(_('Transaction cannot be found.'))
+            if self.env.user.share:
+                raise MissingError(_('Transaction cannot be found.'))
+            else:
+                raise UserError(_('Transaction cannot be found.'))
 
         company = transactions.mapped('company_id')
         if len(company) > 1:

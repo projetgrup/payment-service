@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import uuid
 import json
 import logging
 from collections import defaultdict
@@ -84,6 +85,11 @@ def log(cr, company=None, **values):
 
     keys = values.keys()
     vals = values.values()
+    values['uid'] = str(uuid.uuid4())
+    values['success'] = True
+    values['message'] = ''
+    values['ip_address'] = request.httprequest.remote_addr
+
     try:
         with cr.savepoint():
             cr.execute('''
@@ -171,13 +177,17 @@ class Audit(models.Model):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     name = fields.Char(string='Name', compute='_compute_name')
+    uid = fields.Char(string='Unique ID', readonly=True)
     create_uid = fields.Many2one('res.users', string='User', readonly=True)
+    create_uid_email = fields.Char(string='User Email', related='create_uid.email')
+    message = fields.Text(string='Message', readonly=True)
     create_date = fields.Datetime(string='Date', readonly=True)
     end_date = fields.Datetime(string='End Date', readonly=True)
     time = fields.Float(string='Time', compute='_compute_duration')
     duration = fields.Float(string='Duration', compute='_compute_duration', store=True, readonly=True)
     record = fields.Reference(string='Record', selection='_selection_model', readonly=True)
     view = fields.Char(string='View', readonly=True)
+    success = fields.Boolean(string='Success', readonly=True)
     button = fields.Char(string='Button', readonly=True)
     tracking = fields.Char(string='Tracking', readonly=True)
     download = fields.Char(string='Download', readonly=True)
@@ -185,6 +195,7 @@ class Audit(models.Model):
     download_table = fields.Html(string='Download Table', compute='_compute_download_table', sanitize=False, readonly=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, readonly=True)
     badge = fields.Html(string='Badge', compute='_compute_badge', compute_sudo=True, sanitize=False)
+    ip_address = fields.Char(string='IP Address', readonly=True)
     action = fields.Char(string='Action', readonly=True)
 
     def _update_registry(self):

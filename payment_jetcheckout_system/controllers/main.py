@@ -80,7 +80,7 @@ class PayloxSystemController(PayloxController):
         companies = websites.mapped('company_id')
         partner = request.env['res.partner'].sudo().search([
             ('id', '=', pid), ('access_token', '=', token),
-            '|',('company_id', '=', False), ('company_id', 'in', companies.ids),
+            '|', '|', ('company_id', '=', False), ('company_id', 'in', companies.ids), ('company_id.parent_id', 'in', companies.ids),
         ], limit=1)
         if not partner:
             raise werkzeug.exceptions.NotFound()
@@ -181,7 +181,7 @@ class PayloxSystemController(PayloxController):
 
     def _prepare_system(self, company, system, partner, transaction, options={}):
         currency = company.currency_id
-        acquirer = self._get_acquirer(False)
+        acquirer = self._get_acquirer(False, company)
         installment_type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
@@ -337,7 +337,7 @@ class PayloxSystemController(PayloxController):
                 raise werkzeug.exceptions.NotFound()
 
         company = partner.company_id or request.website.company_id or request.env.company
-        if not company == request.env.company:
+        if (not company.parent_id and company != request.env.company) or (company.parent_id and company.parent_id != request.env.company):
             website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
             if not website:
                 raise werkzeug.exceptions.NotFound()
@@ -1592,7 +1592,9 @@ class PayloxSystemController(PayloxController):
     def page_transactions_txt(self, **data):
         txt = request.env['payment.transaction'].sudo().export_txt([
             ('id', 'in', list(map(int, data[''].split(',')))),
+            '|',
             ('company_id', 'in', request.env.user.company_ids.ids),
+            ('company_id.parent_id', 'in', request.env.user.company_ids.ids),
         ])
         headers = [
             ('Content-Type', 'text/plain'),
