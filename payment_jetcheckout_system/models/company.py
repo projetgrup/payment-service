@@ -2,6 +2,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import test_python_expr
+from odoo.addons.payment_jetcheckout.models.utils import get_main_company
 
 
 class Company(models.Model):
@@ -15,10 +16,15 @@ class Company(models.Model):
         for company in self:
             company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
 
+    def _compute_root_id(self):
+        for company in self:
+            company.root_id = get_main_company(company).id
+
     active = fields.Boolean(default=True)
     tax_office = fields.Char()
     system = fields.Selection([])
     subsystem = fields.Selection([])
+    root_id = fields.Many2one('res.company', compute='_compute_root_id')
     required_2fa = fields.Boolean('Two Factor Required')
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)

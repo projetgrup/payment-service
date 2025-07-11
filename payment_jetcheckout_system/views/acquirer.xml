@@ -19,6 +19,29 @@
                 </field>
             </page>
         </xpath>
+        <xpath expr="//notebook" position="inside">
+            <page name="other" string="Other">
+                <group>
+                    <group string="Parent Company Bank Accounts" attrs="{'invisible': [('paylox_subpartner_root_id', '=', False)]}">
+                        <field name="paylox_parent_bank_ids" nolabel="1" colspan="2" context="{'default_company_id': company_id, 'default_partner_id': paylox_subpartner_root_id}">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="acc_number"/>
+                                <field name="api_merchant" required="1"/>
+                                <field name="api_result" string=" "/>
+                                <field name="api_message" optional="hide"/>
+                                <field name="api_state" invisible="1"/>
+                                <button name="action_api_save" string="" type="object" class="btn btn-link text-primary" icon="fa-save mr-1" attrs="{'invisible': [('api_state', '=', True)]}"/>
+                                <button name="action_api_query" string="" type="object" class="btn btn-link text-primary" icon="fa-search mr-1" attrs="{'invisible': [('acc_number', '=', False)]}"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="partner_id" invisible="1"/>
+                            </tree>
+                        </field>
+                        <field name="paylox_subpartner_root_id" invisible="1"/>
+                    </group>
+                </group>
+            </page>
+        </xpath>
     </field>
     </record>
 </odoo>

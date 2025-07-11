@@ -56,6 +56,7 @@ class PartnerBank(models.Model):
     api_merchant = fields.Char('Merchant')
     api_state = fields.Boolean('State')
     api_message = fields.Char('Message')
+    acquirer_id = fields.Many2one('payment.acquirer')
     api_token_ids = fields.One2many('res.partner.bank.token', 'partner_bank_id', 'Tokens')
     api_result = fields.Html('Result', sanitize=False, compute='_compute_api_result')
     payment_item_bank_token_ok = fields.Boolean(related='company_id.payment_item_bank_token_ok')
@@ -86,16 +87,24 @@ class PartnerBank(models.Model):
 
     @api.model
     def create(self, values):
+        if 'acquirer_id' in values:
+            acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+            partner = acquirer.paylox_subpartner_root_id
+            if partner:
+                values.update({
+                    'partner_id': partner.id,
+                    'company_id': acquirer.company_id.id
+                })
         if 'api_merchant' in values:
             values['api_merchant'] = normalize(values['api_merchant'])
-        res = super().create(values)
+        res = super(PartnerBank, self).create(values)
         res.action_api_save(mode='create')
         return res
 
     def write(self, values):
         if 'api_merchant' in values:
             values['api_merchant'] = normalize(values['api_merchant'])
-        res = super().write(values)
+        res = super(PartnerBank, self).write(values)
         if 'acc_number' in values or 'api_merchant' in values:
             for bank in self:
                 if bank.api_ref:
@@ -109,8 +118,10 @@ class PartnerBank(models.Model):
 
     def action_api_save(self, mode=None):
         if self.partner_id.system:
-            company = self.partner_id.company_id or self.env.company
-            acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
+            acquirer = self.acquirer_id
+            if not acquirer:
+                company = self.partner_id.company_id or self.env.company
+                acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
 
             if not acquirer:
                 self.api_message = _('No acquirer found')
@@ -199,8 +210,10 @@ class PartnerBank(models.Model):
 
     def action_api_query(self):
         if self.partner_id.system:
-            company = self.partner_id.company_id or self.env.company
-            acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
+            acquirer = self.acquirer_id
+            if not acquirer:
+                company = self.partner_id.company_id or self.env.company
+                acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=True)
 
             url = '%s/api/v1/submerchant/query' % acquirer._get_paylox_api_url()
             data = {

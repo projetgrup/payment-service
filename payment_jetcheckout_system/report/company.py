@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, models
 
+
 class ReportCompanyHierarchy(models.AbstractModel):
     _name = 'res.company.hierarchy'
     _description = 'Company Hierarchy'
@@ -57,14 +58,15 @@ class ReportCompanyHierarchy(models.AbstractModel):
 
         company_ids = self.env.context.get('allowed_company_ids') or self.env.companies.ids
         companies = self.env['res.company'].browse(company_ids).sorted(lambda x: x.name.lower())
+        companies_all = self.env['res.company'].search([], order='name')
         if name:
             cids = self.env['res.company'].search([('id', 'in', company_ids), ('name', 'not ilike', f'%{name}%')], order='name')
             ids.extend(cids.ids)
 
         for company in companies:
             if company.id not in ids:
-                cids, children = self._get_children(company, companies)
-                pids, parent = self._get_parents(company, companies, company_ids, children, name)
+                cids, children = self._get_children(company, companies_all)
+                pids, parent = self._get_parents(company, companies_all, company_ids, children, name)
                 lines.append(parent)
                 ids.extend(cids + pids)
 

@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from odoo import fields, models, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError, MissingError
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_jetcheckout.models.utils import get_main_company
 from odoo.tools.safe_eval import safe_eval, json as _json, pytz as _pytz, datetime as _datetime
 
@@ -27,11 +28,10 @@ class PaymentTransaction(models.Model):
 
     def _compute_jetcheckout_can_export_txt(self):
         for tx in self:
-            tx.jetcheckout_can_export_txt = tx.company_id.payment_transaction_export_txt
+            tx.jetcheckout_can_export_txt = tx.company_id.root_id.payment_transaction_export_txt
 
     state = fields.Selection(tracking=True)
     system = fields.Selection(related='company_id.system')
-    partner_ref = fields.Char(string='Partner Reference', related='partner_id.ref')
 
     paylox_item_count = fields.Integer(compute='_compute_item_count')
     paylox_item_tag_id = fields.Many2one('payment.settings.campaign.tag', 'Payment Item Tag', readonly=True, copy=False)
@@ -70,11 +70,30 @@ class PaymentTransaction(models.Model):
         if values.get('jetcheckout_item_ids'):
             item = self.env['payment.item'].sudo().browse(values['jetcheckout_item_ids'][0][2])
             values['paylox_item_tag_code'] = '/'.join(set([i.tag or '-' for i in item]))
-        transaction = super().create(values)
-        if transaction.system and transaction.company_id.id != transaction.partner_id.company_id.id:
+
+        tx = super().create(values)
+
+        if tx.system and tx.company_id.id != tx.partner_id.company_id.id:
             raise ValidationError(_('Payment and partner belong to different companies.'))
-        transaction.with_context(hook_next={'state': transaction.state}).run_hook('transaction_create')
-        return transaction
+
+        tx.with_context(hook_next={'state': tx.state}).run_hook('transaction_create')
+
+        if tx.partner_id.is_subpartner:
+            partner = tx.company_id.partner_id
+            tx.write({
+                'partner_name': partner.name or partner.parent_id.name,
+                'partner_vat': partner.vat,
+                'partner_ref': partner.ref,
+                'partner_lang': partner.lang,
+                'partner_email': partner.email,
+                'partner_zip': partner.zip,
+                'partner_city': partner.city,
+                'partner_state_id': partner.state_id.id,
+                'partner_country_id': partner.country_id.id,
+                'partner_phone': partner.mobile or partner.phone,
+                'partner_address': payment_utils.format_partner_address(partner.street, partner.street2),
+            })
+        return tx
 
     def action_items(self):
         self.ensure_one()
@@ -209,7 +228,7 @@ class PaymentTransaction(models.Model):
             else:
                 raise UserError(_('Transaction cannot be found.'))
 
-        company = transactions.mapped('company_id')
+        company = transactions.mapped('company_id.root_id')
         if len(company) > 1:
             raise ValidationError(_('You can export TXT of transactions only for one company at a time.'))
         if not company.payment_transaction_export_txt:

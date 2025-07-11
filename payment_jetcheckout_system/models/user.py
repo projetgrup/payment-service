@@ -44,6 +44,9 @@ class Users(models.Model):
     def _set_privilege(self, privilege=None):
         for user in self:
             user_privilege = privilege or user.privilege
+            if user.login == f'public-user@company-{user.company_id.id}.com':
+                user_privilege = False
+
             system = user.company_id.system
             module = system or 'jetcheckout_system'
             name = system or 'system'
@@ -66,14 +69,14 @@ class Users(models.Model):
             except:
                 pass
 
-            if user.has_group('base.group_public'):
-                group_public.sudo().write({'users': [(3, user.id)]})
-            if user.has_group('base.group_portal'):
-                group_portal.sudo().write({'users': [(3, user.id)]})
-            if not user.has_group('base.group_user'):
-                group_internal.sudo().write({'users': [(4, user.id)]})
-
             if user_privilege == 'admin':
+                if user.has_group('base.group_public'):
+                    group_public.sudo().write({'users': [(3, user.id)]})
+                if user.has_group('base.group_portal'):
+                    group_portal.sudo().write({'users': [(3, user.id)]})
+                if not user.has_group('base.group_user'):
+                    group_internal.sudo().write({'users': [(4, user.id)]})
+
                 group_admin.sudo().write({'users': [(4, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(4, user.id)]})
@@ -91,6 +94,13 @@ class Users(models.Model):
                     pass
 
             elif user_privilege == 'user':
+                if user.has_group('base.group_public'):
+                    group_public.sudo().write({'users': [(3, user.id)]})
+                if user.has_group('base.group_portal'):
+                    group_portal.sudo().write({'users': [(3, user.id)]})
+                if not user.has_group('base.group_user'):
+                    group_internal.sudo().write({'users': [(4, user.id)]})
+
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_user.sudo().write({'users': [(4, user.id)]})
                 group_system_admin.sudo().write({'users': [(3, user.id)]})
@@ -108,6 +118,13 @@ class Users(models.Model):
                     pass
 
             else:
+                if user.has_group('base.group_user'):
+                    group_internal.sudo().write({'users': [(3, user.id)]})
+                if user.has_group('base.group_portal'):
+                    group_portal.sudo().write({'users': [(3, user.id)]})
+                if not user.has_group('base.group_public'):
+                    group_public.sudo().write({'users': [(4, user.id)]})
+
                 group_user.sudo().write({'users': [(3, user.id)]})
                 group_admin.sudo().write({'users': [(3, user.id)]})
                 group_system_admin.sudo().write({'users': [(3, user.id)]})
@@ -328,8 +345,8 @@ class Users(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        if 'name' in default:
-            default['name'].replace('Public user for ', '')
+        if 'login' in default and 'company_id' in default and default['login'] == f'public-user@company-{default['company_id']}.com':
+            default['name'] = default['name'].replace('Public user for ', '')
         return super().copy(default=default)
 
     def context_get(self):
