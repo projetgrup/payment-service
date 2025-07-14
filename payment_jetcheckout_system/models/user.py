@@ -345,7 +345,7 @@ class Users(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        if 'login' in default and 'company_id' in default and default['login'] == f'public-user@company-{default['company_id']}.com':
+        if 'login' in default and 'company_id' in default and default['login'] == f"public-user@company-{default['company_id']}.com":
             default['name'] = default['name'].replace('Public user for ', '')
         return super().copy(default=default)
 
