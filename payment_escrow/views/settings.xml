@@ -40,7 +40,7 @@
                         <div class="o_setting_right_pane">
                             <label for="payment_page_amount_editable" string="Editable Payment Amount"/>
                             <div class="text-muted">
-                                Allow dealers to edit payable amount on payment link
+                                Allow partners to edit payable amount on payment link
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
@@ -57,7 +57,7 @@
                         <div class="o_setting_right_pane">
                             <label for="payment_page_button_access_transaction" string="Access All Transactions"/>
                             <div class="text-muted">
-                                Allow dealers to see their all transactions on payment link
+                                Allow partners to see their all transactions on payment link
                             </div>
                         </div>
                     </div>

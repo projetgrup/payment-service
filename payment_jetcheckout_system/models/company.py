@@ -15,10 +15,20 @@ class Company(models.Model):
         for company in self:
             company.mail_server_id = self.env['ir.mail_server'].search([('company_id', '=', company.id)], limit=1).id
 
+    def _compute_root_id(self):
+        for company in self:
+            company.root_id = company._get_root_id()
+
+    def _get_root_id(self):
+        if self.parent_id:
+            return self.parent_id._get_root_id()
+        return self.id
+
     active = fields.Boolean(default=True)
     tax_office = fields.Char()
     system = fields.Selection([])
     subsystem = fields.Selection([])
+    root_id = fields.Many2one('res.company', compute_sudo=True, compute='_compute_root_id')
     required_2fa = fields.Boolean('Two Factor Required')
     is_admin = fields.Boolean(compute='_compute_is_admin', compute_sudo=True)
     mail_server_id = fields.Many2one('ir.mail_server', compute='_compute_mail_server', compute_sudo=True)
@@ -119,7 +129,7 @@ class Company(models.Model):
         ('ref', 'Reference'),
     ], string='Payment Partner Unique Field')
 
-    payment_subdealer_ok = fields.Boolean(string='Payment Subdealer')
+    payment_subpartner_ok = fields.Boolean(string='Payment Subpartner')
 
     @api.constrains('payment_transaction_export_txt_code')
     def _check_code(self):

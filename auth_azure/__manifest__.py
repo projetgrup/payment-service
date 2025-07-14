@@ -13,7 +13,7 @@
     'license': 'LGPL-3',
     'external_dependencies': {
         'python': [
-            'PyJWT',
+            'PyJWT==2.9.0',
         ]
     },
 }

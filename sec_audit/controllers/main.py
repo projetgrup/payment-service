@@ -8,7 +8,7 @@ from datetime import datetime
 
 from odoo import http, _
 from odoo.http import request, Response, Controller
-from odoo.addons.web.controllers.main import WebClient, Home, Session, DataSet, ExcelExport, ensure_db
+from odoo.addons.web.controllers.main import Home, Session, DataSet, ExcelExport, ensure_db
 from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 from ..models.audit import log
 
@@ -45,12 +45,16 @@ class AuditController(Controller):
                     except Exception:
                         raise UserError(_('Bad end date format'))
                     domain += [('create_date', '<=', date_end)]
-            logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_date', 'action'])
-            for log in logs:
-                del log['id']
+            logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_uid_email', 'create_date', 'uid', 'success', 'message', 'view', 'ip_address', 'action'])
             logs = [{
+                'id': log['uid'] or None,
                 'date': log['create_date'].strftime('%Y-%d-%m %H:%M:%S') if log['create_date'] else None,
-                'user': log['create_uid'][1] if log['create_uid'] else None,
+                'user': '%s%s' % (log['create_uid'] and log['create_uid'][1] or '', log['create_uid_email'] and ' <%s>' % log['create_uid_email']),
+                #'user': log['create_uid'][1] if log['create_uid'] else None,
+                'success': log['success'] or None,
+                'message': log['message'] or None,
+                'address': log['ip_address'] or None,
+                'view': log['view'] or None,
                 'action': log['action'] or None,
             } for log in logs]
             return Response(json.dumps(logs), status=200, mimetype="application/json")

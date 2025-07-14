@@ -80,7 +80,13 @@
                 </div>
             </button>
         </xpath>
-        <xpath expr='//header' position="inside">
+        <xpath expr="//button[@name='action_allow_use_subpartner']" position="attributes">
+            <attribute name="string">Allow to Use Subdealers</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_disallow_use_subpartner']" position="attributes">
+            <attribute name="string">Disallow to Use Subdealers</attribute>
+        </xpath>
+        <xpath expr='//header/button[hasclass("disabled")]' position="before">
             <button type="object" name="action_process_connector" string="Process Connector" attrs="{'invisible': ['|', ('syncops_ok', '=', False), ('syncops_state', '=', False)]}"/>
         </xpath>
         <xpath expr='//field[@name="vat"]' position="before">
@@ -166,6 +172,12 @@
             <field name="mobile"/>
             <field name="user_id"/>
             <field name="team_id"/>
+        </xpath>
+        <xpath expr='//filter[@name="filterby_parentpartner"]' position="attributes">
+            <attribute name="string">Parent Dealer</attribute>
+        </xpath>
+        <xpath expr='//filter[@name="filterby_subpartner"]' position="attributes">
+            <attribute name="string">Sub Dealer</attribute>
         </xpath>
         <xpath expr='//group' position="before">
             <separator/>
