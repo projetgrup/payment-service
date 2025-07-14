@@ -11,7 +11,6 @@ from odoo import fields, models, api, _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError, MissingError
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_jetcheckout.models.utils import get_main_company
 from odoo.tools.safe_eval import safe_eval, json as _json, pytz as _pytz, datetime as _datetime
 
 from .settings import DAYS
@@ -53,7 +52,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_partner_categ_ids = fields.Many2many('res.partner.category', 'transaction_partner_category_rel', 'transaction_id', 'category_id', 'Tags', related='partner_id.category_id', store=True, readonly=True, ondelete='set null')
 
     def run_hook(self, subtype, **kwargs):
-        company = get_main_company(self.company_id)
+        company = self.company_id.root_id
         hooks = self.env['payment.hook'].sudo().search([
             ('type', '=', 'transaction'),
             ('subtype', '=', subtype),

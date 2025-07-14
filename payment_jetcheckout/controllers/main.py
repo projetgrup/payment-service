@@ -17,7 +17,6 @@ from odoo.tools.misc import formatLang
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal
-from ..models.utils import get_main_company
 
 _logger = logging.getLogger(__name__)
 
@@ -1612,7 +1611,7 @@ class PayloxController(http.Controller):
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
-                    #company = get_main_company(tx.company_id)
+                    #company = tx.company_id.root_id
                     #if company.payment_page_init_redirect_extra:
                     #    url = '/payment/redirect?=%s' % quote_plus(url)
                     return {'url': url, 'id': tx.id}
