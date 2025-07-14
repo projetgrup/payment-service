@@ -1,8 +1,9 @@
-apispec>=4.0.0
-cerberus
-jsondiff
-marshmallow
-marshmallow-objects>=2.0.0
-parse-accept-language
-pyquerystring
-cachetools
+PyJWT==2.9.0
+pysaml2==7.5.2 # apt install xmlsec1
+cerberus==1.3.5
+pyquerystring==1.1
+parse-accept-language==0.1.2
+apispec==6.6.1
+cachetools==5.5.0
+marshmallow==3.15.0
+marshmallow-objects==2.3.0

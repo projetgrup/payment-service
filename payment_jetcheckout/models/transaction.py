@@ -60,7 +60,8 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Please define a country for this company'))
         return country.id
 
-    partner_vat = fields.Char(string='VAT')
+    partner_vat = fields.Char(string='Partner VAT')
+    partner_ref = fields.Char(string='Partner Reference')
     state = fields.Selection(selection_add=[('expired', 'Expired')], ondelete={'expired': lambda self: self.write({'state': 'cancel'})})
     is_paylox = fields.Boolean(compute='_compute_is_paylox')
     jetcheckout_data = fields.Text()
@@ -102,7 +103,8 @@ class PaymentTransaction(models.Model):
     jetcheckout_payment_net = fields.Monetary('Amount Net', compute='_compute_amounts', readonly=True, copy=False, store=True)
 
     jetcheckout_approval_ok = fields.Boolean('Approval Required', readonly=True, copy=False)
-    jetcheckout_approval_state = fields.Selection([('+', 'Approved'), ('-', 'Rejected')], readonly=True, copy=False)
+    jetcheckout_approval_auto = fields.Boolean('Approval Automatically', readonly=True, copy=False)
+    jetcheckout_approval_state = fields.Selection([('+', 'Approved'), ('-', 'Rejected')], string='Approval State', readonly=True, copy=False)
     jetcheckout_approval_state_message = fields.Text('Approval Message', readonly=True, copy=False)
 
     jetcheckout_service_code = fields.Char('Paylox Service Code', readonly=True, copy=False)
@@ -143,9 +145,12 @@ class PaymentTransaction(models.Model):
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
-            if 'partner_vat' not in values:
+            if 'partner_vat' not in values or 'partner_ref' not in values:
                 partner = self.env['res.partner'].browse(values['partner_id'])
-                values.update({'partner_vat': partner.vat})
+                if 'partner_vat' not in values:
+                    values.update({'partner_vat': partner.vat})
+                if 'partner_ref' not in values:
+                    values.update({'partner_ref': partner.ref})
             if 'jetcheckout_order_id' not in values and 'acquirer_id' in values:
                 acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
                 if acquirer.provider == 'jetcheckout':
@@ -343,6 +348,9 @@ class PaymentTransaction(models.Model):
     def _paylox_done_postprocess(self):
         if not self.state == 'done':
             self.write(self._paylox_done_postprocess_values())
+        if self.jetcheckout_approval_auto:
+            self.env.cr.commit()
+            self._action_approve()
         self.paylox_verify_token()
         self.paylox_order_confirm()
         self.paylox_payment()

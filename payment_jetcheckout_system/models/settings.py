@@ -181,7 +181,7 @@ class PaymentSettings(models.TransientModel):
 
     payment_partner_unique_field = fields.Selection(related='company_id.payment_partner_unique_field', readonly=False)
 
-    payment_subdealer_ok = fields.Boolean(related='company_id.payment_subdealer_ok', readonly=False)
+    payment_subpartner_ok = fields.Boolean(related='company_id.payment_subpartner_ok', readonly=False)
 
     def start(self):
         return self.next()

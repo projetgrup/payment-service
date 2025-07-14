@@ -11,7 +11,7 @@
     'category': 'Tools',
     'depends': ['auth_multitenant'],
     'external_dependencies': {
-        'python': ['pysaml2'],
+        'python': ['pysaml2==7.5.2'],
         'bin': ['xmlsec1'],
     },
     'data': [

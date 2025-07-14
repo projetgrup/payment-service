@@ -12,11 +12,14 @@ from odoo import fields, http, _, SUPERUSER_ID
 from odoo.http import content_disposition, request, Response
 from odoo.tools import html_escape
 from odoo.tools.misc import xlsxwriter
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
 from odoo.addons.payment_jetcheckout.controllers.main import PayloxController
 
 REPORT_NAMES = ['payment_jetcheckout.payment_receipt', 'payment_jetcheckout.payment_conveyance']
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class PayloxSystemController(PayloxController):
 
@@ -80,7 +83,7 @@ class PayloxSystemController(PayloxController):
         companies = websites.mapped('company_id')
         partner = request.env['res.partner'].sudo().search([
             ('id', '=', pid), ('access_token', '=', token),
-            '|',('company_id', '=', False), ('company_id', 'in', companies.ids),
+            '|', '|', ('company_id', '=', False), ('company_id', 'in', companies.ids), ('company_id.parent_id', 'in', companies.ids),
         ], limit=1)
         if not partner:
             raise werkzeug.exceptions.NotFound()
@@ -154,6 +157,34 @@ class PayloxSystemController(PayloxController):
 
         return values
 
+    def _get_data_values(self, data, transaction, **kwargs):
+        values = super()._get_data_values(data, transaction, **kwargs)
+        acquirer = transaction.acquirer_id
+        partner = transaction.partner_id
+        if acquirer.paylox_is_submerchant_payment and partner.is_subpartner:
+            if not acquirer.paylox_parent_bank_ids:
+                raise ValidationError(_('%s must have at least one bank account which is verified.' % acquirer.company_id.name))
+
+            reference = acquirer.paylox_parent_bank_ids and acquirer.paylox_parent_bank_ids[0]['api_ref']
+            if not reference:
+                raise ValidationError(_('%s must have at least one bank account which is verified.' % acquirer.company_id.name))
+
+            if transaction.company_id.payment_page_token_wo_commission:
+                amount = float_round(transaction.amount * (1 - (transaction.jetcheckout_commission_rate / 100)), 4)
+            else:
+                amount = float(kwargs['amount'])
+
+            transaction.write({
+                'jetcheckout_approval_ok': True,
+                'jetcheckout_approval_auto': True,
+            })
+            values.update({
+                'is_submerchant_payment': True,
+                'submerchant_external_id': reference,
+                'submerchant_price': amount,
+            })
+        return values
+
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
         if not status:
@@ -181,7 +212,7 @@ class PayloxSystemController(PayloxController):
 
     def _prepare_system(self, company, system, partner, transaction, options={}):
         currency = company.currency_id
-        acquirer = self._get_acquirer(False)
+        acquirer = self._get_acquirer(False, company)
         installment_type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
@@ -337,9 +368,10 @@ class PayloxSystemController(PayloxController):
                 raise werkzeug.exceptions.NotFound()
 
         company = partner.company_id or request.website.company_id or request.env.company
-        if not company == request.env.company:
+        if company != request.env.company:
             website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
             if not website:
+                _logger.error(company)
                 raise werkzeug.exceptions.NotFound()
 
             website._force()
@@ -1592,7 +1624,9 @@ class PayloxSystemController(PayloxController):
     def page_transactions_txt(self, **data):
         txt = request.env['payment.transaction'].sudo().export_txt([
             ('id', 'in', list(map(int, data[''].split(',')))),
+            '|',
             ('company_id', 'in', request.env.user.company_ids.ids),
+            ('company_id.parent_id', 'in', request.env.user.company_ids.ids),
         ])
         headers = [
             ('Content-Type', 'text/plain'),
