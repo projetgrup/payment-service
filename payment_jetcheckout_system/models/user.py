@@ -360,6 +360,6 @@ class Users(models.Model):
         if self.company_id.system:
             return super(Users, self.sudo()).action_reset_password()
         return super(Users, self).action_reset_password()
-    
+
     def action_set_password(self):
         return self.env.ref('base.change_password_wizard_action').sudo().read()[0]
