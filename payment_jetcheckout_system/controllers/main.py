@@ -616,6 +616,10 @@ class PayloxSystemController(PayloxController):
             if company.payment_page_item_add_desc_required:
                 raise ValidationError(_('Payment item description cannot be empty.'))
 
+        payment_desc_prefix = company._get_payment_page_item_add_desc_prefix(partner)
+        if payment_desc_prefix:
+            payment_desc = payment_desc_prefix + payment_desc
+
         payment_amount = kwargs.get('amount', False)
         payment_tagv = kwargs.get('tag', False)
         payment_tags = company.sudo().payment_page_due_tag_ids
