@@ -464,9 +464,9 @@ class SyncopsConnectorLineDefault(models.Model):
     _description = 'syncOPS Connector Line Defaults'
 
     connector_id = fields.Many2one('syncops.connector', ondelete='cascade')
-    io_id = fields.Many2one('syncops.connector.line.io', ondelete='cascade')
-    input_id = fields.Many2one('syncops.connector.line.input', ondelete='cascade')
-    output_id = fields.Many2one('syncops.connector.line.output', ondelete='cascade')
+    io_id = fields.Many2one('syncops.connector.line.io')
+    input_id = fields.Many2one('syncops.connector.line.input')
+    output_id = fields.Many2one('syncops.connector.line.output')
     name = fields.Char()
     method = fields.Char()
     io = fields.Selection([
