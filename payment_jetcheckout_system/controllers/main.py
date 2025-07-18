@@ -153,7 +153,18 @@ class PayloxSystemController(PayloxController):
             token = path.rsplit('/', 1).pop()
             plan = request.env['payment.plan'].sudo().search([('uid', '=', token), ('company_id', '=', request.env.company.id)], limit=1)
             if plan:
-                values.update({'jetcheckout_plan_ids': [(6, 0, plan.ids)]})
+                values.update({
+                    'jetcheckout_plan_ids': [(6, 0, plan.ids)],
+                    'jetcheckout_item_ids': [(6, 0, plan.item_id.ids)],
+                    'paylox_transaction_item_ids': [(0, 0, {
+                        'item_id': plan.item_id.id,
+                        'amount': plan.item_id.amount,
+                        'ref': plan.item_id.ref,
+                        'date': plan.item_id.date,
+                        'desc': plan.item_id.description,
+                        'advance': plan.item_id.advance,
+                    })]
+                })
 
         return values
 
@@ -195,6 +206,8 @@ class PayloxSystemController(PayloxController):
                 path = urlparse(address).path
 
             if path.startswith('/tx/'):
+                return address, tx, status
+            if path.startswith('/p/plan'):
                 return address, tx, status
 
             system = tx.company_id.system or tx.partner_id.system or request.env.company.system
@@ -417,8 +430,9 @@ class PayloxSystemController(PayloxController):
 
         company = plan.company_id
         partner = plan.partner_id
+        transaction = fields.first(plan.transaction_ids) or None
         system = company.system or partner.system or 'jetcheckout_system'
-        values = self._prepare_system(company, system, partner, None)
+        values = self._prepare_system(company, system, partner, transaction)
         values['plan'] = plan
         template = self._get_template('/p/plan', values)
 
@@ -615,6 +629,10 @@ class PayloxSystemController(PayloxController):
         else:
             if company.payment_page_item_add_desc_required:
                 raise ValidationError(_('Payment item description cannot be empty.'))
+
+        payment_desc_prefix = company._get_payment_page_item_add_desc_prefix(partner)
+        if payment_desc_prefix:
+            payment_desc = payment_desc_prefix + payment_desc
 
         payment_amount = kwargs.get('amount', False)
         payment_tagv = kwargs.get('tag', False)

@@ -228,6 +228,7 @@ class PaymentItem(models.Model):
 
     def action_partner(self):
         self.ensure_one()
+        self = self.sudo()
         action = self.env.ref('payment_%s.action_parent' % self.system).read()[0]
         action['res_id'] = self.parent_id.id
         action['views'] = [(False, 'form')]
