@@ -177,6 +177,7 @@ class PaymentPlan(models.Model):
         result = acquirer.action_payment(options=dict(simulate=True), **data)
         if result.get('ok'):
             self.write({'transaction_ids': [(4, result['id'])]})
+            self.item_id.write({'transaction_ids': [(4, result['id'])]})
         if result.get('url'):
             if self.company_id.payment_plan_fullscreen_ok:
                 return {
