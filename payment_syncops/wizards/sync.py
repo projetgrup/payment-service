@@ -319,8 +319,9 @@ class SyncopsSyncWizard(models.TransientModel):
                 if pid and pid in items:
                     models['item'].browse(items[pid]).write({
                         'amount': line['partner_balance'],
+                        'syncops_notif': True,
                     })
-                else:                
+                else:
                     if pid:
                         partner = models['partner'].browse(pid)
                     else:
@@ -398,7 +399,10 @@ class SyncopsSyncWizard(models.TransientModel):
                 inv = line['invoice_id'] if pid else None
                 if pid and inv in items:
                     item = models['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
-                    item.write({'amount': line['invoice_amount']})
+                    item.write({
+                        'amount': line['invoice_amount'],
+                        'syncops_notif': True,
+                    })
                 else:
                     if pid:
                         partner = models['partner'].browse(pid)
