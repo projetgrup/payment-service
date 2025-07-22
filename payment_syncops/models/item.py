@@ -115,6 +115,7 @@ class PaymentItem(models.Model):
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params={
                     'reference': self.description or '',
                     'amount': tx and tx.amount or 0.0,
+                    'date': (self.paid_date or tx.create_date).strftime('%Y-%m-%d %H:%M:%S') or '',
                     'amount_commission_cost': tx and tx.jetcheckout_commission_amount or 0.0,
                     'transaction_id': tx and tx.jetcheckout_transaction_id or '',
                     'order_id': tx and tx.jetcheckout_order_id or '',
