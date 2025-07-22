@@ -43,6 +43,15 @@ class Http(models.AbstractModel):
     def session_info(self):
         self._get_current_system()
         res = super(Http, self).session_info()
+
+        if request.env.user.has_group('base.group_user'):
+            company_ids = request.env.user.company_ids
+            for company in company_ids:
+                res['user_companies']['allowed_companies'][company.id].update({
+                    'is_audit_enabled': company.sec_audit_ok,
+                })
+
         if res['user_context'].get('system'):
             res['home_action_id'] = self.env.ref('payment_jetcheckout_system.action_dashboard').id
+
         return res

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import models, fields, api
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ class PaymentPlan(models.Model):
                 with self.env.cr.savepoint():
                     company = self.item_id.company_id or self.env.company
                     template = self.env.ref('payment_supplier.mail_item_approved')
-                    partner = self.partner_id
-                    server = company.mail_server_id
+                    partner = self.sudo().partner_id
+                    server = company.sudo().mail_server_id
                     amount = sum(self.item_id.plan_ids.mapped('amount_paid'))
 
                     context = self.env.context.copy()

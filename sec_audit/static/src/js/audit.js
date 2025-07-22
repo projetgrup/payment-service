@@ -15,14 +15,20 @@ actionService.start = async function start(env) {
             const view = res.currentController?.view?.type;
             const record = res.currentController?.action?.props?.state?.currentId;
     
-            rpc.query({
-                route: '/reconciliation/log',
-                params: {
-                    action: 'close',
-                    view: name ? `${name} (${view})` : view,
-                    record: `${model},${record || 0}`,
-                },
-            });
+            let company = session.user_context.allowed_company_ids?.[0];
+            if (company) {
+                let isAuditEnabled = session.user_companies.allowed_companies[company]['is_audit_enabled'];
+                if (isAuditEnabled) {
+                    rpc.query({
+                        route: '/security/audit/log',
+                        params: {
+                            action: 'close',
+                            view: name ? `${name} (${view})` : view,
+                            record: `${model},${record || 0}`,
+                        },
+                    });
+                }
+            }
         }
     });
 
@@ -30,10 +36,13 @@ actionService.start = async function start(env) {
         if (view) {
             let company = session.user_context.allowed_company_ids?.[0];
             if (company) {
-                rpc.query({
-                    route: '/security/audit/log',
-                    params: { company: company, action: 'view', view, record },
-                });
+                let isAuditEnabled = session.user_companies.allowed_companies[company]['is_audit_enabled'];
+                if (isAuditEnabled) {
+                    rpc.query({
+                        route: '/security/audit/log',
+                        params: { company: company, action: 'view', view, record },
+                    });
+                }
             }
         }
     }
@@ -63,7 +72,7 @@ actionService.start = async function start(env) {
         if (model) {
             log({
                 view: name ? `${name} (${viewType})` : viewType,
-                record: `${model},${props.resId || 0}`,
+                record: `${model},${props?.resId || 0}`,
             });
         }
         return r;
