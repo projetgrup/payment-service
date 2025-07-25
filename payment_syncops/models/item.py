@@ -303,7 +303,7 @@ class PaymentItem(models.Model):
                                 try:
                                     with self.env.cr.savepoint():
                                         mail_template.with_context(**context).send_mail(
-                                            item.id,
+                                            partner.id,
                                             force_send=True,
                                             email_values={
                                                 'is_notification': True,
