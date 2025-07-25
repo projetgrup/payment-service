@@ -263,6 +263,7 @@ class PaymentItem(models.Model):
                         context = self.env.context.copy()
                         params = self.env['ir.config_parameter'].sudo().get_param
                         types = company.syncops_cron_sync_item_notif_type_ids.mapped('code')
+                        note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
                         if 'email' in types:
                             mail_server = company.mail_server_id
@@ -324,8 +325,26 @@ class PaymentItem(models.Model):
                                             'provider_id': sms_provider.id,
                                             'body': body,
                                         }
-                                        sms_message = self.env['sms.sms'].sudo().create(sms_values)
-                                        sms_message.send(unlink_failed=False, unlink_sent=True, raise_exception=False)
+                                        sms_messages = self.env['sms.sms'].sudo().create(sms_values)
+                                        self.env['mail.message'].create([{
+                                            'res_id': sms_message.partner_id.id,
+                                            'model': 'res.partner',
+                                            'message_type': 'sms',
+                                            'subtype_id': note,
+                                            'body': sms_message.body,
+                                            'notification_ids': [(0, 0, {
+                                                'res_partner_id': sms_message.partner_id.id,
+                                                'sms_number': sms_message.number,
+                                                'notification_type': 'sms',
+                                                'sms_id': sms_message.id,
+                                                'is_read': True,
+                                                'notification_status': 'ready',
+                                                'failure_type': '',
+                                            })]
+                                        } for sms_message in sms_messages])
+                                        # If any sending error happens,
+                                        # use `self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()`
+                                        sms_messages.send(unlink_failed=False, unlink_sent=True, raise_exception=False)
                                 except Exception as e:
                                     _logger.error('An error occured when sending notification sms to %s: %s' % (partner.name, e))
 
