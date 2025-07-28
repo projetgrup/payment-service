@@ -1,0 +1,346 @@
+.o_mobile_redirect {
+    $primary-color: #2980B8;
+    $link-color: #2384C6;
+    $angle: 30deg;
+
+    position: relative;
+    overflow: hidden;
+    clear: both;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:before, 
+    &:after {
+        content: "";
+        background-color: $primary-color;
+        z-index: -1;
+        width: 110%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+    }
+
+    &:before {
+        transform: rotate($angle);
+        transform-origin: left top;
+        left: 0;
+    }
+
+    &:after {
+        transform: rotate($angle*-1);
+        transform-origin: right top;
+        left: -10%
+    }
+
+    .o_booting {
+        cursor: wait;
+        position: fixed;
+        background: rgb(255, 255, 255);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 9999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: $primary-color;
+
+        &.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .o_redirecting {
+        cursor: wait;
+        position: fixed;
+        background: rgb(255, 255, 255);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 99990;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: $primary-color;
+
+        &.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .o_loading {
+        cursor: wait;
+        position: fixed;
+        background: rgb(255, 255, 255);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 99999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: $primary-color;
+
+        &.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    div.bottom-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background-color: $primary-color;
+    }
+    
+    .btn-level {
+        background: $primary-color !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        padding: 12px 20px !important;
+        border-radius: 0px !important;
+        border: none !important;
+        width: 100% !important;
+    
+        &:hover{
+            background: #0089bc !important;
+        }
+    }
+
+    .card {
+        max-width: 350px;
+    }
+
+    .o_redirect_form {
+        font-size: 42px;
+        color: #6672FF;
+        font-weight: bold;
+
+        .field-login {
+            position: relative;
+            margin-left: 24px;
+            padding-top: 20px;
+            margin-right: 24px;
+            margin-top: 12px;
+
+            .fa {
+                position: absolute;
+                left: 0;
+                top: 40px;
+                padding: 10px;
+                font-size: 20px;
+                color: $primary-color;
+            }
+
+            input {
+                padding-left: 42px;
+                width: 100%;
+                border: none;
+                outline: none;
+                font-size: 20px;
+                border-bottom: 1px solid #CED4DA !important;
+            }
+        }
+    }
+    
+    .login--page {
+    
+        main {
+            display: flex;
+            align-items: center;
+        }
+    
+        .login--container {
+            min-height: 100vh;
+        }
+    
+        .login--title {
+            font-size: 18px;
+            color: #787878;
+        }
+    
+        .login--title .line {
+            border-top: 1.5px solid #787878;
+            top: 13px;
+            width: 85%;
+        }
+    
+        .login--title .line--left {
+            left: 50px;
+        }
+    
+        .login--title .line--right {
+            right: 50px;
+        }
+    
+        @media screen and (max-width: 1199px) {
+            .login--title {
+                font-size: 16px;
+            }
+    
+            .login--title .line--left {
+                left: 0px;
+            }
+        
+            .login--title .line--right {
+                right: 0px;
+            }
+        }
+    
+        form .form-group {
+            margin-bottom: 2rem;
+        }
+    
+        form .form-group label {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    
+        form .form-group input {
+            padding: 0.5rem 0.75rem;
+            height: 48px;
+            background: transparent;
+            border-radius: 0px;
+            border: 1px solid #bdbdbd;
+        }
+    
+        form .form-group.field-password {
+            position: relative;
+        }
+    
+        form .form-group.field-password input{
+            padding: 0.5rem 1.75rem 0.5rem 0.75rem;
+        }
+    
+        form .form-group.field-password i {
+            position: absolute;
+            top: 53px;
+            right: 12px;
+        }
+    
+        form .form-group input:focus {
+            border-color: $primary-color;
+        }
+    
+        form .form-group .btn.btn--database {
+            background: $primary-color;
+            border-color: $primary-color;
+            color: #ffffff;
+            text-transform: uppercase;
+            height: 100%;
+    
+            &:hover, &:active{
+                background: darken($primary-color, 10%);
+            }
+        }
+    
+        form .form-group .btn.btn--database i {
+            padding-left: 8px;
+            font-size: 11px;
+        }
+    
+        form .oe_login_buttons .btn {
+            background: $primary-color;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 0px;
+            border: none;
+            width: 100%;
+    
+            &:hover, &:active{
+                background: darken($primary-color, 10%);
+            }
+        }
+    
+        @media screen and (max-width: 768px) {
+            form .oe_login_buttons .btn {
+                width: 100%;
+                margin-left: 0%;
+            }
+        }
+    
+        form .oe_login_buttons .btn.btn-link {
+            background: #fff;
+            color: $link-color;
+        }
+    
+        .login--footer a {
+            color: #212529;
+            font-size: 14px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+    
+        .login--footer a span {
+            color: $link-color;
+            font-weight: 700;
+        }
+    }
+    
+    .login--page.angled_container {
+        $angle: 30deg;
+        background-color: #ffffff;
+        position: relative;
+        overflow: hidden;
+        clear: both;
+    
+        &:before, 
+        &:after {
+            content: "";
+            background-color: $primary-color;
+            z-index: -1;
+            width: 110%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            top: 0;
+        }
+    
+        &:before {
+            transform: rotate($angle);
+            transform-origin: left top;
+            left: 0;
+        }
+    
+        &:after {
+            transform: rotate($angle*-1);
+            transform-origin: right top;
+            left: -10%
+        }
+    
+        div.bottom-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: $primary-color;
+        }
+    }
+}
