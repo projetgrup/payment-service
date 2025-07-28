@@ -1,0 +1,9 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.paylox",
+      "sha256_cert_fingerprints":
+      ["61:A4:32:C5:78:D4:1C:2A:84:90:37:AC:42:85:E9:84:8A:B8:AA:11:36:E9:8D:63:0B:69:B9:99:E9:41:6A:D2"]
+    }
+}]
