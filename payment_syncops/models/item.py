@@ -278,19 +278,31 @@ class PaymentItem(models.Model):
                                 sms_provider = self.env['sms.provider'].browse(id)
 
                         for item in items:
+                            self.env.cr.commit()
+
                             partner = item.parent_id
                             if partner.id in partners:
-                                item.syncops_notif = False
+                                self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
                                 continue
 
                             tag_ids = company.syncops_cron_sync_item_notif_tag_ids.ids
                             if company.syncops_cron_sync_item_notif_tag_ok:
                                 if not any(tag_id not in partner.category_id.ids for tag_id in tag_ids):
-                                    item.syncops_notif = False
+                                    self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
                                     continue
                             else:
                                 if any(tag_id in partner.category_id.ids for tag_id in tag_ids):
-                                    item.syncops_notif = False
+                                    self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    continue
+
+                            user_ids = company.syncops_cron_sync_item_notif_user_ids.ids
+                            if company.syncops_cron_sync_item_notif_user_ok:
+                                if not partner.user_id or partner.user_id.id not in user_ids:
+                                    self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    continue
+                            else:
+                                if partner.user_id and partner.user_id.id in user_ids:
+                                    self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
                                     continue
 
                             link = partner._get_payment_url()
@@ -348,9 +360,7 @@ class PaymentItem(models.Model):
                                 except Exception as e:
                                     _logger.error('An error occured when sending notification sms to %s: %s' % (partner.name, e))
 
-                            item.syncops_notif = False
                             partners.add(partner.id)
-
-                        self.env.cr.commit()
+                            self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
             except:
                 self.env.cr.rollback()

@@ -2,9 +2,7 @@
 import re
 from odoo.http import request
 from odoo.addons.web.controllers.main import Home as WebHome
-import logging
 
-_logger = logging.getLogger(__name__)
 
 class Home(WebHome):
 
@@ -18,18 +16,8 @@ class Home(WebHome):
                 'name': match.group(1) if match else ''
             })]
 
-    def _log_mobile_access(self):
-        """Check User-Agent and log if the client is a mobile device."""
-        agent = request.httprequest.headers.get('User-Agent', '').lower()
-        # Basic check for mobile User-Agent
-        if any(keyword in agent for keyword in ['mobile', 'android', 'iphone', 'ipad']):
-            _logger.error(f"Mobile device access detected: {agent}")
-
     def web_client(self, s_action=None, **kw):
         res = super(Home, self).web_client(s_action=s_action, **kw)
-        agent = request.httprequest.headers.get('User-Agent')
-        _logger.error(agent) # Log for mobile access
-        
         if 'firebase_token' in kw:
             if res.headers.get('Location'):
                 request.session['firebase_token'] = kw['firebase_token']

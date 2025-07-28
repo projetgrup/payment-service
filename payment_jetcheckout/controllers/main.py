@@ -1297,6 +1297,7 @@ class PayloxController(http.Controller):
 
     @http.route('/payment/card/valid', type='json', auth='public', csrf=False, sitemap=False, website=True)
     def payment_card_valid(self, number):
+        raise
         return self._get_validity(card_number=number)
 
     @http.route(['/payment/init'], type='json', auth='public', csrf=False, sitemap=False, website=True)
