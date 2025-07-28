@@ -59,6 +59,8 @@ class SyncopsSyncWizard(models.TransientModel):
                 raise ValidationError(_('An error occured. Please try again.'))
             if not lines:
                 lines = []
+            elif len(lines) == 1 and not lines[0]:
+                lines = []
 
             methods = {
                 'value': lambda line: {
@@ -428,8 +430,8 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     item = models['item'].create({
                         'syncops_ok': True,
-                        'syncops_data': line['data'],
                         'syncops_notif': True,
+                        'syncops_data': line['data'],
                         'system': self.system or company.system,
                         'amount': line['invoice_amount'],
                         'description': line['invoice_name'],
