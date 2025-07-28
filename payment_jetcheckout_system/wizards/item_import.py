@@ -53,6 +53,17 @@ class PaymentItemImport(models.TransientModel):
 
     def _prepare_row(self, line):
         company = line.company_id
+        partner_field = company._get_payment_partner_unique_field()
+        partner = self.env['res.partner'].search([
+            (partner_field, '=', getattr(line, 'partner_%s' % partner_field)),
+            ('parent_id', '=', False),
+            ('system', '=', company.system),
+            '|', ('company_id', '=', company.id),
+                 ('company_id.parent_id', '=', company.id),
+        ], limit=1)
+        if partner:
+            company = partner.company_id
+
         if line.user_email:
             user_values = {}
             if line.user_name:
@@ -84,13 +95,11 @@ class PaymentItemImport(models.TransientModel):
         else:
             user = False
 
-        partner = self.env['res.partner'].search([
-            ('parent_id', '=', False),
-            ('vat', '=', line.partner_vat),
-            ('system', '=', company.system),
-            ('company_id', '=', company.id),
-        ], limit=1)
         partner_values = {'user_id': user and user.id}
+        if line.partner_vat:
+            partner_values.update({'vat': line.partner_vat})
+        if line.partner_ref:
+            partner_values.update({'ref': line.partner_ref})
         if line.partner_name:
             partner_values.update({'name': line.partner_name})
         if line.partner_email:
@@ -107,6 +116,7 @@ class PaymentItemImport(models.TransientModel):
         else:
             partner_values.update({
                 'vat': line.partner_vat,
+                'ref': line.partner_ref,
                 'system': company.system,
                 'company_id': company.id,
             })
@@ -222,6 +232,7 @@ class PaymentItemImportLine(models.TransientModel):
     partner_id = fields.Many2one('res.partner', readonly=True)
     partner_name = fields.Char('Partner Name', readonly=True)
     partner_vat = fields.Char('Partner VAT', readonly=True)
+    partner_ref = fields.Char('Partner Reference', readonly=True)
     partner_email = fields.Char('Partner Email', readonly=True)
     partner_street = fields.Char('Partner Street', readonly=True)
     partner_tax_office = fields.Char('Partner Tax Office', readonly=True)
