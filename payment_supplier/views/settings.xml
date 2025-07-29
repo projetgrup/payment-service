@@ -20,6 +20,28 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="payment_plan_approver_ok"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="payment_plan_approver_ok"/>
+                            <div class="text-muted">
+                                Enable approving payment plans by specified partners
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('payment_plan_approver_ok', '=', False)]}">
+                                <div class="row mt16">
+                                    <field name="payment_plan_approver_ids" colspan="2" nolabel="1" class="w-100 mx-3">
+                                        <tree editable="bottom" default_order="level">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="level" decoration_bf="1"/>
+                                            <field name="partner_id" options="{'no_create': True}" domain="[('company_id', '=', parent.company_id), ('can_approve_payment_plan', '=', True)]"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

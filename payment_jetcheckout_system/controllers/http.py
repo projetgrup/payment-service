@@ -13,7 +13,7 @@ def _json_response(self, result=None, error=None):
             error['code'] = 500
             error['http_status'] = 500
         if 'data' in error and isinstance(error['data'], dict) and 'debug' in error['data'] and http.request.uid != 1:
-            del error['data']['debug']
+            error['data']['debug'] = 'Please contact with system administrator'
     return json_response(self, result=result, error=error)
 
 http.JsonRequest._json_response = _json_response

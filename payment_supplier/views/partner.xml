@@ -21,6 +21,20 @@
     </field>
     </record>
 
+    <record id="tree_approver" model="ir.ui.view">
+    <field name="name">res.supplier.approver.tree</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="child_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="vat"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//button[@name="action_redirect_payment_page"]' position="replace">
+        </xpath>
+    </field>
+    </record>
+
     <record id="parent_tree" model="ir.ui.view">
     <field name="name">res.supplier.parent.tree</field>
     <field name="model">res.partner</field>
@@ -74,12 +88,15 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <xpath expr='//header' position="replace"/>
+        <xpath expr='//field[@name="company_type"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
         <xpath expr='//field[@name="company_id"]' position="before">
-            <field name="ref"/>
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
             <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '!=', False)]}"/>
             <field name="campaign_table" invisible="1"/>
             <field name="acquirer_ids" invisible="1"/>
+            <field name="can_approve_payment_plan" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>
@@ -89,6 +106,33 @@
         <xpath expr='//page[@name="children"]' position="replace"/>
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="string">Supplier</attribute>
+        </xpath>
+    </field>
+    </record>
+
+    <record id="form_approver" model="ir.ui.view">
+    <field name="name">res.supplier.approver.form</field>
+    <field name="model">res.partner</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="child_form"/>
+    <field name="arch" type="xml">
+        <xpath expr='//field[@name="parent_id"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="vat"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="campaign_id"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//field[@name="acquirer_branch_id"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//div[@name="button_box"]' position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr='//notebook' position="attributes">
+            <attribute name="invisible">1</attribute>
         </xpath>
     </field>
     </record>
