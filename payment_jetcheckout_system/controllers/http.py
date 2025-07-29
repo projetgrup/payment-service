@@ -18,12 +18,12 @@ def _json_response(self, result=None, error=None):
 
 http.JsonRequest._json_response = _json_response
 
-common.RPC_VERSION_1 = {
-    'server_version': '1.0',
-    'server_version_info': (1, 0, 0, 'final', 0, ''),
-    'server_serie': '1.0',
-    'protocol_version': 1,
-}
+#common.RPC_VERSION_1 = {
+#    'server_version': '1.0',
+#    'server_version_info': (1, 0, 0, 'final', 0, ''),
+#    'server_serie': '1.0',
+#    'protocol_version': 1,
+#}
 
 
 #import werkzeug
