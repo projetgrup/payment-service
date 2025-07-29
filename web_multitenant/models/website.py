@@ -39,6 +39,10 @@ class Website(models.Model):
             values['domain'] = template.domain
         return super().write(values)
 
+    @api.onchange('template_id')
+    def onchange_template_id(self):
+        self.domain = self.template_id.domain
+
 
 class View(models.Model):
     _inherit = 'ir.ui.view'

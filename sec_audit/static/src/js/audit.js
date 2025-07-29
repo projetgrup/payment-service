@@ -22,6 +22,7 @@ actionService.start = async function start(env) {
                     rpc.query({
                         route: '/security/audit/log',
                         params: {
+                            company,
                             action: 'close',
                             view: name ? `${name} (${view})` : view,
                             record: `${model},${record || 0}`,
@@ -40,7 +41,7 @@ actionService.start = async function start(env) {
                 if (isAuditEnabled) {
                     rpc.query({
                         route: '/security/audit/log',
-                        params: { company: company, action: 'view', view, record },
+                        params: { company, action: 'view', view, record },
                     });
                 }
             }
