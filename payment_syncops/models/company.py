@@ -46,6 +46,14 @@ class ResCompany(models.Model):
         column2='category_id',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
+    syncops_cron_sync_item_notif_user_ok = fields.Boolean()
+    syncops_cron_sync_item_notif_user_ids = fields.Many2many(
+        comodel_name='res.partner.category',
+        relation='company_syncops_cron_sync_item_notif_user_rel',
+        column1='company_id',
+        column2='user_id',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
     syncops_check_iban = fields.Boolean()
     syncops_check_card = fields.Boolean()
     syncops_payment_page_partner_required = fields.Boolean()

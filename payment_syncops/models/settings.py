@@ -10,9 +10,18 @@ class PaymentSettings(models.TransientModel):
         for setting in self:
             setting.syncops_cron_sync_item_notif_tag_opt = 'include' if setting.company_id.syncops_cron_sync_item_notif_tag_ok else 'exclude'
 
+    @api.depends('company_id')
+    def _compute_syncops_cron_sync_item_notif_user_opt(self):
+        for setting in self:
+            setting.syncops_cron_sync_item_notif_user_opt = 'include' if setting.company_id.syncops_cron_sync_item_notif_user_ok else 'exclude'
+
     def _set_syncops_cron_sync_item_notif_tag_opt(self):
         for setting in self:
             setting.company_id.syncops_cron_sync_item_notif_tag_ok = setting.syncops_cron_sync_item_notif_tag_opt == 'include'
+
+    def _set_syncops_cron_sync_item_notif_user_opt(self):
+        for setting in self:
+            setting.company_id.syncops_cron_sync_item_notif_user_ok = setting.syncops_cron_sync_item_notif_user_opt == 'include'
 
     syncops_sync_item_force = fields.Boolean(related='company_id.syncops_sync_item_force', readonly=False)
     syncops_sync_item_soft = fields.Boolean(related='company_id.syncops_sync_item_soft', readonly=False)
@@ -35,6 +44,14 @@ class PaymentSettings(models.TransientModel):
         compute='_compute_syncops_cron_sync_item_notif_tag_opt',
         inverse='_set_syncops_cron_sync_item_notif_tag_opt',
         string='syncOPS Cron Sync Item Notification Tag Option'
+    )
+    syncops_cron_sync_item_notif_user_ok = fields.Boolean(related='company_id.syncops_cron_sync_item_notif_user_ok', readonly=False)
+    syncops_cron_sync_item_notif_user_ids = fields.Many2many(related='company_id.syncops_cron_sync_item_notif_user_ids', readonly=False)
+    syncops_cron_sync_item_notif_user_opt = fields.Selection(
+        selection=[('include', 'include'), ('exclude', 'exclude')],
+        compute='_compute_syncops_cron_sync_item_notif_user_opt',
+        inverse='_set_syncops_cron_sync_item_notif_user_opt',
+        string='syncOPS Cron Sync Item Notification User Option'
     )
     syncops_payment_page_partner_required = fields.Boolean(related='company_id.syncops_payment_page_partner_required', readonly=False)
     syncops_payment_page_sync_item = fields.Boolean(related='company_id.syncops_payment_page_sync_item', readonly=False)

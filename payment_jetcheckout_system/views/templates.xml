@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="http_error_debug" inherit_id="http_routing.http_error_debug">
+        <xpath expr="//div[@id='debug_infos']" position="attributes">
+            <attribute name="t-if">request.uid == 1</attribute>
+        </xpath>
+    </template>
+
     <template id="payment_form" inherit_id="payment_jetcheckout.payment_form">
         <xpath expr="//div[@id='payment_type']" position="after">
             <input t-if="advance" type="hidden" t-att-value="advance" field="advance"/>

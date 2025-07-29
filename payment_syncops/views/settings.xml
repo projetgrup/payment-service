@@ -176,6 +176,10 @@
                                     Only <field name="syncops_cron_sync_item_notif_tag_opt" attrs="{'required': [('syncops_cron_sync_item_notif_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following partner tags<br/><br/><field name="syncops_cron_sync_item_notif_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_open': True}" class="w-100" placeholder="Partner Tags..."/>
                                     <field name="syncops_cron_sync_item_notif_tag_ok" invisible="1"/>
                                 </div>
+                                <div class="row ml-0 pl-3 pt-2 border-left" style="border-width:2px !important" attrs="{'invisible': [('syncops_cron_sync_item_notif_ok', '=', False)]}">
+                                    Only <field name="syncops_cron_sync_item_notif_user_opt" attrs="{'required': [('syncops_cron_sync_item_notif_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following sales representatives<br/><br/><field name="syncops_cron_sync_item_notif_user_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_open': True}" class="w-100" placeholder="Sales Representatives..."/>
+                                    <field name="syncops_cron_sync_item_notif_user_ok" invisible="1"/>
+                                </div>
                             </div>
                         </div>
                     </div>

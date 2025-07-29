@@ -61,7 +61,7 @@ class PaymentItemImport(models.TransientModel):
             '|', ('company_id', '=', company.id),
                  ('company_id.parent_id', '=', company.id),
         ], limit=1)
-        if partner:
+        if partner and partner.company_id:
             company = partner.company_id
 
         if line.user_email:
