@@ -12,8 +12,8 @@ def _json_response(self, result=None, error=None):
         if 'code' in error and error['code'] == 200:
             error['code'] = 500
             error['http_status'] = 500
-        if 'data' in error and http.request.uid != 1:
-            del error['data']
+        if 'data' in error and isinstance(error['data'], dict) and 'debug' in error['data'] and http.request.uid != 1:
+            del error['data']['debug']
     return json_response(self, result=result, error=error)
 
 http.JsonRequest._json_response = _json_response
@@ -33,3 +33,7 @@ http.JsonRequest._json_response = _json_response
 #    def version_info(self):
 #        return {}
 #        return werkzeug.exceptions.NotFound()
+#        return Response(
+#            body, status=error and error.pop('http_status', 200) or 200,
+#            headers=[('Content-Type', mime), ('Content-Length', len(body))]
+#        )
