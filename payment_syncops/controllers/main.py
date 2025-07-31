@@ -154,7 +154,7 @@ class PayloxSyncopsController(Controller):
             'company_id': company_id,
             'vat': vat,
             'ref': ref,
-        }, company=company)
+        }, company=company, timeout=10)
         if result:
             for res in result:
                 currency_name = res.get('currency_name', '')

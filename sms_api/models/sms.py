@@ -119,6 +119,15 @@ class SmsApi(models.AbstractModel):
         results = []
         providers = {message.get('provider') for message in messages}
 
+        for i, message in enumerate(messages):
+            partner_id = message.get('res_id')
+            provider_id = message.get('provider')
+            if partner_id and provider_id:
+                partner = self.env['res.partner'].browse(partner_id)
+                provider = self.env['sms.provider'].browse(provider_id)
+                if partner and provider and partner.company_id.id != provider.company_id.id:
+                    del messages[i]
+
         if not all(providers):
             return super(SmsApi, self)._send_sms_batch(messages)
 

@@ -55,7 +55,7 @@ class SyncopsConnector(models.Model):
         return defaults
 
     @api.model
-    def _execute(self, method, reference='', params={}, connectors=None, company=None, message=None):
+    def _execute(self, method, reference='', params={}, connectors=None, company=None, timeout=None, message=None):
         result = []
         try:
             url = self.env['ir.config_parameter'].sudo().get_param('syncops.url')
@@ -88,7 +88,7 @@ class SyncopsConnector(models.Model):
                         'reference': reference,
                         'environment': connector.environment and 'P' or 'T',
                         'vars': {var.name: var.value for var in connector.variable_ids},
-                    })
+                    }, timeout=timeout)
                     if response.status_code == 200:
                         headers = response.headers
                         if headers.get('Content-Type') == 'application/json':

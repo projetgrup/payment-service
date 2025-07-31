@@ -93,8 +93,8 @@ class PaymentTransaction(models.Model):
                 params = self.env['ir.config_parameter'].sudo().get_param
                 provider = self.env['sms.provider'].get(company.id)
                 if not provider and params('paylox.sms.default'):
-                    id = int(params('paylox.sms.provider', '0'))
-                    provider = self.env['sms.provider'].browse(id)
+                    provider_id = int(params('paylox.sms.provider', '0'))
+                    provider = self.env['sms.provider'].browse(provider_id)
 
                 amount = formatLang(self.env, self.amount)
                 context = self.env.context.copy()
