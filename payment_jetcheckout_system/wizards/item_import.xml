@@ -18,6 +18,7 @@
                         <tree create="0" edit="0" delete="0">
                             <field name="partner_name" force_save="1"/>
                             <field name="partner_vat" force_save="1"/>
+                            <field name="partner_ref" force_save="1"/>
                             <field name="partner_email" force_save="1"/>
                             <field name="partner_street" invisible="1" force_save="1"/>
                             <field name="partner_tax_office" invisible="1" force_save="1"/>
@@ -43,6 +44,7 @@
                                     <group>
                                         <field name="partner_name" force_save="1"/>
                                         <field name="partner_vat" force_save="1"/>
+                                        <field name="partner_ref" force_save="1"/>
                                         <field name="partner_email" force_save="1"/>
                                         <field name="partner_street" invisible="1" force_save="1"/>
                                         <field name="partner_tax_office" invisible="1" force_save="1"/>

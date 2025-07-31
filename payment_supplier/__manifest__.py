@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2024 Projet (https://bulutkobi.io)
+# Copyright © 2025 Projet (https://bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Supplier Payment System',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -11,6 +11,7 @@
     'depends': ['payment_jetcheckout_system', 'payment_syncops'],
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'data/data.xml',
         'report/report.xml',
         'views/item.xml',

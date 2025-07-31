@@ -295,10 +295,10 @@ class PaymentPayloxSend(models.TransientModel):
                 if sms_template:
                     body = sms_template._render_field('body', [partner.id], set_lang=partner.lang)[partner.id]
                     sms_values = {
-                        'partner_id': partner.id,
+                        'state': 'outgoing',
                         'body': body,
                         'number': partner.mobile,
-                        'state': 'outgoing',
+                        'partner_id': partner.id,
                         'provider_id': sms_provider.id,
                     }
                     sms_messages.append(sms_values)
