@@ -120,12 +120,10 @@ class SmsApi(models.AbstractModel):
         providers = {message.get('provider') for message in messages}
 
         for i, message in enumerate(messages):
-            partner_id = message.get('res_id')
-            provider_id = message.get('provider')
-            if partner_id and provider_id:
-                partner = self.env['res.partner'].browse(partner_id)
-                provider = self.env['sms.provider'].browse(provider_id)
-                if partner and provider and partner.company_id.id != provider.company_id.id:
+            sms_id = message.get('res_id')
+            if sms_id:
+                sms = self.env['sms.sms'].sudo().browse(sms_id)
+                if sms and sms.partner_id and sms.provider_id and sms.partner_id.company_id.id != sms.provider_id.company_id.id:
                     del messages[i]
 
         if not all(providers):
