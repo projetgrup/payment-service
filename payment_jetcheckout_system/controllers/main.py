@@ -1110,9 +1110,6 @@ class PayloxSystemController(PayloxController):
 
     @http.route('/my/payment', type='http', auth='public', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_system_payment(self, **kwargs):
-        if request.env.user.has_group('base.group_public'):
-            raise werkzeug.exceptions.NotFound()
-
         if not kwargs.get('values', {}).get('no_redirect'):
             redirect = self._check_redirect(request.env.user.partner_id)
             if redirect:
@@ -1123,6 +1120,9 @@ class PayloxSystemController(PayloxController):
         params = kwargs.get('', {})
         if params:
             params = json.loads(base64.b64decode(params))
+
+        if not params and request.env.user.has_group('base.group_public'):
+            raise werkzeug.exceptions.NotFound()
 
         partner = None
         company = request.env.company
