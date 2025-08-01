@@ -73,7 +73,7 @@ class SyncopsConnector(models.Model):
                 return (None, info) if message else None
 
             url += '/api/v1/execute'
-            for connector in connectors:
+            for connector in connectors.filtered(lambda c: c.active):
                 lines = connector.line_ids.filtered(lambda l: l.code == method)
                 for line in lines:
                     defaults = line._defaults('input', params)
