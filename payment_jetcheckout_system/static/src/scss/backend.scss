@@ -115,6 +115,28 @@
             }
         }
     }
+
+    .o_field_kanban_header {
+        display: grid;
+        position: relative;
+        overflow: hidden;
+        grid-template-columns: 1fr 1fr 32px 1fr;
+        width: 100%;
+        border-radius: 8px;
+
+        &::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 1;
+            border-left: 16px solid var(--odoo);
+            border-right: 16px solid transparent;
+            border-bottom: 16px solid transparent;
+        }
+    }
 }
 
 .o_web_client {

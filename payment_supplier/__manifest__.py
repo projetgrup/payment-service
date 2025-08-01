@@ -11,7 +11,6 @@
     'depends': ['payment_jetcheckout_system', 'payment_syncops'],
     'data': [
         'security/security.xml',
-        'security/ir.model.access.csv',
         'data/data.xml',
         'report/report.xml',
         'views/item.xml',

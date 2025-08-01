@@ -606,6 +606,30 @@
         </t>
     </template>
 
+    <template id="page_payment_plan_approve" name="Payment Plan Approve Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="dynamic" t-value="flow == 'dynamic'"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+
+            <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div>
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+                <t t-call="payment_jetcheckout_system.payment_company"/>
+            </div>
+            <div class="payment-system position-relative overflow-hidden">
+                test
+            </div>
+        </t>
+    </template>
+
     <template id="page_login" name="Payment System Page Signin">
         <html>
             <body>

@@ -176,9 +176,90 @@
     </field>
     </record>
 
+    <record id="form_plan_approve" model="ir.ui.view">
+    <field name="name">payment.plan.approve.form</field>
+    <field name="model">payment.plan.approve</field>
+    <field name="arch" type="xml">
+        <form>
+            <group>
+                <group>
+                    <p class="h4 text-primary text-center" colspan="2"><i class="fa fa-2x fa-check-square-o"/></p>
+                    <p class="h4 my-3 text-primary text-center" colspan="2">Payment needs approval</p>
+                    <p class="px-5 my-3 text-700 text-center" colspan="2">Please notify approvers to confirm selected payments.<br/>The payment will proceed upon approvals.</p>
+                </group>
+                <group>
+                    <div class="o_field_kanban_header d-flex bg-100 shadow-sm font-weight-bold p-2" colspan="2">
+                        <div class="pl-5 w-50">Name</div>
+                        <div class="w-50">Status</div>
+                    </div>
+                    <field name="partner_ids" readonly="1" colspan="2" nolabel="1" force_save="1" mode="kanban">
+                        <kanban create="0" edit="0" delete="0">
+                            <field name="id"/>
+                            <field name="name"/>
+                            <field name="image_128"/>
+                            <field name="avatar_128"/>
+                            <field name="payment_plan_approver_status"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click d-flex mx-0 shadow-sm rounded">
+                                        <div class="w-50">
+                                            <div class="o_kanban_image">
+                                                <img t-if="record.image_128.raw_value" alt="" height="32" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
+                                                <img t-else="" alt="" height="32" class="border rounded-circle" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
+                                            </div>
+                                            <div class="oe_kanban_details mt-2">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <strong><field name="name"/></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-50 py-2">
+                                            <t t-raw="record.payment_plan_approver_status.raw_value"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <tree create="0" edit="0" delete="0">
+                            <field name="name" decoration-bf="1"/>
+                            <field name="payment_plan_approver_status" string="Status"/>
+                            <field name="payment_plan_approver_state" invisible="1"/>
+                        </tree>
+                        <form create="0" edit="0" delete="0">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="name"/>
+                                    </group>
+                                    <group>
+                                        <field name="payment_plan_approver_status" string="Status"/>
+                                        <field name="payment_plan_approver_state" invisible="1"/>
+                                    </group>
+                                </group>
+                            </sheet>
+                            <footer style="display: none;"/>
+                        </form>
+                    </field>
+                </group>
+            </group>
+            <footer>
+                <button name="action_send_email" type="object" class="btn-primary" icon="fa-envelope" string="Send Email"/>
+                <button special="cancel" class="btn-secondary" string="Close" icon="fa-times"/>
+            </footer>
+        </form>
+    </field>
+    </record>    
+
     <record id="action_plan_pay" model="ir.actions.act_window">
     <field name="name">Pay Plan</field>
     <field name="res_model">payment.plan.pay</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    </record>
+
+    <record id="action_plan_approve" model="ir.actions.act_window">
+    <field name="name">Approve Plan</field>
+    <field name="res_model">payment.plan.approve</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
     </record>
