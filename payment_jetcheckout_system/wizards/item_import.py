@@ -35,7 +35,7 @@ class PaymentItemImport(models.TransientModel):
             'partner_name': value['Partner Name'],
             'partner_vat': value.get('Partner VAT', False),
             'partner_ref': value.get('Partner Reference', False),
-            'partner_ref': value.get('Partner Email', False),
+            'partner_email': value.get('Partner Email', False),
             'partner_street': value.get('Partner Street', False),
             'partner_tax_office': value.get('Partner Tax Office', False),
             'amount': float(value['Amount']),
