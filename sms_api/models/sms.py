@@ -135,7 +135,7 @@ class SmsApi(models.AbstractModel):
         vals = {provider: [] for provider in providers}
         for message in messages:
             vals[message['provider']].append(message)
-        for provider, message in vals.items():
+        for provider, messages in vals.items():
             if provider:
                 results.extend(self._send_sms_api(messages, provider))
             else:
