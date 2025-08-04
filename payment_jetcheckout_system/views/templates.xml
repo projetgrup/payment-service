@@ -645,7 +645,7 @@
                                     <th class="px-2">Token</th>
                                     <th class="text-right px-2">Amount</th>
                                     <th class="text-center px-2">Installment</th>
-                                    <th class="text-left px-2">State</th>
+                                    <th class="text-left px-2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -664,7 +664,7 @@
                                                 <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="plan.id" t-att-data-amount="plan.amount" checked="checked" field="payment.plan"/>
                                                 <span class="slider round fa"/>
                                             </label>
-                                            <span class="text-primary font-weight-bold" field="payment.planState">Approve</span>
+                                            <span class="text-primary font-weight-bold">Approve</span>
                                         </td>
                                     </tr>
                                 </t>

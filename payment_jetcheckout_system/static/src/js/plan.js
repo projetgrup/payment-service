@@ -2,6 +2,7 @@
 'use strict';
 
 import { _t } from 'web.core';
+import dialog from 'web.Dialog';
 import fields from 'paylox.fields';
 import payloxPage from 'paylox.page';
 import framework from 'paylox.framework';
@@ -79,13 +80,13 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     _onChangePlan: function (ev) {
         if (ev && ev.currentTarget) {
             let $input = $(ev.currentTarget);
-            let $state = $input.parent().next();
+            let $action = $input.parent().next();
             if ($input.is(':checked')) {
-                $state.text(_t('Approve'));
-                $state.removeClass('text-danger').addClass('text-primary');
+                $action.text(_t('Approve'));
+                $action.removeClass('text-danger').addClass('text-primary');
             } else {
-                $state.text(_t('Disapprove'));
-                $state.removeClass('text-primary').addClass('text-danger');
+                $action.text(_t('Disapprove'));
+                $action.removeClass('text-primary').addClass('text-danger');
             }
         }
 
@@ -101,6 +102,20 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     },
 
     _onClickConfirm: function () {
+        new dialog(self, {
+            title: _t('Warning'),
+            size: 'small',
+            buttons: [{
+                close: true,
+                text: _t('Cancel'),
+                classes: 'btn-secondary text-white',
+            }, {
+                text: _t('Remove'),
+                classes: 'btn-danger text-white',
+                click: () => {}
+            }],
+            //$content: qweb.render('paylox.campaigns', { campaigns, current: this.campaign.name.value })
+        }).open();
     },
 });
 
