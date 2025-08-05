@@ -5,6 +5,7 @@ import { _t } from 'web.core';
 import dialog from 'web.Dialog';
 import fields from 'paylox.fields';
 import payloxPage from 'paylox.page';
+import { format } from 'paylox.tools';
 import framework from 'paylox.framework';
 import publicWidget from 'web.public.widget';
 
@@ -102,19 +103,37 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     },
 
     _onClickConfirm: function () {
-        new dialog(self, {
+        let $plans = $('input.input-switch:checked');
+        if (!$plans.length) {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('No payment plan selected to approve.'),
+                sticky: false,
+            });
+            return;
+        }
+
+        let amount = 0;
+        $plans.each(function () { amount += parseFloat(this.dataset.amount); });
+        new dialog(this, {
             title: _t('Warning'),
             size: 'small',
             buttons: [{
+                text: _t('Approve'),
+                classes: 'btn-primary',
+                click: () => {}
+            }, {
                 close: true,
                 text: _t('Cancel'),
-                classes: 'btn-secondary text-white',
-            }, {
-                text: _t('Remove'),
-                classes: 'btn-danger text-white',
-                click: () => {}
+                classes: 'btn-secondary',
             }],
-            //$content: qweb.render('paylox.campaigns', { campaigns, current: this.campaign.name.value })
+            $content: $('<div/>').addClass('h4 text-center').html(
+                _.str.sprintf(
+                    _t('You are about to approve payment plans with a total amount of <h2 class="text-600">%s</h2>'),
+                    format.currency(amount, this.currency.position, this.currency.symbol, this.currency.decimal)
+                ),
+            )
         }).open();
     },
 });

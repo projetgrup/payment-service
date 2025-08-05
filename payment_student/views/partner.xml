@@ -42,6 +42,9 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_tree"/>
     <field name="arch" type="xml">
         <xpath expr='//field[@name="parent_id"]' position="replace"/>
+        <xpath expr='//tree' position="attributes">
+            <attribute name="js_class">student_buttons</attribute>
+        </xpath>
     </field>
     </record>
 
