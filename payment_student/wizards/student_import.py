@@ -295,6 +295,11 @@ class PaymentStudentImport(models.TransientModel):
                 })
                 sending.with_user(user).send()
 
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
 
 class PaymentStudentImportLine(models.TransientModel):
     _name = 'payment.student.import.line'
