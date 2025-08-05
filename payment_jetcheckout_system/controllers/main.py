@@ -445,11 +445,11 @@ class PayloxSystemController(PayloxController):
     @http.route('/p/plan/<tokens>/approve/<token>', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
     def page_system_link_plan(self, tokens, token, **kwargs):
         partner = self._get_parent(token)
-        plans = request.env['payment.plan'].sudo().search([('uid', 'in', tokens.split(',')), ('company_id', '=', request.env.company.id)])
+        company = partner.company_id or request.env.company
+        plans = request.env['payment.plan'].sudo().search([('uid', 'in', tokens.split(',')), ('company_id', '=', company.id)])
 
         self._del()
 
-        company = partner.company_id or request.env.company
         values = {
             'company': company,
             'partner': partner,
@@ -461,6 +461,14 @@ class PayloxSystemController(PayloxController):
             'Pragma': 'no-cache',
             'Expires': '-1'
         })
+
+    @http.route('/p/plan/<tokens>/approve/<token>/confirm', type='json', auth='public', website=True, csrf=False)
+    def page_system_link_plan_confirm(self, tokens, token, **kwargs):
+        partner = self._get_parent(token)
+        company = partner.company_id or request.env.company
+        plans = request.env['payment.plan'].sudo().search([('id', 'in', kwargs['ids']), ('uid', 'in', tokens.split(',')), ('company_id', '=', company.id)])
+        plans.write({'approver_ids': [(4, partner.id)]})
+        return {}
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)
     def page_system_link_privacy_policy(self):

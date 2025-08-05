@@ -670,7 +670,7 @@
                                 </t>
                             </tbody>
                             <tfoot class="shadow bg-light">
-                                <tr>
+                                <tr class="fade">
                                     <td class="text-left" colspan="4"></td>
                                     <td class="text-right align-middle"><em>Select All</em></td>
                                     <td class="text-left align-middle">
@@ -684,8 +684,9 @@
                         </table>
                     </div>
                 </div>
-                <div class="d-flex p-4 justify-content-center">
+                <div class="d-flex p-4 justify-content-center flex-column align-items-center">
                     <button class="btn btn-primary rounded-pill border shadow fade" field="button.confirm"></button>
+                    <em class="text-primary mt-4 small fade" field="text.confirm"></em>
                     <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                 </div>

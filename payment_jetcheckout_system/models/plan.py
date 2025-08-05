@@ -87,7 +87,26 @@ class PaymentPlan(models.Model):
     currency_id = fields.Many2one(related='item_id.currency_id', readonly=True, store=True)
     approval_state = fields.Selection([('+', 'Approved'), ('-', 'Disapproved')], readonly=True)
     approval_result = fields.Char(readonly=True)
-    approver_level = fields.Integer()
+    approver_level = fields.Integer(readonly=True)
+    approver_ids = fields.Many2many('res.partner', 'approver_plan_rel', 'plan_id', 'approver_id', string='Approvers', readonly=True)
+
+    def write(self, values):
+        res = super().write(values)
+        if 'approver_ids' in values:
+            self.calculate_approver_level()
+        return res
+
+    def calculate_approver_level(self):
+        company = self.company_id or self.partner_id.company_id or self.env.company
+        if company.payment_plan_approver_ok:
+            level_max = max(company.payment_plan_approver_ids.mapped('level'))
+            for plan in self:
+                level = plan.approver_level or 0
+                for line in company.payment_plan_approver_ids.filtered(lambda l: l.level > level):
+                    if all(approver_id in plan.approver_ids.ids for approver_id in line.partner_ids.ids):
+                        level = line.level
+                if level == level_max:
+                    plan.approver_level = -1 if level == level_max else level
 
     def payment(self):
         if self.paid:
@@ -96,22 +115,22 @@ class PaymentPlan(models.Model):
         partner = self.env.user.partner_id
         company = self.company_id or self.partner_id.company_id or self.env.company
         if company.payment_plan_approver_ok:
-            level = self.env.context.get('approver_level', 1)
-            for line in company.payment_plan_approver_ids:
-                if partner.id in line.partner_ids.ids:
-                    level = line.level + 1
-                    break
-            line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level >= level))
-            if line:
-                self.approver_level = line.level
-                wizard = self.env['payment.plan.approve'].create({
-                    'partner_ids': [(6, 0, line.partner_ids.ids)],
-                    'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
-                    'level': line.level,
-                })
-                action = self.env.ref('payment_jetcheckout_system.action_plan_approve').sudo().read()[0]
-                action['res_id'] = wizard.id
-                return action
+            level = self.approver_level or 0
+            if level >= 0:
+                for line in company.payment_plan_approver_ids:
+                    if partner.id in line.partner_ids.ids:
+                        level = line.level + 1
+                        break
+                line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level > level))
+                if line:
+                    wizard = self.env['payment.plan.approve'].create({
+                        'partner_ids': [(6, 0, line.partner_ids.ids)],
+                        'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
+                        'level': line.level,
+                    })
+                    action = self.env.ref('payment_jetcheckout_system.action_plan_approve').sudo().read()[0]
+                    action['res_id'] = wizard.id
+                    return action
 
         acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
         if not acquirer:

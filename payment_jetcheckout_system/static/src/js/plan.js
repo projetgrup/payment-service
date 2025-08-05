@@ -1,6 +1,7 @@
 /** @odoo-module alias=paylox.plan.pay.page **/
 'use strict';
 
+import rpc from 'web.rpc';
 import { _t } from 'web.core';
 import dialog from 'web.Dialog';
 import fields from 'paylox.fields';
@@ -62,6 +63,9 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
                 events: [['click', this._onClickConfirm]],
             }),
         };
+        this.text = {
+            confirm: new fields.element(),
+        };
     },
 
     start: function () {
@@ -72,10 +76,27 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
                 this._onChangePlan();
             }
 
-            this.button.confirm.text = _t('I approve all of the payment plans');
-            this.button.confirm.$.addClass('show');
+            this._onRenderConfirm();
             framework.hideLoading();
         });
+    },
+
+    _onRenderConfirm: function() {
+        let $plans = $('label:not("disabled") > input.input-switch:checked');
+        if ($plans.length) {
+            this.button.confirm.text = _t('I approve all selected payment plans');
+            this.text.confirm.text = _t('Unselected ones will be disapproved');
+            this.button.confirm.$.addClass('show');
+            this.text.confirm.$.addClass('show');
+            this.payment.plans.$.closest('tr').addClass('show');
+        } else {
+            this.button.confirm.text = '';
+            this.text.confirm.text = _t('No payment plans to be approved');
+            this.button.confirm.$.removeClass('show');
+            this.text.confirm.$.addClass('show');
+            this.payment.plans.$.closest('tr').removeClass('show');
+            this.payment.plans.$.off('click');
+        }
     },
 
     _onChangePlan: function (ev) {
@@ -91,7 +112,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
             }
         }
 
-        let $plans = $('input.input-switch:checked');
+        let $plans = $('label:not("disabled") > input.input-switch:checked');
         this.payment.plans.checked = !!$plans.length;
     },
 
@@ -103,7 +124,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     },
 
     _onClickConfirm: function () {
-        let $plans = $('input.input-switch:checked');
+        let $plans = $('label:not("disabled") > input.input-switch:checked');
         if (!$plans.length) {
             this.displayNotification({
                 type: 'warning',
@@ -115,14 +136,57 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
         }
 
         let amount = 0;
-        $plans.each(function () { amount += parseFloat(this.dataset.amount); });
+        let ids = [];
+        $plans.each(function () {
+            amount += parseFloat(this.dataset.amount);
+            ids.push(parseInt(this.dataset.id));
+        });
         new dialog(this, {
             title: _t('Warning'),
             size: 'small',
             buttons: [{
                 text: _t('Approve'),
                 classes: 'btn-primary',
-                click: () => {}
+                click: () => {
+                    framework.showLoading();
+                    rpc.query({
+                        route: `${window.location.pathname}/confirm`,
+                        params: { ids } }
+                    ).then((result) => {
+                        if (result.error) {
+                            this.displayNotification({
+                                type: 'danger',
+                                title: _t('Error'),
+                                message: result.error,
+                            });
+                        } else {
+                            $plans.each(function () {
+                                const $input = $(this);
+                                $input.off('click');
+                                const $parent = $input.parent();
+                                $parent.addClass('disabled');
+
+                                const $action = $parent.next();
+                                if ($input.is(':checked')) {
+                                    $action.text(_t('Approved'));
+                                    $action.removeClass('text-danger').addClass('text-primary disabled');
+                                } else {
+                                    $action.text(_t('Disapproved'));
+                                    $action.removeClass('text-primary').addClass('text-danger disabled');
+                                }
+                            });
+                            this._onRenderConfirm();
+                        }
+                    }).guardedCatch(() => {
+                        this.displayNotification({
+                            type: 'danger',
+                            title: _t('Error'),
+                            message: _t('An error occured. Please contact with your system administrator.'),
+                        });
+                    }).finally(() => {
+                        framework.hideLoading();
+                    });
+                }
             }, {
                 close: true,
                 text: _t('Cancel'),

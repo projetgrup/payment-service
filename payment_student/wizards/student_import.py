@@ -204,13 +204,19 @@ class PaymentStudentImport(models.TransientModel):
                     raise ValidationError(_('No campaign found with name "%s" for parent "%s"') % (line.student_class, line.parent_name))
                 context.update({'campaign_id': campaign.id})
 
+            if self.env.context.get('active_subsystem') in ('student_university',):
+                context.update({'skip_student_vat_check': True})
+
             students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
             student = students.search([
                 ('company_id', '=', company.id),
                 ('vat', '=', line.student_vat)
             ])
             if len(student) > 1:
-                raise ValidationError(_('There is more than one student with the same characteristics in the records. Please contact the system administrator.'))
+                if self.env.context.get('active_subsystem') not in ('student_university',):
+                    raise ValidationError(_('There is more than one student with the same characteristics in the records. Please contact the system administrator.\n\n⸻ Details ⸻\nVAT: %s') % line.student_vat)
+                else:
+                    student = student[0]
 
             values = {
                 'name': line.student_name,
