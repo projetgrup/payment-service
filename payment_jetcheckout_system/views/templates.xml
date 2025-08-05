@@ -606,6 +606,93 @@
         </t>
     </template>
 
+    <template id="page_payment_plan_approve" name="Payment Plan Approve Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="dynamic" t-value="flow == 'dynamic'"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page navbar-light bg-100'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <div class="payment-company header row mx-0 card border p-2 px-lg-2 justify-content-between flex-row">
+                <div class="col-md-6">
+                    <img t-att-src="'/web/image/res.company/%s/logo' % company.id" t-att-alt="company.name" class="o_company_logo"/>
+                </div>
+                <div class="col-md-6 text-right align-self-center">
+                    <span class="font-weight-bold text-secondary">Welcome <t t-esc="partner.name"/></span>
+                </div>
+            </div>
+            <div class="payment-plan position-relative overflow-hidden p-4">
+                <div class="bg-white p-2 border rounded">
+                    <div class="payment-list bg-white card table-responsive text-nowrap">
+                        <table class="table table-sm sidebar-table mb-0 text-700">
+                            <colgroup>
+                                <col width="15%"/>
+                                <col width="25%"/>
+                                <col width="15%"/>
+                                <col width="15%"/>
+                                <col width="15%"/>
+                                <col width="15%"/>
+                            </colgroup>
+                            <thead>
+                                <tr class="shadow-sm font-weight-bold bg-white">
+                                    <th class="px-2">Date</th>
+                                    <th class="px-2">Partner</th>
+                                    <th class="px-2">Token</th>
+                                    <th class="text-right px-2">Amount</th>
+                                    <th class="text-center px-2">Installment</th>
+                                    <th class="text-left px-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="amount" t-value="0"/>
+                                <t t-set="currency" t-value="company.currency_id"/>
+                                <t t-foreach="plans" t-as="plan">
+                                    <t t-set="amount" t-value="amount + plan.amount"/>
+                                    <tr>
+                                        <td class="px-2"><span t-field="plan.date" class="font-weight-bold"/></td>
+                                        <td class="px-2 text-wrap"><span t-if="plan.partner_id" t-field="plan.partner_id"/></td>
+                                        <td class="px-2 text-wrap"><span t-if="plan.token_id" t-field="plan.token_id"/></td>
+                                        <td class="px-2 text-right"><span t-esc="plan.amount" t-options="{'widget': 'monetary', 'display_currency': currency}" class="item-amount-total"/></td>
+                                        <td class="px-2 text-center text-wrap"><span t-if="plan.installment_id" t-field="plan.installment_id" class="badge badge-pill bg-200"/></td>
+                                        <td class="text-left">
+                                            <label class="switch mb-0">
+                                                <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="plan.id" t-att-data-amount="plan.amount" checked="checked" field="payment.plan"/>
+                                                <span class="slider round fa"/>
+                                            </label>
+                                            <span class="text-primary font-weight-bold">Approve</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot class="shadow bg-light">
+                                <tr>
+                                    <td class="text-left" colspan="4"></td>
+                                    <td class="text-right align-middle"><em>Select All</em></td>
+                                    <td class="text-left align-middle">
+                                        <label class="switch mb-0">
+                                            <input type="checkbox" class="payment-all-items" checked="checked" autocomplete="off" field="payment.plans"/>
+                                            <span class="slider round fa"/>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="d-flex p-4 justify-content-center">
+                    <button class="btn btn-primary rounded-pill border shadow fade" field="button.confirm"></button>
+                    <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
+                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="page_login" name="Payment System Page Signin">
         <html>
             <body>

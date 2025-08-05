@@ -713,6 +713,16 @@
 
 }
 
+.payment-plan {
+    .slider:before {
+        color: theme-color('danger') !important;
+    }
+
+    input:checked + .slider:before {
+        color: theme-color('primary') !important;
+    }
+}
+
 .oe_sign_form {
     max-width: 900px !important;
 

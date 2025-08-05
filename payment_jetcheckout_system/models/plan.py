@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 import uuid
+import base64
 import requests
+from urllib.parse import urlparse, quote
 
 from odoo import models, fields, api, _
 from odoo.http import request
@@ -85,12 +87,32 @@ class PaymentPlan(models.Model):
     currency_id = fields.Many2one(related='item_id.currency_id', readonly=True, store=True)
     approval_state = fields.Selection([('+', 'Approved'), ('-', 'Disapproved')], readonly=True)
     approval_result = fields.Char(readonly=True)
+    approver_level = fields.Integer()
 
     def payment(self):
         if self.paid:
             return
 
-        company = self.partner_id.company_id or self.env.company
+        partner = self.env.user.partner_id
+        company = self.company_id or self.partner_id.company_id or self.env.company
+        if company.payment_plan_approver_ok:
+            level = self.env.context.get('approver_level', 1)
+            for line in company.payment_plan_approver_ids:
+                if partner.id in line.partner_ids.ids:
+                    level = line.level + 1
+                    break
+            line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level >= level))
+            if line:
+                self.approver_level = line.level
+                wizard = self.env['payment.plan.approve'].create({
+                    'partner_ids': [(6, 0, line.partner_ids.ids)],
+                    'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
+                    'level': line.level,
+                })
+                action = self.env.ref('payment_jetcheckout_system.action_plan_approve').sudo().read()[0]
+                action['res_id'] = wizard.id
+                return action
+
         acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
         if not acquirer:
             self.message = _('No acquirer found')
@@ -134,7 +156,7 @@ class PaymentPlan(models.Model):
         data = {
             'type': 'virtual_pos',
             'payment': False,
-            'threed': self.company_id.payment_plan_threed_ok,
+            'threed': company.payment_plan_threed_ok,
             'card': {
                 'type': self.token_id.jetcheckout_type or '',
                 'program': self.token_id.jetcheckout_program or '',
@@ -179,7 +201,7 @@ class PaymentPlan(models.Model):
             self.write({'transaction_ids': [(4, result['id'])]})
             self.item_id.write({'transaction_ids': [(4, result['id'])]})
         if result.get('url'):
-            if self.company_id.payment_plan_fullscreen_ok:
+            if company.payment_plan_fullscreen_ok:
                 return {
                     'type': 'ir.actions.act_url',
                     'url': result['url'],
@@ -492,3 +514,51 @@ class PaymentPlanErrorWizard(models.TransientModel):
     _description = 'Payment Plan Error Wizard'
 
     item_ids = fields.Many2many('payment.item', 'item_plan_error_wizard_rel', 'wizard_id', 'item_id', string='Items', readonly=True)
+
+
+class PaymentPlanApprover(models.Model):
+    _name = 'payment.plan.approver'
+    _description = 'Payment Plan Approvers'
+    _order= 'level,sequence,id'
+
+    sequence = fields.Integer(default=10)
+    company_id = fields.Many2one('res.company')
+    partner_ids = fields.Many2many('res.partner', 'payment_plan_approver_partner_rel', 'approver_id', 'partner_id', string='Partners')
+    level = fields.Integer(default=1)
+
+    @api.constrains('level')
+    def _check_level(self):
+        for approver in self:
+            if not approver.level or approver.level < 1:
+                raise UserError(_('Approver level must be higher than zero'))
+
+
+class PaymentPlanApprove(models.TransientModel):
+    _name = 'payment.plan.approve'
+    _description = 'Payment Plan Approve'
+
+    partner_ids = fields.Many2many('res.partner', 'payment_plan_approve_partner_rel', 'approver_id', 'partner_id', string='Partners')
+    plan_ids = fields.Many2many('payment.plan', 'payment_plan_approve_plan_rel', 'approver_id', 'plan_id', string='Plans')
+    level = fields.Integer(default=1)
+
+    def action_send_email(self):
+        company = self.env.company
+        template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approve')
+        server = company.mail_server_id
+        for partner in self.partner_ids:
+            plan_uids = ','.join(self.plan_ids.mapped('uid'))
+            link = '%s/p/plan/%s/approve/%s' % (self.get_base_url(), plan_uids, partner._get_token())
+            raise UserError(link)
+            context = self.env.context.copy()
+            context.update({
+                'link': link,
+                'server': server,
+                'company': company,
+                'domain': urlparse(link).netloc,
+                'sender': server.email_formatted or company.email_formatted,
+                'receiver': partner.email_formatted,
+                'lang': partner.lang,
+            })
+            template.with_context(context).send_mail(partner.id, force_send=True, email_values={
+                'mail_server_id': server.id,
+            })
