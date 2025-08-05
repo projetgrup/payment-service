@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2022 Projet (https://bulutkobi.io)
+# Copyright © 2025 Projet (https://bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Paylox Payment System',
-    'version': '1.34',
+    'version': '1.35',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',

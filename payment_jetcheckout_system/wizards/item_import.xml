@@ -7,11 +7,15 @@
         <form>
             <group>
                 <group>
-                    <p class="h4 my-3 text-700 text-center" colspan="2">Please upload a payment item list</p>
-                    <field name="file" filename="filename" colspan="2" nolabel="1" class="justify-content-center my-3 px-5"/>
-                    <field name="filename" invisible="1" colspan="2" nolabel="1"/>
-                    <p class="h5 mt-5 text-primary text-center" colspan="2">
-                        <a href="/payment_jetcheckout_system/static/src/xlsx/template_item_import.xlsx"><i class="fa fa-file-excel-o mr-2"/>Example Template</a></p>
+                    <p class="h4 mt-n3 text-primary text-center" colspan="2"><i class="fa fa-3x fa-upload"/></p>
+                    <p class="h4 mt-2 mb-4 text-primary text-center" colspan="2">Please upload a payment item list</p>
+                    <p class="text-center" colspan="2">
+                        <a role="button" href="/payment_jetcheckout_system/static/src/xlsx/template_item_import.xlsx" class="btn-link"><i class="fa fa-file-excel-o mr-2"/>Click here to get example template</a>
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <field name="file" filename="filename" colspan="2" nolabel="1" class="justify-content-center mt-2 p-4 w-75 border rounded shadow-sm bg-100"/>
+                        <field name="filename" invisible="1" colspan="2" nolabel="1"/>
+                    </div>
                 </group>
                 <group>
                     <field name="line_ids" readonly="1" colspan="2" nolabel="1" force_save="1">

@@ -23,6 +23,7 @@
         'views/settings.xml',
         'views/transaction.xml',
         'wizards/student_import.xml',
+        'wizards/item_import.xml',
     ],
     'assets': {
         'web.assets_qweb': [

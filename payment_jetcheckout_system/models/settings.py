@@ -105,6 +105,8 @@ class PaymentSettings(models.TransientModel):
     payment_plan_use_base_amount = fields.Boolean(related='company_id.payment_plan_use_base_amount', readonly=False)
     payment_plan_fullscreen_ok = fields.Boolean(related='company_id.payment_plan_fullscreen_ok', readonly=False)
     payment_plan_threed_ok = fields.Boolean(related='company_id.payment_plan_threed_ok', readonly=False)
+    payment_plan_approver_ok = fields.Boolean(related='company_id.payment_plan_approver_ok', readonly=False)
+    payment_plan_approver_ids = fields.One2many(related='company_id.payment_plan_approver_ids', readonly=False)
 
     payment_advance_assign_salesperson = fields.Boolean(related='company_id.payment_advance_assign_salesperson', readonly=False)
     payment_advance_amount_readonly = fields.Boolean(related='company_id.payment_advance_amount_readonly', readonly=False)

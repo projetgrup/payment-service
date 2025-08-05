@@ -46,19 +46,3 @@ class PaymentPlan(models.Model):
             except Exception as e:
                 _logger.error('Sending email for payment item #%s is failed\n%s' % (self.item_id.id, e))
  
-
-class PaymentPlanApprover(models.Model):
-    _name = 'payment.plan.approver'
-    _description = 'Payment Plan Approvers'
-    _order= 'level,sequence,id'
-
-    sequence = fields.Integer(default=10)
-    company_id = fields.Many2one('res.company')
-    partner_id = fields.Many2one('res.partner')
-    level = fields.Integer(default=1)
-
-    @api.constrains('level')
-    def _check_level(self):
-        for approver in self:
-            if not approver.level or approver.level < 1:
-                raise UserError(_('Approver level must be higher than zero'))

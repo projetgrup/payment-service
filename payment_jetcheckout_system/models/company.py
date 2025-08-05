@@ -123,6 +123,8 @@ class Company(models.Model):
     payment_plan_use_base_amount = fields.Boolean(string='Payment Plan Use Base Amount')
     payment_plan_fullscreen_ok = fields.Boolean(string='Payment Plan Fullscreen')
     payment_plan_threed_ok = fields.Boolean(string='Payment Plan 3D Secure')
+    payment_plan_approver_ok = fields.Boolean(string='Enable Payment Plan Approvers')
+    payment_plan_approver_ids = fields.One2many('payment.plan.approver', 'company_id', string='Payment Plan Approvers')
 
     payment_partner_unique_field = fields.Selection([
         ('vat', 'ID Number'),

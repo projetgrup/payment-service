@@ -361,6 +361,11 @@ class Partner(models.Model):
                 ('message_type', '=', 'email')
             ])
 
+    def _compute_payment_plan_approver(self):
+        for partner in self:
+            partner.payment_plan_approver_state = False
+            partner.payment_plan_approver_status = '<span class="text-600"><i class="fa fa-spin fa-circle-o-notch"/> Waiting Approval</span>'
+
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
         ids = group_portal.users.mapped('partner_id').ids
@@ -392,6 +397,7 @@ class Partner(models.Model):
     date_sms_sent = fields.Datetime('Sms Sent Date', readonly=True)
     should_send_email = fields.Boolean('Should Send Email', default=True)
     should_send_sms = fields.Boolean('Should Send SMS', default=True)
+    can_approve_payment_plan = fields.Boolean('Can Approve Payment Plans')
     can_use_subpartner = fields.Boolean(string='Can Use Subpartner', compute='_compute_can_use_subpartner', compute_sudo=True, readonly=True)
     use_subpartner = fields.Boolean(string='Use Subpartner', compute='_compute_use_subpartner', compute_sudo=True, readonly=True, store=True)
     is_subpartner = fields.Boolean(string='Is Subpartner', compute='_compute_is_subpartner', compute_sudo=True, readonly=True, store=True)
@@ -404,6 +410,8 @@ class Partner(models.Model):
     payment_item_bank_token_ok = fields.Boolean(related='company_id.payment_item_bank_token_ok')
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
+    payment_plan_approver_state = fields.Selection([('sent', 'Sent'), ('done', 'Done')], 'Payment Plan Approver State', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
+    payment_plan_approver_status = fields.Html('Payment Plan Approver Status', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
     paylox_tax_office = fields.Char('Tax Office')
     signup_token = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')
     signup_type = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')

@@ -22,6 +22,7 @@ const StudentListController = PartnerController.extend({
     },
 
     _onClickImportStudent: function () {
+        const context = this.initialState.context;
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'payment.student.import',
@@ -29,6 +30,10 @@ const StudentListController = PartnerController.extend({
             view_mode: 'form',
             views:[[false, 'form']],
             target: 'new',
+            context: {
+                active_system: context.system,
+                active_subsystem: context.subsystem,
+            },
         });
     },
 });
