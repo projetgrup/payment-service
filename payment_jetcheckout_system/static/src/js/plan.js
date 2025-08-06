@@ -82,7 +82,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     },
 
     _onRenderConfirm: function() {
-        let $plans = $('label:not("disabled") > input.input-switch:checked');
+        let $plans = $('label:not(".disabled") > input.input-switch:checked');
         if ($plans.length) {
             this.button.confirm.text = _t('I approve all selected payment plans');
             this.text.confirm.text = _t('Unselected ones will be disapproved');
@@ -112,7 +112,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
             }
         }
 
-        let $plans = $('label:not("disabled") > input.input-switch:checked');
+        let $plans = $('label:not(".disabled") > input.input-switch:checked');
         this.payment.plans.checked = !!$plans.length;
     },
 
@@ -124,7 +124,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
     },
 
     _onClickConfirm: function () {
-        let $plans = $('label:not("disabled") > input.input-switch:checked');
+        let $plans = $('label:not(".disabled") > input.input-switch:checked');
         if (!$plans.length) {
             this.displayNotification({
                 type: 'warning',
@@ -141,7 +141,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
             amount += parseFloat(this.dataset.amount);
             ids.push(parseInt(this.dataset.id));
         });
-        new dialog(this, {
+        const popup = new dialog(this, {
             title: _t('Warning'),
             size: 'small',
             buttons: [{
@@ -176,6 +176,7 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
                                 }
                             });
                             this._onRenderConfirm();
+                            popup.destroy();
                         }
                     }).guardedCatch(() => {
                         this.displayNotification({

@@ -466,8 +466,8 @@ class PayloxSystemController(PayloxController):
     def page_system_link_plan_confirm(self, tokens, token, **kwargs):
         partner = self._get_parent(token)
         company = partner.company_id or request.env.company
-        plans = request.env['payment.plan'].sudo().search([('id', 'in', kwargs['ids']), ('uid', 'in', tokens.split(',')), ('company_id', '=', company.id)])
-        plans.write({'approver_ids': [(4, partner.id)]})
+        plans = request.env['payment.plan'].sudo().search([('uid', 'in', tokens.split(',')), ('company_id', '=', company.id)])
+        plans.process_confirm(partner, kwargs['ids'])
         return {}
 
     @http.route(['/p/privacy'], type='json', auth='public', website=True, csrf=False)

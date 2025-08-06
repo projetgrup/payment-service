@@ -652,6 +652,7 @@
                                 <t t-set="amount" t-value="0"/>
                                 <t t-set="currency" t-value="company.currency_id"/>
                                 <t t-foreach="plans" t-as="plan">
+                                    <t t-set="disabled" t-value="partner.id in plan.approver_ids.ids"/>
                                     <t t-set="amount" t-value="amount + plan.amount"/>
                                     <tr>
                                         <td class="px-2"><span t-field="plan.date" class="font-weight-bold"/></td>
@@ -660,11 +661,11 @@
                                         <td class="px-2 text-right"><span t-esc="plan.amount" t-options="{'widget': 'monetary', 'display_currency': currency}" class="item-amount-total"/></td>
                                         <td class="px-2 text-center text-wrap"><span t-if="plan.installment_id" t-field="plan.installment_id" class="badge badge-pill bg-200"/></td>
                                         <td class="text-left">
-                                            <label class="switch mb-0">
-                                                <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="plan.id" t-att-data-amount="plan.amount" checked="checked" field="payment.plan"/>
+                                            <label t-attf-class="switch mb-0 #{'disabled' if disabled else ''}">
+                                                <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="plan.id" t-att-data-amount="plan.amount" checked="checked" t-att-field="None if disabled else 'payment.plan'"/>
                                                 <span class="slider round fa"/>
                                             </label>
-                                            <span class="text-primary font-weight-bold">Approve</span>
+                                            <span t-attf-class="text-primary font-weight-bold #{'disabled' if disabled else ''}">Approve</span>
                                         </td>
                                     </tr>
                                 </t>

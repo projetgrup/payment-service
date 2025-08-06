@@ -32,6 +32,8 @@
             <field name="transaction_ids" invisible="1"/>
             <field name="result" string=" "/>
             <field name="message" optional="hide"/>
+            <field name="approver_state" optional="hide" decoration-it="1"/>
+            <field name="approver_ids" optional="hide" widget="many2many_tags_avatar"/>
         </tree>
     </field>
     </record>
