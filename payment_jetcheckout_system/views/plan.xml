@@ -191,8 +191,9 @@
                 </group>
                 <group>
                     <div class="o_field_kanban_header d-flex bg-100 shadow-sm font-weight-bold p-2" colspan="2">
-                        <div class="pl-5 w-50">Name</div>
-                        <div class="w-50">Status</div>
+                        <div style="width:10%">Level</div>
+                        <div class="pl-5" style="width:45%">Name</div>
+                        <div style="width:45%">Status</div>
                     </div>
                     <field name="partner_ids" readonly="1" colspan="2" nolabel="1" force_save="1" mode="kanban">
                         <kanban create="0" edit="0" delete="0">
@@ -201,10 +202,14 @@
                             <field name="image_128"/>
                             <field name="avatar_128"/>
                             <field name="payment_plan_approver_status"/>
+                            <field name="payment_plan_approver_level"/>
                             <templates>
                                 <t t-name="kanban-box">
                                     <div class="oe_kanban_global_click d-flex mx-0 shadow-sm rounded">
-                                        <div class="w-50">
+                                        <div class="py-2 font-weight-bold" style="width:10%">
+                                            <t t-raw="record.payment_plan_approver_level.raw_value"/>
+                                        </div>
+                                        <div style="width:45%">
                                             <div class="o_kanban_image">
                                                 <img t-if="record.image_128.raw_value" alt="" height="32" t-att-src="kanban_image('res.partner', 'avatar_128', record.id.raw_value)"/>
                                                 <img t-else="" alt="" height="32" class="border rounded-circle" t-att-src="_s + &quot;/base/static/img/avatar_grey.png&quot;"/>
@@ -215,7 +220,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="w-50 py-2">
+                                        <div class="py-2" style="width:45%">
                                             <t t-raw="record.payment_plan_approver_status.raw_value"/>
                                         </div>
                                     </div>

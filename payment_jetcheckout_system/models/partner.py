@@ -363,10 +363,13 @@ class Partner(models.Model):
 
     def _compute_payment_plan_approver(self):
         plans = self.env['payment.plan'].browse(self.env.context.get('active_ids', 0))
+        approver_ids = self.env.company.payment_plan_approver_ids
         for partner in self:
             len_plans = len(plans)
             len_approver = 0
             len_disapprover = 0
+            line_approver = fields.first(approver_ids.filtered(lambda l: partner.id in l.partner_ids.ids))
+            partner.payment_plan_approver_level = line_approver and line_approver.level or '-'
             for plan in plans:
                 if partner.id in plan.approver_ids.ids:
                     len_approver += 1
@@ -436,6 +439,7 @@ class Partner(models.Model):
         ('disapproved', 'Disapproved'),
     ], 'Payment Plan Approver State', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
     payment_plan_approver_status = fields.Html('Payment Plan Approver Status', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
+    payment_plan_approver_level = fields.Char('Payment Plan Approver Level', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
     payment_plan_approver_ids = fields.Many2many('payment.plan', 'approver_plan_rel', 'approver_id', 'plan_id', string='Approved Plans', readonly=True)
     payment_plan_disapprover_ids = fields.Many2many('payment.plan', 'disapprover_plan_rel', 'approver_id', 'plan_id', string='Disapproved Plans', readonly=True)
     paylox_tax_office = fields.Char('Tax Office')

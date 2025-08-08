@@ -144,7 +144,12 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
         const popup = new dialog(this, {
             title: _t('Warning'),
             size: 'small',
+            technical: false,
             buttons: [{
+                close: true,
+                text: _t('Cancel'),
+                classes: 'btn-secondary',
+            }, {
                 text: _t('Approve'),
                 classes: 'btn-primary',
                 click: () => {
@@ -188,10 +193,6 @@ publicWidget.registry.payloxPlanPage = publicWidget.Widget.extend({
                         framework.hideLoading();
                     });
                 }
-            }, {
-                close: true,
-                text: _t('Cancel'),
-                classes: 'btn-secondary',
             }],
             $content: $('<div/>').addClass('h4 text-center').html(
                 _.str.sprintf(

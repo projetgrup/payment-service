@@ -176,6 +176,7 @@ class PaymentPlan(models.Model):
                     'link': link,
                     'server': server,
                     'company': company,
+                    'domain': urlparse(link).netloc,
                     'sender': server.email_formatted or company.email_formatted,
                     'receiver': user.partner_id.email_formatted,
                     'lang': user.partner_id.lang,
@@ -189,13 +190,17 @@ class PaymentPlan(models.Model):
         if self:
             company = self.env.company
             server = company.mail_server_id
+            action = self.env.ref('payment_jetcheckout_system.action_plan')
             template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_disapproved')
+            link = '%s/web#action=%s&model=payment.plan&view_type=list' % (self.get_base_url(), action.id)
             users = self.mapped('create_uid')
             for user in users:
                 context = self.env.context.copy()
                 context.update({
+                    'link': link,
                     'server': server,
                     'company': company,
+                    'domain': urlparse(link).netloc,
                     'sender': server.email_formatted or company.email_formatted,
                     'receiver': user.partner_id.email_formatted,
                     'lang': user.partner_id.lang,
@@ -221,7 +226,7 @@ class PaymentPlan(models.Model):
                 line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level > level))
                 if line:
                     wizard = self.env['payment.plan.approve'].create({
-                        'partner_ids': [(6, 0, line.partner_ids.ids)],
+                        'partner_ids': [(6, 0, company.payment_plan_approver_ids.mapped('partner_ids').ids)],
                         'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
                         'level': line.level,
                     })
@@ -661,7 +666,7 @@ class PaymentPlanApprove(models.TransientModel):
         company = self.env.company
         server = company.mail_server_id
         template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approve')
-        line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level > self.level))
+        line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level >= self.level))
         partners = line.mapped('partner_ids').filtered(lambda p: p.payment_plan_approver_state not in ('approved', 'disapproved'))
         plans = {}
         for plan in self.plan_ids:
