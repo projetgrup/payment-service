@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-02 12:32+0000\n"
-"PO-Revision-Date: 2025-07-02 12:32+0000\n"
+"POT-Creation-Date: 2025-08-08 07:45+0000\n"
+"PO-Revision-Date: 2025-08-08 07:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,8 @@ msgid "%s Installment"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
 #, python-format
 msgid "%s must have at least one bank account which is verified."
@@ -104,13 +106,18 @@ msgid "<em class=\"d-block mt-1 text-600\">Redirecting...</em>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
+msgid "<em>Select All</em>"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "<i class=\"fa fa-arrow-right mr-2\"/>Webhook API Documentation"
 msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.import_form
-msgid "<i class=\"fa fa-file-excel-o mr-2\"/>Example Template"
+msgid "<i class=\"fa fa-file-excel-o mr-2\"/>Click here to get example template"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -312,6 +319,81 @@ msgid "<strong>The contact linked to this user is still active</strong>"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Approve Payment Plan</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['user']\"/> wants you to approve created payment plans.\n"
+"                            Click on the button below to get details of payment plans to be approved.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_item_done
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
@@ -372,6 +454,156 @@ msgid ""
 "                    </t>\n"
 "                    <t t-if=\"ctx['company']['website']\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ ctx['company']['website'] }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']['website'] or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Payment Plans Approved</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> has approved the payment plans.<br/>\n"
+"                            Click on the button below to get details of payment plans.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Payment Plans Disapproved</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> has disapproved the payment plans.<br/>\n"
+"                            Click on the button below to get details of payment plans.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -712,11 +944,15 @@ msgid ""
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__acquirer_id
 msgid "Acquirer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Action"
 msgstr ""
@@ -830,7 +1066,17 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Allow partners to create and track their own subpartners"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Allow partners to make advance payments on payment page"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Allow to Use Subpartner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -853,6 +1099,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__amount
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__amount
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__amount
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #, python-format
 msgid "Amount"
 msgstr ""
@@ -916,6 +1163,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
@@ -958,16 +1206,73 @@ msgid "Approval State"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Approval process has been completed"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+#, python-format
 msgid "Approve"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid "Approve Payment Plan | {{ ctx['domain'] }}"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan_approve
+msgid "Approve Plan"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__+
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__approved
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #, python-format
 msgid "Approved"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_ids
+msgid "Approved Plans"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_level
+msgid "Approver Level"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_message_ids
+msgid "Approver Messages"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_state
+msgid "Approver State"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Approver level must be higher than zero"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_ids
+msgid "Approvers"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1181,12 +1486,25 @@ msgid "Campaigns on Campaign Table on Payment Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__can_approve_payment_plan
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__can_approve_payment_plan
+msgid "Can Approve Payment Plans"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_can_export_txt
 msgid "Can Export TXT"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__can_use_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__can_use_subpartner
+msgid "Can Use Subpartner"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_error_wizard
@@ -1275,6 +1593,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.import_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -1331,7 +1650,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_hook__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__company_id
@@ -1477,9 +1799,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__create_uid
@@ -1514,9 +1840,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__create_date
@@ -1654,6 +1984,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__date
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 #, python-format
 msgid "Date"
@@ -1726,6 +2057,11 @@ msgid "Default SMS Settings"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Define Subpartners"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Define payment page names and paths"
 msgstr ""
@@ -1776,6 +2112,16 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Description Prefix for Partner Tags"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Description Prefix for Sales Representatives"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Description Required"
 msgstr ""
 
@@ -1814,16 +2160,38 @@ msgid "Details"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Disallow to Use Subpartner"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+#, python-format
 msgid "Disapprove"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__-
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__disapproved
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #, python-format
 msgid "Disapproved"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_disapprover_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_disapprover_ids
+msgid "Disapproved Plans"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__disapprover_ids
+msgid "Disapprovers"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -1842,9 +2210,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__display_name
@@ -2070,6 +2442,12 @@ msgid "Enable Payment Credit Card Tokens"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_plan_approver_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_plan_approver_ok
+msgid "Enable Payment Plan Approvers"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sec_audit_webservice_ok
 msgid "Enable Webservice for Audit Logs"
 msgstr ""
@@ -2091,6 +2469,8 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
@@ -2397,6 +2777,13 @@ msgid "Hour"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "I approve all selected payment plans"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__bank_iban
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__iban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_bank
@@ -2425,9 +2812,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__id
@@ -2562,6 +2953,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__installment_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard_line__installment_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Installment"
 msgstr ""
 
@@ -2634,9 +3026,9 @@ msgid "Is Portal"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__is_subdealer
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_subdealer
-msgid "Is Subdealer"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__is_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_subpartner
+msgid "Is Subpartner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -2724,9 +3116,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard____last_update
@@ -2764,9 +3160,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__write_uid
@@ -2796,9 +3196,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__write_date
@@ -2831,6 +3235,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Year"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__level
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__level
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid "Level"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Level %s approval is waiting"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3114,6 +3531,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_view__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__bank_name
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 msgid "Name"
 msgstr ""
 
@@ -3171,6 +3589,26 @@ msgstr ""
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
 msgid "No message yet"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "No need to be approved"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "No payment plan selected to approve."
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "No payment plans to be approved"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3342,6 +3780,7 @@ msgid "Order Checkout"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Other"
 msgstr ""
@@ -3424,6 +3863,21 @@ msgid "Parent"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
+msgid "Parent Company Bank Accounts"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+msgid "Parent Partner"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__partial
+msgid "Partial"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_partner__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
@@ -3431,6 +3885,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__partner_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_error_wizard
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
@@ -3479,13 +3934,18 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__parent_ref
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__partner_ref
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__partner_ref
 msgid "Partner Reference"
 msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__partner_street
 msgid "Partner Street"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Partner Tag(s)..."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3542,6 +4002,8 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__partner_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__partner_ids
 msgid "Partners"
 msgstr ""
 
@@ -3636,8 +4098,23 @@ msgid "Paylox Company Branches"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_is_submerchant_payment
+msgid "Paylox Is Submerchant Payment"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_count
 msgid "Paylox Item Count"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_parent_bank_ids
+msgid "Paylox Parent Bank"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_subpartner_root_id
+msgid "Paylox Subpartner Root"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -3780,6 +4257,16 @@ msgid "Payment Items"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_item_prefix_partner_category
+msgid "Payment Items Add Description Prefix for Partner Categories"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_item_prefix_partner_user
+msgid "Payment Items Add Description Prefix for Sales Representatives"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item_wizard
 msgid "Payment Items Wizard"
 msgstr ""
@@ -3851,6 +4338,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_prefix
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix
 msgid "Payment Page Add Payment Item Description Prefix"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_prefix_partner_category_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix_partner_category_ids
+msgid "Payment Page Add Payment Item Description Prefix Partner Categories"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_prefix_partner_user_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix_partner_user_ids
+msgid ""
+"Payment Page Add Payment Item Description Prefix Partner Sales "
+"Representatives"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -4133,6 +4634,36 @@ msgid "Payment Plan 3D Secure"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_approve
+msgid "Payment Plan Approve"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_level
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_level
+msgid "Payment Plan Approver Level"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_state
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_state
+msgid "Payment Plan Approver State"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_status
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_status
+msgid "Payment Plan Approver Status"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_approver
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_plan_approver_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_plan_approver_ids
+msgid "Payment Plan Approvers"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan_error_wizard
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_error_wizard
 msgid "Payment Plan Error Wizard"
@@ -4175,6 +4706,16 @@ msgid "Payment Plans"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid "Payment Plans Approved | {{ ctx['domain'] }}"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid "Payment Plans Disapproved | {{ ctx['domain'] }}"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_preview_ok
 msgid "Payment Preview Page Active"
 msgstr ""
@@ -4208,6 +4749,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_notification_webhook
 msgid "Payment Settings Notification Webhook"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_subpartner_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_subpartner_ok
+msgid "Payment Subpartner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -4389,6 +4936,11 @@ msgid "Payment link is ready"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid "Payment needs approval"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_plan_result
 msgid ""
 "Payment status could not be retrieved. Please close the dialog and check the"
@@ -4411,6 +4963,11 @@ msgid "Payment transactions are listed here"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid "Payment: Approve Plan"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:mail.template,name:payment_jetcheckout_system.mail_template_export_txt
 msgid "Payment: Export TXT"
 msgstr ""
@@ -4418,6 +4975,16 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_item_done
 msgid "Payment: Item Done"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid "Payment: Plans Approved"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid "Payment: Plans Disapproved"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -4479,6 +5046,7 @@ msgid "Planned Amount"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__plan_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Plans"
 msgstr ""
@@ -4562,6 +5130,13 @@ msgid "Please login before continue."
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid ""
+"Please notify approvers to confirm selected payments.<br/>The payment will "
+"proceed upon approvals."
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
@@ -4618,6 +5193,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_hook__subtype__transaction_authorize
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_hook__subtype_transaction__transaction_authorize
 msgid "Pre-Authorization"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__prefix
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__prefix
+msgid "Prefix"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -4804,11 +5385,6 @@ msgid "Remove Item"
 msgstr ""
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Remove from Subdealers"
-msgstr ""
-
-#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #, python-format
 msgid "Report cannot be found"
@@ -4846,6 +5422,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_kanban
 msgid "Revoke Access"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__root_id
+msgid "Root"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5085,6 +5666,7 @@ msgid "Send Amount without Commission On Credit Card Verify Page"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Send Email"
@@ -5143,6 +5725,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__mail_message__mail_state__sent
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__sent
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_mail_message
 msgid "Sent"
 msgstr ""
@@ -5182,6 +5765,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__sequence
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_view__priority
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__sequence
@@ -5202,11 +5786,6 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Set Reminder"
-msgstr ""
-
-#. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Set as Subdealer"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5443,6 +6022,7 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 msgid "Status"
 msgstr ""
 
@@ -5455,6 +6035,11 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_token__system__student
 msgid "Student Payment System"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+msgid "Sub Partner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5548,6 +6133,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__category_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__line_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_due_tag
@@ -5632,13 +6218,13 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
-msgid "The partner \"%s\" is already a subdealer of \"%s\"."
+msgid "The partner \"%s\" is already a parent partner of \"%s\"."
 msgstr ""
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
-msgid "The partner \"%s\" is already not a subdealer."
+msgid "The partner \"%s\" is already not a parent partner."
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5707,6 +6293,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Year"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "This company is not allowed to create subpartners"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -5828,6 +6420,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__token_ids
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Token"
 msgstr ""
 
@@ -5912,6 +6505,7 @@ msgid "Transaction State"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/transaction.py:0
 #: code:addons/payment_jetcheckout_system/models/transaction.py:0
 #, python-format
 msgid "Transaction cannot be found."
@@ -6041,6 +6635,13 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "Unselected ones will be disapproved"
+msgstr ""
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__url
 msgid "Url"
 msgstr ""
@@ -6069,6 +6670,12 @@ msgstr ""
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Use Sale Reference for Payment Link"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__use_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__use_subpartner
+msgid "Use Subpartner"
 msgstr ""
 
 #. module: payment_jetcheckout_system
@@ -6113,6 +6720,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_user
 #: model:ir.model,name:payment_jetcheckout_system.model_res_users
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__user_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__user_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__users_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__users_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
@@ -6196,6 +6804,8 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
@@ -6335,6 +6945,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Welcome"
 msgstr ""
 
@@ -6382,6 +6993,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Yesterday"
+msgstr ""
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid ""
+"You are about to approve payment plans with a total amount of <h2 "
+"class=\"text-600\">%s</h2>"
 msgstr ""
 
 #. module: payment_jetcheckout_system

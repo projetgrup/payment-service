@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-25 17:43+0000\n"
-"PO-Revision-Date: 2025-01-25 17:43+0000\n"
+"POT-Creation-Date: 2025-08-08 07:45+0000\n"
+"PO-Revision-Date: 2025-08-08 07:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,25 @@ msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
 "                <b>Address</b>\n"
 "            </span>"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"h4\">Thank You!</strong><br/>Payment plan is successfully "
+"paid"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-"
+"fill\">Payment</strong>"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
 msgstr ""
 
 #. module: payment_supplier
@@ -150,13 +169,24 @@ msgid ""
 msgstr ""
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Amount"
+msgstr ""
+
+#. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
 msgid "Authorized"
 msgstr ""
 
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
 msgid "Bank Accounts"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Banks"
 msgstr ""
 
 #. module: payment_supplier
@@ -167,6 +197,11 @@ msgstr ""
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
 msgid "CC Paid"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_form
+msgid "Campaign"
 msgstr ""
 
 #. module: payment_supplier
@@ -236,28 +271,13 @@ msgid "Create a supplier contact"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: payment_supplier
 #: model_terms:ir.actions.act_window,help:payment_supplier.action_token
 msgid "Created credit cards are listed here"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__create_date
-msgid "Created on"
-msgstr ""
-
-#. module: payment_supplier
 #: model_terms:ir.actions.act_window,help:payment_supplier.action_item
 msgid "Created payments are listed here"
-msgstr ""
-
-#. module: payment_supplier
-#: model:ir.actions.act_window,name:payment_supplier.action_token_verify
-msgid "Credit Card Verify"
 msgstr ""
 
 #. module: payment_supplier
@@ -269,16 +289,6 @@ msgstr ""
 #. module: payment_supplier
 #: model:ir.ui.menu,name:payment_supplier.menu_dashboard
 msgid "Dashboard"
-msgstr ""
-
-#. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__data
-msgid "Data"
-msgstr ""
-
-#. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__display_name
-msgid "Display Name"
 msgstr ""
 
 #. module: payment_supplier
@@ -302,6 +312,11 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Enable approving payment plans by specified partners"
+msgstr ""
+
+#. module: payment_supplier
 #: model:ir.model,name:payment_supplier.model_ir_http
 msgid "HTTP Routing"
 msgstr ""
@@ -312,8 +327,8 @@ msgid "Hooks"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__id
-msgid "ID"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "IBAN"
 msgstr ""
 
 #. module: payment_supplier
@@ -322,18 +337,18 @@ msgid "Integration Settings"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify____last_update
-msgid "Last Modified on"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Link payment items and partner bank tokens"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__write_uid
-msgid "Last Updated by"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Linked"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__write_date
-msgid "Last Updated on"
+#: model:ir.ui.menu,name:payment_supplier.menu_log
+msgid "Logs"
 msgstr ""
 
 #. module: payment_supplier
@@ -369,6 +384,11 @@ msgid "No payments yet"
 msgstr ""
 
 #. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_plan_partner
+msgid "No plan approvers yet"
+msgstr ""
+
+#. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
 msgid "Other"
 msgstr ""
@@ -389,6 +409,11 @@ msgid "Payment Notification | {{ ctx['company']['name'] }}"
 msgstr ""
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_tree
+msgid "Payment Page"
+msgstr ""
+
+#. module: payment_supplier
 #: model:ir.model,name:payment_supplier.model_payment_plan
 #: model:ir.ui.menu,name:payment_supplier.menu_plan
 msgid "Payment Plans"
@@ -405,11 +430,6 @@ msgid "Payment Token"
 msgstr ""
 
 #. module: payment_supplier
-#: model:ir.model,name:payment_supplier.model_payment_token_verify
-msgid "Payment Token Verify"
-msgstr ""
-
-#. module: payment_supplier
 #: model:mail.template,subject:payment_supplier.mail_item_approved
 msgid "Payment has been approved from {{ ctx['company']['name'] }}"
 msgstr ""
@@ -423,6 +443,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment_supplier.action_item
 #: model:ir.ui.menu,name:payment_supplier.menu_payment
 msgid "Payments"
+msgstr ""
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_plan_partner
+#: model:ir.ui.menu,name:payment_supplier.menu_plan_partner
+msgid "Plan Approvers"
+msgstr ""
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_plan_partner
+msgid "Plan approvers are listed here"
 msgstr ""
 
 #. module: payment_supplier
