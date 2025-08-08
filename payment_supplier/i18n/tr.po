@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-25 17:43+0000\n"
-"PO-Revision-Date: 2025-01-25 20:47+0300\n"
+"POT-Creation-Date: 2025-08-08 07:45+0000\n"
+"PO-Revision-Date: 2025-08-08 11:08+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 
 #. module: payment_supplier
 #: code:addons/payment_supplier/controllers/main.py:0
@@ -33,6 +33,29 @@ msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
 "                <b>Adres</b>\n"
 "            </span>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"h4\">Thank You!</strong><br/>Payment plan is successfully "
+"paid"
+msgstr ""
+"<strong class=\"h4\">Teşekkür Ederiz!</strong><br/>Ödeme planı başarıyla "
+"ödendi"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Payment</"
+"strong>"
+msgstr ""
+"<strong class=\"text-primary font-weight-bold z-index-1 flex-fill\">Ödeme</"
+"strong>"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "<strong class=\"text-primary font-weight-bold\">Information</strong>"
+msgstr "<strong class=\"text-primary font-weight-bold\">Bilgi</strong>"
 
 #. module: payment_supplier
 #: model:mail.template,body_html:payment_supplier.mail_item_done
@@ -64,8 +87,8 @@ msgstr ""
 #| "                    </div>\n"
 #| "                </td></tr>\n"
 #| "                <tr><td style=\"text-align:center;\">\n"
-#| "                  <hr width=\"100%\" style=\"background-color:"
-#| "rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#| "                  <hr width=\"100%\" style=\"background-"
+#| "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
 #| "size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 #| "                </td></tr>\n"
 #| "            </table>\n"
@@ -90,9 +113,9 @@ msgstr ""
 #| "out=\"ctx['company']['email'] or ''\">info@yourcompany.com</a>\n"
 #| "                    </t>\n"
 #| "                    <t t-if=\"ctx['company']['website']\">\n"
-#| "                        | <a t-attf-href=\"{{ ctx['company']"
-#| "['website'] }}\" style=\"text-decoration:none; color: #454748;\" t-"
-#| "out=\"ctx['company']['website'] or ''\">http://www.example.com</a>\n"
+#| "                        | <a t-attf-href=\"{{ ctx['company']['website'] }}"
+#| "\" style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company']"
+#| "['website'] or ''\">http://www.example.com</a>\n"
 #| "                    </t>\n"
 #| "                </td></tr>\n"
 #| "            </table>\n"
@@ -129,9 +152,9 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -154,16 +177,16 @@ msgid ""
 "out=\"format_amount(object.paid_amount, object.currency_id) or ''\"/><br/>\n"
 "                            Payer Company: <strong t-out=\"ctx['company']"
 "['name']\"/><br/>\n"
-"                            Payee IBAN Account: <strong t-"
-"out=\"ctx['iban']\"/><br/>\n"
+"                            Payee IBAN Account: <strong t-out=\"ctx['iban']"
+"\"/><br/>\n"
 "                        </div>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -228,9 +251,9 @@ msgstr ""
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -296,9 +319,9 @@ msgid ""
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -361,9 +384,9 @@ msgstr ""
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -401,7 +424,13 @@ msgstr ""
 "</table>"
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_supplier.page_payment
 msgid "Authorized"
 msgstr "Yetkili"
 
@@ -409,6 +438,11 @@ msgstr "Yetkili"
 #: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
 msgid "Bank Accounts"
 msgstr "Banka Hesapları"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Banks"
+msgstr "Bankalar"
 
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.child_form
@@ -419,6 +453,11 @@ msgstr "Şube"
 #: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
 msgid "CC Paid"
 msgstr "KK Ödendi"
+
+#. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_form
+msgid "Campaign"
+msgstr "Kampanya"
 
 #. module: payment_supplier
 #. openerp-web
@@ -487,29 +526,14 @@ msgid "Create a supplier contact"
 msgstr "Bir tedarikçi yetkilisi oluştur"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__create_uid
-msgid "Created by"
-msgstr "Oluşturan"
-
-#. module: payment_supplier
 #: model_terms:ir.actions.act_window,help:payment_supplier.action_token
 msgid "Created credit cards are listed here"
 msgstr "Oluşturulan kredi kartları burada listelenir"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__create_date
-msgid "Created on"
-msgstr "Oluşturma Tarihi"
-
-#. module: payment_supplier
 #: model_terms:ir.actions.act_window,help:payment_supplier.action_item
 msgid "Created payments are listed here"
 msgstr "Oluşturulan ödemeler burada listelenir"
-
-#. module: payment_supplier
-#: model:ir.actions.act_window,name:payment_supplier.action_token_verify
-msgid "Credit Card Verify"
-msgstr "Kredi Kartı Doğrula"
 
 #. module: payment_supplier
 #: model:ir.actions.act_window,name:payment_supplier.action_token
@@ -521,16 +545,6 @@ msgstr "Kredi Kartları"
 #: model:ir.ui.menu,name:payment_supplier.menu_dashboard
 msgid "Dashboard"
 msgstr "Panel"
-
-#. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__data
-msgid "Data"
-msgstr "Veri"
-
-#. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__display_name
-msgid "Display Name"
-msgstr "Görünen Adı"
 
 #. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.item_tree
@@ -553,6 +567,11 @@ msgid "Email Templates"
 msgstr "Eposta Şablonları"
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Enable approving payment plans by specified partners"
+msgstr "Seçili iş ortakları ile ödeme planlarını onaylamayı etkinleştir"
+
+#. module: payment_supplier
 #: model:ir.model,name:payment_supplier.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
@@ -563,9 +582,9 @@ msgid "Hooks"
 msgstr "Kancalar"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__id
-msgid "ID"
-msgstr "ID"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "IBAN"
+msgstr "IBAN"
 
 #. module: payment_supplier
 #: model:ir.ui.menu,name:payment_supplier.menu_integrations
@@ -573,19 +592,19 @@ msgid "Integration Settings"
 msgstr "Entegrasyon Ayarları"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify____last_update
-msgid "Last Modified on"
-msgstr "Son Düzenleme Tarihi"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.settings_form
+msgid "Link payment items and partner bank tokens"
+msgstr "Ödeme kalemlerini ve iş ortağı banka jetonlarını bağla"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__write_uid
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
+#: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
+msgid "Linked"
+msgstr "Bağlı"
 
 #. module: payment_supplier
-#: model:ir.model.fields,field_description:payment_supplier.field_payment_token_verify__write_date
-msgid "Last Updated on"
-msgstr "Son Güncelleme Tarihi"
+#: model:ir.ui.menu,name:payment_supplier.menu_log
+msgid "Logs"
+msgstr "Günlükler"
 
 #. module: payment_supplier
 #: model:ir.ui.menu,name:payment_supplier.menu_mail_server
@@ -620,6 +639,11 @@ msgid "No payments yet"
 msgstr "Henüz bir ödeme yok"
 
 #. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_plan_partner
+msgid "No plan approvers yet"
+msgstr "Henüz bir ödeme onaycısı yok"
+
+#. module: payment_supplier
 #: model_terms:ir.ui.view,arch_db:payment_supplier.parent_form
 msgid "Other"
 msgstr "Diğer"
@@ -640,6 +664,11 @@ msgid "Payment Notification | {{ ctx['company']['name'] }}"
 msgstr "Ödeme Bildirimi | {{ ctx['company']['name'] }}"
 
 #. module: payment_supplier
+#: model_terms:ir.ui.view,arch_db:payment_supplier.child_tree
+msgid "Payment Page"
+msgstr "Ödeme Sayfası"
+
+#. module: payment_supplier
 #: model:ir.model,name:payment_supplier.model_payment_plan
 #: model:ir.ui.menu,name:payment_supplier.menu_plan
 msgid "Payment Plans"
@@ -656,11 +685,6 @@ msgid "Payment Token"
 msgstr "Ödeme Jetonları"
 
 #. module: payment_supplier
-#: model:ir.model,name:payment_supplier.model_payment_token_verify
-msgid "Payment Token Verify"
-msgstr "Ödeme Jetonu Doğrula"
-
-#. module: payment_supplier
 #: model:mail.template,subject:payment_supplier.mail_item_approved
 msgid "Payment has been approved from {{ ctx['company']['name'] }}"
 msgstr "{{ ctx['company']['name'] }} tarafından ödemeniz onaylandı"
@@ -675,6 +699,17 @@ msgstr "Ödeme: Kalem Tamamlandı"
 #: model:ir.ui.menu,name:payment_supplier.menu_payment
 msgid "Payments"
 msgstr "Ödemeler"
+
+#. module: payment_supplier
+#: model:ir.actions.act_window,name:payment_supplier.action_plan_partner
+#: model:ir.ui.menu,name:payment_supplier.menu_plan_partner
+msgid "Plan Approvers"
+msgstr "Plan Onaycıları"
+
+#. module: payment_supplier
+#: model_terms:ir.actions.act_window,help:payment_supplier.action_plan_partner
+msgid "Plan approvers are listed here"
+msgstr "Ödeme onaycıları burada listelenir"
 
 #. module: payment_supplier
 #. openerp-web
@@ -909,6 +944,36 @@ msgstr "Posta Kodu"
 #: model:ir.ui.menu,name:payment_supplier.menu_syncops_connector
 msgid "syncOPS Integrations"
 msgstr "syncOPS Entegrasyonları"
+
+#~ msgid "Created by"
+#~ msgstr "Oluşturan"
+
+#~ msgid "Created on"
+#~ msgstr "Oluşturma Tarihi"
+
+#~ msgid "Credit Card Verify"
+#~ msgstr "Kredi Kartı Doğrula"
+
+#~ msgid "Data"
+#~ msgstr "Veri"
+
+#~ msgid "Display Name"
+#~ msgstr "Görünen Adı"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Son Düzenleme Tarihi"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Son Güncelleyen"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Son Güncelleme Tarihi"
+
+#~ msgid "Payment Token Verify"
+#~ msgstr "Ödeme Jetonu Doğrula"
 
 #~ msgid ""
 #~ ". Please try again. If this situation occurs anyway, please contact with "

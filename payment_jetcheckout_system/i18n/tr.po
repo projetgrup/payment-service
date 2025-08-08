@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0-20220110\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-02 12:32+0000\n"
-"PO-Revision-Date: 2025-07-02 15:38+0300\n"
+"POT-Creation-Date: 2025-08-08 07:45+0000\n"
+"PO-Revision-Date: 2025-08-08 11:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -30,6 +30,7 @@ msgid "%s Installment"
 msgstr "%s Taksit"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
 #, python-format
 msgid "%s must have at least one bank account which is verified."
@@ -114,14 +115,19 @@ msgid "<em class=\"d-block mt-1 text-600\">Redirecting...</em>"
 msgstr "<em class=\"d-block mt-1 text-600\">Yönlendiriliyor...</em>"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
+msgid "<em>Select All</em>"
+msgstr "<em>Tümünü Seç</em>"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "<i class=\"fa fa-arrow-right mr-2\"/>Webhook API Documentation"
 msgstr "<i class=\"fa fa-arrow-right mr-2\"/>Web Kancası API Dokümantasyonu"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.import_form
-msgid "<i class=\"fa fa-file-excel-o mr-2\"/>Example Template"
-msgstr "<i class=\"fa fa-file-excel-o mr-2\"/>Örnek Şablon"
+msgid "<i class=\"fa fa-file-excel-o mr-2\"/>Click here to get example template"
+msgstr "<i class=\"fa fa-file-excel-o mr-2\"/>Örnek şablon için buraya tıklayınız"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -357,6 +363,206 @@ msgid "<strong>The contact linked to this user is still active</strong>"
 msgstr "<strong>Bu kullanıcıya bağlı iş ortağı hala aktif</strong>"
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Approve Payment Plan</"
+"span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['user']\"/> wants you to approve "
+"created payment plans.\n"
+"                            Click on the button below to get details of payment "
+"plans to be approved.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\r\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\r\n"
+"<tbody>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"middle\">\r\n"
+"                        <span style=\"font-size: 10px;\">Ödeme Planı Onayla</"
+"span>\r\n"
+"                    </td>\r\n"
+"                    <td valign=\"middle\" align=\"right\">\r\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\r\n"
+"                        <div>\r\n"
+"                            Merhaba,<br/><br/>\r\n"
+"                            <strong t-esc=\"ctx['user']\"/> oluşturulan ödeme "
+"planlarını onaylamanızı istiyor.\r\n"
+"                            Onaylanacak ödeme planlarının detaylarına ulaşmak "
+"için aşağıdaki butona tıklayınız.\r\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\r\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\r\n"
+"                                    <strong>Ödeme planlarına gözat</strong>\r\n"
+"                                </a>\r\n"
+"                            </div>\r\n"
+"                        </div>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\r\n"
+"                <tr><td valign=\"middle\" align=\"left\">\r\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\r\n"
+"                </td></tr>\r\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\r\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\r\n"
+"                    <t t-if=\"ctx['company'].email\">\r\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\r\n"
+"                    </t>\r\n"
+"                    <t t-if=\"ctx['company'].website\">\r\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\r\n"
+"                    </t>\r\n"
+"                </td></tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"</tbody>\r\n"
+"</table>\r\n"
+"</td></tr>\r\n"
+"</table>\r\n"
+"            "
+
+#. module: payment_jetcheckout_system
 #: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_item_done
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
@@ -549,6 +755,406 @@ msgstr ""
 "</table>\n"
 "</td></tr>\n"
 "</table>\n"
+"            "
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Payment Plans Approved</"
+"span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> has "
+"approved the payment plans.<br/>\n"
+"                            Click on the button below to get details of payment "
+"plans.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\r\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\r\n"
+"<tbody>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"middle\">\r\n"
+"                        <span style=\"font-size: 10px;\">Ödeme Planları "
+"Onaylandı</span>\r\n"
+"                    </td>\r\n"
+"                    <td valign=\"middle\" align=\"right\">\r\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\r\n"
+"                        <div>\r\n"
+"                            Merhaba,<br/><br/>\r\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> ödeme "
+"planlarını onayladı.<br/>\r\n"
+"                            Ödeme planlarının detaylarına ulaşmak için aşağıdaki "
+"butona tıklayınız.\r\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\r\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\r\n"
+"                                    <strong>Ödeme planlarına gözat</strong>\r\n"
+"                                </a>\r\n"
+"                            </div>\r\n"
+"                        </div>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\r\n"
+"                <tr><td valign=\"middle\" align=\"left\">\r\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\r\n"
+"                </td></tr>\r\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\r\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\r\n"
+"                    <t t-if=\"ctx['company'].email\">\r\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\r\n"
+"                    </t>\r\n"
+"                    <t t-if=\"ctx['company'].website\">\r\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\r\n"
+"                    </t>\r\n"
+"                </td></tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"</tbody>\r\n"
+"</table>\r\n"
+"</td></tr>\r\n"
+"</table>\r\n"
+"            "
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,body_html:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Payment Plans "
+"Disapproved</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hello,<br/><br/>\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> has "
+"disapproved the payment plans.<br/>\n"
+"                            Click on the button below to get details of payment "
+"plans.\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                    <strong>Go to payment plans</strong>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"ctx['company'].email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"ctx['company'].website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: "
+"#454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\r\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\r\n"
+"<tbody>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"middle\">\r\n"
+"                        <span style=\"font-size: 10px;\">Ödeme Planları "
+"Reddedildi</span>\r\n"
+"                    </td>\r\n"
+"                    <td valign=\"middle\" align=\"right\">\r\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ ctx['company'].id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"ctx['company'].name\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\r\n"
+"                <tr>\r\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\r\n"
+"                        <div>\r\n"
+"                            Merhaba,<br/><br/>\r\n"
+"                            <strong t-esc=\"ctx['partner']['name']\"/> ödeme "
+"planlarını reddetti.<br/>\r\n"
+"                            Ödeme planlarının detaylarına ulaşmak için aşağıdaki "
+"butona tıklayınız.\r\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\r\n"
+"                                <a t-att-href=\"ctx['link']\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-"
+"color: #875A7B; color: #fff; border-radius: 5px;\">\r\n"
+"                                    <strong>Ödeme planlarına gözat</strong>\r\n"
+"                                </a>\r\n"
+"                            </div>\r\n"
+"                        </div>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"                <tr>\r\n"
+"                    <td style=\"text-align:center;\">\r\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\r\n"
+"                    </td>\r\n"
+"                </tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"    <tr>\r\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\r\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px "
+"8px 0px 8px; border-collapse:separate;\">\r\n"
+"                <tr><td valign=\"middle\" align=\"left\">\r\n"
+"                    <t t-out=\"ctx['company'].name or ''\">YourCompany</t>\r\n"
+"                </td></tr>\r\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\r\n"
+"                    <t t-out=\"ctx['company'].phone or ''\">+1 650-123-4567</"
+"t>\r\n"
+"                    <t t-if=\"ctx['company'].email\">\r\n"
+"                        | <a t-attf-href=\"'mailto:%s' % "
+"{{ ctx['company'].email }}\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"ctx['company'].email or ''\">info@yourcompany.com</a>\r\n"
+"                    </t>\r\n"
+"                    <t t-if=\"ctx['company'].website\">\r\n"
+"                        | <a t-attf-href=\"'%s' % {{ ctx['company'].website }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-out=\"ctx['company'].website or "
+"''\">http://www.example.com</a>\r\n"
+"                    </t>\r\n"
+"                </td></tr>\r\n"
+"            </table>\r\n"
+"        </td>\r\n"
+"    </tr>\r\n"
+"</tbody>\r\n"
+"</table>\r\n"
+"</td></tr>\r\n"
+"</table>\r\n"
 "            "
 
 #. module: payment_jetcheckout_system
@@ -1431,11 +2037,15 @@ msgid ""
 msgstr "Hesap sahibi farklı olduğu zaman kullanılacak hesap sahibi adı"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_account_setup_bank_manual_config__acquirer_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank__acquirer_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__acquirer_id
 msgid "Acquirer"
 msgstr "Ödeme Alıcısı"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Action"
 msgstr "Eylem"
@@ -1549,8 +2159,19 @@ msgstr "Tüm kalemler seçilebilir"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Allow partners to create and track their own subpartners"
+msgstr ""
+"İş ortaklarının kendi alt iş ortaklarını oluşturmasına ve izlemesine izin verin"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Allow partners to make advance payments on payment page"
 msgstr "İş ortaklarının ödeme sayfasında avans ödeme yapmalarına izin verin"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Allow to Use Subpartner"
+msgstr "Alt İş Ortağına İzin Ver"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,help:payment_jetcheckout_system.field_payment_view__track
@@ -1570,6 +2191,7 @@ msgstr "İzin Verilen Şirketler"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__amount
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__amount
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__amount
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #, python-format
 msgid "Amount"
 msgstr "Tutar"
@@ -1629,6 +2251,7 @@ msgstr "Bir hata meydana geldi."
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "An error occured. Please contact with your system administrator."
@@ -1665,17 +2288,72 @@ msgid "Approval State"
 msgstr "Onay Durumu"
 
 #. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Approval process has been completed"
+msgstr "Onay işlemi tamamlandı"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+#, python-format
 msgid "Approve"
 msgstr "Onayla"
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid "Approve Payment Plan | {{ ctx['domain'] }}"
+msgstr "Ödeme Planını Onayla | {{ ctx['domain'] }}"
+
+#. module: payment_jetcheckout_system
+#: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan_approve
+msgid "Approve Plan"
+msgstr "Planı Onayla"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__+
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__approved
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #, python-format
 msgid "Approved"
 msgstr "Onaylandı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_ids
+msgid "Approved Plans"
+msgstr "Onaylanmış Planlar"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_level
+msgid "Approver Level"
+msgstr "Onaycı Seviyesi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_message_ids
+msgid "Approver Messages"
+msgstr "Onaycı Mesajları"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_state
+msgid "Approver State"
+msgstr "Onaycı Durumu"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Approver level must be higher than zero"
+msgstr "Onaycı seviyesi sıfırdan büyük olmalıdır"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__approver_ids
+msgid "Approvers"
+msgstr "Onaycılar"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/dashboard.py:0
@@ -1886,12 +2564,25 @@ msgid "Campaigns on Campaign Table on Payment Page"
 msgstr "Ödeme Sayfasında Kampanya Tablosu Kampanyalar"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__can_approve_payment_plan
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__can_approve_payment_plan
+msgid "Can Approve Payment Plans"
+msgstr "Ödeme Planlarını Onaylayabilir"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_can_export_txt
 msgid "Can Export TXT"
 msgstr "TXT Dışa Aktarabilir"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__can_use_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__can_use_subpartner
+msgid "Can Use Subpartner"
+msgstr "Alt İş Ortağı Oluşturabilir"
+
+#. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_wizard_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_error_wizard
@@ -1982,6 +2673,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.import_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_follower_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
@@ -2038,7 +2730,10 @@ msgstr "Şirket adedi"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_hook__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__company_id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__company_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__company_id
@@ -2184,9 +2879,13 @@ msgstr "İş Ortağı Oluştur"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__create_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__create_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__create_uid
@@ -2221,9 +2920,13 @@ msgstr "Oluşturulan kancalar burada listelenir"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__create_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__create_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__create_date
@@ -2362,6 +3065,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction_item__date
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_transaction_list
 #, python-format
 msgid "Date"
@@ -2432,6 +3136,11 @@ msgid "Default SMS Settings"
 msgstr "Varsayılan SMS Ayarları"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Define Subpartners"
+msgstr "Alt İş Ortağı Tanımla"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.res_config_settings_view_form
 msgid "Define payment page names and paths"
 msgstr "Ödeme sayfaları adlarını ve yollarını tanımlayın"
@@ -2480,6 +3189,16 @@ msgstr "Açıklama Öneki"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Description Prefix for Partner Tags"
+msgstr "İş Ortağı Etiketleri için Açıklama Öneki"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Description Prefix for Sales Representatives"
+msgstr "Satış Temsilcileri için Açıklama Öneki"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Description Required"
 msgstr "Açıklama Zorunlu"
 
@@ -2518,17 +3237,39 @@ msgid "Details"
 msgstr "Detaylar"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
+msgid "Disallow to Use Subpartner"
+msgstr "Alt İş Ortağını Engelle"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
+#, python-format
 msgid "Disapprove"
 msgstr "Reddet"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
 #: code:addons/payment_jetcheckout_system/models/plan.py:0
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_plan__approval_state__-
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__disapproved
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
 #, python-format
 msgid "Disapproved"
 msgstr "Reddedildi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_disapprover_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_disapprover_ids
+msgid "Disapproved Plans"
+msgstr "Reddedilen Planlar"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__disapprover_ids
+msgid "Disapprovers"
+msgstr "Reddediciler"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -2546,9 +3287,13 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__display_name
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__display_name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__display_name
@@ -2773,6 +3518,12 @@ msgid "Enable Payment Credit Card Tokens"
 msgstr "Ödeme Kredi Kartı Jetonlarını Etkinleştir"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_plan_approver_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_plan_approver_ok
+msgid "Enable Payment Plan Approvers"
+msgstr "Ödeme Planı Onaycılarını Etkinleştir"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__sec_audit_webservice_ok
 msgid "Enable Webservice for Audit Logs"
 msgstr "Hesap Günlükleri için Webservisi Etkinleştir"
@@ -2794,6 +3545,7 @@ msgstr "Kredi kartı bilgilerini girin"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Error"
@@ -3062,10 +3814,6 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:sms.template,body:payment_jetcheckout_system.sms_template_app_share
-#, fuzzy
-#| msgid ""
-#| "Hello, you can get your mobile application by clicking the following link."
-#| "\\nhttps://jetcheckout.com/jet_checkout/static/app/paylox.apk"
 msgid ""
 "Hello, you can get your mobile application by clicking the following link."
 "\\nhttps://jetcheckout.com/jet_checkout/static/app/paylox.apk"
@@ -3102,6 +3850,13 @@ msgid "Hour"
 msgstr "Saat"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "I approve all selected payment plans"
+msgstr "Tüm seçili ödeme planlarını onaylıyorum"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__bank_iban
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__iban
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_bank
@@ -3130,9 +3885,13 @@ msgstr "IBAN ayarlanmamış"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__id
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__id
@@ -3280,6 +4039,7 @@ msgstr "Devranılan Görünüm"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__installment_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard_line__installment_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Installment"
 msgstr "Taksit"
 
@@ -3352,10 +4112,10 @@ msgid "Is Portal"
 msgstr "Portal Kullanıcısı"
 
 #. module: payment_jetcheckout_system
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__is_subdealer
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_subdealer
-msgid "Is Subdealer"
-msgstr "Altbayi"
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__is_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__is_subpartner
+msgid "Is Subpartner"
+msgstr "Alt İş Ortağı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__item_id
@@ -3442,9 +4202,13 @@ msgstr "Dil"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve____last_update
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay____last_update
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard____last_update
@@ -3482,9 +4246,13 @@ msgstr "Geçen Ay"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__write_uid
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__write_uid
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__write_uid
@@ -3514,9 +4282,13 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_page__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__write_date
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_error_wizard__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_pay__write_date
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__write_date
@@ -3550,6 +4322,19 @@ msgstr "Geçen Hafta"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Last Year"
 msgstr "Geçen Yıl"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__level
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__level
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid "Level"
+msgstr "Seviye"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "Level %s approval is waiting"
+msgstr "Seviye %s onayı bekliyor"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__limit
@@ -3833,6 +4618,7 @@ msgstr "Takip Etmediklerim"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_view__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__name
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__bank_name
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 msgid "Name"
 msgstr "Ad"
 
@@ -3890,6 +4676,26 @@ msgstr "Mesaj yok"
 #, python-format
 msgid "No message yet"
 msgstr "Henüz bir mesaj yok"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/plan.py:0
+#, python-format
+msgid "No need to be approved"
+msgstr "Onaycıya gerek yok"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "No payment plan selected to approve."
+msgstr "Seçilmiş onaylanacak bir ödeme planı yok."
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "No payment plans to be approved"
+msgstr "Onaylanacak bir ödeme planı yok"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.actions.act_window,help:payment_jetcheckout_system.action_plan
@@ -4072,6 +4878,7 @@ msgid "Order Checkout"
 msgstr "Sipariş Ödeme"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.user_form
 msgid "Other"
 msgstr "Diğer"
@@ -4154,6 +4961,21 @@ msgid "Parent"
 msgstr "Veli"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.acquirer_form
+msgid "Parent Company Bank Accounts"
+msgstr "Üst Şirketi Banka Hesapları"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+msgid "Parent Partner"
+msgstr "Üst İş Ortağı"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__partial
+msgid "Partial"
+msgstr "Parçalı"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_partner__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__partner_ids
@@ -4161,6 +4983,7 @@ msgstr "Veli"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__partner_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan__partner_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_error_wizard
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.plan_tree
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.search_plan
@@ -4209,7 +5032,7 @@ msgstr "İş Ortağı Ham"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item__parent_ref
-#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__partner_ref
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__partner_ref
 msgid "Partner Reference"
 msgstr "İş Ortağı Referansı"
 
@@ -4217,6 +5040,11 @@ msgstr "İş Ortağı Referansı"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_import_line__partner_street
 msgid "Partner Street"
 msgstr "İş Ortağı Adresi"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
+msgid "Partner Tag(s)..."
+msgstr "İş Ortağı Etiketleri..."
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_res_partner_category
@@ -4263,6 +5091,8 @@ msgstr "İş ortakları..."
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send__partner_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__partner_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__partner_ids
 msgid "Partners"
 msgstr "İş Ortakları"
 
@@ -4359,9 +5189,24 @@ msgid "Paylox Company Branches"
 msgstr "Paylox Şirket Şubeleri"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_is_submerchant_payment
+msgid "Paylox Is Submerchant Payment"
+msgstr "Paylox Üye İşyeri Ödemesi"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_item_count
 msgid "Paylox Item Count"
 msgstr "Paylox Kalem Adedi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_parent_bank_ids
+msgid "Paylox Parent Bank"
+msgstr "Paylox Üst Banka"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer__paylox_subpartner_root_id
+msgid "Paylox Subpartner Root"
+msgstr "Paylox Alt İş Ortağı Kök"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_acquirer_jetcheckout_send
@@ -4503,6 +5348,16 @@ msgid "Payment Items"
 msgstr "Ödemeler"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_item_prefix_partner_category
+msgid "Payment Items Add Description Prefix for Partner Categories"
+msgstr "Ödeme Kalemleri İş Ortağı Kategorileri için Açıklama Ekle Öneki"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_item_prefix_partner_user
+msgid "Payment Items Add Description Prefix for Sales Representatives"
+msgstr "Ödeme Kalemleri Satış Temsilcileri için Açıklama Ekle Öneki"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_item_wizard
 msgid "Payment Items Wizard"
 msgstr "Ödeme Kalemleri Sihirbazı"
@@ -4575,6 +5430,19 @@ msgstr "Ödeme Sayfası Ödeme Kalemi Ekle Açıklama Sadece Nümerik"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix
 msgid "Payment Page Add Payment Item Description Prefix"
 msgstr "Ödeme Sayfası Ödeme Kalemi Ekle Açıklama Öneki"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_prefix_partner_category_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix_partner_category_ids
+msgid "Payment Page Add Payment Item Description Prefix Partner Categories"
+msgstr "Ödeme Sayfası Ödeme Kalemi Ekle Açıklama Öneki İş Ortağı Kategorileri"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_prefix_partner_user_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_page_item_add_desc_prefix_partner_user_ids
+msgid ""
+"Payment Page Add Payment Item Description Prefix Partner Sales Representatives"
+msgstr "Ödeme Sayfası Ödeme Kalemi Ekle Açıklama Öneki İş Ortağı Satış Temsilcileri"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_page_item_add_desc_required
@@ -4856,6 +5724,36 @@ msgid "Payment Plan 3D Secure"
 msgstr "Ödeme Sayfası 3D Güvenlik"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_approve
+msgid "Payment Plan Approve"
+msgstr "Ödeme Planı Onayla"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_level
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_level
+msgid "Payment Plan Approver Level"
+msgstr "Ödeme Planı Onaycı Seviyesi"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_state
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_state
+msgid "Payment Plan Approver State"
+msgstr "Ödeme Planı Onaycı Durumu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__payment_plan_approver_status
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_plan_approver_status
+msgid "Payment Plan Approver Status"
+msgstr "Ödeme Planı Onaycı Durumu"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_approver
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_plan_approver_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_plan_approver_ids
+msgid "Payment Plan Approvers"
+msgstr "Ödeme Planı Onaycıları"
+
+#. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_plan_error_wizard
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_plan_error_wizard
 msgid "Payment Plan Error Wizard"
@@ -4898,6 +5796,16 @@ msgid "Payment Plans"
 msgstr "Ödeme Planları"
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid "Payment Plans Approved | {{ ctx['domain'] }}"
+msgstr "Ödeme Planları Onaylandı | {{ ctx['domain'] }}"
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,subject:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid "Payment Plans Disapproved | {{ ctx['domain'] }}"
+msgstr "Ödeme Planları Reddedildi | {{ ctx['domain'] }}"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__payment_preview_ok
 msgid "Payment Preview Page Active"
 msgstr "Önizleme Sayfası Aktif"
@@ -4932,6 +5840,12 @@ msgstr "Ödeme Ayarları Vadeler"
 #: model:ir.model,name:payment_jetcheckout_system.model_payment_settings_notification_webhook
 msgid "Payment Settings Notification Webhook"
 msgstr "Ödeme Ayarları Bildirim Web Kancası"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings__payment_subpartner_ok
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__payment_subpartner_ok
+msgid "Payment Subpartner"
+msgstr "Ödeme Alt İş Ortağı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.module.category,description:payment_jetcheckout_system.module_category_system
@@ -5116,6 +6030,11 @@ msgid "Payment link is ready"
 msgstr "Ödeme linki hazır"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid "Payment needs approval"
+msgstr "Ödeme onayı gerekli"
+
+#. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_plan_result
 msgid ""
 "Payment status could not be retrieved. Please close the dialog and check the "
@@ -5138,6 +6057,11 @@ msgid "Payment transactions are listed here"
 msgstr "Ödeme işlemleri burada listelenir"
 
 #. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_approve
+msgid "Payment: Approve Plan"
+msgstr "Ödeme: Planı Onayla"
+
+#. module: payment_jetcheckout_system
 #: model:mail.template,name:payment_jetcheckout_system.mail_template_export_txt
 msgid "Payment: Export TXT"
 msgstr "Ödeme: TXT Dışa Aktar"
@@ -5146,6 +6070,16 @@ msgstr "Ödeme: TXT Dışa Aktar"
 #: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_item_done
 msgid "Payment: Item Done"
 msgstr "Ödeme: Tamamlanan Ödeme Kalemi"
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_approved
+msgid "Payment: Plans Approved"
+msgstr "Ödeme: Planlar Onaylandı"
+
+#. module: payment_jetcheckout_system
+#: model:mail.template,name:payment_jetcheckout_system.mail_template_payment_plan_disapproved
+msgid "Payment: Plans Disapproved"
+msgstr "Ödeme Planları Reddedildi"
 
 #. module: payment_jetcheckout_system
 #: model:mail.template,name:payment_jetcheckout_system.mail_template_app_share
@@ -5206,6 +6140,7 @@ msgid "Planned Amount"
 msgstr "Planlanan Tutar"
 
 #. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approve__plan_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.item_tree
 msgid "Plans"
 msgstr "Planlar"
@@ -5285,6 +6220,15 @@ msgid "Please login before continue."
 msgstr "Devam etmeden önce lütfen giriş yapın."
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
+msgid ""
+"Please notify approvers to confirm selected payments.<br/>The payment will "
+"proceed upon approvals."
+msgstr ""
+"Seçili ödemeleri onaylaması için lütfen onaycıları bilgilendiriniz<br/>Ödeme onay "
+"işlemlerinden sonra devam edecektir."
+
+#. module: payment_jetcheckout_system
 #. openerp-web
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
@@ -5342,6 +6286,12 @@ msgstr "Portal: Kullanıcı Portal Davet Şablonu"
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_hook__subtype_transaction__transaction_authorize
 msgid "Pre-Authorization"
 msgstr "Ön Otorizasyon"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__prefix
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__prefix
+msgid "Prefix"
+msgstr "Önek"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__paylox_prepayment_amount
@@ -5530,11 +6480,6 @@ msgid "Remove Item"
 msgstr "Ödemeyi Kaldır"
 
 #. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Remove from Subdealers"
-msgstr "Altbayilerden Kaldır"
-
-#. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/controllers/main.py:0
 #, python-format
 msgid "Report cannot be found"
@@ -5572,6 +6517,11 @@ msgstr "Sonuç"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_kanban
 msgid "Revoke Access"
 msgstr "Yetki Geri Al"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_company__root_id
+msgid "Root"
+msgstr "Kök"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_due__round
@@ -5810,6 +6760,7 @@ msgid "Send Amount without Commission On Credit Card Verify Page"
 msgstr "Kredi Kartı Doğrulama Sayfasında Tutarı Komisyon Hariç Gönder"
 
 #. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_contactless_payment
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Send Email"
@@ -5872,6 +6823,7 @@ msgstr ""
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__mail_message__mail_state__sent
+#: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__res_partner__payment_plan_approver_state__sent
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_mail_message
 msgid "Sent"
 msgstr "Gönderildi"
@@ -5911,6 +6863,7 @@ msgstr "Eylül"
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_send_type__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_dashboard__sequence
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_approver__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__sequence
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_view__priority
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_token__sequence
@@ -5932,11 +6885,6 @@ msgstr "Parola Ayarla"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Set Reminder"
 msgstr "Hatırlatıcı Ayarla"
-
-#. module: payment_jetcheckout_system
-#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_form
-msgid "Set as Subdealer"
-msgstr "Altbayi olarak ayarla"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_form
@@ -6177,6 +7125,7 @@ msgstr "Statik"
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_partner_bank_submerchant_query
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_plan_approve
 msgid "Status"
 msgstr "Durumu"
 
@@ -6191,6 +7140,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment_jetcheckout_system.selection__payment_token__system__student
 msgid "Student Payment System"
 msgstr "Öğrenci Tahsilat Sistemi"
+
+#. module: payment_jetcheckout_system
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.partner_search
+msgid "Sub Partner"
+msgstr "Alt İş Ortağı"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner_bank_submerchant_query__submerchant_id
@@ -6282,6 +7236,7 @@ msgstr "Etiket"
 
 #. module: payment_jetcheckout_system
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_partner_category
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_category__category_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_settings_campaign_tag__line_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_transaction__jetcheckout_partner_categ_ids
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.form_due_tag
@@ -6368,14 +7323,14 @@ msgstr "Kişi \"%s\" portal yetkisine sahip değil."
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
-msgid "The partner \"%s\" is already a subdealer of \"%s\"."
-msgstr "İş ortağı \"%s\"  zaten \"%s\" için altbayidir."
+msgid "The partner \"%s\" is already a parent partner of \"%s\"."
+msgstr "İş ortağı \"%s\" zaten \"%s\" için üst iş ortağıdır."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
 #, python-format
-msgid "The partner \"%s\" is already not a subdealer."
-msgstr "İş ortağı \"%s\" zaten bir altbayi değil."
+msgid "The partner \"%s\" is already not a parent partner."
+msgstr "İş ortağı \"%s\" zaten bir üst iş ortağı değildir."
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/partner.py:0
@@ -6445,6 +7400,12 @@ msgstr "Bu Hafta"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "This Year"
 msgstr "Bu Yıl"
+
+#. module: payment_jetcheckout_system
+#: code:addons/payment_jetcheckout_system/models/partner.py:0
+#, python-format
+msgid "This company is not allowed to create subpartners"
+msgstr "Bu şirketin alt iş ortakları oluşturmak için izni yok"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/wizards/send.py:0
@@ -6575,6 +7536,7 @@ msgstr "Bugün"
 
 #. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_plan_wizard__token_ids
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Token"
 msgstr "Jeton"
 
@@ -6786,6 +7748,13 @@ msgid "Unread Messages Counter"
 msgstr "Okunmamış Mesajlar Sayacı"
 
 #. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid "Unselected ones will be disapproved"
+msgstr "Seçili olmayanlar reddedilecektir"
+
+#. module: payment_jetcheckout_system
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_wizard__url
 msgid "Url"
 msgstr "Url"
@@ -6815,6 +7784,12 @@ msgstr "Vadeleri Kullan"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
 msgid "Use Sale Reference for Payment Link"
 msgstr "Ödeme Linki için Satış Referansı Kullan"
+
+#. module: payment_jetcheckout_system
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__use_subpartner
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__use_subpartner
+msgid "Use Subpartner"
+msgstr "Alt İş Ortağı Kullan"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.settings_form
@@ -6858,6 +7833,7 @@ msgstr "Kullanıcı Şablonu"
 #: model:ir.actions.act_window,name:payment_jetcheckout_system.action_user
 #: model:ir.model,name:payment_jetcheckout_system.model_res_users
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_acquirer_jetcheckout_branch__user_ids
+#: model:ir.model.fields,field_description:payment_jetcheckout_system.field_payment_item_prefix_partner_user__user_ids
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_partner__users_id
 #: model:ir.model.fields,field_description:payment_jetcheckout_system.field_res_users__users_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.company_hierarchy_line
@@ -6941,6 +7917,7 @@ msgstr "Parola Görünürlüğü"
 
 #. module: payment_jetcheckout_system
 #. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
 #: code:addons/payment_jetcheckout_system/static/src/js/system.js:0
 #, python-format
 msgid "Warning"
@@ -7074,6 +8051,7 @@ msgstr "5. Hafta"
 
 #. module: payment_jetcheckout_system
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.page_payment_plan_approve
 msgid "Welcome"
 msgstr "Hoş Geldiniz"
 
@@ -7122,6 +8100,16 @@ msgstr "Yıl"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.transaction_search
 msgid "Yesterday"
 msgstr "Dün"
+
+#. module: payment_jetcheckout_system
+#. openerp-web
+#: code:addons/payment_jetcheckout_system/static/src/js/plan.js:0
+#, python-format
+msgid ""
+"You are about to approve payment plans with a total amount of <h2 "
+"class=\"text-600\">%s</h2>"
+msgstr ""
+"<h2 class=\"text-600\">%s</h2> tutarındaki ödeme planları onaylamak üzeresiniz"
 
 #. module: payment_jetcheckout_system
 #: code:addons/payment_jetcheckout_system/models/transaction.py:0
@@ -7279,6 +8267,12 @@ msgstr "dahil"
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout_system.system_send_form
 msgid "partner selected"
 msgstr "iş ortağı seçildi"
+
+#~ msgid "Remove from Subdealers"
+#~ msgstr "Altbayilerden Kaldır"
+
+#~ msgid "Set as Subdealer"
+#~ msgstr "Altbayi olarak ayarla"
 
 #~ msgid "Campaign Tags"
 #~ msgstr "Kampanya Etiketleri"
