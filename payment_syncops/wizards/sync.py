@@ -164,6 +164,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'partner_mobile': line.get('mobile', False),
                         'partner_address': line.get('address', False),
                         'invoice_id': line.get('id', False),
+                        'invoice_ref': line.get('invoice_ref', False),
                         'invoice_tag': line.get('tag', False),
                         'invoice_name': line.get('name', False),
                         'invoice_date': line.get('date', False),
@@ -435,6 +436,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'system': self.system or company.system,
                         'amount': line['invoice_amount'],
                         'description': line['invoice_name'],
+                        'invoice_ref': line['invoice_ref'],
                         'date': line['invoice_date'],
                         'due_date': line['invoice_due_date'],
                         'ref': line['invoice_id'],
@@ -541,6 +543,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     partner_user_mobile = fields.Char(string='Partner Salesperson Mobile', readonly=True)
     partner_tax_office = fields.Char(string='Partner Tax Office', readonly=True)
     invoice_id = fields.Char(readonly=True)
+    invoice_ref = fields.Char(readonly=True)
     invoice_tag = fields.Char(readonly=True)
     invoice_name = fields.Char(readonly=True)
     invoice_date = fields.Date(readonly=True)
