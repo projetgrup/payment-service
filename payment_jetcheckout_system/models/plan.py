@@ -21,7 +21,7 @@ class PaymentPlan(models.Model):
         for payment in self:
             payment.name = payment.partner_id.name
 
-    @api.depends('paid', 'message')    
+    @api.depends('paid', 'message')
     def _compute_result(self):
         for plan in self:
             if plan.transaction_state == 'pending':
@@ -34,7 +34,7 @@ class PaymentPlan(models.Model):
                 #plan.result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
                 plan.result = ''
 
-    @api.depends('transaction_ids.state')    
+    @api.depends('transaction_ids.state')
     def _compute_paid(self):
         for plan in self:
             state = False
@@ -163,6 +163,7 @@ class PaymentPlan(models.Model):
 
     def action_send_email_approved(self, partner):
         if self:
+            self = self.sudo()
             company = self.env.company
             server = company.mail_server_id
             action = self.env.ref('payment_jetcheckout_system.action_plan')
@@ -188,6 +189,7 @@ class PaymentPlan(models.Model):
 
     def action_send_email_disapproved(self, partner):
         if self:
+            self = self.sudo()
             company = self.env.company
             server = company.mail_server_id
             action = self.env.ref('payment_jetcheckout_system.action_plan')
@@ -663,6 +665,7 @@ class PaymentPlanApprove(models.TransientModel):
     level = fields.Integer(default=0)
 
     def action_send_email(self):
+        self = self.sudo()
         company = self.env.company
         server = company.mail_server_id
         template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approve')

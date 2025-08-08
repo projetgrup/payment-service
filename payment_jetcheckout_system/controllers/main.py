@@ -442,7 +442,7 @@ class PayloxSystemController(PayloxController):
             'Expires': '-1'
         })
 
-    @http.route('/p/plan/<tokens>/approve/<token>', type='http', auth='user', methods=['GET'], sitemap=False, website=True)
+    @http.route('/p/plan/<tokens>/approve/<token>', type='http', auth='public', methods=['GET'], sitemap=False, website=True)
     def page_system_link_plan(self, tokens, token, **kwargs):
         partner = self._get_parent(token)
         company = partner.company_id or request.env.company
