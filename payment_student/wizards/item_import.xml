@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="import_form" model="ir.ui.view">
+    <record id="form_item_import" model="ir.ui.view">
     <field name="inherit_id" ref="payment_jetcheckout_system.import_form"/>
     <field name="model">payment.item.import</field>
     <field name="arch" type="xml">
