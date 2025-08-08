@@ -362,9 +362,31 @@ class Partner(models.Model):
             ])
 
     def _compute_payment_plan_approver(self):
+        plans = self.env['payment.plan'].browse(self.env.context.get('active_ids', 0))
+        approver_ids = self.env.company.payment_plan_approver_ids
         for partner in self:
-            partner.payment_plan_approver_state = False
-            partner.payment_plan_approver_status = '<span class="text-600"><i class="fa fa-spin fa-circle-o-notch"/> Waiting Approval</span>'
+            len_plans = len(plans)
+            len_approver = 0
+            len_disapprover = 0
+            line_approver = fields.first(approver_ids.filtered(lambda l: partner.id in l.partner_ids.ids))
+            partner.payment_plan_approver_level = line_approver and line_approver.level or '-'
+            for plan in plans:
+                if partner.id in plan.approver_ids.ids:
+                    len_approver += 1
+                if partner.id in plan.disapprover_ids.ids:
+                    len_disapprover += 1
+            if len_plans == len_approver:
+                partner.payment_plan_approver_state = 'approved'
+                partner.payment_plan_approver_status = '<span class="text-success"><i class="fa fa-check"/> Approved</span>'
+            elif len_plans == len_approver + len_disapprover:
+                partner.payment_plan_approver_state = 'partial'
+                partner.payment_plan_approver_status = '<span class="text-warning"><i class="fa fa-minus"/> %s approved, %s disapproved</span>' % (len_approver, len_disapprover)
+            elif len_plans == len_disapprover:
+                partner.payment_plan_approver_state = 'disapproved'
+                partner.payment_plan_approver_status = '<span class="text-danger"><i class="fa fa-times"/> Disapproved</span>'
+            else:
+                partner.payment_plan_approver_state = False
+                partner.payment_plan_approver_status = '<span class="text-600"><i class="fa fa-spin fa-circle-o-notch"/> Waiting Approval</span>'
 
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
@@ -410,8 +432,16 @@ class Partner(models.Model):
     payment_item_bank_token_ok = fields.Boolean(related='company_id.payment_item_bank_token_ok')
     payment_link_url = fields.Char('Payment Link URL', compute='_compute_payment_link_url', compute_sudo=True, readonly=True)
     payment_page_url = fields.Char('Payment Page URL', compute='_compute_payment_page_url', compute_sudo=True, readonly=True)
-    payment_plan_approver_state = fields.Selection([('sent', 'Sent'), ('done', 'Done')], 'Payment Plan Approver State', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
+    payment_plan_approver_state = fields.Selection([
+        ('sent', 'Sent'),
+        ('partial', 'Partial'),
+        ('approved', 'Approved'),
+        ('disapproved', 'Disapproved'),
+    ], 'Payment Plan Approver State', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
     payment_plan_approver_status = fields.Html('Payment Plan Approver Status', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
+    payment_plan_approver_level = fields.Char('Payment Plan Approver Level', compute='_compute_payment_plan_approver', compute_sudo=True, readonly=True)
+    payment_plan_approver_ids = fields.Many2many('payment.plan', 'approver_plan_rel', 'approver_id', 'plan_id', string='Approved Plans', readonly=True)
+    payment_plan_disapprover_ids = fields.Many2many('payment.plan', 'disapprover_plan_rel', 'approver_id', 'plan_id', string='Disapproved Plans', readonly=True)
     paylox_tax_office = fields.Char('Tax Office')
     signup_token = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')
     signup_type = fields.Char(groups='base.group_erp_manager,payment_jetcheckout_system.group_system_manager')

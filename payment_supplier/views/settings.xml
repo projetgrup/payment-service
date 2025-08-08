@@ -35,7 +35,7 @@
                                         <tree editable="bottom" default_order="level">
                                             <field name="sequence" widget="handle"/>
                                             <field name="level" decoration_bf="1"/>
-                                            <field name="partner_ids" options="{'no_create': True}" widget="many2many_tags_avatar" domain="[('company_id', '=', parent.company_id), ('can_approve_payment_plan', '=', True)]"/>
+                                            <field name="partner_ids" options="{'no_create': True}" domain="[('company_id', '=', parent.company_id), ('can_approve_payment_plan', '=', True)]"/>
                                         </tree>
                                     </field>
                                 </div>

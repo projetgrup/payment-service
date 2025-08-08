@@ -65,6 +65,28 @@ class PaymentPlan(models.Model):
                 plan.transaction_state = state
                 plan.message = message
 
+    @api.depends('approver_level')
+    def _compute_approver_state(self):
+        for plan in self:
+            partner = plan.create_uid
+            company = plan.company_id or plan.partner_id.company_id or self.env.company
+            if company.payment_plan_approver_ok:
+                level = plan.approver_level or 0
+                if level >= 0:
+                    for line in company.payment_plan_approver_ids:
+                        if partner.id in line.partner_ids.ids:
+                            level = line.level + 1
+                            break
+                    line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level > level))
+                    if line:
+                        plan.approver_state = _('Level %s approval is waiting') % line.level
+                    else:
+                        plan.approver_state = _('Approval process has been completed')
+                else:
+                    plan.approver_state = _('Approval process has been completed')
+            else:
+                plan.approver_state = _('No need to be approved')
+
     name = fields.Char(compute='_compute_name')
     uid = fields.Char('Unique ID', readonly=True, copy=False, default=lambda self: str(uuid.uuid4()))
     item_id = fields.Many2one('payment.item', ondelete='restrict', readonly=True, domain='[("company_id", "=", company_id)]')
@@ -87,31 +109,130 @@ class PaymentPlan(models.Model):
     currency_id = fields.Many2one(related='item_id.currency_id', readonly=True, store=True)
     approval_state = fields.Selection([('+', 'Approved'), ('-', 'Disapproved')], readonly=True)
     approval_result = fields.Char(readonly=True)
-    approver_level = fields.Integer()
+    approver_level = fields.Integer(readonly=True)
+    approver_state = fields.Char(compute='_compute_approver_state')
+    approver_ids = fields.Many2many('res.partner', 'approver_plan_rel', 'plan_id', 'approver_id', string='Approvers', readonly=True)
+    disapprover_ids = fields.Many2many('res.partner', 'disapprover_plan_rel', 'plan_id', 'approver_id', string='Disapprovers', readonly=True)
+    approver_message_ids = fields.Many2many('mail.message', 'approver_message_plan_rel', 'plan_id', 'message_id', string='Approver Messages', readonly=True)
+
+    def write(self, values):
+        res = super().write(values)
+        if 'approver_ids' in values:
+            self.calculate_approver_level()
+        return res
+
+    def calculate_approver_level(self):
+        company = self.company_id or self.partner_id.company_id or self.env.company
+        if company.payment_plan_approver_ok:
+            level_max = max(company.payment_plan_approver_ids.mapped('level'))
+            plans = self.env['payment.plan']
+            for plan in self:
+                level = plan.approver_level or 0
+                for line in company.payment_plan_approver_ids.filtered(lambda l: l.level > level):
+                    if all(approver_id in plan.approver_ids.ids for approver_id in line.partner_ids.ids):
+                        level = line.level
+                if level == level_max:
+                    plan.approver_level = -1
+                elif level > plan.approver_level:
+                    plan.approver_level = level
+                    plans |= plan
+
+            if plans:
+                partners = company.payment_plan_approver_ids.mapped('partner_ids')
+                wizard = self.env['payment.plan.approve'].with_context(active_ids=plans.ids).create({
+                    'partner_ids': [(6, 0, partners.ids)],
+                    'plan_ids': [(6, 0, plans.ids)],
+                    'level': line.level,
+                })
+                wizard.action_send_email()
+
+    def process_confirm(self, partner, ids):
+        approver = self.env['payment.plan']
+        disapprover = self.env['payment.plan']
+        for plan in self:
+            if plan.id in ids:
+                approver |= plan
+            else:
+                disapprover |= plan
+
+        approver.write({'approver_ids': [(4, partner.id)]})
+        approver.action_send_email_approved(partner)
+
+        disapprover.write({'disapprover_ids': [(4, partner.id)]})
+        disapprover.action_send_email_disapproved(partner)
+
+    def action_send_email_approved(self, partner):
+        if self:
+            company = self.env.company
+            server = company.mail_server_id
+            action = self.env.ref('payment_jetcheckout_system.action_plan')
+            template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approved')
+            link = '%s/web#action=%s&model=payment.plan&view_type=list' % (self.get_base_url(), action.id)
+            users = self.mapped('create_uid')
+            context = self.env.context.copy()
+            for user in users:
+                context = self.env.context.copy()
+                context.update({
+                    'link': link,
+                    'server': server,
+                    'company': company,
+                    'domain': urlparse(link).netloc,
+                    'sender': server.email_formatted or company.email_formatted,
+                    'receiver': user.partner_id.email_formatted,
+                    'lang': user.partner_id.lang,
+                    'partner': partner,
+                })
+                template.with_context(context).send_mail(user.partner_id.id, force_send=True, email_values={
+                    'mail_server_id': server.id,
+                })
+
+    def action_send_email_disapproved(self, partner):
+        if self:
+            company = self.env.company
+            server = company.mail_server_id
+            action = self.env.ref('payment_jetcheckout_system.action_plan')
+            template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_disapproved')
+            link = '%s/web#action=%s&model=payment.plan&view_type=list' % (self.get_base_url(), action.id)
+            users = self.mapped('create_uid')
+            for user in users:
+                context = self.env.context.copy()
+                context.update({
+                    'link': link,
+                    'server': server,
+                    'company': company,
+                    'domain': urlparse(link).netloc,
+                    'sender': server.email_formatted or company.email_formatted,
+                    'receiver': user.partner_id.email_formatted,
+                    'lang': user.partner_id.lang,
+                    'partner': partner,
+                })
+                template.with_context(context).send_mail(user.partner_id.id, force_send=True, email_values={
+                    'mail_server_id': server.id,
+                })
 
     def payment(self):
         if self.paid:
             return
 
-        partner = self.env.user.partner_id
+        partner = self.create_uid
         company = self.company_id or self.partner_id.company_id or self.env.company
         if company.payment_plan_approver_ok:
-            level = self.env.context.get('approver_level', 1)
-            for line in company.payment_plan_approver_ids:
-                if partner.id in line.partner_ids.ids:
-                    level = line.level + 1
-                    break
-            line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level >= level))
-            if line:
-                self.approver_level = line.level
-                wizard = self.env['payment.plan.approve'].create({
-                    'partner_ids': [(6, 0, line.partner_ids.ids)],
-                    'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
-                    'level': line.level,
-                })
-                action = self.env.ref('payment_jetcheckout_system.action_plan_approve').sudo().read()[0]
-                action['res_id'] = wizard.id
-                return action
+            level = self.approver_level or 0
+            if level >= 0:
+                for line in company.payment_plan_approver_ids:
+                    if partner.id in line.partner_ids.ids:
+                        level = line.level + 1
+                        break
+                line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level > level))
+                if line:
+                    wizard = self.env['payment.plan.approve'].create({
+                        'partner_ids': [(6, 0, company.payment_plan_approver_ids.mapped('partner_ids').ids)],
+                        'plan_ids': [(6, 0, self.env.context.get('active_ids', self.ids))],
+                        'level': line.level,
+                    })
+                    action = self.env.ref('payment_jetcheckout_system.action_plan_approve').sudo().read()[0]
+                    action['res_id'] = wizard.id
+                    return action
 
         acquirer = self.env['payment.acquirer'].sudo()._get_acquirer(company=company, providers=['jetcheckout'], limit=1, raise_exception=False)
         if not acquirer:
@@ -539,26 +660,35 @@ class PaymentPlanApprove(models.TransientModel):
 
     partner_ids = fields.Many2many('res.partner', 'payment_plan_approve_partner_rel', 'approver_id', 'partner_id', string='Partners')
     plan_ids = fields.Many2many('payment.plan', 'payment_plan_approve_plan_rel', 'approver_id', 'plan_id', string='Plans')
-    level = fields.Integer(default=1)
+    level = fields.Integer(default=0)
 
     def action_send_email(self):
         company = self.env.company
-        template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approve')
         server = company.mail_server_id
-        for partner in self.partner_ids:
-            plan_uids = ','.join(self.plan_ids.mapped('uid'))
-            link = '%s/p/plan/%s/approve/%s' % (self.get_base_url(), plan_uids, partner._get_token())
-            raise UserError(link)
-            context = self.env.context.copy()
-            context.update({
-                'link': link,
-                'server': server,
-                'company': company,
-                'domain': urlparse(link).netloc,
-                'sender': server.email_formatted or company.email_formatted,
-                'receiver': partner.email_formatted,
-                'lang': partner.lang,
-            })
-            template.with_context(context).send_mail(partner.id, force_send=True, email_values={
-                'mail_server_id': server.id,
-            })
+        template = self.env.ref('payment_jetcheckout_system.mail_template_payment_plan_approve')
+        line = fields.first(company.payment_plan_approver_ids.filtered(lambda l: l.level >= self.level))
+        partners = line.mapped('partner_ids').filtered(lambda p: p.payment_plan_approver_state not in ('approved', 'disapproved'))
+        plans = {}
+        for plan in self.plan_ids:
+            if plan.create_uid.id not in plans:
+                plans[plan.create_uid.id] = self.env['payment.plan']
+            plans[plan.create_uid.id] |= plan
+        for partner in partners:
+            for uid, plan in plans.items():
+                user = self.env['res.users'].browse(uid)
+                plan_uids = ','.join(plan.mapped('uid'))
+                link = '%s/p/plan/%s/approve/%s' % (self.get_base_url(), plan_uids, partner._get_token())
+                context = self.env.context.copy()
+                context.update({
+                    'link': link,
+                    'server': server,
+                    'company': company,
+                    'domain': urlparse(link).netloc,
+                    'sender': server.email_formatted or company.email_formatted,
+                    'receiver': partner.email_formatted,
+                    'lang': partner.lang,
+                    'user': user,
+                })
+                template.with_context(context).send_mail(partner.id, force_send=True, email_values={
+                    'mail_server_id': server.id,
+                })

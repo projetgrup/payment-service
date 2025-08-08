@@ -31,4 +31,4 @@ class PaymentItemImport(models.TransientModel):
 class PaymentItemImportLine(models.TransientModel):
     _inherit = 'payment.item.import.line'
 
-    student_term_name = fields.Many2one('res.student.term', string='Student Term Name', readonly=True)
+    student_term_name = fields.Char(string='Student Term Name', readonly=True)
