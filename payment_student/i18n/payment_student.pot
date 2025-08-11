@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-11 07:29+0000\n"
-"PO-Revision-Date: 2025-08-11 07:29+0000\n"
+"POT-Creation-Date: 2025-08-11 07:54+0000\n"
+"PO-Revision-Date: 2025-08-11 07:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -169,7 +169,7 @@ msgid "Bursary Amount"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_bursary_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__bursary_code
 msgid "Bursary Code"
 msgstr ""
 
@@ -179,7 +179,7 @@ msgid "Bursary Discount"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_bursary_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__bursary_name
 msgid "Bursary Name"
 msgstr ""
 
@@ -195,12 +195,12 @@ msgid "Campus"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_campus_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__campus_code
 msgid "Campus Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_campus_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__campus_name
 msgid "Campus Name"
 msgstr ""
 
@@ -227,12 +227,12 @@ msgid "Class"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_class_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__class_code
 msgid "Class Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_class_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__class_name
 msgid "Class Name"
 msgstr ""
 
@@ -421,12 +421,12 @@ msgid "Department"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_department_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__department_code
 msgid "Department Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_department_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__department_name
 msgid "Department Name"
 msgstr ""
 
@@ -479,7 +479,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_email
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__email
 #: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 msgid "Email"
 msgstr ""
@@ -522,12 +522,12 @@ msgid "Faculty"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_faculty_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__faculty_code
 msgid "Faculty Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_faculty_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__faculty_name
 msgid "Faculty Name"
 msgstr ""
 
@@ -684,7 +684,7 @@ msgid "Menu"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_bursary__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_campus__name
 #: model:ir.model.fields,field_description:payment_student.field_res_student_class__name
@@ -877,7 +877,7 @@ msgid ""
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_phone
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__phone
 #: model_terms:ir.ui.view,arch_db:payment_student.page_payment_subsystem_university
 msgid "Phone"
 msgstr ""
@@ -918,12 +918,12 @@ msgid "Program"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_program_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__program_code
 msgid "Program Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_program_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__program_name
 msgid "Program Name"
 msgstr ""
 
@@ -935,7 +935,7 @@ msgid "Programs"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_ref
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__ref
 msgid "Reference"
 msgstr ""
 
@@ -985,12 +985,12 @@ msgid "School"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_school_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__school_code
 msgid "School Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_school_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__school_name
 msgid "School Name"
 msgstr ""
 
@@ -1184,12 +1184,12 @@ msgid "Term"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_term_code
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__term_code
 msgid "Term Code"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_term_name
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__term_name
 msgid "Term Name"
 msgstr ""
 
@@ -1258,7 +1258,7 @@ msgid "Users"
 msgstr ""
 
 #. module: payment_student
-#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__student_vat
+#: model:ir.model.fields,field_description:payment_student.field_payment_student_import_line__vat
 msgid "VAT"
 msgstr ""
 
