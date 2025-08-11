@@ -20,27 +20,27 @@
                 <group>
                     <field name="line_ids" readonly="1" colspan="2" nolabel="1" force_save="1">
                         <tree create="0" edit="0" delete="0">
-                            <field name="student_name" force_save="1"/>
-                            <field name="student_vat" force_save="1"/>
-                            <field name="student_ref" force_save="1" optional="hide"/>
-                            <field name="student_email" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_phone" force_save="1" optional="hide" invisible="not context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_school_name" force_save="1"/>
-                            <field name="student_school_code" force_save="1" optional="hide"/>
-                            <field name="student_class_name" force_save="1"/>
-                            <field name="student_class_code" force_save="1" optional="hide"/>
-                            <field name="student_bursary_name" force_save="1" optional="hide"/>
-                            <field name="student_bursary_code" force_save="1" optional="hide"/>
-                            <field name="student_term_name" force_save="1" optional="hide"/>
-                            <field name="student_term_code" force_save="1" optional="hide"/>
-                            <field name="student_campus_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_campus_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_faculty_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_faculty_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_department_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_department_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_program_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                            <field name="student_program_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="name" force_save="1"/>
+                            <field name="vat" force_save="1"/>
+                            <field name="ref" force_save="1" optional="hide"/>
+                            <field name="email" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="phone" force_save="1" optional="hide" invisible="not context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="school_name" force_save="1"/>
+                            <field name="school_code" force_save="1" optional="hide"/>
+                            <field name="class_name" force_save="1"/>
+                            <field name="class_code" force_save="1" optional="hide"/>
+                            <field name="bursary_name" force_save="1" optional="hide"/>
+                            <field name="bursary_code" force_save="1" optional="hide"/>
+                            <field name="term_name" force_save="1" optional="hide"/>
+                            <field name="term_code" force_save="1" optional="hide"/>
+                            <field name="campus_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="campus_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="faculty_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="faculty_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="department_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="department_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="program_name" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                            <field name="program_code" force_save="1" optional="hide" invisible="context.get('active_subsystem') not in ('student_university',)"/>
                             <field name="parent_name" force_save="1" invisible="context.get('active_subsystem') in ('student_university',)"/>
                             <field name="parent_email" force_save="1" optional="hide" invisible="context.get('active_subsystem') in ('student_university',)"/>
                             <field name="parent_phone" force_save="1" optional="hide" invisible="context.get('active_subsystem') in ('student_university',)"/>
@@ -50,19 +50,19 @@
                             <sheet>
                                 <group>
                                     <group>
-                                        <field name="student_name" force_save="1"/>
-                                        <field name="student_vat" force_save="1"/>
-                                        <field name="student_ref" force_save="1"/>
-                                        <field name="student_email" force_save="1" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                                        <field name="student_phone" force_save="1" invisible="context.get('active_subsystem') not in ('student_university',)"/>
-                                        <field name="student_school_name" force_save="1"/>
-                                        <field name="student_school_code" force_save="1"/>
-                                        <field name="student_class_name" force_save="1"/>
-                                        <field name="student_class_code" force_save="1"/>
-                                        <field name="student_bursary_name" force_save="1"/>
-                                        <field name="student_bursary_code" force_save="1"/>
-                                        <field name="student_term_name" force_save="1"/>
-                                        <field name="student_term_code" force_save="1"/>
+                                        <field name="name" force_save="1"/>
+                                        <field name="vat" force_save="1"/>
+                                        <field name="ref" force_save="1"/>
+                                        <field name="email" force_save="1" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                                        <field name="phone" force_save="1" invisible="context.get('active_subsystem') not in ('student_university',)"/>
+                                        <field name="school_name" force_save="1"/>
+                                        <field name="school_code" force_save="1"/>
+                                        <field name="class_name" force_save="1"/>
+                                        <field name="class_code" force_save="1"/>
+                                        <field name="bursary_name" force_save="1"/>
+                                        <field name="bursary_code" force_save="1"/>
+                                        <field name="term_name" force_save="1"/>
+                                        <field name="term_code" force_save="1"/>
                                     </group>
                                     <group invisible="context.get('active_subsystem') in ('student_university',)">
                                         <field name="parent_name" force_save="1"/>
@@ -71,14 +71,14 @@
                                         <field name="parent_campaign" force_save="1"/>
                                     </group>
                                     <group invisible="context.get('active_subsystem') not in ('student_university',)">
-                                        <field name="student_campus_name" force_save="1" optional="hide"/>
-                                        <field name="student_campus_code" force_save="1" optional="hide"/>
-                                        <field name="student_faculty_name" force_save="1" optional="hide"/>
-                                        <field name="student_faculty_code" force_save="1" optional="hide"/>
-                                        <field name="student_department_name" force_save="1" optional="hide"/>
-                                        <field name="student_department_code" force_save="1" optional="hide"/>
-                                        <field name="student_program_name" force_save="1" optional="hide"/>
-                                        <field name="student_program_code" force_save="1" optional="hide"/>
+                                        <field name="campus_name" force_save="1" optional="hide"/>
+                                        <field name="campus_code" force_save="1" optional="hide"/>
+                                        <field name="faculty_name" force_save="1" optional="hide"/>
+                                        <field name="faculty_code" force_save="1" optional="hide"/>
+                                        <field name="department_name" force_save="1" optional="hide"/>
+                                        <field name="department_code" force_save="1" optional="hide"/>
+                                        <field name="program_name" force_save="1" optional="hide"/>
+                                        <field name="program_code" force_save="1" optional="hide"/>
                                     </group>
                                 </group>
                             </sheet>
