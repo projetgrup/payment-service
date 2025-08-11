@@ -209,8 +209,10 @@ class PaymentStudentImport(models.TransientModel):
 
             students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
             student = students.search([
-                ('company_id', '=', company.id),
+                ('vat', '!=', False),
                 ('vat', '=', line.vat)
+                ('parent_id', '!=', False),
+                ('company_id', '=', company.id),
             ])
             if len(student) > 1:
                 if self.env.context.get('active_subsystem') not in ('student_university',):
@@ -238,6 +240,7 @@ class PaymentStudentImport(models.TransientModel):
             }
             if self.env.context.get('active_subsystem') not in ('student_university',):
                 parent = self.env['res.partner'].sudo().search([
+                    ('parent_id', '!=', False),
                     ('company_id', '=', company.id),
                     ('email', '=', line.parent_email)
                 ], limit=1)

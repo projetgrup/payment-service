@@ -30,6 +30,8 @@ class Partner(models.Model):
         res = super().create(vals)
         if res.company_id.system == 'student':
             if res.parent_id:
+                if not res.vat and 'vat' in vals:
+                    res.write({'vat': vals['vat']})
                 templates = self.env['res.student.payment.template'].search([
                     ('school_id', '=', res.school_id.id),
                     '|', ('class_id', '=', res.class_id.id), ('class_id', '=', False),
@@ -89,10 +91,10 @@ class Partner(models.Model):
         if system == 'student' and self.env.user.has_group('payment_student.group_student_user') and not self.env.context.get('skip_student_vat_check'):
             for line in self:
                 if line.vat and not line.is_company:
-                    student = self.search([('id', '!=', line.id), ('vat', '=', line.vat), ('company_id', '=', line.company_id.id)], limit=1)
+                    student = self.search([('active', '=', True), ('id', '!=', line.id), ('vat', '=', line.vat), ('company_id', '=', line.company_id.id)], limit=1)
                     if student:
                         raise UserError(_('There is already a student with the same Vat Number - %s') % student.name)
                 elif line.email and line.is_company:
-                    parent = self.search([('id', '!=', line.id), ('email', '=', line.email), ('company_id', '=', line.company_id.id)], limit=1)
+                    parent = self.search([('active', '=', True), ('id', '!=', line.id), ('email', '=', line.email), ('company_id', '=', line.company_id.id)], limit=1)
                     if parent:
                         raise UserError(_('There is already a parent with the same email - %s') % line.email)
