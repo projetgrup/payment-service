@@ -33,7 +33,7 @@
             <field name="result" string=" "/>
             <field name="message" optional="hide"/>
             <field name="approver_state" optional="hide" decoration-it="1"/>
-            <field name="approver_ids" optional="hide" widget="many2many_tags_avatar"/>
+            <field name="approver_ids" optional="hide" widget="many2many_tags_tags"/>
         </tree>
     </field>
     </record>
@@ -72,6 +72,7 @@
                 <filter string="Partner" name="groupby_parent" domain="[]" context="{'group_by':'partner_id'}"/>
                 <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
                 <filter string="Paid" name="groupby_paid" domain="[]" context="{'group_by':'paid'}"/>
+                <filter string="Approver Level" name="groupby_approver_level" domain="[('approver_level', '>=', 0)]" context="{'group_by':'approver_level'}"/>
             </group>
         </search>
     </field>

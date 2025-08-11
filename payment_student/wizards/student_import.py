@@ -76,7 +76,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not school:
                     #raise ValidationError(_('No school found with code "%s" for student "%s"') % (line.student_school_name, line.student_name))
                     school = school.create({
-                        'name': line.student_school_name,
+                        'name': line.student_school_name or line.student_school_code,
                         'code': line.student_school_code,
                         'company_id': company.id,
                     })
@@ -92,7 +92,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not bursary:
                     #raise ValidationError(_('No bursary found with code "%s" for student "%s"') % (line.student_bursary_name, line.student_name))
                     bursary = bursary.create({
-                        'name': line.student_bursary_name,
+                        'name': line.student_bursary_name or line.student_bursary_code,
                         'code': line.student_bursary_code,
                         'company_id': company.id,
                     })
@@ -108,7 +108,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not classroom:
                     #raise ValidationError(_('No classroom found with code "%s" for student "%s"') % (line.student_class_name, line.student_name))
                     classroom = classroom.create({
-                        'name': line.student_class_name,
+                        'name': line.student_class_name or line.student_class_code,
                         'code': line.student_class_code,
                         'company_id': company.id,
                     })
@@ -124,7 +124,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not campus:
                     #raise ValidationError(_('No campus found with code "%s" for student "%s"') % (line.student_campus_name, line.student_name))
                     campus = campus.create({
-                        'name': line.student_campus_name,
+                        'name': line.student_campus_name or line.student_campus_code,
                         'code': line.student_campus_code,
                         'company_id': company.id,
                     })
@@ -140,7 +140,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not faculty:
                     #raise ValidationError(_('No faculty found with code "%s" for student "%s"') % (line.student_faculty_name, line.student_name))
                     faculty = faculty.create({
-                        'name': line.student_faculty_name,
+                        'name': line.student_faculty_name or line.student_faculty_code,
                         'code': line.student_faculty_code,
                         'company_id': company.id,
                     })
@@ -156,7 +156,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not department:
                     #raise ValidationError(_('No department found with code "%s" for student "%s"') % (line.student_department_name, line.student_name))
                     department = department.create({
-                        'name': line.student_department_name,
+                        'name': line.student_department_name or line.student_department_code,
                         'code': line.student_department_code,
                         'company_id': company.id,
                     })
@@ -172,7 +172,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not program:
                     #raise ValidationError(_('No program found with code "%s" for student "%s"') % (line.student_program_name, line.student_name))
                     program = program.create({
-                        'name': line.student_program_name,
+                        'name': line.student_program_name or line.student_program_code,
                         'code': line.student_program_code,
                         'company_id': company.id,
                     })
@@ -188,7 +188,7 @@ class PaymentStudentImport(models.TransientModel):
                 if not term:
                     #raise ValidationError(_('No term found with code "%s" for student "%s"') % (line.student_term, line.student_name))
                     term = term.create({
-                        'name': line.student_term_name,
+                        'name': line.student_term_name or line.student_term_code,
                         'code': line.student_term_code,
                         'company_id': company.id,
                     })
@@ -312,9 +312,9 @@ class PaymentStudentImportLine(models.TransientModel):
     _description = 'Payment Student Import Line'
 
     wizard_id = fields.Many2one('payment.student.import')
-    student_name = fields.Char('Student Name', readonly=True, required=True)
-    student_email = fields.Char('Student Email', readonly=True)
-    student_phone = fields.Char('Student Phone', readonly=True)
+    student_name = fields.Char('Name', readonly=True, required=True)
+    student_email = fields.Char('Email', readonly=True)
+    student_phone = fields.Char('Phone', readonly=True)
     student_vat = fields.Char('VAT', readonly=True, required=True)
     student_ref = fields.Char('Reference', readonly=True)
     student_school_name = fields.Char('School Name', readonly=True)
@@ -336,4 +336,4 @@ class PaymentStudentImportLine(models.TransientModel):
     parent_name = fields.Char('Parent Name', readonly=True)
     parent_email = fields.Char('Parent Email', readonly=True)
     parent_phone = fields.Char('Parent Phone', readonly=True)
-    parent_campaign = fields.Char('Parent Campaign', readonly=True)
+    parent_campaign = fields.Char('Campaign', readonly=True)
