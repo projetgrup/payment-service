@@ -665,7 +665,8 @@
                                                 <input type="checkbox" class="payment-items input-switch" autocomplete="off" t-att-data-id="plan.id" t-att-data-amount="plan.amount" checked="checked" t-att-field="None if disabled else 'payment.plan'"/>
                                                 <span class="slider round fa"/>
                                             </label>
-                                            <span t-attf-class="text-primary font-weight-bold #{'disabled' if disabled else ''}">Approve</span>
+                                            <span t-if="disabled" class="text-primary font-weight-bold disabled">Approved</span>
+                                            <span t-else="" class="text-primary font-weight-bold">Approve</span>
                                         </td>
                                     </tr>
                                 </t>

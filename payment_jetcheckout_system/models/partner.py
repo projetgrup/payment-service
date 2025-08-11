@@ -377,16 +377,16 @@ class Partner(models.Model):
                     len_disapprover += 1
             if len_plans == len_approver:
                 partner.payment_plan_approver_state = 'approved'
-                partner.payment_plan_approver_status = '<span class="text-success"><i class="fa fa-check"/> Approved</span>'
+                partner.payment_plan_approver_status = _('<span class="text-success"><i class="fa fa-check"/> Approved</span>')
             elif len_plans == len_approver + len_disapprover:
                 partner.payment_plan_approver_state = 'partial'
-                partner.payment_plan_approver_status = '<span class="text-warning"><i class="fa fa-minus"/> %s approved, %s disapproved</span>' % (len_approver, len_disapprover)
+                partner.payment_plan_approver_status = _('<span class="text-warning"><i class="fa fa-minus"/> %s approved, %s disapproved</span>') % (len_approver, len_disapprover)
             elif len_plans == len_disapprover:
                 partner.payment_plan_approver_state = 'disapproved'
-                partner.payment_plan_approver_status = '<span class="text-danger"><i class="fa fa-times"/> Disapproved</span>'
+                partner.payment_plan_approver_status = _('<span class="text-danger"><i class="fa fa-times"/> Disapproved</span>')
             else:
                 partner.payment_plan_approver_state = False
-                partner.payment_plan_approver_status = '<span class="text-600"><i class="fa fa-spin fa-circle-o-notch"/> Waiting Approval</span>'
+                partner.payment_plan_approver_status = _('<span class="text-600"><i class="fa fa-spin fa-circle-o-notch"/> Waiting Approval</span>')
 
     def _search_is_portal(self, operator, operand):
         group_portal = self.env.ref('base.group_portal')
