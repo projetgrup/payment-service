@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
 import io
-import pytz
 import json
 import base64
 import werkzeug
@@ -18,8 +17,6 @@ from odoo.addons.payment_jetcheckout.controllers.main import PayloxController
 
 REPORT_NAMES = ['payment_jetcheckout.payment_receipt', 'payment_jetcheckout.payment_conveyance']
 
-import logging
-_logger = logging.getLogger(__name__)
 
 class PayloxSystemController(PayloxController):
 
@@ -384,7 +381,6 @@ class PayloxSystemController(PayloxController):
         if company != request.env.company:
             website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
             if not website:
-                _logger.error(company)
                 raise werkzeug.exceptions.NotFound()
 
             website._force()

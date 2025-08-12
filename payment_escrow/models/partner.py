@@ -7,7 +7,11 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
-    paylox_escrow_type = fields.Selection([('customer', 'Customer'), ('owner', 'Owner')], string='Paylox Escrow Type')
+    paylox_escrow_type = fields.Selection([
+        ('customer', 'Customer'),
+        ('broker', 'Broker'),
+        ('owner', 'Owner'),
+    ], string='Paylox Escrow Type')
 
     def action_payable(self):
         action = super(Partner, self).action_payable()
