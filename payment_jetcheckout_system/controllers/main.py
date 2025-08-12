@@ -377,8 +377,9 @@ class PayloxSystemController(PayloxController):
             if not transaction:
                 raise werkzeug.exceptions.NotFound()
 
-        company = partner.company_id or request.website.company_id or request.env.company
-        if company != request.env.company:
+        company = partner.use_subpartner and partner.company_id.root_id or partner.company_id or request.website.company_id or request.env.company
+        website_company = request.website.sudo().company_id
+        if company != website_company:
             website = request.env['website'].sudo().search([('company_id', '=', company.id)], limit=1)
             if not website:
                 raise werkzeug.exceptions.NotFound()

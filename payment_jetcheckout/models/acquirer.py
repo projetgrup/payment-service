@@ -246,18 +246,26 @@ class PaymentAcquirer(models.Model):
     @api.model
     def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
         self = self.sudo()
-        domain = [('state', 'in', ('enabled', 'test'))]
-        if providers:
-            domain.append(('provider', 'in', providers))
-        if self.env['res.company'].search_count([]) > 1:
-            company = company or self.env.company
-            if isinstance(company, int):
-                company = self.env['res.company'].browse(company)
-            domain.append(('company_id', '=', company.id))
-            if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
-                domain.append(('website_id', '=', website.id))
 
-        acquirer = self.search(domain, limit=limit, order='sequence')
+        def get_domain():
+            domain = [('state', 'in', ('enabled', 'test'))]
+            if providers:
+                domain.append(('provider', 'in', providers))
+            if self.env['res.company'].search_count([]) > 1:
+                company = company or self.env.company
+                if isinstance(company, int):
+                    company = self.env['res.company'].browse(company)
+                domain.append(('company_id', '=', company.id))
+                if website and self.env['website'].search_count([('company_id', '=', company.id)]) > 1:
+                    domain.append(('website_id', '=', website.id))
+            return domain
+
+        acquirer = self.search(get_domain(), limit=limit, order='sequence')
+        if not acquirer:
+            if company and company.parent_id:
+                company = company.parent_id
+                acquirer = self.search(get_domain(), limit=limit, order='sequence')
+
         if not acquirer:
             if raise_exception:
                 raise ValidationError(_('Payment acquirer not found. Please contact with system administrator'))
