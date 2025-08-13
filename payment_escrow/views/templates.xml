@@ -148,14 +148,14 @@
                 </div>
                 <div class="escrow-ad-container">
                     <div class="row justify-content-md-center">
-                        <div class="col-12">
-                            <div class="escrow-ad-add-container">
-                                <h3 class="ad-add-title">My Ads</h3>
-                                <div class="escrow-ad-add-control">
-                                    <button class="btn escrow-ad-add-btn-add" title="Add New Ad"><i class="fa fa-plus mr8"/>Add New Ad</button>
-                                    <div class="escrow-ad-add-type">
-                                        <button class="btn escrow-ad-add-btn-view active" data-view="list" field="ad.button.list">List</button>
-                                        <button class="btn escrow-ad-add-btn-view" data-view="grid" field="ad.button.grid">Grid</button>
+                        <div class="escrow-ad-read col-12">
+                            <div class="escrow-ad-nav">
+                                <h3 class="escrow-ad-nav-title">My Ads</h3>
+                                <div class="escrow-ad-nav-control">
+                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.form"><i class="fa fa-plus mr8"/>Add New Ad</button>
+                                    <div class="escrow-ad-nav-buttons">
+                                        <button class="btn escrow-ad-nav-button-secondary active" data-view="list" field="ad.button.list">List</button>
+                                        <button class="btn escrow-ad-nav-button-secondary" data-view="grid" field="ad.button.grid">Grid</button>
                                     </div>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                                                 <span t-esc="ad.name"/>
                                             </div>
                                             <div class="escrow-ad-grid-cell-body">
-                                                <div class="escrow-ad-grid-cell-body-cat" t-esc="ad.categ_id.name"/>
+                                                <div class="escrow-ad-grid-cell-body-categ" t-esc="ad.categ_id.name"/>
                                                 <div class="escrow-ad-grid-cell-body-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}"/>
                                                 <div class="escrow-ad-grid-cell-body-status"><span class="danger">Satıldı</span></div>
                                             </div>
@@ -203,9 +203,56 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="escrow-ad-edit col-12">
+                            <div class="escrow-ad-nav">
+                                <h3 class="escrow-ad-nav-title"></h3>
+                                <div class="escrow-ad-nav-control">
+                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.save"><i class="fa fa-save mr8"/>Save</button>
+                                    <button class="btn escrow-ad-nav-button-secondary" data-view="list" field="ad.button.discard">Discard</button>
+                                </div>
+                            </div>
+                            <div class="escrow-ad-form form-view" field="ad.view.form">
+                                <div class="escrow-ad-form-container">
+                                    <div class="field-container field-name">
+                                        <input id="adInputName" type="text" required="required" field="ad.input.name"/>
+                                        <span class="bar-container"/>
+                                        <label for="adInputName"><span>Name</span></label>
+                                    </div>
+                                    <div class="field-container field-categ">
+                                        <select required="required" field="ad.input.categ" placeholder="Select a category">
+                                            <option/>
+                                            <t t-foreach="company.env['product.category'].sudo().search_read([])" t-as="categ">
+                                                <option t-att-value="categ['id']" t-esc="categ['name']"/>
+                                            </t>
+                                        </select>
+                                        <span class="bar-container"/>
+                                        <label for="adInputCateg"><span>Category</span></label>
+                                    </div>
+                                    <div class="field-img">
+                                        <img src="" alt="" field="ad.input.img"/>
+                                    </div>
+                                    <div class="field-container field-price">
+                                        <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="text-center"/>
+                                        <span class="bar-container"/>
+                                        <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                        <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                        <label for="adInputPrice"><span>Price</span></label>
+                                    </div>
+                                    <div class="field-container field-desc">
+                                        <textarea id="adInputDesc" style="min-height: 120px" class="form-control o_wysiwyg_loader" required="required" field="ad.input.desc"/>
+                                        <span class="bar-container"/>
+                                        <label for="adInputDesc" class="shadow"><span>Description</span></label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="escrow-ad-edit col-12">
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="escrow-ad-sideback d-none" field="ad.sideback"/>
             <div class="escrow-ad-sidebar" field="ad.sidebar">
                 <button class="btn" field="ad.button.sidebar.toggle"><i class="fa fa-2x fa-times"/></button>
                 <div class="escrow-ad-sidebar-section escrow-ad-sidebar-settings d-none">

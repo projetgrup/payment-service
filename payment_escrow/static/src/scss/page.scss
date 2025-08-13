@@ -287,18 +287,31 @@
         }
     }
 
+    .escrow-ad-sideback {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
     .escrow-ad-sidebar {
-        display: none;
-        position: fixed;
-        right: 0;
+        transition: all 0.2s ease-in-out;
+        right: -500px;
+        opacity: 0;
         top: 0;
         bottom: 0;
+        z-index: 2;
         width: 500px;
         height: 100vh;
         padding: 24px;
+        position: fixed;
         border-left: 1px solid #eeeeee;
         background-color: var(--white);
         box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05) !important;
+
+        &.show {
+            right: 0px;
+            opacity: 1;
+        }
 
         .escrow-ad-sidebar-settings-help {
             i {
@@ -434,44 +447,44 @@
         margin: 0 auto;
     }
 
-    .escrow-ad-add-container {
-        display: flex;
-        justify-content: space-between;
-        padding: 0 1em;
+    .escrow-ad-edit {
+        display: none;
     }
 
-    .escrow-ad-add-control {
+    .escrow-ad-nav {
         display: flex;
         justify-content: space-between;
         padding: 0 1em;
 
-        .escrow-ad-add-btn-add {
-            margin: 0 1.5rem;
-            color: var(--white);
-            transition: 0.5s;
-            background-size: 200% auto;
-            background-image: linear-gradient(to right bottom, var(--gradient-primary) 0%, var(--primary) 100%);
-            box-shadow: rgba(33, 35, 38, 0.35) 0px 10px 10px -10px;
-            &:hover {
-                background-position: 100%;
-            }
-        }
+        .escrow-ad-nav-control {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1em;
 
-        .escrow-ad-add-btn-add {
-            margin: 0 1.5rem;
-        }
-
-        .escrow-ad-add-btn-view {
-            background-color: var(--lightgray);
-            transition: all 0.2s;
-            &:hover {
-                background-color: #eeeeee;
-            }
-            &.active {
-                color: var(--lightgray);
-                background-color: #333333;
+            .escrow-ad-nav-button-primary {
+                margin: 0 1.5rem;
+                color: var(--white);
+                transition: 0.5s;
+                background-size: 200% auto;
+                background-image: linear-gradient(to right bottom, var(--gradient-primary) 0%, var(--primary) 100%);
+                box-shadow: rgba(33, 35, 38, 0.35) 0px 10px 10px -10px;
                 &:hover {
-                    background-color: #555555;
+                    background-position: 100%;
+                }
+            }
+
+            .escrow-ad-nav-button-secondary {
+                background-color: var(--lightgray);
+                transition: all 0.2s;
+                &:hover {
+                    background-color: #eeeeee;
+                }
+                &.active {
+                    color: var(--lightgray);
+                    background-color: #333333;
+                    &:hover {
+                        background-color: #555555;
+                    }
                 }
             }
         }
@@ -636,6 +649,37 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    .escrow-ad-form {
+        display: none;
+
+        .escrow-ad-form-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-areas: "name img""categ img""price img""desc desc";
+            gap: 10px;
+
+            div.field-name {
+                grid-area: name;
+            }
+
+            div.field-categ {
+                grid-area: categ;
+            }
+
+            div.field-img {
+                grid-area: img;
+            }
+
+            div.field-price {
+                grid-area: price;
+            }
+
+            div.field-desc {
+                grid-area: desc;
             }
         }
     }

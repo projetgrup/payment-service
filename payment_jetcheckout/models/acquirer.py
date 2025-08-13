@@ -247,7 +247,7 @@ class PaymentAcquirer(models.Model):
     def _get_acquirer(self, company=None, website=None, providers=None, limit=None, raise_exception=True):
         self = self.sudo()
 
-        def get_domain():
+        def get_domain(company):
             domain = [('state', 'in', ('enabled', 'test'))]
             if providers:
                 domain.append(('provider', 'in', providers))
@@ -260,11 +260,11 @@ class PaymentAcquirer(models.Model):
                     domain.append(('website_id', '=', website.id))
             return domain
 
-        acquirer = self.search(get_domain(), limit=limit, order='sequence')
+        acquirer = self.search(get_domain(company), limit=limit, order='sequence')
         if not acquirer:
             if company and company.parent_id:
                 company = company.parent_id
-                acquirer = self.search(get_domain(), limit=limit, order='sequence')
+                acquirer = self.search(get_domain(company), limit=limit, order='sequence')
 
         if not acquirer:
             if raise_exception:

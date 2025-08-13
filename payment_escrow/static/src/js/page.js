@@ -32,6 +32,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
         this.ad = {
             sidebar: new fields.element(),
+            sideback: new fields.element({
+                events: [['click', this._onClickSideback]],
+            }),
             button: {
                 sidebar: {
                     toggle: new fields.element({
@@ -44,10 +47,29 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 grid: new fields.element({
                     events: [['click', this._onClickButtonGrid]],
                 }),
+                form: new fields.element({
+                    events: [['click', this._onClickButtonForm]],
+                }),
+                discard: new fields.element({
+                    events: [['click', this._onClickButtonDiscard]],
+                }),
+            },
+            input: {
+                img: new fields.element(),
+                name: new fields.string(),
+                desc: new fields.html({
+                    parent: this,
+                }),
+                categ: new fields.selection(),
+                price: new fields.float({
+                    mask: payloxPage.prototype._maskAmount.bind(this),
+                    default: 0,
+                }),
             },
             view: {
                 list: new fields.element(),
                 grid: new fields.element(),
+                form: new fields.element(),
             },
             item: new fields.element({
                 events: [['click', this._onClickItem]],
@@ -80,9 +102,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonSidebarToggle: function (ev) {
-        this.ad.sidebar.$.toggle('slide');
         $('.escrow-ad-wrapper').toggleClass('blur');
         $('.escrow-ad-sidebar-section').addClass('d-none');
+        this.ad.sideback.$.toggleClass('d-none');
+        this.ad.sidebar.$.toggleClass('show');
 
         const value = ev?.currentTarget?.dataset?.value;
         if (value) {
@@ -90,24 +113,49 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _onClickButtonList: function () {
-        if (!this.ad.button.list.$.hasClass('active')) {
-            this.ad.button.grid.$.removeClass('active');
-            this.ad.button.list.$.addClass('active');
-            this.ad.view.grid.$.fadeOut(400, () => {
-                this.ad.view.list.$.fadeIn(400);
-            });
+    _onClickSideback: function () {
+        this._onClickButtonSidebarToggle();
+    },
+
+    
+    _activateView: function (view) {
+        if (!this.ad.button[view].$.hasClass('active')) {
+            for (const v of ['form', 'grid', 'list']) {
+                if (this.ad.button[v].$.hasClass('active')) {
+                    this.ad.button[v].$.removeClass('active');
+                    this.ad.view[v].$.fadeOut(400, () => {
+                        this.ad.view[view].$.fadeIn(400);
+                    });
+                }
+            }
+            this.ad.button[view].$.addClass('active');
+
+            if (view === 'form') {
+                $('.escrow-ad-read').fadeOut(400, () => {
+                    $('.escrow-ad-edit').fadeIn(400);
+                });
+            } else {
+                $('.escrow-ad-edit').fadeOut(400, () => {
+                    $('.escrow-ad-read').fadeIn(400);
+                });
+            }
         }
     },
 
+    _onClickButtonList: function () {
+        this._activateView('list');
+    },
+
     _onClickButtonGrid: function () {
-        if (!this.ad.button.grid.$.hasClass('active')) {
-            this.ad.button.list.$.removeClass('active');
-            this.ad.button.grid.$.addClass('active');
-            this.ad.view.list.$.fadeOut(400, () => {
-                this.ad.view.grid.$.fadeIn(400);
-            });
-        }
+        this._activateView('grid');
+    },
+
+    _onClickButtonForm: function () {
+        this._activateView('form');
+    },
+
+    _onClickButtonDiscard: function () {
+        this._activateView('list');
     },
 
     _onClickItem: function (ev) {

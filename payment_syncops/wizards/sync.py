@@ -513,7 +513,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
             elif wizard.type == 'item':
                 pairs['models']['item'] = self.env['payment.item']
-                pairs['models']['item'].search([('company_id', '=', company.id), ('syncops_notif', '=', True)]).write({'syncops_notif': False})
+                self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE company_id=%s AND syncops_notif=true' % company.id)
                 if wizard.type_item_subtype == 'balance':
                     wizard._sync_item_balance(**pairs)
                 elif wizard.type_item_subtype == 'invoice':

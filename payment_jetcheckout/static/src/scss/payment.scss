@@ -493,7 +493,8 @@
         > input[type=text],
         > input[type=email],
         > input[type=number],
-        > textarea {
+        > textarea,
+        .note-editable {
             -webkit-box-sizing: border-box;
             min-height: 50px;
             box-sizing: border-box;
@@ -532,11 +533,17 @@
             overflow: hidden;
             font-size: 14px;
             font-weight: bold;
-            color: theme-color('primary');
+            color: var(--primary);
             margin-top: 2px;
             transition: 0.2s ease all;
             -moz-transition: 0.2s ease all;
             -webkit-transition: 0.2s ease all;
+
+            &.shadow {
+                border-radius: 10px;
+                backdrop-filter: brightness(1.6);
+                box-shadow: 0 8px 8px 2px rgb(255, 255, 255) !important;
+            }
 
             span {
                 background-image: linear-gradient(0deg, transparent 40%, rgb(255,255,255) 40%, rgb(255,255,255) 60%, transparent 100%);
