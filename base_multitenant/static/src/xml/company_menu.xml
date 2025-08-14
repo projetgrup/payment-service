@@ -19,11 +19,17 @@
                     </button>
                 </div>
             </div>
-            <t t-foreach="Object.values(companyService.availableCompanies).filter(c => !c.parent_id).sort((c1, c2) => c1.name.localeCompare(c2.name))" t-as="company">
-                <t t-call="base_multitenant.SwitchCompanyItems">
-                    <t t-set="company" t-value="company"/>
-                    <t t-set="companies" t-value="companyService.availableCompanies"/>
+            <t t-set="companies" t-value="state.companies.filter(c => !c.parent_id).sort((c1, c2) => c1.name.localeCompare(c2.name))"/>
+            <t t-if="companies.length">
+                <t t-foreach="companies" t-as="company">
+                    <t t-call="base_multitenant.SwitchCompanyItems">
+                        <t t-set="company" t-value="company"/>
+                        <t t-set="companies" t-value="companyService.availableCompanies"/>
+                    </t>
                 </t>
+            </t>
+            <t t-else="">
+                <div class="font-weight-bold font-italic text-600 text-center py-2 rounded bg-100 mb-2 mt-3 mx-2">No company found</div>
             </t>
         </Dropdown>
     </t>
@@ -33,7 +39,7 @@
             <t t-set="company" t-value="company"/>
         </t>
         <t t-if="company.child_ids.length">
-            <t t-set="children" t-value="Object.values(companies).filter(c => company.child_ids.includes(c.id)).sort((c1, c2) => c1.name.localeCompare(c2.name))"/>
+            <t t-set="children" t-value="state.companies.filter(c => company.child_ids.includes(c.id)).sort((c1, c2) => c1.name.localeCompare(c2.name))"/>
             <t t-foreach="children" t-as="child">
                 <t t-call="base_multitenant.SwitchCompanyItem">
                     <t t-set="company" t-value="child"/>

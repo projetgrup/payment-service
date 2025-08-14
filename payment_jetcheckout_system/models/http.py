@@ -46,7 +46,7 @@ class Http(models.AbstractModel):
 
         if request.env.user.has_group('base.group_user'):
             company_ids = request.env.user.company_ids
-            child_ids = self.env['res.company'].sudo().search([('root_id', 'in', company_ids.ids)])
+            child_ids = self.env['res.company'].sudo().search([('parent_id', 'in', company_ids.ids)])
             for child in child_ids:
                 if child.id not in res['user_companies']['allowed_companies']:
                     res['user_companies']['allowed_companies'].update({

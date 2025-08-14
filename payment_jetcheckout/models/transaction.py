@@ -431,7 +431,7 @@ class PaymentTransaction(models.Model):
             tx._action_approve()
 
     def _action_approve(self):
-        if self.jetcheckout_approval_state:
+        if self.jetcheckout_approval_state == '+':
             return
 
         if self.state != 'done':
@@ -465,11 +465,7 @@ class PaymentTransaction(models.Model):
             tx._action_disapprove()
 
     def _action_disapprove(self):
-        if self.jetcheckout_approval_state:
-            return
-
-        if self.state != 'done':
-            self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
+        if self.jetcheckout_approval_state == '-':
             return
 
         url = '%s/api/v1/payment/submerchant/disapprove' % self.acquirer_id._get_paylox_api_url()
@@ -531,6 +527,9 @@ class PaymentTransaction(models.Model):
     def _paylox_cancel_postprocess(self):
         if not self.state == 'cancel':
             self.write(self._paylox_cancel_postprocess_values())
+        if self.jetcheckout_approval_auto:
+            self.env.cr.commit()
+            self._action_disapprove()
         if self.payment_id:
             self.payment_id.action_draft()
             self.payment_id.unlink()
