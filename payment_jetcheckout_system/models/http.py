@@ -46,9 +46,22 @@ class Http(models.AbstractModel):
 
         if request.env.user.has_group('base.group_user'):
             company_ids = request.env.user.company_ids
-            for company in company_ids:
+            child_ids = self.env['res.company'].sudo().search([('root_id', 'in', company_ids.ids)])
+            for child in child_ids:
+                if child.id not in res['user_companies']['allowed_companies']:
+                    res['user_companies']['allowed_companies'].update({
+                        child.id: {
+                            'id': child.id,
+                            'name': child.name,
+                            'sequence': child.sequence,
+                        }})
+
+            for company in (company_ids | child_ids):
                 res['user_companies']['allowed_companies'][company.id].update({
                     'is_audit_enabled': company.sec_audit_ok,
+                    'parent_id': company.parent_id.id,
+                    'disabled': company.id not in company_ids.ids,
+                    'child_ids' : company.env['res.company'].sudo().search([('parent_id', '=', company.id)]).ids
                 })
 
         if res['user_context'].get('system'):
