@@ -1,53 +1,49 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
-import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
-import { symmetricalDifference } from "@web/core/utils/arrays";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useBus } from "@web/core/utils/hooks";
-import { patch } from "web.utils";
-
+import { useService } from '@web/core/utils/hooks';
+import { SwitchCompanyMenu } from '@web/webclient/switch_company_menu/switch_company_menu';
+import { symmetricalDifference } from '@web/core/utils/arrays';
+import { patch } from 'web.utils';
 
 const { hooks } = owl;
 const { useState } = hooks;
 
-patch(SwitchCompanyMenu.prototype, "base_multitenant.SwitchCompanyMenu", {
+patch(SwitchCompanyMenu.prototype, 'base_multitenant.SwitchCompanyMenu', {
     setup() {
         this._super.apply(this, arguments);
-        this.companyService = useService("company");
+        this.companyService = useService('company');
+        this.availableCompanies = Object.values(this.companyService.availableCompanies || {});
         this.state = useState({
             companiesToToggle: [],
-            originalCompanies: Object.values(this.companyService.availableCompanies || {}),
-        });
-        useBus(Dropdown.bus, "state-changed", () => {
-            this.companyService.availableCompanies = this.state.originalCompanies;
+            companies: this.availableCompanies,
         });
     },
 
     toggleCompany(companyId) {
-        this.state.companiesToToggle = symmetricalDifference(this.state.companiesToToggle, [
-            companyId,
-        ]);
+        this.state.companiesToToggle = symmetricalDifference(this.state.companiesToToggle, [companyId]);
     },
 
     chooseCompany(){
-        this.companyService.setCompanies("toggle", ...this.state.companiesToToggle);
+        this.companyService.setCompanies('toggle', ...this.state.companiesToToggle);
     },
 
     onSearchInput(ev) {
-        const companiesObj = this.state.originalCompanies; 
+        let filteredCompanies;
         const searchValue = ev.target.value.trim().toLowerCase();
         if (!searchValue) {
-            this.state.filteredCompanies = companiesObj;
+            filteredCompanies = this.availableCompanies;
         } else {
-            const filteredCompanies = companiesObj.filter(company => {
+            filteredCompanies = this.availableCompanies.filter(company => {
                 return company.name.toLowerCase().includes(searchValue);
             });
-            this.state.filteredCompanies = filteredCompanies;
+            for (const company of [...filteredCompanies]) {
+                if (company.parent_id && !filteredCompanies.find(c => c.id == company.parent_id)) {
+                    filteredCompanies.push(this.companyService.availableCompanies[company.parent_id]);
+                }
+            }
         }
-        this.companyService.availableCompanies = this.state.filteredCompanies;
+        this.state.companies = filteredCompanies;
     },
 });
 
-
-SwitchCompanyMenu.template = "base_multitenant.SwitchCompanyMenu";
+SwitchCompanyMenu.template = 'base_multitenant.SwitchCompanyMenu';
