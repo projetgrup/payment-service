@@ -81,6 +81,7 @@ class ProductTemplate(models.Model):
             product.payment_price_flow = product.payment_price_flow_option == 'dynamic'
 
     system = fields.Selection(selection=[], readonly=True)
+    owner_id = fields.Many2one('res.partner', string='Owner')
     payment_page_ok = fields.Boolean()
     payment_color_foreground = fields.Char()
     payment_color_background = fields.Char()

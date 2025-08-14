@@ -21,10 +21,10 @@
         'views/templates.xml',
         'views/settings.xml',
     ],
-    #'assets': {
-    #    'web.assets_frontend': [
-    #        'payment_escrow/static/src/scss/page.scss',
-    #        'payment_escrow/static/src/js/page.js',
-    #    ],
-    #},
+    'assets': {
+        'web.assets_frontend': [
+            'payment_escrow/static/src/scss/page.scss',
+            'payment_escrow/static/src/js/page.js',
+        ],
+    },
 }

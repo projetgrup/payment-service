@@ -1,6 +1,8 @@
 /** @odoo-module alias=paylox.fields **/
 'use strict';
 
+import wysiwygLoader from 'web_editor.loader';
+
 class fields {
     constructor(options) {
         Object.assign(this, options);
@@ -101,6 +103,16 @@ class boolean extends fields {}
 
 class element extends fields {}
 
+
+class html extends fields {
+    async start() {
+        super.start(...arguments);
+        wysiwygLoader.loadFromTextarea(this.options.parent, this.$[0], {
+            resizable: true,
+            userGeneratedContent: true,
+        });
+    }
+}
 class selection extends fields {
     async start() {
         super.start(...arguments);
@@ -165,6 +177,7 @@ class integer extends float {
 export default {
     field: fields,
     string: string,
+    html: html,
     boolean: boolean,
     integer: integer,
     float: float,
