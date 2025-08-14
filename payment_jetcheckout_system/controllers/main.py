@@ -186,10 +186,27 @@ class PayloxSystemController(PayloxController):
                 'jetcheckout_approval_ok': True,
                 'jetcheckout_approval_auto': True,
             })
+
+            partner = transaction.partner_id
+            partner_name = partner.name.split(' ', 1)
             values.update({
                 'is_submerchant_payment': True,
                 'submerchant_external_id': reference,
                 'submerchant_price': amount,
+                'customer':  {
+                    'name': partner_name[0],
+                    'surname': partner_name[-1],
+                    'email': partner.email,
+                    'id': str(partner.id),
+                    'identity_number': partner.vat,
+                    'phone': partner.phone,
+                    'ip_address': transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
+                    'postal_code': partner.zip,
+                    'company': partner.parent_id and partner.parent_id.name or '',
+                    'address': partner._display_address(without_company=True),
+                    'city': partner.state_id and partner.state_id.name or '',
+                    'country': partner.country_id and partner.country_id.name or '',
+                },
             })
         return values
 
