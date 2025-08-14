@@ -7,9 +7,10 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
+    broker_id = fields.Many2one('res.partner', string='Broker')
 
 
-class ProductTemplate(models.Model):
+class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     @api.model

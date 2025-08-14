@@ -63,7 +63,7 @@
         <record id="payment_item_rule" model="ir.rule">
             <field name="name">Access only related items</field>
             <field name="model_id" ref="model_payment_item"/>
-            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id.parent_id', '=', company_id)]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
@@ -81,7 +81,7 @@
         <record id="mail_template_company_rule" model="ir.rule">
             <field name="name">Access only related mail templates for users</field>
             <field name="model_id" ref="mail.model_mail_template"/>
-            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id.parent_id', '=', company_id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -111,7 +111,7 @@
         <record id="mail_server_company_rule" model="ir.rule">
             <field name="name">Access only related mail servers for users</field>
             <field name="model_id" ref="base.model_ir_mail_server"/>
-            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id.parent_id', '=', company_id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -131,7 +131,7 @@
         <record id="website_company_rule" model="ir.rule">
             <field name="name">Access only related websites for users</field>
             <field name="model_id" ref="website.model_website"/>
-            <field name="domain_force">[('company_id', '=', company_id)]</field>
+            <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id.parent_id', '=', company_id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
@@ -171,7 +171,7 @@
         <record id="partner_user_rule" model="ir.rule">
             <field name="name">Access only related users for users</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -241,7 +241,7 @@
         <record id="rule_hook_company" model="ir.rule">
             <field name="name">Access only related hooks for companies</field>
             <field name="model_id" ref="payment_jetcheckout_system.model_payment_hook"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -251,7 +251,7 @@
         <record id="rule_view_company" model="ir.rule">
             <field name="name">Access only related views for companies</field>
             <field name="model_id" ref="payment_jetcheckout_system.model_payment_view"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -266,6 +266,12 @@
         </record>
         <record id="payment.transaction_company_rule" model="ir.rule">
             <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
+        </record>
+        <record id="payment.payment_acquirer_company_rule" model="ir.rule">
+            <field name="domain_force">['|', ('company_id', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
+        </record>
+        <record id="base.res_users_rule" model="ir.rule">
+            <field name="domain_force">['|', '|', ('share', '=', False), ('company_ids', 'in', company_ids), ('company_id.parent_id', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

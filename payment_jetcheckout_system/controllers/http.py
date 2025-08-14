@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from odoo import http
-from odoo.service import common
 
 
 json_response = http.JsonRequest._json_response
 def _json_response(self, result=None, error=None):
     if isinstance(error, dict):
-        if 'message' in error and isinstance(error['message'], str):
-            error['message'] = error['message'].replace('Odoo', '').strip()
-        if 'code' in error and error['code'] == 200:
-            error['code'] = 500
-            error['http_status'] = 500
-        if 'data' in error and isinstance(error['data'], dict) and 'debug' in error['data'] and http.request.uid != 1:
-            error['data']['debug'] = 'Please contact with system administrator'
+        try:
+            admin = http.request.env.user.has_group('base.group_system')
+        except:
+            admin = False
+        if not admin:
+            if 'message' in error and isinstance(error['message'], str):
+                error['message'] = error['message'].replace('Odoo', '').strip()
+            if 'code' in error and error['code'] == 200:
+                error['code'] = 500
+                error['http_status'] = 500
+            if 'data' in error and isinstance(error['data'], dict) and 'debug' in error['data'] and http.request.uid != 1:
+                error['data']['debug'] = 'Please contact with system administrator'
     return json_response(self, result=result, error=error)
 
 http.JsonRequest._json_response = _json_response
 
+#from odoo.service import common
 #common.RPC_VERSION_1 = {
 #    'server_version': '1.0',
 #    'server_version_info': (1, 0, 0, 'final', 0, ''),

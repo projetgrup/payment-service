@@ -9,11 +9,11 @@ from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystem
 
 class CustomerPortal(portal.CustomerPortal):
 
-    @route(['/my', '/my/home'], type='http', auth="user", website=True)
+    @route(['/my', '/my/home'], type='http', auth='user', website=True)
     def home(self, **kwargs):
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
-            return request.redirect('/my/payment')
+            return request.redirect('/my/ads')
         return super().home(**kwargs)
 
 
@@ -53,3 +53,24 @@ class PayloxSystemEscrowController(Controller):
                 'submerchant_price': amount,
             })
         return values
+
+    @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
+    def page_my_ads(self, **kwargs):
+        company = request.env.company
+        user = request.env.user
+        partner = user.partner_id
+        domain = [('company_id', '=', company.id)]
+        if user.share:
+            domain.append(('broker_id', '=', partner.id))
+        ads = request.env['product.product'].sudo().with_context(system='escrow').search(domain)
+        values = {
+            'ads': ads,
+            'partner': partner,
+            'company': company,
+            'currency': company.currency_id,
+        }
+        return request.render('payment_escrow.page_ads', values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
