@@ -348,9 +348,8 @@ class PaymentTransaction(models.Model):
     def _paylox_done_postprocess(self):
         if not self.state == 'done':
             self.write(self._paylox_done_postprocess_values())
-        if self.jetcheckout_approval_auto:
-            self.env.cr.commit()
-            self._action_approve()
+            if self.jetcheckout_approval_auto:
+                self._action_approve()
         self.paylox_verify_token()
         self.paylox_order_confirm()
         self.paylox_payment()
@@ -526,10 +525,9 @@ class PaymentTransaction(models.Model):
 
     def _paylox_cancel_postprocess(self):
         if not self.state == 'cancel':
+            if self.jetcheckout_approval_auto:
+                self._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
-        if self.jetcheckout_approval_auto:
-            self.env.cr.commit()
-            self._action_disapprove()
         if self.payment_id:
             self.payment_id.action_draft()
             self.payment_id.unlink()
