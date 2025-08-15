@@ -3,6 +3,12 @@
 
 import wysiwygLoader from 'web_editor.loader';
 
+try {
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+} catch {}
+
 class fields {
     constructor(options) {
         Object.assign(this, options);
@@ -103,16 +109,61 @@ class boolean extends fields {}
 
 class element extends fields {}
 
+class file extends fields {
+    async start() {
+        super.start(...arguments);
+        this.$.prop('accept', this.options.accept || '*');
+        const callbacks = {};
+        if (this.el) {
+            Object.assign(callbacks, {
+                onaddfile: async (error, file) => {
+                    const bytes = await file.file.bytes();
+                    const array = Array.from(bytes).map(byte => String.fromCharCode(byte)).join('');
+                    this.el.src = `data:${file.fileType};base64,${btoa(array)}`;
+                },
+            });
+        }
+        const props = {
+            ...callbacks,
+            credits: false,
+            captureMethod: 'environment',
+            allowFileSizeValidation: false,
+            allowMultiple: this.options.allowMultiple || false,
+        }
+        if (this.options.size) {
+            Object.assign(props, {
+                maxFileSize: this.options.size,
+                allowFileSizeValidation: true,
+                labelMaxFileSizeExceeded: _t('File is too large'),
+                labelMaxFileSize: _t('Maximum file size is {filesize}'),
+                labelMaxTotalFileSizeExceeded: _t('Maximum total size exceeded'),
+                labelMaxTotalFileSize: _t('Maximum total file size is {filesize}'),
+            })
+        }
+        FilePond.create(this.$[0], props);
+    }
+}
 
 class html extends fields {
     async start() {
         super.start(...arguments);
-        wysiwygLoader.loadFromTextarea(this.options.parent, this.$[0], {
+        const wysiwyg = await wysiwygLoader.loadFromTextarea(this.options.parent, this.$[0], {
             resizable: true,
             userGeneratedContent: true,
         });
+        this.$ = wysiwyg.$editable;
+    }
+
+    get value() {
+        return this.$.html();
+    }
+
+    set value(v) {
+        this.$.html(v);
+        this.$.trigger('change');
     }
 }
+
 class selection extends fields {
     async start() {
         super.start(...arguments);
@@ -177,6 +228,7 @@ class integer extends float {
 export default {
     field: fields,
     string: string,
+    file: file,
     html: html,
     boolean: boolean,
     integer: integer,

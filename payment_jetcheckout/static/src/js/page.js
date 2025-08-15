@@ -13,7 +13,7 @@ import cardPrograms from 'paylox.card.programs';
 
 publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     selector: '#payment_card',
-    jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
+    jsLibs: ['/payment_jetcheckout/static/src/lib/imask/imask.js'],
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
     init: function (parent, options) {

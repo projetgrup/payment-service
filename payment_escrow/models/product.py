@@ -18,7 +18,7 @@ class ProductProduct(models.Model):
         system = self.env.context.get('active_system') or self.env.context.get('system')
         if system == 'escrow':
             self = self.with_context(skip_view_mapping=True)
-        return super(ProductTemplate, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        return super(ProductProduct, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
 
 class ProductCategory(models.Model):

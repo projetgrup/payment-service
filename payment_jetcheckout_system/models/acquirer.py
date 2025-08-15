@@ -30,7 +30,7 @@ class PaymentAcquirer(models.Model):
             acquirer.paylox_is_submerchant_payment = len(acquirer.paylox_parent_bank_ids) > 0
 
     paylox_is_submerchant_payment = fields.Boolean(compute='_compute_paylox_is_submerchant_payment')
-    paylox_subpartner_root_id = fields.Many2one('res.partner', compute='_compute_paylox_subpartner_root_id')
+    paylox_subpartner_root_id = fields.Many2one('res.partner', compute='_compute_paylox_subpartner_root_id', compute_sudo=True)
     paylox_parent_bank_ids = fields.One2many('res.partner.bank', 'acquirer_id', groups='base.group_user')
     paylox_branch_ids = fields.One2many('payment.acquirer.jetcheckout.branch', 'acquirer_id', groups='base.group_user')
     jetcheckout_no_dashboard_button = fields.Boolean('Hide Dashboard Payment Button', groups='base.group_user')

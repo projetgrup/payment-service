@@ -35,7 +35,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_jetcheckout/static/src/lib/imask.js',
+            'payment_jetcheckout/static/src/lib/imask/imask.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
             'payment_jetcheckout/static/src/xml/templates.xml',
             'payment_jetcheckout/static/src/js/tools.js',

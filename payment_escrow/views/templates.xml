@@ -175,7 +175,7 @@
                                             </div>
                                             <span class="escrow-ad-item-name" t-esc="ad.name"/>
                                         </div>
-                                        <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name"/>
+                                        <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id"/>
                                         <div class="escrow-ad-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}"/>
                                         <div class="escrow-ad-item-state"><span class="danger">Satıldı</span></div>
                                         <div class="escrow-ad-item-arrow"><i class="fa fa-chevron-right"/></div>
@@ -214,14 +214,14 @@
                             <div class="escrow-ad-form form-view" field="ad.view.form">
                                 <div class="escrow-ad-form-container">
                                     <div class="field-container field-name">
-                                        <input id="adInputName" type="text" required="required" field="ad.input.name"/>
+                                        <input id="adInputName" type="text" class="text-center" required="required" field="ad.input.name"/>
                                         <span class="bar-container"/>
                                         <label for="adInputName"><span>Name</span></label>
                                     </div>
                                     <div class="field-container field-categ">
                                         <select required="required" field="ad.input.categ" placeholder="Select a category">
                                             <option/>
-                                            <t t-foreach="company.env['product.category'].sudo().search_read([])" t-as="categ">
+                                            <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search_read([('company_id', '=', company.id)])" t-as="categ">
                                                 <option t-att-value="categ['id']" t-esc="categ['name']"/>
                                             </t>
                                         </select>
@@ -229,7 +229,10 @@
                                         <label for="adInputCateg"><span>Category</span></label>
                                     </div>
                                     <div class="field-img">
-                                        <img src="" alt="" field="ad.input.img"/>
+                                        <div>
+                                            <img src="/payment_jetcheckout/static/src/img/placeholder.png" alt=""/>
+                                        </div>
+                                        <input type="file" field="ad.input.img"/>
                                     </div>
                                     <div class="field-container field-price">
                                         <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="text-center"/>
@@ -241,7 +244,7 @@
                                     <div class="field-container field-desc">
                                         <textarea id="adInputDesc" style="min-height: 120px" class="form-control o_wysiwyg_loader" required="required" field="ad.input.desc"/>
                                         <span class="bar-container"/>
-                                        <label for="adInputDesc" class="shadow"><span>Description</span></label>
+                                        <label for="adInputDesc"><span>Description</span></label>
                                     </div>
 
                                 </div>
@@ -315,9 +318,9 @@
                     <div class="escrow-ad-item-state"/>
                     <div class="escrow-ad-item-desc"/>
                     <div class="escrow-ad-item-footer">
-                        <button class="btn"><i class="fa fa-trash mr8"/>Delete</button>
-                        <button class="btn"><i class="fa fa-edit mr8"/>Edit</button>
-                        <button class="btn"><i class="fa fa-chevron-right mr8"/>Continue</button>
+                        <button class="btn escrow-ad-button-delete" field="ad.button.delete"><i class="fa fa-trash mr8"/>Delete</button>
+                        <button class="btn escrow-ad-button-edit" field="ad.button.edit"><i class="fa fa-edit mr8"/>Edit</button>
+                        <button class="btn escrow-ad-button-continue" field="ad.button.continue"><i class="fa fa-chevron-right mr8"/>Continue</button>
                     </div>
                 </div>
             </div>

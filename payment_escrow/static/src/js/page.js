@@ -12,6 +12,10 @@ const _t = core._t;
 
 publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     selector: '.payment-escrow #wrapwrap',
+    jsLibs: [
+        '/payment_jetcheckout/static/src/lib/imask/imask.js',
+        '/payment_jetcheckout/static/src/lib/filepond/filepond.js',
+    ],
 
     init: function (parent, options) {
         this._super(parent, options);
@@ -53,9 +57,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 discard: new fields.element({
                     events: [['click', this._onClickButtonDiscard]],
                 }),
+                edit: new fields.element({
+                    events: [['click', this._onClickButtonEdit]],
+                }),
             },
             input: {
-                img: new fields.element(),
+                img: new fields.file({
+                    allowMultiple: false,
+                    accept: 'image/*',
+                    maxFileSize: '5MB',
+                    el: document.querySelector('.escrow-ad-form .field-img img'),
+                }),
                 name: new fields.string(),
                 desc: new fields.html({
                     parent: this,
@@ -72,7 +84,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 form: new fields.element(),
             },
             item: new fields.element({
-                events: [['click', this._onClickItem]],
+                events: [['click', this._onClickAd]],
             }),
         };
     },
@@ -89,11 +101,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _parseAds: function () {
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
+            const categ = $this.find('.escrow-ad-item-categ');
             this.values.ads[e.dataset.id] = {
                 id: $this.data('id'),
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
-                categ: $this.find('.escrow-ad-item-categ').text().trim(),
+                categ: {id: categ.data('id'), name: categ.text().trim()},
                 price: $this.find('.escrow-ad-item-price').text().trim(),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 desc: $this.find('.escrow-ad-item-desc').html().trim(),
@@ -158,7 +171,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._activateView('list');
     },
 
-    _onClickItem: function (ev) {
+    _onClickButtonEdit: function (ev) {
+        this._prepareAd($(ev.currentTarget).data('id'));
+        this._activateView('form');
+        this._onClickSideback();
+    },
+
+    _onClickAd: function (ev) {
         this._onClickButtonSidebarToggle({ currentTarget: { dataset: { value: 'items'}}});
 
         const id = ev?.currentTarget?.dataset?.id;
@@ -167,10 +186,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ($item.length) {
             $item.find('.escrow-ad-item-img').attr('src', value.img);
             $item.find('.escrow-ad-item-name').text(value.name);
-            $item.find('.escrow-ad-item-categ').text(value.categ);
+            $item.find('.escrow-ad-item-categ').text(value.categ.name);
             $item.find('.escrow-ad-item-price').text(value.price);
             $item.find('.escrow-ad-item-state').html(value.state);
             $item.find('.escrow-ad-item-desc').html(value.desc);
+            $item.find('.escrow-ad-button-edit').data('id', id);
         } else {
             $item.find('.escrow-ad-item-img').attr('src', '/web/image/product.product/0/logo');
             $item.find('.escrow-ad-item-name').text(_('No ad found'));
@@ -178,7 +198,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-price').text('');
             $item.find('.escrow-ad-item-state').html('');
             $item.find('.escrow-ad-item-desc').html('');
+            $item.find('.escrow-ad-button-edit').data('id', 0);
         }
+    },
+
+    _prepareAd: function (id) {
+        const ad = this.values.ads[id];
+        this.ad.input.name.value = ad.name;
+        this.ad.input.categ.value = ad.categ.id;
+        this.ad.input.price.value = ad.price;
+        this.ad.input.desc.value = ad.desc;
+        this.ad.input.img.el.src = ad.img;
     },
 
 });
