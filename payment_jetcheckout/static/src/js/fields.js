@@ -157,13 +157,18 @@ class file extends fields {
     }
 
     get value() {
-        return this._.getFile().getFileEncodeBase64String();
+        const file = this._.getFile()
+        return file ? file.getFileEncodeBase64String() : false;
     }
 
     set value(v) {
         this.$.html(v);
         this.$.trigger('change');
         this._.addFile(v);
+    }
+
+    reset() {
+        this._.removeFile();
     }
 }
 
@@ -208,9 +213,13 @@ class selection extends fields {
         }
     }
 
+    get text() {
+        return this.$.data('select2').selection.text().trim();
+    }
+
     get value() {
         let value = this.$.val();
-        if ($.isNumeric(value)) return parseFloat(value);
+        if ($.isNumeric(value)) return parseInt(value);
         return value;
     }
 

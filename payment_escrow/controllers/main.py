@@ -81,6 +81,45 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/ad/save'], type='json', auth='user', website=True)
     def page_my_ad_save(self, **kwargs):
+        if kwargs['id']:
+            product = request.env['product.product'].sudo().with_context(system='escrow').search([
+                ('id', '=', kwargs['id']),
+                ('broker_id', '=', request.env.user.partner_id.id),
+                ('company_id', '=', request.env.company.id),
+            ])
+            if not product:
+                return {'error': _('Product cannot be found, or you are not allowed to save it.')}
+
+            values = {}
+            if 'name' in kwargs and product.name != kwargs['name']:
+                values.update({'name': kwargs['name']})
+            if 'categ' in kwargs and product.categ_id.id != kwargs['categ'][0]:
+                values.update({'categ_id': kwargs['categ'][0]})
+            if 'price' in kwargs and product.name != kwargs['price']:
+                values.update({'price': kwargs['price']})
+            if 'desc' in kwargs and product.description != kwargs['desc']:
+                values.update({'description': kwargs['desc']})
+            if 'img' in kwargs and product.image_1920 != kwargs['img']:
+                values.update({'image_1920': kwargs['img']})
+            if values:
+                product.write(values)
+
+        else:
+            product = request.env['product.product'].sudo().create({
+                'broker_id': request.env.user.partner_id.id,
+                'name': kwargs['name'],
+                'categ_id': kwargs['categ'][0],
+                'price': kwargs['price'],
+                'description': kwargs['desc'],
+                'image_1920': kwargs['img'],
+            })
+
+        return {
+            'id': product.id,
+        }
+
+    @route(['/my/ad/delete'], type='json', auth='user', website=True)
+    def page_my_ad_delete(self, **kwargs):
         product = request.env['product.product'].sudo().with_context(system='escrow').search([
             ('id', '=', kwargs['id']),
             ('broker_id', '=', request.env.user.partner_id.id),
@@ -89,20 +128,5 @@ class PayloxSystemEscrowController(Controller):
         if not product:
             return {'error': _('Product cannot be found, or you are not allowed to save it.')}
 
-        values = {}
-        if 'name' in kwargs and product.name != kwargs['name']:
-            values.update({'name': kwargs['name']})
-        if 'categ' in kwargs and product.categ_id.id != kwargs['categ']:
-            values.update({'categ_id': kwargs['categ']})
-        if 'price' in kwargs and product.name != kwargs['price']:
-            values.update({'price': kwargs['price']})
-        if 'desc' in kwargs and product.description != kwargs['desc']:
-            values.update({'description': kwargs['desc']})
-        if 'img' in kwargs and product.image_1920 != kwargs['img']:
-            values.update({'image_1920': kwargs['img']})
-        if values:
-            product.write(values)
-
-        return {
-            'id': product.id,
-        }
+        product.unlink()
+        return {}

@@ -2,14 +2,13 @@
 'use strict';
 
 import rpc from 'web.rpc';
-import core from 'web.core';
+import dialog from 'web.Dialog';
+import { _t, qweb } from 'web.core';
 import publicWidget from 'web.public.widget';
 import framework from 'paylox.framework';
 import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
-
-const _t = core._t;
 
 publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     selector: '.payment-escrow #wrapwrap',
@@ -17,6 +16,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         '/payment_jetcheckout/static/src/lib/imask/imask.js',
         '/payment_jetcheckout/static/src/lib/filepond/filepond.js',
     ],
+    xmlDependencies: ['/payment_escrow/static/src/xml/templates.xml'],
 
     init: function (parent, options) {
         this._super(parent, options);
@@ -61,11 +61,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 discard: new fields.element({
                     events: [['click', this._onClickButtonDiscard]],
                 }),
+                create: new fields.element({
+                    events: [['click', this._onClickButtonCreate]],
+                }),
                 edit: new fields.element({
                     events: [['click', this._onClickButtonEdit]],
                 }),
                 save: new fields.element({
                     events: [['click', this._onClickButtonSave]],
+                }),
+                delete: new fields.element({
+                    events: [['click', this._onClickButtonDelete]],
                 }),
             },
             input: {
@@ -112,7 +118,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 id: $this.data('id'),
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
-                categ: { id: categ.data('id'), name: categ.text().trim() },
+                categ: [categ.data('id'), categ.text().trim()],
                 price: parseFloat($this.find('.escrow-ad-item-price').data('value')),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 desc: $this.find('.escrow-ad-item-desc').html().trim(),
@@ -121,13 +127,55 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _updateAds: function (value) {
-        const $items = this.ad.item.$.filter(`[data-id=${value.id}]`);
-        console.log(this.ad.item.$);
-        console.log($items);
-        this.values.ads[value.id]['name'] = value.name;
-        if ($items.length) {
-            $items.find('[name=name]').text(value.name);
+        if (this.state.id) {
+            Object.assign(this.values.ads[value.id], {
+                img: value.img,
+                name: value.name,
+                categ: value.categ,
+                price: value.price,
+                desc: value.desc,
+            });
+
+            const $items = this.ad.item.$.filter(`[data-id=${value.id}]`);
+            if ($items.length) {
+                $items.find('[name=name]').text(value.name);
+                $items.find('[name=categ]').text(value.categ[1]).data('id', value.categ[0]);
+                $items.find('[name=price]').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
+                $items.find('[name=desc]').html(value.desc);
+                $items.find('[name=img]').attr('src', value.img);
+            }
+
+            this.state.id = 0;
+
+        } else {
+            this.values.ads[value.id] = {
+                id: value.id,
+                img: value.img,
+                name: value.name,
+                categ: value.categ,
+                price: value.price,
+                desc: value.desc,
+                state: '-',
+            };
+
+            const $items = this.ad.item.$.filter(`[data-id=${value.id}]`);
+            if ($items.length) {
+                $items.find('[name=name]').text(value.name);
+                $items.find('[name=categ]').text(value.categ[1]).data('id', value.categ[0]);
+                $items.find('[name=price]').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
+                $items.find('[name=desc]').html(value.desc);
+                $items.find('[name=img]').attr('src', value.img);
+            }
+
+            $('.escrow-ad-list-header').after(qweb.render('paylox.escrow.list.item', { ad: value, currency: this.currency, format }));
+            $('.escrow-ad-grid-container').prepend(qweb.render('paylox.escrow.grid.item', { ad: value, currency: this.currency, format }));
         }
+    },
+
+    _deleteAds: function (id) {
+        delete this.values.ads[id];
+        this.ad.item.$.filter(`[data-id=${id}]`).remove();
+        this._onClickSideback();
     },
 
     _onClickButtonSidebarToggle: function (ev) {
@@ -186,6 +234,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._activateView('list');
     },
 
+    _onClickButtonCreate: function (ev) {
+        this._prepareAd();
+        this._activateView('form');
+    },
+
     _onClickButtonEdit: function (ev) {
         this._prepareAd($(ev.currentTarget).data('id'));
         this._activateView('form');
@@ -197,7 +250,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let params = {
             id: this.state.id,
             name: this.ad.input.name.value,
-            categ: this.ad.input.categ.value,
+            categ: [this.ad.input.categ.value, this.ad.input.categ.text],
             price: this.ad.input.price.value,
             desc: this.ad.input.desc.value,
             img: this.ad.input.img.value,
@@ -230,6 +283,54 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
+    _onClickButtonDelete: function (ev) {
+        const id = parseInt($(ev.currentTarget).data('id'));
+        const popup = new dialog(this, {
+            title: _t('Are you sure?'),
+            $content: $('<div/>').text(_t('This action cannot be undone.')),
+            size: 'small',
+            technical: false,
+            buttons: [{
+                text: _t('Cancel'),
+                classes: 'btn-secondary text-white',
+                close: true,
+            }, {
+                text: _t('Remove'),
+                classes: 'btn-danger text-white',
+                click: () => {
+                    framework.showLoading();
+                    rpc.query({ route: '/my/ad/delete', params: { id } }).then((result) => {
+                        if ('error' in result) {
+                            this.displayNotification({
+                                type: 'warning',
+                                title: _t('Warning'),
+                                message: _t('An error occured.') + ' ' + result.error,
+                            });
+                        } else {
+                            this._deleteAds(id);
+                            this._activateView('list');
+                            this.displayNotification({
+                                type: 'success',
+                                title: _t('Success'),
+                                message: _t('Ad has been removed.'),
+                            });
+                        }
+                    }).guardedCatch(() => {
+                        this.displayNotification({
+                            type: 'danger',
+                            title: _t('Error'),
+                            message: _t('An error occured. Please contact with your system administrator.'),
+                        });
+                    }).finally(() => {
+                        popup.destroy();
+                        framework.hideLoading();
+                    });
+                },
+            }],
+        });
+        popup.open();
+    },
+
     _onClickAd: function (ev) {
         this._onClickButtonSidebarToggle({ currentTarget: { dataset: { value: 'items'}}});
 
@@ -239,11 +340,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ($item.length) {
             $item.find('.escrow-ad-item-img').attr('src', value.img);
             $item.find('.escrow-ad-item-name').text(value.name);
-            $item.find('.escrow-ad-item-categ').text(value.categ.name);
+            $item.find('.escrow-ad-item-categ').text(value.categ[1]);
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
             $item.find('.escrow-ad-item-state').html(value.state);
             $item.find('.escrow-ad-item-desc').html(value.desc);
             $item.find('.escrow-ad-button-edit').data('id', id);
+            $item.find('.escrow-ad-button-delete').data('id', id);
         } else {
             $item.find('.escrow-ad-item-img').attr('src', '/payment_jetcheckout/static/src/img/placeholder.png');
             $item.find('.escrow-ad-item-name').text(_('No ad found'));
@@ -252,17 +354,27 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-state').html('');
             $item.find('.escrow-ad-item-desc').html('');
             $item.find('.escrow-ad-button-edit').data('id', 0);
+            $item.find('.escrow-ad-button-delete').data('id', 0);
         }
     },
 
     _prepareAd: function (id) {
-        this.state.id = parseInt(id);
-        const ad = this.values.ads[id];
-        this.ad.input.name.value = ad.name;
-        this.ad.input.categ.value = ad.categ.id;
-        this.ad.input.price.value = format.float(ad.price);
-        this.ad.input.desc.value = ad.desc;
-        setTimeout(() => this.ad.input.img.value = ad.img, 1000);
+        if (id) {
+            this.state.id = parseInt(id);
+            const ad = this.values.ads[id];
+            this.ad.input.name.value = ad.name;
+            this.ad.input.categ.value = ad.categ[0];
+            this.ad.input.price.value = format.float(ad.price);
+            this.ad.input.desc.value = ad.desc;
+            setTimeout(() => this.ad.input.img.value = ad.img, 1000);
+        } else {
+            this.state.id = 0;
+            this.ad.input.name.value = '';
+            this.ad.input.categ.value = '';
+            this.ad.input.price.value = format.float(0);
+            this.ad.input.desc.value = '';
+            this.ad.input.img.reset();
+        }
     },
 
 });

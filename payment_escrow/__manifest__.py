@@ -39,5 +39,8 @@
             'payment_escrow/static/src/scss/page.scss',
             'payment_escrow/static/src/js/page.js',
         ],
+        'web.assets_qweb': [
+            'payment_escrow/static/src/xml/templates.xml',
+        ],
     },
 }

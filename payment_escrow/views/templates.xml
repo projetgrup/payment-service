@@ -152,7 +152,7 @@
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
                                 <div class="escrow-ad-nav-control">
-                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.form"><i class="fa fa-plus mr8"/>Add New Ad</button>
+                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.create"><i class="fa fa-plus mr8"/>Add New Ad</button>
                                     <div class="escrow-ad-nav-buttons">
                                         <button class="btn escrow-ad-nav-button-secondary active" data-view="list" field="ad.button.list">List</button>
                                         <button class="btn escrow-ad-nav-button-secondary" data-view="grid" field="ad.button.grid">Grid</button>
@@ -168,7 +168,7 @@
                                     <div/>
                                 </div>
                                 <t t-foreach="ads" t-as="ad">
-                                    <div class="escrow-ad-list-row" t-att-data-id="ad.id" data-value="" field="ad.item">
+                                    <div class="escrow-ad-list-item" t-att-data-id="ad.id" data-value="" field="ad.item">
                                         <div class="escrow-ad-item-info">
                                             <div class="escrow-ad-item-image">
                                                 <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
@@ -186,17 +186,17 @@
                             <div class="escrow-ad-grid grid-view" field="ad.view.grid">
                                 <div class="escrow-ad-grid-container">
                                     <t t-foreach="ads" t-as="ad">
-                                        <div class="escrow-ad-grid-cell" t-att-data-id="ad.id" field="ad.item">
-                                            <div class="escrow-ad-grid-cell-header">
+                                        <div class="escrow-ad-grid-item" t-att-data-id="ad.id" field="ad.item">
+                                            <div class="escrow-ad-grid-item-header">
                                                 <div class="escrow-ad-figure">
                                                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
                                                 </div>
                                                 <span t-esc="ad.name" name="name"/>
                                             </div>
-                                            <div class="escrow-ad-grid-cell-body">
-                                                <div class="escrow-ad-grid-cell-body-categ" t-esc="ad.categ_id.name" name="categ"/>
-                                                <div class="escrow-ad-grid-cell-body-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" name="price"/>
-                                                <div class="escrow-ad-grid-cell-body-status"><span class="danger">Satıldı</span></div>
+                                            <div class="escrow-ad-grid-item-body">
+                                                <div class="escrow-ad-grid-item-categ" t-esc="ad.categ_id.name" name="categ"/>
+                                                <div class="escrow-ad-grid-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" name="price"/>
+                                                <div class="escrow-ad-grid-item-status"><span class="danger">Satıldı</span></div>
                                             </div>
                                         </div>
                                     </t>
