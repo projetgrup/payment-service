@@ -171,7 +171,7 @@
                                     <div class="escrow-ad-list-row" t-att-data-id="ad.id" data-value="" field="ad.item">
                                         <div class="escrow-ad-item-info">
                                             <div class="escrow-ad-item-image">
-                                                <img t-att-src="'/web/image/product.product/%s/logo' % ad.id" alt=""/>
+                                                <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt=""/>
                                             </div>
                                             <span class="escrow-ad-item-name" t-esc="ad.name"/>
                                         </div>
@@ -189,7 +189,7 @@
                                         <div class="escrow-ad-grid-cell" t-att-data-id="ad.id" field="ad.item">
                                             <div class="escrow-ad-grid-cell-header">
                                                 <div class="escrow-ad-figure">
-                                                    <img t-att-src="'/web/image/product.product/%s/logo' % ad.id" alt=""/>
+                                                    <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt=""/>
                                                 </div>
                                                 <span t-esc="ad.name"/>
                                             </div>
@@ -229,10 +229,7 @@
                                         <label for="adInputCateg"><span>Category</span></label>
                                     </div>
                                     <div class="field-img">
-                                        <div>
-                                            <img src="/payment_jetcheckout/static/src/img/placeholder.png" alt=""/>
-                                        </div>
-                                        <input type="file" field="ad.input.img"/>
+                                        <input type="file" class="filepond" name="filepond" accept="image/png, image/jpeg, image/gif" field="ad.input.img"/>
                                     </div>
                                     <div class="field-container field-price">
                                         <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="text-center"/>

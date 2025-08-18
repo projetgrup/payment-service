@@ -66,7 +66,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     allowMultiple: false,
                     accept: 'image/*',
                     maxFileSize: '5MB',
-                    el: document.querySelector('.escrow-ad-form .field-img img'),
                 }),
                 name: new fields.string(),
                 desc: new fields.html({
@@ -208,7 +207,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.ad.input.categ.value = ad.categ.id;
         this.ad.input.price.value = ad.price;
         this.ad.input.desc.value = ad.desc;
-        this.ad.input.img.el.src = ad.img;
+        //this.ad.input.img.$.data('id', id);
     },
 
 });

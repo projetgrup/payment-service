@@ -74,3 +74,7 @@ class PayloxSystemEscrowController(Controller):
             'Pragma': 'no-cache',
             'Expires': '-1'
         })
+
+    @route(['/my/ad/<int:id>/image'], type='http', auth='public')
+    def page_my_ad_image(self, id):
+        return request.env['ir.http'].sudo()._content_image(xmlid=None, model='product.product', res_id=id, field='image_1920', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
