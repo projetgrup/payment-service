@@ -75,6 +75,34 @@ class PayloxSystemEscrowController(Controller):
             'Expires': '-1'
         })
 
-    @route(['/my/ad/<int:id>/image'], type='http', auth='public')
+    @route(['/my/ad/<int:id>/image'], type='http', auth='user')
     def page_my_ad_image(self, id):
         return request.env['ir.http'].sudo()._content_image(xmlid=None, model='product.product', res_id=id, field='image_1920', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
+
+    @route(['/my/ad/save'], type='json', auth='user', website=True)
+    def page_my_ad_save(self, **kwargs):
+        product = request.env['product.product'].sudo().with_context(system='escrow').search([
+            ('id', '=', kwargs['id']),
+            ('broker_id', '=', request.env.user.partner_id.id),
+            ('company_id', '=', request.env.company.id),
+        ])
+        if not product:
+            return {'error': _('Product cannot be found, or you are not allowed to save it.')}
+
+        values = {}
+        if 'name' in kwargs and product.name != kwargs['name']:
+            values.update({'name': kwargs['name']})
+        if 'categ' in kwargs and product.categ_id.id != kwargs['categ']:
+            values.update({'categ_id': kwargs['categ']})
+        if 'price' in kwargs and product.name != kwargs['price']:
+            values.update({'price': kwargs['price']})
+        if 'desc' in kwargs and product.description != kwargs['desc']:
+            values.update({'description': kwargs['desc']})
+        if 'img' in kwargs and product.image_1920 != kwargs['img']:
+            values.update({'image_1920': kwargs['img']})
+        if values:
+            product.write(values)
+
+        return {
+            'id': product.id,
+        }

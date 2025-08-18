@@ -1,6 +1,7 @@
 /** @odoo-module alias=paylox.system.escrow **/
 'use strict';
 
+import rpc from 'web.rpc';
 import core from 'web.core';
 import publicWidget from 'web.public.widget';
 import framework from 'paylox.framework';
@@ -21,6 +22,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._super(parent, options);
         this.values = {
             ads: {},
+        };
+        this.state = {
+            id: 0,
         };
         this.currency = {
             id: 0,
@@ -59,6 +63,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 edit: new fields.element({
                     events: [['click', this._onClickButtonEdit]],
+                }),
+                save: new fields.element({
+                    events: [['click', this._onClickButtonSave]],
                 }),
             },
             input: {
@@ -105,12 +112,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 id: $this.data('id'),
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
-                categ: {id: categ.data('id'), name: categ.text().trim()},
-                price: $this.find('.escrow-ad-item-price').text().trim(),
+                categ: { id: categ.data('id'), name: categ.text().trim() },
+                price: parseFloat($this.find('.escrow-ad-item-price').data('value')),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 desc: $this.find('.escrow-ad-item-desc').html().trim(),
             };
         });
+    },
+
+    _updateAds: function (value) {
+        const $items = this.ad.item.$.filter(`[data-id=${value.id}]`);
+        console.log(this.ad.item.$);
+        console.log($items);
+        this.values.ads[value.id]['name'] = value.name;
+        if ($items.length) {
+            $items.find('[name=name]').text(value.name);
+        }
     },
 
     _onClickButtonSidebarToggle: function (ev) {
@@ -129,7 +146,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._onClickButtonSidebarToggle();
     },
 
-    
     _activateView: function (view) {
         if (!this.ad.button[view].$.hasClass('active')) {
             for (const v of ['form', 'grid', 'list']) {
@@ -176,6 +192,44 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._onClickSideback();
     },
 
+    _onClickButtonSave: function (ev) {
+        framework.showLoading();
+        let params = {
+            id: this.state.id,
+            name: this.ad.input.name.value,
+            categ: this.ad.input.categ.value,
+            price: this.ad.input.price.value,
+            desc: this.ad.input.desc.value,
+            img: this.ad.input.img.value,
+        }
+        rpc.query({ route: '/my/ad/save', params }).then((result) => {
+            if ('error' in result) {
+                this.displayNotification({
+                    type: 'warning',
+                    title: _t('Warning'),
+                    message: _t('An error occured.') + ' ' + result.error,
+                });
+            } else {
+                params.id = result.id;
+                this._updateAds(params);
+                this._activateView('list');
+                this.displayNotification({
+                    type: 'success',
+                    title: _t('Success'),
+                    message: this.state.id ? _t('Ad has been added.') : _t('Ad has been saved.'),
+                });
+            }
+        }).guardedCatch(() => {
+            this.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('An error occured. Please contact with your system administrator.'),
+            });
+        }).finally(() => {
+            framework.hideLoading();
+        });
+    },
+
     _onClickAd: function (ev) {
         this._onClickButtonSidebarToggle({ currentTarget: { dataset: { value: 'items'}}});
 
@@ -186,12 +240,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-img').attr('src', value.img);
             $item.find('.escrow-ad-item-name').text(value.name);
             $item.find('.escrow-ad-item-categ').text(value.categ.name);
-            $item.find('.escrow-ad-item-price').text(value.price);
+            $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
             $item.find('.escrow-ad-item-state').html(value.state);
             $item.find('.escrow-ad-item-desc').html(value.desc);
             $item.find('.escrow-ad-button-edit').data('id', id);
         } else {
-            $item.find('.escrow-ad-item-img').attr('src', '/web/image/product.product/0/logo');
+            $item.find('.escrow-ad-item-img').attr('src', '/payment_jetcheckout/static/src/img/placeholder.png');
             $item.find('.escrow-ad-item-name').text(_('No ad found'));
             $item.find('.escrow-ad-item-categ').text('');
             $item.find('.escrow-ad-item-price').text('');
@@ -202,12 +256,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _prepareAd: function (id) {
+        this.state.id = parseInt(id);
         const ad = this.values.ads[id];
         this.ad.input.name.value = ad.name;
         this.ad.input.categ.value = ad.categ.id;
-        this.ad.input.price.value = ad.price;
+        this.ad.input.price.value = format.float(ad.price);
         this.ad.input.desc.value = ad.desc;
-        //this.ad.input.img.$.data('id', id);
+        setTimeout(() => this.ad.input.img.value = ad.img, 1000);
     },
 
 });
