@@ -705,4 +705,53 @@
             }
         }
     }
+
+    .escrow-seller-container {
+        display: flex;
+        justify-content: center;
+
+        .escrow-seller-info {
+            border-radius: 20px;
+            min-width: 500px;
+        }
+
+        .escrow-seller-header {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .escrow-seller-option {
+            border-radius: 10px;
+            max-width: 300px;
+            border: 2px solid #ddd;
+            padding: 4px;
+        }
+
+        .escrow-seller-input {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        label {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        input {
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            padding: 10px;
+        }
+
+        .escrow-seller-submit {
+            display: flex;
+            justify-content: center;
+            button {
+                border-radius: 30px !important;
+                padding: 0.8rem 3rem !important;
+            }
+        }
+
+    }
 }
