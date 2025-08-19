@@ -232,7 +232,7 @@ class Audit(models.Model):
                             AND table_name = '{self._table}'
                             AND column_name IN ({','.join(["'%s'" % key for key in keys])});
                         ''')
-                        res = request.cr.fetchone()
+                        res = self.env.cr.fetchone()
                         if res:
                             self.env.cr.execute(res[0])
                             res = self.env.cr.dictfetchall()
