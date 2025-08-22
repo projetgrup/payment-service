@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from datetime import date
 
 
 class ProductTemplate(models.Model):
@@ -12,6 +14,18 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    # Escrow Car relations and attributes
+    escrow_car_brand_id = fields.Many2one('escrow.car.brand', string='Car Brand')
+    escrow_car_model_id = fields.Many2one('escrow.car.model', string='Car Model')
+    escrow_car_model_year = fields.Char(string='Car Model Year')
+    escrow_car_vin = fields.Char(string='Chassis (VIN)')
+    escrow_car_plate = fields.Char(string='License Plate')
+    escrow_owner_id = fields.Many2one('res.partner', string='Owner', domain=[('system', '=', 'escrow')])
+    escrow_customer_id = fields.Many2one('res.partner', string='Customer', domain=[('paylox_escrow_type', '=', 'customer')])
+    escrow_partner_id = fields.Many2one('res.partner', string='Partner', domain=[('system', '=', 'escrow')])
+
+    # No numeric constraint needed since Year is a record now
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

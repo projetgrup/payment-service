@@ -64,7 +64,7 @@
     <field name="name">product.product.escrow.ad.form</field>
     <field name="model">product.product</field>
     <field name="arch" type="xml">
-        <form>
+    <form>
             <sheet>
                 <field name="is_product_variant" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -97,9 +97,24 @@
                         <field name="purchase_ok" invisible="1"/>
                         <field name="product_variant_id" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
+                        <field name="escrow_owner_id" string="Owner"/>
+                        <field name="escrow_customer_id" string="Customer"/>
                     </group>
                 </group>
                 <notebook>
+                    <page name="car" string="Car">
+                        <group>
+                            <group>
+                                <field name="escrow_car_brand_id"/>
+                                <field name="escrow_car_model_id" domain="[('brand_id','=',escrow_car_brand_id)]"/>
+                                <field name="escrow_car_model_year"/>
+                            </group>
+                            <group>
+                                <field name="escrow_car_vin"/>
+                                <field name="escrow_car_plate"/>
+                            </group>
+                        </group>
+                    </page>
                     <page name="description" string="Description">
                         <field name="description"/>
                     </page>

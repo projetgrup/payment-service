@@ -7,3 +7,5 @@ from . import product
 from . import transaction
 from . import sale
 from . import item
+from . import car_brand
+from . import car_model

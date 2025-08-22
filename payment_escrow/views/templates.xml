@@ -8,109 +8,201 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page payment-api-page payment-escrow navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
-            <div class="header row mx-0 card border p-2 px-lg-5">
-                <div class="px-xl-3 mx-xl-auto mw-xl-128">
-                    <img t-att-src="'/web/image/res.company/%s/logo' % tx.company_id.id" t-att-alt="tx.company_id.name"/>
+            <div class="escrow-ad-wrapper">
+                <div class="header">
+                    <div class="header__logo">
+                        <img t-att-src="'/web/image/res.company/%s/logo' % tx.company_id.id" height="30" t-att-alt="tx.company_id.name"/>
+                    </div>
+                    <div class="header__help">
+                        <button class="header__settingsBtn btn text-600" type="button" data-value="settings" field="ad.button.sidebar.toggle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill=""
+                                xmlns="http://www.w3.org/2000/svg" icon="settings" class="icon settings">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 8.25C9.92894 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92894 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25ZM9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z" fill="#1C274C"></path>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9747 1.25C11.5303 1.24999 11.1592 1.24999 10.8546 1.27077C10.5375 1.29241 10.238 1.33905 9.94761 1.45933C9.27379 1.73844 8.73843 2.27379 8.45932 2.94762C8.31402 3.29842 8.27467 3.66812 8.25964 4.06996C8.24756 4.39299 8.08454 4.66251 7.84395 4.80141C7.60337 4.94031 7.28845 4.94673 7.00266 4.79568C6.64714 4.60777 6.30729 4.45699 5.93083 4.40743C5.20773 4.31223 4.47642 4.50819 3.89779 4.95219C3.64843 5.14353 3.45827 5.3796 3.28099 5.6434C3.11068 5.89681 2.92517 6.21815 2.70294 6.60307L2.67769 6.64681C2.45545 7.03172 2.26993 7.35304 2.13562 7.62723C1.99581 7.91267 1.88644 8.19539 1.84541 8.50701C1.75021 9.23012 1.94617 9.96142 2.39016 10.5401C2.62128 10.8412 2.92173 11.0602 3.26217 11.2741C3.53595 11.4461 3.68788 11.7221 3.68786 12C3.68785 12.2778 3.53592 12.5538 3.26217 12.7258C2.92169 12.9397 2.62121 13.1587 2.39007 13.4599C1.94607 14.0385 1.75012 14.7698 1.84531 15.4929C1.88634 15.8045 1.99571 16.0873 2.13552 16.3727C2.26983 16.6469 2.45535 16.9682 2.67758 17.3531L2.70284 17.3969C2.92507 17.7818 3.11058 18.1031 3.28089 18.3565C3.45817 18.6203 3.64833 18.8564 3.89769 19.0477C4.47632 19.4917 5.20763 19.6877 5.93073 19.5925C6.30717 19.5429 6.647 19.3922 7.0025 19.2043C7.28833 19.0532 7.60329 19.0596 7.8439 19.1986C8.08452 19.3375 8.24756 19.607 8.25964 19.9301C8.27467 20.3319 8.31403 20.7016 8.45932 21.0524C8.73843 21.7262 9.27379 22.2616 9.94761 22.5407C10.238 22.661 10.5375 22.7076 10.8546 22.7292C11.1592 22.75 11.5303 22.75 11.9747 22.75H12.0252C12.4697 22.75 12.8407 22.75 13.1454 22.7292C13.4625 22.7076 13.762 22.661 14.0524 22.5407C14.7262 22.2616 15.2616 21.7262 15.5407 21.0524C15.686 20.7016 15.7253 20.3319 15.7403 19.93C15.7524 19.607 15.9154 19.3375 16.156 19.1985C16.3966 19.0596 16.7116 19.0532 16.9974 19.2042C17.3529 19.3921 17.6927 19.5429 18.0692 19.5924C18.7923 19.6876 19.5236 19.4917 20.1022 19.0477C20.3516 18.8563 20.5417 18.6203 20.719 18.3565C20.8893 18.1031 21.0748 17.7818 21.297 17.3969L21.3223 17.3531C21.5445 16.9682 21.7301 16.6468 21.8644 16.3726C22.0042 16.0872 22.1135 15.8045 22.1546 15.4929C22.2498 14.7697 22.0538 14.0384 21.6098 13.4598C21.3787 13.1586 21.0782 12.9397 20.7378 12.7258C20.464 12.5538 20.3121 12.2778 20.3121 11.9999C20.3121 11.7221 20.464 11.4462 20.7377 11.2742C21.0783 11.0603 21.3788 10.8414 21.6099 10.5401C22.0539 9.96149 22.2499 9.23019 22.1547 8.50708C22.1136 8.19546 22.0043 7.91274 21.8645 7.6273C21.7302 7.35313 21.5447 7.03183 21.3224 6.64695L21.2972 6.60318C21.0749 6.21825 20.8894 5.89688 20.7191 5.64347C20.5418 5.37967 20.3517 5.1436 20.1023 4.95225C19.5237 4.50826 18.7924 4.3123 18.0692 4.4075C17.6928 4.45706 17.353 4.60782 16.9975 4.79572C16.7117 4.94679 16.3967 4.94036 16.1561 4.80144C15.9155 4.66253 15.7524 4.39297 15.7403 4.06991C15.7253 3.66808 15.686 3.2984 15.5407 2.94762C15.2616 2.27379 14.7262 1.73844 14.0524 1.45933C13.762 1.33905 13.4625 1.29241 13.1454 1.27077C12.8407 1.24999 12.4697 1.24999 12.0252 1.25H11.9747Z" fill="#1C274C"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="px-lg-5 mx-xl-auto mw-xl-128">
-                <t t-call="payment_jetcheckout_system.payment_state">
-                    <t t-set="classes" t-value="'mx-0'"/>
-                    <t t-set="hide_button_payment" t-value="True"/>
-                    <t t-set="hide_report_iframe" t-value="True"/>
+                <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+
+                <!-- Payment Steps - Using Template Component -->
+                <t t-call="payment_escrow.steps_container_template">
+                    <t t-set="container_class" t-value="'d-none'"/>
+                    <t t-set="container_id" t-value="'payment-steps'"/>
+                    <t t-set="step_1_class" t-value="'-completed'"/>
+                    <t t-set="step_1_edit" t-value="True"/>
+                    <t t-set="step_2_class" t-value="'-completed'"/>
+                    <t t-set="step_3_class" t-value="'-completed'"/>
+                    <t t-set="step_3_edit" t-value="True"/>
+                    <t t-set="step_4_class" t-value="'-active'"/>
+                    <t t-set="step_5_class" t-value="''"/>
                 </t>
-                <div class="row mx-0 my-4 card border shadow p-4">
-                    <div class="text-center text-primary h5 font-weight-bold position-relative">
-                        <a t-if="not tx_pending and back_url" class="btn card d-block ml-3 position-absolute shadow-sm text-600" t-att-href="back_url"><i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>Back</a>
+                <div class="px-lg-5 mx-xl-auto mw-xl-128">
+                    <t t-call="payment_jetcheckout_system.payment_state">
+                        <t t-set="classes" t-value="'mx-0'"/>
+                        <t t-set="hide_button_payment" t-value="True"/>
+                        <t t-set="hide_report_iframe" t-value="True"/>
+                    </t>
+                    <div class="row mx-0 my-4 card border shadow p-4">
+                        <div class="text-center text-primary h5 font-weight-bold position-relative">
+                            <a t-if="not tx_pending and back_url" class="btn card d-block ml-3 position-absolute shadow-sm text-600" t-att-href="back_url">
+                                <i class="fa fa-arrow-left text-primary mr-3" t-translations="off"/>
+                                Back
+                            </a>
                         Payment Information
-                    </div>
-                    <div class="row mx-0 my-2">
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon">
-                                    <i class="fa fa-info"/>
+                        </div>
+                        <div class="row mx-0 my-2">
+                            <div class="col-md-6 p-3">
+                                <div class="border card info-card p-4 h-100">
+                                    <div class="position-absolute info-icon">
+                                        <i class="fa fa-info"/>
+                                    </div>
+                                    <div>
+                                        <strong class="text-primary font-weight-bold">Customer</strong>
+                                        <p class="mr-5 pr-5">
+                                            <t t-esc="tx.partner_name"/>
+                                            <br/>
+                                            <t t-esc="tx.partner_address"/>
+                                            <t t-if="tx.partner_state_id">
+                                                <t t-esc="tx.partner_state_id.name"/>
+                                                <t t-esc="tx.partner_country_id.name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="tx.partner_country_id.name"/>
+                                            </t>
+                                        </p>
+                                    </div>
+                                    <div t-if="tx.jetcheckout_api_contact">
+                                        <strong class="text-primary font-weight-bold">Contact</strong>
+                                        <p>
+                                            <t t-esc="tx.jetcheckout_api_contact"/>
+                                            <br/>
+                                            <t t-esc="tx.partner_email"/>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <strong class="text-primary font-weight-bold">Customer</strong>
-                                    <p class="mr-5 pr-5">
-                                        <t t-esc="tx.partner_name"/><br/>
-                                        <t t-esc="tx.partner_address"/> <t t-if="tx.partner_state_id"><t t-esc="tx.partner_state_id.name"/> / <t t-esc="tx.partner_country_id.name"/></t><t t-else=""><t t-esc="tx.partner_country_id.name"/></t>
-                                    </p>
-                                </div>
-                                <div t-if="tx.jetcheckout_api_contact">
-                                    <strong class="text-primary font-weight-bold">Contact</strong>
-                                    <p>
-                                        <t t-esc="tx.jetcheckout_api_contact"/><br/>
-                                        <t t-esc="tx.partner_email"/>
-                                    </p>
+                            </div>
+                            <div class="col-md-6 p-3">
+                                <div class="border card info-card p-4 h-100">
+                                    <div class="position-absolute info-icon">
+                                        <i class="fa fa-shopping-basket"/>
+                                    </div>
+                                    <div t-if="len(tx.paylox_product_ids) == 1 and tx.paylox_product_ids[0]['qty'] &lt;= 1.0">
+                                        <strong class="text-primary font-weight-bold z-index-1">Product</strong>
+                                        <p class="z-index-1">
+                                            <t t-esc="tx.paylox_product_ids[0]['product_id']['name']"/>
+                                        </p>
+                                    </div>
+                                    <div t-elif="tx.jetcheckout_api_order">
+                                        <strong class="text-primary font-weight-bold z-index-1">Reference</strong>
+                                        <p class="z-index-1">
+                                            <t t-esc="tx.jetcheckout_api_order"/>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="text-right mt-3 mb-0">
+                                            <strong class="text-primary font-weight-bold text-right z-index-1 mt-5">Amount</strong>
+                                        </p>
+                                        <p class="h3 text-right font-weight-bold z-index-1">
+                                            <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 p-3">
-                            <div class="border card info-card p-4 h-100">
-                                <div class="position-absolute info-icon">
-                                    <i class="fa fa-shopping-basket"/>
-                                </div>
-                                <div t-if="len(tx.paylox_product_ids) == 1 and tx.paylox_product_ids[0]['qty'] &lt;= 1.0">
-                                    <strong class="text-primary font-weight-bold z-index-1">Product</strong>
-                                    <p class="z-index-1">
-                                        <t t-esc="tx.paylox_product_ids[0]['product_id']['name']"/>
-                                    </p>
-                                </div>
-                                <div t-elif="tx.jetcheckout_api_order">
-                                    <strong class="text-primary font-weight-bold z-index-1">Reference</strong>
-                                    <p class="z-index-1">
-                                        <t t-esc="tx.jetcheckout_api_order"/>
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-right mt-3 mb-0">
-                                        <strong class="text-primary font-weight-bold text-right z-index-1 mt-5">Amount</strong>
-                                    </p>
-                                    <p class="h3 text-right font-weight-bold z-index-1">
-                                        <t t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
-                        <div class="card table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th class="text-right">Price</th>
-                                        <!--<th class="text-right">Quantity</th>
+                        <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
+                            <div class="card table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-right">Price</th>
+                                            <!--<th class="text-right">Quantity</th>
                                         <th></th>
                                         <th class="text-right">Total</th>-->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="tx.paylox_product_ids" t-as="product">
-                                        <tr>
-                                            <td><span t-esc="product.product_id.name"/></td>
-                                            <td class="text-right"><span t-esc="product.price" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>
-                                            <!--<td class="text-right"><span t-esc="product.qty" t-options="{'widget': 'float', 'precision': 2}"/></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="tx.paylox_product_ids" t-as="product">
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="product.product_id.name"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="product.price" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                                </td>
+                                                <!--<td class="text-right"><span t-esc="product.qty" t-options="{'widget': 'float', 'precision': 2}"/></td>
                                             <td><span t-esc="product.uom or ''"/></td>
                                             <td class="text-right"><span t-esc="product.price * product.qty" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>-->
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <t t-raw="product.product_id.description"/>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <t t-raw="product.product_id.description"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div t-if="tx.state in ('draft', 'pending', 'error')" t-attf-class="row mx-0 #{classname}">
+                            <t t-call="payment_jetcheckout.s2s">
+                                <t t-set="amount" t-value="tx.amount"/>
+                                <t t-set="no_border" t-value="True"/>
+                                <t t-set="partner" t-value="partner"/>
+                            </t>
                         </div>
                     </div>
-                    <div t-if="tx.state in ('draft', 'pending', 'error')" t-attf-class="row mx-0 #{classname}">
-                        <t t-call="payment_jetcheckout.s2s">
-                            <t t-set="amount" t-value="tx.amount"/>
-                            <t t-set="no_border" t-value="True"/>
-                            <t t-set="partner" t-value="partner"/>
-                        </t>
+                </div>
+            </div>            <!-- /.escrow-ad-wrapper -->
+            <div class="escrow-ad-sideback d-none" field="ad.sideback"/>
+            <div class="escrow-ad-sidebar" field="ad.sidebar">
+                <button class="btn" field="ad.button.sidebar.toggle">
+                    <i class="fa fa-2x fa-times"/>
+                </button>
+                <div class="escrow-ad-sidebar-section escrow-ad-sidebar-settings">
+                    <div class="escrow-ad-sidebar-settings-theme my-4">
+                        <div>
+                            <strong>Views Setting</strong>
+                            <p>You can update the application's theme from here.</p>
+                        </div>
+                        <div>
+                            <div>
+                                <button class="btn" data-value="light" field="ad.button.sidebar.theme">Light</button>
+                                <button class="btn" data-value="dark" field="ad.button.sidebar.theme">Dark</button>
+                                <button class="btn active" data-value="system" field="ad.button.sidebar.theme">System</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="escrow-ad-sidebar-settings-lang my-4">
+                        <div>
+                            <strong>Application Language</strong>
+                            <p>You can update the application's language from here.</p>
+                        </div>
+                        <div>
+                            <div>
+                                <button class="btn active" data-value="tr" field="ad.button.sidebar.lang">Turkish</button>
+                                <button class="btn" data-value="en" field="ad.button.sidebar.theme.lang">English</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="escrow-ad-sidebar-settings-help my-4">
+                        <div>
+                            <strong>Help Center</strong>
+                            <p>You can submit your support requests by contacting us 24/7.</p>
+                        </div>
+                        <button class="btn btn-block text-left">
+                            <i class="fa fa-question pr-2"/>
+                            <span>Help</span>
+                        </button>
+                        <button class="btn btn-block text-left">
+                            <i class="fa fa-life-bouy pr-2"/>
+                            <span>Support Request</span>
+                        </button>
+                        <button class="btn btn-block text-left">
+                            <i class="fa fa-phone pr-2"/>
+                            <span>Contact Us</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -129,68 +221,31 @@
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-call="payment_jetcheckout.payment_loading"/>
             <div class="escrow-ad-wrapper">
-                <div class="header row mx-0 border p-2 px-lg-5 mb-4 justify-content-between shadow-sm">
-                    <div class="px-xl-3 mx-xl-auto d-flex align-items-center">
+                <div class="header">
+                    <div class="header__logo">
                         <img t-att-src="'/web/image/res.company/%s/logo' % company.id" height="30" t-att-alt="company.name"/>
                     </div>
-                    <div class="px-xl-3 mx-xl-auto">
-                        <button class="btn text-600" data-value="settings" field="ad.button.sidebar.toggle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg" icon="settings" class="icon settings">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M12 8.25C9.92894 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92894 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25ZM9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z"
-                                fill="#1C274C"></path>
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M11.9747 1.25C11.5303 1.24999 11.1592 1.24999 10.8546 1.27077C10.5375 1.29241 10.238 1.33905 9.94761 1.45933C9.27379 1.73844 8.73843 2.27379 8.45932 2.94762C8.31402 3.29842 8.27467 3.66812 8.25964 4.06996C8.24756 4.39299 8.08454 4.66251 7.84395 4.80141C7.60337 4.94031 7.28845 4.94673 7.00266 4.79568C6.64714 4.60777 6.30729 4.45699 5.93083 4.40743C5.20773 4.31223 4.47642 4.50819 3.89779 4.95219C3.64843 5.14353 3.45827 5.3796 3.28099 5.6434C3.11068 5.89681 2.92517 6.21815 2.70294 6.60307L2.67769 6.64681C2.45545 7.03172 2.26993 7.35304 2.13562 7.62723C1.99581 7.91267 1.88644 8.19539 1.84541 8.50701C1.75021 9.23012 1.94617 9.96142 2.39016 10.5401C2.62128 10.8412 2.92173 11.0602 3.26217 11.2741C3.53595 11.4461 3.68788 11.7221 3.68786 12C3.68785 12.2778 3.53592 12.5538 3.26217 12.7258C2.92169 12.9397 2.62121 13.1587 2.39007 13.4599C1.94607 14.0385 1.75012 14.7698 1.84531 15.4929C1.88634 15.8045 1.99571 16.0873 2.13552 16.3727C2.26983 16.6469 2.45535 16.9682 2.67758 17.3531L2.70284 17.3969C2.92507 17.7818 3.11058 18.1031 3.28089 18.3565C3.45817 18.6203 3.64833 18.8564 3.89769 19.0477C4.47632 19.4917 5.20763 19.6877 5.93073 19.5925C6.30717 19.5429 6.647 19.3922 7.0025 19.2043C7.28833 19.0532 7.60329 19.0596 7.8439 19.1986C8.08452 19.3375 8.24756 19.607 8.25964 19.9301C8.27467 20.3319 8.31403 20.7016 8.45932 21.0524C8.73843 21.7262 9.27379 22.2616 9.94761 22.5407C10.238 22.661 10.5375 22.7076 10.8546 22.7292C11.1592 22.75 11.5303 22.75 11.9747 22.75H12.0252C12.4697 22.75 12.8407 22.75 13.1454 22.7292C13.4625 22.7076 13.762 22.661 14.0524 22.5407C14.7262 22.2616 15.2616 21.7262 15.5407 21.0524C15.686 20.7016 15.7253 20.3319 15.7403 19.93C15.7524 19.607 15.9154 19.3375 16.156 19.1985C16.3966 19.0596 16.7116 19.0532 16.9974 19.2042C17.3529 19.3921 17.6927 19.5429 18.0692 19.5924C18.7923 19.6876 19.5236 19.4917 20.1022 19.0477C20.3516 18.8563 20.5417 18.6203 20.719 18.3565C20.8893 18.1031 21.0748 17.7818 21.297 17.3969L21.3223 17.3531C21.5445 16.9682 21.7301 16.6468 21.8644 16.3726C22.0042 16.0872 22.1135 15.8045 22.1546 15.4929C22.2498 14.7697 22.0538 14.0384 21.6098 13.4598C21.3787 13.1586 21.0782 12.9397 20.7378 12.7258C20.464 12.5538 20.3121 12.2778 20.3121 11.9999C20.3121 11.7221 20.464 11.4462 20.7377 11.2742C21.0783 11.0603 21.3788 10.8414 21.6099 10.5401C22.0539 9.96149 22.2499 9.23019 22.1547 8.50708C22.1136 8.19546 22.0043 7.91274 21.8645 7.6273C21.7302 7.35313 21.5447 7.03183 21.3224 6.64695L21.2972 6.60318C21.0749 6.21825 20.8894 5.89688 20.7191 5.64347C20.5418 5.37967 20.3517 5.1436 20.1023 4.95225C19.5237 4.50826 18.7924 4.3123 18.0692 4.4075C17.6928 4.45706 17.353 4.60782 16.9975 4.79572C16.7117 4.94679 16.3967 4.94036 16.1561 4.80144C15.9155 4.66253 15.7524 4.39297 15.7403 4.06991C15.7253 3.66808 15.686 3.2984 15.5407 2.94762C15.2616 2.27379 14.7262 1.73844 14.0524 1.45933C13.762 1.33905 13.4625 1.29241 13.1454 1.27077C12.8407 1.24999 12.4697 1.24999 12.0252 1.25H11.9747ZM10.5216 2.84515C10.5988 2.81319 10.716 2.78372 10.9567 2.76729C11.2042 2.75041 11.5238 2.75 12 2.75C12.4762 2.75 12.7958 2.75041 13.0432 2.76729C13.284 2.78372 13.4012 2.81319 13.4783 2.84515C13.7846 2.97202 14.028 3.21536 14.1548 3.52165C14.1949 3.61826 14.228 3.76887 14.2414 4.12597C14.271 4.91835 14.68 5.68129 15.4061 6.10048C16.1321 6.51968 16.9974 6.4924 17.6984 6.12188C18.0143 5.9549 18.1614 5.90832 18.265 5.89467C18.5937 5.8514 18.9261 5.94047 19.1891 6.14228C19.2554 6.19312 19.3395 6.27989 19.4741 6.48016C19.6125 6.68603 19.7726 6.9626 20.0107 7.375C20.2488 7.78741 20.4083 8.06438 20.5174 8.28713C20.6235 8.50382 20.6566 8.62007 20.6675 8.70287C20.7108 9.03155 20.6217 9.36397 20.4199 9.62698C20.3562 9.70995 20.2424 9.81399 19.9397 10.0041C19.2684 10.426 18.8122 11.1616 18.8121 11.9999C18.8121 12.8383 19.2683 13.574 19.9397 13.9959C20.2423 14.186 20.3561 14.29 20.4198 14.373C20.6216 14.636 20.7107 14.9684 20.6674 15.2971C20.6565 15.3799 20.6234 15.4961 20.5173 15.7128C20.4082 15.9355 20.2487 16.2125 20.0106 16.6249C19.7725 17.0373 19.6124 17.3139 19.474 17.5198C19.3394 17.72 19.2553 17.8068 19.189 17.8576C18.926 18.0595 18.5936 18.1485 18.2649 18.1053C18.1613 18.0916 18.0142 18.045 17.6983 17.8781C16.9973 17.5075 16.132 17.4803 15.4059 17.8995C14.68 18.3187 14.271 19.0816 14.2414 19.874C14.228 20.2311 14.1949 20.3817 14.1548 20.4784C14.028 20.7846 13.7846 21.028 13.4783 21.1549C13.4012 21.1868 13.284 21.2163 13.0432 21.2327C12.7958 21.2496 12.4762 21.25 12 21.25C11.5238 21.25 11.2042 21.2496 10.9567 21.2327C10.716 21.2163 10.5988 21.1868 10.5216 21.1549C10.2154 21.028 9.97201 20.7846 9.84514 20.4784C9.80512 20.3817 9.77195 20.2311 9.75859 19.874C9.72896 19.0817 9.31997 18.3187 8.5939 17.8995C7.86784 17.4803 7.00262 17.5076 6.30158 17.8781C5.98565 18.0451 5.83863 18.0917 5.73495 18.1053C5.40626 18.1486 5.07385 18.0595 4.81084 17.8577C4.74458 17.8069 4.66045 17.7201 4.52586 17.5198C4.38751 17.314 4.22736 17.0374 3.98926 16.625C3.75115 16.2126 3.59171 15.9356 3.4826 15.7129C3.37646 15.4962 3.34338 15.3799 3.33248 15.2971C3.28921 14.9684 3.37828 14.636 3.5801 14.373C3.64376 14.2901 3.75761 14.186 4.0602 13.9959C4.73158 13.5741 5.18782 12.8384 5.18786 12.0001C5.18791 11.1616 4.73165 10.4259 4.06021 10.004C3.75769 9.81389 3.64385 9.70987 3.58019 9.62691C3.37838 9.3639 3.28931 9.03149 3.33258 8.7028C3.34348 8.62001 3.37656 8.50375 3.4827 8.28707C3.59181 8.06431 3.75125 7.78734 3.98935 7.37493C4.22746 6.96253 4.3876 6.68596 4.52596 6.48009C4.66055 6.27983 4.74468 6.19305 4.81093 6.14222C5.07395 5.9404 5.40636 5.85133 5.73504 5.8946C5.83873 5.90825 5.98576 5.95483 6.30173 6.12184C7.00273 6.49235 7.86791 6.51962 8.59394 6.10045C9.31998 5.68128 9.72896 4.91837 9.75859 4.12602C9.77195 3.76889 9.80512 3.61827 9.84514 3.52165C9.97201 3.21536 10.2154 2.97202 10.5216 2.84515Z"
-                                fill="#1C274C"></path>
+                    <div class="header__help">
+                        <button class="header__settingsBtn btn text-600" data-value="settings" field="ad.button.sidebar.toggle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill=""
+                                xmlns="http://www.w3.org/2000/svg" icon="settings" class="icon settings">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 8.25C9.92894 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92894 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25ZM9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z" fill="#1C274C"></path>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9747 1.25C11.5303 1.24999 11.1592 1.24999 10.8546 1.27077C10.5375 1.29241 10.238 1.33905 9.94761 1.45933C9.27379 1.73844 8.73843 2.27379 8.45932 2.94762C8.31402 3.29842 8.27467 3.66812 8.25964 4.06996C8.24756 4.39299 8.08454 4.66251 7.84395 4.80141C7.60337 4.94031 7.28845 4.94673 7.00266 4.79568C6.64714 4.60777 6.30729 4.45699 5.93083 4.40743C5.20773 4.31223 4.47642 4.50819 3.89779 4.95219C3.64843 5.14353 3.45827 5.3796 3.28099 5.6434C3.11068 5.89681 2.92517 6.21815 2.70294 6.60307L2.67769 6.64681C2.45545 7.03172 2.26993 7.35304 2.13562 7.62723C1.99581 7.91267 1.88644 8.19539 1.84541 8.50701C1.75021 9.23012 1.94617 9.96142 2.39016 10.5401C2.62128 10.8412 2.92173 11.0602 3.26217 11.2741C3.53595 11.4461 3.68788 11.7221 3.68786 12C3.68785 12.2778 3.53592 12.5538 3.26217 12.7258C2.92169 12.9397 2.62121 13.1587 2.39007 13.4599C1.94607 14.0385 1.75012 14.7698 1.84531 15.4929C1.88634 15.8045 1.99571 16.0873 2.13552 16.3727C2.26983 16.6469 2.45535 16.9682 2.67758 17.3531L2.70284 17.3969C2.92507 17.7818 3.11058 18.1031 3.28089 18.3565C3.45817 18.6203 3.64833 18.8564 3.89769 19.0477C4.47632 19.4917 5.20763 19.6877 5.93073 19.5925C6.30717 19.5429 6.647 19.3922 7.0025 19.2043C7.28833 19.0532 7.60329 19.0596 7.8439 19.1986C8.08452 19.3375 8.24756 19.607 8.25964 19.9301C8.27467 20.3319 8.31403 20.7016 8.45932 21.0524C8.73843 21.7262 9.27379 22.2616 9.94761 22.5407C10.238 22.661 10.5375 22.7076 10.8546 22.7292C11.1592 22.75 11.5303 22.75 11.9747 22.75H12.0252C12.4697 22.75 12.8407 22.75 13.1454 22.7292C13.4625 22.7076 13.762 22.661 14.0524 22.5407C14.7262 22.2616 15.2616 21.7262 15.5407 21.0524C15.686 20.7016 15.7253 20.3319 15.7403 19.93C15.7524 19.607 15.9154 19.3375 16.156 19.1985C16.3966 19.0596 16.7116 19.0532 16.9974 19.2042C17.3529 19.3921 17.6927 19.5429 18.0692 19.5924C18.7923 19.6876 19.5236 19.4917 20.1022 19.0477C20.3516 18.8563 20.5417 18.6203 20.719 18.3565C20.8893 18.1031 21.0748 17.7818 21.297 17.3969L21.3223 17.3531C21.5445 16.9682 21.7301 16.6468 21.8644 16.3726C22.0042 16.0872 22.1135 15.8045 22.1546 15.4929C22.2498 14.7697 22.0538 14.0384 21.6098 13.4598C21.3787 13.1586 21.0782 12.9397 20.7378 12.7258C20.464 12.5538 20.3121 12.2778 20.3121 11.9999C20.3121 11.7221 20.464 11.4462 20.7377 11.2742C21.0783 11.0603 21.3788 10.8414 21.6099 10.5401C22.0539 9.96149 22.2499 9.23019 22.1547 8.50708C22.1136 8.19546 22.0043 7.91274 21.8645 7.6273C21.7302 7.35313 21.5447 7.03183 21.3224 6.64695L21.2972 6.60318C21.0749 6.21825 20.8894 5.89688 20.7191 5.64347C20.5418 5.37967 20.3517 5.1436 20.1023 4.95225C19.5237 4.50826 18.7924 4.3123 18.0692 4.4075C17.6928 4.45706 17.353 4.60782 16.9975 4.79572C16.7117 4.94679 16.3967 4.94036 16.1561 4.80144C15.9155 4.66253 15.7524 4.39297 15.7403 4.06991C15.7253 3.66808 15.686 3.2984 15.5407 2.94762C15.2616 2.27379 14.7262 1.73844 14.0524 1.45933C13.762 1.33905 13.4625 1.29241 13.1454 1.27077C12.8407 1.24999 12.4697 1.24999 12.0252 1.25H11.9747ZM10.5216 2.84515C10.5988 2.81319 10.716 2.78372 10.9567 2.76729C11.2042 2.75041 11.5238 2.75 12 2.75C12.4762 2.75 12.7958 2.75041 13.0432 2.76729C13.284 2.78372 13.4012 2.81319 13.4783 2.84515C13.7846 2.97202 14.028 3.21536 14.1548 3.52165C14.1949 3.61826 14.228 3.76887 14.2414 4.12597C14.271 4.91835 14.68 5.68129 15.4061 6.10048C16.1321 6.51968 16.9974 6.4924 17.6984 6.12188C18.0143 5.9549 18.1614 5.90832 18.265 5.89467C18.5937 5.8514 18.9261 5.94047 19.1891 6.14228C19.2554 6.19312 19.3395 6.27989 19.4741 6.48016C19.6125 6.68603 19.7726 6.9626 20.0107 7.375C20.2488 7.78741 20.4083 8.06438 20.5174 8.28713C20.6235 8.50382 20.6566 8.62007 20.6675 8.70287C20.7108 9.03155 20.6217 9.36397 20.4199 9.62698C20.3562 9.70995 20.2424 9.81399 19.9397 10.0041C19.2684 10.426 18.8122 11.1616 18.8121 11.9999C18.8121 12.8383 19.2683 13.574 19.9397 13.9959C20.2423 14.186 20.3561 14.29 20.4198 14.373C20.6216 14.636 20.7107 14.9684 20.6674 15.2971C20.6565 15.3799 20.6234 15.4961 20.5173 15.7128C20.4082 15.9355 20.2487 16.2125 20.0106 16.6249C19.7725 17.0373 19.6124 17.3139 19.474 17.5198C19.3394 17.72 19.2553 17.8068 19.189 17.8576C18.926 18.0595 18.5936 18.1485 18.2649 18.1053C18.1613 18.0916 18.0142 18.045 17.6983 17.8781C16.9973 17.5075 16.132 17.4803 15.4059 17.8995C14.68 18.3187 14.271 19.0816 14.2414 19.874C14.228 20.2311 14.1949 20.3817 14.1548 20.4784C14.028 20.7846 13.7846 21.028 13.4783 21.1549C13.4012 21.1868 13.284 21.2163 13.0432 21.2327C12.7958 21.2496 12.4762 21.25 12 21.25C11.5238 21.25 11.2042 21.2496 10.9567 21.2327C10.716 21.2163 10.5988 21.1868 10.5216 21.1549C10.2154 21.028 9.97201 20.7846 9.84514 20.4784C9.80512 20.3817 9.77195 20.2311 9.75859 19.874C9.72896 19.0817 9.31997 18.3187 8.5939 17.8995C7.86784 17.4803 7.00262 17.5076 6.30158 17.8781C5.98565 18.0451 5.83863 18.0917 5.73495 18.1053C5.40626 18.1486 5.07385 18.0595 4.81084 17.8577C4.74458 17.8069 4.66045 17.7201 4.52586 17.5198C4.38751 17.314 4.22736 17.0374 3.98926 16.625C3.75115 16.2126 3.59171 15.9356 3.4826 15.7129C3.37646 15.4962 3.34338 15.3799 3.33248 15.2971C3.28921 14.9684 3.37828 14.636 3.5801 14.373C3.64376 14.2901 3.75761 14.186 4.0602 13.9959C4.73158 13.5741 5.18782 12.8384 5.18786 12.0001C5.18791 11.1616 4.73165 10.4259 4.06021 10.004C3.75769 9.81389 3.64385 9.70987 3.58019 9.62691C3.37838 9.3639 3.28931 9.03149 3.33258 8.7028C3.34348 8.62001 3.37656 8.50375 3.4827 8.28707C3.59181 8.06431 3.75125 7.78734 3.98935 7.37493C4.22746 6.96253 4.3876 6.68596 4.52596 6.48009C4.66055 6.27983 4.74468 6.19305 4.81093 6.14222C5.07395 5.9404 5.40636 5.85133 5.73504 5.8946C5.83873 5.90825 5.98576 5.95483 6.30173 6.12184C7.00273 6.49235 7.86791 6.51962 8.59394 6.10045C9.31998 5.68128 9.72896 4.91837 9.75859 4.12602C9.77195 3.76889 9.80512 3.61827 9.84514 3.52165C9.97201 3.21536 10.2154 2.97202 10.5216 2.84515Z" fill="#1C274C"></path>
                             </svg>
                         </button>
                     </div>
                 </div>
-                <div class="subheader row mx-0 mb-4 border-top border-bottom">
-                    <div>
-                        <div>
-                            <i class="fa fa-check"/>
-                        </div>
-                        <div>
-                            <strong>Seller Information</strong>
-                            <span>edit</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <i class="fa fa-check"/>
-                        </div>
-                        <div>
-                            <strong>Product Information</strong>
-                            <span>edit</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <i class="fa fa-check"/>
-                        </div>
-                        <div>
-                            <strong>Payment</strong>
-                            <span>edit</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <i class="fa fa-check"/>
-                        </div>
-                        <div>
-                            <strong>Done</strong>
-                            <span>edit</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="escrow-ad-container d-none">
-                    <div class="row justify-content-md-center">
+
+                <div class="escrow-ad-container">
+                    <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center">
                         <div class="escrow-ad-read col-12">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
                                 <div class="escrow-ad-nav-control">
-                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.create"><i class="fa fa-plus mr8"/>Add New Ad</button>
+                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.create">
+                                        <i class="fa fa-plus mr8"/>
+                                        Add New Ad
+                                    </button>
                                     <div class="escrow-ad-nav-buttons">
                                         <button class="btn escrow-ad-nav-button-secondary active" data-view="list" field="ad.button.list">List</button>
                                         <button class="btn escrow-ad-nav-button-secondary" data-view="grid" field="ad.button.grid">Grid</button>
@@ -206,7 +261,7 @@
                                     <div/>
                                 </div>
                                 <t t-foreach="ads" t-as="ad">
-                                    <div class="escrow-ad-list-item" t-att-data-id="ad.id" data-value="" field="ad.item">
+                                    <div class="escrow-ad-list-item" t-att-data-id="ad.id" data-value="" field="ad.item" t-att-data-vin="ad.escrow_car_vin or ''" t-att-data-plate="ad.escrow_car_plate or ''" t-att-data-brand-id="ad.escrow_car_brand_id.id" t-att-data-brand-name="ad.escrow_car_brand_id.name or ''" t-att-data-category-name="ad.categ_id.name or ''" t-att-data-model-id="ad.escrow_car_model_id.id" t-att-data-model-name="ad.escrow_car_model_id.name or ''" t-att-data-owner-id="ad.escrow_owner_id.id" t-att-data-customer-id="ad.escrow_customer_id.id" t-att-data-model-year="ad.escrow_car_model_year">
                                         <div class="escrow-ad-item-info">
                                             <div class="escrow-ad-item-image">
                                                 <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
@@ -215,8 +270,12 @@
                                         </div>
                                         <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"/>
                                         <div class="escrow-ad-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
-                                        <div class="escrow-ad-item-state"><span class="danger">Satıldı</span></div>
-                                        <div class="escrow-ad-item-arrow"><i class="fa fa-chevron-right"/></div>
+                                        <div class="escrow-ad-item-state">
+                                            <span class="success">New</span>
+                                        </div>
+                                        <div class="escrow-ad-item-arrow">
+                                            <i class="fa fa-chevron-right"/>
+                                        </div>
                                         <div class="escrow-ad-item-desc d-none" t-raw="ad.description" name="desc"/>
                                     </div>
                                 </t>
@@ -224,7 +283,7 @@
                             <div class="escrow-ad-grid grid-view" field="ad.view.grid">
                                 <div class="escrow-ad-grid-container">
                                     <t t-foreach="ads" t-as="ad">
-                                        <div class="escrow-ad-grid-item" t-att-data-id="ad.id" field="ad.item">
+                                        <div class="escrow-ad-grid-item" t-att-data-id="ad.id" field="ad.item" t-att-data-vin="ad.escrow_car_vin or ''" t-att-data-plate="ad.escrow_car_plate or ''" t-att-data-brand-id="ad.escrow_car_brand_id.id" t-att-data-brand-name="ad.escrow_car_brand_id.name or ''" t-att-data-model-id="ad.escrow_car_model_id.id" t-att-data-model-name="ad.escrow_car_model_id.name or ''" t-att-data-owner-id="ad.escrow_owner_id.id" t-att-data-customer-id="ad.escrow_customer_id.id" t-att-data-model-year="ad.escrow_car_model_year" t-att-data-category-name="ad.categ_id.name or ''">
                                             <div class="escrow-ad-grid-item-header">
                                                 <div class="escrow-ad-figure">
                                                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
@@ -234,7 +293,9 @@
                                             <div class="escrow-ad-grid-item-body">
                                                 <div class="escrow-ad-grid-item-categ" t-esc="ad.categ_id.name" name="categ"/>
                                                 <div class="escrow-ad-grid-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" name="price"/>
-                                                <div class="escrow-ad-grid-item-status"><span class="danger">Satıldı</span></div>
+                                                <div class="escrow-ad-grid-item-status">
+                                                    <span class="success">New</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </t>
@@ -245,7 +306,10 @@
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title"></h3>
                                 <div class="escrow-ad-nav-control">
-                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.save"><i class="fa fa-save mr8"/>Save</button>
+                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.save">
+                                        <i class="fa fa-save mr8"/>
+                                        Save
+                                    </button>
                                     <button class="btn escrow-ad-nav-button-secondary" data-view="list" field="ad.button.discard">Discard</button>
                                 </div>
                             </div>
@@ -254,7 +318,9 @@
                                     <div class="field-container field-name">
                                         <input id="adInputName" type="text" class="text-center" required="required" field="ad.input.name"/>
                                         <span class="bar-container"/>
-                                        <label for="adInputName"><span>Name</span></label>
+                                        <label for="adInputName">
+                                            <span>Name</span>
+                                        </label>
                                     </div>
                                     <div class="field-container field-categ">
                                         <select required="required" field="ad.input.categ" placeholder="Select a category">
@@ -264,7 +330,9 @@
                                             </t>
                                         </select>
                                         <span class="bar-container"/>
-                                        <label for="adInputCateg"><span>Category</span></label>
+                                        <label for="adInputCateg">
+                                            <span>Category</span>
+                                        </label>
                                     </div>
                                     <div class="field-img">
                                         <input type="file" class="filepond" name="filepond" accept="image/png, image/jpeg, image/gif" field="ad.input.img"/>
@@ -274,12 +342,16 @@
                                         <span class="bar-container"/>
                                         <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
                                         <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
-                                        <label for="adInputPrice"><span>Price</span></label>
+                                        <label for="adInputPrice">
+                                            <span>Price</span>
+                                        </label>
                                     </div>
                                     <div class="field-container field-desc">
                                         <textarea id="adInputDesc" style="min-height: 120px" class="form-control o_wysiwyg_loader" required="required" field="ad.input.desc"/>
                                         <span class="bar-container"/>
-                                        <label for="adInputDesc"><span>Description</span></label>
+                                        <label for="adInputDesc">
+                                            <span>Description</span>
+                                        </label>
                                     </div>
 
                                 </div>
@@ -288,47 +360,526 @@
                         <div class="escrow-ad-edit col-12">
                         </div>
                     </div>
-                </div>
-                <div class="escrow-seller-container">
-                    <div class="escrow-seller-info bg-100">
-                        <div class="escrow-seller-header py-3">Seller Information</div>
-                        <div class="escrow-seller-option d-flex bg-white mx-auto">
-                            <button class="btn bg-black flex-fill active">Individial</button>
-                            <button class="btn flex-fill">Corporate</button>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerName">Full Name</label>
-                            <input id="escrowSellerName" type="text" placeholder="FULL NAME"/>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerVat">Identity Number</label>
-                            <input id="escrowSellerVat" type="text" placeholder="XXXXXXXXXXX"/>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerBirthdate">Birth Date</label>
-                            <input id="escrowSellerBirthdate" type="text" placeholder="GG/AA/YYYY"/>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerMobile">Mobile Number</label>
-                            <input id="escrowSellerMobile" type="text" placeholder="+90 XXX XXX XX XX"/>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerEmail">Email Address</label>
-                            <input id="escrowSellerEmail" type="text" placeholder="ornek@mail.com"/>
-                        </div>
-                        <div class="escrow-seller-input">
-                            <label for="escrowSellerIban">IBAN to Transfer</label>
-                            <input id="escrowSellerIban" type="text" placeholder="TRXX XXXX XXXX XXXX XXXX XX"/>
-                        </div>
-                        <div class="escrow-seller-submit">
-                            <button class="btn font-weight-bold bg-black">Continue<i class="fa fa-long-arrow-right ml-3"/></button>
+                    <div class="escrow-wizard d-none" field="seller.wizard">
+                        <!-- Wizard Steps - Using Template Component -->
+                        <t t-call="payment_escrow.steps_container_template">
+                            <t t-set="container_class" t-value="'escrow-wizard-header'"/>
+                            <t t-set="step_1_class" t-value="'-active'"/>
+                            <t t-set="step_2_class" t-value="''"/>
+                            <t t-set="step_3_class" t-value="''"/>
+                            <t t-set="step_4_class" t-value="''"/>
+                            <t t-set="step_5_class" t-value="''"/>
+                        </t>
+
+                        <div class="row mx-0 w-100">
+                            <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center">
+                                <!-- Step 1: Seller Info (React-like) -->
+                                <div class="wizard-step wizard-step-1">
+                                    <div class="section">
+                                        <div class="panel">
+                                            <div class="panel__header">
+                                                <h3>Seller Information</h3>
+                                            </div>
+                                            <form action="#" id="sellerInfo" class="form">
+                                                <div class="radioTabSelector mb-3">
+                                                    <div class="radioTab">
+                                                        <label class="radioTab__label">
+                                                            <input type="radio" class="radioTab__control" name="userType" value="individual" data-type="individual" checked="checked"/>
+                                                            <span>Individual</span>
+                                                        </label>
+                                                        <label class="radioTab__label">
+                                                            <input type="radio" class="radioTab__control" name="userType" value="corporate" data-type="corporate"/>
+                                                            <span>Corporate</span>
+                                                        </label>
+                                                        <div class="radioTab__slider"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="corporate" class="wizard-section wizard-section-corporate d-none">
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="corporate_title">Company Title</label>
+                                                        <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="wizard_tax">Tax Number</label>
+                                                        <input class="form__control -letter" id="wizard_tax" name="taxnumber" type="text" placeholder="Tax Number" field="seller.input.tax_number"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label -between" for="wizard_iban_corp">
+                                                            <span>Transfer IBAN</span>
+                                                            <span class="form__loading d-none">
+                                                                <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24"
+                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
+                                                                        <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
+                                                                    </path>
+                                                                </svg>
+                                                            Verifying..
+                                                            </span>
+                                                        </label>
+                                                        <input class="form__control -letter" id="wizard_iban_corp" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_corporate"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="ibanaccountname_corporate">Transfer Account Name</label>
+                                                        <input class="form__control -letter" id="ibanaccountname_corporate" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_corporate"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="corporate_person">Authorized Person</label>
+                                                        <input class="form__control -letter" id="corporate_person" name="person" type="text" placeholder="Authorized Person" field="seller.input.corporate_person"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="phone_corporate">Authorized Mobile Phone</label>
+                                                        <input class="form__control -letter" id="phone_corporate" name="phone" type="text" placeholder="e.g: 532 123 3456" field="seller.input.phone_corporate"/>
+                                                    </div>
+                                                    <div class="form__group -mb-0">
+                                                        <label class="form__label" for="email_corporate">Authorized Email</label>
+                                                        <input class="form__control -letter" id="email_corporate" name="email" type="email" placeholder="example@mail.com" field="seller.input.email_corporate"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Individual Section -->
+                                                <div id="individual" class="wizard-section wizard-section-individual">
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="namesurname">Name Surname</label>
+                                                        <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
+                                                        <input class="form__control -letter" id="wizard_tckn" name="idendity" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                                                        <div class="form__error d-none">Please enter a valid TCKN.</div>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="birthdate">Birth Date</label>
+                                                        <input class="form__control -letter" id="birthdate" name="birthdate" type="text" placeholder="GG/AA/YYYY" field="seller.input.birthdate"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="phone_individual">Mobile Phone</label>
+                                                        <input class="form__control -letter" id="phone_individual" name="phone" type="text" placeholder="E.g.: 532 123 3456" field="seller.input.phone_individual"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="email_individual">E-Mail</label>
+                                                        <input class="form__control -letter" id="email_individual" name="email" type="email" placeholder="ornek@mail.com" field="seller.input.email_individual"/>
+                                                    </div>
+                                                    <div class="form__group">
+                                                        <label class="form__label -between" for="wizard_iban">
+                                                            <span>Transfer IBAN</span>
+                                                            <span class="form__loading d-none">
+                                                                <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24"
+                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
+                                                                        <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
+                                                                    </path>
+                                                                </svg>
+                                                                Checked...
+                                                            </span>
+                                                        </label>
+                                                        <input class="form__control -letter" id="wizard_iban" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_individual"/>
+                                                        <div class="form__error d-none">Please enter a valid IBAN.</div>
+                                                    </div>
+                                                    <div class="form__group -mb-0">
+                                                        <label class="form__label" for="ibanaccountname_individual">Transferring account name</label>
+                                                        <input class="form__control -letter" id="ibanaccountname_individual" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_individual"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form__group mt-3">
+                                                    <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                                                        Devam Et
+                                                        <i class="fa fa-chevron-right ml-2"/>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Product Info (React-like) -->
+                                <div class="wizard-step wizard-step-2 d-none">
+                                    <div class="section">
+                                        <form action="#" id="productInfo" class="form">
+                                            <div class="form__group -mt-lg">
+                                                <label class="form__label" for="wizard_product_name">Product Name</label>
+                                                <input id="wizard_product_name" class="form__control" type="text" name="product_name" placeholder="Product Name" field="escrow.input.name"/>
+                                            </div>
+                                            <div class="form__group -mt-lg">
+                                                <label class="form__label" for="wizard_category">Sale Category</label>
+                                                <select id="wizard_category" class="form__control" name="category" field="escrow.input.category">
+                                                    <option value="">Select</option>
+                                                    <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
+                                                        <option t-att-value="categ.id" t-esc="categ.name"/>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="wizard_price">Sale Price</label>
+                                                <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="escrow.input.price"/>
+                                            </div>
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="wizard_product_desc">Product Description</label>
+                                                <textarea id="wizard_product_desc" class="form__control" name="product_desc" placeholder="Product Description" field="escrow.input.desc"></textarea>
+                                            </div>
+
+                                            <div class="panel mt-3">
+                                                <div class="panel__header">
+                                                    <h3>License Information</h3>
+                                                </div>
+                                                <div class="panel__body">
+                                                    <div id="carInfo">
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="wizard_vin">Chassis Number</label>
+                                                            <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="escrow.input.vin"/>
+                                                            <i class="fa fa-check text-success state-check d-none"></i>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="wizard_plate">License Plate</label>
+                                                            <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="escrow.input.plate"/>
+                                                            <i class="fa fa-check text-success state-check d-none"></i>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="wizard_brand">Brand</label>
+                                                            <select id="wizard_brand" class="form__control" name="brand" field="escrow.input.brand">
+                                                                <option value="">Select</option>
+                                                                <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
+                                                                    <option t-att-value="brand.id" t-esc="brand.name"/>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="wizard_model">Model</label>
+                                                            <select id="wizard_model" class="form__control" name="model" field="escrow.input.model">
+                                                                <option value="">Select</option>
+                                                                <t t-foreach="company.env['escrow.car.model'].sudo().search([])" t-as="model">
+                                                                    <option t-att-value="model.id" t-att-data-brand="model.brand_id.id" t-esc="model.name"/>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="wizard_year">Yıl</label>
+                                                            <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Yılı" field="escrow.input.year"/>
+                                                        </div>
+                                                        <div class="form__group -mb-0">
+                                                            <div class="form__label">Upload License Photo</div>
+                                                            <div class="upload">
+                                                                <input type="file" id="wizard_file_input" name="license_photo" multiple="multiple"/>
+                                                                <label for="wizard_file_input">
+                                                                    <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                                                        <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                                                        <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                                                    </svg>
+                                                                    <span>Select Image or Take New</span>
+                                                                    <div id="wizard_num_of_files">No Image Selected</div>
+                                                                </label>
+                                                                <ul id="wizard_files_list"></ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form__group mt-3 d-flex justify-content-between">
+                                                <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                                                    Devam Et
+                                                    <svg width="20" height="15" viewBox="0 0 27 15" fill=""
+                                                        xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                                                        <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Recipient Info (React-like) -->
+                                <div class="wizard-step wizard-step-3 d-none">
+                                    <div class="section">
+                                        <div class="panel">
+                                            <div class="panel__header">
+                                                <h3>Recipient Information</h3>
+                                            </div>
+                                            <div class="panel__body">
+                                                <form action="#" id="recipientInfo" class="form">
+                                                    <div class="radioTabSelector">
+                                                        <div class="radioTab">
+                                                            <div class="radioTab__slider"></div>
+                                                            <label class="radioTab__label">
+                                                                <input type="radio" class="radioTab__control" name="recipientType" value="individual" checked="checked"/>
+                                                                <span>Bireysel</span>
+                                                            </label>
+                                                            <label class="radioTab__label">
+                                                                <input type="radio" class="radioTab__control" name="recipientType" value="corporate"/>
+                                                                <span>Kurumsal</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="recipientCorporate" style="display: none;">
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_corporate_title">Company Title</label>
+                                                            <input class="form__control -letter" name="recipient_corporate_title" id="recipient_corporate_title" type="text" placeholder="Company Title" value="" field="recipient.input.corporate_title"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_tax_number">Tax Number</label>
+                                                            <input class="form__control -letter" name="recipient_tax_number" id="recipient_tax_number" type="text" placeholder="Tax Number" value="" field="recipient.input.tax_number"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_tax_office">Tax Office</label>
+                                                            <input class="form__control -letter" name="recipient_tax_office" id="recipient_tax_office" type="text" placeholder="Tax Office" value="" field="recipient.input.tax_office"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_address_corporate">Address</label>
+                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_corporate" placeholder="Address" field="recipient.input.address_corporate"></textarea>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_person">Authorized Person</label>
+                                                            <input class="form__control -letter" name="recipient_person" id="recipient_person" type="text" placeholder="Authorized Person" value="" field="recipient.input.person"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_phone_corporate">Authorized Mobile Phone</label>
+                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_corporate" type="text" placeholder="e.g: 532 123 3456" value="" field="recipient.input.phone_corporate"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_email_corporate">Authorized Email</label>
+                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_corporate" type="email" placeholder="example@mail.com" value="" field="recipient.input.email_corporate"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="recipientIndividual">
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_name_surname">Full Name</label>
+                                                            <input class="form__control -letter" name="recipient_name_surname" id="recipient_name_surname" type="text" placeholder="Full Name" value="" field="recipient.input.name_surname"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_identity">Identity Number</label>
+                                                            <input class="form__control -letter" name="recipient_identity" id="recipient_identity" type="text" placeholder="T.C. Kimlik Numarası" value="" field="recipient.input.identity"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_birthdate">Birth Date</label>
+                                                            <input class="form__control -letter" name="recipient_birthdate" id="recipient_birthdate" type="text" placeholder="GG/AA/YYYY" value="" field="recipient.input.birthdate"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_phone_individual">Phone Number</label>
+                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_individual" type="text" placeholder="Örn: 532 123 3456" value="" field="recipient.input.phone_individual"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_email_individual">E-mail</label>
+                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_individual" type="email" placeholder="ornek@mail.com" value="" field="recipient.input.email_individual"/>
+                                                        </div>
+                                                        <div class="form__group">
+                                                            <label class="form__label" for="recipient_address_individual">Address</label>
+                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_individual" placeholder="Address" field="recipient.input.address_individual"></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form__group mt-3 d-flex justify-content-between">
+                                                        <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                                                            Devam Et
+                                                            <svg width="20" height="15" viewBox="0 0 27 15" fill=""
+                                                                xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                                                                <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Payment (React-like) -->
+                                <div class="wizard-step wizard-step-4 d-none">
+                                    <div class="section">
+                                        <div class="selectCartType">
+                                            <div class="switch -small">
+                                                <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint"/>
+                                                <label for="checkPoint"></label>
+                                            </div>
+                                            <div class="selectCartType__title">
+                                                <strong>Credit Card Holder and Recipient Information Different</strong>
+                                                <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and recipient information are different.</p>
+                                            </div>
+                                        </div>
+                                        <div id="payment_type" class="payment-type d-none">
+                                            <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+                                        </div>
+
+                                        <div class="partialPrice">
+                                            <form id="partialPriceForm">
+                                                <div class="priceBox">
+                                                    <div class="form__group">
+                                                        <label class="form__label" for="paymentAmount">Payment Amount</label>
+                                                        <input class="form__control" field="amount" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
+                                                    </div>
+                                                    <button type="button" class="button__link -small" id="payAllBtn">Pay All</button>
+                                                </div>
+                                                <p>Remaining Balance: <strong id="remainingBalance">1.900.000 TL</strong>
+                                                </p>
+                                            </form>
+                                        </div>
+
+                                        <div class="creditCard">
+                                            <h3>Credit Card Information</h3>
+                                            <div class="form" id="payment_card">
+                                                <div class="form__group">
+                                                    <label for="card_holder_name" class="form__label">Adınız Soyadınız</label>
+                                                    <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="ADINIZ SOYADINIZ"/>
+                                                </div>
+                                                <div class="creditCard__logoContent">
+                                                    <div class="form__group">
+                                                        <label for="card_number" class="form__label">Credit Card Number</label>
+                                                        <input type="text" field="card.number" name="card_number" id="card_number" class="form__control -letter" maxlength="19" placeholder="---- ---- ---- ----"/>
+                                                    </div>
+                                                    <div class="creditCard__paymentLogoType">
+                                                        <svg width="33" height="11" viewBox="0 0 43 14" fill="#111"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M21.2913 0.247712L18.4179 13.7883H14.9435L17.8173 0.247712H21.2913ZM35.9096 8.99091L37.7388 3.90596L38.7914 8.99091H35.9096ZM39.7862 13.7883H43L40.1955 0.247712H37.2291C36.5625 0.247712 36.0001 0.638565 35.7497 1.24113L30.537 13.7883H34.1857L34.9101 11.7663H39.3679L39.7862 13.7883ZM30.7181 9.36719C30.733 5.79337 25.8157 5.59666 25.8497 4.00025C25.8599 3.51382 26.3195 2.99783 27.3232 2.8654C27.8218 2.79983 29.1928 2.74969 30.7496 3.47182L31.3592 0.600423C30.523 0.294426 29.447 0 28.1088 0C24.6747 0 22.2575 1.8407 22.2371 4.47638C22.2155 6.42551 23.9627 7.51321 25.2792 8.1612C26.6328 8.82505 27.0877 9.25019 27.0817 9.84376C27.0728 10.7527 26.0019 11.153 25.0029 11.1689C23.2557 11.1967 22.2418 10.6936 21.4337 10.3139L20.8041 13.2809C21.6156 13.6567 23.1141 13.9833 24.6688 14C28.3184 14 30.7062 12.182 30.7181 9.36719ZM16.3264 0.247712L10.6971 13.7883H7.02369L4.25366 2.98197C4.08532 2.31641 3.93908 2.07298 3.42767 1.79227C2.59318 1.33584 1.21369 0.906848 0 0.641136L0.0828966 0.247712H5.99492C6.74822 0.247712 7.42627 0.753421 7.59716 1.62813L9.0604 9.46405L12.676 0.247712H16.3264Z" fill="#1434CB"/>
+                                                        </svg>
+                                                        <svg width="23" height="13" viewBox="0 0 29 18" fill="#111"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M18.3312 1.89868H10.5277V15.8625H18.3312V1.89868Z" fill="#FF5F00"/>
+                                                            <path d="M11.0233 8.8806C11.022 7.53578 11.3281 6.2083 11.9182 4.99867C12.5083 3.78904 13.3671 2.72896 14.4295 1.89868C13.1139 0.86893 11.5338 0.228547 9.87 0.0507195C8.20616 -0.127108 6.52564 0.16479 5.02052 0.893062C3.51541 1.62133 2.24642 2.75659 1.35861 4.16908C0.470804 5.58155 0 7.21427 0 8.8806C0 10.5469 0.470804 12.1796 1.35861 13.5921C2.24642 15.0046 3.51541 16.1399 5.02052 16.8681C6.52564 17.5964 8.20616 17.8883 9.87 17.7105C11.5338 17.5326 13.1139 16.8923 14.4295 15.8625C13.3671 15.0322 12.5083 13.9721 11.9182 12.7625C11.3281 11.5529 11.022 10.2254 11.0233 8.8806Z" fill="#EB001B"/>
+                                                            <path d="M28.8586 8.8806C28.8586 10.5469 28.3879 12.1796 27.5001 13.5921C26.6124 15.0046 25.3434 16.1398 23.8383 16.8681C22.3332 17.5964 20.6527 17.8883 18.9889 17.7105C17.3251 17.5326 15.7451 16.8923 14.4295 15.8625C15.491 15.0314 16.3491 13.9711 16.9391 12.7617C17.5292 11.5523 17.8357 10.2252 17.8357 8.8806C17.8357 7.53599 17.5292 6.20893 16.9391 4.99949C16.3491 3.79005 15.491 2.7298 14.4295 1.89868C15.7451 0.868928 17.3251 0.228542 18.9889 0.0507172C20.6527 -0.127108 22.3332 0.164803 23.8383 0.893082C25.3434 1.62136 26.6124 2.75662 27.5001 4.1691C28.3879 5.58158 28.8586 7.21429 28.8586 8.8806Z" fill="#F79E1B"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form__row">
+                                                    <div class="form__col">
+                                                        <div class="form__group">
+                                                            <label for="card_expiry" class="form__label">Expiry Date</label>
+                                                            <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form__col -relative">
+                                                        <div class="form__group">
+                                                            <label for="cvv" class="form__label">Security Code</label>
+                                                            <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Credit Card Information Notice -->
+                                                <div class="form__row">
+                                                    <div class="form__col">
+                                                        <div class="card-info-notice">
+                                                            <div class="info-icon">
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                    <circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="2"/>
+                                                                    <path d="m9 12 2 2 4-4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                </svg>
+                                                            </div>
+                                                            <span class="info-text">When you enter your credit card information, applicable installment options will be displayed</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Installment Options -->
+                                                <div class="form__row" id="installmentOptionsContainer" style="display: none;">
+                                                    <div class="form__col">
+                                                        <div class="form__group">
+                                                            <div class="form__label">Installment Options</div>
+                                                            <div class="installment-table">
+                                                                <div class="payment-gradient border card p-3 installment-rows">
+                                                                    <div>
+                                                                        <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
+                                                                            <t t-call="payment_jetcheckout.payment_installment_header"/>
+                                                                        </div>
+                                                                        <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
+                                                                    </div>
+                                                                    <div class="d-none installment-row overflow-auto flex-fill" data-type="i" field="installment.row"/>
+                                                                    <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
+                                                                        <i class="fa fa-info-circle mb-3" t-translation="off"></i>
+                                                                        <br/>
+                                                                        Appliable installment options will be displayed here after you enter your credit card number
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form__group">
+                                                    <div class="form__label">Assignment Form Information</div>
+                                                    <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
+                                                    <div class="download">
+                                                        <svg width="30" height="30" viewBox="0 0 42 42" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                                            <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                                            <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                                        </svg>
+                                                        <a href="#" class="download__link">Temlikname Formunu İndir</a>
+                                                    </div>
+                                                    <div class="form__label">Upload Assignment Form</div>
+                                                    <div class="upload">
+                                                        <input type="file" id="file-input" multiple="multiple"/>
+                                                        <label for="file-input">
+                                                            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                                                <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                                                <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                                            </svg>
+                                                            <span>Select Image or Take New</span>
+                                                            <div id="num-of-files">No Image Selected</div>
+                                                        </label>
+                                                        <ul id="files-list"></ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form__buttons">
+                                                    <div class="form__agreements">
+                                                        <label class="form-control -small" for="agreementChk">
+                                                            <input type="checkbox" name="agreement" id="agreementChk"/>
+                                                            <p>
+                                                                <strong>I have read the Privacy Notice</strong> and I approve and I want to save my Card Information in İyzi A.Ş. Infrastructure.</p>
+                                                        </label>
+                                                        <label class="form-control -small" for="agreementSaveCardChk">
+                                                            <input type="checkbox" name="save_card" id="agreementSaveCardChk"/>
+                                                            <p>
+                                                                <strong>I have read the Privacy Notice</strong> and I approve and I want to save my Card Information in İyzi A.Ş. Infrastructure.</p>
+                                                        </label>
+                                                    </div>
+
+                                                    <!-- Navigation buttons -->
+                                                    <div class="form__group d-flex justify-content-between mt-3">
+                                                        <div class="form__group mt-3">
+                                                            <button type="button" class="button button__dark button__medium" field="payment.button" data-wizard-action="next">
+                                                                Continue
+                                                                <i class="fa fa-chevron-right ml-2"/>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="submit" class="primaryButton d-none" id="btn_pay_now">
+                                                        <div class="summary__priceBtn">
+                                                            <span>Payable Amount</span>
+                                                            <strong>2.400.000 TL</strong>
+                                                        </div>
+                                                        <span>Pay Now
+                                                            <svg width="20" height="15" viewBox="0 0 27 15" fill=""
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="escrow-ad-sideback d-none" field="ad.sideback"/>
             <div class="escrow-ad-sidebar" field="ad.sidebar">
-                <button class="btn" field="ad.button.sidebar.toggle"><i class="fa fa-2x fa-times"/></button>
+                <button class="btn" field="ad.button.sidebar.toggle">
+                    <i class="fa fa-2x fa-times"/>
+                </button>
                 <div class="escrow-ad-sidebar-section escrow-ad-sidebar-settings d-none">
                     <div class="escrow-ad-sidebar-settings-theme my-4">
                         <div>
@@ -350,7 +901,7 @@
                         </div>
                         <div>
                             <div>
-                                <button class="btn active" data-value="tr" field="ad.button.sidebar.lang">Türkçe</button>
+                                <button class="btn active" data-value="tr" field="ad.button.sidebar.lang">Turkish</button>
                                 <button class="btn" data-value="en" field="ad.button.sidebar.theme.lang">English</button>
                             </div>
                         </div>
@@ -389,9 +940,18 @@
                     <div class="escrow-ad-item-state"/>
                     <div class="escrow-ad-item-desc"/>
                     <div class="escrow-ad-item-footer">
-                        <button class="btn escrow-ad-button-delete" field="ad.button.delete"><i class="fa fa-trash mr8"/>Delete</button>
-                        <button class="btn escrow-ad-button-edit" field="ad.button.edit"><i class="fa fa-edit mr8"/>Edit</button>
-                        <button class="btn escrow-ad-button-continue" field="ad.button.continue"><i class="fa fa-chevron-right mr8"/>Continue</button>
+                        <button class="btn escrow-ad-button-delete" field="ad.button.delete">
+                            <i class="fa fa-trash mr8"/>
+                            Delete
+                        </button>
+                        <button class="btn escrow-ad-button-edit" field="ad.button.edit">
+                            <i class="fa fa-edit mr8"/>
+                            Edit
+                        </button>
+                        <button class="btn escrow-ad-button-continue" field="ad.button.continue">
+                            <i class="fa fa-chevron-right mr8"/>
+                            Continue
+                        </button>
                     </div>
                 </div>
             </div>
@@ -399,4 +959,5 @@
             <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
         </t>
     </template>
+
 </odoo>

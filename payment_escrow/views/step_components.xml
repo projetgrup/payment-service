@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Step Item Template Component -->
+    <template id="step_item_template" name="Step Item Template">
+        <div t-att-class="'steps__item ' + (step_class or '')">
+            <div class="steps__icon">
+                <span class="check">
+                    <svg width="14" height="11" viewBox="0 0 14 13" fill="#FFF"
+                        xmlns="http://www.w3.org/2000/svg" icon="check">
+                        <path d="M11.7996 1.25213C12.0393 1.01016 12.3651 0.87292 12.7057 0.870412C13.0463 0.867903 13.3741 1.00032 13.6173 1.23874C13.8606 1.47715 13.9996 1.80217 14.004 2.14276C14.0083 2.48335 13.8777 2.81182 13.6406 3.05638L6.7806 11.6323C6.66275 11.7591 6.52054 11.861 6.36246 11.9317C6.20438 12.0024 6.03367 12.0405 5.86053 12.0438C5.68739 12.047 5.51537 12.0154 5.35474 11.9507C5.1941 11.886 5.04815 11.7896 4.9256 11.6673L0.37735 7.12075C0.135655 6.87894 -8.201e-05 6.55102 3.71739e-08 6.20913C8.20843e-05 5.86724 0.135976 5.53939 0.377787 5.29769C0.619599 5.05599 0.947519 4.92026 1.28941 4.92034C1.6313 4.92042 1.95915 5.05632 2.20085 5.29813L5.79797 8.89613L11.7655 1.29238C11.7763 1.27854 11.788 1.26539 11.8005 1.253L11.7996 1.25213Z"></path>
+                    </svg>
+                </span>
+                <span class="num" t-esc="step_number"/>
+            </div>
+            <div class="steps__content" t-if="not is_completed_step">
+                <span t-esc="step_title"/>
+                <a href="#" t-att-data-step="step_number" t-if="show_edit_link">Edit</a>
+            </div>
+            <span class="steps__content" t-esc="step_title" t-if="is_completed_step"/>
+        </div>
+    </template>
+
+    <!-- Steps Container Template -->
+    <template id="steps_container_template" name="Steps Container Template">
+        <div t-att-class="'steps ' + (container_class or '')" t-att-id="container_id or ''">
+            <!-- Step 1: Seller Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="1"/>
+                <t t-set="step_title" t-value="'Seller Information'"/>
+                <t t-set="step_class" t-value="step_1_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_1_edit or False"/>
+            </t>
+
+            <!-- Step 2: Ads Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="2"/>
+                <t t-set="step_title" t-value="'Ads Information'"/>
+                <t t-set="step_class" t-value="step_2_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_2_edit or False"/>
+            </t>
+
+            <!-- Step 3: Customer Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="3"/>
+                <t t-set="step_title" t-value="'Customer Information'"/>
+                <t t-set="step_class" t-value="step_3_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_3_edit or False"/>
+            </t>
+
+            <!-- Step 4: Payment Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="4"/>
+                <t t-set="step_title" t-value="'Payment Information'"/>
+                <t t-set="step_class" t-value="step_4_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_4_edit or False"/>
+            </t>
+
+            <!-- Step 5: Completed -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="5"/>
+                <t t-set="step_title" t-value="'Completed'"/>
+                <t t-set="step_class" t-value="step_5_class or ''"/>
+                <t t-set="is_completed_step" t-value="True"/>
+                <t t-set="show_edit_link" t-value="False"/>
+            </t>
+        </div>
+    </template>
+</odoo>

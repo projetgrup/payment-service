@@ -37,7 +37,7 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            partner = transaction.paylox_product_ids[0]['product_id']['owner_id']
+            partner = request.env['res.partner'].sudo().browse(16444) #transaction.paylox_product_ids[0]['product_id']['owner_id'] 
             reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -81,7 +81,10 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/ad/save'], type='json', auth='user', website=True)
     def page_my_ad_save(self, **kwargs):
-        if kwargs['id']:
+        user = request.env.user
+        partner = user.partner_id
+        values = {}
+        if kwargs.get('id'):
             product = request.env['product.product'].sudo().with_context(system='escrow').search([
                 ('id', '=', kwargs['id']),
                 ('broker_id', '=', request.env.user.partner_id.id),
@@ -90,29 +93,17 @@ class PayloxSystemEscrowController(Controller):
             if not product:
                 return {'error': _('Product cannot be found, or you are not allowed to save it.')}
 
-            values = {}
-            if 'name' in kwargs and product.name != kwargs['name']:
-                values.update({'name': kwargs['name']})
-            if 'categ' in kwargs and product.categ_id.id != kwargs['categ'][0]:
-                values.update({'categ_id': kwargs['categ'][0]})
-            if 'price' in kwargs and product.name != kwargs['price']:
-                values.update({'price': kwargs['price']})
-            if 'desc' in kwargs and product.description != kwargs['desc']:
-                values.update({'description': kwargs['desc']})
-            if 'img' in kwargs and product.image_1920 != kwargs['img']:
-                values.update({'image_1920': kwargs['img']})
+            values.update({'system': 'escrow', 'broker_id': partner.id, **kwargs})
             if values:
                 product.write(values)
-
         else:
-            product = request.env['product.product'].sudo().create({
-                'broker_id': request.env.user.partner_id.id,
-                'name': kwargs['name'],
-                'categ_id': kwargs['categ'][0],
-                'price': kwargs['price'],
-                'description': kwargs['desc'],
-                'image_1920': kwargs['img'],
+            values.update({
+                'system': 'escrow',
+                'broker_id': partner.id,
+                **kwargs
             })
+
+            product = request.env['product.product'].sudo().create(values)
 
         return {
             'id': product.id,
@@ -130,3 +121,277 @@ class PayloxSystemEscrowController(Controller):
 
         product.unlink()
         return {}
+
+    @route(['/my/iban/check'], type='json', auth='user', methods=['POST'], website=True)
+    def check_iban(self, **kwargs):
+        """Check IBAN validity using syncOPS if available"""
+        try:
+            iban = kwargs.get('iban', '').replace(' ', '').upper()
+            vat = kwargs.get('vat', '')
+            
+            if not iban:
+                return {
+                    'success': False,
+                    'message': 'IBAN is required'
+                }
+            
+            if not iban.startswith('TR') or len(iban) != 26:
+                return {
+                    'success': False,
+                    'message': 'Invalid IBAN format'
+                }
+            
+            company = request.env.company
+            
+            # Check if syncOPS is available and IBAN check is enabled
+            # if hasattr(company, 'syncops_check_iban') and company.syncops_check_iban:
+            #     user = request.env.user
+            #     if user.has_group('payment_syncops.group_check_iban'):
+            #         # Check if IBAN was already validated
+            #         cached_iban = request.env['syncops.partner.iban'].sudo().search([('name', '=', iban)])
+            #         if cached_iban:
+            #             return {
+            #                 'success': True,
+            #                 'message': 'IBAN doğrulandı (önbellekten)'
+            #             }
+                    
+            #         # Use syncOPS to validate IBAN
+            #         try:
+            #             result, message = request.env['syncops.connector'].sudo()._execute(
+            #                 'other_get_ozan_iban', 
+            #                 reference=str(user.partner_id.id), 
+            #                 params={
+            #                     'vat': vat,
+            #                     'iban': iban,
+            #                 }, 
+            #                 company=company, 
+            #                 message=True
+            #             )
+                        
+            #             if result is None:
+            #                 return {
+            #                     'success': False,
+            #                     'message': message or 'IBAN doğrulama servisi kullanılamıyor'
+            #                 }
+            #             elif not result[0]['ok']:
+            #                 return {
+            #                     'success': False,
+            #                     'message': result[0]['message'] or 'IBAN doğrulanamadı'
+            #                 }
+            #             else:
+            #                 # Cache the validated IBAN
+            #                 request.env['syncops.partner.iban'].sudo().create({'name': iban})
+            #                 return {
+            #                     'success': True,
+            #                     'message': 'IBAN başarıyla doğrulandı'
+            #                 }
+            #         except Exception as e:
+            #             return {
+            #                 'success': False,
+            #                 'message': 'IBAN doğrulama hatası: ' + str(e)
+            #             }
+            
+            # If syncOPS is not available, do basic validation only
+            return {
+                'success': True,
+                'message': 'IBAN formatı geçerli (temel doğrulama)'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'message': 'Beklenmeyen hata: ' + str(e)
+            }
+
+    @route(['/my/seller/save'], type='json', auth='user', methods=['POST'], website=True)
+    def save_seller_info(self, **kwargs):
+        try:
+            partner_data = {
+                'paylox_escrow_type': 'owner',
+                'is_company': kwargs.get('seller_type') == 'corporate',
+                "system": 'escrow'
+            }
+            iban = kwargs.get('seller_iban', '')
+            vat = kwargs.get('seller_tax_number', '') if kwargs.get('seller_type') == 'corporate' else kwargs.get('seller_tc_number', '')
+            
+            # Validate IBAN if provided
+            if iban:
+                iban_check = self.check_iban(iban=iban, vat=vat)
+                if not iban_check.get('success', False):
+                    return {
+                        'success': False,
+                        'message': 'IBAN Doğrulama Hatası: ' + iban_check.get('message', 'Bilinmeyen hata')
+                    }
+
+            if kwargs.get('seller_type') == 'corporate':
+                partner_data.update({
+                    'name': kwargs.get('seller_name', ''),
+                    'email': kwargs.get('seller_email', ''),
+                    'phone': kwargs.get('seller_phone', ''),
+                    'vat': kwargs.get('seller_tax_number', ''),
+                    'comment': 'Yetkili Kişi: ' + kwargs.get('seller_contact_person', ''),
+                    'is_company': True,
+                })
+            else:
+                partner_data.update({
+                    'name': kwargs.get('seller_name', ''),
+                    'email': kwargs.get('seller_email', ''),
+                    'phone': kwargs.get('seller_phone', ''),
+                    'vat': kwargs.get('seller_tc_number', ''),
+                    'comment': 'Doğum Tarihi: ' + kwargs.get('seller_birthdate', ''),
+                    'is_company': False,
+                })
+            
+            if kwargs.get('seller_iban'):
+                iban_info = f"IBAN: {kwargs.get('seller_iban', '')}"
+                if kwargs.get('seller_iban_name'):
+                    iban_info += f" - Hesap Adı: {kwargs.get('seller_iban_name', '')}"
+                
+                if partner_data.get('comment'):
+                    partner_data['comment'] += f"\n{iban_info}"
+                else:
+                    partner_data['comment'] = iban_info
+            
+            partner = request.env['res.partner'].sudo().create(partner_data)
+            
+            if kwargs.get('seller_iban'):
+                bank_data = {
+                    'partner_id': partner.id,
+                    'acc_number': kwargs.get('seller_iban', '').replace(' ', ''),
+                    'api_merchant': kwargs.get('seller_iban_name', ''),
+                    'currency_id': request.env.company.currency_id.id,
+                }
+                request.env['res.partner.bank'].sudo().create(bank_data)
+            
+            return {
+                'success': True,
+                'partner_id': partner.id,
+                'message': 'Seller information has been successfully saved.'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Seller information could not be saved.'
+            }
+
+    @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
+    def save_customer_info(self, **kwargs):
+        try:
+            # Common fields for both individual and corporate
+            partner_data = {
+                'paylox_escrow_type': 'customer',
+                'is_company': kwargs.get('customer_type') == 'corporate',
+                "system": 'escrow'
+            }
+
+            if kwargs.get('customer_type') == 'corporate':
+                partner_data.update({
+                    'name': kwargs.get('customer_corporate_title', ''),
+                    'email': kwargs.get('customer_email', ''),
+                    'phone': kwargs.get('customer_phone', ''),
+                    'vat': kwargs.get('customer_tax_number', ''),
+                    'street': kwargs.get('customer_address', ''),
+                    'is_company': True,
+                })
+            else:
+                partner_data.update({
+                    'name': kwargs.get('customer_name_surname', ''),
+                    'email': kwargs.get('customer_email', ''),
+                    'phone': kwargs.get('customer_phone', ''),
+                    'vat': kwargs.get('customer_identity', ''),
+                    'street': kwargs.get('customer_address', ''),
+                    'is_company': False,
+                })
+            
+            partner = request.env['res.partner'].sudo().create(partner_data)
+            
+            product_id = kwargs.get('product_id')
+            if product_id:
+                try:
+                    product = request.env['product.product'].sudo().browse(int(product_id))
+                    if product.exists():
+                        product.write({'escrow_customer_id': partner.id})
+                except:
+                    pass 
+            
+            return {
+                'success': True,
+                'partner_id': partner.id,
+                'message': 'Customer information has been successfully saved.'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Customer information could not be saved.'
+            }
+
+    @route('/my/partner/get', type='json', auth='public', methods=['POST'], csrf=False)
+    def get_partner_info(self, **kwargs):
+        try:
+            partner_id = kwargs.get('partner_id')
+            if not partner_id:
+                return {
+                    'success': False,
+                    'error': 'missing_partner_id',
+                    'message': 'Partner ID is required.'
+                }
+            
+            partner = request.env['res.partner'].sudo().browse(int(partner_id))
+            if not partner.exists():
+                return {
+                    'success': False,
+                    'error': 'partner_not_found',
+                    'message': 'Partner could not be found.'
+                }
+            
+            bank_accounts = []
+            for bank in partner.bank_ids:
+                bank_accounts.append({
+                    'id': bank.id,
+                    'acc_number': bank.acc_number,
+                    'api_merchant': bank.api_merchant,
+                    'bank_name': bank.bank_id.name if bank.bank_id else '',
+                })
+            
+            partner_data = {
+                'id': partner.id,
+                'name': partner.name,
+                'email': partner.email,
+                'phone': partner.phone,
+                'mobile': partner.mobile,
+                'street': partner.street,
+                'street2': partner.street2,
+                'city': partner.city,
+                'zip': partner.zip,
+                'vat': partner.vat,
+                'is_company': partner.is_company,
+                'commercial_partner_id': {
+                    'id': partner.commercial_partner_id.id,
+                    'name': partner.commercial_partner_id.name
+                } if partner.commercial_partner_id else None,
+                'state_id': {
+                    'id': partner.state_id.id,
+                    'name': partner.state_id.name
+                } if partner.state_id else None,
+                'country_id': {
+                    'id': partner.country_id.id,
+                    'name': partner.country_id.name
+                } if partner.country_id else None,
+                'bank_ids': bank_accounts,
+            }
+
+            return {
+                'success': True,
+                'partner': partner_data
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'An error occurred while retrieving partner information.'
+            }

@@ -11,6 +11,7 @@
     'depends': ['payment_syncops', 'payment_system_agreement', 'payment_system_sale'],
     'data': [
         'security/security.xml',
+    'security/ir.model.access.csv',
         'data/data.xml',
         'views/ad.xml',
         'views/sale.xml',
@@ -18,6 +19,7 @@
         'views/partner.xml',
         'views/actions.xml',
         'views/menu.xml',
+        'views/step_components.xml',
         'views/templates.xml',
         'views/settings.xml',
     ],

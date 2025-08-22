@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_escrow_car_brand_user,escrow.car.brand user,model_escrow_car_brand,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_car_brand_manager,escrow.car.brand manager,model_escrow_car_brand,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_car_model_user,escrow.car.model user,model_escrow_car_model,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_car_model_manager,escrow.car.model manager,model_escrow_car_model,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_car_year_user,escrow.car.year user,model_escrow_car_year,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_car_year_manager,escrow.car.year manager,model_escrow_car_year,payment_escrow.group_escrow_manager,1,1,1,1
