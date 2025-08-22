@@ -37,7 +37,7 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            partner = request.env['res.partner'].sudo().browse(16444) #transaction.paylox_product_ids[0]['product_id']['owner_id'] 
+            partner = transaction.paylox_product_ids[0]['product_id']['owner_id']
             reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
