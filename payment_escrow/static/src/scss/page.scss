@@ -335,6 +335,27 @@
 
         .header__logo img { height: 30px; }
 
+        .header__user {
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                
+                .user-avatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                
+                .user-name {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-color);
+                }
+            }
+        }
+
         .header__settingsBtn {
             display: inline-flex;
             width: 36px;
@@ -347,6 +368,84 @@
             cursor: pointer;
 
             .icon { color: #1C274C; }
+        }
+    }
+
+    /* Sticky Wizard Header */
+    .escrow-wizard-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--white);
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Info Cards */
+    .info-card {
+        background: var(--white);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(36, 20, 216, 0.1);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-border);
+            background: var(--panel-color);
+
+            i:first-child {
+                color: var(--primary-color);
+                margin-right: 8px;
+                font-size: 16px;
+            }
+
+            h4 {
+                flex: 1;
+                margin: 0;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
+            i:last-child {
+                color: var(--secondary-text-color);
+                font-size: 12px;
+            }
+        }
+
+        .info-card-content {
+            padding: 12px 16px;
+
+            .info-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                .info-label {
+                    font-size: 12px;
+                    color: var(--secondary-text-color);
+                    font-weight: 500;
+                }
+
+                .info-value {
+                    font-size: 12px;
+                    color: var(--text-color);
+                    font-weight: 400;
+                }
+            }
         }
     }
 

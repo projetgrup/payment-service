@@ -37,7 +37,7 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            partner = transaction.paylox_product_ids[0]['product_id']['owner_id']
+            partner = request.env['res.partner'].sudo().browse(16444) #transaction.paylox_product_ids[0]['product_id']['owner_id'] 
             reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -84,6 +84,38 @@ class PayloxSystemEscrowController(Controller):
         user = request.env.user
         partner = user.partner_id
         values = {}
+        
+        def generate_product_name():
+            brand_name = ""
+            model_name = ""
+            year = kwargs.get('escrow_car_model_year', '')
+            
+            if kwargs.get('escrow_car_brand_id'):
+                try:
+                    brand = request.env['car.brand'].sudo().browse(int(kwargs['escrow_car_brand_id']))
+                    if brand.exists():
+                        brand_name = brand.name
+                except:
+                    pass
+            
+            if kwargs.get('escrow_car_model_id'):
+                try:
+                    model = request.env['car.model'].sudo().browse(int(kwargs['escrow_car_model_id']))
+                    if model.exists():
+                        model_name = model.name
+                except:
+                    pass
+
+            name_parts = []
+            if brand_name:
+                name_parts.append(brand_name)
+            if model_name:
+                name_parts.append(model_name)
+            if year:
+                name_parts.append(str(year))
+            
+            return " / ".join(name_parts) if name_parts else "Araç İlanı"
+        
         if kwargs.get('id'):
             product = request.env['product.product'].sudo().with_context(system='escrow').search([
                 ('id', '=', kwargs['id']),
@@ -94,6 +126,10 @@ class PayloxSystemEscrowController(Controller):
                 return {'error': _('Product cannot be found, or you are not allowed to save it.')}
 
             values.update({'system': 'escrow', 'broker_id': partner.id, **kwargs})
+            
+            # Otomatik isim oluştur
+            values['name'] = generate_product_name()
+            
             if values:
                 product.write(values)
         else:
@@ -102,6 +138,9 @@ class PayloxSystemEscrowController(Controller):
                 'broker_id': partner.id,
                 **kwargs
             })
+            
+            # Otomatik isim oluştur
+            values['name'] = generate_product_name()
 
             product = request.env['product.product'].sudo().create(values)
 

@@ -47,7 +47,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 // Individual seller fields
                 name: new fields.string(), // namesurname
                 tc: new fields.string(), // wizard_tckn
-                birthdate: new fields.string(),
                 phone_individual: new fields.string(),
                 email_individual: new fields.string(),
                 address_individual: new fields.string(),
@@ -71,7 +70,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 brand: new fields.selection(),
                 model: new fields.selection(),
                 year: new fields.selection(),
-                name: new fields.string(),
                 price: new fields.float({
                     mask: payloxPage.prototype._maskAmount.bind(this),
                     default: 0,
@@ -88,7 +86,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 // Individual recipient fields
                 name_surname: new fields.string(),
                 identity: new fields.string(),
-                birthdate: new fields.string(),
                 phone_individual: new fields.string(),
                 email_individual: new fields.string(),
                 address_individual: new fields.string(),
@@ -176,8 +173,43 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._bindWizardValidation();
             this._bindWizardToggle();
             this._bindWizardSteps();
+            this._bindInfoCardEvents();
             framework.hideLoading();
         });
+    },
+
+    _bindInfoCardEvents: function() {
+        const self = this;
+        
+        // Satıcı bilgileri kartı click event'i
+        $(document).on('click', '.seller-info-card', function() {
+            const id = $('.escrow-ad-button-edit').data('id');
+            if (id) {
+                self._openSellerEditForCard(id, 'seller');
+            }
+        });
+        
+        // Ruhsat bilgileri kartı click event'i  
+        $(document).on('click', '.vehicle-info-card', function() {
+            const id = $('.escrow-ad-button-edit').data('id');
+            if (id) {
+                self._openSellerEditForCard(id, 'vehicle');
+            }
+        });
+    },
+
+    _openSellerEditForCard: function(id, section) {
+        this._openSellerWizardForEdit(id);
+        this._closeSidebar();
+
+        setTimeout(() => {
+            const $wiz = $('.escrow-wizard');
+            if (section === 'seller') {
+                this._navigateToStep(1);
+            } else if (section === 'vehicle') {
+                this._navigateToStep(2);
+            }
+        }, 100);
     },
 
     _parseAds: function () {
@@ -188,7 +220,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 id: $this.data('id'),
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
-                categ: [categ.data('id'), categ.text().trim()],
+                categ: categ.data('id'),
                 price: parseFloat($this.find('.escrow-ad-item-price').data('value')),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 desc: $this.find('.escrow-ad-item-desc').html().trim(),
@@ -202,55 +234,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 model_name: $this.data('model-name'),
                 year: $this.data('model-year')
             };
-        });
-    },
-
-    _formatTurkishCurrency: function(value, withCurrency) {
-        if (withCurrency === undefined) withCurrency = false;
-        if (!value && value !== 0) return '';
-        const num = parseFloat(value);
-        if (isNaN(num)) return '';
-        const formatted = new Intl.NumberFormat('tr-TR').format(num);
-        return withCurrency ? formatted + ' TL' : formatted;
-    },
-
-    _setupPartialPriceValidation: function() {
-        const self = this;
-        const $wiz = $('.escrow-wizard');
-        const $form = $wiz.find('#partialPriceForm');
-        const $input = $form.find('#paymentAmount');
-        const $button = $form.find('#payAllBtn');
-        const $balanceText = $form.find('#remainingBalance');
-
-        if (!$form.length || !$input.length) return;
-
-        const getRawValue = (val) => val.replace(/\D/g, '');
-
-        const formatCurrency = (val) => {
-            return self._formatTurkishCurrency(val, true);
-        };
-
-        $button.on('click', () => {
-            const raw = getRawValue($balanceText.text());
-            $input.val(formatCurrency(raw));
-            $input.trigger('input');
-            this._validatePartialPriceField();
-        });
-
-        $input.on('input', (e) => {
-            const caretPos = $input[0].selectionStart;
-            const raw = getRawValue($input.val());
-            const formatted = formatCurrency(raw);
-
-            $input.val(formatted);
-
-            requestAnimationFrame(() => {
-                if ($input[0].setSelectionRange) {
-                    const newPos = Math.max(0, $input.val().length - 3); 
-                    $input[0].setSelectionRange(newPos, newPos);
-                }
-            });
-            this._validatePartialPriceField();
+            
         });
     },
 
@@ -557,8 +541,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 route: '/my/partner/get',
                 params: { partner_id: adData.owner_id }
             }).then((ownerData) => {
-                
-                console.log(ownerData)
                 if (ownerData.success) {
                     const owner = ownerData.partner;
                     if (owner.is_company) {
@@ -578,7 +560,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         
                         $wiz.find('#namesurname').val(owner.name || '');
                         $wiz.find('#wizard_tckn').val(owner.vat || '');
-                        $wiz.find('#birthdate').val(''); 
                         $wiz.find('#phone_individual').val(owner.phone || '');
                         $wiz.find('#email_individual').val(owner.email || '');
                         $wiz.find('#address_individual').val(this._formatAddress(owner));
@@ -590,19 +571,54 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         $wiz.find('#ibanaccountname_individual, #ibanaccountname_corporate').val(bankAccount.api_merchant || owner.name);
                     }
                 }
+                return Promise.resolve();
             }).catch(() => {
                 console.warn('Could not load owner data for prefill');
             });
         }
     },
 
+    _loadSellerInfoForSidebar: function(adId, ownerId) {
+        const self = this;
+        
+        this._rpc({
+            route: '/my/partner/get',
+            params: { partner_id: ownerId }
+        }).then((ownerData) => {
+            if (ownerData.success && self.values.ads[adId]) {
+                const owner = ownerData.partner;
+                
+                // Store seller info in ads object for sidebar display
+                self.values.ads[adId].seller_name = owner.name || 'Belirtilmemiş';
+                self.values.ads[adId].seller_tc = owner.vat || 'Belirtilmemiş';
+                
+                // Get IBAN if available
+                if (owner.bank_ids && owner.bank_ids.length > 0) {
+                    const bankAccount = owner.bank_ids[0];
+                    self.values.ads[adId].seller_iban = self._formatIban(bankAccount.acc_number) || 'Belirtilmemiş';
+                } else {
+                    self.values.ads[adId].seller_iban = 'Belirtilmemiş';
+                }
+                
+                // Update sidebar display if currently showing this ad
+                const $item = $('.escrow-ad-sidebar-items');
+                if ($item.length && $('.escrow-ad-button-edit').data('id') == adId) {
+                    $item.find('.seller-name').text(self.values.ads[adId].seller_name);
+                    $item.find('.seller-tc').text(self.values.ads[adId].seller_tc);
+                    $item.find('.seller-iban').text(self.values.ads[adId].seller_iban);
+                }
+            }
+        }).catch(() => {
+            console.warn('Could not load seller data for sidebar');
+        });
+    },
+
     _prefillProductFromAd: function(adData) {
-        if (adData.name) this.escrow.input.name.$.val(adData.name);
         if (adData.price) this.escrow.input.price.$.val(adData.price);
         if (adData.description) this.escrow.input.desc.$.val(adData.description);
-        
-        if (adData.categ_id) {
-            this.escrow.input.category.$.val(adData.categ_id);
+        if (adData.categ) {
+            this.escrow.input.category.$.val(adData.categ);
+            this.escrow.input.category.$.trigger('change');
         }
         
         if (adData.vin) this.escrow.input.vin.$.val(adData.vin);
@@ -614,6 +630,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
         if (adData.model_id) {
             this.escrow.input.model.$.val(adData.model_id);
+            this.escrow.input.model.$.trigger('change');
         }
         if (adData.year) {
             this.escrow.input.year.$.val(adData.year);
@@ -671,7 +688,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         
                         $wiz.find('#recipient_name_surname').val(customer.name || '');
                         $wiz.find('#recipient_identity').val(customer.vat || '');
-                        $wiz.find('#recipient_birthdate').val(customer.comment?.replace('Doğum Tarihi: ', '') || '');
                         $wiz.find('#recipient_phone_individual').val(customer.phone || '');
                         $wiz.find('#recipient_email_individual').val(customer.email || '');
                         $wiz.find('#recipient_address_individual').val(customer.street || '');
@@ -687,7 +703,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         framework.showLoading();
         let params = {
             id: this.state.id,
-            name: this.ad.input.name.value,
             categ: [this.ad.input.categ.value, this.ad.input.categ.text],
             price: this.ad.input.price.value,
             desc: this.ad.input.desc.value,
@@ -787,11 +802,25 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         const id = ev?.currentTarget?.dataset?.id;
         const value = this.values.ads[id];
+        
+        // Load seller info for sidebar if not already loaded
+        if (value && value.owner_id && !value.seller_name) {
+            this._loadSellerInfoForSidebar(id, value.owner_id);
+        }
         const $item = $('.escrow-ad-sidebar-items');
         if ($item.length) {
-            $item.find('.escrow-ad-item-img').attr('src', value.img);
             $item.find('.escrow-ad-item-name').text(value.name);
-            $item.find('.escrow-ad-item-categ').text(value.categ[1]);
+            $item.find('.escrow-ad-item-categ').text(value.categ);
+            $item.find('.seller-name').text(value.seller_name || 'Belirtilmemiş');
+            $item.find('.seller-tc').text(value.seller_tc || 'Belirtilmemiş');
+            $item.find('.seller-iban').text(value.seller_iban || 'Belirtilmemiş');
+            
+            const brandModel = value.brand && value.model ? `${value.brand} / ${value.model}` : 'Belirtilmemiş';
+            $item.find('.escrow-ad-item-brand-model').text(brandModel);
+            $item.find('.escrow-ad-item-year').text(value.year || 'Belirtilmemiş');
+            $item.find('.escrow-ad-item-plate').text(value.plate || 'Belirtilmemiş');
+            $item.find('.escrow-ad-item-vin').text(value.vin || 'Belirtilmemiş');
+
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
             $item.find('.escrow-ad-item-state').html(value.state);
             $item.find('.escrow-ad-item-desc').html(value.desc);
@@ -799,11 +828,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-button-delete').data('id', id);
             $item.find('.escrow-ad-button-continue').data('id', id);
         } else {
-            $item.find('.escrow-ad-item-img').attr('src', '/payment_jetcheckout/static/src/img/placeholder.png');
-            $item.find('.escrow-ad-item-name').text(_t('No ad found'));
-            $item.find('.escrow-ad-item-categ').text('');
+            $item.find('.seller-name, .seller-tc, .seller-iban').text('Belirtilmemiş');
+            $item.find('.vehicle-brand-model, .vehicle-year, .vehicle-plate, .vehicle-vin').text('Belirtilmemiş');
             $item.find('.escrow-ad-item-price').text('');
             $item.find('.escrow-ad-item-state').html('');
+            $item.find('.escrow-ad-item-name').text(_t('No ad found'));
+            $item.find('.escrow-ad-item-categ').text('');
             $item.find('.escrow-ad-item-desc').html('');
             $item.find('.escrow-ad-button-edit').data('id', 0);
             $item.find('.escrow-ad-button-delete').data('id', 0);
@@ -879,6 +909,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.price.value = format.float(ad.price);
             this.ad.input.desc.value = ad.desc;
             setTimeout(() => this.ad.input.img.value = ad.img, 1000);
+
         } else {
             this.state.id = 0;
             this.ad.input.name.value = '';
@@ -971,8 +1002,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._updateExistingAd().then(() => {
                 this.displayNotification({
                     type: 'success',
-                    title: 'Başarılı',
-                    message: 'İlan bilgileri başarıyla güncellendi.',
+                    title: 'Success',
+                    message: 'Ad information has been successfully updated.',
                 });
                 
                 setTimeout(() => {
@@ -982,16 +1013,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }).catch((error) => {
                 this.displayNotification({
                     type: 'danger',
-                    title: 'Hata',
-                    message: 'İlan güncellenirken bir hata oluştu: ' + (error.message || 'Bilinmeyen hata'),
+                    title: 'Error',
+                    message: 'An error occurred while updating the ad: ' + (error.message || 'Unknown error'),
                 });
             });
         } else {
             this._saveWizardData().then(() => {
                 this.displayNotification({
                     type: 'success',
-                    title: 'Başarılı',
-                    message: 'Tüm bilgiler kaydedildi. Ödeme sayfasına yönlendiriliyorsunuz.',
+                    title: 'Success',
+                    message: 'All information has been saved. You are being redirected to the payment page.',
                 });
                 
                 setTimeout(() => {
@@ -1000,8 +1031,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }).catch((error) => {
                 this.displayNotification({
                     type: 'danger',
-                    title: 'Hata',
-                    message: 'Bilgiler kaydedilirken bir hata oluştu: ' + (error.message || 'Bilinmeyen hata'),
+                    title: 'Error',
+                    message: 'An error occurred while saving the information: ' + (error.message || 'Unknown error'),
                 });
             });
         }
@@ -1018,7 +1049,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 params: sellerData
             }).then((sellerResult) => {
                 if (!sellerResult.success) {
-                    reject(new Error(sellerResult.message || 'Seller kayıt hatası'));
+                    reject(new Error(sellerResult.message || 'Seller registration error'));
                     return;
                 }
                 
@@ -1049,7 +1080,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const adId = this.wizard.editingAdId;
             
             if (!adId) {
-                reject(new Error('Güncellenecek ilan bulunamadı'));
+                reject(new Error('Not Updateable Ads'));
                 return;
             }
             
@@ -1100,7 +1131,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         } else {
             sellerData.seller_name = this.seller.input.name.$.val();
             sellerData.seller_tc_number = this.seller.input.tc.$.val();
-            sellerData.seller_birthdate = this.seller.input.birthdate.$.val();
             sellerData.seller_phone = this.seller.input.phone_individual.$.val();
             sellerData.seller_email = this.seller.input.email_individual.$.val();
             sellerData.seller_iban = this.seller.input.iban_individual.$.val();
@@ -1113,9 +1143,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _getProductFormData: function() {
         const productData = {
             id: null,
-            name: this.escrow.input.name.$.val(),
             categ: [this.escrow.input.category.$.val(), this.escrow.input.category.$.find('option:selected').text()],
-            price: this._parseTurkishPrice(this.escrow.input.price.$.val()),
+            price: this.escrow.input.price.$.val(),
             desc: this.escrow.input.desc.$.val(),
             vin: this.escrow.input.vin.$.val(),
             plate: this.escrow.input.plate.$.val(),
@@ -1141,165 +1170,236 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const $wiz = $('.escrow-wizard');
         if (!$wiz.length) return;
 
+        const isValidIBAN = (iban) => {
+            const cleanIban = iban.replace(/\s/g, '').toUpperCase();
+            
+            if (!/^TR\d{24}$/.test(cleanIban)) {
+                return false;
+            }
+            
+            const rearranged = cleanIban.substring(4) + cleanIban.substring(0, 4);
+            
+            let numericString = '';
+            for (let i = 0; i < rearranged.length; i++) {
+                const char = rearranged[i];
+                if (char >= 'A' && char <= 'Z') {
+                    numericString += (char.charCodeAt(0) - 65 + 10).toString();
+                } else {
+                    numericString += char;
+                }
+            }
+            
+            let remainder = 0;
+            for (let i = 0; i < numericString.length; i++) {
+                remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
+            }
+            
+            return remainder === 1;
+        };
+
+        const isValidTCKN = (tckn) => {
+            const cleanTckn = tckn.replace(/\D/g, '');
+            if (cleanTckn.length !== 11) {
+                return false;
+            }
+            
+            const digits = cleanTckn.split('').map(Number);
+            
+            if (digits[0] === 0) {
+                return false;
+            }
+            
+            const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+            const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+            
+            const checkDigit10 = ((oddSum * 7) - evenSum) % 10;
+            const checkDigit11 = (digits.slice(0, 10).reduce((a, b) => a + b, 0)) % 10;
+            
+            return digits[9] === checkDigit10 && digits[10] === checkDigit11;
+        };
+
+        const isValidEmail = (email) => {
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            
+            if (!emailRegex.test(email)) {
+                return false;
+            }
+
+            const parts = email.split('@');
+            if (parts.length !== 2) return false;
+            
+            const [localPart, domainPart] = parts;
+            
+            if (localPart.length > 64 || localPart.length === 0) return false;
+            if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+            if (localPart.includes('..')) return false;
+            
+            if (domainPart.length > 253 || domainPart.length === 0) return false;
+            if (domainPart.startsWith('-') || domainPart.endsWith('-')) return false;
+            if (domainPart.startsWith('.') || domainPart.endsWith('.')) return false;
+            
+            const domainParts = domainPart.split('.');
+            const tld = domainParts[domainParts.length - 1];
+            if (tld.length < 2) return false;
+            
+            const invalidDomains = ['tempmail.com', '10minutemail.com', 'mailinator.com', 'guerrillamail.com'];
+            if (invalidDomains.some(domain => domainPart.toLowerCase().includes(domain))) {
+                return false;
+            }
+            
+            return true;
+        };
+
         this.validationErrors = {};
         this.validationRules = {
             '#namesurname': [
-                { rule: 'required', errorMessage: 'Ad Soyad zorunludur' }
+                { rule: 'required', errorMessage: 'Full Name is required' }
             ],
             '#wizard_tckn': [
                 { rule: 'required', errorMessage: 'T.C. Kimlik No zorunludur' },
                 {
                     rule: 'custom',
-                    validator: (val) => /^[1-9][0-9]{10}$/.test(val.replace(/\D/g, '')),
+                    validator: (val) => isValidTCKN(val),
                     errorMessage: '11 haneli geçerli T.C. No girin'
                 }
             ],
-            '#birthdate': [
-                { rule: 'required', errorMessage: 'Doğum tarihi zorunludur' },
-                {
-                    rule: 'custom',
-                    validator: (val) => /^\d{2}\/\d{2}\/\d{4}$/.test(val),
-                    errorMessage: 'GG/AA/YYYY formatında girin'
-                }
-            ],
             '#email_individual': [
-                { rule: 'required', errorMessage: 'E-posta zorunludur' },
+                { rule: 'required', errorMessage: 'E-posta adresi zorunludur' },
                 {
                     rule: 'custom',
-                    validator: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-                    errorMessage: 'Geçerli bir e-posta giriniz'
+                    validator: (val) => isValidEmail(val),
+                    errorMessage: 'Geçerli bir e-posta adresi girin (format, domain ve TLD kontrolü)'
                 }
             ],
             '#phone_individual': [
-                { rule: 'required', errorMessage: 'Telefon zorunludur' },
+                { rule: 'required', errorMessage: 'Phone number is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^[0-9\s]{10,15}$/.test(val.replace(/\D/g, '')),
-                    errorMessage: 'Geçerli bir telefon giriniz'
+                    errorMessage: 'Please enter a valid phone number'
                 }
             ],
             '#wizard_iban': [
                 { rule: 'required', errorMessage: 'IBAN zorunludur' },
                 {
                     rule: 'custom',
-                    validator: (val) => /^TR\d{2}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{2}$/.test(val.replace(/\s/g, '')),
-                    errorMessage: 'Geçerli bir IBAN giriniz'
+                    validator: (val) => isValidIBAN(val),
+                    errorMessage: 'Geçerli bir TR IBAN giriniz (mod-97 kontrolü)'
                 }
             ],
             '#ibanaccountname_individual': [
-                { rule: 'required', errorMessage: 'Hesap adı zorunludur' }
+                { rule: 'required', errorMessage: 'Account name is required' }
             ],
-            // Corporate fields
             '#corporate_title': [
-                { rule: 'required', errorMessage: 'Firma unvanı zorunludur' }
+                { rule: 'required', errorMessage: 'Company title is required' }
             ],
             '#wizard_tax': [
-                { rule: 'required', errorMessage: 'Vergi numarası zorunludur' },
+                { rule: 'required', errorMessage: 'Tax number is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^[0-9]{10}$/.test(val.replace(/\D/g, '')),
-                    errorMessage: '10 haneli geçerli vergi no girin'
+                    errorMessage: 'Please enter a valid 10-digit tax number'
                 }
             ],
             '#corporate_person': [
-                { rule: 'required', errorMessage: 'Yetkili kişi adı zorunludur' }
+                { rule: 'required', errorMessage: 'Authorized person name is required' }
             ],
             '#email_corporate': [
-                { rule: 'required', errorMessage: 'E-posta zorunludur' },
+                { rule: 'required', errorMessage: 'E-posta adresi zorunludur' },
                 {
                     rule: 'custom',
-                    validator: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-                    errorMessage: 'Geçerli bir e-posta giriniz'
+                    validator: (val) => isValidEmail(val),
+                    errorMessage: 'Geçerli bir e-posta adresi girin (format, domain ve TLD kontrolü)'
                 }
             ],
             '#phone_corporate': [
-                { rule: 'required', errorMessage: 'Telefon zorunludur' },
+                { rule: 'required', errorMessage: 'Phone number is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^[0-9\s]{10,15}$/.test(val.replace(/\D/g, '')),
-                    errorMessage: 'Geçerli bir telefon giriniz'
+                    errorMessage: 'Please enter a valid phone number'
                 }
             ],
             '#wizard_iban_corp': [
                 { rule: 'required', errorMessage: 'IBAN zorunludur' },
                 {
                     rule: 'custom',
-                    validator: (val) => /^TR\d{2}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\s?\d{2}$/.test(val.replace(/\s/g, '')),
-                    errorMessage: 'Geçerli bir IBAN giriniz'
+                    validator: (val) => isValidIBAN(val),
+                    errorMessage: 'Geçerli bir TR IBAN giriniz (mod-97 kontrolü)'
                 }
             ],
             '#ibanaccountname_corporate': [
-                { rule: 'required', errorMessage: 'Hesap adı zorunludur' }
+                { rule: 'required', errorMessage: 'Account name is required' }
             ],
             '#wizard_category': [
-                { rule: 'required', errorMessage: 'Satış kategorisi seçin' },
+                { rule: 'required', errorMessage: 'Sales category is required' },
                 {
                     rule: 'custom',
                     validator: (val) => val !== '' && val !== '0',
-                    errorMessage: 'Lütfen satış kategorisi seçin'
+                    errorMessage: 'Please select a sales category'
                 }
             ],
             '#wizard_price': [
-                { rule: 'required', errorMessage: 'Satış fiyatı zorunludur' },
+                { rule: 'required', errorMessage: 'Sales price is required' },
                 {
                     rule: 'custom',
                     validator: (val) => {
                         return /^\d{1,3}(\.\d{3})*,\d{2}$/.test(val) || /^\d+,\d{2}$/.test(val) || /^\d+$/.test(val);
                     },
-                    errorMessage: 'Geçerli bir fiyat girin (örn: 1.000.000,00)'
+                    errorMessage: 'Please enter a valid price (e.g., 1.000.000,00)'
                 },
                 {
                     rule: 'custom',
                     validator: (val) => {
-                        const numericValue = self._parseTurkishPrice(val);
+                        const numericValue = parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
                         return numericValue > 0;
                     },
-                    errorMessage: 'Fiyat sıfırdan büyük olmalıdır'
+                    errorMessage: 'Price must be greater than zero'
                 }
             ],
             '#wizard_vin': [
-                { rule: 'required', errorMessage: 'Şase numarası zorunludur' },
+                { rule: 'required', errorMessage: 'VIN is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^[A-HJ-NPR-Z0-9]{17}$/.test(val.toUpperCase()),
-                    errorMessage: 'Geçerli bir 17 karakterlik VIN girin'
+                    errorMessage: 'Please enter a valid 17-character VIN'
                 },
                 {
                     rule: 'custom',
                     validator: (val) => self._isValidVinChecksum(val.toUpperCase()),
-                    errorMessage: 'Geçersiz VIN numarası (kontrol hanesi yanlış)'
+                    errorMessage: 'Invalid VIN (checksum is incorrect)'
                 }
             ],
             '#wizard_plate': [
-                { rule: 'required', errorMessage: 'Plaka zorunludur' },
+                { rule: 'required', errorMessage: 'License plate is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^(0[1-9]|[1-7][0-9]|8[01])\s?[A-Z]{1,3}\s?[0-9]{1,4}$/.test(val),
-                    errorMessage: 'Geçerli bir plaka girin (örn: 34 ABC 123)'
+                    errorMessage: 'Please enter a valid license plate (e.g., 34 ABC 123)'
                 }
             ],
             '#wizard_brand': [
-                { rule: 'required', errorMessage: 'Marka seçin' },
+                { rule: 'required', errorMessage: 'Brand is required' },
                 {
                     rule: 'custom',
                     validator: (val) => val !== '' && val !== '0',
-                    errorMessage: 'Marka seçin'
+                    errorMessage: 'Please select a brand'
                 }
             ],
             '#wizard_model': [
-                { rule: 'required', errorMessage: 'Model seçin' },
+                { rule: 'required', errorMessage: 'Model is required' },
                 {
                     rule: 'custom',
                     validator: (val) => val !== '' && val !== '0',
-                    errorMessage: 'Model seçin'
+                    errorMessage: 'Please select a model'
                 }
             ],
             '#wizard_year': [
-                { rule: 'required', errorMessage: 'Yıl zorunludur' },
+                { rule: 'required', errorMessage: 'Year is required' },
                 {
                     rule: 'custom',
                     validator: (val) => /^\d{4}$/.test(val),
-                    errorMessage: 'Yıl sadece sayı olmalıdır'
+                    errorMessage: 'Year must be a number'
                 },
                 {
                     rule: 'custom',
@@ -1307,7 +1407,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const year = parseInt(val);
                         return year >= 1950 && year <= new Date().getFullYear();
                     },
-                    errorMessage: 'Geçerli bir yıl girin'
+                    errorMessage: 'Please enter a valid year'
                 }
             ],
             '#wizard_file_input': [
@@ -1317,7 +1417,93 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const input = $wiz.find('#wizard_file_input')[0];
                         return input && input.files && input.files.length > 0;
                     },
-                    errorMessage: 'En az bir dosya seçmelisiniz'
+                    errorMessage: 'At least one file must be selected'
+                }
+            ],
+            '#recipient_name_surname': [
+                { rule: 'required', errorMessage: 'Name Surname is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => val.length >= 2,
+                    errorMessage: 'Please enter at least 2 characters'
+                }
+            ],
+            '#recipient_identity': [
+                { rule: 'required', errorMessage: 'T.C. Kimlik Numarası zorunludur' },
+                {
+                    rule: 'custom',
+                    validator: (val) => isValidTCKN(val),
+                    errorMessage: '11 haneli geçerli T.C. No girin'
+                }
+            ],
+            '#recipient_phone_individual': [
+                { rule: 'required', errorMessage: 'Phone is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => /^[0-9\s]{10,15}$/.test(val.replace(/\D/g, '')),
+                    errorMessage: 'Please enter a valid phone number'
+                }
+            ],
+            '#recipient_email_individual': [
+                { rule: 'required', errorMessage: 'E-posta adresi zorunludur' },
+                {
+                    rule: 'custom',
+                    validator: (val) => isValidEmail(val),
+                    errorMessage: 'Geçerli bir e-posta adresi girin (format, domain ve TLD kontrolü)'
+                }
+            ],
+            '#recipient_address_individual': [
+                { rule: 'required', errorMessage: 'Address is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => val.length >= 10,
+                    errorMessage: 'Address is too short (at least 10 characters)'
+                }
+            ],
+            '#recipient_corporate_title': [
+                { rule: 'required', errorMessage: 'Company title is required' }
+            ],
+            '#recipient_tax_number': [
+                { rule: 'required', errorMessage: 'Tax number is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => /^[0-9]{10}$/.test(val.replace(/\D/g, '')),
+                    errorMessage: 'Please enter a valid 10-digit tax number'
+                }
+            ],
+            '#recipient_tax_office': [
+                { rule: 'required', errorMessage: 'Tax office is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => val.length >= 2,
+                    errorMessage: 'Please enter at least 2 characters'
+                }
+            ],
+            '#recipient_person': [
+                { rule: 'required', errorMessage: 'Authorized person name is required' }
+            ],
+            '#recipient_phone_corporate': [
+                { rule: 'required', errorMessage: 'Phone is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => /^[0-9\s]{10,15}$/.test(val.replace(/\D/g, '')),
+                    errorMessage: 'Please enter a valid phone number'
+                }
+            ],
+            '#recipient_email_corporate': [
+                { rule: 'required', errorMessage: 'E-posta adresi zorunludur' },
+                {
+                    rule: 'custom',
+                    validator: (val) => isValidEmail(val),
+                    errorMessage: 'Geçerli bir e-posta adresi girin (format, domain ve TLD kontrolü)'
+                }
+            ],
+            '#recipient_address_corporate': [
+                { rule: 'required', errorMessage: 'Address is required' },
+                {
+                    rule: 'custom',
+                    validator: (val) => val.length >= 10,
+                    errorMessage: 'Address is too short (at least 10 characters)'
                 }
             ]
         };
@@ -1329,13 +1515,25 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const value = $field.val() || '';
             const rules = this.validationRules[selector] || [];
             
+            if (selector.includes('#recipient_')) {
+                const recipientType = $('input[name="recipientType"]:checked').val();
+                const isIndividualField = selector.includes('_individual') || 
+                    ['#recipient_name_surname', '#recipient_identity'].includes(selector);
+                const isCorporateField = selector.includes('_corporate') || 
+                    ['#recipient_corporate_title', '#recipient_tax_number', '#recipient_tax_office', '#recipient_person'].includes(selector);
+                
+                if ((recipientType === 'individual' && isCorporateField) || 
+                    (recipientType === 'corporate' && isIndividualField)) {
+                    return true;
+                }
+            }
+            
             $field.removeClass('is-invalid -error just-validate-error-field -success');
             const $group = $field.closest('.form__group');
             $group.find('.form__error-label, .just-validate-error-label').remove();
             $group.find('.state-check').addClass('d-none');
             $group.find('.form__error').addClass('d-none');
 
-            // Check each rule
             for (const rule of rules) {
                 let isValid = true;
                 let errorMessage = rule.errorMessage;
@@ -1374,8 +1572,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $field.on('input blur', () => {
                     const mode = self.getCurrentMode();
                     const isIndividualField = selector.includes('individual') || selector === '#namesurname' || 
-                                             selector === '#wizard_tckn' || selector === '#birthdate' || 
-                                             selector === '#wizard_iban' || selector === '#ibanaccountname_individual';
+                                             selector === '#wizard_tckn' || selector === '#wizard_iban' || 
+                                             selector === '#ibanaccountname_individual';
                     const isCorporateField = selector.includes('corporate') || selector === '#corporate_title' || 
                                            selector === '#wizard_tax' || selector === '#corporate_person' ||
                                            selector === '#wizard_iban_corp' || selector === '#ibanaccountname_corporate';
@@ -1386,6 +1584,34 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         isProductField) {
                         setTimeout(() => validateField(selector), 100);
                     }
+                });
+            }
+        });
+
+        const emailFields = ['#email_individual', '#email_corporate', '#recipient_email_individual', '#recipient_email_corporate'];
+        emailFields.forEach(selector => {
+            const $emailField = $wiz.find(selector);
+            if ($emailField.length) {
+                $emailField.on('blur', function() {
+                    const email = $(this).val().trim();
+                    const $field = $(this);
+                    const $group = $field.closest('.form__group');
+                    
+                    $group.find('.email-verification-status').remove();
+                    
+                    if (email && email.includes('@')) {
+                        const isValid = isValidEmail(email);
+                        
+                        if (isValid) {
+                            $group.append('<div class="email-verification-status text-success small mt-1">✅ E-mail format corrected</div>');
+                        } else {
+                            $group.append('<div class="email-verification-status text-danger small mt-1">❌ E-mail format invalid</div>');
+                        }
+                    }
+                });
+                
+                $emailField.on('input', function() {
+                    $(this).closest('.form__group').find('.email-verification-status').remove();
                 });
             }
         });
@@ -1499,14 +1725,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const $counter = $('#wizard_num_of_files');
             
             if (files.length > 0) {
-                $counter.text(`${files.length} dosya seçildi`);
+                $counter.text(`${files.length} File Selected`);
                 $filesList.empty();
                 
                 Array.from(files).forEach((file, index) => {
                     $filesList.append(`<li>${file.name}</li>`);
                 });
             } else {
-                $counter.text('Hiçbir Görsel Seçilmedi');
+                $counter.text('No Files Selected');
                 $filesList.empty();
             }
             
@@ -1516,12 +1742,44 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         });
 
+        $wiz.find('#recipient_corporate_title').on('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+
+        $wiz.find('#recipient_phone_individual, #recipient_phone_corporate').on('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 3 && value.length <= 6) {
+                value = value.slice(0, 3) + ' ' + value.slice(3);
+            } else if (value.length > 6) {
+                value = value.slice(0, 3) + ' ' + value.slice(3, 6) + ' ' + value.slice(6, 10);
+            }
+            this.value = value;
+        });
+
+        $wiz.find('#phone_individual, #phone_corporate').on('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 3 && value.length <= 6) {
+                value = value.slice(0, 3) + ' ' + value.slice(3);
+            } else if (value.length > 6) {
+                value = value.slice(0, 3) + ' ' + value.slice(3, 6) + ' ' + value.slice(6, 10);
+            }
+            this.value = value;
+        });
+
+        $wiz.find('#recipient_tax_number').on('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        $wiz.find('#recipient_identity').on('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 11);
+        });
+
         this.validateWizardStep1 = () => {
             const mode = this.getCurrentMode();
             let isValid = true;
 
             if (mode === 'individual') {
-                const fields = ['#namesurname', '#wizard_tckn', '#birthdate', '#email_individual', '#phone_individual', '#wizard_iban', '#ibanaccountname_individual'];
+                const fields = ['#namesurname', '#wizard_tckn', '#email_individual', '#phone_individual', '#wizard_iban', '#ibanaccountname_individual'];
                 fields.forEach(selector => {
                     if (!validateField(selector)) {
                         isValid = false;
@@ -1543,6 +1801,40 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const fields = ['#wizard_category', '#wizard_price', '#wizard_vin', '#wizard_plate', '#wizard_brand', '#wizard_model', '#wizard_year', '#wizard_file_input'];
             
             fields.forEach(selector => {
+                if (!validateField(selector)) {
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        };
+
+        this.validateWizardStep3 = () => {
+            let isValid = true;
+            const recipientType = $('input[name="recipientType"]:checked').val();
+            
+            let fieldsToValidate;
+            if (recipientType === 'individual') {
+                fieldsToValidate = [
+                    '#recipient_name_surname',
+                    '#recipient_identity', 
+                    '#recipient_phone_individual',
+                    '#recipient_email_individual',
+                    '#recipient_address_individual'
+                ];
+            } else {
+                fieldsToValidate = [
+                    '#recipient_corporate_title',
+                    '#recipient_tax_number',
+                    '#recipient_tax_office',
+                    '#recipient_address_corporate',
+                    '#recipient_person',
+                    '#recipient_phone_corporate',
+                    '#recipient_email_corporate'
+                ];
+            }
+            
+            fieldsToValidate.forEach(selector => {
                 if (!validateField(selector)) {
                     isValid = false;
                 }
@@ -1682,7 +1974,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 this._initializeProductInfoForm();
                 break;
             case 3:
-                this._initializeRecipientInfoForm();
+                this._bindRecipientToggle();
                 break;
             case 4:
                 this._initializePaymentForm();
@@ -1730,76 +2022,70 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     message: 'Bağlantı hatası oluştu.',
                 });
             });
-            return false; // Prevent default navigation
+            return false;
         }
 
-        // If moving from step 2 to step 3, save product information (both edit and new mode)
         if (this.wizard.currentStep === 2) {
             this._saveProductInfo().then(function(result) {
                 if (result.success || result.id) {
-                    // Save the product ID for future use (e.g., recipient save)
                     if (result.id && !self.wizard.editMode) {
                         self.wizard.savedProductId = result.id;
                     }
                     
-                    // Mark current step as completed
                     self._markStepCompleted(self.wizard.currentStep);
                     self._navigateToStep(self.wizard.currentStep + 1);
                     
                     self.displayNotification({
                         type: 'success',
-                        title: 'Başarılı',
-                        message: result.message || 'Ürün bilgileri kaydedildi.',
+                        title: 'Success',
+                        message: result.message || 'Product information has been saved.',
                     });
                 } else {
                     self.displayNotification({
                         type: 'danger',
-                        title: 'Hata',
-                        message: result.message || 'Ürün bilgileri kaydedilirken bir hata oluştu.',
+                        title: 'Error',
+                        message: result.message || 'Product information could not be saved.',
                     });
                 }
             }).catch(function(error) {
                 self.displayNotification({
                     type: 'danger',
-                    title: 'Hata',
-                    message: 'Bağlantı hatası oluştu.',
+                    title: 'Error',
+                    message: 'Connection error occurred.',
                 });
             });
-            return false; // Prevent default navigation
+            return false;
         }
 
-        // If moving from step 3 to step 4, save recipient information
         if (this.wizard.currentStep === 3) {
             this._saveRecipientInfo().then(function(result) {
                 if (result.success) {
-                    // Mark current step as completed
                     self._markStepCompleted(self.wizard.currentStep);
                     self._navigateToStep(self.wizard.currentStep + 1);
                     
                     self.displayNotification({
                         type: 'success',
-                        title: 'Başarılı',
-                        message: result.message || 'Alıcı bilgileri kaydedildi.',
+                        title: 'Success',
+                        message: result.message || 'Customer Information has been saved',
                     });
                 } else {
                     self.displayNotification({
                         type: 'danger',
-                        title: 'Hata',
-                        message: result.message || 'Alıcı bilgileri kaydedilirken bir hata oluştu.',
+                        title: 'Error',
+                        message: result.message || 'Customer Information could not be saved.',
                     });
                 }
             }).catch(function(error) {
                 self.displayNotification({
                     type: 'danger',
-                    title: 'Hata',
-                    message: 'Bağlantı hatası oluştu.',
+                    title: 'Error',
+                    message: 'Connection error occurred.',
                 });
             });
-            return false; // Prevent default navigation
+            return false;
         }
 
         if (this.wizard.currentStep < 5) {
-            // Mark current step as completed
             this._markStepCompleted(this.wizard.currentStep);
             this._navigateToStep(this.wizard.currentStep + 1);
         }
@@ -1821,7 +2107,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             case 2:
                 return this._validateProductInfo();
             case 3:
-                return this._validateRecipientInfo();
+                return this.validateWizardStep3();
             case 4:
                 return this._validatePaymentInfo();
             default:
@@ -1830,28 +2116,23 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _validateAllSteps: function () {
-        // Validate all steps before final submission
         return this.validateWizardStep1() && 
                this._validateProductInfo() && 
-               this._validateRecipientInfo() &&
+               this.validateWizardStep3() &&
                this._validatePaymentInfo();
     },
 
     _validateProductInfo: function () {
-        // Use the new validation system for Step 2
         return this.validateWizardStep2();
     },
 
     _validatePaymentInfo: function () {
-        // Payment info validation logic
         const $wiz = $('.escrow-wizard');
         let isValid = true;
 
-        // Clear all previous errors
         $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
         $wiz.find('.form__error-label, .just-validate-error-label').remove();
 
-        // Helper function to show error
         const showError = ($field, message) => {
             $field.addClass('is-invalid -error just-validate-error-field');
             const $group = $field.closest('.form__group');
@@ -1860,7 +2141,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             isValid = false;
         };
 
-        // Card holder name validation
         const $cardHolder = $wiz.find('#card_holder_name');
         if ($cardHolder.length) {
             const cardHolderValue = $cardHolder.val().trim();
@@ -1871,7 +2151,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         }
 
-        // Card number validation
         const $cardNumber = $wiz.find('#card_number');
         if ($cardNumber.length) {
             const cardNumberValue = $cardNumber.val().replace(/\D/g, '');
@@ -1881,8 +2160,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 showError($cardNumber, 'Geçerli bir kart numarası giriniz');
             }
         }
-
-        // Card expiry validation
         const $cardExpiry = $wiz.find('#card_expiry');
         if ($cardExpiry.length) {
             const expiryValue = $cardExpiry.val().trim();
@@ -1892,8 +2169,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 showError($cardExpiry, 'AA/YY formatında giriniz');
             }
         }
-
-        // CVV validation
         const $cvv = $wiz.find('#cvv');
         if ($cvv.length) {
             const cvvValue = $cvv.val().replace(/\D/g, '');
@@ -1903,17 +2178,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 showError($cvv, 'Güvenlik kodu en az 3 haneli olmalıdır');
             }
         }
-
-        // Payment amount validation (if exists)
         const paymentAmountValid = this._validatePartialPriceField();
         if (!paymentAmountValid) {
             isValid = false;
         }
 
-        // Agreement checkboxes validation
         const $agreement = $wiz.find('#agreementChk');
         if ($agreement.length && !$agreement.is(':checked')) {
-            // Show error for agreement checkbox
             const $agreementLabel = $agreement.closest('label');
             $agreementLabel.addClass('text-danger');
             $agreementLabel.after('<div class="form__error-label just-validate-error-label">Sözleşmeyi kabul etmeniz gerekiyor</div>');
@@ -1924,123 +2195,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeSellerInfoForm: function () {
-        // Seller info form initialization
         this._setupFileUpload();
     },
 
     _initializeProductInfoForm: function () {
-        // Product info form initialization
         this._setupFileUpload();
-        this._setupPriceFormatting();
-    },
-
-    _setupPriceFormatting: function() {
-        const $wiz = $('.escrow-wizard');
-        const $priceInput = $wiz.find('#wizard_price');
-        
-        if (!$priceInput.length) return;
-        
-        const self = this;
-        
-        // Turkish price formatting function
-        const formatTurkishPrice = (value) => {
-            // Remove all non-digits
-            let numericValue = value.replace(/[^\d]/g, '');
-            
-            // If empty, return empty
-            if (!numericValue) return '';
-            
-            // Convert to integer for processing
-            let num = parseInt(numericValue, 10);
-            
-            // Format with thousands separator (dots) and add decimal part (,00)
-            let formattedValue = num.toLocaleString('tr-TR').replace(/,/g, '.');
-            
-            // Add ,00 for decimal part
-            formattedValue += ',00';
-            
-            return formattedValue;
-        };
-        
-        // Format price input on input
-        $priceInput.on('input', function() {
-            const currentValue = $(this).val();
-            const cursorPosition = this.selectionStart;
-            const formattedValue = formatTurkishPrice(currentValue);
-            
-            if (formattedValue !== currentValue) {
-                $(this).val(formattedValue);
-                // Try to maintain cursor position
-                const newPosition = Math.min(cursorPosition, formattedValue.length);
-                this.setSelectionRange(newPosition, newPosition);
-            }
-            
-            // Update remaining balance when price changes
-            self._updateRemainingBalance(formattedValue);
-        });
-        
-        // Also format on blur to ensure consistency
-        $priceInput.on('blur', function() {
-            const currentValue = $(this).val();
-            if (currentValue && !currentValue.includes(',')) {
-                const formattedValue = formatTurkishPrice(currentValue);
-                $(this).val(formattedValue);
-                self._updateRemainingBalance(formattedValue);
-            }
-        });
-    },
-
-    _updateRemainingBalance: function(priceValue) {
-        const $remainingBalance = $('.escrow-wizard #remainingBalance');
-        if (!$remainingBalance.length || !priceValue) return;
-        
-        // Parse the Turkish formatted price and format it for display
-        const numericPrice = this._parseTurkishPrice(priceValue);
-        if (numericPrice > 0) {
-            const formattedPrice = this._formatTurkishCurrency(numericPrice, true);
-            $remainingBalance.text(formattedPrice);
-        }
-    },
-
-    // Utility function to convert Turkish formatted price to numeric
-    _parseTurkishPrice: function(formattedPrice) {
-        if (!formattedPrice) return 0;
-        console.log('Parsing Turkish price:', formattedPrice);
-        
-        return parseFloat(formattedPrice.replace(/\./g, '').replace(',', '.')) || 0;
-    },
-
-    // Utility function to format numeric price to Turkish format
-    _formatTurkishPrice: function(numericPrice) {
-        if (!numericPrice && numericPrice !== 0) return '';
-        let formattedValue = Math.floor(numericPrice).toLocaleString('tr-TR').replace(/,/g, '.');
-        formattedValue += ',00';
-        return formattedValue;
     },
 
     _initializePaymentForm: function () {
-        // Payment form initialization
-        this._setupRemainingBalanceFromProduct();
-        this._setupPartialPriceValidation();
         this._setupFileUpload();
         this._setupCreditCardInstallments();
-    },
-
-    _setupRemainingBalanceFromProduct: function() {
-        const $wiz = $('.escrow-wizard');
-        const $priceInput = $wiz.find('#wizard_price');
-        const $remainingBalance = $wiz.find('#remainingBalance');
-        
-        if (!$priceInput.length || !$remainingBalance.length) return;
-        
-        // Get the product price from wizard step 2
-        const priceValue = $priceInput.val();
-        if (priceValue) {
-            // Parse the Turkish formatted price and format it for display
-            const numericPrice = this._parseTurkishPrice(priceValue);
-            const formattedPrice = this._formatTurkishCurrency(numericPrice, true);
-            $remainingBalance.text(formattedPrice);
-        }
     },
 
     _setupCreditCardInstallments: function() {
@@ -2054,7 +2218,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         
         const self = this;
         
-        // Function to check BIN and fetch installment options
         const checkBINAndFetchInstallments = (cardNumber) => {
             if (cardNumber.length >= 6) {
                 const bin = cardNumber.substring(0, 6);
@@ -2091,20 +2254,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _formatPriceForDisplay: function(price) {
-        if (!price) return '0,00';
-        price = price.replace('.', ',');
-        const num = parseFloat(price);
-        if (isNaN(num)) return '0,00';
-        
-        return num.toLocaleString('tr-TR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    },
-
     _showCompletionPage: function () {
-        // Completion page actions
         console.log('Wizard completed');
     },
 
@@ -2129,11 +2279,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         function setMode(mode) {
             const isInd = mode === 'individual';
             
-            // Update sections visibility
             $secInd.toggleClass('d-none', !isInd);
             $secCor.toggleClass('d-none', isInd);
             
-            // Update radio buttons without triggering events
             if ($radioInd.length && $radioCor.length) {
                 $radioInd.off('change');
                 $radioCor.off('change');
@@ -2141,7 +2289,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $radioInd.prop('checked', isInd);
                 $radioCor.prop('checked', !isInd);
                 
-                // Re-bind events after updating
                 $radioInd.on('change', () => {
                     if ($radioInd.is(':checked')) {
                         setMode('individual');
@@ -2153,12 +2300,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 });
             } else {
-                // Button-based UI fallback
                 $btnInd.toggleClass('btn-dark active', isInd).toggleClass('btn-outline-dark', !isInd);
                 $btnCor.toggleClass('btn-outline-dark', isInd).toggleClass('btn-dark active', !isInd);
             }
             
-            // Update slider position for animation
             if ($slider.length) {
                 if (isInd) {
                     $slider.css('transform', 'translateX(0%)');
@@ -2170,11 +2315,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         }
 
-        // Bind button events
         $btnInd.on('click', (e) => { e.preventDefault(); setMode('individual'); });
         $btnCor.on('click', (e) => { e.preventDefault(); setMode('corporate'); });
         
-        // Initial radio event binding
         $radioInd.on('change', () => {
             if ($radioInd.is(':checked')) {
                 setMode('individual');
@@ -2186,23 +2329,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         });
         
-        // Initialize with individual mode
         setMode('individual');
     },
 
     _saveSellerInfo: function () {
         const self = this;
         
-        // Get seller type (individual or corporate)
         const sellerType = $('input[name="userType"]:checked').val();
-        
-        // Collect form data based on seller type using field system
         let formData = {
             seller_type: sellerType,
         };
         
         if (sellerType === 'corporate') {
-            // Corporate fields using field system
             formData = {
                 ...formData,
                 seller_name: this.seller.input.corporate_title.$.val(),
@@ -2214,25 +2352,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 seller_iban_name: this.seller.input.iban_name_corporate.$.val(),
             };
         } else {
-            // Individual fields using field system
             formData = {
                 ...formData,
                 seller_name: this.seller.input.name.$.val(),
                 seller_email: this.seller.input.email_individual.$.val(),
                 seller_phone: this.seller.input.phone_individual.$.val(),
                 seller_tc_number: this.seller.input.tc.$.val(),
-                seller_birthdate: this.seller.input.birthdate.$.val(),
                 seller_iban: this.seller.input.iban_individual.$.val(),
                 seller_iban_name: this.seller.input.iban_name_individual.$.val(),
             };
         }
-        
-        // Make AJAX request to save seller info
         return this._rpc({
             route: '/my/seller/save',
             params: formData,
         }).then((result) => {
-            // Store the seller partner_id for later use in product creation
             if (result.success && result.partner_id) {
                 self.wizard.sellerId = result.partner_id;
                 console.log('Seller saved with ID:', result.partner_id);
@@ -2241,45 +2374,36 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    // Save product information for both edit and new mode
     _saveProductInfo: function () {
         const self = this;
         
-        // Check if we're in edit mode
         const isEditMode = this.wizard && this.wizard.editMode;
         const editingAdId = this.wizard && this.wizard.editingAdId;
         
-        // Helper function to safely parse integer IDs
         const parseIntSafe = (value) => {
             const parsed = parseInt(value, 10);
             return isNaN(parsed) ? null : parsed;
         };
         
-        // Collect product form data using field system
         const productData = {
-            name: this.escrow.input.name.$.val(),
             categ_id: parseIntSafe(this.escrow.input.category.$.val()),
-            price: this._parseTurkishPrice(this.escrow.input.price.$.val()),
+            price: this.escrow.input.price.$.val(),
             description: this.escrow.input.desc.$.val(),
-            // Vehicle information with proper ID parsing
             escrow_car_vin: this.escrow.input.vin.$.val(),
             escrow_car_plate: this.escrow.input.plate.$.val(),
             escrow_car_brand_id: parseIntSafe(this.escrow.input.brand.$.val()),
             escrow_car_model_id: parseIntSafe(this.escrow.input.model.$.val()),
             escrow_car_model_year: parseIntSafe(this.escrow.input.year.$.val()),
-            // Image data would need to be handled separately
-            image_1920: null // TODO: Handle image upload
+            image_1920: null
         };
         
         if (isEditMode && editingAdId) {
-            // Update existing ad
             productData.id = parseIntSafe(editingAdId);
             return this._rpc({
                 route: '/my/ad/save',
                 params: productData,
             });
         } else {
-            // Create new ad - add owner_id if we have a saved seller ID
             if (this.wizard && this.wizard.sellerId) {
                 productData.owner_id = parseIntSafe(this.wizard.sellerId);
             }
@@ -2288,7 +2412,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 route: '/my/ad/save',
                 params: productData,
             }).then((result) => {
-                // Store the saved product ID for recipient info step
                 if (result.success && result.id) {
                     self.wizard.savedProductId = result.id;
                 }
@@ -2297,7 +2420,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    // VIN doğrulama fonksiyonu
     _isValidVinChecksum: function(vin) {
         const map = {
             A: 1, B: 2, C: 3, D: 4, E: 5,
@@ -2327,15 +2449,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return checkDigit === expected;
     },
 
-    // Save recipient information
     _saveRecipientInfo: function() {
         const recipientType = $('input[name="recipientType"]:checked').val();
         
         const data = {
-            customer_type: recipientType,
+            recipient_type: recipientType,
         };
 
-        // Add product_id if we're editing an existing ad or have a saved product
         if (this.wizard && this.wizard.editingAdId) {
             data.product_id = this.wizard.editingAdId;
         } else if (this.wizard && this.wizard.savedProductId) {
@@ -2343,103 +2463,72 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (recipientType === 'individual') {
-            // Individual recipient data using field system
-            data.customer_name_surname = this.recipient.input.name_surname.$.val();
-            data.customer_identity = this.recipient.input.identity.$.val();
-            data.customer_birthdate = this.recipient.input.birthdate.$.val();
-            data.customer_phone = this.recipient.input.phone_individual.$.val();
-            data.customer_email = this.recipient.input.email_individual.$.val();
-            data.customer_address = this.recipient.input.address_individual.$.val();
+            data.recipient_name_surname = this.recipient.input.name_surname.$.val();
+            data.recipient_identity = this.recipient.input.identity.$.val();
+            data.recipient_phone = this.recipient.input.phone_individual.$.val();
+            data.recipient_email = this.recipient.input.email_individual.$.val();
+            data.recipient_address = this.recipient.input.address_individual.$.val();
         } else {
-            // Corporate recipient data using field system
-            data.customer_corporate_title = this.recipient.input.corporate_title.$.val();
-            data.customer_tax_number = this.recipient.input.tax_number.$.val();
-            data.customer_tax_office = this.recipient.input.tax_office.$.val();
-            data.customer_person = this.recipient.input.person.$.val();
-            data.customer_phone = this.recipient.input.phone_corporate.$.val();
-            data.customer_email = this.recipient.input.email_corporate.$.val();
-            data.customer_address = this.recipient.input.address_corporate.$.val();
+            data.recipient_corporate_title = this.recipient.input.corporate_title.$.val();
+            data.recipient_tax_number = this.recipient.input.tax_number.$.val();
+            data.recipient_tax_office = this.recipient.input.tax_office.$.val();
+            data.recipient_person = this.recipient.input.person.$.val();
+            data.recipient_phone = this.recipient.input.phone_corporate.$.val();
+            data.recipient_email = this.recipient.input.email_corporate.$.val();
+            data.recipient_address = this.recipient.input.address_corporate.$.val();
         }
 
         return this._rpc({
-            route: '/my/customer/save',
+            route: '/my/recipient/save',
             params: data,
         });
     },
 
-    // IBAN doğrulama fonksiyonu
     _checkIban: function(iban, vat) {
-        const self = this;
-        
         if (!iban) {
             return Promise.resolve({
                 success: false,
                 message: 'IBAN gereklidir'
             });
         }
+
+        const cleanIban = iban.replace(/\s/g, '').toUpperCase();
         
-        return this._rpc({
-            route: '/my/iban/check',
-            params: {
-                iban: iban,
-                vat: vat || ''
-            },
+        const isValidIBAN = (iban) => {
+            const cleanIban = iban.replace(/\s/g, '').toUpperCase();
+            if (!/^TR\d{24}$/.test(cleanIban)) return false;
+            
+            const rearranged = cleanIban.substring(4) + cleanIban.substring(0, 4);
+            let numericString = '';
+            for (let i = 0; i < rearranged.length; i++) {
+                const char = rearranged[i];
+                if (char >= 'A' && char <= 'Z') {
+                    numericString += (char.charCodeAt(0) - 65 + 10).toString();
+                } else {
+                    numericString += char;
+                }
+            }
+            
+            let remainder = 0;
+            for (let i = 0; i < numericString.length; i++) {
+                remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
+            }
+            return remainder === 1;
+        };
+
+        if (!isValidIBAN(cleanIban)) {
+            return Promise.resolve({
+                success: false,
+                message: 'Invalid IBAN format (mod-97 validation failed)',
+            });
+        }
+        
+        return Promise.resolve({
+            success: true,
+            message: 'IBAN verification successful'
         });
     },
 
-    // Recipient Info Form Initialization
-    _initializeRecipientInfoForm: function() {
-        const self = this;
-        const $form = $('#recipientInfo');
-        
-        if (!$form.length) return;
-        
-        // Bind recipient type toggle
-        this._bindRecipientToggle();
-        
-        // Initialize field validations
-        this._bindRecipientValidations();
-        
-        // Auto uppercase for corporate title
-        $form.find('#recipient_corporate_title').on('input', function() {
-            this.value = this.value.toUpperCase();
-        });
-
-        // Phone number formatting
-        $form.find('#recipient_phone_individual, #recipient_phone_corporate').on('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length > 3 && value.length <= 6) {
-                value = value.slice(0, 3) + ' ' + value.slice(3);
-            } else if (value.length > 6) {
-                value = value.slice(0, 3) + ' ' + value.slice(3, 6) + ' ' + value.slice(6, 10);
-            }
-            this.value = value;
-        });
-
-        // Date formatting for birthdate
-        $form.find('#recipient_birthdate').on('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2);
-            }
-            if (value.length >= 5) {
-                value = value.slice(0, 5) + '/' + value.slice(5, 9);
-            }
-            this.value = value;
-        });
-
-        // Tax number formatting
-        $form.find('#recipient_tax_number').on('input', function() {
-            this.value = this.value.replace(/\D/g, '').slice(0, 10);
-        });
-
-        // TC Identity formatting
-        $form.find('#recipient_identity').on('input', function() {
-            this.value = this.value.replace(/\D/g, '').slice(0, 11);
-        });
-    },
-
-    // Bind recipient type toggle (similar to seller toggle)
     _bindRecipientToggle: function() {
         const self = this;
         const $form = $('#recipientInfo');
@@ -2449,7 +2538,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const $corporate = $('#recipientCorporate');
         
         function setRecipientMode(mode) {
-            // Unbind existing events first
             $form.find('input[name="recipientType"]').off('change.recipientToggle');
             
             if (mode === 'individual') {
@@ -2464,203 +2552,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $slider.css('transform', 'translateX(100%)');
             }
             
-            // Re-bind events after state change
             $form.find('input[name="recipientType"]').on('change.recipientToggle', function() {
                 if ($(this).is(':checked')) {
                     setRecipientMode($(this).val());
                 }
             });
         }
-        
-        // Initialize with individual mode
         setRecipientMode('individual');
-    },
-
-    // Recipient form validations
-    _bindRecipientValidations: function() {
-        const $form = $('#recipientInfo');
-        
-        if (!$form.length) return;
-        
-        const self = this;
-        
-        // Real-time validation binding
-        $form.find('input, textarea').on('blur', function() {
-            self._validateRecipientField($(this));
-        });
-    },
-
-    // Validate individual recipient field
-    _validateRecipientField: function($field) {
-        const fieldName = $field.attr('name');
-        const value = $field.val().trim();
-        let isValid = true;
-        let errorMessage = '';
-
-        // Clear previous error
-        $field.removeClass('is-invalid -error just-validate-error-field');
-        $field.next('.form__error-label').remove();
-
-        // Get current recipient type
-        const recipientType = $('input[name="recipientType"]:checked').val();
-        const isFieldVisible = $field.closest('#recipient' + (recipientType === 'individual' ? 'Individual' : 'Corporate')).is(':visible');
-        
-        if (!isFieldVisible) return true; // Skip validation for hidden fields
-
-        switch (fieldName) {
-            case 'recipient_name_surname':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Ad Soyad zorunludur';
-                } else if (value.length < 2) {
-                    isValid = false;
-                    errorMessage = 'En az 2 karakter girin';
-                }
-                break;
-                
-            case 'recipient_identity':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'T.C. Kimlik Numarası zorunludur';
-                } else if (!/^[1-9][0-9]{10}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = '11 haneli geçerli T.C. No girin';
-                }
-                break;
-                
-            case 'recipient_birthdate':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Doğum tarihi zorunludur';
-                } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'GG/AA/YYYY formatında girin';
-                }
-                break;
-                
-            case 'recipient_phone':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Telefon zorunludur';
-                } else if (!/^[0-9\s]{10,15}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Geçerli bir telefon giriniz';
-                }
-                break;
-                
-            case 'recipient_email':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'E-posta zorunludur';
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Geçerli bir e-posta giriniz';
-                }
-                break;
-                
-            case 'recipient_address':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Adres zorunludur';
-                } else if (value.length < 10) {
-                    isValid = false;
-                    errorMessage = 'Adres çok kısa (en az 10 karakter)';
-                }
-                break;
-                
-            case 'recipient_corporate_title':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Firma unvanı zorunludur';
-                }
-                break;
-                
-            case 'recipient_tax_number':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Vergi numarası zorunludur';
-                } else if (!/^[0-9]{10}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = '10 haneli geçerli vergi no girin';
-                }
-                break;
-                
-            case 'recipient_tax_office':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Vergi dairesi zorunludur';
-                } else if (value.length < 2) {
-                    isValid = false;
-                    errorMessage = 'En az 2 karakter girin';
-                }
-                break;
-                
-            case 'recipient_person':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'Yetkili kişi adı zorunludur';
-                }
-                break;
-        }
-
-        if (!isValid) {
-            $field.addClass('is-invalid -error just-validate-error-field');
-            $field.after(`<div class="form__error-label text-danger small mt-1">${errorMessage}</div>`);
-        }
-
-        return isValid;
-    },
-
-    // Validate entire recipient info step
-    _validateRecipientInfo: function() {
-        const self = this;
-        const $form = $('#recipientInfo');
-        let isValid = true;
-
-        if (!$form.length) return true;
-
-        // Get current recipient type
-        const recipientType = $('input[name="recipientType"]:checked').val();
-        
-        // Clear all previous errors
-        $form.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
-        $form.find('.form__error-label').remove();
-
-        // Get fields to validate based on type
-        let fieldsToValidate;
-        if (recipientType === 'individual') {
-            fieldsToValidate = [
-                '#recipient_name_surname',
-                '#recipient_identity', 
-                '#recipient_birthdate',
-                '#recipient_phone_individual',
-                '#recipient_email_individual',
-                '#recipient_address_individual'
-            ];
-        } else {
-            fieldsToValidate = [
-                '#recipient_corporate_title',
-                '#recipient_tax_number',
-                '#recipient_tax_office',
-                '#recipient_address_corporate',
-                '#recipient_person',
-                '#recipient_phone_corporate',
-                '#recipient_email_corporate'
-            ];
-        }
-
-        // Validate each field
-        fieldsToValidate.forEach(function(selector) {
-            const $field = $form.find(selector);
-            if ($field.length) {
-                const fieldValid = self._validateRecipientField($field);
-                if (!fieldValid) {
-                    isValid = false;
-                }
-            }
-        });
-
-        return isValid;
     },
 
 });
