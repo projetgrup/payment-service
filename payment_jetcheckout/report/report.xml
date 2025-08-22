@@ -179,7 +179,7 @@
         <field name="model">payment.transaction</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">payment_jetcheckout.payment_receipt</field>
-        <!-- <field name="report_file">payment_jetcheckout.payment_receipt</field> -->
+        <field name="report_file">payment_jetcheckout.payment_receipt</field>
         <field name="binding_model_id" ref="payment.model_payment_transaction"/>
         <field name="binding_type">report</field>
     </record>
@@ -189,7 +189,7 @@
         <field name="model">payment.transaction</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">payment_jetcheckout.payment_conveyance</field>
-        <!-- <field name="report_file">payment_jetcheckout.payment_conveyance</field> -->
+        <field name="report_file">payment_jetcheckout.payment_conveyance</field>
         <field name="binding_model_id" ref="payment.model_payment_transaction"/>
         <field name="binding_type">report</field>
     </record>
