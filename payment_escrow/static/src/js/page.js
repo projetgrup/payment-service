@@ -2464,23 +2464,23 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (recipientType === 'individual') {
-            data.recipient_name_surname = this.recipient.input.name_surname.$.val();
-            data.recipient_identity = this.recipient.input.identity.$.val();
-            data.recipient_phone = this.recipient.input.phone_individual.$.val();
-            data.recipient_email = this.recipient.input.email_individual.$.val();
-            data.recipient_address = this.recipient.input.address_individual.$.val();
+            data.customer_name_surname = this.recipient.input.name_surname.$.val();
+            data.customer_identity = this.recipient.input.identity.$.val();
+            data.customer_phone = this.recipient.input.phone_individual.$.val();
+            data.customer_email = this.recipient.input.email_individual.$.val();
+            data.customer_address = this.recipient.input.address_individual.$.val();
         } else {
-            data.recipient_corporate_title = this.recipient.input.corporate_title.$.val();
-            data.recipient_tax_number = this.recipient.input.tax_number.$.val();
-            data.recipient_tax_office = this.recipient.input.tax_office.$.val();
-            data.recipient_person = this.recipient.input.person.$.val();
-            data.recipient_phone = this.recipient.input.phone_corporate.$.val();
-            data.recipient_email = this.recipient.input.email_corporate.$.val();
-            data.recipient_address = this.recipient.input.address_corporate.$.val();
+            data.customer_corporate_title = this.recipient.input.corporate_title.$.val();
+            data.customer_tax_number = this.recipient.input.tax_number.$.val();
+            data.customer_tax_office = this.recipient.input.tax_office.$.val();
+            data.customer_person = this.recipient.input.person.$.val();
+            data.customer_phone = this.recipient.input.phone_corporate.$.val();
+            data.customer_email = this.recipient.input.email_corporate.$.val();
+            data.customer_address = this.recipient.input.address_corporate.$.val();
         }
 
         return this._rpc({
-            route: '/my/recipient/save',
+            route: '/my/customer/save',
             params: data,
         });
     },
