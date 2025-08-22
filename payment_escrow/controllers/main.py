@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 from odoo import _
 from odoo.http import route, request
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
+import werkzeug
+
+_logger = logging.getLogger(__name__)
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -18,6 +22,28 @@ class CustomerPortal(portal.CustomerPortal):
 
 
 class PayloxSystemEscrowController(Controller):
+
+    @route(['/payment/success', '/payment/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
+    def finalize(self, **kwargs):
+        """Override JetCheckout's finalize method for escrow payments"""
+        # Check if this is an escrow payment
+        tx_reference = kwargs.get('oid') or kwargs.get('reference')
+        if tx_reference:
+            tx = request.env['payment.transaction'].sudo().search([
+                ('reference', '=', tx_reference),
+                ('system', '=', 'escrow')
+            ], limit=1)
+            
+            if tx:
+                # This is an escrow payment, redirect to our custom URLs
+                access_token = tx.access_token or 'notoken'
+                if request.httprequest.path == '/payment/success':
+                    return werkzeug.utils.redirect(f'/my/escrow/payment/success/{tx.id}/{access_token}')
+                else:
+                    return werkzeug.utils.redirect(f'/my/escrow/payment/fail/{tx.id}/{access_token}')
+        
+        # If not escrow payment, use parent's finalize method
+        return super().finalize(**kwargs)
 
     def _get_tx_values(self, **kwargs):
         return {
@@ -37,7 +63,7 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            partner = transaction.paylox_product_ids[0]['product_id']['owner_id']
+            partner = request.env['res.partner'].sudo().browse(16444) #transaction.paylox_product_ids[0]['product_id']['owner_id'] 
             reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -434,3 +460,133 @@ class PayloxSystemEscrowController(Controller):
                 'error': str(e),
                 'message': 'An error occurred while retrieving partner information.'
             }
+
+
+class EscrowPaymentController(Controller):
+    """Controller for escrow payment handling"""
+
+    @route(['/my/escrow/payment/3d/<int:tx_id>/<access_token>'], type='http', auth='public', website=True, sitemap=False)
+    def escrow_payment_3d(self, tx_id, access_token, redirect_url=None, **kwargs):
+        """3D Secure iframe page for escrow payments"""
+        try:
+            # Get transaction and verify access
+            tx = request.env['payment.transaction'].sudo().browse(tx_id)
+            if not tx.exists():
+                raise AccessError(_("Transaction not found"))
+            
+            if not tx._verify_access_token(access_token):
+                raise AccessError(_("Invalid access token"))
+            
+            if not redirect_url:
+                raise UserError(_("3D Secure redirect URL is required"))
+            
+            # Prepare values for template
+            values = {
+                'tx': tx,
+                'redirect_url': redirect_url,
+                'access_token': access_token,
+            }
+            
+            return request.render('payment_escrow.escrow_3d_secure', values)
+            
+        except Exception as e:
+            _logger.error("Error in escrow 3D secure page: %s", str(e))
+            return request.render('website.404')
+
+    @route(['/my/escrow/payment/success/<int:tx_id>/<access_token>'], type='http', auth='public', website=True, sitemap=False)
+    def escrow_payment_success(self, tx_id, access_token, **kwargs):
+        """Escrow payment success page with iframe for 3D Secure completion"""
+        tx = request.env['payment.transaction'].sudo().browse(tx_id)
+        if not tx.exists():
+            return request.redirect('/my/ads')
+        
+        # Validate access token for security
+        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
+            return request.redirect('/my/ads')
+        
+        values = {
+            'tx': tx,
+            'tx_id': tx_id,
+            'success': True,
+            'show_iframe': True,  # For 3D Secure completion
+        }
+        return request.render('payment_escrow.payment_result', values)
+
+    @route(['/my/escrow/payment/fail/<int:tx_id>/<string:access_token>'], type='http', auth='public', methods=['GET'], website=True, csrf=False)
+    def escrow_payment_fail(self, tx_id, access_token, **kwargs):
+        """Escrow payment fail page"""
+        tx = request.env['payment.transaction'].sudo().browse(tx_id)
+        if not tx.exists():
+            return request.redirect('/my/ads')
+        
+        # Validate access token for security
+        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
+            return request.redirect('/my/ads')
+        
+        values = {
+            'tx': tx,
+            'tx_id': tx_id,
+            'success': False,
+            'show_iframe': False,
+        }
+        return request.render('payment_escrow.payment_result', values)
+
+    @route(['/my/escrow/payment/completed/<int:tx_id>/<string:access_token>'], type='http', auth='public', methods=['GET'], website=True, csrf=False)
+    def escrow_payment_completed(self, tx_id, access_token, **kwargs):
+        """Final escrow payment completion page (after 3D Secure)"""
+        tx = request.env['payment.transaction'].sudo().browse(tx_id)
+        if not tx.exists():
+            return request.redirect('/my/ads')
+        
+        # Validate access token for security
+        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
+            return request.redirect('/my/ads')
+        
+        values = {
+            'tx': tx,
+            'tx_id': tx_id,
+            'access_token': access_token,
+            'completed': True,
+            'show_iframe': False,
+        }
+        return request.render('payment_escrow.payment_completed', values)
+
+    def finalize(self, tx_sudo, acquirer_sudo):
+        """Override JetCheckout finalize to handle escrow payments"""
+        # Check if this is an escrow transaction
+        if hasattr(tx_sudo, 'reference') and tx_sudo.reference and 'escrow' in tx_sudo.reference.lower():
+            # Generate access token
+            access_token = tx_sudo._generate_access_token()
+            
+            # Redirect to escrow success/fail URLs based on transaction state
+            if tx_sudo.state == 'done':
+                return werkzeug.utils.redirect('/my/escrow/payment/success/%s/%s' % (tx_sudo.id, access_token))
+            else:
+                return werkzeug.utils.redirect('/my/escrow/payment/fail/%s/%s' % (tx_sudo.id, access_token))
+        
+        # For non-escrow transactions, use parent method
+        return super().finalize(tx_sudo, acquirer_sudo)
+
+    @route(['/my/escrow/payment/success/<int:tx_id>/<access_token>'], type='http', auth='public', methods=['GET'], sitemap=False, csrf=False)
+    def escrow_payment_success(self, tx_id, access_token, **kwargs):
+        """Handle successful escrow payment"""
+        # Redirect to ads page with step=5
+        return werkzeug.utils.redirect('/my/ads?step=5')
+
+    @route(['/my/escrow/payment/fail/<int:tx_id>/<access_token>'], type='http', auth='public', methods=['GET'], sitemap=False, csrf=False)
+    def escrow_payment_fail(self, tx_id, access_token, **kwargs):
+        """Handle failed escrow payment"""
+        # Redirect to ads page  
+        return werkzeug.utils.redirect('/my/ads')
+
+    @route(['/payment/status/<int:tx_id>'], type='json', auth='public', methods=['POST'], sitemap=False, csrf=False)
+    def payment_status(self, tx_id, **kwargs):
+        """Check payment transaction status"""
+        try:
+            tx = request.env['payment.transaction'].sudo().browse(tx_id)
+            if tx.exists():
+                return {'status': tx.state}
+            return {'status': 'not_found'}
+        except Exception as e:
+            _logger.error("Error checking payment status: %s", e)
+            return {'status': 'error'}

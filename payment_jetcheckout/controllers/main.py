@@ -1608,6 +1608,9 @@ class PayloxController(http.Controller):
                     if isinstance(result.get('virtual_pos_name'), str):
                         values.update({'jetcheckout_vpos_name': result['virtual_pos_name']})
                     tx.write(values)
+                    if hasattr(tx, 'system') and tx.system and 'escrow' in tx.system.lower():
+                        # For escrow transactions, return popup parameter for 3D secure
+                        return {'ok': True, 'popup': True, 'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)

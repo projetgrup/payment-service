@@ -1917,3 +1917,260 @@
         }
     }
 }
+
+/* Step 5 Completion Modal Styles */
+.step5-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    
+    &.d-none {
+        display: none !important;
+    }
+    
+    .step5-modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .step5-modal-content {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        max-width: 500px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    .step5-header {
+        padding: 24px 24px 0;
+        text-align: center;
+        
+        .step5-steps {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            
+            .step {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 14px;
+                border: 2px solid var(--color-passive);
+                color: var(--color-passive);
+                background: white;
+                position: relative;
+                
+                &.completed {
+                    background: var(--color-success);
+                    border-color: var(--color-success);
+                    color: white;
+                }
+                
+                &.active {
+                    animation: pulse 2s infinite;
+                }
+                
+                &:not(:last-child)::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 100%;
+                    width: 16px;
+                    height: 2px;
+                    background: var(--color-success);
+                    transform: translateY(-50%);
+                }
+            }
+        }
+    }
+    
+    .step5-body {
+        padding: 0 24px 32px;
+        text-align: center;
+        
+        .step5-success-icon {
+            margin-bottom: 24px;
+            
+            svg {
+                animation: successBounce 0.6s ease-out;
+            }
+        }
+        
+        .step5-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 12px;
+        }
+        
+        .step5-description {
+            font-size: 16px;
+            color: var(--secondary-text-color);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        
+        .step5-transaction-info {
+            background: var(--lightgray);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+            
+            .info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                
+                .label {
+                    font-size: 14px;
+                    color: var(--secondary-text-color);
+                }
+                
+                .value {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-color);
+                    
+                    &.success {
+                        color: var(--color-success);
+                    }
+                }
+            }
+        }
+        
+        .step5-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            
+            .btn-step5-primary {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 14px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                
+                &:hover {
+                    background: #1E0FB0;
+                    transform: translateY(-1px);
+                }
+                
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+            
+            .btn-step5-secondary {
+                background: transparent;
+                color: var(--primary-color);
+                border: 2px solid var(--primary-color);
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                
+                &:hover {
+                    background: var(--primary-light-color);
+                }
+            }
+        }
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes successBounce {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(74, 198, 67, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(74, 198, 67, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 198, 67, 0);
+    }
+}
+
+@media (max-width: 768px) {
+    .step5-modal {
+        .step5-modal-content {
+            margin: 20px;
+            max-width: none;
+        }
+        
+        .step5-header .step5-steps .step {
+            width: 32px;
+            height: 32px;
+            font-size: 12px;
+            
+            &:not(:last-child)::after {
+                width: 12px;
+            }
+        }
+        
+        .step5-body {
+            .step5-title {
+                font-size: 20px;
+            }
+            
+            .step5-actions {
+                .btn-step5-primary,
+                .btn-step5-secondary {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}

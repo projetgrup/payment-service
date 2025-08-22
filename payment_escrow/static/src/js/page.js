@@ -174,6 +174,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._bindWizardToggle();
             this._bindWizardSteps();
             this._bindInfoCardEvents();
+            this._checkStep5Parameter(); // Check for step=5 parameter
             framework.hideLoading();
         });
     },
@@ -2464,23 +2465,23 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (recipientType === 'individual') {
-            data.customer_name_surname = this.recipient.input.name_surname.$.val();
-            data.customer_identity = this.recipient.input.identity.$.val();
-            data.customer_phone = this.recipient.input.phone_individual.$.val();
-            data.customer_email = this.recipient.input.email_individual.$.val();
-            data.customer_address = this.recipient.input.address_individual.$.val();
+            data.recipient_name_surname = this.recipient.input.name_surname.$.val();
+            data.recipient_identity = this.recipient.input.identity.$.val();
+            data.recipient_phone = this.recipient.input.phone_individual.$.val();
+            data.recipient_email = this.recipient.input.email_individual.$.val();
+            data.recipient_address = this.recipient.input.address_individual.$.val();
         } else {
-            data.customer_corporate_title = this.recipient.input.corporate_title.$.val();
-            data.customer_tax_number = this.recipient.input.tax_number.$.val();
-            data.customer_tax_office = this.recipient.input.tax_office.$.val();
-            data.customer_person = this.recipient.input.person.$.val();
-            data.customer_phone = this.recipient.input.phone_corporate.$.val();
-            data.customer_email = this.recipient.input.email_corporate.$.val();
-            data.customer_address = this.recipient.input.address_corporate.$.val();
+            data.recipient_corporate_title = this.recipient.input.corporate_title.$.val();
+            data.recipient_tax_number = this.recipient.input.tax_number.$.val();
+            data.recipient_tax_office = this.recipient.input.tax_office.$.val();
+            data.recipient_person = this.recipient.input.person.$.val();
+            data.recipient_phone = this.recipient.input.phone_corporate.$.val();
+            data.recipient_email = this.recipient.input.email_corporate.$.val();
+            data.recipient_address = this.recipient.input.address_corporate.$.val();
         }
 
         return this._rpc({
-            route: '/my/customer/save',
+            route: '/my/recipient/save',
             params: data,
         });
     },
@@ -2562,4 +2563,59 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         setRecipientMode('individual');
     },
 
+    _checkStep5Parameter: function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const step = urlParams.get('step');
+        
+        if (step === '5') {
+            this._showStep5CompletionModal();
+            this._removeStepParameter();
+        }
+    },
+
+    _showStep5CompletionModal: function() {
+        const $modal = $('#step5CompletionModal');
+        if ($modal.length) {
+            $modal.removeClass('d-none');
+            
+            $(document).on('click.step5Modal', (e) => {
+                if ($(e.target).is('#step5CompletionModal .step5-modal-overlay')) {
+                    this._closeStep5Modal();
+                }
+            });
+            
+            $(document).on('keydown.step5Modal', (e) => {
+                if (e.key === 'Escape') {
+                    this._closeStep5Modal();
+                }
+            });
+            
+            setTimeout(() => {
+                this._closeStep5Modal();
+            }, 30000);
+        }
+    },
+
+    _closeStep5Modal: function() {
+        const $modal = $('#step5CompletionModal');
+        if ($modal.length && !$modal.hasClass('d-none')) {
+            $modal.addClass('d-none');
+            
+            $(document).off('click.step5Modal keydown.step5Modal');
+        }
+    },
+
+    _removeStepParameter: function() {
+        const url = new URL(window.location);
+        url.searchParams.delete('step');
+        window.history.replaceState({}, '', url);
+    },
+
 });
+
+window.closeStep5Modal = function() {
+    const widget = $('.payment-escrow #wrapwrap').data('publicWidget');
+    if (widget && widget._closeStep5Modal) {
+        widget._closeStep5Modal();
+    }
+};

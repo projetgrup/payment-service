@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import traceback
 import logging
 import pytz
@@ -16,6 +17,19 @@ class PaymentTransaction(models.Model):
 
     paylox_notif_mail_state = fields.Boolean('Paylox Email Notification State', readonly=True)
     paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
+
+    def _generate_access_token(self):
+        """Generate a secure access token for escrow payment URLs"""
+        self.ensure_one()
+        # Create token based on transaction ID, reference and current time
+        data = f"{self.id}-{self.reference or ''}-{self.create_date}-escrow"
+        return hashlib.sha256(data.encode()).hexdigest()[:32]
+    
+    def _verify_access_token(self, token):
+        """Verify the access token for escrow payment URLs"""
+        self.ensure_one()
+        expected_token = self._generate_access_token()
+        return token == expected_token
 
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()
