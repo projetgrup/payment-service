@@ -341,32 +341,32 @@ class PayloxSystemEscrowController(Controller):
                 'message': 'Seller information could not be saved.'
             }
 
-    @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
-    def save_customer_info(self, **kwargs):
+    @route('/my/recipient/save', type='json', auth='public', methods=['POST'], csrf=False)
+    def save_recipient_info(self, **kwargs):
         try:
             # Common fields for both individual and corporate
             partner_data = {
-                'paylox_escrow_type': 'customer',
+                'paylox_escrow_type': 'recipient',
                 'is_company': kwargs.get('customer_type') == 'corporate',
                 "system": 'escrow'
             }
 
-            if kwargs.get('customer_type') == 'corporate':
+            if kwargs.get('recipient_type') == 'corporate':
                 partner_data.update({
-                    'name': kwargs.get('customer_corporate_title', ''),
-                    'email': kwargs.get('customer_email', ''),
-                    'phone': kwargs.get('customer_phone', ''),
-                    'vat': kwargs.get('customer_tax_number', ''),
-                    'street': kwargs.get('customer_address', ''),
+                    'name': kwargs.get('recipient_corporate_title', ''),
+                    'email': kwargs.get('recipient_email', ''),
+                    'phone': kwargs.get('recipient_phone', ''),
+                    'vat': kwargs.get('recipient_tax_number', ''),
+                    'street': kwargs.get('recipient_address', ''),
                     'is_company': True,
                 })
             else:
                 partner_data.update({
-                    'name': kwargs.get('customer_name_surname', ''),
-                    'email': kwargs.get('customer_email', ''),
-                    'phone': kwargs.get('customer_phone', ''),
-                    'vat': kwargs.get('customer_identity', ''),
-                    'street': kwargs.get('customer_address', ''),
+                    'name': kwargs.get('recipient_name_surname', ''),
+                    'email': kwargs.get('recipient_email', ''),
+                    'phone': kwargs.get('recipient_phone', ''),
+                    'vat': kwargs.get('recipient_identity', ''),
+                    'street': kwargs.get('recipient_address', ''),
                     'is_company': False,
                 })
             
