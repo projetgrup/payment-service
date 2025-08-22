@@ -346,7 +346,7 @@ class PayloxSystemEscrowController(Controller):
         try:
             # Common fields for both individual and corporate
             partner_data = {
-                'paylox_escrow_type': 'recipient',
+                'paylox_escrow_type': 'customer',
                 'is_company': kwargs.get('customer_type') == 'corporate',
                 "system": 'escrow'
             }
