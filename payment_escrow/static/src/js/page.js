@@ -1344,7 +1344,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 {
                     rule: 'custom',
                     validator: (val) => {
-                        return /^\d{1,3}(\.\d{3})*,\d{2}$/.test(val) || /^\d+,\d{2}$/.test(val) || /^\d+$/.test(val);
+                        const cleanVal = val.replace(/[^\d.,]/g, '');
+                        return /^\d+([.,]\d{1,3})*([,]\d{2})?$/.test(cleanVal) && cleanVal.length > 0;
                     },
                     errorMessage: 'Please enter a valid price (e.g., 1.000.000,00)'
                 },
