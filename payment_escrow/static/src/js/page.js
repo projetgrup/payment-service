@@ -74,9 +74,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     mask: payloxPage.prototype._maskAmount.bind(this),
                     default: 0,
                 }),
-                desc: new fields.html({
-                    parent: this,
-                }),
                 vin: new fields.string(),
                 plate: new fields.string(),
             }
@@ -162,14 +159,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
             input: {
                 img: new fields.file({
-                    allowMultiple: false,
+                    allowMultiple: true,
                     accept: 'image/*',
                     maxFileSize: '5MB',
+                    maxFiles: 10,
+                    labelIdle: 'Resimleri sürükleyin veya <span class="filepond--label-action">Seçin</span><br><small>En fazla 10 resim, maksimum 5MB</small>',
+                    imagePreviewHeight: 170,
+                    imageCropAspectRatio: '1:1',
+                    imageResizeTargetWidth: 800,
+                    imageResizeTargetHeight: 600,
+                    stylePanelLayout: 'compact circle',
+                    styleLoadIndicatorPosition: 'center bottom',
+                    styleProgressIndicatorPosition: 'right bottom',
+                    styleButtonRemoveItemPosition: 'left bottom',
+                    styleButtonProcessItemPosition: 'right bottom',
                 }),
                 name: new fields.string(),
-                desc: new fields.html({
-                    parent: this,
-                }),
                 categ: new fields.selection(),
                 price: new fields.float({
                     mask: payloxPage.prototype._maskAmount.bind(this),
@@ -220,6 +225,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._bindWizardToggle();
             this._bindWizardSteps();
             this._bindInfoCardEvents();
+            this._bindImageUpload();
             this._checkStep5Parameter();
             framework.hideLoading();
         });
@@ -241,6 +247,55 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 self._openSellerEditForCard(id, 'vehicle');
             }
         });
+    },
+
+    _bindImageUpload: function() {
+        const self = this;
+        
+        // Wizard file input için handler
+        $(document).on('change', '#wizard_file_input', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                // İlk resmi ürün resmi olarak ayarla
+                const firstFile = files[0];
+                self._setProductImage(firstFile);
+            }
+        });
+    },
+
+    _setProductImage: function(file) {
+        if (!file || !file.type.startsWith('image/')) {
+            return;
+        }
+
+        // FileReader ile resmi base64'e çevir
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Ürün resim field'ını güncelle
+            if (this.ad && this.ad.input && this.ad.input.img) {
+                this.ad.input.img.value = e.target.result;
+            }
+            
+            // Preview göster
+            this._showImagePreview(e.target.result);
+            
+            console.log('Product image set from wizard file upload');
+        };
+        reader.readAsDataURL(file);
+    },
+
+    _showImagePreview: function(imageSrc) {
+        let $preview = $('#image-preview');
+        if (!$preview.length) {
+            $preview = $('<div id="image-preview" style="margin-top: 10px;"></div>');
+            $('#wizard_file_input').after($preview);
+        }
+        
+        $preview.html(`
+            <div style="display: inline-block; margin-right: 10px;">
+                <img src="${imageSrc}" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" alt="Preview">
+            </div>
+        `);
     },
 
     _openSellerEditForCard: function(id, section) {
@@ -266,7 +321,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 categ: categ.data('id'),
                 price: parseFloat($this.find('.escrow-ad-item-price').data('value')),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
-                desc: $this.find('.escrow-ad-item-desc').html().trim(),
                 owner_id: $this.data('owner-id'),
                 customer_id: $this.data('customer-id'),
                 vin: $this.data('vin'),
@@ -399,7 +453,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 name: value.name,
                 categ: value.categ,
                 price: value.price,
-                desc: value.desc,
             });
 
             const $items = this.ad.item.$.filter(`[data-id=${value.id}]`);
@@ -407,7 +460,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $items.find('[name=name]').text(value.name);
                 $items.find('[name=categ]').text(value.categ[1]).data('id', value.categ[0]);
                 $items.find('[name=price]').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
-                $items.find('[name=desc]').html(value.desc);
                 $items.find('[name=img]').attr('src', value.img);
             }
 
@@ -420,7 +472,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 name: value.name,
                 categ: value.categ,
                 price: value.price,
-                desc: value.desc,
                 state: '-',
             };
 
@@ -429,7 +480,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $items.find('[name=name]').text(value.name);
                 $items.find('[name=categ]').text(value.categ[1]).data('id', value.categ[0]);
                 $items.find('[name=price]').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
-                $items.find('[name=desc]').html(value.desc);
                 $items.find('[name=img]').attr('src', value.img);
             }
 
@@ -566,6 +616,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._prefillProductFromAd(adData);
             
             this._prefillRecipientFromAd(adData);
+            
+            // Ürün resmini de yükle
+            if (adData.img) {
+                this.ad.input.img.value = adData.img;
+                this._showImagePreview(adData.img);
+            }
         }
         
         this._updateStepStates();
@@ -658,7 +714,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _prefillProductFromAd: function(adData) {
         if (adData.price) this.escrow.input.price.$.val(adData.price);
-        if (adData.description) this.escrow.input.desc.$.val(adData.description);
         if (adData.categ) {
             this.escrow.input.category.$.val(adData.categ);
             this.escrow.input.category.$.trigger('change');
@@ -753,7 +808,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     name: this.ad.input.name.value || '',
                     categ: [this.ad.input.categ.value, this.ad.input.categ.text],
                     price: this.ad.input.price.value,
-                    desc: this.ad.input.desc.value
                 });
                 this._activateView('list');
                 this.displayNotification({
@@ -792,13 +846,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 id: isEditMode ? this.state.id : null,
                 categ_id: parseInt(this.escrow.input.category.$.val(), 10) || null,
                 price: this._parsePrice(this.escrow.input.price.$.val()),
-                description: this.escrow.input.desc.$.val(),
                 escrow_car_vin: this.escrow.input.vin.$.val(),
                 escrow_car_plate: this.escrow.input.plate.$.val(),
                 escrow_car_brand_id: parseInt(this.escrow.input.brand.$.val(), 10) || null,
                 escrow_car_model_id: parseInt(this.escrow.input.model.$.val(), 10) || null,
                 escrow_car_model_year: parseInt(this.escrow.input.year.$.val(), 10) || null,
-                image_1920: null
+                image_1920: this.ad.input.img.value || null
             };
             
             if (this.wizard && this.wizard.sellerId) {
@@ -810,7 +863,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 id: this.state.id,
                 categ: [this.ad.input.categ.value, this.ad.input.categ.text],
                 price: this._parsePrice(this.ad.input.price.value),
-                desc: this.ad.input.desc.value,
                 img: this.ad.input.img.value,
             };
         }
@@ -910,7 +962,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
             $item.find('.escrow-ad-item-state').html(value.state);
-            $item.find('.escrow-ad-item-desc').html(value.desc);
             $item.find('.escrow-ad-button-edit').data('id', id);
             $item.find('.escrow-ad-button-delete').data('id', id);
             $item.find('.escrow-ad-button-continue').data('id', id);
@@ -921,7 +972,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-state').html('');
             $item.find('.escrow-ad-item-name').text(_t('No ad found'));
             $item.find('.escrow-ad-item-categ').text('');
-            $item.find('.escrow-ad-item-desc').html('');
             $item.find('.escrow-ad-button-edit').data('id', 0);
             $item.find('.escrow-ad-button-delete').data('id', 0);
             $item.find('.escrow-ad-button-continue').data('id', 0);
@@ -994,7 +1044,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.name.value = ad.name;
             this.ad.input.categ.value = ad.categ[0];
             this.ad.input.price.value = format.float(ad.price);
-            this.ad.input.desc.value = ad.desc;
             setTimeout(() => this.ad.input.img.value = ad.img, 1000);
 
         } else {
@@ -1002,7 +1051,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.name.value = '';
             this.ad.input.categ.value = '';
             this.ad.input.price.value = format.float(0);
-            this.ad.input.desc.value = '';
             this.ad.input.img.reset();
         }
     },
@@ -1035,6 +1083,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         } else {
             this.wizard.currentStep = 1;
             this.wizard.previousStep = 1;
+        }
+        
+        // Set default category to first option for new sales listings
+        if (!id) {
+            const $categorySelect = $wiz.find('#wizard_category');
+            const $firstOption = $categorySelect.find('option[value!=""]').first();
+            if ($firstOption.length) {
+                $categorySelect.val($firstOption.val());
+                $categorySelect.trigger('change');
+            }
         }
         
         this._updateStepStates();
@@ -1470,7 +1528,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     rule: 'custom',
                     validator: () => {
                         const input = $wiz.find('#wizard_file_input')[0];
-                        return input && input.files && input.files.length > 0;
+                        const hasNewFiles = input && input.files && input.files.length > 0;
+                        const hasExistingImage = self.ad.input.img.value && self.ad.input.img.value.length > 0;
+                        const isEditMode = self.wizard && self.wizard.editMode;
+                        
+                        // Edit modunda mevcut resim varsa veya yeni dosya seçilmişse geçerli
+                        return hasNewFiles || (isEditMode && hasExistingImage);
                     },
                     errorMessage: 'At least one file must be selected'
                 }

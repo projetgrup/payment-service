@@ -87,6 +87,7 @@
                         <!--<field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_method', '=', 'formula')], 'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>-->
                         <field name="default_code"/>
                         <field name="barcode"/>
+                        <field name="lst_price"/>
                     </group>
                     <group name="group_general">
                         <field name="categ_id" string="Category" options="{'no_create': True}"/>

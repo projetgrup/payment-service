@@ -249,7 +249,10 @@ class PayloxSystemEscrowController(Controller):
             partner_data = {
                 'paylox_escrow_type': 'owner',
                 'is_company': kwargs.get('seller_type') == 'corporate',
-                "system": 'escrow'
+                'system': 'escrow',
+                'street': 'Merkez',
+                'paylox_tax_office': 'Merkez'
+
             }
             iban = kwargs.get('seller_iban', '')
             vat = kwargs.get('seller_tax_number', '') if kwargs.get('seller_type') == 'corporate' else kwargs.get('seller_tc_number', '')
@@ -267,7 +270,7 @@ class PayloxSystemEscrowController(Controller):
                 partner_data.update({
                     'name': kwargs.get('seller_name', ''),
                     'email': kwargs.get('seller_email', ''),
-                    'phone': kwargs.get('seller_phone', ''),
+                    'mobile': kwargs.get('seller_phone', ''),
                     'vat': kwargs.get('seller_tax_number', ''),
                     'comment': 'Yetkili Kişi: ' + kwargs.get('seller_contact_person', ''),
                     'is_company': True,
@@ -276,7 +279,7 @@ class PayloxSystemEscrowController(Controller):
                 partner_data.update({
                     'name': kwargs.get('seller_name', ''),
                     'email': kwargs.get('seller_email', ''),
-                    'phone': kwargs.get('seller_phone', ''),
+                    'mobile': kwargs.get('seller_phone', ''),
                     'vat': kwargs.get('seller_tc_number', ''),
                     'comment': 'Doğum Tarihi: ' + kwargs.get('seller_birthdate', ''),
                     'is_company': False,

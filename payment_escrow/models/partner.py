@@ -13,6 +13,123 @@ class Partner(models.Model):
         ('owner', 'Owner'),
     ], string='Paylox Escrow Type')
 
+    # Smart Button Computed Fields
+    escrow_owner_ad_count = fields.Integer(
+        string='Owner Ads Count',
+        compute='_compute_escrow_counts'
+    )
+    escrow_customer_ad_count = fields.Integer(
+        string='Customer Ads Count',
+        compute='_compute_escrow_counts'
+    )
+    escrow_successful_payment_count = fields.Integer(
+        string='Successful Payments Count',
+        compute='_compute_escrow_counts'
+    )
+    escrow_failed_payment_count = fields.Integer(
+        string='Failed Payments Count',
+        compute='_compute_escrow_counts'
+    )
+
+    @api.depends()
+    def _compute_escrow_counts(self):
+        for partner in self:
+            # Owner'ın ilanları (product.product'daki escrow_owner_id field'ından)
+            partner.escrow_owner_ad_count = self.env['product.product'].search_count([
+                ('escrow_owner_id', '=', partner.id),
+                ('company_id', '=', partner.company_id.id or self.env.company.id)
+            ])
+            
+            # Customer'ın kayıt olduğu ilanlar (product.product'daki escrow_customer_id field'ından)
+            partner.escrow_customer_ad_count = self.env['product.product'].search_count([
+                ('escrow_customer_id', '=', partner.id),
+                ('company_id', '=', partner.company_id.id or self.env.company.id)
+            ])
+            
+            # Başarılı ödemeler (payment.transaction'dan)
+            partner.escrow_successful_payment_count = self.env['payment.transaction'].search_count([
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'done'),
+                ('company_id', '=', partner.company_id.id or self.env.company.id)
+            ])
+            
+            # Başarısız ödemeler
+            partner.escrow_failed_payment_count = self.env['payment.transaction'].search_count([
+                ('partner_id', '=', partner.id),
+                ('state', 'in', ['error', 'cancel']),
+                ('company_id', '=', partner.company_id.id or self.env.company.id)
+            ])
+
+    def action_view_owner_ads(self):
+        """Owner'ın sahip olduğu ilanları göster"""
+        return {
+            'name': _('My Ads'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.product',
+            'view_mode': 'tree,kanban,form',
+            'views': [
+                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
+                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
+                (self.env.ref('payment_escrow.form_ad').id, 'form'),
+            ],
+            'domain': [('escrow_owner_id', '=', self.id)],
+            'context': {
+                'default_escrow_owner_id': self.id,
+                'create': False,
+            }
+        }
+
+    def action_view_customer_ads(self):
+        """Customer'ın kayıt olduğu ilanları göster"""
+        return {
+            'name': _('Registered Ads'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.product',
+            'view_mode': 'tree,kanban,form',
+            'views': [
+                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
+                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
+                (self.env.ref('payment_escrow.form_ad').id, 'form'),
+            ],
+            'domain': [('escrow_customer_id', '=', self.id)],
+            'context': {
+                'default_escrow_customer_id': self.id,
+                'create': False,
+            }
+        }
+
+    def action_view_successful_payments(self):
+        return {
+            'name': _('Successful Payments'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'payment.transaction',
+            'view_mode': 'tree,form',
+            'domain': [
+                ('partner_id', '=', self.id),
+                ('state', '=', 'done')
+            ],
+            'context': {
+                'default_partner_id': self.id,
+                'create': False,
+            }
+        }
+
+    def action_view_failed_payments(self):
+        return {
+            'name': _('Failed Payments'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'payment.transaction',
+            'view_mode': 'tree,form',
+            'domain': [
+                ('partner_id', '=', self.id),
+                ('state', 'in', ['error', 'cancel'])
+            ],
+            'context': {
+                'default_partner_id': self.id,
+                'create': False,
+            }
+        }
+
     def action_payable(self):
         action = super(Partner, self).action_payable()
         system = self.company_id and self.company_id.system or self.env.context.get('active_system')

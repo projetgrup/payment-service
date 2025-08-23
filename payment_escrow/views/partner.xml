@@ -50,7 +50,17 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//div[@name="button_box"]' position="replace">
+            <div class="oe_button_box" name="button_box">
+                <button name="action_view_owner_ads" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-car"
+                        attrs="{'invisible': [('escrow_owner_ad_count', '=', 0)]}">
+                    <field name="escrow_owner_ad_count" widget="statinfo" string="My Ads"/>
+                </button>
+            </div>
+        </xpath>
         <xpath expr='//header' position="replace"/>
         <xpath expr="//field[@name='vat']" position="before">
             <span class="o_form_label o_td_label" name="address_name">
@@ -389,7 +399,33 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//div[@name="button_box"]' position="replace">
+            <div class="oe_button_box" name="button_box">
+                <button name="action_view_customer_ads" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-shopping-cart"
+                        attrs="{'invisible': [('escrow_customer_ad_count', '=', 0)]}">
+                    <field name="escrow_customer_ad_count" widget="statinfo" string="My Ads"/>
+                </button>
+                
+                <button name="action_view_successful_payments" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-check-circle"
+                        attrs="{'invisible': [('escrow_successful_payment_count', '=', 0)]}">
+                    <field name="escrow_successful_payment_count" widget="statinfo" string="Successful Payments"/>
+                </button>
+                
+                <button name="action_view_failed_payments" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-times-circle"
+                        attrs="{'invisible': [('escrow_failed_payment_count', '=', 0)]}">
+                    <field name="escrow_failed_payment_count" widget="statinfo" string="Failed Payments"/>
+                </button>
+            </div>
+        </xpath>
         <xpath expr='//header' position="replace"/>
         <xpath expr="//field[@name='vat']" position="before">
             <span class="o_form_label o_td_label" name="address_name">

@@ -134,11 +134,6 @@
                                             <td><span t-esc="product.uom or ''"/></td>
                                             <td class="text-right"><span t-esc="product.price * product.qty" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/></td>-->
                                             </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <t t-raw="product.product_id.description"/>
-                                                </td>
-                                            </tr>
                                         </t>
                                     </tbody>
                                 </table>
@@ -217,7 +212,6 @@
                                         <div class="escrow-ad-item-arrow">
                                             <i class="fa fa-chevron-right"/>
                                         </div>
-                                        <div class="escrow-ad-item-desc d-none" t-raw="ad.description" name="desc"/>
                                     </div>
                                 </t>
                             </div>
@@ -287,14 +281,6 @@
                                             <span>Price</span>
                                         </label>
                                     </div>
-                                    <div class="field-container field-desc">
-                                        <textarea id="adInputDesc" style="min-height: 120px" class="form-control o_wysiwyg_loader" required="required" field="ad.input.desc"/>
-                                        <span class="bar-container"/>
-                                        <label for="adInputDesc">
-                                            <span>Description</span>
-                                        </label>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -446,10 +432,6 @@
                                             <div class="form__group -mb-0">
                                                 <label class="form__label" for="wizard_price">Sale Price</label>
                                                 <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="escrow.input.price"/>
-                                            </div>
-                                            <div class="form__group -mb-0">
-                                                <label class="form__label" for="wizard_product_desc">Product Description</label>
-                                                <textarea id="wizard_product_desc" class="form__control" name="product_desc" placeholder="Product Description" field="escrow.input.desc"></textarea>
                                             </div>
 
                                             <div class="panel mt-3">
