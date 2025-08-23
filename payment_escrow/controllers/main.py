@@ -124,6 +124,7 @@ class PayloxSystemEscrowController(Controller):
                 ('id', '=', kwargs['id']),
                 ('broker_id', '=', request.env.user.partner_id.id),
                 ('company_id', '=', request.env.company.id),
+                
             ])
             if not product:
                 return {'error': _('Product cannot be found, or you are not allowed to save it.')}

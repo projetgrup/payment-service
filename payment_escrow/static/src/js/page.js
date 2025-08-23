@@ -855,7 +855,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             };
             
             if (this.wizard && this.wizard.sellerId) {
-                params.owner_id = this.wizard.sellerId;
+                params.escrow_owner_id = this.wizard.sellerId;
             }
         } else {
             // Use old ad form data
