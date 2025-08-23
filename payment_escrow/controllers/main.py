@@ -333,7 +333,7 @@ class PayloxSystemEscrowController(Controller):
                 partner_data.update({
                     'name': kwargs.get('customer_corporate_title', ''),
                     'email': kwargs.get('customer_email', ''),
-                    'phone': kwargs.get('customer_phone', ''),
+                    'mobile': kwargs.get('customer_phone', ''),
                     'vat': kwargs.get('customer_tax_number', ''),
                     'street': kwargs.get('customer_address', ''),
                     'is_company': True,
@@ -342,7 +342,7 @@ class PayloxSystemEscrowController(Controller):
                 partner_data.update({
                     'name': kwargs.get('customer_name_surname', ''),
                     'email': kwargs.get('customer_email', ''),
-                    'phone': kwargs.get('customer_phone', ''),
+                    'mobile': kwargs.get('customer_phone', ''),
                     'vat': kwargs.get('customer_identity', ''),
                     'street': kwargs.get('customer_address', ''),
                     'is_company': False,
