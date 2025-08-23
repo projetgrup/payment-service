@@ -34,26 +34,22 @@ class Partner(models.Model):
     @api.depends()
     def _compute_escrow_counts(self):
         for partner in self:
-            # Owner'ın ilanları (product.product'daki escrow_owner_id field'ından)
             partner.escrow_owner_ad_count = self.env['product.product'].search_count([
                 ('escrow_owner_id', '=', partner.id),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
             
-            # Customer'ın kayıt olduğu ilanlar (product.product'daki escrow_customer_id field'ından)
             partner.escrow_customer_ad_count = self.env['product.product'].search_count([
                 ('escrow_customer_id', '=', partner.id),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
             
-            # Başarılı ödemeler (payment.transaction'dan)
             partner.escrow_successful_payment_count = self.env['payment.transaction'].search_count([
                 ('partner_id', '=', partner.id),
                 ('state', '=', 'done'),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
-            
-            # Başarısız ödemeler
+
             partner.escrow_failed_payment_count = self.env['payment.transaction'].search_count([
                 ('partner_id', '=', partner.id),
                 ('state', 'in', ['error', 'cancel']),
@@ -61,7 +57,6 @@ class Partner(models.Model):
             ])
 
     def action_view_owner_ads(self):
-        """Owner'ın sahip olduğu ilanları göster"""
         return {
             'name': _('My Ads'),
             'type': 'ir.actions.act_window',
@@ -80,7 +75,6 @@ class Partner(models.Model):
         }
 
     def action_view_customer_ads(self):
-        """Customer'ın kayıt olduğu ilanları göster"""
         return {
             'name': _('Registered Ads'),
             'type': 'ir.actions.act_window',
