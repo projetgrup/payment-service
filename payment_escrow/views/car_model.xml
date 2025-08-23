@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escrow_car_model_tree" model="ir.ui.view">
+        <field name="name">escrow.car.model.tree</field>
+        <field name="model">escrow.car.model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="brand_id"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_escrow_car_model_form" model="ir.ui.view">
+        <field name="name">escrow.car.model.form</field>
+        <field name="model">escrow.car.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="brand_id"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escrow_car_model" model="ir.actions.act_window">
+        <field name="name">Car Models</field>
+        <field name="res_model">escrow.car.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first car model
+            </p>
+        </field>
+    </record>
+</odoo>

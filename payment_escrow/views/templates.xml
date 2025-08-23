@@ -35,7 +35,6 @@
                     <t t-set="step_3_class" t-value="'-completed'"/>
                     <t t-set="step_3_edit" t-value="True"/>
                     <t t-set="step_4_class" t-value="'-active'"/>
-                    <t t-set="step_5_class" t-value="''"/>
                 </t>
                 <div class="px-lg-5 mx-xl-auto mw-xl-128">
                     <t t-call="payment_jetcheckout_system.payment_state">
@@ -145,66 +144,6 @@
                                 </table>
                             </div>
                         </div>
-                        <div t-if="tx.state in ('draft', 'pending', 'error')" t-attf-class="row mx-0 #{classname}">
-                            <t t-call="payment_jetcheckout.s2s">
-                                <t t-set="amount" t-value="tx.amount"/>
-                                <t t-set="no_border" t-value="True"/>
-                                <t t-set="partner" t-value="partner"/>
-                                <t t-set="success_url" t-value="'/my/escrow/payment/success/%s/%s' % (tx.id, tx.access_token or 'notoken')"/>
-                                <t t-set="fail_url" t-value="'/my/escrow/payment/fail/%s/%s' % (tx.id, tx.access_token or 'notoken')"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>            <!-- /.escrow-ad-wrapper -->
-            <div class="escrow-ad-sideback d-none" field="ad.sideback"/>
-            <div class="escrow-ad-sidebar" field="ad.sidebar">
-                <button class="btn" field="ad.button.sidebar.toggle">
-                    <i class="fa fa-2x fa-times"/>
-                </button>
-                <div class="escrow-ad-sidebar-section escrow-ad-sidebar-settings">
-                    <div class="escrow-ad-sidebar-settings-theme my-4">
-                        <div>
-                            <strong>Views Setting</strong>
-                            <p>You can update the application's theme from here.</p>
-                        </div>
-                        <div>
-                            <div>
-                                <button class="btn" data-value="light" field="ad.button.sidebar.theme">Light</button>
-                                <button class="btn" data-value="dark" field="ad.button.sidebar.theme">Dark</button>
-                                <button class="btn active" data-value="system" field="ad.button.sidebar.theme">System</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="escrow-ad-sidebar-settings-lang my-4">
-                        <div>
-                            <strong>Application Language</strong>
-                            <p>You can update the application's language from here.</p>
-                        </div>
-                        <div>
-                            <div>
-                                <button class="btn active" data-value="tr" field="ad.button.sidebar.lang">Turkish</button>
-                                <button class="btn" data-value="en" field="ad.button.sidebar.theme.lang">English</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="escrow-ad-sidebar-settings-help my-4">
-                        <div>
-                            <strong>Help Center</strong>
-                            <p>You can submit your support requests by contacting us 24/7.</p>
-                        </div>
-                        <button class="btn btn-block text-left">
-                            <i class="fa fa-question pr-2"/>
-                            <span>Help</span>
-                        </button>
-                        <button class="btn btn-block text-left">
-                            <i class="fa fa-life-bouy pr-2"/>
-                            <span>Support Request</span>
-                        </button>
-                        <button class="btn btn-block text-left">
-                            <i class="fa fa-phone pr-2"/>
-                            <span>Contact Us</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -236,61 +175,7 @@
                     </div>
                 </div>
 
-                <!-- Step 5 Completion Modal (Hidden by default) -->
-                <div id="step5CompletionModal" class="step5-modal d-none">
-                    <div class="step5-modal-overlay">
-                        <div class="step5-modal-content">
-                            <div class="step5-header">
-                                <div class="step5-steps">
-                                    <div class="step completed">1</div>
-                                    <div class="step completed">2</div>
-                                    <div class="step completed">3</div>
-                                    <div class="step completed">4</div>
-                                    <div class="step completed active">5</div>
-                                </div>
-                            </div>
-                            
-                            <div class="step5-body">
-                                <div class="step5-success-icon">
-                                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="12" cy="12" r="10" fill="#10B981"/>
-                                        <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                
-                                <h2 class="step5-title">Payment Completed Successfully!</h2>
-                                <p class="step5-description">
-                                    Your escrow payment has been completed and the transaction is now secure.
-                                    You will receive notifications about the transaction progress.
-                                </p>
-                                
-                                <div class="step5-transaction-info">
-                                    <div class="info-row">
-                                        <span class="label">Transaction Status:</span>
-                                        <span class="value success">Completed</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span class="label">Security Level:</span>
-                                        <span class="value">Escrow Protected</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span class="label">Next Step:</span>
-                                        <span class="value">Await seller confirmation</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="step5-actions">
-                                    <button class="btn-step5-primary" onclick="closeStep5Modal()">
-                                        Continue to My Ads
-                                    </button>
-                                    <button class="btn-step5-secondary" onclick="window.open('/my/transactions', '_blank')">
-                                        View Transaction Details
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <t t-call="payment_escrow.payment_step5_completion_modal"/>
 
                 <div class="escrow-ad-container">
                     <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center">
@@ -652,11 +537,11 @@
                                                         <div class="radioTab">
                                                             <div class="radioTab__slider"></div>
                                                             <label class="radioTab__label">
-                                                                <input type="radio" class="radioTab__control" name="recipientType" value="individual" checked="checked"/>
+                                                                <input type="radio" class="radioTab__control" name="customerType" value="individual" checked="checked"/>
                                                                 <span>Bireysel</span>
                                                             </label>
                                                             <label class="radioTab__label">
-                                                                <input type="radio" class="radioTab__control" name="recipientType" value="corporate"/>
+                                                                <input type="radio" class="radioTab__control" name="customerType" value="corporate"/>
                                                                 <span>Kurumsal</span>
                                                             </label>
                                                         </div>
@@ -665,54 +550,54 @@
                                                     <div id="recipientCorporate" style="display: none;">
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_corporate_title">Company Title</label>
-                                                            <input class="form__control -letter" name="recipient_corporate_title" id="recipient_corporate_title" type="text" placeholder="Company Title" value="" field="recipient.input.corporate_title"/>
+                                                            <input class="form__control -letter" name="recipient_corporate_title" id="recipient_corporate_title" type="text" placeholder="Company Title" value="" field="customer.input.corporate_title"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_tax_number">Tax Number</label>
-                                                            <input class="form__control -letter" name="recipient_tax_number" id="recipient_tax_number" type="text" placeholder="Tax Number" value="" field="recipient.input.tax_number"/>
+                                                            <input class="form__control -letter" name="recipient_tax_number" id="recipient_tax_number" type="text" placeholder="Tax Number" value="" field="customer.input.tax_number"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_tax_office">Tax Office</label>
-                                                            <input class="form__control -letter" name="recipient_tax_office" id="recipient_tax_office" type="text" placeholder="Tax Office" value="" field="recipient.input.tax_office"/>
+                                                            <input class="form__control -letter" name="recipient_tax_office" id="recipient_tax_office" type="text" placeholder="Tax Office" value="" field="customer.input.tax_office"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_address_corporate">Address</label>
-                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_corporate" placeholder="Address" field="recipient.input.address_corporate"></textarea>
+                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_corporate" placeholder="Address" field="customer.input.address_corporate"></textarea>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_person">Authorized Person</label>
-                                                            <input class="form__control -letter" name="recipient_person" id="recipient_person" type="text" placeholder="Authorized Person" value="" field="recipient.input.person"/>
+                                                            <input class="form__control -letter" name="recipient_person" id="recipient_person" type="text" placeholder="Authorized Person" value="" field="customer.input.person"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_phone_corporate">Authorized Mobile Phone</label>
-                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_corporate" type="text" placeholder="e.g: 532 123 3456" value="" field="recipient.input.phone_corporate"/>
+                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_corporate" type="text" placeholder="e.g: 532 123 3456" value="" field="customer.input.phone_corporate"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_email_corporate">Authorized Email</label>
-                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_corporate" type="email" placeholder="example@mail.com" value="" field="recipient.input.email_corporate"/>
+                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_corporate" type="email" placeholder="example@mail.com" value="" field="customer.input.email_corporate"/>
                                                         </div>
                                                     </div>
 
                                                     <div id="recipientIndividual">
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_name_surname">Full Name</label>
-                                                            <input class="form__control -letter" name="recipient_name_surname" id="recipient_name_surname" type="text" placeholder="Full Name" value="" field="recipient.input.name_surname"/>
+                                                            <input class="form__control -letter" name="recipient_name_surname" id="recipient_name_surname" type="text" placeholder="Full Name" value="" field="customer.input.name_surname"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_identity">Identity Number</label>
-                                                            <input class="form__control -letter" name="recipient_identity" id="recipient_identity" type="text" placeholder="T.C. Kimlik Numarası" value="" field="recipient.input.identity"/>
+                                                            <input class="form__control -letter" name="recipient_identity" id="recipient_identity" type="text" placeholder="T.C. Kimlik Numarası" value="" field="customer.input.identity"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_phone_individual">Phone Number</label>
-                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_individual" type="text" placeholder="Örn: 532 123 3456" value="" field="recipient.input.phone_individual"/>
+                                                            <input class="form__control -letter" name="recipient_phone" id="recipient_phone_individual" type="text" placeholder="Örn: 532 123 3456" value="" field="customer.input.phone_individual"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_email_individual">E-mail</label>
-                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_individual" type="email" placeholder="ornek@mail.com" value="" field="recipient.input.email_individual"/>
+                                                            <input class="form__control -letter" name="recipient_email" id="recipient_email_individual" type="email" placeholder="ornek@mail.com" value="" field="customer.input.email_individual"/>
                                                         </div>
                                                         <div class="form__group">
                                                             <label class="form__label" for="recipient_address_individual">Address</label>
-                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_individual" placeholder="Address" field="recipient.input.address_individual"></textarea>
+                                                            <textarea class="form__control -letter" name="recipient_address" id="recipient_address_individual" placeholder="Address" field="customer.input.address_individual"></textarea>
                                                         </div>
                                                     </div>
 
@@ -736,7 +621,7 @@
                                     <div class="section">
                                         <div class="selectCartType">
                                             <div class="switch -small">
-                                                <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint"/>
+                                                <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint" field="payment.different.holder"/>
                                                 <label for="checkPoint"></label>
                                             </div>
                                             <div class="selectCartType__title">
@@ -844,9 +729,11 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form__group">
+                                                <div class="form__group d-none" field="assignment.form.section">
                                                     <div class="form__label">Assignment Form Information</div>
                                                     <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
+                                                    
+                                                    <!-- Download Assignment Form -->
                                                     <div class="download">
                                                         <svg width="30" height="30" viewBox="0 0 42 42" fill="none"
                                                             xmlns="http://www.w3.org/2000/svg">
@@ -854,24 +741,31 @@
                                                             <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
                                                             <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
                                                         </svg>
-                                                        <a href="#" class="download__link">Temlikname Formunu İndir</a>
+                                                        <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
                                                     </div>
+                                                    
+                                                    <!-- Upload Assignment Form -->
                                                     <div class="form__label">Upload Assignment Form</div>
                                                     <div class="upload">
-                                                        <input type="file" id="file-input" multiple="multiple"/>
-                                                        <label for="file-input">
+                                                        <input type="file" id="assignment-file-input" field="assignment.form.upload" accept=".pdf,.jpg,.jpeg,.png" multiple="multiple"/>
+                                                        <label for="assignment-file-input">
                                                             <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
-                                                                <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
-                                                                <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                                                <path d="M14.7498 32.3737C15.1968 32.3737 15.6439 32.2014 15.9884 31.861L19.9998 27.8497L24.0111 31.861C24.6919 32.5459 25.8035 32.5459 26.4843 31.861C27.1693 31.176 27.1693 30.0686 26.4843 29.3877L21.2343 24.1377C20.5535 23.4528 19.4419 23.4528 18.7611 24.1377L13.5111 29.3877C12.8261 30.0727 12.8261 31.1801 13.5111 31.861C13.8556 32.2055 14.3027 32.3737 14.7498 32.3737Z" fill="#2414D8"/>
+                                                                <path d="M20.9996 39.375C21.9676 39.375 22.751 38.5916 22.751 37.6236V25.3764C22.751 24.4084 21.9676 23.625 20.9996 23.625C20.0316 23.625 19.2482 24.4084 19.2482 25.3764V37.6277C19.2482 38.5916 20.0316 39.375 20.9996 39.375Z" fill="#2414D8"/>
                                                             </svg>
-                                                            <span>Select Image or Take New</span>
-                                                            <div id="num-of-files">No Image Selected</div>
+                                                            <span>Upload Assignment Form</span>
                                                         </label>
-                                                        <ul id="files-list"></ul>
+                                                    </div>
+                                                    <div class="upload-info" field="assignment.form.info">
+                                                        <small class="text-muted">Accepted formats: PDF, JPG, PNG. Maximum size: 10MB</small>
+                                                    </div>
+                                                    <div class="upload-status" field="assignment.form.upload.status">
+                                                        <!-- Upload status messages will appear here -->
                                                     </div>
                                                 </div>
+                                                            
 
                                                 <div class="form__buttons">
                                                     <div class="form__agreements">
@@ -1046,6 +940,213 @@
             </div>
             <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
             <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+        </t>
+    </template>
+
+    <template id="payment_step5_completion_modal" name="Step Item Template">
+        <div id="step5CompletionModal" class="step5-modal d-none">
+            <div class="step5-modal-overlay">
+                <div class="step5-modal-content">
+                    <div class="step5-header">
+                        <div class="step5-steps">
+                            <div class="step completed">1</div>
+                            <div class="step completed">2</div>
+                            <div class="step completed">3</div>
+                            <div class="step completed">4</div>
+                            <div class="step completed active">5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step5-body">
+                        <div class="step5-success-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" fill="#10B981"/>
+                                <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        
+                        <h2 class="step5-title">Payment Completed Successfully!</h2>
+                        <p class="step5-description">
+                            Your escrow payment has been completed and the transaction is now secure.
+                            You will receive notifications about the transaction progress.
+                        </p>
+                        
+                        <div class="step5-transaction-info">
+                            <div class="info-row">
+                                <span class="label">Transaction Status:</span>
+                                <span class="value success">Completed</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Security Level:</span>
+                                <span class="value">Escrow Protected</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Next Step:</span>
+                                <span class="value">Await seller confirmation</span>
+                            </div>
+                        </div>
+                        
+                        <div class="step5-actions">
+                            <button class="btn-step5-primary" onclick="closeStep5Modal()">
+                                Continue to My Ads
+                            </button>
+                            <button class="btn-step5-secondary" onclick="window.open('/my/transactions', '_blank')">
+                                View Transaction Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Assignment Form Template -->
+    <template id="assignment_form_template" name="Assignment Form Template">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="'Assignment Form - Escrow Payment'"/>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .form-section { margin-bottom: 20px; }
+                .form-row { display: flex; margin-bottom: 10px; }
+                .form-field { flex: 1; margin-right: 10px; }
+                .form-field label { font-weight: bold; display: block; margin-bottom: 5px; }
+                .form-field input { width: 100%; padding: 5px; border: 1px solid #ccc; }
+                .signature-section { margin-top: 30px; }
+                .signature-box { border: 1px solid #000; height: 80px; margin: 10px 0; }
+                @media print { body { margin: 0; } .no-print { display: none; } }
+                .print-btn { margin: 20px 0; text-align: center; }
+            </style>
+            
+            <div class="print-btn no-print">
+                <button onclick="window.print()" class="btn btn-primary">Print as PDF</button>
+                <button onclick="window.close()" class="btn btn-secondary ml-2">Close</button>
+            </div>
+
+            <div class="header">
+                <h1>ASSIGNMENT FORM</h1>
+                <h2>Escrow Payment System</h2>
+            </div>
+
+            <div class="form-section">
+                <h3>Assignor Information (Credit Card Holder)</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Full Name:</label>
+                        <input type="text" name="assignor_name"/>
+                    </div>
+                    <div class="form-field">
+                        <label>ID Number:</label>
+                        <input type="text" name="assignor_id"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Address:</label>
+                        <input type="text" name="assignor_address"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Phone:</label>
+                        <input type="text" name="assignor_phone"/>
+                    </div>
+                    <div class="form-field">
+                        <label>Email:</label>
+                        <input type="text" name="assignor_email"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Assignee Information (Payment Recipient)</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Full Name:</label>
+                        <input type="text" name="assignee_name"/>
+                    </div>
+                    <div class="form-field">
+                        <label>ID Number:</label>
+                        <input type="text" name="assignee_id"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Address:</label>
+                        <input type="text" name="assignee_address"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Phone:</label>
+                        <input type="text" name="assignee_phone"/>
+                    </div>
+                    <div class="form-field">
+                        <label>Email:</label>
+                        <input type="text" name="assignee_email"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Payment Information</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Payment Amount:</label>
+                        <input type="text" name="payment_amount"/>
+                    </div>
+                    <div class="form-field">
+                        <label>Payment Reference:</label>
+                        <input type="text" name="payment_reference"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Payment Date:</label>
+                        <input type="text" name="payment_date"/>
+                    </div>
+                    <div class="form-field">
+                        <label>Transaction ID:</label>
+                        <input type="text" name="transaction_id"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Assignment Declaration</h3>
+                <p>I, the undersigned assignor, hereby assign all rights and benefits of the payment transaction described above to the assignee. This assignment is irrevocable and the assignee has full authority to receive the payment on my behalf.</p>
+            </div>
+
+            <div class="signature-section">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Assignor Signature:</label>
+                        <div class="signature-box"></div>
+                        <label>Date: ________________</label>
+                    </div>
+                    <div class="form-field">
+                        <label>Assignee Signature:</label>
+                        <div class="signature-box"></div>
+                        <label>Date: ________________</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Witness Information (Optional)</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>Witness Name:</label>
+                        <input type="text" name="witness_name"/>
+                    </div>
+                    <div class="form-field">
+                        <label>Witness Signature:</label>
+                        <div class="signature-box"></div>
+                    </div>
+                </div>
+            </div>
         </t>
     </template>
 </odoo>

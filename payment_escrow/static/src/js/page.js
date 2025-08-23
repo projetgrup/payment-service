@@ -81,15 +81,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 plate: new fields.string(),
             }
         }
-        this.recipient = {
+        this.customer = {
             input: {
-                // Individual recipient fields
                 name_surname: new fields.string(),
                 identity: new fields.string(),
                 phone_individual: new fields.string(),
                 email_individual: new fields.string(),
                 address_individual: new fields.string(),
-                // Corporate recipient fields
                 corporate_title: new fields.string(),
                 tax_number: new fields.string(),
                 tax_office: new fields.string(),
@@ -99,6 +97,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 address_corporate: new fields.string(),
             }
         }
+        
+        // Payment fields
+        this.payment = {
+            different: {
+                holder: new fields.boolean({
+                    events: [['change', this._onToggleDifferentHolder]],
+                }),
+            },
+        };
+
+        // Assignment form fields  
+        this.assignment = {
+            form: {
+                section: new fields.element(),
+                download: new fields.element({
+                    events: [['click', this._onDownloadAssignmentForm]],
+                }),
+                upload: new fields.element({
+                    events: [['change', this._onUploadAssignmentForm]],
+                }),
+                info: new fields.element(),
+            },
+        };
+
         this.ad = {
             sidebar: new fields.element(),
             sideback: new fields.element({
@@ -163,6 +185,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 events: [['click', this._onClickAd]],
             }),
         };
+        
+        // Payment fields for assignment form functionality
+        this.payment = {
+            different: {
+                holder: new fields.boolean({
+                    events: [['change', this._onToggleDifferentHolder]]
+                })
+            }
+        };
+        
+        // Assignment form fields
+        this.assignment = {
+            form: {
+                section: new fields.element(),
+                download: new fields.element({
+                    events: [['click', this._onDownloadAssignmentForm]]
+                }),
+                upload: new fields.element({
+                    events: [['change', this._onUploadAssignmentForm]]
+                }),
+                info: new fields.element(),
+                'upload.status': new fields.element()
+            }
+        };
     },
 
     start: function () {
@@ -174,7 +220,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._bindWizardToggle();
             this._bindWizardSteps();
             this._bindInfoCardEvents();
-            this._checkStep5Parameter(); // Check for step=5 parameter
+            this._checkStep5Parameter();
             framework.hideLoading();
         });
     },
@@ -182,15 +228,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _bindInfoCardEvents: function() {
         const self = this;
         
-        // Satıcı bilgileri kartı click event'i
         $(document).on('click', '.seller-info-card', function() {
             const id = $('.escrow-ad-button-edit').data('id');
             if (id) {
                 self._openSellerEditForCard(id, 'seller');
             }
         });
-        
-        // Ruhsat bilgileri kartı click event'i  
+
         $(document).on('click', '.vehicle-info-card', function() {
             const id = $('.escrow-ad-button-edit').data('id');
             if (id) {
@@ -202,18 +246,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _openSellerEditForCard: function(id, section) {
         this._openSellerWizardForEdit(id);
         this._closeSidebar();
-
-        setTimeout(() => {
-            const $wiz = $('.escrow-wizard');
-            if (section === 'seller') {
-                this._navigateToStep(1);
-            } else if (section === 'vehicle') {
-                this._navigateToStep(2);
-            }
-        }, 100);
+        const $wiz = $('.escrow-wizard');
+        if (section === 'seller') {
+            this._navigateToStep(1);
+        } else if (section === 'vehicle') {
+            this._navigateToStep(2);
+        }
     },
 
     _parseAds: function () {
+        console.log('_parseAds');
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
             const categ = $this.find('.escrow-ad-item-categ');
@@ -674,9 +716,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (customerData.success) {
                     const customer = customerData.partner;
                     if (customer.is_company) {
-                        $wiz.find('input[name="recipientType"][value="corporate"]').prop('checked', true);
-                        this._bindRecipientToggle();
+                        $wiz.find('input[name="customerType"][value="corporate"]').prop('checked', true);
                         $wiz.find('#recipient_corporate_title').val(customer.name || '');
+                        console.log(customer);
+                        console.log($wiz.find('#recipient_corporate_title'));
                         $wiz.find('#recipient_tax_number').val(customer.vat || '');
                         $wiz.find('#recipient_tax_office').val(customer.commercial_partner_id?.name || '');
                         $wiz.find('#recipient_person').val(customer.comment?.replace('Yetkili Kişi: ', '') || '');
@@ -684,9 +727,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         $wiz.find('#recipient_email_corporate').val(customer.email || '');
                         $wiz.find('#recipient_address_corporate').val(customer.street || '');
                     } else {
-                        $wiz.find('input[name="recipientType"][value="individual"]').prop('checked', true);
-                        this._bindRecipientToggle();
-                        
+                        $wiz.find('input[name="customerType"][value="individual"]').prop('checked', true);
+
                         $wiz.find('#recipient_name_surname').val(customer.name || '');
                         $wiz.find('#recipient_identity').val(customer.vat || '');
                         $wiz.find('#recipient_phone_individual').val(customer.phone || '');
@@ -701,39 +743,83 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonSave: function (ev) {
+        // Use the unified product saving logic
         framework.showLoading();
-        let params = {
-            id: this.state.id,
-            categ: [this.ad.input.categ.value, this.ad.input.categ.text],
-            price: this.ad.input.price.value,
-            desc: this.ad.input.desc.value,
-            img: this.ad.input.img.value,
-        }
-        rpc.query({ route: '/my/ad/save', params }).then((result) => {
-            if ('error' in result) {
-                this.displayNotification({
-                    type: 'warning',
-                    title: _t('Warning'),
-                    message: _t('An error occured.') + ' ' + result.error,
+        this._saveAdData()
+            .then((result) => {
+                this._updateAds({
+                    id: result.id,
+                    img: this.ad.input.img.value,
+                    name: this.ad.input.name.value || '',
+                    categ: [this.ad.input.categ.value, this.ad.input.categ.text],
+                    price: this.ad.input.price.value,
+                    desc: this.ad.input.desc.value
                 });
-            } else {
-                params.id = result.id;
-                this._updateAds(params);
                 this._activateView('list');
                 this.displayNotification({
                     type: 'success',
                     title: _t('Success'),
-                    message: this.state.id ? _t('Ad has been added.') : _t('Ad has been saved.'),
+                    message: this.state.id ? _t('Ad has been updated.') : _t('Ad has been saved.'),
                 });
-            }
-        }).guardedCatch(() => {
-            this.displayNotification({
-                type: 'danger',
-                title: _t('Error'),
-                message: _t('An error occured. Please contact with your system administrator.'),
+            })
+            .catch((error) => {
+                this.displayNotification({
+                    type: 'danger',
+                    title: _t('Error'),
+                    message: error.message || _t('An error occurred. Please contact with your system administrator.'),
+                });
+            })
+            .finally(() => {
+                framework.hideLoading();
             });
-        }).finally(() => {
-            framework.hideLoading();
+    },
+
+    _parsePrice: function(priceStr) {
+        if (!priceStr) return 0;
+        const str = String(priceStr);
+        const cleaned = str.replace(/\./g, '').replace(',', '.');
+        const parsed = parseFloat(cleaned);
+        return isNaN(parsed) ? 0 : parsed;
+    },
+
+    _saveAdData: function(useWizardForm = false) {
+        const isEditMode = this.state.id > 0;
+        let params;
+        
+        if (useWizardForm) {
+            // Use wizard/escrow form data
+            params = {
+                id: isEditMode ? this.state.id : null,
+                categ_id: parseInt(this.escrow.input.category.$.val(), 10) || null,
+                price: this._parsePrice(this.escrow.input.price.$.val()),
+                description: this.escrow.input.desc.$.val(),
+                escrow_car_vin: this.escrow.input.vin.$.val(),
+                escrow_car_plate: this.escrow.input.plate.$.val(),
+                escrow_car_brand_id: parseInt(this.escrow.input.brand.$.val(), 10) || null,
+                escrow_car_model_id: parseInt(this.escrow.input.model.$.val(), 10) || null,
+                escrow_car_model_year: parseInt(this.escrow.input.year.$.val(), 10) || null,
+                image_1920: null
+            };
+            
+            if (this.wizard && this.wizard.sellerId) {
+                params.owner_id = this.wizard.sellerId;
+            }
+        } else {
+            // Use old ad form data
+            params = {
+                id: this.state.id,
+                categ: [this.ad.input.categ.value, this.ad.input.categ.text],
+                price: this._parsePrice(this.ad.input.price.value),
+                desc: this.ad.input.desc.value,
+                img: this.ad.input.img.value,
+            };
+        }
+        console.log(params)
+        return rpc.query({ route: '/my/ad/save', params }).then((result) => {
+            if ('error' in result) {
+                throw new Error(result.error);
+            }
+            return result;
         });
     },
 
@@ -1054,13 +1140,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return;
                 }
                 
-                const productData = this._getProductFormData();
-                productData.owner_id = sellerResult.partner_id;
+                // Set seller ID for unified saving
+                self.wizard.sellerId = sellerResult.partner_id;
                 
-                return self._rpc({
-                    route: '/my/ad/save',
-                    params: productData
-                });
+                return self._saveAdData(true);
             }).then((productResult) => {
                 if (productResult && productResult.error) {
                     reject(new Error(productResult.error));
@@ -1077,11 +1160,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const self = this;
         
         return new Promise((resolve, reject) => {
-            const sellerData = this._getSellerFormData();
             const adId = this.wizard.editingAdId;
             
             if (!adId) {
-                reject(new Error('Not Updateable Ads'));
+                reject(new Error('No ad ID to update'));
                 return;
             }
             
@@ -1089,24 +1171,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const ownerId = adData ? adData.owner_id : null;
             
             if (ownerId) {
-                console.log('Updating existing owner:', ownerId);
+                self.wizard.sellerId = ownerId;
             }
             
-            const productData = this._getProductFormData();
-            productData.id = adId;
-            if (ownerId) {
-                productData.owner_id = ownerId;
-            }
+            // Set state for unified function
+            self.state.id = parseInt(adId, 10);
             
-            self._rpc({
-                route: '/my/ad/save',
-                params: productData
-            }).then((result) => {
-                if (result && result.error) {
-                    reject(new Error(result.error));
-                } else {
-                    resolve(result);
-                }
+            self._saveAdData(true).then((result) => {
+                resolve(result);
             }).catch((error) => {
                 reject(error);
             });
@@ -1141,26 +1213,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return sellerData;
     },
 
-    _getProductFormData: function() {
-        const productData = {
-            id: null,
-            categ: [this.escrow.input.category.$.val(), this.escrow.input.category.$.find('option:selected').text()],
-            price: this.escrow.input.price.$.val(),
-            desc: this.escrow.input.desc.$.val(),
-            vin: this.escrow.input.vin.$.val(),
-            plate: this.escrow.input.plate.$.val(),
-            brand_id: this.escrow.input.brand.$.val(),
-            model_id: this.escrow.input.model.$.val(),
-            year: this.escrow.input.year.$.val(),
-            img: null // TODO: Handle image upload
-        };
-        
-        if (this.wizard && this.wizard.sellerId) {
-            productData.owner_id = this.wizard.sellerId;
-        }
-        
-        return productData;
-    },
+    // Note: _getProductFormData removed - now using unified _saveAdData function
 
     _loadAds: function() {
         window.location.reload();
@@ -1518,7 +1571,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const rules = this.validationRules[selector] || [];
             
             if (selector.includes('#recipient_')) {
-                const recipientType = $('input[name="recipientType"]:checked').val();
+                const recipientType = $('input[name="customerType"]:checked').val();
                 const isIndividualField = selector.includes('_individual') || 
                     ['#recipient_name_surname', '#recipient_identity'].includes(selector);
                 const isCorporateField = selector.includes('_corporate') || 
@@ -1813,8 +1866,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         this.validateWizardStep3 = () => {
             let isValid = true;
-            const recipientType = $('input[name="recipientType"]:checked').val();
-            
+            const recipientType = $('input[name="customerType"]:checked').val();
+
             let fieldsToValidate;
             if (recipientType === 'individual') {
                 fieldsToValidate = [
@@ -2060,7 +2113,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (this.wizard.currentStep === 3) {
-            this._saveRecipientInfo().then(function(result) {
+            this._saveCustomerInfo().then(function(result) {
                 if (result.success) {
                     self._markStepCompleted(self.wizard.currentStep);
                     self._navigateToStep(self.wizard.currentStep + 1);
@@ -2147,9 +2200,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ($cardHolder.length) {
             const cardHolderValue = $cardHolder.val().trim();
             if (!cardHolderValue) {
-                showError($cardHolder, 'Kart sahibi adı zorunludur');
+                showError($cardHolder, 'Card holder name is required');
             } else if (cardHolderValue.length < 3) {
-                showError($cardHolder, 'Kart sahibi adı en az 3 karakter olmalıdır');
+                showError($cardHolder, 'Card holder name must be at least 3 characters long');
             }
         }
 
@@ -2157,27 +2210,27 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ($cardNumber.length) {
             const cardNumberValue = $cardNumber.val().replace(/\D/g, '');
             if (!cardNumberValue) {
-                showError($cardNumber, 'Kart numarası zorunludur');
+                showError($cardNumber, 'Card number is required');
             } else if (cardNumberValue.length < 16) {
-                showError($cardNumber, 'Geçerli bir kart numarası giriniz');
+                showError($cardNumber, 'Please enter a valid card number');
             }
         }
         const $cardExpiry = $wiz.find('#card_expiry');
         if ($cardExpiry.length) {
             const expiryValue = $cardExpiry.val().trim();
             if (!expiryValue) {
-                showError($cardExpiry, 'Son kullanma tarihi zorunludur');
+                showError($cardExpiry, 'Expiration date is required');
             } else if (!/^\d{2}\/\d{2}$/.test(expiryValue)) {
-                showError($cardExpiry, 'AA/YY formatında giriniz');
+                showError($cardExpiry, 'Please enter in MM/YY format');
             }
         }
         const $cvv = $wiz.find('#cvv');
         if ($cvv.length) {
             const cvvValue = $cvv.val().replace(/\D/g, '');
             if (!cvvValue) {
-                showError($cvv, 'Güvenlik kodu zorunludur');
+                showError($cvv, 'Security code is required');
             } else if (cvvValue.length < 3) {
-                showError($cvv, 'Güvenlik kodu en az 3 haneli olmalıdır');
+                showError($cvv, 'Security code must be at least 3 digits long');
             }
         }
         const paymentAmountValid = this._validatePartialPriceField();
@@ -2189,7 +2242,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ($agreement.length && !$agreement.is(':checked')) {
             const $agreementLabel = $agreement.closest('label');
             $agreementLabel.addClass('text-danger');
-            $agreementLabel.after('<div class="form__error-label just-validate-error-label">Sözleşmeyi kabul etmeniz gerekiyor</div>');
+            $agreementLabel.after('<div class="form__error-label just-validate-error-label">You must accept the terms and conditions</div>');
             isValid = false;
         }
 
@@ -2378,48 +2431,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _saveProductInfo: function () {
         const self = this;
-        
         const isEditMode = this.wizard && this.wizard.editMode;
         const editingAdId = this.wizard && this.wizard.editingAdId;
         
-        const parseIntSafe = (value) => {
-            const parsed = parseInt(value, 10);
-            return isNaN(parsed) ? null : parsed;
-        };
-        
-        const productData = {
-            categ_id: parseIntSafe(this.escrow.input.category.$.val()),
-            price: this.escrow.input.price.$.val(),
-            description: this.escrow.input.desc.$.val(),
-            escrow_car_vin: this.escrow.input.vin.$.val(),
-            escrow_car_plate: this.escrow.input.plate.$.val(),
-            escrow_car_brand_id: parseIntSafe(this.escrow.input.brand.$.val()),
-            escrow_car_model_id: parseIntSafe(this.escrow.input.model.$.val()),
-            escrow_car_model_year: parseIntSafe(this.escrow.input.year.$.val()),
-            image_1920: null
-        };
-        
         if (isEditMode && editingAdId) {
-            productData.id = parseIntSafe(editingAdId);
-            return this._rpc({
-                route: '/my/ad/save',
-                params: productData,
-            });
+            this.state.id = parseInt(editingAdId, 10);
         } else {
-            if (this.wizard && this.wizard.sellerId) {
-                productData.owner_id = parseIntSafe(this.wizard.sellerId);
-            }
-            
-            return this._rpc({
-                route: '/my/ad/save',
-                params: productData,
-            }).then((result) => {
-                if (result.success && result.id) {
-                    self.wizard.savedProductId = result.id;
-                }
-                return result;
-            });
+            this.state.id = 0;
         }
+
+        return this._saveAdData(true).then((result) => {
+            if (result.success && result.id) {
+                self.wizard.savedProductId = result.id;
+            }
+            return result;
+        });
     },
 
     _isValidVinChecksum: function(vin) {
@@ -2451,11 +2477,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return checkDigit === expected;
     },
 
-    _saveRecipientInfo: function() {
-        const recipientType = $('input[name="recipientType"]:checked').val();
-        
+    _saveCustomerInfo: function() {
+        const customerType = $('input[name="customerType"]:checked').val();
+
         const data = {
-            recipient_type: recipientType,
+            customer_type: customerType,
         };
 
         if (this.wizard && this.wizard.editingAdId) {
@@ -2464,70 +2490,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             data.product_id = this.wizard.savedProductId;
         }
 
-        if (recipientType === 'individual') {
-            data.recipient_name_surname = this.recipient.input.name_surname.$.val();
-            data.recipient_identity = this.recipient.input.identity.$.val();
-            data.recipient_phone = this.recipient.input.phone_individual.$.val();
-            data.recipient_email = this.recipient.input.email_individual.$.val();
-            data.recipient_address = this.recipient.input.address_individual.$.val();
+        if (customerType === 'individual') {
+            data.customer_name_surname = this.customer.input.name_surname.$.val();
+            data.customer_identity = this.customer.input.identity.$.val();
+            data.customer_phone = this.customer.input.phone_individual.$.val();
+            data.customer_email = this.customer.input.email_individual.$.val();
+            data.customer_address = this.customer.input.address_individual.$.val();
         } else {
-            data.recipient_corporate_title = this.recipient.input.corporate_title.$.val();
-            data.recipient_tax_number = this.recipient.input.tax_number.$.val();
-            data.recipient_tax_office = this.recipient.input.tax_office.$.val();
-            data.recipient_person = this.recipient.input.person.$.val();
-            data.recipient_phone = this.recipient.input.phone_corporate.$.val();
-            data.recipient_email = this.recipient.input.email_corporate.$.val();
-            data.recipient_address = this.recipient.input.address_corporate.$.val();
+            data.customer_corporate_title = this.customer.input.corporate_title.$.val();
+            data.customer_tax_number = this.customer.input.tax_number.$.val();
+            data.customer_tax_office = this.customer.input.tax_office.$.val();
+            data.customer_person = this.customer.input.person.$.val();
+            data.customer_phone = this.customer.input.phone_corporate.$.val();
+            data.customer_email = this.customer.input.email_corporate.$.val();
+            data.customer_address = this.customer.input.address_corporate.$.val();
         }
-
         return this._rpc({
-            route: '/my/recipient/save',
+            route: '/my/customer/save',
             params: data,
-        });
-    },
-
-    _checkIban: function(iban, vat) {
-        if (!iban) {
-            return Promise.resolve({
-                success: false,
-                message: 'IBAN gereklidir'
-            });
-        }
-
-        const cleanIban = iban.replace(/\s/g, '').toUpperCase();
-        
-        const isValidIBAN = (iban) => {
-            const cleanIban = iban.replace(/\s/g, '').toUpperCase();
-            if (!/^TR\d{24}$/.test(cleanIban)) return false;
-            
-            const rearranged = cleanIban.substring(4) + cleanIban.substring(0, 4);
-            let numericString = '';
-            for (let i = 0; i < rearranged.length; i++) {
-                const char = rearranged[i];
-                if (char >= 'A' && char <= 'Z') {
-                    numericString += (char.charCodeAt(0) - 65 + 10).toString();
-                } else {
-                    numericString += char;
-                }
-            }
-            
-            let remainder = 0;
-            for (let i = 0; i < numericString.length; i++) {
-                remainder = (remainder * 10 + parseInt(numericString[i])) % 97;
-            }
-            return remainder === 1;
-        };
-
-        if (!isValidIBAN(cleanIban)) {
-            return Promise.resolve({
-                success: false,
-                message: 'Invalid IBAN format (mod-97 validation failed)',
-            });
-        }
-        
-        return Promise.resolve({
-            success: true,
-            message: 'IBAN verification successful'
         });
     },
 
@@ -2540,21 +2520,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const $corporate = $('#recipientCorporate');
         
         function setRecipientMode(mode) {
-            $form.find('input[name="recipientType"]').off('change.recipientToggle');
+            $form.find('input[name="customerType"]').off('change.recipientToggle');
             
             if (mode === 'individual') {
-                $form.find('input[name="recipientType"][value="individual"]').prop('checked', true);
+                $form.find('input[name="customerType"][value="individual"]').prop('checked', true);
                 $individual.show();
                 $corporate.hide();
                 $slider.css('transform', 'translateX(0)');
             } else {
-                $form.find('input[name="recipientType"][value="corporate"]').prop('checked', true);
+                $form.find('input[name="customerType"][value="corporate"]').prop('checked', true);
                 $individual.hide();
                 $corporate.show();
                 $slider.css('transform', 'translateX(100%)');
             }
-            
-            $form.find('input[name="recipientType"]').on('change.recipientToggle', function() {
+
+            $form.find('input[name="customerType"]').on('change.recipientToggle', function() {
                 if ($(this).is(':checked')) {
                     setRecipientMode($(this).val());
                 }
@@ -2609,6 +2589,84 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const url = new URL(window.location);
         url.searchParams.delete('step');
         window.history.replaceState({}, '', url);
+    },
+
+    // Assignment Form Toggle Handler
+    _onToggleDifferentHolder: function(event) {
+        const isChecked = event.target.checked;
+        const $assignmentSection = this.assignment.form.section.$;
+        
+        if (isChecked) {
+            $assignmentSection.removeClass('d-none').hide().slideDown(300);
+        } else {
+            $assignmentSection.slideUp(300, function() {
+                $(this).addClass('d-none');
+            });
+        }
+    },
+
+    // Assignment Form Download Handler
+    _onDownloadAssignmentForm: function(event) {
+        event.preventDefault();
+        
+        // Create download link for assignment form
+        const downloadUrl = '/escrow/assignment/form/download';
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'assignment_form.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    },
+
+    // Assignment Form Upload Handler
+    _onUploadAssignmentForm: function(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const $uploadStatus = this.assignment.form['upload.status'].$;
+
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Please upload only PDF, JPG, or PNG files.</div>');
+            event.target.value = '';
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> File size must be less than 5MB.</div>');
+            event.target.value = '';
+            return;
+        }
+
+        // Upload file
+        const formData = new FormData();
+        formData.append('assignment_form', file);
+
+        $uploadStatus.html('<div class="text-info"><i class="fa fa-spinner fa-spin"></i> Uploading...</div>');
+
+        this._rpc({
+            route: '/escrow/assignment/form/upload',
+            params: formData
+        }).then((result) => {
+            if (result.success) {
+                $uploadStatus.html('<div class="text-success"><i class="fa fa-check"></i> File uploaded successfully</div>');
+                // Update download link if needed
+                const $downloadBtn = this.assignment.form.download.$;
+                $downloadBtn.removeClass('d-none');
+            } else {
+                $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> ' + (result.error || 'Upload failed') + '</div>');
+                event.target.value = '';
+            }
+        }).catch((error) => {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Upload failed. Please try again.</div>');
+            event.target.value = '';
+        });
     },
 
 });

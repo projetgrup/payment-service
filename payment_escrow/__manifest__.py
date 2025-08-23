@@ -17,6 +17,8 @@
         'views/sale.xml',
         'views/item.xml',
         'views/partner.xml',
+        'views/car_brand.xml',
+        'views/car_model.xml',
         'views/actions.xml',
         'views/menu.xml',
         'views/step_components.xml',

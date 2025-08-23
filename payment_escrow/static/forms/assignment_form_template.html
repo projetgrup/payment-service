@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Assignment Form Template</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .form-section { margin-bottom: 20px; }
+        .form-row { display: flex; margin-bottom: 10px; }
+        .form-field { flex: 1; margin-right: 10px; }
+        .form-field label { font-weight: bold; display: block; margin-bottom: 5px; }
+        .form-field input { width: 100%; padding: 5px; border: 1px solid #ccc; }
+        .signature-section { margin-top: 30px; }
+        .signature-box { border: 1px solid #000; height: 80px; margin: 10px 0; }
+        @media print { body { margin: 0; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ASSIGNMENT FORM</h1>
+        <h2>Escrow Payment System</h2>
+    </div>
+
+    <div class="form-section">
+        <h3>Assignor Information (Credit Card Holder)</h3>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Full Name:</label>
+                <input type="text" name="assignor_name">
+            </div>
+            <div class="form-field">
+                <label>ID Number:</label>
+                <input type="text" name="assignor_id">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Address:</label>
+                <input type="text" name="assignor_address">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Phone:</label>
+                <input type="text" name="assignor_phone">
+            </div>
+            <div class="form-field">
+                <label>Email:</label>
+                <input type="text" name="assignor_email">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>Assignee Information (Payment Recipient)</h3>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Full Name:</label>
+                <input type="text" name="assignee_name">
+            </div>
+            <div class="form-field">
+                <label>ID Number:</label>
+                <input type="text" name="assignee_id">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Address:</label>
+                <input type="text" name="assignee_address">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Phone:</label>
+                <input type="text" name="assignee_phone">
+            </div>
+            <div class="form-field">
+                <label>Email:</label>
+                <input type="text" name="assignee_email">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>Payment Information</h3>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Payment Amount:</label>
+                <input type="text" name="payment_amount">
+            </div>
+            <div class="form-field">
+                <label>Payment Reference:</label>
+                <input type="text" name="payment_reference">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Payment Date:</label>
+                <input type="text" name="payment_date">
+            </div>
+            <div class="form-field">
+                <label>Transaction ID:</label>
+                <input type="text" name="transaction_id">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>Assignment Declaration</h3>
+        <p>I, the undersigned assignor, hereby assign all rights and benefits of the payment transaction described above to the assignee. This assignment is irrevocable and the assignee has full authority to receive the payment on my behalf.</p>
+    </div>
+
+    <div class="signature-section">
+        <div class="form-row">
+            <div class="form-field">
+                <label>Assignor Signature:</label>
+                <div class="signature-box"></div>
+                <label>Date: ________________</label>
+            </div>
+            <div class="form-field">
+                <label>Assignee Signature:</label>
+                <div class="signature-box"></div>
+                <label>Date: ________________</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>Witness Information (Optional)</h3>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Witness Name:</label>
+                <input type="text" name="witness_name">
+            </div>
+            <div class="form-field">
+                <label>Witness Signature:</label>
+                <div class="signature-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Print functionality for PDF generation
+        window.onload = function() {
+            if (window.location.search.includes('print=true')) {
+                window.print();
+            }
+        }
+    </script>
+</body>
+</html>

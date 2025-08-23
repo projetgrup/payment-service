@@ -54,15 +54,6 @@
                 <t t-set="step_class" t-value="step_4_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_4_edit or False"/>
             </t>
-
-            <!-- Step 5: Completed -->
-            <t t-call="payment_escrow.step_item_template">
-                <t t-set="step_number" t-value="5"/>
-                <t t-set="step_title" t-value="'Completed'"/>
-                <t t-set="step_class" t-value="step_5_class or ''"/>
-                <t t-set="is_completed_step" t-value="True"/>
-                <t t-set="show_edit_link" t-value="False"/>
-            </t>
         </div>
     </template>
 </odoo>

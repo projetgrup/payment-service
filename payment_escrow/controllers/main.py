@@ -23,28 +23,6 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PayloxSystemEscrowController(Controller):
 
-    @route(['/payment/success', '/payment/fail'], type='http', auth='public', methods=['POST'], sitemap=False, csrf=False, save_session=False)
-    def finalize(self, **kwargs):
-        """Override JetCheckout's finalize method for escrow payments"""
-        # Check if this is an escrow payment
-        tx_reference = kwargs.get('oid') or kwargs.get('reference')
-        if tx_reference:
-            tx = request.env['payment.transaction'].sudo().search([
-                ('reference', '=', tx_reference),
-                ('system', '=', 'escrow')
-            ], limit=1)
-            
-            if tx:
-                # This is an escrow payment, redirect to our custom URLs
-                access_token = tx.access_token or 'notoken'
-                if request.httprequest.path == '/payment/success':
-                    return werkzeug.utils.redirect(f'/my/escrow/payment/success/{tx.id}/{access_token}')
-                else:
-                    return werkzeug.utils.redirect(f'/my/escrow/payment/fail/{tx.id}/{access_token}')
-        
-        # If not escrow payment, use parent's finalize method
-        return super().finalize(**kwargs)
-
     def _get_tx_values(self, **kwargs):
         return {
             'paylox_description': kwargs.get('description', False),
@@ -118,7 +96,7 @@ class PayloxSystemEscrowController(Controller):
             
             if kwargs.get('escrow_car_brand_id'):
                 try:
-                    brand = request.env['car.brand'].sudo().browse(int(kwargs['escrow_car_brand_id']))
+                    brand = request.env['escrow.car.brand'].sudo().browse(int(kwargs['escrow_car_brand_id']))
                     if brand.exists():
                         brand_name = brand.name
                 except:
@@ -126,7 +104,7 @@ class PayloxSystemEscrowController(Controller):
             
             if kwargs.get('escrow_car_model_id'):
                 try:
-                    model = request.env['car.model'].sudo().browse(int(kwargs['escrow_car_model_id']))
+                    model = request.env['escrow.car.model'].sudo().browse(int(kwargs['escrow_car_model_id']))
                     if model.exists():
                         model_name = model.name
                 except:
@@ -139,7 +117,6 @@ class PayloxSystemEscrowController(Controller):
                 name_parts.append(model_name)
             if year:
                 name_parts.append(str(year))
-            
             return " / ".join(name_parts) if name_parts else "Araç İlanı"
         
         if kwargs.get('id'):
@@ -153,7 +130,6 @@ class PayloxSystemEscrowController(Controller):
 
             values.update({'system': 'escrow', 'broker_id': partner.id, **kwargs})
             
-            # Otomatik isim oluştur
             values['name'] = generate_product_name()
             
             if values:
@@ -165,7 +141,6 @@ class PayloxSystemEscrowController(Controller):
                 **kwargs
             })
             
-            # Otomatik isim oluştur
             values['name'] = generate_product_name()
 
             product = request.env['product.product'].sudo().create(values)
@@ -341,8 +316,8 @@ class PayloxSystemEscrowController(Controller):
                 'message': 'Seller information could not be saved.'
             }
 
-    @route('/my/recipient/save', type='json', auth='public', methods=['POST'], csrf=False)
-    def save_recipient_info(self, **kwargs):
+    @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
+    def save_customer_info(self, **kwargs):
         try:
             # Common fields for both individual and corporate
             partner_data = {
@@ -351,22 +326,22 @@ class PayloxSystemEscrowController(Controller):
                 "system": 'escrow'
             }
 
-            if kwargs.get('recipient_type') == 'corporate':
+            if kwargs.get('customer_type') == 'corporate':
                 partner_data.update({
-                    'name': kwargs.get('recipient_corporate_title', ''),
-                    'email': kwargs.get('recipient_email', ''),
-                    'phone': kwargs.get('recipient_phone', ''),
-                    'vat': kwargs.get('recipient_tax_number', ''),
-                    'street': kwargs.get('recipient_address', ''),
+                    'name': kwargs.get('customer_corporate_title', ''),
+                    'email': kwargs.get('customer_email', ''),
+                    'phone': kwargs.get('customer_phone', ''),
+                    'vat': kwargs.get('customer_tax_number', ''),
+                    'street': kwargs.get('customer_address', ''),
                     'is_company': True,
                 })
             else:
                 partner_data.update({
-                    'name': kwargs.get('recipient_name_surname', ''),
-                    'email': kwargs.get('recipient_email', ''),
-                    'phone': kwargs.get('recipient_phone', ''),
-                    'vat': kwargs.get('recipient_identity', ''),
-                    'street': kwargs.get('recipient_address', ''),
+                    'name': kwargs.get('customer_name_surname', ''),
+                    'email': kwargs.get('customer_email', ''),
+                    'phone': kwargs.get('customer_phone', ''),
+                    'vat': kwargs.get('customer_identity', ''),
+                    'street': kwargs.get('customer_address', ''),
                     'is_company': False,
                 })
             
@@ -463,122 +438,7 @@ class PayloxSystemEscrowController(Controller):
 
 
 class EscrowPaymentController(Controller):
-    """Controller for escrow payment handling"""
-
-    @route(['/my/escrow/payment/3d/<int:tx_id>/<access_token>'], type='http', auth='public', website=True, sitemap=False)
-    def escrow_payment_3d(self, tx_id, access_token, redirect_url=None, **kwargs):
-        """3D Secure iframe page for escrow payments"""
-        try:
-            # Get transaction and verify access
-            tx = request.env['payment.transaction'].sudo().browse(tx_id)
-            if not tx.exists():
-                raise AccessError(_("Transaction not found"))
-            
-            if not tx._verify_access_token(access_token):
-                raise AccessError(_("Invalid access token"))
-            
-            if not redirect_url:
-                raise UserError(_("3D Secure redirect URL is required"))
-            
-            # Prepare values for template
-            values = {
-                'tx': tx,
-                'redirect_url': redirect_url,
-                'access_token': access_token,
-            }
-            
-            return request.render('payment_escrow.escrow_3d_secure', values)
-            
-        except Exception as e:
-            _logger.error("Error in escrow 3D secure page: %s", str(e))
-            return request.render('website.404')
-
-    @route(['/my/escrow/payment/success/<int:tx_id>/<access_token>'], type='http', auth='public', website=True, sitemap=False)
-    def escrow_payment_success(self, tx_id, access_token, **kwargs):
-        """Escrow payment success page with iframe for 3D Secure completion"""
-        tx = request.env['payment.transaction'].sudo().browse(tx_id)
-        if not tx.exists():
-            return request.redirect('/my/ads')
-        
-        # Validate access token for security
-        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
-            return request.redirect('/my/ads')
-        
-        values = {
-            'tx': tx,
-            'tx_id': tx_id,
-            'success': True,
-            'show_iframe': True,  # For 3D Secure completion
-        }
-        return request.render('payment_escrow.payment_result', values)
-
-    @route(['/my/escrow/payment/fail/<int:tx_id>/<string:access_token>'], type='http', auth='public', methods=['GET'], website=True, csrf=False)
-    def escrow_payment_fail(self, tx_id, access_token, **kwargs):
-        """Escrow payment fail page"""
-        tx = request.env['payment.transaction'].sudo().browse(tx_id)
-        if not tx.exists():
-            return request.redirect('/my/ads')
-        
-        # Validate access token for security
-        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
-            return request.redirect('/my/ads')
-        
-        values = {
-            'tx': tx,
-            'tx_id': tx_id,
-            'success': False,
-            'show_iframe': False,
-        }
-        return request.render('payment_escrow.payment_result', values)
-
-    @route(['/my/escrow/payment/completed/<int:tx_id>/<string:access_token>'], type='http', auth='public', methods=['GET'], website=True, csrf=False)
-    def escrow_payment_completed(self, tx_id, access_token, **kwargs):
-        """Final escrow payment completion page (after 3D Secure)"""
-        tx = request.env['payment.transaction'].sudo().browse(tx_id)
-        if not tx.exists():
-            return request.redirect('/my/ads')
-        
-        # Validate access token for security
-        if access_token != 'notoken' and hasattr(tx, 'access_token') and tx.access_token != access_token:
-            return request.redirect('/my/ads')
-        
-        values = {
-            'tx': tx,
-            'tx_id': tx_id,
-            'access_token': access_token,
-            'completed': True,
-            'show_iframe': False,
-        }
-        return request.render('payment_escrow.payment_completed', values)
-
-    def finalize(self, tx_sudo, acquirer_sudo):
-        """Override JetCheckout finalize to handle escrow payments"""
-        # Check if this is an escrow transaction
-        if hasattr(tx_sudo, 'reference') and tx_sudo.reference and 'escrow' in tx_sudo.reference.lower():
-            # Generate access token
-            access_token = tx_sudo._generate_access_token()
-            
-            # Redirect to escrow success/fail URLs based on transaction state
-            if tx_sudo.state == 'done':
-                return werkzeug.utils.redirect('/my/escrow/payment/success/%s/%s' % (tx_sudo.id, access_token))
-            else:
-                return werkzeug.utils.redirect('/my/escrow/payment/fail/%s/%s' % (tx_sudo.id, access_token))
-        
-        # For non-escrow transactions, use parent method
-        return super().finalize(tx_sudo, acquirer_sudo)
-
-    @route(['/my/escrow/payment/success/<int:tx_id>/<access_token>'], type='http', auth='public', methods=['GET'], sitemap=False, csrf=False)
-    def escrow_payment_success(self, tx_id, access_token, **kwargs):
-        """Handle successful escrow payment"""
-        # Redirect to ads page with step=5
-        return werkzeug.utils.redirect('/my/ads?step=5')
-
-    @route(['/my/escrow/payment/fail/<int:tx_id>/<access_token>'], type='http', auth='public', methods=['GET'], sitemap=False, csrf=False)
-    def escrow_payment_fail(self, tx_id, access_token, **kwargs):
-        """Handle failed escrow payment"""
-        # Redirect to ads page  
-        return werkzeug.utils.redirect('/my/ads')
-
+    
     @route(['/payment/status/<int:tx_id>'], type='json', auth='public', methods=['POST'], sitemap=False, csrf=False)
     def payment_status(self, tx_id, **kwargs):
         """Check payment transaction status"""
@@ -590,3 +450,60 @@ class EscrowPaymentController(Controller):
         except Exception as e:
             _logger.error("Error checking payment status: %s", e)
             return {'status': 'error'}
+
+    @route(['/escrow/assignment/form/download'], type='http', auth='public', methods=['GET'], sitemap=False)
+    def download_assignment_form(self, **kwargs):
+        """Download blank assignment form template"""
+        try:
+            # Serve the HTML form template that can be printed as PDF
+            return request.render('payment_escrow.assignment_form_template')
+        except Exception as e:
+            _logger.error("Error downloading assignment form: %s", e)
+            return request.render('website.404')
+
+    @route(['/escrow/assignment/form/upload'], type='json', auth='public', methods=['POST'], sitemap=False, csrf=False)
+    def upload_assignment_form(self, **kwargs):
+        """Upload signed assignment form"""
+        try:
+            assignment_form = request.httprequest.files.get('assignment_form')
+            
+            if not assignment_form:
+                return {'success': False, 'error': 'No file provided'}
+
+            # Validate file type
+            allowed_types = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
+            if assignment_form.content_type not in allowed_types:
+                return {'success': False, 'error': 'Invalid file type. Only PDF, JPG, and PNG files are allowed.'}
+
+            # Validate file size (max 5MB)
+            max_size = 5 * 1024 * 1024
+            assignment_form.seek(0, 2)  # Seek to end to get file size
+            file_size = assignment_form.tell()
+            assignment_form.seek(0)  # Reset to beginning
+            
+            if file_size > max_size:
+                return {'success': False, 'error': 'File size exceeds 5MB limit.'}
+
+            # Read file content
+            file_content = assignment_form.read()
+            
+            # Here you can save the file to database or file system
+            # For example, save to ir.attachment
+            attachment = request.env['ir.attachment'].sudo().create({
+                'name': assignment_form.filename,
+                'type': 'binary',
+                'datas': file_content,
+                'mimetype': assignment_form.content_type,
+                'res_model': 'payment.transaction',
+                'public': False,
+                'description': 'Assignment Form Upload'
+            })
+
+            if attachment:
+                return {'success': True, 'attachment_id': attachment.id, 'message': 'File uploaded successfully'}
+            else:
+                return {'success': False, 'error': 'Failed to save file'}
+
+        except Exception as e:
+            _logger.error("Error uploading assignment form: %s", e)
+            return {'success': False, 'error': 'Upload failed. Please try again.'}
