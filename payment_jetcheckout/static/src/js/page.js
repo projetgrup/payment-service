@@ -1591,28 +1591,97 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return false;
     },
 
-    _open3DSecurePopup: function(url, transactionId) {
+    _open3DSecurePopup: function(url, transactionId, productId) {
         const self = this;
+
         
-        const popup = window.open(
-            url,
-            '3DSecurePopup',
-            'width=600,height=500,scrollbars=yes,resizable=yes,status=yes,location=yes'
-        );
+        // Create modal with iframe
+        const modalHtml = `
+            <div class="modal fade" id="payment3DModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-credit-card mr-2"></i>
+                                3D Secure Doğrulama
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div>
+                            <div id="iframe-loading" class="text-center p-4">
+                                <i class="fa fa-spinner fa-spin fa-2x mb-3"></i>
+                                <div>Ödeme sayfası yükleniyor...</div>
+                            </div>
+                            <iframe id="payment3DIframe" src="${url}" 
+                                style="width: 100%; height: 500px; border: none; display: none;"
+                                allow="payment"
+                                onload="document.getElementById('iframe-loading').style.display='none'; this.style.display='block';">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
         
-        if (!popup) {
-            window.location.assign(url);
-            return;
-        }
-        const checkPopup = setInterval(() => {
-            if (popup.closed) {
-                clearInterval(checkPopup);
+        // Add modal to body
+        $('body').append(modalHtml);
+        
+        // Show modal
+        $('#payment3DModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        
+        // Periodic payment status check
+        let statusCheckInterval = setInterval(() => {
+            rpc.query({
+                route: '/payment/status/' + transactionId,
+                params: {}
+            }).then((result) => {
+                if (result.status === 'done') {
+                    clearInterval(statusCheckInterval);
+                    $('#payment3DModal').modal('hide');
+                    
+                    // Success notification and redirect
+                    self.displayNotification({
+                        type: 'success',
+                        title: _t('Payment Successful'),
+                        message: _t('Your payment has been processed successfully.'),
+                    });
+                    
+                    setTimeout(() => {
+                        window.location.assign('/my/ads?step=5');
+                    }, 1500);
+                }
+            }).guardedCatch(() => {
+                // Silent fail for status checks
+            });
+        }, 3000); // Check every 3 seconds
+        
+        // Handle checkbox change
+        $('#paymentCompleted').on('change', function() {
+            if ($(this).is(':checked')) {
+                clearInterval(statusCheckInterval);
+                $('#payment3DModal').modal('hide');
+                
+                // Check payment status one final time
                 rpc.query({
                     route: '/payment/status/' + transactionId,
-                    params: {}
+                    params: {
+                        product_id: productId
+                    }
                 }).then((result) => {
                     if (result.status === 'done') {
-                        window.location.assign('/my/ads?step=5');
+                        self.displayNotification({
+                            type: 'success',
+                            title: _t('Payment Successful'),
+                            message: _t('Your payment has been processed successfully.'),
+                        });
+                        setTimeout(() => {
+                            window.location.assign('/my/ads?step=5');
+                        }, 1500);
                     } else if (result.status === 'error' || result.status === 'cancel') {
                         framework.hideLoading();
                         self.displayNotification({
@@ -1621,9 +1690,14 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                             message: _t('Your payment could not be processed. Please try again.'),
                         });
                     } else {
+                        self.displayNotification({
+                            type: 'warning',
+                            title: _t('Payment Pending'),
+                            message: _t('Payment status is being verified. Please wait...'),
+                        });
                         setTimeout(() => {
                             window.location.reload();
-                        }, 2000);
+                        }, 3000);
                     }
                 }).guardedCatch(() => {
                     framework.hideLoading();
@@ -1634,13 +1708,20 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     });
                 });
             }
-        }, 1000);
+        });
         
+        // Handle modal close
+        $('#payment3DModal').on('hidden.bs.modal', function() {
+            clearInterval(statusCheckInterval);
+            $(this).remove();
+            framework.hideLoading();
+        });
+        
+        // Auto timeout after 10 minutes
         setTimeout(() => {
-            if (!popup.closed) {
-                popup.close();
-                clearInterval(checkPopup);
-                framework.hideLoading();
+            if ($('#payment3DModal').length) {
+                clearInterval(statusCheckInterval);
+                $('#payment3DModal').modal('hide');
                 self.displayNotification({
                     type: 'warning',
                     title: _t('Timeout'),

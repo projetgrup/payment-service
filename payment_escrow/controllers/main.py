@@ -124,7 +124,6 @@ class PayloxSystemEscrowController(Controller):
                 ('id', '=', kwargs['id']),
                 ('broker_id', '=', request.env.user.partner_id.id),
                 ('company_id', '=', request.env.company.id),
-                
             ])
             if not product:
                 return {'error': _('Product cannot be found, or you are not allowed to save it.')}
@@ -454,60 +453,3 @@ class EscrowPaymentController(Controller):
         except Exception as e:
             _logger.error("Error checking payment status: %s", e)
             return {'status': 'error'}
-
-    @route(['/escrow/assignment/form/download'], type='http', auth='public', methods=['GET'], sitemap=False)
-    def download_assignment_form(self, **kwargs):
-        """Download blank assignment form template"""
-        try:
-            # Serve the HTML form template that can be printed as PDF
-            return request.render('payment_escrow.assignment_form_template')
-        except Exception as e:
-            _logger.error("Error downloading assignment form: %s", e)
-            return request.render('website.404')
-
-    @route(['/escrow/assignment/form/upload'], type='json', auth='public', methods=['POST'], sitemap=False, csrf=False)
-    def upload_assignment_form(self, **kwargs):
-        """Upload signed assignment form"""
-        try:
-            assignment_form = request.httprequest.files.get('assignment_form')
-            
-            if not assignment_form:
-                return {'success': False, 'error': 'No file provided'}
-
-            # Validate file type
-            allowed_types = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
-            if assignment_form.content_type not in allowed_types:
-                return {'success': False, 'error': 'Invalid file type. Only PDF, JPG, and PNG files are allowed.'}
-
-            # Validate file size (max 5MB)
-            max_size = 5 * 1024 * 1024
-            assignment_form.seek(0, 2)  # Seek to end to get file size
-            file_size = assignment_form.tell()
-            assignment_form.seek(0)  # Reset to beginning
-            
-            if file_size > max_size:
-                return {'success': False, 'error': 'File size exceeds 5MB limit.'}
-
-            # Read file content
-            file_content = assignment_form.read()
-            
-            # Here you can save the file to database or file system
-            # For example, save to ir.attachment
-            attachment = request.env['ir.attachment'].sudo().create({
-                'name': assignment_form.filename,
-                'type': 'binary',
-                'datas': file_content,
-                'mimetype': assignment_form.content_type,
-                'res_model': 'payment.transaction',
-                'public': False,
-                'description': 'Assignment Form Upload'
-            })
-
-            if attachment:
-                return {'success': True, 'attachment_id': attachment.id, 'message': 'File uploaded successfully'}
-            else:
-                return {'success': False, 'error': 'Failed to save file'}
-
-        except Exception as e:
-            _logger.error("Error uploading assignment form: %s", e)
-            return {'success': False, 'error': 'Upload failed. Please try again.'}

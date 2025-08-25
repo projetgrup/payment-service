@@ -8,6 +8,50 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page payment-api-page payment-escrow navbar-light'"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <!-- Animated Background Icons -->
+            <div class="background-animation">
+                <div class="floating-icon icon-1">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 1L15.09 8.26L22 9L17 14.74L18.18 22L12 18.27L5.82 22L7 14.74L2 9L8.91 8.26L12 1Z" fill="#2414D8" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.17L10.58 10.76C10.22 11.12 10 11.6 10 12.1V15H8V22H10V17H12V15.9L17 10.9V15L21 19H23V17L19 13V9H21Z" fill="#4AC643" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 6H22V8H20V21C20 21.5 19.5 22 19 22H5C4.5 22 4 21.5 4 21V8H2V6H7V3C7 2.5 7.5 2 8 2H16C16.5 2 17 2.5 17 3V6M15 4H9V6H15V4M6 8V20H18V8H6Z" fill="#F8A941" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17C10.89 17 10 16.1 10 15C10 13.89 10.89 13 12 13C13.11 13 14 13.89 14 15C14 16.1 13.11 17 12 17M18 8C19.1 8 20 8.9 20 10V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V10C4 8.9 4.9 8 6 8H7V6C7 3.24 9.24 1 12 1S17 3.24 17 6V8H18M12 3C10.34 3 9 4.34 9 6V8H15V6C15 4.34 13.66 3 12 3Z" fill="#2414D8" opacity="0.15"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-5">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 15H9C9 16.08 10.37 17 12 17C13.63 17 15 16.08 15 15C15 13.9 13.96 13.5 11.76 12.97C9.64 12.44 7 11.78 7 9C7 7.21 8.47 5.69 10.5 5.18V3H13.5V5.18C15.53 5.69 17 7.21 17 9H15C15 7.92 13.63 7 12 7C10.37 7 9 7.92 9 9C9 10.1 10.04 10.5 12.24 11.03C14.36 11.56 17 12.22 17 15C17 16.79 15.53 18.31 13.5 18.82V21H10.5V18.82C8.47 18.31 7 16.79 7 15Z" fill="#4AC643" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-6">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4C2.89 4 2 4.89 2 6V18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4M20 18H4V8L12 13L20 8V18M20 6L12 11L4 6H20Z" fill="#7A36FA" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-7">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 11H7V9H9V11M13 11H11V9H13V11M17 11H15V9H17V11M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M19 19H5V8H19V19Z" fill="#F8A941" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-8">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 12L11 14L15 10M21 5C21 3.89 20.1 3 19 3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5Z" fill="#4AC643" opacity="0.15"/>
+                    </svg>
+                </div>
+            </div>
+
             <div class="escrow-ad-wrapper">
                 <div class="header">
                     <div class="header__logo">
@@ -156,6 +200,51 @@
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-call="payment_jetcheckout.payment_loading"/>
+            
+            <!-- Animated Background Icons -->
+            <div class="background-animation">
+                <div class="floating-icon icon-1">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 1L15.09 8.26L22 9L17 14.74L18.18 22L12 18.27L5.82 22L7 14.74L2 9L8.91 8.26L12 1Z" fill="#2414D8" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.17L10.58 10.76C10.22 11.12 10 11.6 10 12.1V15H8V22H10V17H12V15.9L17 10.9V15L21 19H23V17L19 13V9H21Z" fill="#4AC643" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 6H22V8H20V21C20 21.5 19.5 22 19 22H5C4.5 22 4 21.5 4 21V8H2V6H7V3C7 2.5 7.5 2 8 2H16C16.5 2 17 2.5 17 3V6M15 4H9V6H15V4M6 8V20H18V8H6Z" fill="#F8A941" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17C10.89 17 10 16.1 10 15C10 13.89 10.89 13 12 13C13.11 13 14 13.89 14 15C14 16.1 13.11 17 12 17M18 8C19.1 8 20 8.9 20 10V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V10C4 8.9 4.9 8 6 8H7V6C7 3.24 9.24 1 12 1S17 3.24 17 6V8H18M12 3C10.34 3 9 4.34 9 6V8H15V6C15 4.34 13.66 3 12 3Z" fill="#2414D8" opacity="0.15"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-5">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 15H9C9 16.08 10.37 17 12 17C13.63 17 15 16.08 15 15C15 13.9 13.96 13.5 11.76 12.97C9.64 12.44 7 11.78 7 9C7 7.21 8.47 5.69 10.5 5.18V3H13.5V5.18C15.53 5.69 17 7.21 17 9H15C15 7.92 13.63 7 12 7C10.37 7 9 7.92 9 9C9 10.1 10.04 10.5 12.24 11.03C14.36 11.56 17 12.22 17 15C17 16.79 15.53 18.31 13.5 18.82V21H10.5V18.82C8.47 18.31 7 16.79 7 15Z" fill="#4AC643" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-6">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4C2.89 4 2 4.89 2 6V18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4M20 18H4V8L12 13L20 8V18M20 6L12 11L4 6H20Z" fill="#7A36FA" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-7">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 11H7V9H9V11M13 11H11V9H13V11M17 11H15V9H17V11M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3.01 3.9 3.01 5L3 19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M19 19H5V8H19V19Z" fill="#F8A941" opacity="0.1"/>
+                    </svg>
+                </div>
+                <div class="floating-icon icon-8">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 12L11 14L15 10M21 5C21 3.89 20.1 3 19 3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5Z" fill="#4AC643" opacity="0.15"/>
+                    </svg>
+                </div>
+            </div>
+            
             <div class="escrow-ad-wrapper">
                 <div class="header">
                     <div class="header__logo">
